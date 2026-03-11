@@ -2789,16 +2789,6 @@ function txRender(){
           </button>`).join('')}
       </div>
       <div class="txoko-feedback" id="txokoFeedback"></div>
-      <details style="margin-top:.75rem;font-size:.65rem;font-family:'DM Mono',monospace;color:var(--parch3);border:1px dashed var(--line);border-radius:var(--r2);padding:.5rem;">
-        <summary style="cursor:pointer;color:var(--gold)">🐛 Debug</summary>
-        <div style="margin-top:.5rem;line-height:1.8">
-          <div><b>Plato:</b> ${q.dishName}</div>
-          <div><b>Topic:</b> ${q.topicKey}</div>
-          <div><b>correctIdx:</b> ${q.correctIdx}</div>
-          <div><b>Respuesta correcta:</b> ${q.choices[q.correctIdx]}</div>
-          <div><b>Opciones:</b><br>${q.choices.map((c,i)=>`${i===q.correctIdx?'✓':'✗'} [${i}] ${c}`).join('<br>')}</div>
-        </div>
-      </details>
     </div>`;
 }
 
