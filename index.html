@@ -2,8 +2,15 @@
 <html lang="es" id="htmlRoot">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
+<meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
+<meta name="theme-color" content="#1a1714">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TXOKO">
+<link rel="manifest" href="data:application/json,{%22name%22:%22TXOKO%20Formaci%C3%B3n%22,%22short_name%22:%22TXOKO%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%231a1714%22,%22theme_color%22:%22%231a1714%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%25270%25200%2520100%2520100%2527%253E%253Crect%2520width%3D%2527100%2527%2520height%3D%2527100%2527%2520rx%3D%252720%2527%2520fill%3D%2527%25231a1714%2527%2F%253E%253Ctext%2520y%3D%2527.9em%2527%2520font-size%3D%252780%2527%2520x%3D%252710%2527%253E%25E2%259C%25A6%253C%2Ftext%253E%253C%2Fsvg%253E%22,%22sizes%22:%22any%22,%22type%22:%22image/svg+xml%22}]}">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ─────────────────────────────────────────────────
@@ -1265,7 +1272,7 @@ const DISHES_EN = [
   {id:28,name:'Fried cauliflower',allergens:['Dairy'],ingredients:'Cauliflower.',history:null,notes:'Cauliflower blanched for two minutes in salted water, then fried.'},
   {id:29,name:'Grilled artichokes',allergens:['Dairy'],ingredients:'Spanish artichokes.',history:null,notes:'Artichoke hearts confit in olive oil, then fried.'},
   {id:30,name:'Padrón peppers',allergens:[],ingredients:'Padrón peppers, Pepper, Salt.',history:'Our Padrón peppers are organic and sourced from Granadilla.',notes:null},
-  {id:32,name:'French fries',allergens:[],ingredients:'Local potatoes, Oil, Salt.',history:'Our local potatoes come from Tacoronte.',notes:'⚠️ No declared allergens but possible cross-contamination with gluten. Alert kitchen in case of gluten allergy. Always serve with sauces for children (Mayonnaise, Ketchup, etc.)'},
+  {id:32,name:'French fries',allergens:['Gluten'],ingredients:'Local potatoes, Oil, Salt.',history:'Our local potatoes come from Tacoronte.',notes:'⚠️ No declared allergens but possible cross-contamination with gluten. Alert kitchen in case of gluten allergy. Always serve with sauces for children (Mayonnaise, Ketchup, etc.)'},
   {id:33,name:'Cherry tomatoes with garlic',allergens:[],ingredients:'Organic tomatoes, Oil, Sliced garlic, Chilli.',history:null,notes:'Organic island tomatoes fried with garlic.'},
   {id:34,name:'Canarian potato parmentier',allergens:['Dairy'],ingredients:null,history:null,notes:null},
   {id:35,name:'White asparagus',allergens:[],ingredients:null,history:null,notes:'Grilled asparagus.'},
@@ -1293,7 +1300,7 @@ const DISHES_EN = [
   {id:63,name:'Tocinillo de cielo',allergens:['Tree nuts','Gluten','Dairy','Eggs'],ingredients:'Eggs, Lemon, Ginger, Cocoa, Coffee, Hazelnuts.',history:'Tocinillo del cielo is a traditional Spanish dessert, very sweet with a smooth and glossy texture, similar to flan but denser. Originally from Andalusia. We have reimagined this recipe by adding other preparations to bring it to the Txoko style.',notes:'Egg yolk cream, lemon and ginger ice cream, chocolate tile, finished with a coffee and hazelnut tile.'},
   {id:64,name:'Hazelnut brownie with cocoa and mandarin cream (vegetarian)',allergens:['Tree nuts','Dairy','Eggs'],ingredients:'Egg whites, Hazelnut flour, Dark chocolate, White chocolate cremoso, Chocolate ice cream, Mandarin cream.',history:'This is one of our gluten-free desserts (though we always clarify it may contain traces) as it is made with hazelnut flour.',notes:'⚠️ Gluten-free but may contain TRACES. Hazelnut and chocolate brownie, chocolate ice cream, chocolate tube filled with cocoa and mandarin cremoso. Finished with white chocolate ganache.'},
   // ===== NEW DISHES EN =====
-  {id:65,name:'Padrón peppers',allergens:[],ingredients:'Padrón peppers, Pepper, Salt',history:'Our Padrón peppers are organic and sourced from Granadilla.',notes:null},
+  {id:65,name:'Padrón peppers',allergens:['Gluten'],ingredients:'Padrón peppers, Pepper, Salt',history:'Our Padrón peppers are organic and sourced from Granadilla.',notes:'⚠️ Can be prepared gluten-free — alert kitchen team.'},
   {id:66,name:'Grilled asparagus',allergens:[],ingredients:'',history:'',notes:null},
   {id:67,name:'Sweetened wings',allergens:['Soy'],ingredients:'Chicken wings, Sunflower oil, Soy, Palm honey, Ginger, Vegetable stock (Onion, Leek, Carrot, Pumpkin and Chickpeas), Salt',history:'',notes:null},
   {id:68,name:'Txoko-style patatas bravas',allergens:['Eggs','Sulphur dioxide and sulphites','Dairy'],ingredients:'Potato, Parmesan cheese, Chicken stock, Onion, Tomato, Sherry vinegar, Cayenne, Garlic, Egg, Sunflower oil, Salt',history:'Our patatas bravas are made with a potato terrine base (with parmesan cheese between each layer as a binder). Finished with dots of brava sauce and aioli.',notes:null},
@@ -1386,7 +1393,7 @@ const DISHES = [
   {id:28,cat:'Guarniciones',name:'Coliflor frita',allergens:['Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Coliflor.',history:null,notes:'Coliflor blanqueada dos minutos en agua sal, luego frita.'},
   {id:29,cat:'Guarniciones',name:'Alcachofas a la brasa',allergens:['Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Alcachofas nacionales.',history:null,notes:'Corazones de alcachofa confitados en aceite de oliva y luego fritos.'},
   {id:30,cat:'Guarniciones',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:null},
-  {id:32,cat:'Guarniciones',name:'Patatas cerilla fritas',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠️ Sin alérgenos, pero puede tener contaminación cruzada de gluten. En caso de alergia al gluten avisar a cocina. Servir siempre salsas para los niños (Mayonesa, Kéchup, etc.)'},
+  {id:32,cat:'Guarniciones',name:'Patatas cerilla fritas',allergens:['Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠️ Sin alérgenos, pero puede tener contaminación cruzada de gluten. En caso de alergia al gluten avisar a cocina. Servir siempre salsas para los niños (Mayonesa, Kéchup, etc.)'},
   {id:33,cat:'Guarniciones',name:'Tomate Cherry al ajillo',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Tomates ecológicos, Aceite, Ajo laminado, Guindilla.',history:null,notes:'Tomates ecológicos de la isla fritos en ajillo.'},
   {id:34,cat:'Guarniciones',name:'Parmentier de papa canaria',allergens:['Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:null,history:null,notes:null},
   {id:35,cat:'Guarniciones',name:'Espárragos blancos',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:null,history:null,notes:'Espárragos a la brasa.'},
@@ -1414,7 +1421,7 @@ const DISHES = [
   {id:63,cat:'Vegetariano',name:'Tocinillo de cielo',allergens:['Frutos de cáscara','Gluten','Lácteos','Huevos'],cutlery:'Cuchara de postre',ingredients:'Huevos, Limón, Jengibre, Cacao, Café, Avellanas.',history:'El tocinillo es un postre tradicional español, muy dulce y con una textura suave y brillante, similar al flan pero más denso. Proveniente de Andalucía. Nosotros reversionamos esta receta añadiéndole otras preparaciones para llevarlo al estilo Txoko.',notes:'Crema de yema, helado de limón y jengibre, teja de chocolate, culminado con una teja de café y avellanas.'},
   {id:64,cat:'Vegetariano',name:'Brownie de avellanas con crema de cacao y mandarina',allergens:['Frutos de cáscara','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchara de postre',ingredients:'Claras, Harina de avellanas, Chocolate negro, Cremoso de chocolate blanco, Helado de chocolate, Crema de mandarina.',history:'Este es uno de nuestros postres Gluten-free (aunque siempre aclaramos que puede contener trazas) ya que está hecho a base de harina de avellanas.',notes:'⚠️ Gluten-free pero puede contener TRAZAS. Brownie de avellana y chocolate, helado de chocolate, tubo de chocolate relleno con cremoso de cacao y mandarina. Terminamos con ganache de chocolate blanco.'},
   // ===== NUEVOS ENTRANTES =====
-  {id:65,cat:'Entrantes',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pimientos del padrón, Pimienta, Sal',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de granadilla.',notes:null},
+  {id:65,cat:'Entrantes',name:'Pimientos del padrón',allergens:['Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pimientos del padrón, Pimienta, Sal',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de granadilla.',notes:'⚠️ Se pueden preparar sin gluten — avisar al equipo de cocina.'},
   {id:66,cat:'Entrantes',name:'Espárragos a la brasa',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'',history:'',notes:null},
   {id:67,cat:'Entrantes',name:'Alitas melosas glaseadas',allergens:['Soja'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Toallitas húmedas (Finger balls)',ingredients:'Alitas de pollo, Aceite girasol, Soja, Miel de palma, Jengibre, Caldo de verduras (Cebolla, Puerro, Zanahoria, Calabaza y Garbanzos), Sal',history:'',notes:null},
   {id:68,cat:'Entrantes',name:'Papas bravas al estilo Txoko',allergens:['Huevos','Dióxido de azufre y sulfitos','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Papa, Queso Parmesano, Caldo de pollo, Cebolla, Tomate, Vinagre de jerez, Cayena, Ajo, Huevo, Aceite de girasol, Sal',history:'Nuestras papas bravas están hechas con una base de terrina de papa (entre capa y capa colocamos queso parmesano que sirve como pegamento). Terminamos con puntos de salsa brava y puntos de ali-oli.',notes:null},
@@ -1562,7 +1569,7 @@ let DB={employees:{}};
 function loadDB(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){}}
 function saveDB(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));}catch(e){}}
 function getEmp(name){
-  if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},cutlery:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},sessions:[],fcHistory:[]};
+  if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},cutlery:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
   return DB.employees[name];
 }
 
@@ -2090,7 +2097,12 @@ function answerExam(idx){
   const emp=getEmp(currentUser);
   emp.topicScores[q.topic.key]=emp.topicScores[q.topic.key]||{correct:0,total:0};
   emp.topicScores[q.topic.key].total++;
-  if(ok)emp.topicScores[q.topic.key].correct++;
+  if(ok){
+    emp.topicScores[q.topic.key].correct++;
+    emp.examCorrect=emp.examCorrect||{};
+    emp.examCorrect[q.dish.id]=(emp.examCorrect[q.dish.id]||0)+1;
+    if(emp.examCorrect[q.dish.id]>=10){emp.knownDishes=emp.knownDishes||{};emp.knownDishes[q.dish.id]=true;}
+  }
   saveDB();
   document.querySelectorAll('.choice').forEach((el,i)=>{
     el.classList.add('locked');
@@ -2299,6 +2311,20 @@ function renderStats(){
 }
 
 renderLogin();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  // Inline service worker for offline cache
+  const sw = `
+self.addEventListener('install',e=>e.waitUntil(
+  caches.open('txoko-v1').then(c=>c.addAll([location.href||'/']))
+));
+self.addEventListener('fetch',e=>e.respondWith(
+  fetch(e.request).catch(()=>caches.match(e.request))
+));`;
+  const blob = new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
 </script>
 </body>
 </html>
