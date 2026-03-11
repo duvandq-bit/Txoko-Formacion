@@ -1096,6 +1096,190 @@ body::before{
 
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+/* ═══ XP BAR ═══ */
+.xp-bar-wrap{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r2);
+  padding:.65rem .9rem;cursor:pointer;transition:border-color .2s;margin-bottom:.75rem;
+}
+.xp-bar-wrap:hover{border-color:var(--gold-a);}
+.xp-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem;}
+.xp-bar-title{font-size:.8rem;font-weight:600;color:var(--parchment);}
+.xp-bar-lvl{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);
+  background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.1rem .5rem;}
+.xp-bar-track{height:7px;background:var(--ink3);border-radius:4px;overflow:hidden;margin-bottom:.3rem;}
+.xp-bar-fill{height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--gold),var(--gold3));
+  transition:width .6s cubic-bezier(.4,0,.2,1);}
+.xp-bar-sub{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3);}
+/* level panel in stats */
+.xp-level-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r);
+  padding:1.25rem;margin-bottom:1rem;text-align:center;
+}
+.xp-level-icon{font-size:2.8rem;margin-bottom:.4rem;}
+.xp-level-name{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--parchment);margin-bottom:.2rem;}
+.xp-level-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.12em;margin-bottom:.75rem;}
+.xp-levels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-top:.75rem;}
+.xp-lvl-tile{
+  background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);
+  padding:.5rem .3rem;text-align:center;font-size:.65rem;color:var(--parch3);
+  transition:all .2s;
+}
+.xp-lvl-tile.unlocked{background:#fff;color:var(--parchment);border-color:var(--gold-a);}
+.xp-lvl-tile.current{background:var(--gold-b);border-color:var(--gold);color:var(--parchment);}
+.xp-lvl-tile-icon{font-size:1.1rem;display:block;margin-bottom:.15rem;}
+.xp-lvl-tile-name{font-size:.6rem;line-height:1.3;}
+.xp-lvl-tile-lvl{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);margin-top:.1rem;}
+/* top10 in minigame */
+.tx-top10{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:1rem;}
+.tx-top10-title{font-family:'DM Mono',monospace;font-size:.65rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--gold);margin-bottom:.75rem;}
+.tx-top10-row{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;
+  border-bottom:1px solid var(--line);font-size:.78rem;}
+.tx-top10-row:last-child{border-bottom:none;}
+.tx-top10-pos{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch3);width:1.2rem;text-align:center;}
+.tx-top10-pos.gold{color:#f0a500;font-weight:700;}
+.tx-top10-pos.silver{color:#888;font-weight:700;}
+.tx-top10-pos.bronze{color:#a0522d;font-weight:700;}
+.tx-top10-name{flex:1;font-weight:500;color:var(--parchment);}
+.tx-top10-name.me{color:var(--gold);}
+.tx-top10-score{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--parch2);}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+
+/* ═══ WEEKLY CHALLENGE ═══ */
+.weekly-card{
+  background:#fff;border:1px solid var(--gold-a);border-radius:var(--r);
+  padding:1rem 1.1rem;margin-bottom:.75rem;cursor:pointer;
+  transition:all .2s;animation:slideUp .35s ease both;
+}
+.weekly-card:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:var(--shadow);}
+.weekly-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem;}
+.weekly-eyebrow{font-family:'DM Mono',monospace;font-size:.62rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--gold);}
+.weekly-days{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);
+  background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.1rem .5rem;}
+.weekly-title{font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.65rem;line-height:1.4;}
+.weekly-bar-track{height:6px;background:var(--ink3);border-radius:3px;overflow:hidden;margin-bottom:.3rem;}
+.weekly-bar-fill{height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold3));transition:width .6s ease;}
+.weekly-bar-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);}
+
+
+
+/* ═══ SUPERVISOR PANEL ═══ */
+.sup-wrap{padding:1rem;max-width:520px;margin:0 auto;}
+.sup-hero{text-align:center;padding:1.5rem 1rem 1rem;}
+.sup-hero-icon{font-size:2.5rem;margin-bottom:.4rem;}
+.sup-hero-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--parchment);}
+.sup-hero-sub{font-size:.75rem;color:var(--parch3);margin-bottom:1.2rem;}
+.sup-emp-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r);
+  padding:1rem 1.1rem;margin-bottom:.6rem;cursor:pointer;transition:all .2s;
+}
+.sup-emp-card:hover{border-color:var(--gold-a);transform:translateY(-1px);}
+.sup-emp-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem;}
+.sup-emp-avatar{width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--ink3),var(--ink4));
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.sup-emp-name{font-weight:600;font-size:.88rem;color:var(--parchment);flex:1;}
+.sup-emp-level{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);
+  background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.1rem .5rem;}
+.sup-emp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.5rem;}
+.sup-emp-stat{text-align:center;}
+.sup-emp-stat-num{font-family:'DM Mono',monospace;font-size:.85rem;color:var(--parchment);font-weight:600;}
+.sup-emp-stat-lbl{font-size:.55rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;}
+.sup-topic-bars{display:flex;flex-direction:column;gap:.3rem;}
+.sup-topic-row{display:flex;align-items:center;gap:.5rem;font-size:.7rem;}
+.sup-topic-name{width:80px;color:var(--parch2);font-size:.65rem;}
+.sup-topic-track{flex:1;height:5px;background:var(--ink3);border-radius:3px;overflow:hidden;}
+.sup-topic-fill{height:100%;border-radius:3px;transition:width .5s ease;}
+.sup-topic-pct{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3);width:28px;text-align:right;}
+.sup-weak{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--rose);margin-top:.4rem;}
+.sup-pin-wrap{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.5rem;text-align:center;}
+.sup-pin-input{
+  display:flex;gap:.5rem;justify-content:center;margin:1rem 0;
+}
+.sup-pin-dot{
+  width:14px;height:14px;border-radius:50%;border:2px solid var(--line);
+  transition:background .15s;
+}
+.sup-pin-dot.filled{background:var(--gold);border-color:var(--gold);}
+
+/* ═══ DUELO 1v1 ═══ */
+.duel-wrap{padding:.75rem;max-width:480px;margin:0 auto;}
+.duel-vs{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;}
+.duel-player{flex:1;background:#fff;border:1px solid var(--line);border-radius:var(--r2);
+  padding:.6rem;text-align:center;}
+.duel-player.active{border-color:var(--gold);background:var(--gold-b);}
+.duel-player.winner{border-color:var(--sage);background:#e8f5ee;}
+.duel-player.loser{border-color:var(--rose);background:#fdecea;opacity:.7;}
+.duel-player-name{font-weight:600;font-size:.78rem;color:var(--parchment);}
+.duel-player-score{font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--gold);}
+.duel-vs-badge{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3);
+  background:var(--ink3);border-radius:20px;padding:.2rem .5rem;flex-shrink:0;}
+.duel-round{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3);
+  text-align:center;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.08em;}
+.duel-turn-badge{
+  text-align:center;padding:.4rem;border-radius:var(--r2);
+  font-size:.78rem;font-weight:600;margin-bottom:.5rem;
+  background:var(--gold-b);color:var(--gold);border:1px solid var(--gold-a);
+}
+
+@keyframes emojiBurst{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0.3);}
+}
+
+/* ═══ GAMES SCREEN ═══ */
+.games-header{padding:1.2rem 0 .75rem;text-align:center;}
+.games-header-title{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--parchment);}
+.games-header-sub{font-size:.72rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem;}
+
+.game-card{
+  position:relative;overflow:hidden;
+  background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);
+  padding:1.1rem 1rem 1rem 1rem;margin-bottom:.75rem;cursor:pointer;
+  display:flex;align-items:center;gap:.75rem;
+  transition:all .2s ease;
+}
+.game-card:hover{border-color:var(--gold-a);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.25);}
+.game-card-disabled{opacity:.55;cursor:default;}
+.game-card-disabled:hover{transform:none;border-color:var(--line);box-shadow:none;}
+.game-card-bg{
+  font-size:2.8rem;line-height:1;flex-shrink:0;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.3));
+}
+.game-card-body{flex:1;min-width:0;}
+.game-card-label{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  letter-spacing:.12em;color:var(--gold);margin-bottom:.2rem;
+}
+.game-card-title{
+  font-family:'Playfair Display',serif;font-size:1.15rem;
+  color:var(--parchment);margin-bottom:.3rem;
+}
+.game-card-desc{font-size:.72rem;color:var(--parch2);line-height:1.5;margin-bottom:.5rem;}
+.game-card-meta{display:flex;flex-wrap:wrap;gap:.3rem;}
+.game-card-badge{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:20px;padding:.15rem .55rem;color:var(--parch2);
+}
+.game-card-arrow{
+  font-size:.9rem;color:var(--gold);flex-shrink:0;opacity:.7;
+}
+.sound-toggle{
+  position:fixed;bottom:52px;right:12px;
+  width:34px;height:34px;border-radius:50%;
+  background:var(--ink3);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:pointer;z-index:500;
+  box-shadow:0 2px 16px rgba(0,0,0,.25);transition:all .2s;
+}
+.sound-toggle:hover{border-color:var(--gold-a);transform:scale(1.1);}
 </style>
 </head>
 <body>
@@ -1147,10 +1331,12 @@ body::before{
     <button class="nav-btn" id="navRepaso" onclick="showTab('repaso')">Repaso</button>
     <button class="nav-btn" id="navStats" onclick="showTab('stats')">Estadísticas</button>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')">🎮 Juegos</button>
+    <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none">👁️ Sup.</button>
   </nav>
 
   <div class="app-content" id="appContent"></div>
   <div class="app-credit">Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro · Developed by Duvan Stiven Ramírez Duque</div>
+  <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido">🔔</button>
 </div>
 
 <script>
@@ -1375,7 +1561,424 @@ function setLang(lang) {
   document.getElementById('loginNewLabel').textContent = t('newLabel');
   document.getElementById('loginEnterBtn').textContent = t('enterBtn');
   document.getElementById('newEmpInput').placeholder = t('inputPlaceholder');
-  renderLogin();
+  
+// ═══ SUPERVISOR PANEL ═══
+const SUP_PIN = '1966'; // Duvan's supervisor PIN
+
+let supAuthenticated = false;
+
+function renderSupervisor(){
+  if(!supAuthenticated){
+    renderSupPinEntry();
+    return;
+  }
+  renderSupDashboard();
+}
+
+function renderSupPinEntry(){
+  let entered='';
+  const c=document.getElementById('appContent');
+  function draw(){
+    c.innerHTML=`
+      <div class="sup-wrap">
+        <div class="sup-hero">
+          <div class="sup-hero-icon">👁️</div>
+          <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+          <div class="sup-hero-sub">${LANG==='en'?'Enter your PIN to continue':'Introduce el PIN para continuar'}</div>
+        </div>
+        <div class="sup-pin-wrap">
+          <div class="sup-pin-input">
+            ${[0,1,2,3].map(i=>`<div class="sup-pin-dot${entered.length>i?' filled':''}"></div>`).join('')}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:200px;margin:0 auto;">
+            ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`
+              <button onclick="supPinKey('${k}')" style="
+                background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);
+                padding:.7rem;font-size:1rem;font-weight:500;color:var(--parchment);cursor:pointer;
+                ${k===''?'visibility:hidden;':''}
+              ">${k}</button>`).join('')}
+          </div>
+          ${entered.length===4&&entered!==SUP_PIN?`<div style="color:var(--rose);font-size:.75rem;margin-top:.75rem">❌ ${LANG==='en'?'Wrong PIN':'PIN incorrecto'}</div>`:''}
+        </div>
+      </div>`;
+  }
+  window.supPinKey=function(k){
+    if(k==='⌫'){ entered=entered.slice(0,-1); draw(); return; }
+    if(k===''||entered.length>=4) return;
+    entered+=k;
+    if(entered.length===4){
+      if(entered===SUP_PIN){ supAuthenticated=true; renderSupDashboard(); }
+      else { draw(); }
+    } else { draw(); }
+  };
+  draw();
+}
+
+function renderSupDashboard(){
+  const empNames=Object.keys(DB.employees).filter(n=>n!=='');
+  if(empNames.length===0){
+    document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
+    return;
+  }
+  const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+  const cards=empNames.map(name=>{
+    const emp=DB.employees[name];
+    const sessions=(emp.sessions||[]);
+    const xp=emp.xp||0;
+    const lvl=getLevelInfo(xp);
+    const streak=emp.streak||0;
+    const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
+    const topics=emp.topicScores||{};
+    // Weak topic
+    let weakTopic=null, weakPct=100;
+    for(const [k,v] of Object.entries(topics)){
+      if(v.total>0){
+        const p=Math.round(v.correct/v.total*100);
+        if(p<weakPct){weakPct=p;weakTopic=k;}
+      }
+    }
+    const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
+      const s=topics[k]||{correct:0,total:0};
+      const pct=s.total?Math.round(s.correct/s.total*100):0;
+      const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+      return `<div class="sup-topic-row">
+        <span class="sup-topic-name">${lbl}</span>
+        <div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div>
+        <span class="sup-topic-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+    const lastSession=sessions.length?new Date(sessions[sessions.length-1].ts):null;
+    const daysAgo=lastSession?Math.floor((Date.now()-lastSession)/(86400000)):null;
+    const activityLabel=daysAgo===null?(LANG==='en'?'No activity':'Sin actividad'):daysAgo===0?(LANG==='en'?'Today':'Hoy'):daysAgo===1?(LANG==='en'?'Yesterday':'Ayer'):`${daysAgo}d`;
+    return `<div class="sup-emp-card">
+      <div class="sup-emp-header">
+        <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
+        <div style="flex:1">
+          <div class="sup-emp-name">${name}</div>
+          <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+        </div>
+        <span class="sup-emp-level">${activityLabel}</span>
+      </div>
+      <div class="sup-emp-stats">
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
+      </div>
+      <div class="sup-topic-bars">${topicBars}</div>
+      ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+    </div>`;
+  }).join('');
+
+  // Team summary
+  const totalEmp=empNames.length;
+  const avgXP=Math.round(empNames.reduce((a,n)=>(a+(DB.employees[n].xp||0)),0)/totalEmp);
+  const studiedToday=empNames.filter(n=>(DB.employees[n].lastStudyDay||'')===todayStr()).length;
+
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div class="sup-hero">
+        <div class="sup-hero-icon">👁️</div>
+        <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Team overview':'Resumen del equipo'}</div>
+      </div>
+      <div class="stats-row" style="margin-bottom:.75rem">
+        <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+      </div>
+      ${renderWeeklyChallenge()}
+      <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+      ${cards}
+      <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+    </div>`;
+}
+
+
+// ═══ MODO ERROR ═══
+function getFailedDishes(){
+  const emp=getEmp(currentUser);
+  const ec=emp.examCorrect||{};
+  // dishes attempted in exam but with low correct rate
+  const failed=[];
+  for(const d of DISHES){
+    const correct=ec[d.id]||0;
+    // Find total attempts for this dish across sessions — approximate from topicScores
+    // Use examCorrect: if <3 correct answers, it's a weak dish
+    // Also include dishes never answered correctly
+    const sessions=emp.sessions||[];
+    if(correct<3) failed.push(d);
+  }
+  return failed.slice(0,30); // max 30
+}
+function startErrorMode(){
+  const failed=getFailedDishes();
+  if(failed.length===0) return;
+  // Use exam module with failed dishes pre-loaded
+  examConfig={count:Math.min(15,failed.length),topic:'mixed',cat:'all'};
+  examDishes=[];examIndex=0;examScore=0;examAnswered=false;
+  // Build exam questions from failed dishes only
+  const noHist=t('noHistory');
+  const isEmpty=v=>!v||v==='—'||v===noHist;
+  let attempts=0;
+  const usedIds=new Set();
+  while(examDishes.length<examConfig.count&&attempts<200){
+    attempts++;
+    const d=failed[Math.floor(Math.random()*failed.length)];
+    if(usedIds.has(d.id)&&failed.length<=examConfig.count){usedIds.clear();}
+    if(usedIds.has(d.id)) continue;
+    let topicKey=TOPICS[Math.floor(Math.random()*TOPICS.length)].key;
+    let topic=TOPICS.find(t=>t.key===topicKey);
+    let correct=(topic.a(d)||'').trim().replace(/\.+$/,'');
+    if(isEmpty(correct)){
+      const fb=TOPICS.find(tp=>{const a=tp.a(d);return !isEmpty(a);});
+      if(!fb) continue;
+      topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
+    }
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongs=[];
+    for(const o of wrongPool){
+      if(wrongs.length>=3) break;
+      const w=(topic.a(o)||'').trim().replace(/\.+$/,'');
+      if(!isEmpty(w)&&w!==correct&&!wrongs.includes(w)) wrongs.push(w);
+    }
+    if(wrongs.length<3) continue;
+    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const correctIdx=choices.indexOf(correct);
+    usedIds.add(d.id);
+    examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
+  }
+  if(examDishes.length===0) return;
+  examActive=true;examStartTime=Date.now();examResults=null;
+  showTab('exam');
+}
+
+
+// ═══ DUELO 1v1 ═══
+let duelState=null;
+
+function renderDuel(){
+  const empNames=Object.keys(DB.employees).filter(n=>n);
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div class="sup-hero">
+        <div class="sup-hero-icon">⚔️</div>
+        <div class="sup-hero-title">${LANG==='en'?'1v1 Duel':'Duelo 1v1'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Two players, same question, same device':'Dos jugadores, misma pregunta, mismo dispositivo'}</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.1rem;margin-bottom:1rem">
+        <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem">${LANG==='en'?'Player 1:':'Jugador 1:'}</div>
+        <select id="duelP1" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:var(--r2);
+          background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment);margin-bottom:.75rem">
+          ${empNames.map(n=>`<option${n===currentUser?' selected':''}>${n}</option>`).join('')}
+        </select>
+        <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem">${LANG==='en'?'Player 2:':'Jugador 2:'}</div>
+        <select id="duelP2" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:var(--r2);
+          background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment);margin-bottom:1rem">
+          ${empNames.map((n,i)=>`<option${i===1?' selected':''}>${n}</option>`).join('')}
+        </select>
+        <button class="btn-primary" onclick="startDuel()" style="width:100%">${LANG==='en'?'Start duel ⚔️':'Comenzar duelo ⚔️'}</button>
+      </div>
+    </div>`;
+}
+
+function startDuel(){
+  const p1=document.getElementById('duelP1').value;
+  const p2=document.getElementById('duelP2').value;
+  if(p1===p2){ alert(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!'); return; }
+  duelState={p1,p2,scores:{[p1]:0,[p2]:0},round:1,totalRounds:7,current:p1,question:null,answered:{[p1]:false,[p2]:false}};
+  duelNextRound();
+}
+
+function duelNextRound(){
+  if(duelState.round>duelState.totalRounds){ duelGameOver(); return; }
+  let q=null;
+  for(let i=0;i<20;i++){ q=txBuildQuestion(); if(q) break; }
+  if(!q){ duelGameOver(); return; }
+  duelState.question=q;
+  duelState.current=duelState.p1;
+  duelState.answered={[duelState.p1]:false,[duelState.p2]:false};
+  duelState.p1Answer=null;
+  duelState.p2Answer=null;
+  duelRender();
+}
+
+function duelAnswer(idx){
+  const {current,p1,p2,question}=duelState;
+  if(duelState.answered[current]) return;
+  duelState.answered[current]=true;
+  const ok=idx===question.correctIdx;
+  if(current===p1) duelState.p1Answer={idx,ok};
+  else duelState.p2Answer={idx,ok};
+  if(ok) duelState.scores[current]=(duelState.scores[current]||0)+1;
+  // Switch to other player or finish round
+  const other=current===p1?p2:p1;
+  if(!duelState.answered[other]){
+    duelState.current=other;
+    duelRender();
+  } else {
+    // Both answered — show result briefly then next round
+    duelState.round++;
+    duelShowRoundResult();
+  }
+}
+
+function duelShowRoundResult(){
+  const {p1,p2,p1Answer,p2Answer,question,scores}=duelState;
+  const correct=question.choices[question.correctIdx];
+  const c=document.getElementById('appContent');
+  if(!c) return;
+  const resultHtml=`
+    <div style="padding:.5rem;text-align:center">
+      <div style="font-size:.75rem;color:var(--parch3);margin-bottom:.5rem">${LANG==='en'?'Correct answer:':'Respuesta correcta:'}</div>
+      <div style="font-size:.82rem;font-weight:600;color:var(--sage);margin-bottom:.75rem">${correct}</div>
+      <div style="display:flex;gap:.5rem;justify-content:center">
+        <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p1Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
+          <div style="font-size:.72rem;font-weight:600">${p1}</div>
+          <div style="font-size:1.2rem">${p1Answer?.ok?'✓':'✗'}</div>
+        </div>
+        <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p2Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
+          <div style="font-size:.72rem;font-weight:600">${p2}</div>
+          <div style="font-size:1.2rem">${p2Answer?.ok?'✓':'✗'}</div>
+        </div>
+      </div>
+    </div>`;
+  // Insert result temporarily
+  const fb=document.getElementById('duelFeedback');
+  if(fb){ fb.innerHTML=resultHtml; fb.style.display='block'; }
+  setTimeout(()=>{ if(duelState.round<=duelState.totalRounds) duelRender(); else duelGameOver(); },1800);
+}
+
+function duelRender(){
+  const {p1,p2,scores,round,totalRounds,current,question}=duelState;
+  const letters=['A','B','C','D'];
+  document.getElementById('appContent').innerHTML=`
+    <div class="duel-wrap">
+      <div class="duel-vs">
+        <div class="duel-player${current===p1?' active':''}">
+          <div class="duel-player-name">${p1}</div>
+          <div class="duel-player-score">${scores[p1]||0}</div>
+        </div>
+        <div class="duel-vs-badge">${LANG==='en'?'Round':'Ronda'} ${round}/${totalRounds}</div>
+        <div class="duel-player${current===p2?' active':''}">
+          <div class="duel-player-name">${p2}</div>
+          <div class="duel-player-score">${scores[p2]||0}</div>
+        </div>
+      </div>
+      <div class="duel-turn-badge">👤 ${LANG==='en'?'Turn:':'Turno:'} ${current}</div>
+      <div class="txoko-scene" style="margin-bottom:.75rem">
+        <div class="txoko-waiter">
+          <div class="txoko-waiter-avatar">🤵</div>
+          <div class="txoko-waiter-bubble">
+            ${question.msg}
+            <div><span class="txoko-dish-badge">📋 ${question.topicLabel}</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem">
+        ${question.choices.map((c,i)=>`
+          <button class="txoko-choice" onclick="duelAnswer(${i})">
+            <span class="txoko-choice-letter">${letters[i]}.</span>${c}
+          </button>`).join('')}
+      </div>
+      <div id="duelFeedback" style="display:none"></div>
+    </div>`;
+}
+
+function duelGameOver(){
+  const {p1,p2,scores}=duelState;
+  const s1=scores[p1]||0, s2=scores[p2]||0;
+  const winner=s1>s2?p1:s2>s1?p2:null;
+  // Award XP
+  if(winner){ awardXP(40, LANG==='en'?`Duel victory! ⚔️`:`¡Victoria en duelo! ⚔️`); }
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="font-size:3rem;margin-bottom:.5rem">${winner?'⚔️':'🤝'}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--parchment);margin-bottom:.3rem">
+          ${winner?(LANG==='en'?`${winner} wins!`:`¡${winner} gana!`):(LANG==='en'?'Draw!':'¡Empate!')}
+        </div>
+        <div style="display:flex;gap:.75rem;margin:1.5rem 0">
+          <div class="duel-player ${s1>s2?'winner':s1<s2?'loser':''}">
+            <div class="duel-player-name">${p1}</div>
+            <div class="duel-player-score">${s1}</div>
+          </div>
+          <div class="duel-player ${s2>s1?'winner':s2<s1?'loser':''}">
+            <div class="duel-player-name">${p2}</div>
+            <div class="duel-player-score">${s2}</div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="startDuel()" style="width:100%;margin-bottom:.5rem">${LANG==='en'?'Rematch ⚔️':'Revancha ⚔️'}</button>
+        <button class="btn-secondary" onclick="renderTxoko()" style="width:100%">${LANG==='en'?'Back to games':'Volver a juegos'}</button>
+      </div>
+    </div>`;
+}
+
+
+// ═══ SOUNDS ═══
+let soundEnabled=true;
+try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
+
+function playSound(type){
+  if(!soundEnabled) return;
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    if(type==='correct'){
+      osc.frequency.setValueAtTime(523,ctx.currentTime);
+      osc.frequency.setValueAtTime(659,ctx.currentTime+0.1);
+      osc.frequency.setValueAtTime(784,ctx.currentTime+0.2);
+      gain.gain.setValueAtTime(0.15,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.4);
+    } else if(type==='wrong'){
+      osc.type='sawtooth';
+      osc.frequency.setValueAtTime(200,ctx.currentTime);
+      osc.frequency.setValueAtTime(150,ctx.currentTime+0.1);
+      gain.gain.setValueAtTime(0.1,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
+    } else if(type==='levelup'){
+      [523,659,784,1047].forEach((f,i)=>{
+        const o2=ctx.createOscillator();const g2=ctx.createGain();
+        o2.connect(g2);g2.connect(ctx.destination);
+        o2.frequency.value=f;
+        g2.gain.setValueAtTime(0.12,ctx.currentTime+i*0.12);
+        g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.2);
+        o2.start(ctx.currentTime+i*0.12);o2.stop(ctx.currentTime+i*0.12+0.2);
+      });
+    }
+  }catch(e){}
+}
+
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  try{localStorage.setItem('txoko_sound',soundEnabled?'on':'off');}catch(e){}
+  const btn=document.getElementById('soundToggle');
+  if(btn) btn.textContent=soundEnabled?'🔔':'🔕';
+}
+
+
+// ═══ DISH ANIMATION ═══
+const CAT_EMOJIS={'Entrantes':'🥗','Hamburguesas y Bocatas':'🍔','Platos Principales':'🥩',
+  'Guarniciones y Salsas':'🫙','Postres':'🍮','Vegetariano':'🥦'};
+
+function burstEmoji(emoji){
+  for(let i=0;i<6;i++){
+    const el=document.createElement('div');
+    el.textContent=emoji;
+    el.style.cssText=`position:fixed;pointer-events:none;z-index:9998;font-size:1.5rem;
+      left:50%;top:50%;transform:translate(-50%,-50%);
+      animation:emojiBurst .7s ease forwards;
+      --dx:${(Math.random()-0.5)*180}px;--dy:${(Math.random()-0.8)*160}px;`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend',()=>el.remove());
+  }
+}
+
+renderLogin();
 }
 
 function applyLangToApp() {
@@ -1716,12 +2319,208 @@ async function supaFetchLeaderboard() {
     return result.length ? result : null;
   } catch(e) { return null; }
 }
+async function supaInsertTxokoRecord(employee, record) {
+  // Store txoko record in 'scores' table using topic='txoko', score=record
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/scores`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ employee, score: record, total: 1, topic: 'txoko', cat: 'all', time_sec: 0 })
+    });
+  } catch(e) {}
+}
+
+async function supaFetchTxokoTop10() {
+  try {
+    // Fetch all txoko rows, then keep best per employee
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/scores?select=employee,score&topic=eq.txoko&order=score.desc&limit=200`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    );
+    if (!res.ok) return null;
+    const rows = await res.json();
+    if (!Array.isArray(rows) || !rows.length) return null;
+    // Best record per employee
+    const best = {};
+    rows.forEach(r => {
+      if (!best[r.employee] || r.score > best[r.employee]) best[r.employee] = r.score;
+    });
+    return Object.entries(best)
+      .map(([employee, record]) => ({ employee, record }))
+      .sort((a, b) => b.record - a.record)
+      .slice(0, 10);
+  } catch(e) { return null; }
+}
+
 let DB={employees:{}};
 function loadDB(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){}}
 function saveDB(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));}catch(e){}}
 function getEmp(name){
   if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},cutlery:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
   return DB.employees[name];
+}
+
+// ═══════════════════════════════════════════════════
+//  ⭐ SISTEMA DE XP Y NIVELES
+// ═══════════════════════════════════════════════════
+
+const XP_LEVELS = [
+  {level: 1, xp:0     ,icon:'🥄', title:'Becario Perdido',                          desc:'Aún no sabes dónde está la carta...',                title_en:'The Lost Intern',                     desc_en:'You still can\'t find the menu...'},
+  {level: 2, xp:100   ,icon:'📋', title:'Porta-Cartas',                             desc:'Ya sabes abrir la puerta del restaurante',           title_en:'Menu Carrier',                        desc_en:'You can now open the restaurant door'},
+  {level: 3, xp:200   ,icon:'🍽️', title:'Aprendiz de Sala',                         desc:'Tu primera mesa sin catástrofes',                    title_en:'Floor Apprentice',                    desc_en:'Your first table without disaster'},
+  {level: 4, xp:350   ,icon:'👔', title:'Camarero Novato',                          desc:'El uniforme ya no te queda raro',                    title_en:'Rookie Waiter',                       desc_en:'The uniform finally fits right'},
+  {level: 5, xp:500   ,icon:'⚠️', title:'Conocedor de Alérgenos',                   desc:'Sabes que el gluten existe',                         title_en:'Allergen Aware',                      desc_en:'You know that gluten is a thing'},
+  {level: 6, xp:700   ,icon:'🍴', title:'Guardián del Marcaje',                     desc:'Tenedor a la izquierda, siempre',                    title_en:'Cutlery Guardian',                    desc_en:'Fork on the left, always'},
+  {level: 7, xp:950   ,icon:'📜', title:'Narrador de Platos',                       desc:'El cliente escucha embobado',                        title_en:'Dish Storyteller',                    desc_en:'The guest listens, spellbound'},
+  {level: 8, xp:1200  ,icon:'🛡️', title:'Escudero del Servicio',                    desc:'Cubres las espaldas del equipo',                     title_en:'Service Squire',                      desc_en:'You have the team\'s back'},
+  {level: 9, xp:1550  ,icon:'⚔️', title:'Caballero de la Sala',                     desc:'Ninguna queja sobrevive tu turno',                   title_en:'Knight of the Floor',                 desc_en:'No complaint survives your shift'},
+  {level:10, xp:1900  ,icon:'👑', title:'Señor de las Comandas',                    desc:'Las mesas te respetan',                              title_en:'Lord of Orders',                      desc_en:'The tables respect you'},
+  {level:11, xp:2350  ,icon:'⚗️', title:'Alquimista del Sabor',                     desc:'Conviertes ingredientes en historias',               title_en:'Flavour Alchemist',                   desc_en:'You turn ingredients into stories'},
+  {level:12, xp:2900  ,icon:'🍷', title:'Maestro Sumiller',                         desc:'El maridaje te habla en sueños',                     title_en:'Master Sommelier',                    desc_en:'Pairings speak to you in dreams'},
+  {level:13, xp:3500  ,icon:'🌟', title:'Guardián de Berasategui',                  desc:'Martín te ha visto y ha asentido',                   title_en:'Berasategui\'s Guardian',              desc_en:'Martín has seen you and nodded'},
+  {level:14, xp:4200  ,icon:'🎋', title:'Sensei del Fine Dining',                   desc:'Tus movimientos son pura coreografía',               title_en:'Fine Dining Sensei',                  desc_en:'Your movements are pure choreography'},
+  {level:15, xp:5100  ,icon:'🏰', title:'Leyenda de Abama',                         desc:'El hotel susurra tu nombre',                         title_en:'Legend of Abama',                     desc_en:'The hotel whispers your name'},
+  {level:16, xp:6100  ,icon:'👻', title:'Fantasma del Servicio',                    desc:'Sirves sin que nadie te vea',                        title_en:'Ghost of Service',                    desc_en:'You serve without being seen'},
+  {level:17, xp:7300  ,icon:'🔮', title:'Oráculo de la Carta',                      desc:'Sabes lo que el cliente quiere antes que él',        title_en:'Oracle of the Menu',                  desc_en:'You know what the guest wants before they do'},
+  {level:18, xp:8700  ,icon:'🐉', title:'Dragón de la Hospitalidad',                desc:'Tu presencia transforma la sala',                    title_en:'Dragon of Hospitality',               desc_en:'Your presence transforms the room'},
+  {level:19, xp:10400 ,icon:'🧙', title:'Archimago del Servicio',                   desc:'Doblas el espacio-tiempo entre mesas',               title_en:'Archmage of Service',                 desc_en:'You bend space-time between tables'},
+  {level:20, xp:12350 ,icon:'⚡', title:'Dios de los Cubiertos',                    desc:'Los tenedores se alinean solos',                     title_en:'God of Cutlery',                      desc_en:'The forks align themselves'},
+  {level:21, xp:14650 ,icon:'🗿', title:'Titán de la Hospitalidad',                 desc:'Llevas el servicio sobre los hombros',               title_en:'Titan of Hospitality',                desc_en:'You carry the service on your shoulders'},
+  {level:22, xp:17400 ,icon:'🔥', title:'Rey del Josper',                           desc:'El fuego te obedece',                                title_en:'King of the Josper',                  desc_en:'The fire obeys you'},
+  {level:23, xp:20650 ,icon:'🌊', title:'Semidiós del Menú',                        desc:'Fluyes entre mesas como marea',                      title_en:'Demigod of the Menu',                 desc_en:'You flow between tables like a tide'},
+  {level:24, xp:24450 ,icon:'🌀', title:'Avatar del Servicio',                      desc:'Eres uno con la sala',                               title_en:'Avatar of Service',                   desc_en:'You are one with the floor'},
+  {level:25, xp:28950 ,icon:'💎', title:'Inmortal de Txoko',                        desc:'La leyenda no muere',                                title_en:'Immortal of Txoko',                   desc_en:'The legend never dies'},
+  {level:26, xp:34250 ,icon:'🌌', title:'El Elegido',                               desc:'Martín te llama por tu nombre completo',             title_en:'The Chosen One',                      desc_en:'Martín calls you by your full name'},
+  {level:27, xp:40550 ,icon:'🪐', title:'Maestro del Universo',                     desc:'Otros restaurantes te estudian',                     title_en:'Master of the Universe',              desc_en:'Other restaurants study you'},
+  {level:28, xp:47900 ,icon:'👁️', title:'Dios del Fine Dining',                     desc:'Ves más allá del menú',                              title_en:'God of Fine Dining',                  desc_en:'You see beyond the menu'},
+  {level:29, xp:56650 ,icon:'⚜️', title:'Mito Viviente',                            desc:'Tu sola presencia sube el Michelin',                 title_en:'Living Myth',                         desc_en:'Your presence alone raises the Michelin'},
+  {level:30, xp:66950 ,icon:'🌠', title:'La Estrella de Txoko',                     desc:'Eres Txoko',                                         title_en:'The Star of Txoko',                   desc_en:'You are Txoko'},
+];
+
+function xpForLevel(lvl){ return XP_LEVELS[Math.min(lvl-1,XP_LEVELS.length-1)].xp; }
+function getLevelInfo(xp){
+  let info = XP_LEVELS[0];
+  for(const l of XP_LEVELS){ if(xp >= l.xp) info=l; else break; }
+  // Return localized title/desc
+  return {
+    ...info,
+    title: LANG==='en' ? info.title_en : info.title,
+    desc:  LANG==='en' ? info.desc_en  : info.desc,
+  };
+}
+function getNextLevel(xp){
+  const cur = getLevelInfo(xp);
+  return XP_LEVELS.find(l=>l.level===cur.level+1)||null;
+}
+function xpProgress(xp){
+  const cur = getLevelInfo(xp);
+  const next = getNextLevel(xp);
+  if(!next) return 100;
+  return Math.min(100, Math.round((xp-cur.xp)/(next.xp-cur.xp)*100));
+}
+
+// Award XP and show toast
+function awardXP(amount, reason){
+  if(!currentUser||amount<=0) return;
+  const emp = getEmp(currentUser);
+  const oldXP = emp.xp||0;
+  const oldLevel = getLevelInfo(oldXP);
+  emp.xp = oldXP + amount;
+  const newLevel = getLevelInfo(emp.xp);
+  saveDB();
+  // Show XP toast
+  showXPToast(amount, reason);
+  // Level up?
+  if(newLevel.level > oldLevel.level){
+    setTimeout(()=>showLevelUpModal(newLevel), 800);
+  }
+}
+
+function showXPToast(amount, reason){
+  const existing = document.getElementById('xpToast');
+  if(existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'xpToast';
+  toast.innerHTML = `<span style="font-size:1rem">⭐</span> <strong>+${amount} XP</strong> <span style="opacity:.7;font-size:.75rem">${reason}</span>`;
+  toast.style.cssText = `
+    position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--parchment);color:var(--ink);
+    padding:.5rem 1.1rem;border-radius:30px;
+    font-family:'Jost',sans-serif;font-size:.82rem;font-weight:500;
+    box-shadow:0 4px 20px rgba(0,0,0,.25);
+    z-index:9999;opacity:0;transition:all .3s ease;
+    display:flex;align-items:center;gap:.5rem;white-space:nowrap;
+  `;
+  document.body.appendChild(toast);
+  requestAnimationFrame(()=>{
+    toast.style.opacity='1';
+    toast.style.transform='translateX(-50%) translateY(0)';
+  });
+  setTimeout(()=>{
+    toast.style.opacity='0';
+    toast.style.transform='translateX(-50%) translateY(-10px)';
+    setTimeout(()=>toast.remove(), 300);
+  }, 2200);
+}
+
+function showLevelUpModal(levelInfo){
+  const modal = document.createElement('div');
+  modal.id = 'levelUpModal';
+  modal.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:10000;
+    display:flex;align-items:center;justify-content:center;
+    animation:fadeIn .3s ease;
+  `;
+  modal.innerHTML = `
+    <div style="background:var(--ink);border:1px solid var(--gold-a);border-radius:var(--r);
+      padding:2rem;text-align:center;max-width:320px;width:90%;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .4s ease;">
+      <div style="font-size:3.5rem;margin-bottom:.5rem">${levelInfo.icon}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);
+        text-transform:uppercase;letter-spacing:.15em;margin-bottom:.25rem">
+        ${LANG==='en'?`Level ${levelInfo.level} unlocked!`:`¡Nivel ${levelInfo.level} desbloqueado!`}
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;
+        color:var(--parchment);margin-bottom:.5rem">${levelInfo.title}</div>
+      <div style="font-size:.78rem;color:var(--parch2);margin-bottom:1.5rem;
+        font-style:italic">"${levelInfo.desc}"</div>
+      <button onclick="document.getElementById('levelUpModal').remove()"
+        style="background:var(--parchment);color:var(--ink);border:none;
+        border-radius:30px;padding:.6rem 1.5rem;font-family:'Jost',sans-serif;
+        font-weight:600;font-size:.85rem;cursor:pointer">
+        ${LANG==='en'?'Thanks! 🎉':'¡Gracias! 🎉'}
+      </button>
+    </div>`;
+  playSound('levelup');
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+}
+
+// XP bar widget — call inside any render to show the bar
+function renderXPBar(){
+  const emp = getEmp(currentUser);
+  const xp = emp.xp||0;
+  const cur = getLevelInfo(xp);
+  const next = getNextLevel(xp);
+  const pct = xpProgress(xp);
+  const nextXP = next ? next.xp : xp;
+  const needed = next ? nextXP - xp : 0;
+  return `
+    <div class="xp-bar-wrap" onclick="showTab('stats')" title="Ver estadísticas">
+      <div class="xp-bar-top">
+        <span class="xp-bar-title">${cur.icon} ${cur.title}</span>
+        <span class="xp-bar-lvl">Nv.${cur.level}</span>
+      </div>
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="xp-bar-sub">${xp.toLocaleString()} XP${next?` · Faltan ${needed.toLocaleString()} para Nv.${next.level}`:' · ¡Nivel máximo!'}${(getEmp(currentUser).streak||0)>1?' · 🔥'+((getEmp(currentUser).streak||0))+' días':''}</div>
+    </div>`;
 }
 
 // ═══════ STATE ═══════
@@ -1734,6 +2533,127 @@ let repasoView='cats',repasoCat=null,repasoTopic='allergens';
 
 // ═══════ LOGIN ═══════
 loadDB();
+
+
+// ═══ DAILY STREAK ═══
+function todayStr(){
+  // Canary Islands date
+  const now=new Date();
+  const h=now.getUTCHours()+(isCanaryDST()?1:0);
+  const d=new Date(now);
+  if(h<0) d.setUTCDate(d.getUTCDate()-1);
+  return d.toISOString().slice(0,10);
+}
+function isCanaryDST(){
+  const n=new Date();
+  function lastSun(y,m){const d=new Date(y,m+1,0);d.setDate(d.getDate()-d.getDay());return d;}
+  return n>=lastSun(n.getFullYear(),2)&&n<lastSun(n.getFullYear(),9);
+}
+function checkStreak(){
+  if(!currentUser) return;
+  const emp=getEmp(currentUser);
+  const today=todayStr();
+  const last=emp.lastStudyDay||'';
+  if(last===today) return; // already logged today
+  const yesterday=new Date(today);yesterday.setDate(yesterday.getDate()-1);
+  const yStr=yesterday.toISOString().slice(0,10);
+  if(last===yStr){
+    emp.streak=(emp.streak||0)+1;
+  } else if(last!==today){
+    emp.streak=1;
+  }
+  emp.lastStudyDay=today;
+  saveDB();
+  // XP bonus for streak milestones
+  if(emp.streak===3)  awardXP(25, LANG==='en'?'3-day streak 🔥':'Racha de 3 días 🔥');
+  if(emp.streak===7)  awardXP(75, LANG==='en'?'1-week streak! 🔥':'¡Racha de 1 semana! 🔥');
+  if(emp.streak===14) awardXP(150,LANG==='en'?'2-week streak! 🔥🔥':'¡Racha de 2 semanas! 🔥🔥');
+  if(emp.streak===30) awardXP(500,LANG==='en'?'1-month streak! 🌟':'¡Racha de 1 mes! 🌟');
+  // Show streak notification in dashboard
+  if(emp.streak>1) showStreakToast(emp.streak);
+}
+function showStreakToast(days){
+  setTimeout(()=>{
+    const toast=document.createElement('div');
+    toast.style.cssText=`position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-10px);
+      background:var(--parchment);color:var(--ink);padding:.5rem 1.2rem;
+      border-radius:30px;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;
+      box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:9999;opacity:0;transition:all .35s ease;
+      display:flex;align-items:center;gap:.4rem;`;
+    toast.innerHTML=`🔥 ${days} ${LANG==='en'?`day streak! Keep it up!`:`días seguidos estudiando!`}`;
+    document.body.appendChild(toast);
+    requestAnimationFrame(()=>{toast.style.opacity='1';toast.style.transform='translateX(-50%) translateY(0)';});
+    setTimeout(()=>{toast.style.opacity='0';setTimeout(()=>toast.remove(),350);},3000);
+  },1500);
+}
+
+
+// ═══ RETO SEMANAL ═══
+const WEEKLY_CHALLENGES=[
+  {key:'allergens_postres',  topic:'allergens',   cat:'Postres',              es:'Domina los alérgenos de los Postres',          en:'Master allergens in Desserts'},
+  {key:'cutlery_all',        topic:'cutlery',     cat:'all',                  es:'Aprende el marcaje de toda la carta',           en:'Learn the full menu cutlery'},
+  {key:'allergens_entrantes',topic:'allergens',   cat:'Entrantes',            es:'Alérgenos de todos los Entrantes',              en:'Allergens of all Starters'},
+  {key:'ingredients_main',   topic:'ingredients', cat:'Platos Principales',   es:'Ingredientes de los Platos Principales',        en:'Ingredients of Main Courses'},
+  {key:'history_all',        topic:'history',     cat:'all',                  es:'Storytelling de toda la carta',                 en:'Storytelling of the full menu'},
+  {key:'allergens_hambur',   topic:'allergens',   cat:'Hamburguesas y Bocatas',es:'Alérgenos de Hamburguesas y Bocatas',          en:'Allergens of Burgers & Sandwiches'},
+  {key:'ingredients_guarn',  topic:'ingredients', cat:'Guarniciones y Salsas', es:'Ingredientes de Guarniciones y Salsas',        en:'Ingredients of Sides & Sauces'},
+  {key:'cutlery_postres',    topic:'cutlery',     cat:'Postres',              es:'Marcaje de Postres',                            en:'Cutlery for Desserts'},
+  {key:'allergens_veg',      topic:'allergens',   cat:'Vegetariano',          es:'Alérgenos de los platos Vegetarianos',          en:'Allergens of Vegetarian dishes'},
+  {key:'ingredients_entrantes',topic:'ingredients',cat:'Entrantes',           es:'Ingredientes de todos los Entrantes',           en:'Ingredients of all Starters'},
+  {key:'history_principales',topic:'history',     cat:'Platos Principales',   es:'Historia de los Platos Principales',            en:'History of Main Courses'},
+  {key:'cutlery_principales',topic:'cutlery',     cat:'Platos Principales',   es:'Marcaje de Platos Principales',                 en:'Cutlery for Main Courses'},
+];
+function getCurrentChallenge(){
+  // Week number since a fixed epoch — rotates automatically
+  const epoch=new Date('2025-01-06'); // Monday
+  const now=new Date();
+  const weekNum=Math.floor((now-epoch)/(7*24*3600*1000));
+  return WEEKLY_CHALLENGES[weekNum%WEEKLY_CHALLENGES.length];
+}
+function getChallengeProgress(ch){
+  // Check all employees' exam sessions this week matching topic+cat
+  const weekStart=new Date();
+  weekStart.setHours(0,0,0,0);
+  weekStart.setDate(weekStart.getDate()-weekStart.getDay());
+  const empNames=Object.keys(DB.employees);
+  let completed=0;
+  for(const name of empNames){
+    const emp=DB.employees[name];
+    const sessions=(emp.sessions||[]).filter(s=>{
+      const sDate=new Date(s.ts);
+      return sDate>=weekStart &&
+        (ch.topic==='mixed'||s.topic===ch.topic||s.topic==='mixed') &&
+        (ch.cat==='all'||s.cat===ch.cat||s.cat==='all') &&
+        Math.round(s.score/s.total*100)>=70;
+    });
+    if(sessions.length>0) completed++;
+  }
+  return {total:empNames.length||1, completed};
+}
+function renderWeeklyChallenge(){
+  const ch=getCurrentChallenge();
+  const {total,completed}=getChallengeProgress(ch);
+  const pct=Math.round(completed/Math.max(total,1)*100);
+  const label=LANG==='en'?ch.en:ch.es;
+  const daysLeft=7-new Date().getDay()||7;
+  return `
+    <div class="weekly-card" onclick="startChallengeExam('${ch.topic}','${ch.cat}')">
+      <div class="weekly-header">
+        <span class="weekly-eyebrow">🏆 ${LANG==='en'?'Weekly challenge':'Reto semanal'}</span>
+        <span class="weekly-days">${daysLeft}d</span>
+      </div>
+      <div class="weekly-title">${label}</div>
+      <div class="weekly-bar-wrap">
+        <div class="weekly-bar-track"><div class="weekly-bar-fill" style="width:${pct}%"></div></div>
+        <span class="weekly-bar-label">${completed}/${total} ${LANG==='en'?'passed (≥70%)':'superado (≥70%)'}</span>
+      </div>
+    </div>`;
+}
+function startChallengeExam(topic,cat){
+  examConfig={count:15,topic,cat};
+  showTab('exam');
+}
+
 
 function renderLeaderboard(){
   const el=document.getElementById('leaderboard');
@@ -1948,6 +2868,10 @@ function closePinAndEnter(){
   document.getElementById('screenApp').classList.add('active');
   applyLangToApp();
   showTab('dashboard');
+  checkStreak();
+  // Show supervisor tab for Duvan
+  const _supBtn=document.getElementById('navSupervisor');
+  if(_supBtn) _supBtn.style.display=currentUser==='Duvan'?'':'none';
 }
 
 function pinCancel(){
@@ -1959,18 +2883,435 @@ function logout(){
   currentUser=null;
   document.getElementById('screenLogin').classList.add('active');
   document.getElementById('screenApp').classList.remove('active');
-  renderLogin();
+  
+// ═══ SUPERVISOR PANEL ═══
+const SUP_PIN = '1966'; // Duvan's supervisor PIN
+
+let supAuthenticated = false;
+
+function renderSupervisor(){
+  if(!supAuthenticated){
+    renderSupPinEntry();
+    return;
+  }
+  renderSupDashboard();
+}
+
+function renderSupPinEntry(){
+  let entered='';
+  const c=document.getElementById('appContent');
+  function draw(){
+    c.innerHTML=`
+      <div class="sup-wrap">
+        <div class="sup-hero">
+          <div class="sup-hero-icon">👁️</div>
+          <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+          <div class="sup-hero-sub">${LANG==='en'?'Enter your PIN to continue':'Introduce el PIN para continuar'}</div>
+        </div>
+        <div class="sup-pin-wrap">
+          <div class="sup-pin-input">
+            ${[0,1,2,3].map(i=>`<div class="sup-pin-dot${entered.length>i?' filled':''}"></div>`).join('')}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:200px;margin:0 auto;">
+            ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`
+              <button onclick="supPinKey('${k}')" style="
+                background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);
+                padding:.7rem;font-size:1rem;font-weight:500;color:var(--parchment);cursor:pointer;
+                ${k===''?'visibility:hidden;':''}
+              ">${k}</button>`).join('')}
+          </div>
+          ${entered.length===4&&entered!==SUP_PIN?`<div style="color:var(--rose);font-size:.75rem;margin-top:.75rem">❌ ${LANG==='en'?'Wrong PIN':'PIN incorrecto'}</div>`:''}
+        </div>
+      </div>`;
+  }
+  window.supPinKey=function(k){
+    if(k==='⌫'){ entered=entered.slice(0,-1); draw(); return; }
+    if(k===''||entered.length>=4) return;
+    entered+=k;
+    if(entered.length===4){
+      if(entered===SUP_PIN){ supAuthenticated=true; renderSupDashboard(); }
+      else { draw(); }
+    } else { draw(); }
+  };
+  draw();
+}
+
+function renderSupDashboard(){
+  const empNames=Object.keys(DB.employees).filter(n=>n!=='');
+  if(empNames.length===0){
+    document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
+    return;
+  }
+  const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+  const cards=empNames.map(name=>{
+    const emp=DB.employees[name];
+    const sessions=(emp.sessions||[]);
+    const xp=emp.xp||0;
+    const lvl=getLevelInfo(xp);
+    const streak=emp.streak||0;
+    const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
+    const topics=emp.topicScores||{};
+    // Weak topic
+    let weakTopic=null, weakPct=100;
+    for(const [k,v] of Object.entries(topics)){
+      if(v.total>0){
+        const p=Math.round(v.correct/v.total*100);
+        if(p<weakPct){weakPct=p;weakTopic=k;}
+      }
+    }
+    const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
+      const s=topics[k]||{correct:0,total:0};
+      const pct=s.total?Math.round(s.correct/s.total*100):0;
+      const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+      return `<div class="sup-topic-row">
+        <span class="sup-topic-name">${lbl}</span>
+        <div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div>
+        <span class="sup-topic-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+    const lastSession=sessions.length?new Date(sessions[sessions.length-1].ts):null;
+    const daysAgo=lastSession?Math.floor((Date.now()-lastSession)/(86400000)):null;
+    const activityLabel=daysAgo===null?(LANG==='en'?'No activity':'Sin actividad'):daysAgo===0?(LANG==='en'?'Today':'Hoy'):daysAgo===1?(LANG==='en'?'Yesterday':'Ayer'):`${daysAgo}d`;
+    return `<div class="sup-emp-card">
+      <div class="sup-emp-header">
+        <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
+        <div style="flex:1">
+          <div class="sup-emp-name">${name}</div>
+          <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+        </div>
+        <span class="sup-emp-level">${activityLabel}</span>
+      </div>
+      <div class="sup-emp-stats">
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
+      </div>
+      <div class="sup-topic-bars">${topicBars}</div>
+      ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+    </div>`;
+  }).join('');
+
+  // Team summary
+  const totalEmp=empNames.length;
+  const avgXP=Math.round(empNames.reduce((a,n)=>(a+(DB.employees[n].xp||0)),0)/totalEmp);
+  const studiedToday=empNames.filter(n=>(DB.employees[n].lastStudyDay||'')===todayStr()).length;
+
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div class="sup-hero">
+        <div class="sup-hero-icon">👁️</div>
+        <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Team overview':'Resumen del equipo'}</div>
+      </div>
+      <div class="stats-row" style="margin-bottom:.75rem">
+        <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+      </div>
+      ${renderWeeklyChallenge()}
+      <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+      ${cards}
+      <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+    </div>`;
+}
+
+
+// ═══ MODO ERROR ═══
+function getFailedDishes(){
+  const emp=getEmp(currentUser);
+  const ec=emp.examCorrect||{};
+  // dishes attempted in exam but with low correct rate
+  const failed=[];
+  for(const d of DISHES){
+    const correct=ec[d.id]||0;
+    // Find total attempts for this dish across sessions — approximate from topicScores
+    // Use examCorrect: if <3 correct answers, it's a weak dish
+    // Also include dishes never answered correctly
+    const sessions=emp.sessions||[];
+    if(correct<3) failed.push(d);
+  }
+  return failed.slice(0,30); // max 30
+}
+function startErrorMode(){
+  const failed=getFailedDishes();
+  if(failed.length===0) return;
+  // Use exam module with failed dishes pre-loaded
+  examConfig={count:Math.min(15,failed.length),topic:'mixed',cat:'all'};
+  examDishes=[];examIndex=0;examScore=0;examAnswered=false;
+  // Build exam questions from failed dishes only
+  const noHist=t('noHistory');
+  const isEmpty=v=>!v||v==='—'||v===noHist;
+  let attempts=0;
+  const usedIds=new Set();
+  while(examDishes.length<examConfig.count&&attempts<200){
+    attempts++;
+    const d=failed[Math.floor(Math.random()*failed.length)];
+    if(usedIds.has(d.id)&&failed.length<=examConfig.count){usedIds.clear();}
+    if(usedIds.has(d.id)) continue;
+    let topicKey=TOPICS[Math.floor(Math.random()*TOPICS.length)].key;
+    let topic=TOPICS.find(t=>t.key===topicKey);
+    let correct=(topic.a(d)||'').trim().replace(/\.+$/,'');
+    if(isEmpty(correct)){
+      const fb=TOPICS.find(tp=>{const a=tp.a(d);return !isEmpty(a);});
+      if(!fb) continue;
+      topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
+    }
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongs=[];
+    for(const o of wrongPool){
+      if(wrongs.length>=3) break;
+      const w=(topic.a(o)||'').trim().replace(/\.+$/,'');
+      if(!isEmpty(w)&&w!==correct&&!wrongs.includes(w)) wrongs.push(w);
+    }
+    if(wrongs.length<3) continue;
+    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const correctIdx=choices.indexOf(correct);
+    usedIds.add(d.id);
+    examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
+  }
+  if(examDishes.length===0) return;
+  examActive=true;examStartTime=Date.now();examResults=null;
+  showTab('exam');
+}
+
+
+// ═══ DUELO 1v1 ═══
+let duelState=null;
+
+function renderDuel(){
+  const empNames=Object.keys(DB.employees).filter(n=>n);
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div class="sup-hero">
+        <div class="sup-hero-icon">⚔️</div>
+        <div class="sup-hero-title">${LANG==='en'?'1v1 Duel':'Duelo 1v1'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Two players, same question, same device':'Dos jugadores, misma pregunta, mismo dispositivo'}</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.1rem;margin-bottom:1rem">
+        <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem">${LANG==='en'?'Player 1:':'Jugador 1:'}</div>
+        <select id="duelP1" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:var(--r2);
+          background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment);margin-bottom:.75rem">
+          ${empNames.map(n=>`<option${n===currentUser?' selected':''}>${n}</option>`).join('')}
+        </select>
+        <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem">${LANG==='en'?'Player 2:':'Jugador 2:'}</div>
+        <select id="duelP2" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:var(--r2);
+          background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment);margin-bottom:1rem">
+          ${empNames.map((n,i)=>`<option${i===1?' selected':''}>${n}</option>`).join('')}
+        </select>
+        <button class="btn-primary" onclick="startDuel()" style="width:100%">${LANG==='en'?'Start duel ⚔️':'Comenzar duelo ⚔️'}</button>
+      </div>
+    </div>`;
+}
+
+function startDuel(){
+  const p1=document.getElementById('duelP1').value;
+  const p2=document.getElementById('duelP2').value;
+  if(p1===p2){ alert(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!'); return; }
+  duelState={p1,p2,scores:{[p1]:0,[p2]:0},round:1,totalRounds:7,current:p1,question:null,answered:{[p1]:false,[p2]:false}};
+  duelNextRound();
+}
+
+function duelNextRound(){
+  if(duelState.round>duelState.totalRounds){ duelGameOver(); return; }
+  let q=null;
+  for(let i=0;i<20;i++){ q=txBuildQuestion(); if(q) break; }
+  if(!q){ duelGameOver(); return; }
+  duelState.question=q;
+  duelState.current=duelState.p1;
+  duelState.answered={[duelState.p1]:false,[duelState.p2]:false};
+  duelState.p1Answer=null;
+  duelState.p2Answer=null;
+  duelRender();
+}
+
+function duelAnswer(idx){
+  const {current,p1,p2,question}=duelState;
+  if(duelState.answered[current]) return;
+  duelState.answered[current]=true;
+  const ok=idx===question.correctIdx;
+  if(current===p1) duelState.p1Answer={idx,ok};
+  else duelState.p2Answer={idx,ok};
+  if(ok) duelState.scores[current]=(duelState.scores[current]||0)+1;
+  // Switch to other player or finish round
+  const other=current===p1?p2:p1;
+  if(!duelState.answered[other]){
+    duelState.current=other;
+    duelRender();
+  } else {
+    // Both answered — show result briefly then next round
+    duelState.round++;
+    duelShowRoundResult();
+  }
+}
+
+function duelShowRoundResult(){
+  const {p1,p2,p1Answer,p2Answer,question,scores}=duelState;
+  const correct=question.choices[question.correctIdx];
+  const c=document.getElementById('appContent');
+  if(!c) return;
+  const resultHtml=`
+    <div style="padding:.5rem;text-align:center">
+      <div style="font-size:.75rem;color:var(--parch3);margin-bottom:.5rem">${LANG==='en'?'Correct answer:':'Respuesta correcta:'}</div>
+      <div style="font-size:.82rem;font-weight:600;color:var(--sage);margin-bottom:.75rem">${correct}</div>
+      <div style="display:flex;gap:.5rem;justify-content:center">
+        <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p1Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
+          <div style="font-size:.72rem;font-weight:600">${p1}</div>
+          <div style="font-size:1.2rem">${p1Answer?.ok?'✓':'✗'}</div>
+        </div>
+        <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p2Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
+          <div style="font-size:.72rem;font-weight:600">${p2}</div>
+          <div style="font-size:1.2rem">${p2Answer?.ok?'✓':'✗'}</div>
+        </div>
+      </div>
+    </div>`;
+  // Insert result temporarily
+  const fb=document.getElementById('duelFeedback');
+  if(fb){ fb.innerHTML=resultHtml; fb.style.display='block'; }
+  setTimeout(()=>{ if(duelState.round<=duelState.totalRounds) duelRender(); else duelGameOver(); },1800);
+}
+
+function duelRender(){
+  const {p1,p2,scores,round,totalRounds,current,question}=duelState;
+  const letters=['A','B','C','D'];
+  document.getElementById('appContent').innerHTML=`
+    <div class="duel-wrap">
+      <div class="duel-vs">
+        <div class="duel-player${current===p1?' active':''}">
+          <div class="duel-player-name">${p1}</div>
+          <div class="duel-player-score">${scores[p1]||0}</div>
+        </div>
+        <div class="duel-vs-badge">${LANG==='en'?'Round':'Ronda'} ${round}/${totalRounds}</div>
+        <div class="duel-player${current===p2?' active':''}">
+          <div class="duel-player-name">${p2}</div>
+          <div class="duel-player-score">${scores[p2]||0}</div>
+        </div>
+      </div>
+      <div class="duel-turn-badge">👤 ${LANG==='en'?'Turn:':'Turno:'} ${current}</div>
+      <div class="txoko-scene" style="margin-bottom:.75rem">
+        <div class="txoko-waiter">
+          <div class="txoko-waiter-avatar">🤵</div>
+          <div class="txoko-waiter-bubble">
+            ${question.msg}
+            <div><span class="txoko-dish-badge">📋 ${question.topicLabel}</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem">
+        ${question.choices.map((c,i)=>`
+          <button class="txoko-choice" onclick="duelAnswer(${i})">
+            <span class="txoko-choice-letter">${letters[i]}.</span>${c}
+          </button>`).join('')}
+      </div>
+      <div id="duelFeedback" style="display:none"></div>
+    </div>`;
+}
+
+function duelGameOver(){
+  const {p1,p2,scores}=duelState;
+  const s1=scores[p1]||0, s2=scores[p2]||0;
+  const winner=s1>s2?p1:s2>s1?p2:null;
+  // Award XP
+  if(winner){ awardXP(40, LANG==='en'?`Duel victory! ⚔️`:`¡Victoria en duelo! ⚔️`); }
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="font-size:3rem;margin-bottom:.5rem">${winner?'⚔️':'🤝'}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--parchment);margin-bottom:.3rem">
+          ${winner?(LANG==='en'?`${winner} wins!`:`¡${winner} gana!`):(LANG==='en'?'Draw!':'¡Empate!')}
+        </div>
+        <div style="display:flex;gap:.75rem;margin:1.5rem 0">
+          <div class="duel-player ${s1>s2?'winner':s1<s2?'loser':''}">
+            <div class="duel-player-name">${p1}</div>
+            <div class="duel-player-score">${s1}</div>
+          </div>
+          <div class="duel-player ${s2>s1?'winner':s2<s1?'loser':''}">
+            <div class="duel-player-name">${p2}</div>
+            <div class="duel-player-score">${s2}</div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="startDuel()" style="width:100%;margin-bottom:.5rem">${LANG==='en'?'Rematch ⚔️':'Revancha ⚔️'}</button>
+        <button class="btn-secondary" onclick="renderTxoko()" style="width:100%">${LANG==='en'?'Back to games':'Volver a juegos'}</button>
+      </div>
+    </div>`;
+}
+
+
+// ═══ SOUNDS ═══
+let soundEnabled=true;
+try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
+
+function playSound(type){
+  if(!soundEnabled) return;
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    if(type==='correct'){
+      osc.frequency.setValueAtTime(523,ctx.currentTime);
+      osc.frequency.setValueAtTime(659,ctx.currentTime+0.1);
+      osc.frequency.setValueAtTime(784,ctx.currentTime+0.2);
+      gain.gain.setValueAtTime(0.15,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.4);
+    } else if(type==='wrong'){
+      osc.type='sawtooth';
+      osc.frequency.setValueAtTime(200,ctx.currentTime);
+      osc.frequency.setValueAtTime(150,ctx.currentTime+0.1);
+      gain.gain.setValueAtTime(0.1,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
+    } else if(type==='levelup'){
+      [523,659,784,1047].forEach((f,i)=>{
+        const o2=ctx.createOscillator();const g2=ctx.createGain();
+        o2.connect(g2);g2.connect(ctx.destination);
+        o2.frequency.value=f;
+        g2.gain.setValueAtTime(0.12,ctx.currentTime+i*0.12);
+        g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.2);
+        o2.start(ctx.currentTime+i*0.12);o2.stop(ctx.currentTime+i*0.12+0.2);
+      });
+    }
+  }catch(e){}
+}
+
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  try{localStorage.setItem('txoko_sound',soundEnabled?'on':'off');}catch(e){}
+  const btn=document.getElementById('soundToggle');
+  if(btn) btn.textContent=soundEnabled?'🔔':'🔕';
+}
+
+
+// ═══ DISH ANIMATION ═══
+const CAT_EMOJIS={'Entrantes':'🥗','Hamburguesas y Bocatas':'🍔','Platos Principales':'🥩',
+  'Guarniciones y Salsas':'🫙','Postres':'🍮','Vegetariano':'🥦'};
+
+function burstEmoji(emoji){
+  for(let i=0;i<6;i++){
+    const el=document.createElement('div');
+    el.textContent=emoji;
+    el.style.cssText=`position:fixed;pointer-events:none;z-index:9998;font-size:1.5rem;
+      left:50%;top:50%;transform:translate(-50%,-50%);
+      animation:emojiBurst .7s ease forwards;
+      --dx:${(Math.random()-0.5)*180}px;--dy:${(Math.random()-0.8)*160}px;`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend',()=>el.remove());
+  }
+}
+
+renderLogin();
 }
 
 // ═══════ TABS ═══════
 function showTab(tab){
   currentTab=tab;
   document.querySelectorAll('.nav-btn').forEach((b,i)=>{
-    b.classList.toggle('active',['dashboard','flashcards','exam','repaso','stats','txoko'][i]===tab);
+    b.classList.toggle('active',['dashboard','flashcards','exam','repaso','stats','txoko','supervisor'][i]===tab);
   });
   const c=document.getElementById('appContent');
   c.innerHTML='';
-  ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko})[tab]();
+  ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,supervisor:renderSupervisor})[tab]();
 }
 
 // ═══════ DASHBOARD ═══════
@@ -1981,8 +3322,20 @@ function renderDashboard(){
   const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
   const fc=(emp.fcHistory||[]).length;
   const topics=emp.topicScores||{};
-  const h=new Date().getHours();
-  const greeting=h<12?t('greetingMorning'):h<18?t('greetingAfternoon'):t('greetingEvening');
+  // Canary Islands: UTC+0 (winter) / UTC+1 (summer, last Sun Mar–last Sun Oct)
+  const _now=new Date();
+  const _jan=new Date(_now.getFullYear(),0,1);
+  const _jul=new Date(_now.getFullYear(),6,1);
+  const _stdOffset=Math.max(_jan.getTimezoneOffset(),_jul.getTimezoneOffset());
+  const _canaryOffset=_stdOffset===0?0:0; // always UTC±0 base
+  // DST: last Sunday of March to last Sunday of October
+  function _lastSun(y,m){const d=new Date(y,m+1,0);d.setDate(d.getDate()-d.getDay());return d;}
+  const _dstStart=_lastSun(_now.getFullYear(),2); // last Sun March
+  const _dstEnd=_lastSun(_now.getFullYear(),9);   // last Sun October
+  const _isDST=_now>=_dstStart&&_now<_dstEnd;
+  const _utcH=_now.getUTCHours();
+  const _canaryH=(_utcH+(_isDST?1:0))%24;
+  const greeting=_canaryH<12?t('greetingMorning'):_canaryH<20?t('greetingAfternoon'):t('greetingEvening');
 
   const progressRows=TOPICS.map(tp=>{
     const s=topics[tp.key]||{correct:0,total:0};
@@ -2001,6 +3354,7 @@ function renderDashboard(){
       <div class="dash-hero-sub">${t('dashSub')} &nbsp;·&nbsp; ${DISHES.length} ${t('dishesOnMenu')}</div>
     </div>
 
+    ${renderXPBar()}
     <div class="stats-row">
       <div class="stat-tile"><div class="stat-num">${sessions.length}</div><div class="stat-lbl">${t('statExams')}</div></div>
       <div class="stat-tile"><div class="stat-num">${avg}<sup>%</sup></div><div class="stat-lbl">${t('statAvg')}</div></div>
@@ -2008,6 +3362,7 @@ function renderDashboard(){
       <div class="stat-tile"><div class="stat-num">${fc}</div><div class="stat-lbl">${t('statFlashcards')}</div></div>
     </div>
 
+    ${renderWeeklyChallenge()}
     <div class="section-eyebrow" style="animation:slideUp .4s .08s ease both">${t('studyModes')}</div>
     <div class="modes-grid">
       <div class="mode-tile" onclick="showTab('flashcards')">
@@ -2244,7 +3599,7 @@ function answerExam(idx){
   const q=examDishes[examIndex];
   const chosen=q.choices[idx];
   const norm=s=>s?s.trim().replace(/\.+$/,'').toLowerCase():'';const ok=norm(chosen)===norm(q.correct);
-  if(ok)examScore++;
+  if(ok){ playSound('correct'); examScore++; awardXP(5,LANG==='en'?'Correct answer ✓':'Respuesta correcta ✓'); }
   const emp=getEmp(currentUser);
   emp.topicScores[q.topic.key]=emp.topicScores[q.topic.key]||{correct:0,total:0};
   emp.topicScores[q.topic.key].total++;
@@ -2276,6 +3631,11 @@ function nextExamQ(){
     emp.sessions=emp.sessions||[];emp.sessions.push(session);
     saveDB();examResults=session;
     supaInsertScore(session, currentUser);
+    // Award XP for exam
+    const pctExam=Math.round(examScore/examDishes.length*100);
+    const baseXP=examDishes.length*3;
+    const bonusXP=pctExam>=90?50:pctExam>=70?25:pctExam>=50?10:0;
+    awardXP(baseXP+bonusXP, LANG==='en'?`Exam (${pctExam}%)`:`Examen (${pctExam}%)`);
     renderExamResults();
   } else {
     renderExamQuestion();
@@ -2435,9 +3795,36 @@ function renderStats(){
       </div>`;
     }).join('');
 
+  const empXP = getEmp(currentUser).xp||0;
+  const curLvl = getLevelInfo(empXP);
+  const nxtLvl = getNextLevel(empXP);
+  const xpPct = xpProgress(empXP);
+  const levelsHtml = XP_LEVELS.map(l=>{
+    const unlocked=empXP>=l.xp;
+    const current=l.level===curLvl.level;
+    return `<div class="xp-lvl-tile ${current?'current':unlocked?'unlocked':''}">
+      <span class="xp-lvl-tile-icon">${unlocked?l.icon:'🔒'}</span>
+      <div class="xp-lvl-tile-name">${unlocked?l.title:'???'}</div>
+      <div class="xp-lvl-tile-lvl">Nv.${l.level}</div>
+    </div>`;
+  }).join('');
+
   document.getElementById('appContent').innerHTML=`
     <div class="stats-header">
       <h2>${t('statsTitle')} — ${currentUser}</h2>
+    </div>
+    <div class="xp-level-card" style="animation:slideUp .3s ease both">
+      <div class="xp-level-icon">${curLvl.icon}</div>
+      <div class="xp-level-num">Nivel ${curLvl.level}</div>
+      <div class="xp-level-name">${curLvl.title}</div>
+      <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem;font-style:italic">"${curLvl.desc}"</div>
+      <div class="xp-bar-track" style="margin-bottom:.4rem">
+        <div class="xp-bar-fill" style="width:${xpPct}%"></div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3)">
+        ${empXP.toLocaleString()} XP${nxtLvl?` · ${(nxtLvl.xp-empXP).toLocaleString()} para "${nxtLvl.title}"`:' · ¡Nivel máximo!'}
+      </div>
+      <div class="xp-levels-grid" style="margin-top:1rem">${levelsHtml}</div>
     </div>
 
     <div class="stats-row" style="animation:slideUp .35s ease both">
@@ -2461,6 +3848,423 @@ function renderStats(){
   `;
 }
 
+
+// ═══ SUPERVISOR PANEL ═══
+const SUP_PIN = '1966'; // Duvan's supervisor PIN
+
+let supAuthenticated = false;
+
+function renderSupervisor(){
+  if(!supAuthenticated){
+    renderSupPinEntry();
+    return;
+  }
+  renderSupDashboard();
+}
+
+function renderSupPinEntry(){
+  let entered='';
+  const c=document.getElementById('appContent');
+  function draw(){
+    c.innerHTML=`
+      <div class="sup-wrap">
+        <div class="sup-hero">
+          <div class="sup-hero-icon">👁️</div>
+          <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+          <div class="sup-hero-sub">${LANG==='en'?'Enter your PIN to continue':'Introduce el PIN para continuar'}</div>
+        </div>
+        <div class="sup-pin-wrap">
+          <div class="sup-pin-input">
+            ${[0,1,2,3].map(i=>`<div class="sup-pin-dot${entered.length>i?' filled':''}"></div>`).join('')}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:200px;margin:0 auto;">
+            ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`
+              <button onclick="supPinKey('${k}')" style="
+                background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);
+                padding:.7rem;font-size:1rem;font-weight:500;color:var(--parchment);cursor:pointer;
+                ${k===''?'visibility:hidden;':''}
+              ">${k}</button>`).join('')}
+          </div>
+          ${entered.length===4&&entered!==SUP_PIN?`<div style="color:var(--rose);font-size:.75rem;margin-top:.75rem">❌ ${LANG==='en'?'Wrong PIN':'PIN incorrecto'}</div>`:''}
+        </div>
+      </div>`;
+  }
+  window.supPinKey=function(k){
+    if(k==='⌫'){ entered=entered.slice(0,-1); draw(); return; }
+    if(k===''||entered.length>=4) return;
+    entered+=k;
+    if(entered.length===4){
+      if(entered===SUP_PIN){ supAuthenticated=true; renderSupDashboard(); }
+      else { draw(); }
+    } else { draw(); }
+  };
+  draw();
+}
+
+function renderSupDashboard(){
+  const empNames=Object.keys(DB.employees).filter(n=>n!=='');
+  if(empNames.length===0){
+    document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
+    return;
+  }
+  const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+  const cards=empNames.map(name=>{
+    const emp=DB.employees[name];
+    const sessions=(emp.sessions||[]);
+    const xp=emp.xp||0;
+    const lvl=getLevelInfo(xp);
+    const streak=emp.streak||0;
+    const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
+    const topics=emp.topicScores||{};
+    // Weak topic
+    let weakTopic=null, weakPct=100;
+    for(const [k,v] of Object.entries(topics)){
+      if(v.total>0){
+        const p=Math.round(v.correct/v.total*100);
+        if(p<weakPct){weakPct=p;weakTopic=k;}
+      }
+    }
+    const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
+      const s=topics[k]||{correct:0,total:0};
+      const pct=s.total?Math.round(s.correct/s.total*100):0;
+      const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+      return `<div class="sup-topic-row">
+        <span class="sup-topic-name">${lbl}</span>
+        <div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div>
+        <span class="sup-topic-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+    const lastSession=sessions.length?new Date(sessions[sessions.length-1].ts):null;
+    const daysAgo=lastSession?Math.floor((Date.now()-lastSession)/(86400000)):null;
+    const activityLabel=daysAgo===null?(LANG==='en'?'No activity':'Sin actividad'):daysAgo===0?(LANG==='en'?'Today':'Hoy'):daysAgo===1?(LANG==='en'?'Yesterday':'Ayer'):`${daysAgo}d`;
+    return `<div class="sup-emp-card">
+      <div class="sup-emp-header">
+        <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
+        <div style="flex:1">
+          <div class="sup-emp-name">${name}</div>
+          <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+        </div>
+        <span class="sup-emp-level">${activityLabel}</span>
+      </div>
+      <div class="sup-emp-stats">
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
+        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
+      </div>
+      <div class="sup-topic-bars">${topicBars}</div>
+      ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+    </div>`;
+  }).join('');
+
+  // Team summary
+  const totalEmp=empNames.length;
+  const avgXP=Math.round(empNames.reduce((a,n)=>(a+(DB.employees[n].xp||0)),0)/totalEmp);
+  const studiedToday=empNames.filter(n=>(DB.employees[n].lastStudyDay||'')===todayStr()).length;
+
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div class="sup-hero">
+        <div class="sup-hero-icon">👁️</div>
+        <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Team overview':'Resumen del equipo'}</div>
+      </div>
+      <div class="stats-row" style="margin-bottom:.75rem">
+        <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+      </div>
+      ${renderWeeklyChallenge()}
+      <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+      ${cards}
+      <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+    </div>`;
+}
+
+
+// ═══ MODO ERROR ═══
+function getFailedDishes(){
+  const emp=getEmp(currentUser);
+  const ec=emp.examCorrect||{};
+  // dishes attempted in exam but with low correct rate
+  const failed=[];
+  for(const d of DISHES){
+    const correct=ec[d.id]||0;
+    // Find total attempts for this dish across sessions — approximate from topicScores
+    // Use examCorrect: if <3 correct answers, it's a weak dish
+    // Also include dishes never answered correctly
+    const sessions=emp.sessions||[];
+    if(correct<3) failed.push(d);
+  }
+  return failed.slice(0,30); // max 30
+}
+function startErrorMode(){
+  const failed=getFailedDishes();
+  if(failed.length===0) return;
+  // Use exam module with failed dishes pre-loaded
+  examConfig={count:Math.min(15,failed.length),topic:'mixed',cat:'all'};
+  examDishes=[];examIndex=0;examScore=0;examAnswered=false;
+  // Build exam questions from failed dishes only
+  const noHist=t('noHistory');
+  const isEmpty=v=>!v||v==='—'||v===noHist;
+  let attempts=0;
+  const usedIds=new Set();
+  while(examDishes.length<examConfig.count&&attempts<200){
+    attempts++;
+    const d=failed[Math.floor(Math.random()*failed.length)];
+    if(usedIds.has(d.id)&&failed.length<=examConfig.count){usedIds.clear();}
+    if(usedIds.has(d.id)) continue;
+    let topicKey=TOPICS[Math.floor(Math.random()*TOPICS.length)].key;
+    let topic=TOPICS.find(t=>t.key===topicKey);
+    let correct=(topic.a(d)||'').trim().replace(/\.+$/,'');
+    if(isEmpty(correct)){
+      const fb=TOPICS.find(tp=>{const a=tp.a(d);return !isEmpty(a);});
+      if(!fb) continue;
+      topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
+    }
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongs=[];
+    for(const o of wrongPool){
+      if(wrongs.length>=3) break;
+      const w=(topic.a(o)||'').trim().replace(/\.+$/,'');
+      if(!isEmpty(w)&&w!==correct&&!wrongs.includes(w)) wrongs.push(w);
+    }
+    if(wrongs.length<3) continue;
+    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const correctIdx=choices.indexOf(correct);
+    usedIds.add(d.id);
+    examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
+  }
+  if(examDishes.length===0) return;
+  examActive=true;examStartTime=Date.now();examResults=null;
+  showTab('exam');
+}
+
+
+// ═══ DUELO 1v1 ═══
+let duelState=null;
+
+function renderDuel(){
+  const empNames=Object.keys(DB.employees).filter(n=>n);
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div class="sup-hero">
+        <div class="sup-hero-icon">⚔️</div>
+        <div class="sup-hero-title">${LANG==='en'?'1v1 Duel':'Duelo 1v1'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Two players, same question, same device':'Dos jugadores, misma pregunta, mismo dispositivo'}</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.1rem;margin-bottom:1rem">
+        <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem">${LANG==='en'?'Player 1:':'Jugador 1:'}</div>
+        <select id="duelP1" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:var(--r2);
+          background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment);margin-bottom:.75rem">
+          ${empNames.map(n=>`<option${n===currentUser?' selected':''}>${n}</option>`).join('')}
+        </select>
+        <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem">${LANG==='en'?'Player 2:':'Jugador 2:'}</div>
+        <select id="duelP2" style="width:100%;padding:.6rem;border:1px solid var(--line);border-radius:var(--r2);
+          background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment);margin-bottom:1rem">
+          ${empNames.map((n,i)=>`<option${i===1?' selected':''}>${n}</option>`).join('')}
+        </select>
+        <button class="btn-primary" onclick="startDuel()" style="width:100%">${LANG==='en'?'Start duel ⚔️':'Comenzar duelo ⚔️'}</button>
+      </div>
+    </div>`;
+}
+
+function startDuel(){
+  const p1=document.getElementById('duelP1').value;
+  const p2=document.getElementById('duelP2').value;
+  if(p1===p2){ alert(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!'); return; }
+  duelState={p1,p2,scores:{[p1]:0,[p2]:0},round:1,totalRounds:7,current:p1,question:null,answered:{[p1]:false,[p2]:false}};
+  duelNextRound();
+}
+
+function duelNextRound(){
+  if(duelState.round>duelState.totalRounds){ duelGameOver(); return; }
+  let q=null;
+  for(let i=0;i<20;i++){ q=txBuildQuestion(); if(q) break; }
+  if(!q){ duelGameOver(); return; }
+  duelState.question=q;
+  duelState.current=duelState.p1;
+  duelState.answered={[duelState.p1]:false,[duelState.p2]:false};
+  duelState.p1Answer=null;
+  duelState.p2Answer=null;
+  duelRender();
+}
+
+function duelAnswer(idx){
+  const {current,p1,p2,question}=duelState;
+  if(duelState.answered[current]) return;
+  duelState.answered[current]=true;
+  const ok=idx===question.correctIdx;
+  if(current===p1) duelState.p1Answer={idx,ok};
+  else duelState.p2Answer={idx,ok};
+  if(ok) duelState.scores[current]=(duelState.scores[current]||0)+1;
+  // Switch to other player or finish round
+  const other=current===p1?p2:p1;
+  if(!duelState.answered[other]){
+    duelState.current=other;
+    duelRender();
+  } else {
+    // Both answered — show result briefly then next round
+    duelState.round++;
+    duelShowRoundResult();
+  }
+}
+
+function duelShowRoundResult(){
+  const {p1,p2,p1Answer,p2Answer,question,scores}=duelState;
+  const correct=question.choices[question.correctIdx];
+  const c=document.getElementById('appContent');
+  if(!c) return;
+  const resultHtml=`
+    <div style="padding:.5rem;text-align:center">
+      <div style="font-size:.75rem;color:var(--parch3);margin-bottom:.5rem">${LANG==='en'?'Correct answer:':'Respuesta correcta:'}</div>
+      <div style="font-size:.82rem;font-weight:600;color:var(--sage);margin-bottom:.75rem">${correct}</div>
+      <div style="display:flex;gap:.5rem;justify-content:center">
+        <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p1Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
+          <div style="font-size:.72rem;font-weight:600">${p1}</div>
+          <div style="font-size:1.2rem">${p1Answer?.ok?'✓':'✗'}</div>
+        </div>
+        <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p2Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
+          <div style="font-size:.72rem;font-weight:600">${p2}</div>
+          <div style="font-size:1.2rem">${p2Answer?.ok?'✓':'✗'}</div>
+        </div>
+      </div>
+    </div>`;
+  // Insert result temporarily
+  const fb=document.getElementById('duelFeedback');
+  if(fb){ fb.innerHTML=resultHtml; fb.style.display='block'; }
+  setTimeout(()=>{ if(duelState.round<=duelState.totalRounds) duelRender(); else duelGameOver(); },1800);
+}
+
+function duelRender(){
+  const {p1,p2,scores,round,totalRounds,current,question}=duelState;
+  const letters=['A','B','C','D'];
+  document.getElementById('appContent').innerHTML=`
+    <div class="duel-wrap">
+      <div class="duel-vs">
+        <div class="duel-player${current===p1?' active':''}">
+          <div class="duel-player-name">${p1}</div>
+          <div class="duel-player-score">${scores[p1]||0}</div>
+        </div>
+        <div class="duel-vs-badge">${LANG==='en'?'Round':'Ronda'} ${round}/${totalRounds}</div>
+        <div class="duel-player${current===p2?' active':''}">
+          <div class="duel-player-name">${p2}</div>
+          <div class="duel-player-score">${scores[p2]||0}</div>
+        </div>
+      </div>
+      <div class="duel-turn-badge">👤 ${LANG==='en'?'Turn:':'Turno:'} ${current}</div>
+      <div class="txoko-scene" style="margin-bottom:.75rem">
+        <div class="txoko-waiter">
+          <div class="txoko-waiter-avatar">🤵</div>
+          <div class="txoko-waiter-bubble">
+            ${question.msg}
+            <div><span class="txoko-dish-badge">📋 ${question.topicLabel}</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem">
+        ${question.choices.map((c,i)=>`
+          <button class="txoko-choice" onclick="duelAnswer(${i})">
+            <span class="txoko-choice-letter">${letters[i]}.</span>${c}
+          </button>`).join('')}
+      </div>
+      <div id="duelFeedback" style="display:none"></div>
+    </div>`;
+}
+
+function duelGameOver(){
+  const {p1,p2,scores}=duelState;
+  const s1=scores[p1]||0, s2=scores[p2]||0;
+  const winner=s1>s2?p1:s2>s1?p2:null;
+  // Award XP
+  if(winner){ awardXP(40, LANG==='en'?`Duel victory! ⚔️`:`¡Victoria en duelo! ⚔️`); }
+  document.getElementById('appContent').innerHTML=`
+    <div class="sup-wrap">
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="font-size:3rem;margin-bottom:.5rem">${winner?'⚔️':'🤝'}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--parchment);margin-bottom:.3rem">
+          ${winner?(LANG==='en'?`${winner} wins!`:`¡${winner} gana!`):(LANG==='en'?'Draw!':'¡Empate!')}
+        </div>
+        <div style="display:flex;gap:.75rem;margin:1.5rem 0">
+          <div class="duel-player ${s1>s2?'winner':s1<s2?'loser':''}">
+            <div class="duel-player-name">${p1}</div>
+            <div class="duel-player-score">${s1}</div>
+          </div>
+          <div class="duel-player ${s2>s1?'winner':s2<s1?'loser':''}">
+            <div class="duel-player-name">${p2}</div>
+            <div class="duel-player-score">${s2}</div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="startDuel()" style="width:100%;margin-bottom:.5rem">${LANG==='en'?'Rematch ⚔️':'Revancha ⚔️'}</button>
+        <button class="btn-secondary" onclick="renderTxoko()" style="width:100%">${LANG==='en'?'Back to games':'Volver a juegos'}</button>
+      </div>
+    </div>`;
+}
+
+
+// ═══ SOUNDS ═══
+let soundEnabled=true;
+try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
+
+function playSound(type){
+  if(!soundEnabled) return;
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    if(type==='correct'){
+      osc.frequency.setValueAtTime(523,ctx.currentTime);
+      osc.frequency.setValueAtTime(659,ctx.currentTime+0.1);
+      osc.frequency.setValueAtTime(784,ctx.currentTime+0.2);
+      gain.gain.setValueAtTime(0.15,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.4);
+    } else if(type==='wrong'){
+      osc.type='sawtooth';
+      osc.frequency.setValueAtTime(200,ctx.currentTime);
+      osc.frequency.setValueAtTime(150,ctx.currentTime+0.1);
+      gain.gain.setValueAtTime(0.1,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
+    } else if(type==='levelup'){
+      [523,659,784,1047].forEach((f,i)=>{
+        const o2=ctx.createOscillator();const g2=ctx.createGain();
+        o2.connect(g2);g2.connect(ctx.destination);
+        o2.frequency.value=f;
+        g2.gain.setValueAtTime(0.12,ctx.currentTime+i*0.12);
+        g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.2);
+        o2.start(ctx.currentTime+i*0.12);o2.stop(ctx.currentTime+i*0.12+0.2);
+      });
+    }
+  }catch(e){}
+}
+
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  try{localStorage.setItem('txoko_sound',soundEnabled?'on':'off');}catch(e){}
+  const btn=document.getElementById('soundToggle');
+  if(btn) btn.textContent=soundEnabled?'🔔':'🔕';
+}
+
+
+// ═══ DISH ANIMATION ═══
+const CAT_EMOJIS={'Entrantes':'🥗','Hamburguesas y Bocatas':'🍔','Platos Principales':'🥩',
+  'Guarniciones y Salsas':'🫙','Postres':'🍮','Vegetariano':'🥦'};
+
+function burstEmoji(emoji){
+  for(let i=0;i<6;i++){
+    const el=document.createElement('div');
+    el.textContent=emoji;
+    el.style.cssText=`position:fixed;pointer-events:none;z-index:9998;font-size:1.5rem;
+      left:50%;top:50%;transform:translate(-50%,-50%);
+      animation:emojiBurst .7s ease forwards;
+      --dx:${(Math.random()-0.5)*180}px;--dy:${(Math.random()-0.8)*160}px;`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend',()=>el.remove());
+  }
+}
+
 renderLogin();
 
 // ═══════════════════════════════════════════════════
@@ -2469,39 +4273,43 @@ renderLogin();
 
 // ── Constants ──────────────────────────────────────
 const TXOKO_LEVELS=[
-  {name:'Calma',    cls:'calma',    time:12},
-  {name:'Ritmo',    cls:'ritmo',    time:9},
-  {name:'Fuego',    cls:'fuego',    time:6},
-  {name:'Infierno', cls:'infierno', time:4},
+  {name:'Calma',    name_en:'Calm',    cls:'calma',    time:12},
+  {name:'Ritmo',    name_en:'Rhythm',  cls:'ritmo',    time:9},
+  {name:'Fuego',    name_en:'Fire',    cls:'fuego',    time:6},
+  {name:'Infierno', name_en:'Inferno', cls:'infierno', time:4},
 ];
 const WAITER_MSGS={
   allergens:[
-    d=>`Mesa 4 tiene una alergia — ¿qué alérgenos lleva <strong>${d}</strong>?`,
-    d=>`Mesa 7 pregunta por los alérgenos de <strong>${d}</strong>`,
-    d=>`Mesa 2: ¿Es apto para alérgicos? ¿Qué contiene <strong>${d}</strong>?`,
-    d=>`Mesa 9 pregunta: ¿tiene alérgenos <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 4 has an allergy — what allergens does <strong>${d}</strong> contain?`:`Mesa 4 tiene una alergia — ¿qué alérgenos lleva <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 7 is asking about allergens in <strong>${d}</strong>`:`Mesa 7 pregunta por los alérgenos de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Table 2: Is <strong>${d}</strong> safe for allergies?`:`Mesa 2: ¿Es apto para alérgicos? ¿Qué contiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 9 asks: does <strong>${d}</strong> have allergens?`:`Mesa 9 pregunta: ¿tiene alérgenos <strong>${d}</strong>?`,
   ],
   cutlery:[
-    d=>`¿Cómo marcamos <strong>${d}</strong>?`,
-    d=>`Mesa 3 pide <strong>${d}</strong> — ¿qué cubiertos ponemos?`,
-    d=>`El jefe de sala pregunta: marcaje para <strong>${d}</strong>`,
-    d=>`¿Qué cubiertos necesita <strong>${d}</strong>?`,
+    d=>LANG==='en'?`How do we set the cutlery for <strong>${d}</strong>?`:`¿Cómo marcamos <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 3 ordered <strong>${d}</strong> — what cutlery do we use?`:`Mesa 3 pide <strong>${d}</strong> — ¿qué cubiertos ponemos?`,
+    d=>LANG==='en'?`Floor manager asks: cutlery for <strong>${d}</strong>`:`El jefe de sala pregunta: marcaje para <strong>${d}</strong>`,
+    d=>LANG==='en'?`What cutlery does <strong>${d}</strong> need?`:`¿Qué cubiertos necesita <strong>${d}</strong>?`,
   ],
   ingredients:[
-    d=>`Mesa 5 quiere saber qué lleva <strong>${d}</strong>`,
-    d=>`El cliente de mesa 6 pregunta los ingredientes de <strong>${d}</strong>`,
-    d=>`¿Qué ingredientes tiene <strong>${d}</strong>?`,
-    d=>`Mesa 1: ¿Qué lleva exactamente <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 5 wants to know what's in <strong>${d}</strong>`:`Mesa 5 quiere saber qué lleva <strong>${d}</strong>`,
+    d=>LANG==='en'?`Guest at table 6 is asking for the ingredients of <strong>${d}</strong>`:`El cliente de mesa 6 pregunta los ingredientes de <strong>${d}</strong>`,
+    d=>LANG==='en'?`What ingredients does <strong>${d}</strong> have?`:`¿Qué ingredientes tiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 1: exactly what goes into <strong>${d}</strong>?`:`Mesa 1: ¿Qué lleva exactamente <strong>${d}</strong>?`,
   ],
   history:[
-    d=>`Mesa 8 quiere saber la historia de <strong>${d}</strong>`,
-    d=>`El cliente de mesa 2 pregunta por el origen de <strong>${d}</strong>`,
-    d=>`¿Qué le contamos al cliente sobre <strong>${d}</strong>?`,
-    d=>`Mesa 6 quiere saber el storytelling de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Table 8 wants to know the story behind <strong>${d}</strong>`:`Mesa 8 quiere saber la historia de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Guest at table 2 is asking about the origin of <strong>${d}</strong>`:`El cliente de mesa 2 pregunta por el origen de <strong>${d}</strong>`,
+    d=>LANG==='en'?`What do we tell the guest about <strong>${d}</strong>?`:`¿Qué le contamos al cliente sobre <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 6 wants the storytelling for <strong>${d}</strong>`:`Mesa 6 quiere saber el storytelling de <strong>${d}</strong>`,
   ],
 };
-const WAITER_OK=['¡Perfecto, gracias! 🙌','¡Eso es! 👌','¡Correcto! 💪','¡Excelente! ⭐','¡Muy bien! 🎯'];
-const WAITER_KO=['¡Eso no es correcto! 😬','¡El cliente no está contento! 😤','¡Fallo! 😒','Error... el cliente llama al manager 😰'];
+const WAITER_OK_ES=['¡Perfecto, gracias! 🙌','¡Eso es! 👌','¡Correcto! 💪','¡Excelente! ⭐','¡Muy bien! 🎯'];
+const WAITER_OK_EN=['Perfect, thank you! 🙌','Exactly right! 👌','Correct! 💪','Excellent! ⭐','Well done! 🎯'];
+const WAITER_OK=()=>LANG==='en'?WAITER_OK_EN:WAITER_OK_ES;
+const WAITER_KO_ES=['¡Eso no es correcto! 😬','¡El cliente no está contento! 😤','¡Fallo! 😒','Error... el cliente llama al manager 😰'];
+const WAITER_KO_EN=["Not correct! 😬","The guest is unhappy! 😤","Wrong! 😒","Oops... the guest is calling the manager 😰"];
+const WAITER_KO=()=>LANG==='en'?WAITER_KO_EN:WAITER_KO_ES;
 
 let txokoState=null;
 let txokoTimer=null;
@@ -2634,6 +4442,7 @@ function txBuildQuestion(){
 }
 
 // ── Level helpers ───────────────────────────────────
+function txLevelName(lvl){ return LANG==='en'?(lvl.name_en||lvl.name):lvl.name; }
 function txLevel(score){
   if(score>=20) return TXOKO_LEVELS[3];
   if(score>=10) return TXOKO_LEVELS[2];
@@ -2645,26 +4454,122 @@ function txLevel(score){
 function renderTxoko(){
   const emp=getEmp(currentUser);
   const record=emp.txokoRecord||0;
+  const failedCount=getFailedDishes().length;
+  const failedLabel=failedCount===0
+    ?(LANG==='en'?'No errors yet':'Sin fallos aún')
+    :(LANG==='en'?failedCount+' dishes to review':failedCount+' platos a repasar');
   document.getElementById('appContent').innerHTML=`
     <div class="txoko-wrap">
-      <div class="txoko-hero">
-        <div class="txoko-hero-icon">🍽️</div>
-        <div class="txoko-hero-title">Txoko</div>
-        <div class="txoko-hero-sub">Sobrevive al servicio</div>
-        <div class="txoko-record-box">
-          <div class="txoko-record-icon">🏆</div>
-          <div>
-            <div class="txoko-record-label">Tu récord</div>
-            <div class="txoko-record-val">${record} ${record===1?'comanda':'comandas'}</div>
+      <div class="games-header">
+        <div class="games-header-title">${LANG==='en'?'Games':'Juegos'}</div>
+        <div class="games-header-sub">${LANG==='en'?'Train while competing':'Entrena mientras compites'}</div>
+      </div>
+
+      <!-- TXOKO: Survive the service -->
+      <div class="game-card" onclick="txStart()">
+        <div class="game-card-bg">🍽️</div>
+        <div class="game-card-body">
+          <div class="game-card-label">${LANG==='en'?'SURVIVAL':'SUPERVIVENCIA'}</div>
+          <div class="game-card-title">Txoko</div>
+          <div class="game-card-desc">${LANG==='en'?'The waiter fires orders. Answer before the guest runs out of patience.':'El camarero te manda comandas. Responde antes de que el cliente pierda la paciencia.'}</div>
+          <div class="game-card-meta">
+            <span class="game-card-badge">🏆 ${record} ${LANG==='en'?(record===1?'order':'orders'):(record===1?'comanda':'comandas')}</span>
+            <span class="game-card-badge">❤️ 3 vidas</span>
           </div>
         </div>
-        <p style="font-size:.8rem;color:var(--parch2);margin-bottom:1.5rem;line-height:1.6">
-          El camarero te manda comandas. Responde antes de que el cliente se impaciente.<br>
-          <strong>3 errores y el servicio termina.</strong>
-        </p>
-        <button class="btn-primary" onclick="txStart()" style="width:100%">Comenzar servicio →</button>
+        <div class="game-card-arrow">▶</div>
+      </div>
+
+      <!-- TOP 10 inline under Txoko -->
+      ${renderTxTop10()}
+
+      <!-- ERROR MODE -->
+      <div class="game-card ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}">
+        <div class="game-card-bg">⚠️</div>
+        <div class="game-card-body">
+          <div class="game-card-label" style="color:var(--rose)">${LANG==='en'?'TRAINING':'ENTRENAMIENTO'}</div>
+          <div class="game-card-title">${LANG==='en'?'Weak Spots':'Puntos Débiles'}</div>
+          <div class="game-card-desc">${LANG==='en'?'Only the dishes you keep getting wrong. Face your mistakes.':'Solo los platos que más fallas. Enfrenta tus errores.'}</div>
+          <div class="game-card-meta">
+            <span class="game-card-badge">${failedLabel}</span>
+          </div>
+        </div>
+        <div class="game-card-arrow">${failedCount>0?'▶':'🔒'}</div>
+      </div>
+
+      <!-- DUEL 1v1 -->
+      <div class="game-card" onclick="renderDuel()">
+        <div class="game-card-bg">⚔️</div>
+        <div class="game-card-body">
+          <div class="game-card-label" style="color:#6b8cde">${LANG==='en'?'MULTIPLAYER':'MULTIJUGADOR'}</div>
+          <div class="game-card-title">${LANG==='en'?'1v1 Duel':'Duelo 1v1'}</div>
+          <div class="game-card-desc">${LANG==='en'?'Challenge a colleague. 7 rounds, same question. May the best win.':'Desafía a un compañero. 7 rondas, misma pregunta. Que gane el mejor.'}</div>
+          <div class="game-card-meta">
+            <span class="game-card-badge">👥 2 ${LANG==='en'?'players':'jugadores'}</span>
+            <span class="game-card-badge">7 ${LANG==='en'?'rounds':'rondas'}</span>
+          </div>
+        </div>
+        <div class="game-card-arrow">▶</div>
       </div>
     </div>`;
+  refreshTxTop10();
+}
+
+function renderTxTop10(){
+  // Build top 10 from local data immediately, then refresh from Supabase
+  const localEntries = Object.values(DB.employees)
+    .filter(e=>e.txokoRecord&&e.txokoRecord>0)
+    .sort((a,b)=>(b.txokoRecord||0)-(a.txokoRecord||0))
+    .slice(0,10)
+    .map(e=>({employee:e.name, record:e.txokoRecord}));
+  return buildTxTop10Html(localEntries);
+}
+
+function buildTxTop10Html(entries){
+  const medals=['🥇','🥈','🥉'];
+  const title = LANG==='en'?'Best Services':'Mejores Servicios';
+  const ordersLbl = LANG==='en'?'orders':'cmdas';
+  if(!entries.length){
+    return '<div class="tx-top10"><div class="tx-top10-title">🏆 Top 10 — '+title+'</div>'
+      +'<div style="text-align:center;font-size:.75rem;color:var(--parch3);padding:1rem">'
+      +(LANG==='en'?'No one has played yet. Be the first! 🎮':'Nadie ha jugado todavía. ¡Sé el primero! 🎮')
+      +'</div></div>';
+  }
+  const rows = entries.map((e,i)=>{
+    const isMe = e.employee===currentUser;
+    const pos = medals[i]||(i+1);
+    const posCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const meLabel = isMe?(LANG==='en'?' (you)':' (tú)'):'';
+    return '<div class="tx-top10-row">'
+      +'<span class="tx-top10-pos '+posCls+'">'+pos+'</span>'
+      +'<span class="tx-top10-name'+(isMe?' me':'')+'">'+e.employee+meLabel+'</span>'
+      +'<span class="tx-top10-score">'+e.record+' '+ordersLbl+'</span>'
+      +'</div>';
+  }).join('');
+  return '<div class="tx-top10" id="txTop10Container"><div class="tx-top10-title">🏆 Top 10 — '+title+' <span id="txTop10Loading" style="font-size:.6rem;opacity:.5">↻</span></div>'+rows+'</div>';
+}
+
+function refreshTxTop10(){
+  supaFetchTxokoTop10().then(remote=>{
+    const container=document.getElementById('txTop10Container');
+    if(!container) return;
+    const spinner=document.getElementById('txTop10Loading');
+    if(spinner) spinner.remove();
+    if(!remote||!remote.length) return;
+    // Merge with local: take best record per employee
+    const merged={};
+    Object.values(DB.employees).filter(e=>e.txokoRecord>0).forEach(e=>{
+      merged[e.name]={employee:e.name,record:e.txokoRecord};
+    });
+    remote.forEach(r=>{
+      if(!merged[r.employee]||r.record>merged[r.employee].record)
+        merged[r.employee]={employee:r.employee,record:r.record};
+    });
+    const sorted=Object.values(merged).sort((a,b)=>b.record-a.record).slice(0,10);
+    const parent=container.parentNode;
+    if(parent) parent.insertAdjacentHTML('afterbegin', buildTxTop10Html(sorted));
+    container.remove();
+  });
 }
 
 // ── Game flow ────────────────────────────────────────
@@ -2717,8 +4622,14 @@ function txAnswer(idx){
   const timeout=(idx===-1);
   const ok=!timeout && idx===q.correctIdx;
 
-  if(ok){ txokoState.score++; txokoState.streak++; }
-  else   { txokoState.lives--; txokoState.streak=0; }
+  if(ok){
+    playSound('correct');
+    const _ec=CAT_EMOJIS[txokoState.question&&DISHES.find(d=>getDish(d).name===txokoState.question.dishName)?.cat]||'⭐';
+    burstEmoji(_ec);
+    txokoState.score++; txokoState.streak++;
+    const xpAmt = txokoState.streak>=5?15:txokoState.streak>=3?10:7;
+    awardXP(xpAmt,LANG==='en'?'Correct order 🍽️':'Comanda correcta 🍽️');
+  } else { playSound('wrong'); txokoState.lives--; txokoState.streak=0; }
 
   // Highlight buttons using correctIdx — no string comparison needed
   document.querySelectorAll('.txoko-choice').forEach((el,i)=>{
@@ -2732,18 +4643,22 @@ function txAnswer(idx){
   const livesEl=document.getElementById('txokoLives');
   const streakEl=document.getElementById('txokoStreak');
   if(fb){
-    const msg=timeout?'⏱️ ¡Se acabó el tiempo!'
-      :ok?WAITER_OK[Math.floor(Math.random()*WAITER_OK.length)]
-         :WAITER_KO[Math.floor(Math.random()*WAITER_KO.length)];
+    const msg=timeout?(LANG==='en'?'⏱️ Time\'s up!':'⏱️ ¡Se acabó el tiempo!')
+      :ok?WAITER_OK()[Math.floor(Math.random()*WAITER_OK().length)]
+         :WAITER_KO()[Math.floor(Math.random()*WAITER_KO().length)];
     fb.textContent=msg;
     fb.className='txoko-feedback show '+(ok?'ok':'ko');
   }
   if(livesEl) livesEl.textContent='😠'.repeat(3-txokoState.lives)+'😊'.repeat(txokoState.lives);
-  if(streakEl) streakEl.textContent=txokoState.streak>1?`🔥 Racha x${txokoState.streak}`:'';
+  if(streakEl) streakEl.textContent=txokoState.streak>1?('🔥 '+(LANG==='en'?'Streak':'Racha')+' x'+txokoState.streak):'';
 
-  // Save record
+  // Save record + bonus XP
   const emp=getEmp(currentUser);
-  if(txokoState.score>(emp.txokoRecord||0)){ emp.txokoRecord=txokoState.score; saveDB(); }
+  if(txokoState.score>(emp.txokoRecord||0)){
+    emp.txokoRecord=txokoState.score; saveDB();
+    supaInsertTxokoRecord(currentUser, emp.txokoRecord);
+    awardXP(30,LANG==='en'?'New record! 🏆':'¡Nuevo récord! 🏆');
+  }
 
   if(txokoState.lives<=0) setTimeout(txGameOver,1200);
   else setTimeout(txNext, ok?900:1400);
@@ -2760,13 +4675,13 @@ function txRender(){
   document.getElementById('appContent').innerHTML=`
     <div class="txoko-game">
       <div class="txoko-hud">
-        <span class="txoko-lives" id="txokoLives">${'😠'.repeat(3-lives)}${'😊'.repeat(lives)}</span>
-        <span class="txoko-streak" id="txokoStreak">${streak>1?'🔥 Racha x'+streak:''}</span>
-        <span class="txoko-score-hud">${score} <span class="txoko-diff ${lvl.cls}">${lvl.name}</span></span>
+        <span class="txoko-lives" id="txokoLives">${"😠".repeat(3-lives)+"😊".repeat(lives)}</span>
+        <span class="txoko-streak" id="txokoStreak">${streak>1?('🔥 '+(LANG==='en'?'Streak':'Racha')+' x'+streak):''}</span>
+        <span class="txoko-score-hud">${score} <span class="txoko-diff ${lvl.cls}">${txLevelName(lvl)}</span></span>
       </div>
       <div class="txoko-patience-wrap">
         <div class="txoko-patience-label">
-          <span>⏱️ Paciencia del cliente</span>
+          <span>⏱️ ${LANG==='en'?"Guest's patience":'Paciencia del cliente'}</span>
           <span id="txokoTimeLeft">${Math.ceil(patienceLeft)}s</span>
         </div>
         <div class="txoko-patience-track">
@@ -2807,16 +4722,16 @@ function txGameOver(){
     <div class="txoko-wrap">
       <div class="txoko-gameover">
         <div class="txoko-gameover-icon">${isRecord?'🏆':'😬'}</div>
-        <div class="txoko-gameover-title">${isRecord?'¡Nuevo récord!':'Servicio terminado'}</div>
-        <div class="txoko-gameover-sub">El camarero cierra el cuaderno...</div>
+        <div class="txoko-gameover-title">${isRecord?(LANG==='en'?'New record!':'¡Nuevo récord!'):(LANG==='en'?'Service over':'Servicio terminado')}</div>
+        <div class="txoko-gameover-sub">${LANG==='en'?'The waiter closes the notepad...':'El camarero cierra el cuaderno...'}</div>
         <div class="txoko-gameover-stats">
           <div class="txoko-stat-card"><div class="txoko-stat-num">${txokoState.score}</div><div class="txoko-stat-lbl">Comandas</div></div>
           <div class="txoko-stat-card"><div class="txoko-stat-num">${record}</div><div class="txoko-stat-lbl">Récord</div></div>
           <div class="txoko-stat-card"><div class="txoko-stat-num">${timeStr}</div><div class="txoko-stat-lbl">Tiempo</div></div>
           <div class="txoko-stat-card"><div class="txoko-stat-num"><span class="txoko-diff ${lvl.cls}">${lvl.name}</span></div><div class="txoko-stat-lbl">Nivel alcanzado</div></div>
         </div>
-        <button class="btn-primary" onclick="txStart()" style="width:100%;margin-bottom:.75rem">Volver a intentarlo →</button>
-        <button class="btn-secondary" onclick="renderTxoko()" style="width:100%">Menú principal</button>
+        <button class="btn-primary" onclick="txStart()" style="width:100%;margin-bottom:.75rem">${LANG==='en'?'Try again →':'Volver a intentarlo →'}</button>
+        <button class="btn-secondary" onclick="renderTxoko()" style="width:100%">${LANG==='en'?'Main menu':'Menú principal'}</button>
       </div>
     </div>`;
 }
