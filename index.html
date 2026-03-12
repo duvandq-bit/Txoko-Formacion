@@ -3607,8 +3607,12 @@ function renderRanking(){
 
   supaFetchAllEmployees().then(remoteEmps => {
     let allEmps = {};
-    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
-    Object.keys(DB.employees).forEach(n => { if(n) allEmps[n] = DB.employees[n]; });
+    // Local first
+    Object.keys(DB.employees).forEach(n => { if(n) allEmps[n] = {...DB.employees[n], name: n}; });
+    // Remote wins — always higher XP is source of truth
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => {
+      if(!allEmps[e.name] || (e.xp||0) >= (allEmps[e.name].xp||0)) allEmps[e.name] = e;
+    });
 
     const sorted = Object.values(allEmps)
       .filter(e => e.name)
