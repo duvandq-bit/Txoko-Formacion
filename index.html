@@ -3008,19 +3008,14 @@ function closePinAndEnter(){
   // Show supervisor tab for Duvan
   const _supBtn=document.getElementById('navSupervisor');
   if(_supBtn) _supBtn.style.display=currentUser==='Duvan'?'':'none';
-  // If local XP is 0, try to restore from Supabase before showing dashboard
-  const localEmp = getEmp(currentUser);
-  if(!localEmp.xp || localEmp.xp === 0){
-    supaRestoreEmployee(currentUser).then(() => {
-      showTab('dashboard');
-      checkStreak();
-      supaUpsertEmployee(currentUser);
-    });
-  } else {
+  // Restore from Supabase first, then show dashboard, then sync back
+  supaRestoreEmployee(currentUser).then(() => {
     showTab('dashboard');
     checkStreak();
-    supaUpsertEmployee(currentUser);
-  }
+    // Only sync back if we have real data (avoid overwriting cloud with empty local)
+    const emp = getEmp(currentUser);
+    if(emp.xp && emp.xp > 0) supaUpsertEmployee(currentUser);
+  });
 }
 
 function pinCancel(){
