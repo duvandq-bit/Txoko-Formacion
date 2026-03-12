@@ -2397,21 +2397,7 @@ async function supaUpsertEmployee(name) {
         updated_at: new Date().toISOString()
       })
     });
-    if(!res.ok){
-      const txt = await res.text();
-      const el=document.createElement('div');
-      el.style.cssText='position:fixed;bottom:1rem;left:1rem;right:1rem;background:#a84040;color:#fff;padding:.75rem 1rem;border-radius:8px;font-size:.72rem;z-index:99999;font-family:monospace;word-break:break-all';
-      el.textContent='Sync error '+res.status+': '+txt;
-      document.body.appendChild(el);
-      setTimeout(()=>el.remove(),12000);
-    }
-  } catch(e) {
-    const el=document.createElement('div');
-    el.style.cssText='position:fixed;bottom:1rem;left:1rem;right:1rem;background:#a84040;color:#fff;padding:.75rem 1rem;border-radius:8px;font-size:.72rem;z-index:99999;font-family:monospace;word-break:break-all';
-    el.textContent='Sync exception: '+e.message;
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),12000);
-  }
+  } catch(e) { /* silent — local always saved */ }
 }
 
 async function supaFetchAllEmployees() {
