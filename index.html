@@ -1946,6 +1946,7 @@ async function supaFetchLeaderboard() {
     rows.forEach(r => {
       if (!r.employee || !r.total) return;
       const pct = Math.round(r.score / r.total * 100);
+      if (pct > 100 || pct < 0) return; // ignore corrupt entries
       if (!map[r.employee] || pct > map[r.employee].best) {
         map[r.employee] = { name: r.employee, best: pct };
       }
