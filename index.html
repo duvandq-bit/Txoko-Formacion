@@ -1331,6 +1331,7 @@ body::before{
     <button class="nav-btn" id="navRepaso" onclick="showTab('repaso')">Repaso</button>
     <button class="nav-btn" id="navStats" onclick="showTab('stats')">Estadísticas</button>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')">🎮 Juegos</button>
+    <button class="nav-btn" id="navRanking" onclick="showTab('ranking')">🏆 Ranking</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none">👁️ Sup.</button>
   </nav>
 
@@ -1562,6 +1563,60 @@ function setLang(lang) {
   document.getElementById('loginEnterBtn').textContent = t('enterBtn');
   document.getElementById('newEmpInput').placeholder = t('inputPlaceholder');
   
+// ═══ RANKING (visible to all) ═══
+function renderRanking(){
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🏆</div>
+      <div class="sup-hero-title">${LANG==='en'?'Team Ranking':'Ranking del Equipo'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Loading...':'Cargando...'}</div>
+    </div>
+    <div id="rankingContent" style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">⏳</div>
+  </div>`;
+
+  supaFetchAllEmployees().then(remoteEmps => {
+    let allEmps = {};
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
+    Object.keys(DB.employees).forEach(n => { if(n) allEmps[n] = DB.employees[n]; });
+
+    const sorted = Object.values(allEmps)
+      .filter(e => e.name)
+      .sort((a,b) => (b.xp||0) - (a.xp||0));
+
+    if(!sorted.length){
+      document.getElementById('rankingContent').innerHTML = `<div style="color:var(--parch3);font-size:.85rem">${LANG==='en'?'No data yet':'Sin datos todavía'}</div>`;
+      return;
+    }
+
+    const medals = ['🥇','🥈','🥉'];
+    const rows = sorted.map((emp, i) => {
+      const lvl = getLevelInfo(emp.xp||0);
+      const isMe = emp.name === currentUser;
+      const known = Object.values(emp.knownDishes||{}).filter(Boolean).length;
+      const sessions = (emp.sessions||[]).length;
+      return `<div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;background:${isMe?'var(--gold-b)':'#fff'};border:1px solid ${isMe?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);margin-bottom:.45rem;transition:all .2s">
+        <div style="font-size:1.3rem;width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch3)">${i+1}</span>`}</div>
+        <div style="width:32px;height:32px;border-radius:50%;background:${isMe?'var(--gold-a)':'var(--ink3)'};border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.85rem;font-weight:500;color:var(--parchment);${isMe?'color:var(--gold)':''}">${emp.name}${isMe?' ← tú':''}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold)">${(emp.xp||0).toLocaleString()}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">XP</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('rankingContent').innerHTML = `
+      <div style="margin-bottom:1rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;opacity:.8">— ${LANG==='en'?'By XP':'Por XP'} —</div>
+        ${rows}
+      </div>`;
+  });
+}
+
 // ═══ SUPERVISOR PANEL ═══
 const SUP_PIN = '1966'; // Duvan's supervisor PIN
 
@@ -1680,6 +1735,24 @@ function renderSupDashboard(){
         </div>
         <div class="sup-topic-bars">${topicBars}</div>
         ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+        <div style="border-top:1px solid var(--line);margin-top:.75rem;padding-top:.75rem">
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">${LANG==='en'?'Recent exams':'Últimos exámenes'}</div>
+          ${sessions.length===0
+            ? `<div style="font-size:.75rem;color:var(--parch4);font-style:italic">${LANG==='en'?'No exams yet':'Sin exámenes aún'}</div>`
+            : [...sessions].reverse().slice(0,5).map(s=>{
+                const pct=s.total?Math.round((s.score||0)/s.total*100):0;
+                const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+                const d=s.ts?new Date(s.ts):null;
+                const dt=d?`${d.getDate()}/${d.getMonth()+1}`:'—';
+                const topic=s.topic==='mixed'?'Mixto':(TOPICS.find(tp=>tp.key===s.topic)?.label||s.topic||'—');
+                return `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">
+                  <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);width:32px">${dt}</span>
+                  <span style="font-size:.72rem;color:var(--parch2);flex:1">${topic}</span>
+                  <span style="font-family:'DM Mono',monospace;font-size:.65rem;font-weight:600;color:${col}">${pct}%</span>
+                </div>`;
+              }).join('')
+          }
+        </div>
       </div>`;
     }).join('');
     const totalEmp=empNames.length;
@@ -1702,9 +1775,114 @@ function renderSupDashboard(){
         ${renderWeeklyChallenge()}
         <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
         ${cards}
-        <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn-secondary" onclick="renderCartaEditor()" style="flex:1">✏️ ${LANG==='en'?'Edit menu':'Editar carta'}</button>
+          <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="flex:1">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+        </div>
       </div>`;
   });
+}
+
+// ═══ CARTA EDITOR ═══
+function renderCartaEditor(){
+  const cats = [...new Set(DISHES.map(d=>d.cat))];
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">✏️</div>
+      <div class="sup-hero-title">${LANG==='en'?'Menu Editor':'Editor de Carta'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Edit dish details':'Edita los detalles de los platos'}</div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <select id="cartaCatFilter" onchange="renderCartaList()" style="width:100%;padding:.6rem 1rem;border:1px solid var(--line);border-radius:var(--r2);background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment)">
+        <option value="all">${LANG==='en'?'All categories':'Todas las categorías'}</option>
+        ${cats.map(c=>`<option value="${c}">${c}</option>`).join('')}
+      </select>
+    </div>
+    <div id="cartaDishList"></div>
+    <button class="btn-secondary" onclick="renderSupDashboard()" style="width:100%;margin-top:.75rem">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
+  </div>`;
+  renderCartaList();
+}
+
+function renderCartaList(){
+  const cat = document.getElementById('cartaCatFilter')?.value||'all';
+  const dishes = cat==='all'?DISHES:DISHES.filter(d=>d.cat===cat);
+  const container = document.getElementById('cartaDishList');
+  if(!container) return;
+  container.innerHTML = dishes.map(d=>`
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.45rem;cursor:pointer;transition:all .2s" onclick="renderCartaDishEdit(${d.id})" class="card-hover">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.85rem;font-weight:500;color:var(--parchment)">${d.name}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);margin-top:.1rem">${d.cat}</div>
+        </div>
+        <span style="color:var(--parch4);font-size:.8rem">›</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderCartaDishEdit(id){
+  const d = DISHES.find(x=>x.id===id);
+  if(!d) return;
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+      <button onclick="renderCartaEditor()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${d.name}</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Alérgenos</div>
+      <textarea id="editAllergens" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.allergens.join(', ')}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Marcaje</div>
+      <textarea id="editCutlery" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.cutlery}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Ingredientes</div>
+      <textarea id="editIngredients" rows="4" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.ingredients}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Historia / Storytelling</div>
+      <textarea id="editHistory" rows="4" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.history||''}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Notas</div>
+      <textarea id="editNotes" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.notes||''}</textarea>
+    </div>
+    <button onclick="saveCartaDish(${id})" class="btn-primary" style="width:100%;padding:.85rem">💾 ${LANG==='en'?'Save changes':'Guardar cambios'}</button>
+    <div id="cartaSaveMsg" style="text-align:center;margin-top:.5rem;font-size:.75rem;color:var(--sage);font-family:'DM Mono',monospace;display:none">✓ ${LANG==='en'?'Saved':'Guardado'}</div>
+  </div>`;
+}
+
+function saveCartaDish(id){
+  const d = DISHES.find(x=>x.id===id);
+  if(!d) return;
+  d.allergens = document.getElementById('editAllergens').value.split(',').map(s=>s.trim()).filter(Boolean);
+  d.cutlery = document.getElementById('editCutlery').value.trim();
+  d.ingredients = document.getElementById('editIngredients').value.trim();
+  d.history = document.getElementById('editHistory').value.trim();
+  d.notes = document.getElementById('editNotes').value.trim()||null;
+  // Save overrides to localStorage
+  try {
+    const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
+    overrides[id] = {allergens:d.allergens,cutlery:d.cutlery,ingredients:d.ingredients,history:d.history,notes:d.notes};
+    localStorage.setItem('txoko_carta_overrides', JSON.stringify(overrides));
+  } catch(e){}
+  const msg = document.getElementById('cartaSaveMsg');
+  if(msg){ msg.style.display='block'; setTimeout(()=>msg.style.display='none',2000); }
+}
+
+// Load carta overrides on startup
+function loadCartaOverrides(){
+  try {
+    const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
+    Object.entries(overrides).forEach(([id,data])=>{
+      const d = DISHES.find(x=>x.id===parseInt(id));
+      if(d){ Object.assign(d,data); }
+    });
+  } catch(e){}
 }
 
 
@@ -1724,6 +1902,64 @@ function getFailedDishes(){
   }
   return failed.slice(0,30); // max 30
 }
+function startPersonalErrorMode(){
+  const emp = getEmp(currentUser);
+  const topics = emp.topicScores||{};
+  // Find weakest topic
+  let weakTopic = 'allergens', weakPct = 100;
+  for(const [k,v] of Object.entries(topics)){
+    if(v.total>5){
+      const p = Math.round(v.correct/v.total*100);
+      if(p < weakPct){ weakPct=p; weakTopic=k; }
+    }
+  }
+  // Use examCorrect to find weak dishes
+  const ec = emp.examCorrect||{};
+  const weakDishes = DISHES.filter(d => (ec[d.id]||0) < 3);
+  if(!weakDishes.length){
+    const toast=document.createElement('div');
+    toast.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;padding:.5rem 1.2rem;border-radius:30px;font-family:Jost,sans-serif;font-size:.82rem;font-weight:600;z-index:9999';
+    toast.textContent = LANG==='en'?'🎉 You know all dishes!':'🎉 ¡Dominas todos los platos!';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),2500);
+    return;
+  }
+  examConfig={count:Math.min(15,weakDishes.length),topic:weakTopic,cat:'all'};
+  examDishes=[];examIndex=0;examScore=0;examAnswered=false;
+  const noHist=t('noHistory');
+  const isEmpty=v=>!v||v==='—'||v===noHist;
+  let attempts=0;
+  const usedIds=new Set();
+  while(examDishes.length<examConfig.count&&attempts<200){
+    attempts++;
+    const d=weakDishes[Math.floor(Math.random()*weakDishes.length)];
+    if(usedIds.has(d.id)&&weakDishes.length<=examConfig.count){usedIds.clear();}
+    if(usedIds.has(d.id)) continue;
+    const topic=TOPICS.find(tp=>tp.key===weakTopic)||TOPICS[0];
+    let correct=(topic.a(d)||'').trim().replace(/\.+$/,'');
+    if(isEmpty(correct)){
+      const fb=TOPICS.find(tp=>{const a=tp.a(d);return !isEmpty(a);});
+      if(!fb) continue;
+      correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
+    }
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongs=[];
+    for(const o of wrongPool){
+      if(wrongs.length>=3) break;
+      const w=(topic.a(o)||'').trim().replace(/\.+$/,'');
+      if(!isEmpty(w)&&w!==correct&&!wrongs.includes(w)) wrongs.push(w);
+    }
+    if(wrongs.length<3) continue;
+    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const correctIdx=choices.indexOf(correct);
+    usedIds.add(d.id);
+    examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
+  }
+  if(examDishes.length===0){ startErrorMode(); return; }
+  examActive=true;examStartTime=Date.now();examResults=null;
+  showTab('exam');
+}
+
 function startErrorMode(){
   const failed=getFailedDishes();
   if(failed.length===0) return;
@@ -2562,31 +2798,39 @@ function showXPToast(amount, reason){
 }
 
 function showLevelUpModal(levelInfo){
+  // Confetti burst
+  const confettiColors=['#9a7340','#c8a96e','#3d7a54','#3a5fa0','#a84040'];
+  for(let i=0;i<40;i++){
+    const el=document.createElement('div');
+    const color=confettiColors[Math.floor(Math.random()*confettiColors.length)];
+    const size=Math.random()*8+4;
+    const x=Math.random()*window.innerWidth;
+    const delay=Math.random()*600;
+    const dur=Math.random()*1200+800;
+    el.style.cssText=`position:fixed;top:-10px;left:${x}px;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>0.5?'50%':'2px'};z-index:10001;pointer-events:none;opacity:1;transition:top ${dur}ms ${delay}ms cubic-bezier(.25,.46,.45,.94),opacity ${dur}ms ${delay}ms ease`;
+    document.body.appendChild(el);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      el.style.top=(window.innerHeight+20)+'px';
+      el.style.opacity='0';
+    }));
+    setTimeout(()=>el.remove(), dur+delay+100);
+  }
   const modal = document.createElement('div');
   modal.id = 'levelUpModal';
-  modal.style.cssText = `
-    position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:10000;
-    display:flex;align-items:center;justify-content:center;
-    animation:fadeIn .3s ease;
-  `;
+  modal.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10000;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease;`;
   modal.innerHTML = `
-    <div style="background:var(--ink);border:1px solid var(--gold-a);border-radius:var(--r);
-      padding:2rem;text-align:center;max-width:320px;width:90%;
-      box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .4s ease;">
-      <div style="font-size:3.5rem;margin-bottom:.5rem">${levelInfo.icon}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);
-        text-transform:uppercase;letter-spacing:.15em;margin-bottom:.25rem">
-        ${LANG==='en'?`Level ${levelInfo.level} unlocked!`:`¡Nivel ${levelInfo.level} desbloqueado!`}
+    <div style="background:var(--ink);border:2px solid var(--gold-a);border-radius:var(--r);padding:2.5rem 2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:scaleIn .4s cubic-bezier(.34,1.56,.64,1);">
+      <div style="font-size:4rem;margin-bottom:.25rem;animation:scaleIn .5s .2s cubic-bezier(.34,1.56,.64,1) both">${levelInfo.icon}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.5rem;opacity:.8">
+        ✦ ${LANG==='en'?'Level Up':'Nivel alcanzado'} ✦
       </div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;
-        color:var(--parchment);margin-bottom:.5rem">${levelInfo.title}</div>
-      <div style="font-size:.78rem;color:var(--parch2);margin-bottom:1.5rem;
-        font-style:italic">"${levelInfo.desc}"</div>
-      <button onclick="document.getElementById('levelUpModal').remove()"
-        style="background:var(--parchment);color:var(--ink);border:none;
-        border-radius:30px;padding:.6rem 1.5rem;font-family:'Jost',sans-serif;
-        font-weight:600;font-size:.85rem;cursor:pointer">
-        ${LANG==='en'?'Thanks! 🎉':'¡Gracias! 🎉'}
+      <div style="font-family:'Playfair Display',serif;font-size:1.75rem;color:var(--parchment);margin-bottom:.3rem;line-height:1.2">
+        ${LANG==='en'?`Level ${levelInfo.level}`:`Nivel ${levelInfo.level}`}
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:.6rem;font-style:italic">${levelInfo.title}</div>
+      <div style="font-size:.78rem;color:var(--parch2);margin-bottom:1.75rem;font-style:italic;line-height:1.6">"${levelInfo.desc}"</div>
+      <button onclick="document.getElementById('levelUpModal').remove()" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);border:none;border-radius:30px;padding:.7rem 2rem;font-family:'Jost',sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;letter-spacing:.05em">
+        ${LANG==='en'?'Keep going! 🚀':'¡A seguir! 🚀'}
       </button>
     </div>`;
   playSound('levelup');
@@ -2626,6 +2870,7 @@ let repasoView='cats',repasoCat=null,repasoTopic='allergens';
 
 // ═══════ LOGIN ═══════
 loadDB();
+loadCartaOverrides();
 
 
 // ═══ DAILY STREAK ═══
@@ -3028,6 +3273,60 @@ function logout(){
   document.getElementById('screenLogin').classList.add('active');
   document.getElementById('screenApp').classList.remove('active');
   
+// ═══ RANKING (visible to all) ═══
+function renderRanking(){
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🏆</div>
+      <div class="sup-hero-title">${LANG==='en'?'Team Ranking':'Ranking del Equipo'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Loading...':'Cargando...'}</div>
+    </div>
+    <div id="rankingContent" style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">⏳</div>
+  </div>`;
+
+  supaFetchAllEmployees().then(remoteEmps => {
+    let allEmps = {};
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
+    Object.keys(DB.employees).forEach(n => { if(n) allEmps[n] = DB.employees[n]; });
+
+    const sorted = Object.values(allEmps)
+      .filter(e => e.name)
+      .sort((a,b) => (b.xp||0) - (a.xp||0));
+
+    if(!sorted.length){
+      document.getElementById('rankingContent').innerHTML = `<div style="color:var(--parch3);font-size:.85rem">${LANG==='en'?'No data yet':'Sin datos todavía'}</div>`;
+      return;
+    }
+
+    const medals = ['🥇','🥈','🥉'];
+    const rows = sorted.map((emp, i) => {
+      const lvl = getLevelInfo(emp.xp||0);
+      const isMe = emp.name === currentUser;
+      const known = Object.values(emp.knownDishes||{}).filter(Boolean).length;
+      const sessions = (emp.sessions||[]).length;
+      return `<div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;background:${isMe?'var(--gold-b)':'#fff'};border:1px solid ${isMe?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);margin-bottom:.45rem;transition:all .2s">
+        <div style="font-size:1.3rem;width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch3)">${i+1}</span>`}</div>
+        <div style="width:32px;height:32px;border-radius:50%;background:${isMe?'var(--gold-a)':'var(--ink3)'};border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.85rem;font-weight:500;color:var(--parchment);${isMe?'color:var(--gold)':''}">${emp.name}${isMe?' ← tú':''}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold)">${(emp.xp||0).toLocaleString()}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">XP</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('rankingContent').innerHTML = `
+      <div style="margin-bottom:1rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;opacity:.8">— ${LANG==='en'?'By XP':'Por XP'} —</div>
+        ${rows}
+      </div>`;
+  });
+}
+
 // ═══ SUPERVISOR PANEL ═══
 const SUP_PIN = '1966'; // Duvan's supervisor PIN
 
@@ -3146,6 +3445,24 @@ function renderSupDashboard(){
         </div>
         <div class="sup-topic-bars">${topicBars}</div>
         ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+        <div style="border-top:1px solid var(--line);margin-top:.75rem;padding-top:.75rem">
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">${LANG==='en'?'Recent exams':'Últimos exámenes'}</div>
+          ${sessions.length===0
+            ? `<div style="font-size:.75rem;color:var(--parch4);font-style:italic">${LANG==='en'?'No exams yet':'Sin exámenes aún'}</div>`
+            : [...sessions].reverse().slice(0,5).map(s=>{
+                const pct=s.total?Math.round((s.score||0)/s.total*100):0;
+                const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+                const d=s.ts?new Date(s.ts):null;
+                const dt=d?`${d.getDate()}/${d.getMonth()+1}`:'—';
+                const topic=s.topic==='mixed'?'Mixto':(TOPICS.find(tp=>tp.key===s.topic)?.label||s.topic||'—');
+                return `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">
+                  <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);width:32px">${dt}</span>
+                  <span style="font-size:.72rem;color:var(--parch2);flex:1">${topic}</span>
+                  <span style="font-family:'DM Mono',monospace;font-size:.65rem;font-weight:600;color:${col}">${pct}%</span>
+                </div>`;
+              }).join('')
+          }
+        </div>
       </div>`;
     }).join('');
     const totalEmp=empNames.length;
@@ -3168,9 +3485,114 @@ function renderSupDashboard(){
         ${renderWeeklyChallenge()}
         <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
         ${cards}
-        <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn-secondary" onclick="renderCartaEditor()" style="flex:1">✏️ ${LANG==='en'?'Edit menu':'Editar carta'}</button>
+          <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="flex:1">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+        </div>
       </div>`;
   });
+}
+
+// ═══ CARTA EDITOR ═══
+function renderCartaEditor(){
+  const cats = [...new Set(DISHES.map(d=>d.cat))];
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">✏️</div>
+      <div class="sup-hero-title">${LANG==='en'?'Menu Editor':'Editor de Carta'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Edit dish details':'Edita los detalles de los platos'}</div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <select id="cartaCatFilter" onchange="renderCartaList()" style="width:100%;padding:.6rem 1rem;border:1px solid var(--line);border-radius:var(--r2);background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment)">
+        <option value="all">${LANG==='en'?'All categories':'Todas las categorías'}</option>
+        ${cats.map(c=>`<option value="${c}">${c}</option>`).join('')}
+      </select>
+    </div>
+    <div id="cartaDishList"></div>
+    <button class="btn-secondary" onclick="renderSupDashboard()" style="width:100%;margin-top:.75rem">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
+  </div>`;
+  renderCartaList();
+}
+
+function renderCartaList(){
+  const cat = document.getElementById('cartaCatFilter')?.value||'all';
+  const dishes = cat==='all'?DISHES:DISHES.filter(d=>d.cat===cat);
+  const container = document.getElementById('cartaDishList');
+  if(!container) return;
+  container.innerHTML = dishes.map(d=>`
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.45rem;cursor:pointer;transition:all .2s" onclick="renderCartaDishEdit(${d.id})" class="card-hover">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.85rem;font-weight:500;color:var(--parchment)">${d.name}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);margin-top:.1rem">${d.cat}</div>
+        </div>
+        <span style="color:var(--parch4);font-size:.8rem">›</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderCartaDishEdit(id){
+  const d = DISHES.find(x=>x.id===id);
+  if(!d) return;
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+      <button onclick="renderCartaEditor()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${d.name}</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Alérgenos</div>
+      <textarea id="editAllergens" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.allergens.join(', ')}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Marcaje</div>
+      <textarea id="editCutlery" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.cutlery}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Ingredientes</div>
+      <textarea id="editIngredients" rows="4" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.ingredients}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Historia / Storytelling</div>
+      <textarea id="editHistory" rows="4" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.history||''}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Notas</div>
+      <textarea id="editNotes" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.notes||''}</textarea>
+    </div>
+    <button onclick="saveCartaDish(${id})" class="btn-primary" style="width:100%;padding:.85rem">💾 ${LANG==='en'?'Save changes':'Guardar cambios'}</button>
+    <div id="cartaSaveMsg" style="text-align:center;margin-top:.5rem;font-size:.75rem;color:var(--sage);font-family:'DM Mono',monospace;display:none">✓ ${LANG==='en'?'Saved':'Guardado'}</div>
+  </div>`;
+}
+
+function saveCartaDish(id){
+  const d = DISHES.find(x=>x.id===id);
+  if(!d) return;
+  d.allergens = document.getElementById('editAllergens').value.split(',').map(s=>s.trim()).filter(Boolean);
+  d.cutlery = document.getElementById('editCutlery').value.trim();
+  d.ingredients = document.getElementById('editIngredients').value.trim();
+  d.history = document.getElementById('editHistory').value.trim();
+  d.notes = document.getElementById('editNotes').value.trim()||null;
+  // Save overrides to localStorage
+  try {
+    const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
+    overrides[id] = {allergens:d.allergens,cutlery:d.cutlery,ingredients:d.ingredients,history:d.history,notes:d.notes};
+    localStorage.setItem('txoko_carta_overrides', JSON.stringify(overrides));
+  } catch(e){}
+  const msg = document.getElementById('cartaSaveMsg');
+  if(msg){ msg.style.display='block'; setTimeout(()=>msg.style.display='none',2000); }
+}
+
+// Load carta overrides on startup
+function loadCartaOverrides(){
+  try {
+    const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
+    Object.entries(overrides).forEach(([id,data])=>{
+      const d = DISHES.find(x=>x.id===parseInt(id));
+      if(d){ Object.assign(d,data); }
+    });
+  } catch(e){}
 }
 
 
@@ -3190,6 +3612,64 @@ function getFailedDishes(){
   }
   return failed.slice(0,30); // max 30
 }
+function startPersonalErrorMode(){
+  const emp = getEmp(currentUser);
+  const topics = emp.topicScores||{};
+  // Find weakest topic
+  let weakTopic = 'allergens', weakPct = 100;
+  for(const [k,v] of Object.entries(topics)){
+    if(v.total>5){
+      const p = Math.round(v.correct/v.total*100);
+      if(p < weakPct){ weakPct=p; weakTopic=k; }
+    }
+  }
+  // Use examCorrect to find weak dishes
+  const ec = emp.examCorrect||{};
+  const weakDishes = DISHES.filter(d => (ec[d.id]||0) < 3);
+  if(!weakDishes.length){
+    const toast=document.createElement('div');
+    toast.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;padding:.5rem 1.2rem;border-radius:30px;font-family:Jost,sans-serif;font-size:.82rem;font-weight:600;z-index:9999';
+    toast.textContent = LANG==='en'?'🎉 You know all dishes!':'🎉 ¡Dominas todos los platos!';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),2500);
+    return;
+  }
+  examConfig={count:Math.min(15,weakDishes.length),topic:weakTopic,cat:'all'};
+  examDishes=[];examIndex=0;examScore=0;examAnswered=false;
+  const noHist=t('noHistory');
+  const isEmpty=v=>!v||v==='—'||v===noHist;
+  let attempts=0;
+  const usedIds=new Set();
+  while(examDishes.length<examConfig.count&&attempts<200){
+    attempts++;
+    const d=weakDishes[Math.floor(Math.random()*weakDishes.length)];
+    if(usedIds.has(d.id)&&weakDishes.length<=examConfig.count){usedIds.clear();}
+    if(usedIds.has(d.id)) continue;
+    const topic=TOPICS.find(tp=>tp.key===weakTopic)||TOPICS[0];
+    let correct=(topic.a(d)||'').trim().replace(/\.+$/,'');
+    if(isEmpty(correct)){
+      const fb=TOPICS.find(tp=>{const a=tp.a(d);return !isEmpty(a);});
+      if(!fb) continue;
+      correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
+    }
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongs=[];
+    for(const o of wrongPool){
+      if(wrongs.length>=3) break;
+      const w=(topic.a(o)||'').trim().replace(/\.+$/,'');
+      if(!isEmpty(w)&&w!==correct&&!wrongs.includes(w)) wrongs.push(w);
+    }
+    if(wrongs.length<3) continue;
+    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const correctIdx=choices.indexOf(correct);
+    usedIds.add(d.id);
+    examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
+  }
+  if(examDishes.length===0){ startErrorMode(); return; }
+  examActive=true;examStartTime=Date.now();examResults=null;
+  showTab('exam');
+}
+
 function startErrorMode(){
   const failed=getFailedDishes();
   if(failed.length===0) return;
@@ -3464,11 +3944,11 @@ renderLogin();
 function showTab(tab){
   currentTab=tab;
   document.querySelectorAll('.nav-btn').forEach((b,i)=>{
-    b.classList.toggle('active',['dashboard','flashcards','exam','repaso','stats','txoko','supervisor'][i]===tab);
+    b.classList.toggle('active',['dashboard','flashcards','exam','repaso','stats','txoko','ranking','supervisor'][i]===tab);
   });
   const c=document.getElementById('appContent');
   c.innerHTML='';
-  ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,supervisor:renderSupervisor})[tab]();
+  ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor})[tab]();
 }
 
 // ═══════ DASHBOARD ═══════
@@ -3536,6 +4016,16 @@ function renderDashboard(){
         <div class="mode-tile-icon">📖</div>
         <div class="mode-tile-title">${t('navRepaso')}</div>
         <div class="mode-tile-desc">${t('repasoDesc')}</div>
+      </div>
+      <div class="mode-tile" onclick="startPersonalErrorMode()">
+        <div class="mode-tile-icon">🎯</div>
+        <div class="mode-tile-title">${LANG==='en'?'Weak spots':'Mis puntos débiles'}</div>
+        <div class="mode-tile-desc">${LANG==='en'?'Practice the dishes you fail most':'Repasa los platos donde más fallas'}</div>
+      </div>
+      <div class="mode-tile" onclick="showTab('ranking')">
+        <div class="mode-tile-icon">🏆</div>
+        <div class="mode-tile-title">${LANG==='en'?'Team ranking':'Ranking del equipo'}</div>
+        <div class="mode-tile-desc">${LANG==='en'?'See how you compare to your team':'Compara tu progreso con el equipo'}</div>
       </div>
     </div>
 
@@ -4006,6 +4496,60 @@ function renderStats(){
 }
 
 
+// ═══ RANKING (visible to all) ═══
+function renderRanking(){
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🏆</div>
+      <div class="sup-hero-title">${LANG==='en'?'Team Ranking':'Ranking del Equipo'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Loading...':'Cargando...'}</div>
+    </div>
+    <div id="rankingContent" style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">⏳</div>
+  </div>`;
+
+  supaFetchAllEmployees().then(remoteEmps => {
+    let allEmps = {};
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
+    Object.keys(DB.employees).forEach(n => { if(n) allEmps[n] = DB.employees[n]; });
+
+    const sorted = Object.values(allEmps)
+      .filter(e => e.name)
+      .sort((a,b) => (b.xp||0) - (a.xp||0));
+
+    if(!sorted.length){
+      document.getElementById('rankingContent').innerHTML = `<div style="color:var(--parch3);font-size:.85rem">${LANG==='en'?'No data yet':'Sin datos todavía'}</div>`;
+      return;
+    }
+
+    const medals = ['🥇','🥈','🥉'];
+    const rows = sorted.map((emp, i) => {
+      const lvl = getLevelInfo(emp.xp||0);
+      const isMe = emp.name === currentUser;
+      const known = Object.values(emp.knownDishes||{}).filter(Boolean).length;
+      const sessions = (emp.sessions||[]).length;
+      return `<div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;background:${isMe?'var(--gold-b)':'#fff'};border:1px solid ${isMe?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);margin-bottom:.45rem;transition:all .2s">
+        <div style="font-size:1.3rem;width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch3)">${i+1}</span>`}</div>
+        <div style="width:32px;height:32px;border-radius:50%;background:${isMe?'var(--gold-a)':'var(--ink3)'};border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.85rem;font-weight:500;color:var(--parchment);${isMe?'color:var(--gold)':''}">${emp.name}${isMe?' ← tú':''}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold)">${(emp.xp||0).toLocaleString()}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">XP</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('rankingContent').innerHTML = `
+      <div style="margin-bottom:1rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;opacity:.8">— ${LANG==='en'?'By XP':'Por XP'} —</div>
+        ${rows}
+      </div>`;
+  });
+}
+
 // ═══ SUPERVISOR PANEL ═══
 const SUP_PIN = '1966'; // Duvan's supervisor PIN
 
@@ -4124,6 +4668,24 @@ function renderSupDashboard(){
         </div>
         <div class="sup-topic-bars">${topicBars}</div>
         ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+        <div style="border-top:1px solid var(--line);margin-top:.75rem;padding-top:.75rem">
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">${LANG==='en'?'Recent exams':'Últimos exámenes'}</div>
+          ${sessions.length===0
+            ? `<div style="font-size:.75rem;color:var(--parch4);font-style:italic">${LANG==='en'?'No exams yet':'Sin exámenes aún'}</div>`
+            : [...sessions].reverse().slice(0,5).map(s=>{
+                const pct=s.total?Math.round((s.score||0)/s.total*100):0;
+                const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+                const d=s.ts?new Date(s.ts):null;
+                const dt=d?`${d.getDate()}/${d.getMonth()+1}`:'—';
+                const topic=s.topic==='mixed'?'Mixto':(TOPICS.find(tp=>tp.key===s.topic)?.label||s.topic||'—');
+                return `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">
+                  <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);width:32px">${dt}</span>
+                  <span style="font-size:.72rem;color:var(--parch2);flex:1">${topic}</span>
+                  <span style="font-family:'DM Mono',monospace;font-size:.65rem;font-weight:600;color:${col}">${pct}%</span>
+                </div>`;
+              }).join('')
+          }
+        </div>
       </div>`;
     }).join('');
     const totalEmp=empNames.length;
@@ -4146,9 +4708,114 @@ function renderSupDashboard(){
         ${renderWeeklyChallenge()}
         <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
         ${cards}
-        <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <button class="btn-secondary" onclick="renderCartaEditor()" style="flex:1">✏️ ${LANG==='en'?'Edit menu':'Editar carta'}</button>
+          <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="flex:1">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+        </div>
       </div>`;
   });
+}
+
+// ═══ CARTA EDITOR ═══
+function renderCartaEditor(){
+  const cats = [...new Set(DISHES.map(d=>d.cat))];
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">✏️</div>
+      <div class="sup-hero-title">${LANG==='en'?'Menu Editor':'Editor de Carta'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Edit dish details':'Edita los detalles de los platos'}</div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <select id="cartaCatFilter" onchange="renderCartaList()" style="width:100%;padding:.6rem 1rem;border:1px solid var(--line);border-radius:var(--r2);background:#fff;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment)">
+        <option value="all">${LANG==='en'?'All categories':'Todas las categorías'}</option>
+        ${cats.map(c=>`<option value="${c}">${c}</option>`).join('')}
+      </select>
+    </div>
+    <div id="cartaDishList"></div>
+    <button class="btn-secondary" onclick="renderSupDashboard()" style="width:100%;margin-top:.75rem">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
+  </div>`;
+  renderCartaList();
+}
+
+function renderCartaList(){
+  const cat = document.getElementById('cartaCatFilter')?.value||'all';
+  const dishes = cat==='all'?DISHES:DISHES.filter(d=>d.cat===cat);
+  const container = document.getElementById('cartaDishList');
+  if(!container) return;
+  container.innerHTML = dishes.map(d=>`
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.45rem;cursor:pointer;transition:all .2s" onclick="renderCartaDishEdit(${d.id})" class="card-hover">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.85rem;font-weight:500;color:var(--parchment)">${d.name}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);margin-top:.1rem">${d.cat}</div>
+        </div>
+        <span style="color:var(--parch4);font-size:.8rem">›</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderCartaDishEdit(id){
+  const d = DISHES.find(x=>x.id===id);
+  if(!d) return;
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+      <button onclick="renderCartaEditor()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${d.name}</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Alérgenos</div>
+      <textarea id="editAllergens" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.allergens.join(', ')}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Marcaje</div>
+      <textarea id="editCutlery" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.cutlery}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Ingredientes</div>
+      <textarea id="editIngredients" rows="4" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.ingredients}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Historia / Storytelling</div>
+      <textarea id="editHistory" rows="4" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.history||''}</textarea>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Notas</div>
+      <textarea id="editNotes" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.notes||''}</textarea>
+    </div>
+    <button onclick="saveCartaDish(${id})" class="btn-primary" style="width:100%;padding:.85rem">💾 ${LANG==='en'?'Save changes':'Guardar cambios'}</button>
+    <div id="cartaSaveMsg" style="text-align:center;margin-top:.5rem;font-size:.75rem;color:var(--sage);font-family:'DM Mono',monospace;display:none">✓ ${LANG==='en'?'Saved':'Guardado'}</div>
+  </div>`;
+}
+
+function saveCartaDish(id){
+  const d = DISHES.find(x=>x.id===id);
+  if(!d) return;
+  d.allergens = document.getElementById('editAllergens').value.split(',').map(s=>s.trim()).filter(Boolean);
+  d.cutlery = document.getElementById('editCutlery').value.trim();
+  d.ingredients = document.getElementById('editIngredients').value.trim();
+  d.history = document.getElementById('editHistory').value.trim();
+  d.notes = document.getElementById('editNotes').value.trim()||null;
+  // Save overrides to localStorage
+  try {
+    const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
+    overrides[id] = {allergens:d.allergens,cutlery:d.cutlery,ingredients:d.ingredients,history:d.history,notes:d.notes};
+    localStorage.setItem('txoko_carta_overrides', JSON.stringify(overrides));
+  } catch(e){}
+  const msg = document.getElementById('cartaSaveMsg');
+  if(msg){ msg.style.display='block'; setTimeout(()=>msg.style.display='none',2000); }
+}
+
+// Load carta overrides on startup
+function loadCartaOverrides(){
+  try {
+    const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
+    Object.entries(overrides).forEach(([id,data])=>{
+      const d = DISHES.find(x=>x.id===parseInt(id));
+      if(d){ Object.assign(d,data); }
+    });
+  } catch(e){}
 }
 
 
@@ -4168,6 +4835,64 @@ function getFailedDishes(){
   }
   return failed.slice(0,30); // max 30
 }
+function startPersonalErrorMode(){
+  const emp = getEmp(currentUser);
+  const topics = emp.topicScores||{};
+  // Find weakest topic
+  let weakTopic = 'allergens', weakPct = 100;
+  for(const [k,v] of Object.entries(topics)){
+    if(v.total>5){
+      const p = Math.round(v.correct/v.total*100);
+      if(p < weakPct){ weakPct=p; weakTopic=k; }
+    }
+  }
+  // Use examCorrect to find weak dishes
+  const ec = emp.examCorrect||{};
+  const weakDishes = DISHES.filter(d => (ec[d.id]||0) < 3);
+  if(!weakDishes.length){
+    const toast=document.createElement('div');
+    toast.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;padding:.5rem 1.2rem;border-radius:30px;font-family:Jost,sans-serif;font-size:.82rem;font-weight:600;z-index:9999';
+    toast.textContent = LANG==='en'?'🎉 You know all dishes!':'🎉 ¡Dominas todos los platos!';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),2500);
+    return;
+  }
+  examConfig={count:Math.min(15,weakDishes.length),topic:weakTopic,cat:'all'};
+  examDishes=[];examIndex=0;examScore=0;examAnswered=false;
+  const noHist=t('noHistory');
+  const isEmpty=v=>!v||v==='—'||v===noHist;
+  let attempts=0;
+  const usedIds=new Set();
+  while(examDishes.length<examConfig.count&&attempts<200){
+    attempts++;
+    const d=weakDishes[Math.floor(Math.random()*weakDishes.length)];
+    if(usedIds.has(d.id)&&weakDishes.length<=examConfig.count){usedIds.clear();}
+    if(usedIds.has(d.id)) continue;
+    const topic=TOPICS.find(tp=>tp.key===weakTopic)||TOPICS[0];
+    let correct=(topic.a(d)||'').trim().replace(/\.+$/,'');
+    if(isEmpty(correct)){
+      const fb=TOPICS.find(tp=>{const a=tp.a(d);return !isEmpty(a);});
+      if(!fb) continue;
+      correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
+    }
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongs=[];
+    for(const o of wrongPool){
+      if(wrongs.length>=3) break;
+      const w=(topic.a(o)||'').trim().replace(/\.+$/,'');
+      if(!isEmpty(w)&&w!==correct&&!wrongs.includes(w)) wrongs.push(w);
+    }
+    if(wrongs.length<3) continue;
+    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const correctIdx=choices.indexOf(correct);
+    usedIds.add(d.id);
+    examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
+  }
+  if(examDishes.length===0){ startErrorMode(); return; }
+  examActive=true;examStartTime=Date.now();examResults=null;
+  showTab('exam');
+}
+
 function startErrorMode(){
   const failed=getFailedDishes();
   if(failed.length===0) return;
