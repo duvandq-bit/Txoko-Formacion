@@ -1615,83 +1615,96 @@ function renderSupPinEntry(){
 }
 
 function renderSupDashboard(){
-  const empNames=Object.keys(DB.employees).filter(n=>n!=='');
-  if(empNames.length===0){
-    document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
-    return;
-  }
-  const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
-  const cards=empNames.map(name=>{
-    const emp=DB.employees[name];
-    const sessions=(emp.sessions||[]);
-    const xp=emp.xp||0;
-    const lvl=getLevelInfo(xp);
-    const streak=emp.streak||0;
-    const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
-    const topics=emp.topicScores||{};
-    // Weak topic
-    let weakTopic=null, weakPct=100;
-    for(const [k,v] of Object.entries(topics)){
-      if(v.total>0){
-        const p=Math.round(v.correct/v.total*100);
-        if(p<weakPct){weakPct=p;weakTopic=k;}
-      }
-    }
-    const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
-      const s=topics[k]||{correct:0,total:0};
-      const pct=s.total?Math.round(s.correct/s.total*100):0;
-      const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-      return `<div class="sup-topic-row">
-        <span class="sup-topic-name">${lbl}</span>
-        <div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div>
-        <span class="sup-topic-pct">${pct}%</span>
-      </div>`;
-    }).join('');
-    const lastSession=sessions.length?new Date(sessions[sessions.length-1].ts):null;
-    const daysAgo=lastSession?Math.floor((Date.now()-lastSession)/(86400000)):null;
-    const activityLabel=daysAgo===null?(LANG==='en'?'No activity':'Sin actividad'):daysAgo===0?(LANG==='en'?'Today':'Hoy'):daysAgo===1?(LANG==='en'?'Yesterday':'Ayer'):`${daysAgo}d`;
-    return `<div class="sup-emp-card">
-      <div class="sup-emp-header">
-        <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
-        <div style="flex:1">
-          <div class="sup-emp-name">${name}</div>
-          <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
-        </div>
-        <span class="sup-emp-level">${activityLabel}</span>
-      </div>
-      <div class="sup-emp-stats">
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
-      </div>
-      <div class="sup-topic-bars">${topicBars}</div>
-      ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
-    </div>`;
-  }).join('');
-
-  // Team summary
-  const totalEmp=empNames.length;
-  const avgXP=Math.round(empNames.reduce((a,n)=>(a+(DB.employees[n].xp||0)),0)/totalEmp);
-  const studiedToday=empNames.filter(n=>(DB.employees[n].lastStudyDay||'')===todayStr()).length;
-
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
       <div class="sup-hero">
         <div class="sup-hero-icon">👁️</div>
         <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
-        <div class="sup-hero-sub">${LANG==='en'?'Team overview':'Resumen del equipo'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Loading team data...':'Cargando datos del equipo...'}</div>
       </div>
-      <div class="stats-row" style="margin-bottom:.75rem">
-        <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
-        <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
-        <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+      <div style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em">
+        ⏳ ${LANG==='en'?'Fetching from cloud...':'Sincronizando desde la nube...'}
       </div>
-      ${renderWeeklyChallenge()}
-      <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
-      ${cards}
-      <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
     </div>`;
+  supaFetchAllEmployees().then(remoteEmps => {
+    let allEmps = {};
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
+    Object.keys(DB.employees).forEach(name => { if(name) allEmps[name] = DB.employees[name]; });
+    const empNames = Object.keys(allEmps).filter(n => n !== '');
+    if(empNames.length === 0){
+      document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
+      return;
+    }
+    const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+    const cards=empNames.sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0)).map(name=>{
+      const emp=allEmps[name];
+      const sessions=(emp.sessions||[]);
+      const xp=emp.xp||0;
+      const lvl=getLevelInfo(xp);
+      const streak=emp.streak||0;
+      const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
+      const topics=emp.topicScores||{};
+      let weakTopic=null, weakPct=100;
+      for(const [k,v] of Object.entries(topics)){
+        if(v.total>0){const p=Math.round(v.correct/v.total*100);if(p<weakPct){weakPct=p;weakTopic=k;}}
+      }
+      const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
+        const s=topics[k]||{correct:0,total:0};
+        const pct=s.total?Math.round(s.correct/s.total*100):0;
+        const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+        return `<div class="sup-topic-row"><span class="sup-topic-name">${lbl}</span><div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div><span class="sup-topic-pct">${pct}%</span></div>`;
+      }).join('');
+      const lastDay = emp.lastStudyDay || '';
+      let activityLabel;
+      if(!lastDay){ activityLabel = LANG==='en'?'No activity':'Sin actividad'; }
+      else {
+        const today=todayStr();
+        const diff=Math.floor((new Date(today)-new Date(lastDay))/(86400000));
+        activityLabel = diff===0?(LANG==='en'?'Today':'Hoy'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
+      }
+      const isCloud = !DB.employees[name];
+      return `<div class="sup-emp-card">
+        <div class="sup-emp-header">
+          <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
+          <div style="flex:1">
+            <div class="sup-emp-name">${name}${isCloud?` <span style="font-size:.55rem;color:var(--gold);font-family:'DM Mono',monospace;opacity:.7">☁️</span>`:''}</div>
+            <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+          </div>
+          <span class="sup-emp-level">${activityLabel}</span>
+        </div>
+        <div class="sup-emp-stats">
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
+        </div>
+        <div class="sup-topic-bars">${topicBars}</div>
+        ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+      </div>`;
+    }).join('');
+    const totalEmp=empNames.length;
+    const avgXP=Math.round(empNames.reduce((a,n)=>(a+(allEmps[n].xp||0)),0)/totalEmp);
+    const studiedToday=empNames.filter(n=>(allEmps[n].lastStudyDay||'')===todayStr()).length;
+    const cloudCount = remoteEmps ? remoteEmps.length : 0;
+    document.getElementById('appContent').innerHTML=`
+      <div class="sup-wrap">
+        <div class="sup-hero">
+          <div class="sup-hero-icon">👁️</div>
+          <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+          <div class="sup-hero-sub">${LANG==='en'?'Team overview · All devices':'Resumen del equipo · Todos los dispositivos'}</div>
+        </div>
+        ${cloudCount===0?`<div style="background:var(--rose-a);border:1px solid rgba(168,64,64,.2);border-radius:var(--r2);padding:.7rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">⚠️ ${LANG==='en'?'Cloud unavailable — showing local data only':'Nube no disponible — mostrando solo datos locales'}</div>`:''}
+        <div class="stats-row" style="margin-bottom:.75rem">
+          <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
+          <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
+          <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+        </div>
+        ${renderWeeklyChallenge()}
+        <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+        ${cards}
+        <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+      </div>`;
+  });
 }
 
 
@@ -2357,9 +2370,80 @@ async function supaFetchTxokoTop10() {
   } catch(e) { return null; }
 }
 
+// ═══════ SUPABASE EMPLOYEE SYNC ═══════
+async function supaUpsertEmployee(name) {
+  if(!name) return;
+  const emp = DB.employees[name];
+  if(!emp) return;
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/employees`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=minimal'
+      },
+      body: JSON.stringify({
+        name: name,
+        xp: emp.xp || 0,
+        streak: emp.streak || 0,
+        last_study_day: emp.lastStudyDay || null,
+        topic_scores: JSON.stringify(emp.topicScores || {}),
+        known_dishes: JSON.stringify(emp.knownDishes || {}),
+        exam_correct: JSON.stringify(emp.examCorrect || {}),
+        sessions_count: (emp.sessions || []).length,
+        txoko_record: emp.txokoRecord || 0,
+        updated_at: new Date().toISOString()
+      })
+    });
+    if(!res.ok){
+      const txt = await res.text();
+      const el=document.createElement('div');
+      el.style.cssText='position:fixed;bottom:1rem;left:1rem;right:1rem;background:#a84040;color:#fff;padding:.75rem 1rem;border-radius:8px;font-size:.72rem;z-index:99999;font-family:monospace;word-break:break-all';
+      el.textContent='Sync error '+res.status+': '+txt;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),12000);
+    }
+  } catch(e) {
+    const el=document.createElement('div');
+    el.style.cssText='position:fixed;bottom:1rem;left:1rem;right:1rem;background:#a84040;color:#fff;padding:.75rem 1rem;border-radius:8px;font-size:.72rem;z-index:99999;font-family:monospace;word-break:break-all';
+    el.textContent='Sync exception: '+e.message;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),12000);
+  }
+}
+
+async function supaFetchAllEmployees() {
+  try {
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/employees?select=*&order=xp.desc`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    );
+    if(!res.ok) return null;
+    const rows = await res.json();
+    if(!Array.isArray(rows) || !rows.length) return null;
+    return rows.map(r => ({
+      name: r.name,
+      xp: r.xp || 0,
+      streak: r.streak || 0,
+      lastStudyDay: r.last_study_day || '',
+      topicScores: (() => { try { return JSON.parse(r.topic_scores||'{}'); } catch(e){ return {}; } })(),
+      knownDishes: (() => { try { return JSON.parse(r.known_dishes||'{}'); } catch(e){ return {}; } })(),
+      examCorrect: (() => { try { return JSON.parse(r.exam_correct||'{}'); } catch(e){ return {}; } })(),
+      sessions: Array(r.sessions_count || 0).fill({}),
+      txokoRecord: r.txoko_record || 0
+    }));
+  } catch(e) { return null; }
+}
+
 let DB={employees:{}};
 function loadDB(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){}}
-function saveDB(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));}catch(e){}}
+function saveDB(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));}catch(e){}
+  // Sync current user to Supabase in background
+  if(currentUser) supaUpsertEmployee(currentUser);
+}
 function getEmp(name){
   if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},cutlery:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
   return DB.employees[name];
@@ -2724,13 +2808,16 @@ function renderLogin(){
     const e=DB.employees[n];
     const s=e.sessions||[];
     const avg=s.length?Math.round(s.reduce((a,x)=>a+(x.score/x.total*100),0)/s.length):0;
-    return `<button class="employee-btn" onclick="login('${n}')">
-      <div class="avatar">${n[0].toUpperCase()}</div>
-      <div>
-        <div class="emp-name">${n}</div>
-        <div class="emp-stats">${s.length} ${t('sessions')}${s.length?` · ${avg}% ${t('sessionsMedia')}`:''}</div>
-      </div>
-    </button>`;
+    return `<div class="emp-row" style="display:flex;align-items:center;gap:.4rem;position:relative" onmouseenter="this.querySelector('.del-btn').style.opacity='1'" onmouseleave="this.querySelector('.del-btn').style.opacity='0'">
+      <button class="employee-btn" style="flex:1" onclick="login('${n}')">
+        <div class="avatar">${n[0].toUpperCase()}</div>
+        <div>
+          <div class="emp-name">${n}</div>
+          <div class="emp-stats">${s.length} ${t('sessions')}${s.length?' · '+avg+'% '+t('sessionsMedia'):''}</div>
+        </div>
+      </button>
+      <button class="del-btn" onclick="deleteProfilePrompt('${n}')" title="Eliminar perfil" style="background:transparent;border:none;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--parch4);font-size:.65rem;flex-shrink:0;transition:opacity .2s;opacity:0;padding:0;">✕</button>
+    </div>`;
   }).join('');
   renderLeaderboard();
 }
@@ -2744,6 +2831,48 @@ function addEmployee(){
   renderLogin();login(name);
 }
 document.getElementById('newEmpInput').addEventListener('keydown',e=>{if(e.key==='Enter')addEmployee();});
+
+// ═══ DELETE PROFILE (supervisor only) ═══
+function deleteProfilePrompt(name){
+  // Ask for supervisor PIN before deleting
+  let entered='';
+  const overlay=document.createElement('div');
+  overlay.id='delOverlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(26,23,20,.72);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  function draw(){
+    overlay.innerHTML=`
+      <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:2rem;width:280px;text-align:center;box-shadow:var(--shadow2)">
+        <div style="font-size:1.4rem;margin-bottom:.4rem">🔒</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--parchment);margin-bottom:.2rem">Eliminar perfil</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);margin-bottom:1.2rem;letter-spacing:.1em">${name}</div>
+        <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">
+          ${[0,1,2,3].map(i=>`<div style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold-a);background:${i<entered.length?'var(--gold)':'transparent'}"></div>`).join('')}
+        </div>
+        ${entered.length===4&&entered!==SUP_PIN?`<div style="color:var(--rose);font-size:.72rem;margin-bottom:.6rem">❌ PIN incorrecto</div>`:''}
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:180px;margin:0 auto .9rem">
+          ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`
+            <button id="delk_${k}" style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;font-size:.95rem;font-weight:500;color:var(--parchment);cursor:pointer;${k===''?'visibility:hidden;':''}">${k}</button>`).join('')}
+        </div>
+        <button onclick="document.getElementById('delOverlay').remove()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem 1rem;font-family:'Jost',sans-serif;font-size:.75rem;color:var(--parch3);cursor:pointer">Cancelar</button>
+      </div>`;
+    // Attach key listeners
+    [1,2,3,4,5,6,7,8,9,0].forEach(k=>{
+      const btn=overlay.querySelector('#delk_'+k);
+      if(btn) btn.onclick=()=>{ if(entered.length<4){entered+=k; if(entered.length===4){ if(entered===SUP_PIN){ overlay.remove(); deleteProfileConfirmed(name); } else { draw(); } } else draw(); } };
+    });
+    const del=overlay.querySelector('#delk_⌫');
+    if(del) del.onclick=()=>{ entered=entered.slice(0,-1); draw(); };
+  }
+  draw();
+  document.body.appendChild(overlay);
+}
+
+function deleteProfileConfirmed(name){
+  if(!DB.employees[name]) return;
+  delete DB.employees[name];
+  saveDB();
+  renderLogin();
+}
 
 // ═══════ PIN SYSTEM ═══════
 let pinTarget=null, pinBuffer='', pinStep='enter'; // step: 'enter'|'setup1'|'setup2'
@@ -2869,6 +2998,8 @@ function closePinAndEnter(){
   applyLangToApp();
   showTab('dashboard');
   checkStreak();
+  // Sync this user's data to Supabase (so supervisor can see all users)
+  supaUpsertEmployee(currentUser);
   // Show supervisor tab for Duvan
   const _supBtn=document.getElementById('navSupervisor');
   if(_supBtn) _supBtn.style.display=currentUser==='Duvan'?'':'none';
@@ -2937,83 +3068,96 @@ function renderSupPinEntry(){
 }
 
 function renderSupDashboard(){
-  const empNames=Object.keys(DB.employees).filter(n=>n!=='');
-  if(empNames.length===0){
-    document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
-    return;
-  }
-  const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
-  const cards=empNames.map(name=>{
-    const emp=DB.employees[name];
-    const sessions=(emp.sessions||[]);
-    const xp=emp.xp||0;
-    const lvl=getLevelInfo(xp);
-    const streak=emp.streak||0;
-    const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
-    const topics=emp.topicScores||{};
-    // Weak topic
-    let weakTopic=null, weakPct=100;
-    for(const [k,v] of Object.entries(topics)){
-      if(v.total>0){
-        const p=Math.round(v.correct/v.total*100);
-        if(p<weakPct){weakPct=p;weakTopic=k;}
-      }
-    }
-    const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
-      const s=topics[k]||{correct:0,total:0};
-      const pct=s.total?Math.round(s.correct/s.total*100):0;
-      const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-      return `<div class="sup-topic-row">
-        <span class="sup-topic-name">${lbl}</span>
-        <div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div>
-        <span class="sup-topic-pct">${pct}%</span>
-      </div>`;
-    }).join('');
-    const lastSession=sessions.length?new Date(sessions[sessions.length-1].ts):null;
-    const daysAgo=lastSession?Math.floor((Date.now()-lastSession)/(86400000)):null;
-    const activityLabel=daysAgo===null?(LANG==='en'?'No activity':'Sin actividad'):daysAgo===0?(LANG==='en'?'Today':'Hoy'):daysAgo===1?(LANG==='en'?'Yesterday':'Ayer'):`${daysAgo}d`;
-    return `<div class="sup-emp-card">
-      <div class="sup-emp-header">
-        <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
-        <div style="flex:1">
-          <div class="sup-emp-name">${name}</div>
-          <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
-        </div>
-        <span class="sup-emp-level">${activityLabel}</span>
-      </div>
-      <div class="sup-emp-stats">
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
-      </div>
-      <div class="sup-topic-bars">${topicBars}</div>
-      ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
-    </div>`;
-  }).join('');
-
-  // Team summary
-  const totalEmp=empNames.length;
-  const avgXP=Math.round(empNames.reduce((a,n)=>(a+(DB.employees[n].xp||0)),0)/totalEmp);
-  const studiedToday=empNames.filter(n=>(DB.employees[n].lastStudyDay||'')===todayStr()).length;
-
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
       <div class="sup-hero">
         <div class="sup-hero-icon">👁️</div>
         <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
-        <div class="sup-hero-sub">${LANG==='en'?'Team overview':'Resumen del equipo'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Loading team data...':'Cargando datos del equipo...'}</div>
       </div>
-      <div class="stats-row" style="margin-bottom:.75rem">
-        <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
-        <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
-        <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+      <div style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em">
+        ⏳ ${LANG==='en'?'Fetching from cloud...':'Sincronizando desde la nube...'}
       </div>
-      ${renderWeeklyChallenge()}
-      <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
-      ${cards}
-      <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
     </div>`;
+  supaFetchAllEmployees().then(remoteEmps => {
+    let allEmps = {};
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
+    Object.keys(DB.employees).forEach(name => { if(name) allEmps[name] = DB.employees[name]; });
+    const empNames = Object.keys(allEmps).filter(n => n !== '');
+    if(empNames.length === 0){
+      document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
+      return;
+    }
+    const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+    const cards=empNames.sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0)).map(name=>{
+      const emp=allEmps[name];
+      const sessions=(emp.sessions||[]);
+      const xp=emp.xp||0;
+      const lvl=getLevelInfo(xp);
+      const streak=emp.streak||0;
+      const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
+      const topics=emp.topicScores||{};
+      let weakTopic=null, weakPct=100;
+      for(const [k,v] of Object.entries(topics)){
+        if(v.total>0){const p=Math.round(v.correct/v.total*100);if(p<weakPct){weakPct=p;weakTopic=k;}}
+      }
+      const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
+        const s=topics[k]||{correct:0,total:0};
+        const pct=s.total?Math.round(s.correct/s.total*100):0;
+        const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+        return `<div class="sup-topic-row"><span class="sup-topic-name">${lbl}</span><div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div><span class="sup-topic-pct">${pct}%</span></div>`;
+      }).join('');
+      const lastDay = emp.lastStudyDay || '';
+      let activityLabel;
+      if(!lastDay){ activityLabel = LANG==='en'?'No activity':'Sin actividad'; }
+      else {
+        const today=todayStr();
+        const diff=Math.floor((new Date(today)-new Date(lastDay))/(86400000));
+        activityLabel = diff===0?(LANG==='en'?'Today':'Hoy'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
+      }
+      const isCloud = !DB.employees[name];
+      return `<div class="sup-emp-card">
+        <div class="sup-emp-header">
+          <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
+          <div style="flex:1">
+            <div class="sup-emp-name">${name}${isCloud?` <span style="font-size:.55rem;color:var(--gold);font-family:'DM Mono',monospace;opacity:.7">☁️</span>`:''}</div>
+            <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+          </div>
+          <span class="sup-emp-level">${activityLabel}</span>
+        </div>
+        <div class="sup-emp-stats">
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
+        </div>
+        <div class="sup-topic-bars">${topicBars}</div>
+        ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+      </div>`;
+    }).join('');
+    const totalEmp=empNames.length;
+    const avgXP=Math.round(empNames.reduce((a,n)=>(a+(allEmps[n].xp||0)),0)/totalEmp);
+    const studiedToday=empNames.filter(n=>(allEmps[n].lastStudyDay||'')===todayStr()).length;
+    const cloudCount = remoteEmps ? remoteEmps.length : 0;
+    document.getElementById('appContent').innerHTML=`
+      <div class="sup-wrap">
+        <div class="sup-hero">
+          <div class="sup-hero-icon">👁️</div>
+          <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+          <div class="sup-hero-sub">${LANG==='en'?'Team overview · All devices':'Resumen del equipo · Todos los dispositivos'}</div>
+        </div>
+        ${cloudCount===0?`<div style="background:var(--rose-a);border:1px solid rgba(168,64,64,.2);border-radius:var(--r2);padding:.7rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">⚠️ ${LANG==='en'?'Cloud unavailable — showing local data only':'Nube no disponible — mostrando solo datos locales'}</div>`:''}
+        <div class="stats-row" style="margin-bottom:.75rem">
+          <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
+          <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
+          <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+        </div>
+        ${renderWeeklyChallenge()}
+        <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+        ${cards}
+        <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+      </div>`;
+  });
 }
 
 
@@ -3902,83 +4046,96 @@ function renderSupPinEntry(){
 }
 
 function renderSupDashboard(){
-  const empNames=Object.keys(DB.employees).filter(n=>n!=='');
-  if(empNames.length===0){
-    document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
-    return;
-  }
-  const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
-  const cards=empNames.map(name=>{
-    const emp=DB.employees[name];
-    const sessions=(emp.sessions||[]);
-    const xp=emp.xp||0;
-    const lvl=getLevelInfo(xp);
-    const streak=emp.streak||0;
-    const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
-    const topics=emp.topicScores||{};
-    // Weak topic
-    let weakTopic=null, weakPct=100;
-    for(const [k,v] of Object.entries(topics)){
-      if(v.total>0){
-        const p=Math.round(v.correct/v.total*100);
-        if(p<weakPct){weakPct=p;weakTopic=k;}
-      }
-    }
-    const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
-      const s=topics[k]||{correct:0,total:0};
-      const pct=s.total?Math.round(s.correct/s.total*100):0;
-      const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-      return `<div class="sup-topic-row">
-        <span class="sup-topic-name">${lbl}</span>
-        <div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div>
-        <span class="sup-topic-pct">${pct}%</span>
-      </div>`;
-    }).join('');
-    const lastSession=sessions.length?new Date(sessions[sessions.length-1].ts):null;
-    const daysAgo=lastSession?Math.floor((Date.now()-lastSession)/(86400000)):null;
-    const activityLabel=daysAgo===null?(LANG==='en'?'No activity':'Sin actividad'):daysAgo===0?(LANG==='en'?'Today':'Hoy'):daysAgo===1?(LANG==='en'?'Yesterday':'Ayer'):`${daysAgo}d`;
-    return `<div class="sup-emp-card">
-      <div class="sup-emp-header">
-        <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
-        <div style="flex:1">
-          <div class="sup-emp-name">${name}</div>
-          <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
-        </div>
-        <span class="sup-emp-level">${activityLabel}</span>
-      </div>
-      <div class="sup-emp-stats">
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
-        <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
-      </div>
-      <div class="sup-topic-bars">${topicBars}</div>
-      ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
-    </div>`;
-  }).join('');
-
-  // Team summary
-  const totalEmp=empNames.length;
-  const avgXP=Math.round(empNames.reduce((a,n)=>(a+(DB.employees[n].xp||0)),0)/totalEmp);
-  const studiedToday=empNames.filter(n=>(DB.employees[n].lastStudyDay||'')===todayStr()).length;
-
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
       <div class="sup-hero">
         <div class="sup-hero-icon">👁️</div>
         <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
-        <div class="sup-hero-sub">${LANG==='en'?'Team overview':'Resumen del equipo'}</div>
+        <div class="sup-hero-sub">${LANG==='en'?'Loading team data...':'Cargando datos del equipo...'}</div>
       </div>
-      <div class="stats-row" style="margin-bottom:.75rem">
-        <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
-        <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
-        <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+      <div style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em">
+        ⏳ ${LANG==='en'?'Fetching from cloud...':'Sincronizando desde la nube...'}
       </div>
-      ${renderWeeklyChallenge()}
-      <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
-      ${cards}
-      <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
     </div>`;
+  supaFetchAllEmployees().then(remoteEmps => {
+    let allEmps = {};
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
+    Object.keys(DB.employees).forEach(name => { if(name) allEmps[name] = DB.employees[name]; });
+    const empNames = Object.keys(allEmps).filter(n => n !== '');
+    if(empNames.length === 0){
+      document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
+      return;
+    }
+    const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+    const cards=empNames.sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0)).map(name=>{
+      const emp=allEmps[name];
+      const sessions=(emp.sessions||[]);
+      const xp=emp.xp||0;
+      const lvl=getLevelInfo(xp);
+      const streak=emp.streak||0;
+      const known=Object.values(emp.knownDishes||{}).filter(Boolean).length;
+      const topics=emp.topicScores||{};
+      let weakTopic=null, weakPct=100;
+      for(const [k,v] of Object.entries(topics)){
+        if(v.total>0){const p=Math.round(v.correct/v.total*100);if(p<weakPct){weakPct=p;weakTopic=k;}}
+      }
+      const topicBars=Object.entries(TOPIC_LABELS).map(([k,lbl])=>{
+        const s=topics[k]||{correct:0,total:0};
+        const pct=s.total?Math.round(s.correct/s.total*100):0;
+        const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+        return `<div class="sup-topic-row"><span class="sup-topic-name">${lbl}</span><div class="sup-topic-track"><div class="sup-topic-fill" style="width:${pct}%;background:${col}"></div></div><span class="sup-topic-pct">${pct}%</span></div>`;
+      }).join('');
+      const lastDay = emp.lastStudyDay || '';
+      let activityLabel;
+      if(!lastDay){ activityLabel = LANG==='en'?'No activity':'Sin actividad'; }
+      else {
+        const today=todayStr();
+        const diff=Math.floor((new Date(today)-new Date(lastDay))/(86400000));
+        activityLabel = diff===0?(LANG==='en'?'Today':'Hoy'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
+      }
+      const isCloud = !DB.employees[name];
+      return `<div class="sup-emp-card">
+        <div class="sup-emp-header">
+          <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
+          <div style="flex:1">
+            <div class="sup-emp-name">${name}${isCloud?` <span style="font-size:.55rem;color:var(--gold);font-family:'DM Mono',monospace;opacity:.7">☁️</span>`:''}</div>
+            <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
+          </div>
+          <span class="sup-emp-level">${activityLabel}</span>
+        </div>
+        <div class="sup-emp-stats">
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?'🔥'+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
+        </div>
+        <div class="sup-topic-bars">${topicBars}</div>
+        ${weakTopic&&weakPct<60?`<div class="sup-weak">⚠️ ${LANG==='en'?'Needs work':'Punto débil'}: ${TOPIC_LABELS[weakTopic]} (${weakPct}%)</div>`:''}
+      </div>`;
+    }).join('');
+    const totalEmp=empNames.length;
+    const avgXP=Math.round(empNames.reduce((a,n)=>(a+(allEmps[n].xp||0)),0)/totalEmp);
+    const studiedToday=empNames.filter(n=>(allEmps[n].lastStudyDay||'')===todayStr()).length;
+    const cloudCount = remoteEmps ? remoteEmps.length : 0;
+    document.getElementById('appContent').innerHTML=`
+      <div class="sup-wrap">
+        <div class="sup-hero">
+          <div class="sup-hero-icon">👁️</div>
+          <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
+          <div class="sup-hero-sub">${LANG==='en'?'Team overview · All devices':'Resumen del equipo · Todos los dispositivos'}</div>
+        </div>
+        ${cloudCount===0?`<div style="background:var(--rose-a);border:1px solid rgba(168,64,64,.2);border-radius:var(--r2);padding:.7rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">⚠️ ${LANG==='en'?'Cloud unavailable — showing local data only':'Nube no disponible — mostrando solo datos locales'}</div>`:''}
+        <div class="stats-row" style="margin-bottom:.75rem">
+          <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
+          <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
+          <div class="stat-tile"><div class="stat-num">${avgXP.toLocaleString()}</div><div class="stat-lbl">${LANG==='en'?'Avg XP':'XP medio'}</div></div>
+        </div>
+        ${renderWeeklyChallenge()}
+        <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+        ${cards}
+        <button class="btn-secondary" onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;margin-top:.5rem">${LANG==='en'?'Exit panel':'Salir del panel'}</button>
+      </div>`;
+  });
 }
 
 
