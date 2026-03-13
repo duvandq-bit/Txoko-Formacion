@@ -1605,6 +1605,59 @@ const SUP_PIN = '1966'; // Duvan's supervisor PIN
 
 let supAuthenticated = false;
 
+
+function renderSupDeleteEmployee(empNames) {
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🗑️</div>
+      <div class="sup-hero-title">${LANG==='en'?'Delete Profile':'Eliminar Perfil'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Select an employee to delete':'Selecciona un empleado para eliminar'}</div>
+    </div>
+    <div style="background:rgba(168,64,64,.08);border:1px solid rgba(168,64,64,.2);border-radius:var(--r2);padding:.75rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">
+      ⚠️ ${LANG==='en'?'This action is permanent and cannot be undone.':'Esta acción es permanente y no se puede deshacer.'}
+    </div>
+    ${empNames.map(n => `
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:#fff;border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.45rem">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--ink3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);flex-shrink:0">${n[0].toUpperCase()}</div>
+        <div style="flex:1;font-size:.85rem;color:var(--parchment)">${n}</div>
+        <button onclick="supDeleteConfirm('${n}')" style="background:transparent;border:1px solid rgba(168,64,64,.4);border-radius:var(--r2);padding:.35rem .7rem;font-family:'Jost',sans-serif;font-size:.72rem;color:var(--rose);cursor:pointer">
+          ${LANG==='en'?'Delete':'Eliminar'}
+        </button>
+      </div>`).join('')}
+    <button onclick="renderSupDashboard()" class="btn-secondary" style="width:100%;margin-top:.75rem">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
+  </div>`;
+}
+
+function supDeleteConfirm(name) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem';
+  overlay.innerHTML = `<div style="background:var(--ink2);border:1px solid rgba(168,64,64,.4);border-radius:var(--r);padding:1.5rem;max-width:320px;width:100%;text-align:center">
+    <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--parchment);margin-bottom:.4rem">${LANG==='en'?'Delete':'Eliminar'} "${name}"?</div>
+    <div style="font-size:.72rem;color:var(--parch3);margin-bottom:1.25rem">${LANG==='en'?'All progress will be permanently lost.':'Todo el progreso se perderá permanentemente.'}</div>
+    <div style="display:flex;gap:.6rem">
+      <button onclick="this.closest('div[style]').remove()" style="flex:1;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parch3);cursor:pointer">${LANG==='en'?'Cancel':'Cancelar'}</button>
+      <button onclick="supDeleteExecute('${name}',this.closest('[style*=fixed]'))" style="flex:1;padding:.6rem;background:var(--rose);border:none;border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;color:#fff;cursor:pointer">${LANG==='en'?'Delete':'Eliminar'}</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+async function supDeleteExecute(name, overlay) {
+  // Delete from local DB
+  if (DB.employees[name]) { delete DB.employees[name]; saveDB(); }
+  // Delete from Supabase
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }
+    });
+  } catch(e) {}
+  if (overlay) overlay.remove();
+  renderSupDashboard();
+}
+
 // ═══ ANALYTICS ═══
 
 // ═══ ENVIAR AVISO / NOTIFICACIÓN ═══
@@ -2161,6 +2214,45 @@ function showBrowserNotif(title, body, icon='✦') {
 }
 
 // Check for new notifications on login + show them
+
+async function checkDuelBanner(user) {
+  try {
+    // Expire old duels first
+    await supaExpireOldDuels();
+    const duels = await supaFetchMyDuels(user);
+    const pending = getPendingDefense(duels, user);
+    if (!pending) return;
+    // Show banner
+    const challenger = pending.challenger;
+    const expires = new Date(pending.expires_at);
+    const hoursLeft = Math.max(0, Math.round((expires - Date.now()) / 3600000));
+    const banner = document.createElement('div');
+    banner.id = 'duelBanner';
+    banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#1a0a0a,#2d1010);border-bottom:2px solid var(--rose);padding:1rem 1.25rem;animation:slideDown .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.5)`;
+    banner.innerHTML = `
+      <div style="max-width:480px;margin:0 auto">
+        <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--rose);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">⚔️ ${LANG==='en'?'INCOMING CHALLENGE':'RETO PENDIENTE'}</div>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div style="flex:1">
+            <div style="font-family:'Playfair Display',serif;font-size:1rem;color:#fff;margin-bottom:.2rem">
+              <strong>${challenger}</strong> ${LANG==='en'?'has challenged you!':'te ha retado!'}
+            </div>
+            <div style="font-size:.68rem;color:rgba(255,255,255,.5)">⏰ ${hoursLeft}h ${LANG==='en'?'remaining':'restantes'} · ${LANG==='en'?'5 questions':'5 preguntas'}</div>
+          </div>
+          <button onclick="document.getElementById('duelBanner').remove();showTab('txoko');setTimeout(()=>renderDuel(),100);"
+            style="background:var(--rose);border:none;border-radius:var(--r2);padding:.5rem .9rem;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:600;color:#fff;cursor:pointer;white-space:nowrap;flex-shrink:0">
+            ${LANG==='en'?'Defend ⚔️':'Defender ⚔️'}
+          </button>
+          <button onclick="document.getElementById('duelBanner').remove()"
+            style="background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:var(--r2);padding:.5rem .6rem;font-family:'Jost',sans-serif;font-size:.75rem;color:rgba(255,255,255,.5);cursor:pointer;flex-shrink:0">
+            ${LANG==='en'?'Later':'Luego'}
+          </button>
+        </div>
+      </div>`;
+    document.body.appendChild(banner);
+  } catch(e) {}
+}
+
 async function checkAndShowNotifications(name) {
   const notifs = await supaFetchNotifications(name);
   if(!notifs.length) return;
@@ -2686,7 +2778,7 @@ function renderLogin(){
     const e=DB.employees[n];
     const s=e.sessions||[];
     const avg=s.length?Math.round(s.reduce((a,x)=>a+(x.score/x.total*100),0)/s.length):0;
-    return `<div class="emp-row" style="display:flex;align-items:center;gap:.4rem;position:relative" onmouseenter="this.querySelector('.del-btn').style.opacity='1'" onmouseleave="this.querySelector('.del-btn').style.opacity='0'">
+    return `<div class="emp-row" style="display:flex;align-items:center;gap:.4rem;position:relative">
       <button class="employee-btn" style="flex:1" onclick="login('${n}')">
         <div class="avatar">${n[0].toUpperCase()}</div>
         <div>
@@ -2694,7 +2786,7 @@ function renderLogin(){
           <div class="emp-stats">${s.length} ${t('sessions')}${s.length?' · '+avg+'% '+t('sessionsMedia'):''}</div>
         </div>
       </button>
-      <button class="del-btn" onclick="deleteProfilePrompt('${n}')" title="Eliminar perfil" style="background:transparent;border:none;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--parch4);font-size:.65rem;flex-shrink:0;transition:opacity .2s;opacity:0;padding:0;">✕</button>
+
     </div>`;
   }).join('');
   renderLeaderboard();
@@ -2703,7 +2795,16 @@ function renderLogin(){
 function addEmployee(){
   const inp=document.getElementById('newEmpInput');
   const name=inp.value.trim();
-  if(!name)return;
+  if(!name) return;
+  // At least 3 letters (not just numbers)
+  const letters = name.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑA-Za-z]/g,'');
+  if(letters.length < 3){
+    inp.style.borderColor='var(--rose)';
+    inp.placeholder = LANG==='en'?'Min. 3 letters required':'Mínimo 3 letras requeridas';
+    inp.value='';
+    setTimeout(()=>{ inp.style.borderColor=''; inp.placeholder=t('inputPlaceholder'); }, 2500);
+    return;
+  }
   if(!DB.employees[name])getEmp(name);
   saveDB();inp.value='';
   renderLogin();login(name);
@@ -2892,6 +2993,7 @@ function closePinAndEnter(){
     if(emp.xp && emp.xp > 0) supaUpsertEmployee(currentUser);
     requestNotifPermission();
     checkAndShowNotifications(currentUser);
+    checkDuelBanner(currentUser);
   });
 }
 
@@ -2949,6 +3051,59 @@ const CERT_THRESHOLD = 0.80; // 80% of dishes in category known = certified
 const SUP_PIN = '1966'; // Duvan's supervisor PIN
 
 let supAuthenticated = false;
+
+
+function renderSupDeleteEmployee(empNames) {
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🗑️</div>
+      <div class="sup-hero-title">${LANG==='en'?'Delete Profile':'Eliminar Perfil'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Select an employee to delete':'Selecciona un empleado para eliminar'}</div>
+    </div>
+    <div style="background:rgba(168,64,64,.08);border:1px solid rgba(168,64,64,.2);border-radius:var(--r2);padding:.75rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">
+      ⚠️ ${LANG==='en'?'This action is permanent and cannot be undone.':'Esta acción es permanente y no se puede deshacer.'}
+    </div>
+    ${empNames.map(n => `
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:#fff;border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.45rem">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--ink3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);flex-shrink:0">${n[0].toUpperCase()}</div>
+        <div style="flex:1;font-size:.85rem;color:var(--parchment)">${n}</div>
+        <button onclick="supDeleteConfirm('${n}')" style="background:transparent;border:1px solid rgba(168,64,64,.4);border-radius:var(--r2);padding:.35rem .7rem;font-family:'Jost',sans-serif;font-size:.72rem;color:var(--rose);cursor:pointer">
+          ${LANG==='en'?'Delete':'Eliminar'}
+        </button>
+      </div>`).join('')}
+    <button onclick="renderSupDashboard()" class="btn-secondary" style="width:100%;margin-top:.75rem">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
+  </div>`;
+}
+
+function supDeleteConfirm(name) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem';
+  overlay.innerHTML = `<div style="background:var(--ink2);border:1px solid rgba(168,64,64,.4);border-radius:var(--r);padding:1.5rem;max-width:320px;width:100%;text-align:center">
+    <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--parchment);margin-bottom:.4rem">${LANG==='en'?'Delete':'Eliminar'} "${name}"?</div>
+    <div style="font-size:.72rem;color:var(--parch3);margin-bottom:1.25rem">${LANG==='en'?'All progress will be permanently lost.':'Todo el progreso se perderá permanentemente.'}</div>
+    <div style="display:flex;gap:.6rem">
+      <button onclick="this.closest('div[style]').remove()" style="flex:1;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parch3);cursor:pointer">${LANG==='en'?'Cancel':'Cancelar'}</button>
+      <button onclick="supDeleteExecute('${name}',this.closest('[style*=fixed]'))" style="flex:1;padding:.6rem;background:var(--rose);border:none;border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;color:#fff;cursor:pointer">${LANG==='en'?'Delete':'Eliminar'}</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+async function supDeleteExecute(name, overlay) {
+  // Delete from local DB
+  if (DB.employees[name]) { delete DB.employees[name]; saveDB(); }
+  // Delete from Supabase
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }
+    });
+  } catch(e) {}
+  if (overlay) overlay.remove();
+  renderSupDashboard();
+}
 
 // ═══ ANALYTICS ═══
 
@@ -3894,6 +4049,10 @@ function renderSupDashboard(){
               <span style="font-size:1.3rem">🎯</span>
               <span style="font-size:.72rem;font-weight:600;color:var(--gold)">Quiz en vivo</span>
             </button>
+            <button onclick="renderSupDeleteEmployee(_supEmpNames)" style="display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.85rem .5rem;background:var(--ink);border:1px solid rgba(168,64,64,.3);border-radius:var(--r);font-family:'Jost',sans-serif;cursor:pointer;transition:all .2s;color:var(--parchment)">
+              <span style="font-size:1.3rem">🗑️</span>
+              <span style="font-size:.72rem;font-weight:500;color:var(--rose)">${LANG==='en'?'Delete profile':'Eliminar perfil'}</span>
+            </button>
           </div>
           <button onclick="supAuthenticated=false;showTab('dashboard')" style="width:100%;padding:.65rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.78rem;color:var(--parch3);cursor:pointer;letter-spacing:.04em">
             ${LANG==='en'?'← Exit panel':'← Salir del panel'}
@@ -3901,6 +4060,59 @@ function renderSupDashboard(){
         </div>
       </div>`;
   });
+}
+
+
+function renderSupDeleteEmployee(empNames) {
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🗑️</div>
+      <div class="sup-hero-title">${LANG==='en'?'Delete Profile':'Eliminar Perfil'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'Select an employee to delete':'Selecciona un empleado para eliminar'}</div>
+    </div>
+    <div style="background:rgba(168,64,64,.08);border:1px solid rgba(168,64,64,.2);border-radius:var(--r2);padding:.75rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">
+      ⚠️ ${LANG==='en'?'This action is permanent and cannot be undone.':'Esta acción es permanente y no se puede deshacer.'}
+    </div>
+    ${empNames.map(n => `
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:#fff;border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.45rem">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--ink3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);flex-shrink:0">${n[0].toUpperCase()}</div>
+        <div style="flex:1;font-size:.85rem;color:var(--parchment)">${n}</div>
+        <button onclick="supDeleteConfirm('${n}')" style="background:transparent;border:1px solid rgba(168,64,64,.4);border-radius:var(--r2);padding:.35rem .7rem;font-family:'Jost',sans-serif;font-size:.72rem;color:var(--rose);cursor:pointer">
+          ${LANG==='en'?'Delete':'Eliminar'}
+        </button>
+      </div>`).join('')}
+    <button onclick="renderSupDashboard()" class="btn-secondary" style="width:100%;margin-top:.75rem">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
+  </div>`;
+}
+
+function supDeleteConfirm(name) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem';
+  overlay.innerHTML = `<div style="background:var(--ink2);border:1px solid rgba(168,64,64,.4);border-radius:var(--r);padding:1.5rem;max-width:320px;width:100%;text-align:center">
+    <div style="font-size:2rem;margin-bottom:.5rem">⚠️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--parchment);margin-bottom:.4rem">${LANG==='en'?'Delete':'Eliminar'} "${name}"?</div>
+    <div style="font-size:.72rem;color:var(--parch3);margin-bottom:1.25rem">${LANG==='en'?'All progress will be permanently lost.':'Todo el progreso se perderá permanentemente.'}</div>
+    <div style="display:flex;gap:.6rem">
+      <button onclick="this.closest('div[style]').remove()" style="flex:1;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parch3);cursor:pointer">${LANG==='en'?'Cancel':'Cancelar'}</button>
+      <button onclick="supDeleteExecute('${name}',this.closest('[style*=fixed]'))" style="flex:1;padding:.6rem;background:var(--rose);border:none;border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;color:#fff;cursor:pointer">${LANG==='en'?'Delete':'Eliminar'}</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+async function supDeleteExecute(name, overlay) {
+  // Delete from local DB
+  if (DB.employees[name]) { delete DB.employees[name]; saveDB(); }
+  // Delete from Supabase
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }
+    });
+  } catch(e) {}
+  if (overlay) overlay.remove();
+  renderSupDashboard();
 }
 
 // ═══ ANALYTICS ═══
@@ -4772,36 +4984,45 @@ async function supaCreateChallenge(fromUser, toUser, questions) {
   } catch(e) { return null; }
 }
 
-async function supaSubmitChallengerAnswers(duelId, answers) {
+async function supaSubmitChallengerAnswers(duelId, answers, timings) {
   try {
     await fetch(`${SUPA_URL}/rest/v1/duels?id=eq.${duelId}`, {
       method: 'PATCH',
       headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify({ challenger_answers: JSON.stringify(answers), state: 'waiting' })
+      body: JSON.stringify({ challenger_answers: JSON.stringify(answers), challenger_timings: JSON.stringify(timings||[]), state: 'waiting' })
     });
   } catch(e) {}
 }
 
-async function supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions) {
+async function supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions, cTimings, dTimings) {
   try {
-    // Calculate results
     let cScore = 0, dScore = 0;
     questions.forEach((q, i) => {
       if (challengerAnswers[i] === q.correctIdx) cScore++;
       if (answers[i] === q.correctIdx) dScore++;
     });
-    const cWins = cScore > dScore, dWins = dScore > cScore;
+    // Tiebreak by total response time (lower = faster = wins)
+    let cWins = cScore > dScore, dWins = dScore > cScore;
+    let tiebreak = false;
+    if (cScore === dScore && cTimings && dTimings && cTimings.length && dTimings.length) {
+      const cTotal = cTimings.reduce((a,b) => a+b, 0);
+      const dTotal = dTimings.reduce((a,b) => a+b, 0);
+      cWins = cTotal < dTotal;
+      dWins = dTotal < cTotal;
+      tiebreak = true;
+    }
     const state = 'completed';
     await fetch(`${SUPA_URL}/rest/v1/duels?id=eq.${duelId}`, {
       method: 'PATCH',
       headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
         'Content-Type': 'application/json' },
       body: JSON.stringify({ defender_answers: JSON.stringify(answers),
+        defender_timings: JSON.stringify(dTimings||[]),
         challenger_score: cScore, defender_score: dScore, state,
         completed_at: new Date().toISOString() })
     });
-    return { cScore, dScore, cWins, dWins };
+    return { cScore, dScore, cWins, dWins, tiebreak };
   } catch(e) { return null; }
 }
 
@@ -4929,6 +5150,50 @@ function getPendingChallenge(duels, user) {
 }
 
 
+
+// ═══ DUEL TIMER ═══
+let _duelTimerInterval = null;
+const DUEL_TIME_LIMIT = 10;
+
+function duelStartTimer(onTimeout) {
+  duelClearTimer();
+  let remaining = DUEL_TIME_LIMIT;
+  _updateDuelTimerUI(remaining);
+  _duelTimerInterval = setInterval(() => {
+    remaining--;
+    _updateDuelTimerUI(remaining);
+    if (remaining <= 0) { duelClearTimer(); onTimeout(); }
+  }, 1000);
+}
+
+function duelClearTimer() {
+  if (_duelTimerInterval) { clearInterval(_duelTimerInterval); _duelTimerInterval = null; }
+}
+
+function _updateDuelTimerUI(remaining) {
+  const el = document.getElementById('duelTimer');
+  if (!el) return;
+  const pct = (remaining / DUEL_TIME_LIMIT) * 100;
+  const color = remaining > 6 ? 'var(--sage)' : remaining > 3 ? 'var(--gold)' : 'var(--rose)';
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem">
+      <div style="flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:${color};transition:width .9s linear;border-radius:3px"></div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:${color};min-width:20px;text-align:right;font-weight:600">${remaining}</div>
+    </div>`;
+}
+
+function duelLockAnswers(correctIdx) {
+  duelClearTimer();
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById(`dab${i}`);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === correctIdx) btn.classList.add('correct');
+  }
+}
+
 // ═══ DUELO REMOTO ═══
 let remoteDuelState = null;
 
@@ -5048,7 +5313,7 @@ async function startChallenge(rivalName) {
   }
   if (questions.length < 5) { alert(LANG==='en'?'Not enough questions. Try again.':'No hay suficientes preguntas.'); return; }
 
-  remoteDuelState = { questions, answers: [], rivalName, phase: 'answering', qIdx: 0 };
+  remoteDuelState = { questions, answers: [], rivalName, phase: 'answering', qIdx: 0, timings: [], _qStart: 0 };
   renderRemoteDuelQuestion();
 }
 
@@ -5064,6 +5329,7 @@ function renderRemoteDuelQuestion() {
         <div class="sup-hero-title">${LANG==='en'?`Challenge ${rivalName}`:`Retando a ${rivalName}`}</div>
         <div class="sup-hero-sub">${LANG==='en'?`Question ${qIdx+1} of ${questions.length}`:`Pregunta ${qIdx+1} de ${questions.length}`}</div>
       </div>
+      <div id="duelTimer" style="margin-bottom:.5rem"></div>
       <div class="txoko-scene" style="margin-bottom:.75rem">
         <div class="txoko-waiter">
           <div class="txoko-waiter-avatar">🤵</div>
@@ -5074,16 +5340,25 @@ function renderRemoteDuelQuestion() {
       <div style="margin-top:.75rem">
         ${q.choices.map((ch, i) => `<button class="duel-answer-btn" id="dab${i}" onclick="remoteDuelAnswer(${i})">${letters[i]}. ${ch}</button>`).join('')}
       </div>
-      <div id="duelQFeedback" style="height:1.5rem;text-align:center;font-size:.8rem;margin-top:.3rem"></div>
+      <div id="duelQFeedback" style="min-height:2rem;text-align:center;font-size:.8rem;margin-top:.5rem;padding:.4rem;border-radius:var(--r2)"></div>
     </div>`;
+  remoteDuelState._qStart = Date.now();
+  duelStartTimer(() => remoteDuelAnswer(-1));
 }
 
 function remoteDuelAnswer(idx) {
+  if (remoteDuelState._answered) return;
+  remoteDuelState._answered = true;
+  duelClearTimer();
+  const elapsed = Date.now() - (remoteDuelState._qStart || Date.now());
+  remoteDuelState.timings = remoteDuelState.timings || [];
+  remoteDuelState.timings.push(idx === -1 ? 10000 : elapsed);
   const { questions, qIdx } = remoteDuelState;
   const q = questions[qIdx];
-  const ok = idx === q.correctIdx;
-  remoteDuelState.answers.push(idx);
-  // Show feedback briefly
+  const timeout = idx === -1;
+  const ok = !timeout && idx === q.correctIdx;
+  remoteDuelState.answers.push(timeout ? -1 : idx);
+  // Show all buttons with correct answer revealed
   for (let i = 0; i < q.choices.length; i++) {
     const btn = document.getElementById(`dab${i}`);
     if (!btn) continue;
@@ -5092,9 +5367,14 @@ function remoteDuelAnswer(idx) {
     else if (i === idx && !ok) btn.classList.add('wrong');
   }
   const fb = document.getElementById('duelQFeedback');
-  if (fb) fb.innerHTML = ok ? `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>` : `<span style="color:var(--rose)">✗ ${q.choices[q.correctIdx]}</span>`;
+  if (fb) {
+    if (timeout) fb.innerHTML = `<span style="color:var(--rose)">⏰ ${LANG==='en'?'Time's up! Correct:':'¡Tiempo! Correcto:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
+    else if (ok) fb.innerHTML = `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>`;
+    else fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Correct answer:':'Respuesta correcta:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
+  }
   remoteDuelState.qIdx++;
-  setTimeout(() => renderRemoteDuelQuestion(), 900);
+  remoteDuelState._answered = false;
+  setTimeout(() => renderRemoteDuelQuestion(), 1400);
 }
 
 async function submitChallenge() {
@@ -5102,7 +5382,7 @@ async function submitChallenge() {
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Sending challenge...':'Enviando reto...'}</div></div>`;
   const duel = await supaCreateChallenge(currentUser, rivalName, questions);
   if (!duel) { alert(LANG==='en'?'Error sending challenge':'Error al enviar el reto'); renderDuel(); return; }
-  await supaSubmitChallengerAnswers(duel.id, answers);
+  await supaSubmitChallengerAnswers(duel.id, answers, remoteDuelState.timings || []);
   // Send notification
   await fetch(`${SUPA_URL}/rest/v1/notifications`, {
     method: 'POST',
@@ -5127,7 +5407,7 @@ async function startDefense(duel) {
   if (typeof duel === 'string') duel = JSON.parse(duel);
   const questions = JSON.parse(duel.questions);
   const challengerAnswers = JSON.parse(duel.challenger_answers || '[]');
-  remoteDuelState = { questions, answers: [], rivalName: duel.challenger, phase: 'defending', qIdx: 0, duelId: duel.id, challengerAnswers };
+  remoteDuelState = { questions, answers: [], rivalName: duel.challenger, phase: 'defending', qIdx: 0, duelId: duel.id, challengerAnswers, timings: [], _qStart: 0, duelObj: duel };
   renderRemoteDefenseQuestion();
 }
 
@@ -5143,6 +5423,7 @@ function renderRemoteDefenseQuestion() {
         <div class="sup-hero-title">${LANG==='en'?`Defending vs ${rivalName}`:`Defendiendo vs ${rivalName}`}</div>
         <div class="sup-hero-sub">${LANG==='en'?`Question ${qIdx+1} of ${questions.length}`:`Pregunta ${qIdx+1} de ${questions.length}`}</div>
       </div>
+      <div id="duelTimer" style="margin-bottom:.5rem"></div>
       <div class="txoko-scene" style="margin-bottom:.75rem">
         <div class="txoko-waiter">
           <div class="txoko-waiter-avatar">🤵</div>
@@ -5153,15 +5434,24 @@ function renderRemoteDefenseQuestion() {
       <div style="margin-top:.75rem">
         ${q.choices.map((ch, i) => `<button class="duel-answer-btn" id="dab${i}" onclick="remoteDefenseAnswer(${i})">${letters[i]}. ${ch}</button>`).join('')}
       </div>
-      <div id="duelQFeedback" style="height:1.5rem;text-align:center;font-size:.8rem;margin-top:.3rem"></div>
+      <div id="duelQFeedback" style="min-height:2rem;text-align:center;font-size:.8rem;margin-top:.5rem;padding:.4rem;border-radius:var(--r2)"></div>
     </div>`;
+  remoteDuelState._qStart = Date.now();
+  duelStartTimer(() => remoteDefenseAnswer(-1));
 }
 
 function remoteDefenseAnswer(idx) {
+  if (remoteDuelState._answered) return;
+  remoteDuelState._answered = true;
+  duelClearTimer();
+  const elapsed = Date.now() - (remoteDuelState._qStart || Date.now());
+  remoteDuelState.timings = remoteDuelState.timings || [];
+  remoteDuelState.timings.push(idx === -1 ? 10000 : elapsed);
   const { questions, qIdx } = remoteDuelState;
   const q = questions[qIdx];
-  const ok = idx === q.correctIdx;
-  remoteDuelState.answers.push(idx);
+  const timeout = idx === -1;
+  const ok = !timeout && idx === q.correctIdx;
+  remoteDuelState.answers.push(timeout ? -1 : idx);
   for (let i = 0; i < q.choices.length; i++) {
     const btn = document.getElementById(`dab${i}`);
     if (!btn) continue;
@@ -5170,17 +5460,24 @@ function remoteDefenseAnswer(idx) {
     else if (i === idx && !ok) btn.classList.add('wrong');
   }
   const fb = document.getElementById('duelQFeedback');
-  if (fb) fb.innerHTML = ok ? `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>` : `<span style="color:var(--rose)">✗ ${q.choices[q.correctIdx]}</span>`;
+  if (fb) {
+    if (timeout) fb.innerHTML = `<span style="color:var(--rose)">⏰ ${LANG==='en'?'Time's up! Correct:':'¡Tiempo! Correcto:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
+    else if (ok) fb.innerHTML = `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>`;
+    else fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Correct answer:':'Respuesta correcta:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
+  }
   remoteDuelState.qIdx++;
-  setTimeout(() => renderRemoteDefenseQuestion(), 900);
+  remoteDuelState._answered = false;
+  setTimeout(() => renderRemoteDefenseQuestion(), 1400);
 }
 
 async function submitDefense() {
   const { questions, answers, challengerAnswers, duelId, rivalName } = remoteDuelState;
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Calculating result...':'Calculando resultado...'}</div></div>`;
-  const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions);
+  const duelObj = remoteDuelState.duelObj || {};
+  const cTimings = JSON.parse(duelObj.challenger_timings || '[]');
+  const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions, cTimings, remoteDuelState.timings || []);
   if (!result) { alert('Error'); renderDuel(); return; }
-  const { cScore, dScore, cWins, dWins } = result;
+  const { cScore, dScore, cWins, dWins, tiebreak } = result;
   const iWon = dWins;
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;
   awardXP(xpAmt, iWon ? (LANG==='en'?'Duel victory! 🥊':'¡Victoria en duelo! 🥊') : cWins ? (LANG==='en'?'Duel lost':'Duelo perdido') : (LANG==='en'?'Duel draw':'Empate en duelo'));
@@ -5195,9 +5492,10 @@ async function submitDefense() {
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;padding:2rem 1rem">
       <div style="font-size:3.5rem;margin-bottom:.75rem">${iWon?'🥊':cWins?'😤':'🤝'}</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:${iWon?'var(--sage)':cWins?'var(--rose)':'var(--gold)'};margin-bottom:.5rem">
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:${iWon?'var(--sage)':cWins?'var(--rose)':'var(--gold)'};margin-bottom:.25rem">
         ${iWon?(LANG==='en'?'You win!':'¡Ganaste!'):cWins?(LANG==='en'?'You lose':'Perdiste'):(LANG==='en'?'Draw!':'¡Empate!')}
       </div>
+      ${tiebreak?`<div style="font-size:.65rem;color:var(--parch3);margin-bottom:.4rem">${LANG==='en'?'⚡ Decided by speed':'⚡ Decidido por velocidad'}</div>`:''}
       <div style="display:flex;gap:1rem;justify-content:center;margin:1.25rem 0">
         <div style="text-align:center">
           <div style="font-size:.7rem;color:var(--parch3);margin-bottom:.3rem">${rivalName}</div>
