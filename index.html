@@ -4937,6 +4937,12 @@ async function renderDuel() {
   c.innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">⏳</div></div>`;
 
   await supaExpireOldDuels();
+  // Always fetch fresh employee list from Supabase
+  const remoteEmps = await supaFetchAllEmployees();
+  if (remoteEmps && remoteEmps.length) {
+    remoteEmps.forEach(e => { if (e.name && !DB.employees[e.name]) DB.employees[e.name] = e; });
+    window._supEmpNames = remoteEmps.map(e => e.name).filter(Boolean);
+  }
   const allDuels = await supaFetchMyDuels(currentUser);
   const seasonDuels = await supaFetchDuelSeason(getDuelSeasonId());
   const feed = await supaFetchDuelFeed();
