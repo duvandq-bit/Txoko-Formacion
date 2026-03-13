@@ -1209,7 +1209,37 @@ body::before{
 }
 .sup-pin-dot.filled{background:var(--gold);border-color:var(--gold);}
 
-/* ═══ DUELO 1v1 ═══ */
+
+/* ═══ DUELO REMOTO ═══ */
+.duel-lobby{padding:1rem 0;}
+.duel-rival-card{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:#fff;border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.5rem;cursor:pointer;transition:all .2s;}
+.duel-rival-card:hover{border-color:var(--gold-a);background:var(--gold-b);}
+.duel-rival-avatar{width:36px;height:36px;border-radius:50%;background:var(--ink3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);border:1px solid var(--gold-a);flex-shrink:0;}
+.duel-rival-name{flex:1;font-size:.85rem;font-weight:500;color:var(--parchment);}
+.duel-rival-trophies{font-size:.75rem;color:var(--gold);}
+.duel-rival-disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
+.duel-challenge-card{background:#fff;border:1px solid var(--gold-a);border-radius:var(--r);padding:1rem;margin-bottom:.75rem;}
+.duel-challenge-from{font-size:.72rem;font-family:'DM Mono',monospace;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.duel-challenge-name{font-size:1rem;font-weight:600;color:var(--parchment);margin-bottom:.5rem;}
+.duel-challenge-expiry{font-size:.65rem;color:var(--parch3);margin-bottom:.75rem;}
+.duel-season-card{background:var(--gold-b);border:1px solid var(--gold-a);border-radius:var(--r);padding:1rem;margin-bottom:.75rem;}
+.duel-season-title{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem;}
+.duel-season-row{display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--line);}
+.duel-season-row:last-child{border-bottom:none;}
+.duel-season-pos{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3);width:20px;text-align:center;}
+.duel-season-name{flex:1;font-size:.82rem;color:var(--parchment);}
+.duel-season-pts{font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold);}
+.duel-feed-item{font-size:.72rem;color:var(--parch2);padding:.4rem 0;border-bottom:1px solid var(--line);line-height:1.4;}
+.duel-feed-item:last-child{border-bottom:none;}
+.duel-feed-win{color:var(--sage);}
+.duel-feed-loss{color:var(--rose);}
+.duel-answer-btn{width:100%;padding:.75rem 1rem;border:1px solid var(--line);border-radius:var(--r2);background:#fff;text-align:left;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--parchment);cursor:pointer;margin-bottom:.4rem;transition:all .15s;}
+.duel-answer-btn:hover{border-color:var(--gold-a);background:var(--gold-b);}
+.duel-answer-btn.correct{background:#e8f5ee;border-color:var(--sage);color:var(--sage);}
+.duel-answer-btn.wrong{background:#fdecea;border-color:var(--rose);color:var(--rose);}
+.trophy-badge{font-size:.75rem;letter-spacing:-.05em;}
+
+/* ═══ DUELO 1v1 ═══ (legacy) ═══ */
 .duel-wrap{padding:.75rem;max-width:480px;margin:0 auto;}
 .duel-vs{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;}
 .duel-player{flex:1;background:#fff;border:1px solid var(--line);border-radius:var(--r2);
@@ -2839,7 +2869,9 @@ function closePinAndEnter(){
   const overlay=document.getElementById('pinOverlay');
   if(overlay) overlay.remove();
   currentUser=pinTarget;
-  document.getElementById('headerUsername').textContent=pinTarget;
+  const empH=getEmp(pinTarget);
+  const trophyH=getTrophyBadge(empH?.trophies||0);
+  document.getElementById('headerUsername').innerHTML=pinTarget+(trophyH?trophyH:'');
   document.getElementById('headerAvatar').textContent=pinTarget[0].toUpperCase();
   document.getElementById('screenLogin').classList.remove('active');
   document.getElementById('screenApp').classList.add('active');
@@ -4719,10 +4751,468 @@ function startErrorMode(){
 }
 
 
-// ═══ DUELO 1v1 ═══
+
+// ═══ SUPABASE DUELS ═══
+
+async function supaCreateChallenge(fromUser, toUser, questions) {
+  try {
+    const seasonId = getDuelSeasonId();
+    const expires = new Date(Date.now() + 24*60*60*1000).toISOString();
+    const res = await fetch(`${SUPA_URL}/rest/v1/duels`, {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify({ challenger: fromUser, challenged: toUser,
+        questions: JSON.stringify(questions), season_id: seasonId,
+        expires_at: expires, state: 'pending' })
+    });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return rows[0] || null;
+  } catch(e) { return null; }
+}
+
+async function supaSubmitChallengerAnswers(duelId, answers) {
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/duels?id=eq.${duelId}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenger_answers: JSON.stringify(answers), state: 'waiting' })
+    });
+  } catch(e) {}
+}
+
+async function supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions) {
+  try {
+    // Calculate results
+    let cScore = 0, dScore = 0;
+    questions.forEach((q, i) => {
+      if (challengerAnswers[i] === q.correctIdx) cScore++;
+      if (answers[i] === q.correctIdx) dScore++;
+    });
+    const cWins = cScore > dScore, dWins = dScore > cScore;
+    const state = 'completed';
+    await fetch(`${SUPA_URL}/rest/v1/duels?id=eq.${duelId}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify({ defender_answers: JSON.stringify(answers),
+        challenger_score: cScore, defender_score: dScore, state,
+        completed_at: new Date().toISOString() })
+    });
+    return { cScore, dScore, cWins, dWins };
+  } catch(e) { return null; }
+}
+
+async function supaFetchMyDuels(user) {
+  try {
+    const seasonId = getDuelSeasonId();
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/duels?or=(challenger.eq.${encodeURIComponent(user)},challenged.eq.${encodeURIComponent(user)})&season_id=eq.${seasonId}&order=created_at.desc&limit=50`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    );
+    if (!res.ok) return [];
+    return await res.json();
+  } catch(e) { return []; }
+}
+
+async function supaFetchDuelSeason(seasonId) {
+  try {
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/duels?season_id=eq.${seasonId}&state=eq.completed&select=challenger,challenged,challenger_score,defender_score`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    );
+    if (!res.ok) return [];
+    return await res.json();
+  } catch(e) { return []; }
+}
+
+async function supaFetchDuelFeed() {
+  try {
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/duels?state=eq.completed&order=completed_at.desc&limit=10&select=challenger,challenged,challenger_score,defender_score,completed_at`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    );
+    if (!res.ok) return [];
+    return await res.json();
+  } catch(e) { return []; }
+}
+
+async function supaExpireOldDuels() {
+  try {
+    const now = new Date().toISOString();
+    await fetch(`${SUPA_URL}/rest/v1/duels?state=eq.pending&expires_at=lt.${now}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify({ state: 'expired' })
+    });
+    await fetch(`${SUPA_URL}/rest/v1/duels?state=eq.waiting&expires_at=lt.${now}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify({ state: 'expired' })
+    });
+  } catch(e) {}
+}
+
+async function supaAwardSeasonTrophy(winner) {
+  try {
+    const emp = getEmp(winner);
+    emp.trophies = (emp.trophies || 0) + 1;
+    saveDB();
+    await supaUpsertEmployee(winner);
+  } catch(e) {}
+}
+
+function getDuelSeasonId() {
+  // Season resets every 2 weeks from epoch
+  const twoWeeks = 14 * 24 * 60 * 60 * 1000;
+  return Math.floor(Date.now() / twoWeeks);
+}
+
+function getDuelSeasonDaysLeft() {
+  const twoWeeks = 14 * 24 * 60 * 60 * 1000;
+  const elapsed = Date.now() % twoWeeks;
+  return Math.ceil((twoWeeks - elapsed) / (24 * 60 * 60 * 1000));
+}
+
+function getTrophyBadge(trophies) {
+  if (!trophies || trophies === 0) return '';
+  if (trophies <= 3) return ' <span class="trophy-badge">' + '🏆'.repeat(trophies) + '</span>';
+  return ' <span class="trophy-badge">🏆×' + trophies + '</span>';
+}
+
+function buildDuelSeasonRanking(duels, allNames) {
+  const pts = {};
+  allNames.forEach(n => { pts[n] = { name: n, wins: 0, losses: 0, draws: 0 }; });
+  duels.forEach(d => {
+    if (!pts[d.challenger]) pts[d.challenger] = { name: d.challenger, wins: 0, losses: 0, draws: 0 };
+    if (!pts[d.challenged]) pts[d.challenged] = { name: d.challenged, wins: 0, losses: 0, draws: 0 };
+    const cWins = d.challenger_score > d.defender_score;
+    const dWins = d.defender_score > d.challenger_score;
+    if (cWins) { pts[d.challenger].wins++; pts[d.challenged].losses++; }
+    else if (dWins) { pts[d.challenged].wins++; pts[d.challenger].losses++; }
+    else { pts[d.challenger].draws++; pts[d.challenged].draws++; }
+  });
+  return Object.values(pts)
+    .filter(p => p.wins + p.losses + p.draws > 0)
+    .sort((a, b) => (b.wins * 3 + b.draws) - (a.wins * 3 + a.draws) || b.wins - a.wins)
+    .slice(0, 10);
+}
+
+function canChallengeToday(duels, fromUser, toUser) {
+  const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+  return !duels.some(d =>
+    d.challenger === fromUser && d.challenged === toUser &&
+    new Date(d.created_at).getTime() > oneDayAgo
+  );
+}
+
+function countDuelsSentToday(duels, user) {
+  const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+  return duels.filter(d => d.challenger === user && new Date(d.created_at).getTime() > oneDayAgo).length;
+}
+
+function countDuelsReceivedToday(duels, user) {
+  const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+  return duels.filter(d => d.challenged === user && new Date(d.created_at).getTime() > oneDayAgo).length;
+}
+
+function getPendingDefense(duels, user) {
+  return duels.find(d => d.challenged === user && d.state === 'waiting');
+}
+
+function getPendingChallenge(duels, user) {
+  return duels.find(d => d.challenger === user && d.state === 'pending');
+}
+
+
+// ═══ DUELO REMOTO ═══
+let remoteDuelState = null;
+
+async function renderDuel() {
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">⏳</div></div>`;
+
+  await supaExpireOldDuels();
+  const allDuels = await supaFetchMyDuels(currentUser);
+  const seasonDuels = await supaFetchDuelSeason(getDuelSeasonId());
+  const feed = await supaFetchDuelFeed();
+  const allNames = (window._supEmpNames || Object.keys(DB.employees)).filter(n => n && n !== currentUser);
+  const emp = getEmp(currentUser);
+
+  const sentToday = countDuelsSentToday(allDuels, currentUser);
+  const receivedToday = countDuelsReceivedToday(allDuels, currentUser);
+  const pendingDefense = getPendingDefense(allDuels, currentUser);
+  const pendingChallenge = getPendingChallenge(allDuels, currentUser);
+  const ranking = buildDuelSeasonRanking(seasonDuels, [currentUser, ...allNames]);
+  const myTrophies = emp.trophies || 0;
+  const daysLeft = getDuelSeasonDaysLeft();
+
+  // Check if previous season just ended and we need to award trophy
+  // (handled server-side via cron ideally, but we check here too)
+
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🥊</div>
+      <div class="sup-hero-title">${LANG==='en'?'Duel':'Duelo'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?`Season ends in ${daysLeft} days`:`Temporada termina en ${daysLeft} días`}</div>
+    </div>
+
+    ${pendingDefense ? `
+    <!-- URGENT: DEFEND -->
+    <div class="duel-challenge-card" style="border-color:var(--rose);background:#fff9f9">
+      <div class="duel-challenge-from" style="color:var(--rose)">⚔️ ${LANG==='en'?'INCOMING CHALLENGE':'RETO PENDIENTE'}</div>
+      <div class="duel-challenge-name">${pendingDefense.challenger}${getTrophyBadge(getEmp(pendingDefense.challenger)?.trophies)} ${LANG==='en'?'challenged you!':'te ha retado!'}</div>
+      <div class="duel-challenge-expiry">⏰ ${LANG==='en'?'Expires':'Expira'}: ${new Date(pendingDefense.expires_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
+      <button class="btn-primary" style="width:100%" onclick="startDefense(${JSON.stringify(pendingDefense).replace(/"/g,'&quot;')})">${LANG==='en'?'Defend now! ⚔️':'¡Defender ahora! ⚔️'}</button>
+    </div>` : ''}
+
+    ${pendingChallenge ? `
+    <!-- WAITING FOR RESPONSE -->
+    <div class="duel-season-card" style="border-color:var(--gold-a)">
+      <div class="duel-season-title">⏳ ${LANG==='en'?'Waiting for response':'Esperando respuesta'}</div>
+      <div style="font-size:.82rem;color:var(--parchment)">${pendingChallenge.challenged} ${LANG==='en'?'has not answered yet':'aún no ha respondido'}</div>
+      <div style="font-size:.65rem;color:var(--parch3);margin-top:.3rem">⏰ ${LANG==='en'?'Expires':'Expira'}: ${new Date(pendingChallenge.expires_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>` : ''}
+
+    <!-- SEASON RANKING -->
+    <div class="duel-season-card">
+      <div class="duel-season-title">🏆 ${LANG==='en'?'Season Ranking':'Ranking de Temporada'} · ${LANG==='en'?`${daysLeft}d left`:`${daysLeft}d restantes`}</div>
+      ${ranking.length ? ranking.map((p, i) => {
+        const isMe = p.name === currentUser;
+        const empR = getEmp(p.name);
+        return `<div class="duel-season-row" style="${isMe?'background:var(--gold-b);border-radius:var(--r2);padding:.4rem .5rem;':''}">
+          <div class="duel-season-pos">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+          <div class="duel-season-name">${p.name}${getTrophyBadge(empR?.trophies)}${isMe?' <span style="color:var(--gold);font-size:.65rem">← tú</span>':''}</div>
+          <div style="font-size:.65rem;color:var(--parch3);margin-right:.5rem">${p.wins}V ${p.losses}D${p.draws?' '+p.draws+'E':''}</div>
+          <div class="duel-season-pts">${p.wins*3+p.draws}</div>
+        </div>`;
+      }).join('') : `<div style="font-size:.75rem;color:var(--parch3);text-align:center;padding:.5rem">${LANG==='en'?'No duels yet this season':'Sin duelos esta temporada'}</div>`}
+    </div>
+
+    <!-- CHALLENGE SOMEONE -->
+    ${!pendingChallenge && sentToday < 2 ? `
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;opacity:.8">
+      — ${LANG==='en'?'Challenge a colleague':'Retar a un compañero'} (${2-sentToday} ${LANG==='en'?'left today':'restantes hoy'}) —
+    </div>
+    <div class="duel-lobby">
+      ${allNames.map(n => {
+        const canChallenge = canChallengeToday(allDuels, currentUser, n) && !pendingDefense;
+        const rival = getEmp(n);
+        const reason = !canChallengeToday(allDuels, currentUser, n) ? (LANG==='en'?'Already challenged today':'Ya retado hoy') : pendingDefense ? (LANG==='en'?'Defend first':'Defiéndete primero') : '';
+        return `<div class="duel-rival-card ${canChallenge?'':'duel-rival-disabled'}" onclick="${canChallenge?`startChallenge('${n}')`:''}" title="${reason}">
+          <div class="duel-rival-avatar">${n[0].toUpperCase()}</div>
+          <div class="duel-rival-name">${n}${getTrophyBadge(rival?.trophies)}</div>
+          ${!canChallenge ? `<div style="font-size:.6rem;color:var(--parch3)">${reason}</div>` : '<div style="font-size:.7rem;color:var(--gold)">⚔️</div>'}
+        </div>`;
+      }).join('')}
+    </div>` : !pendingChallenge ? `
+    <div style="text-align:center;padding:1rem;font-size:.75rem;color:var(--parch3)">
+      ${LANG==='en'?'You have sent 2 challenges today. Come back tomorrow!':'Has enviado 2 retos hoy. ¡Vuelve mañana!'}
+    </div>` : ''}
+
+    <!-- RECENT FEED -->
+    ${feed.length ? `
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin:.75rem 0 .4rem;opacity:.8">— ${LANG==='en'?'Recent results':'Resultados recientes'} —</div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:.75rem 1rem">
+      ${feed.map(d => {
+        const cWins = d.challenger_score > d.defender_score;
+        const dWins = d.defender_score > d.challenger_score;
+        const winner = cWins ? d.challenger : dWins ? d.challenged : null;
+        const loser = cWins ? d.challenged : dWins ? d.challenger : null;
+        const isMe = d.challenger === currentUser || d.challenged === currentUser;
+        return `<div class="duel-feed-item">
+          ${isMe ? '<strong>' : ''}${winner ? `<span class="duel-feed-win">⚔️ ${winner}</span> venció a <span class="duel-feed-loss">${loser}</span> · ${Math.max(d.challenger_score,d.defender_score)}-${Math.min(d.challenger_score,d.defender_score)}` : `🤝 ${d.challenger} vs ${d.challenged} · Empate ${d.challenger_score}-${d.defender_score}`}${isMe ? '</strong>' : ''}
+        </div>`;
+      }).join('')}
+    </div>` : ''}
+
+  </div>`;
+}
+
+async function startChallenge(rivalName) {
+  // Build 5 questions
+  const questions = [];
+  for (let i = 0; i < 30 && questions.length < 5; i++) {
+    const q = txBuildQuestion();
+    if (q) questions.push(q);
+  }
+  if (questions.length < 5) { alert(LANG==='en'?'Not enough questions. Try again.':'No hay suficientes preguntas.'); return; }
+
+  remoteDuelState = { questions, answers: [], rivalName, phase: 'answering', qIdx: 0 };
+  renderRemoteDuelQuestion();
+}
+
+function renderRemoteDuelQuestion() {
+  const { questions, answers, rivalName, qIdx } = remoteDuelState;
+  if (qIdx >= questions.length) { submitChallenge(); return; }
+  const q = questions[qIdx];
+  const letters = ['A','B','C','D'];
+  document.getElementById('appContent').innerHTML = `
+    <div class="sup-wrap">
+      <div class="sup-hero" style="padding-bottom:.75rem">
+        <div class="sup-hero-icon">⚔️</div>
+        <div class="sup-hero-title">${LANG==='en'?`Challenge ${rivalName}`:`Retando a ${rivalName}`}</div>
+        <div class="sup-hero-sub">${LANG==='en'?`Question ${qIdx+1} of ${questions.length}`:`Pregunta ${qIdx+1} de ${questions.length}`}</div>
+      </div>
+      <div class="txoko-scene" style="margin-bottom:.75rem">
+        <div class="txoko-waiter">
+          <div class="txoko-waiter-avatar">🤵</div>
+          <div class="txoko-waiter-bubble">${q.msg}<div><span class="txoko-dish-badge">📋 ${q.topicLabel}</span></div></div>
+        </div>
+      </div>
+      ${questions.map((_, i) => `<div style="display:inline-block;width:10px;height:10px;border-radius:50%;margin:.1rem;background:${i<answers.length?'var(--gold)':i===qIdx?'var(--parchment)':'var(--line)'}"></div>`).join('')}
+      <div style="margin-top:.75rem">
+        ${q.choices.map((ch, i) => `<button class="duel-answer-btn" id="dab${i}" onclick="remoteDuelAnswer(${i})">${letters[i]}. ${ch}</button>`).join('')}
+      </div>
+      <div id="duelQFeedback" style="height:1.5rem;text-align:center;font-size:.8rem;margin-top:.3rem"></div>
+    </div>`;
+}
+
+function remoteDuelAnswer(idx) {
+  const { questions, qIdx } = remoteDuelState;
+  const q = questions[qIdx];
+  const ok = idx === q.correctIdx;
+  remoteDuelState.answers.push(idx);
+  // Show feedback briefly
+  for (let i = 0; i < q.choices.length; i++) {
+    const btn = document.getElementById(`dab${i}`);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === q.correctIdx) btn.classList.add('correct');
+    else if (i === idx && !ok) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('duelQFeedback');
+  if (fb) fb.innerHTML = ok ? `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>` : `<span style="color:var(--rose)">✗ ${q.choices[q.correctIdx]}</span>`;
+  remoteDuelState.qIdx++;
+  setTimeout(() => renderRemoteDuelQuestion(), 900);
+}
+
+async function submitChallenge() {
+  const { questions, answers, rivalName } = remoteDuelState;
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Sending challenge...':'Enviando reto...'}</div></div>`;
+  const duel = await supaCreateChallenge(currentUser, rivalName, questions);
+  if (!duel) { alert(LANG==='en'?'Error sending challenge':'Error al enviar el reto'); renderDuel(); return; }
+  await supaSubmitChallengerAnswers(duel.id, answers);
+  // Send notification
+  await fetch(`${SUPA_URL}/rest/v1/notifications`, {
+    method: 'POST',
+    headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ target: rivalName, message: `⚔️ ${currentUser} ${LANG==='en'?'has challenged you! You have 24h to respond.':'te ha retado. Tienes 24h para responder.'}`, type: 'duel' })
+  });
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:3rem;margin-bottom:.75rem">⚔️</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Challenge sent!':'¡Reto enviado!'}</div>
+      <div style="font-size:.8rem;color:var(--parch2);margin-bottom:1.5rem">${rivalName} ${LANG==='en'?'has 24h to respond.':'tiene 24h para responder.'}</div>
+      <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:1rem">
+        ${answers.map((a, i) => `<div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;background:${a===questions[i].correctIdx?'#e8f5ee':'#fdecea'}">${a===questions[i].correctIdx?'✓':'✗'}</div>`).join('')}
+      </div>
+      <div style="font-size:.75rem;color:var(--parch3);margin-bottom:1.5rem">${answers.filter((a,i)=>a===questions[i].correctIdx).length}/5 ${LANG==='en'?'correct':'correctas'}</div>
+      <button class="btn-primary" onclick="renderDuel()" style="width:100%">${LANG==='en'?'Back to duels':'Volver a duelos'}</button>
+    </div>
+  </div>`;
+}
+
+async function startDefense(duel) {
+  if (typeof duel === 'string') duel = JSON.parse(duel);
+  const questions = JSON.parse(duel.questions);
+  const challengerAnswers = JSON.parse(duel.challenger_answers || '[]');
+  remoteDuelState = { questions, answers: [], rivalName: duel.challenger, phase: 'defending', qIdx: 0, duelId: duel.id, challengerAnswers };
+  renderRemoteDefenseQuestion();
+}
+
+function renderRemoteDefenseQuestion() {
+  const { questions, answers, rivalName, qIdx } = remoteDuelState;
+  if (qIdx >= questions.length) { submitDefense(); return; }
+  const q = questions[qIdx];
+  const letters = ['A','B','C','D'];
+  document.getElementById('appContent').innerHTML = `
+    <div class="sup-wrap">
+      <div class="sup-hero" style="padding-bottom:.75rem">
+        <div class="sup-hero-icon" style="font-size:1.5rem">🛡️</div>
+        <div class="sup-hero-title">${LANG==='en'?`Defending vs ${rivalName}`:`Defendiendo vs ${rivalName}`}</div>
+        <div class="sup-hero-sub">${LANG==='en'?`Question ${qIdx+1} of ${questions.length}`:`Pregunta ${qIdx+1} de ${questions.length}`}</div>
+      </div>
+      <div class="txoko-scene" style="margin-bottom:.75rem">
+        <div class="txoko-waiter">
+          <div class="txoko-waiter-avatar">🤵</div>
+          <div class="txoko-waiter-bubble">${q.msg}<div><span class="txoko-dish-badge">📋 ${q.topicLabel}</span></div></div>
+        </div>
+      </div>
+      ${questions.map((_, i) => `<div style="display:inline-block;width:10px;height:10px;border-radius:50%;margin:.1rem;background:${i<answers.length?'var(--gold)':i===qIdx?'var(--parchment)':'var(--line)'}"></div>`).join('')}
+      <div style="margin-top:.75rem">
+        ${q.choices.map((ch, i) => `<button class="duel-answer-btn" id="dab${i}" onclick="remoteDefenseAnswer(${i})">${letters[i]}. ${ch}</button>`).join('')}
+      </div>
+      <div id="duelQFeedback" style="height:1.5rem;text-align:center;font-size:.8rem;margin-top:.3rem"></div>
+    </div>`;
+}
+
+function remoteDefenseAnswer(idx) {
+  const { questions, qIdx } = remoteDuelState;
+  const q = questions[qIdx];
+  const ok = idx === q.correctIdx;
+  remoteDuelState.answers.push(idx);
+  for (let i = 0; i < q.choices.length; i++) {
+    const btn = document.getElementById(`dab${i}`);
+    if (!btn) continue;
+    btn.disabled = true;
+    if (i === q.correctIdx) btn.classList.add('correct');
+    else if (i === idx && !ok) btn.classList.add('wrong');
+  }
+  const fb = document.getElementById('duelQFeedback');
+  if (fb) fb.innerHTML = ok ? `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>` : `<span style="color:var(--rose)">✗ ${q.choices[q.correctIdx]}</span>`;
+  remoteDuelState.qIdx++;
+  setTimeout(() => renderRemoteDefenseQuestion(), 900);
+}
+
+async function submitDefense() {
+  const { questions, answers, challengerAnswers, duelId, rivalName } = remoteDuelState;
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Calculating result...':'Calculando resultado...'}</div></div>`;
+  const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions);
+  if (!result) { alert('Error'); renderDuel(); return; }
+  const { cScore, dScore, cWins, dWins } = result;
+  const iWon = dWins;
+  const xpAmt = iWon ? 50 : cWins ? 10 : 25;
+  awardXP(xpAmt, iWon ? (LANG==='en'?'Duel victory! 🥊':'¡Victoria en duelo! 🥊') : cWins ? (LANG==='en'?'Duel lost':'Duelo perdido') : (LANG==='en'?'Duel draw':'Empate en duelo'));
+
+  // Notify challenger
+  await fetch(`${SUPA_URL}/rest/v1/notifications`, {
+    method: 'POST',
+    headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ target: rivalName, message: cWins ? `🥊 ${LANG==='en'?'You won the duel vs':'Ganaste el duelo vs'} ${currentUser}! ${cScore}-${dScore}` : dWins ? `😤 ${LANG==='en'?'You lost the duel vs':'Perdiste el duelo vs'} ${currentUser}. ${cScore}-${dScore}` : `🤝 ${LANG==='en'?'Draw vs':'Empate vs'} ${currentUser}. ${cScore}-${dScore}`, type: 'duel' })
+  });
+
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:3.5rem;margin-bottom:.75rem">${iWon?'🥊':cWins?'😤':'🤝'}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:${iWon?'var(--sage)':cWins?'var(--rose)':'var(--gold)'};margin-bottom:.5rem">
+        ${iWon?(LANG==='en'?'You win!':'¡Ganaste!'):cWins?(LANG==='en'?'You lose':'Perdiste'):(LANG==='en'?'Draw!':'¡Empate!')}
+      </div>
+      <div style="display:flex;gap:1rem;justify-content:center;margin:1.25rem 0">
+        <div style="text-align:center">
+          <div style="font-size:.7rem;color:var(--parch3);margin-bottom:.3rem">${rivalName}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;color:${cWins?'var(--sage)':'var(--rose)'}">${cScore}</div>
+        </div>
+        <div style="font-size:1.5rem;color:var(--parch3);align-self:center">vs</div>
+        <div style="text-align:center">
+          <div style="font-size:.7rem;color:var(--parch3);margin-bottom:.3rem">${currentUser}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;color:${dWins?'var(--sage)':'var(--rose)'}">${dScore}</div>
+        </div>
+      </div>
+      <div style="font-size:.75rem;color:var(--gold);margin-bottom:1.5rem">+${xpAmt} XP</div>
+      <button class="btn-primary" onclick="renderDuel()" style="width:100%">${LANG==='en'?'Back to duels':'Volver a duelos'}</button>
+    </div>
+  </div>`;
+}
+
+// ═══ DUELO 1v1 (legacy local) ═══
 let duelState=null;
 
-function renderDuel(){
+function renderDuelLegacy(){
   const empNames=Object.keys(DB.employees).filter(n=>n);
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
@@ -4971,13 +5461,13 @@ const WAITER_MSGS={
   ],
   ingredients:[
     d=>LANG==='en'?`Table 5 wants to know what's in <strong>${d}</strong>`:`Mesa 5 quiere saber qué lleva <strong>${d}</strong>`,
-    d=>LANG==='en'?`Guest at table 6 is asking for the ingredients of <strong>${d}</strong>`:`El cliente de mesa 6 pregunta los ingredientes de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Guest at table 501 is asking for the ingredients of <strong>${d}</strong>`:`El cliente de la mesa 501 pregunta los ingredientes de <strong>${d}</strong>`,
     d=>LANG==='en'?`What ingredients does <strong>${d}</strong> have?`:`¿Qué ingredientes tiene <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 1: exactly what goes into <strong>${d}</strong>?`:`Mesa 1: ¿Qué lleva exactamente <strong>${d}</strong>?`,
   ],
   history:[
     d=>LANG==='en'?`Table 8 wants to know the story behind <strong>${d}</strong>`:`Mesa 8 quiere saber la historia de <strong>${d}</strong>`,
-    d=>LANG==='en'?`Guest at table 2 is asking about the origin of <strong>${d}</strong>`:`El cliente de mesa 2 pregunta por el origen de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Guest at table 501 is asking about the origin of <strong>${d}</strong>`:`El cliente de la mesa 501 pregunta por el origen de <strong>${d}</strong>`,
     d=>LANG==='en'?`What do we tell the guest about <strong>${d}</strong>?`:`¿Qué le contamos al cliente sobre <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 6 wants the storytelling for <strong>${d}</strong>`:`Mesa 6 quiere saber el storytelling de <strong>${d}</strong>`,
   ],
@@ -5145,14 +5635,14 @@ function renderTxoko(){
 
       <!-- TXOKO: Survive the service -->
       <div class="game-card" onclick="txStart()">
-        <div class="game-card-bg">🍽️</div>
+        <div class="game-card-bg" style="font-size:unset">${txClientFace(5,100)}</div>
         <div class="game-card-body">
           <div class="game-card-label">${LANG==='en'?'SURVIVAL':'SUPERVIVENCIA'}</div>
-          <div class="game-card-title">Txoko</div>
-          <div class="game-card-desc">${LANG==='en'?'The waiter fires orders. Answer before the guest runs out of patience.':'El camarero te manda comandas. Responde antes de que el cliente pierda la paciencia.'}</div>
+          <div class="game-card-title">Mr. Shoesmith</div>
+          <div class="game-card-desc">${LANG==='en'?'Mr. Shoesmith is waiting at table 501. Answer his questions before he loses patience.':'Mr. Shoesmith te espera en la mesa 501. Responde sus preguntas antes de que pierda la paciencia.'}</div>
           <div class="game-card-meta">
             <span class="game-card-badge">🏆 ${record} ${LANG==='en'?(record===1?'order':'orders'):(record===1?'comanda':'comandas')}</span>
-            <span class="game-card-badge">❤️ 3 vidas</span>
+            <span class="game-card-badge">❤️ ${LANG==='en'?'5 chances':'5 oportunidades'}</span>
           </div>
         </div>
         <div class="game-card-arrow">▶</div>
@@ -5175,16 +5665,16 @@ function renderTxoko(){
         <div class="game-card-arrow">${failedCount>0?'▶':'🔒'}</div>
       </div>
 
-      <!-- DUEL 1v1 -->
+      <!-- DUEL REMOTE -->
       <div class="game-card" onclick="renderDuel()">
-        <div class="game-card-bg">⚔️</div>
+        <div class="game-card-bg">🥊</div>
         <div class="game-card-body">
-          <div class="game-card-label" style="color:#6b8cde">${LANG==='en'?'MULTIPLAYER':'MULTIJUGADOR'}</div>
-          <div class="game-card-title">${LANG==='en'?'1v1 Duel':'Duelo 1v1'}</div>
-          <div class="game-card-desc">${LANG==='en'?'Challenge a colleague. 7 rounds, same question. May the best win.':'Desafía a un compañero. 7 rondas, misma pregunta. Que gane el mejor.'}</div>
+          <div class="game-card-label" style="color:#6b8cde">${LANG==='en'?'REMOTE DUEL':'DUELO REMOTO'}</div>
+          <div class="game-card-title">${LANG==='en'?'Duel':'Duelo'}</div>
+          <div class="game-card-desc">${LANG==='en'?'Challenge a colleague from any device. 5 questions. Trophy for the season winner.':'Reta a un compañero desde cualquier dispositivo. 5 preguntas. Trofeo para el ganador de temporada.'}</div>
           <div class="game-card-meta">
-            <span class="game-card-badge">👥 2 ${LANG==='en'?'players':'jugadores'}</span>
-            <span class="game-card-badge">7 ${LANG==='en'?'rounds':'rondas'}</span>
+            <span class="game-card-badge">⚔️ 5 ${LANG==='en'?'questions':'preguntas'}</span>
+            <span class="game-card-badge">🏆 ${LANG==='en'?'Season trophy':'Trofeo temporada'}</span>
           </div>
         </div>
         <div class="game-card-arrow">▶</div>
@@ -5279,13 +5769,13 @@ function txShowIntro(){
         </div>
         <!-- Badge -->
         <div style="position:absolute;bottom:-4px;right:-4px;background:var(--gold);color:var(--ink);font-family:'DM Mono',monospace;font-size:.5rem;font-weight:600;padding:.25rem .5rem;border-radius:20px;letter-spacing:.08em;white-space:nowrap">
-          ${LANG==='en'?'VIP · Table 1':'VIP · Mesa 1'}
+          ${LANG==='en'?'VIP · Table 501':'VIP · Mesa 501'}
         </div>
       </div>
 
       <!-- Name -->
       <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--parchment);font-weight:700;margin-bottom:.2rem">
-        Don Augusto
+        Mr. Shoesmith
       </div>
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.25rem;opacity:.85">
         ${LANG==='en'?'Most demanding guest · 14 years running':'Huésped más exigente · 14 años consecutivos'}
@@ -5324,8 +5814,8 @@ function txShowIntro(){
       <!-- Warning box -->
       <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r2);padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.78rem;color:var(--parch2);line-height:1.6">
         ⚠️ ${LANG==='en'
-          ? 'Don Augusto loses patience with every wrong answer. Fail too many times and he <strong style="color:var(--rose)">calls the manager</strong>.'
-          : 'Don Augusto pierde la paciencia con cada respuesta incorrecta. Falla demasiado y <strong style="color:var(--rose)">llama al manager</strong>.'}
+          ? 'Mr. Shoesmith loses patience with every wrong answer. Fail too many times and he <strong style="color:var(--rose)">calls the manager</strong>.'
+          : 'Mr. Shoesmith pierde la paciencia con cada respuesta incorrecta. Falla demasiado y <strong style="color:var(--rose)">llama al manager</strong>.'}
       </div>
 
       <!-- CTA -->
@@ -5439,7 +5929,7 @@ function txClientFace(lives, pct){
   else if(lives===2) mood=3;
   else mood=4;
 
-  // ── 0: Don Augusto — plácido, copa en mano ─────────────────────────────
+  // ── 0: Mr. Shoesmith — plácido, copa en mano ─────────────────────────────
   const f0 = `<svg viewBox="0 0 72 72" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
     <!-- cabeza redonda, mejillas rosadas -->
     <ellipse cx="36" cy="38" rx="26" ry="28" fill="#f5dfc0"/>
@@ -5470,7 +5960,7 @@ function txClientFace(lives, pct){
     </g>
   </svg>`;
 
-  // ── 1: Don Augusto — levanta una ceja ──────────────────────────────────
+  // ── 1: Mr. Shoesmith — levanta una ceja ──────────────────────────────────
   const f1 = `<svg viewBox="0 0 72 72" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="36" cy="38" rx="26" ry="28" fill="#f5dfc0"/>
     <ellipse cx="22" cy="44" rx="7" ry="4" fill="#f0a0a0" opacity=".3"/>
@@ -5496,7 +5986,7 @@ function txClientFace(lives, pct){
     <text x="56" y="22" font-size="14" fill="#8a6040" opacity=".7" font-family="serif">?</text>
   </svg>`;
 
-  // ── 2: Don Augusto — ceño profundo, copa vacía ─────────────────────────
+  // ── 2: Mr. Shoesmith — ceño profundo, copa vacía ─────────────────────────
   const f2 = `<svg viewBox="0 0 72 72" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="36" cy="38" rx="26" ry="28" fill="#f0d0a8"/>
     <ellipse cx="20" cy="46" rx="8" ry="5" fill="#e09080" opacity=".3"/>
@@ -5532,7 +6022,7 @@ function txClientFace(lives, pct){
     <ellipse cx="55" cy="44" rx="2" ry="3" fill="#c04060" opacity=".5"/>
   </svg>`;
 
-  // ── 3: Don Augusto — furioso, pelo de punta ────────────────────────────
+  // ── 3: Mr. Shoesmith — furioso, pelo de punta ────────────────────────────
   const f3 = `<svg viewBox="0 0 72 72" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="36" cy="39" rx="26" ry="27" fill="#e8b888"/>
     <!-- mejillas muy rojas -->
@@ -5572,7 +6062,7 @@ function txClientFace(lives, pct){
     <text x="61" y="26" font-size="10" fill="#c02020" opacity=".7" font-family="sans-serif">!</text>
   </svg>`;
 
-  // ── 4: Don Augusto — explosión total, llama al manager ─────────────────
+  // ── 4: Mr. Shoesmith — explosión total, llama al manager ─────────────────
   const f4 = `<svg viewBox="0 0 72 72" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
     <!-- Halo de furia rojo anaranjado -->
     <ellipse cx="36" cy="38" rx="33" ry="33" fill="#ff4010" opacity=".12"/>
