@@ -5368,7 +5368,7 @@ function remoteDuelAnswer(idx) {
   }
   const fb = document.getElementById('duelQFeedback');
   if (fb) {
-    if (timeout) fb.innerHTML = `<span style="color:var(--rose)">⏰ ${LANG==='en'?'Time's up! Correct:':'¡Tiempo! Correcto:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
+    if (timeout) fb.innerHTML = `<span style="color:var(--rose)">⏰ ${LANG==='en'?'Time’s up! Correct:':'¡Tiempo! Correcto:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
     else if (ok) fb.innerHTML = `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>`;
     else fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Correct answer:':'Respuesta correcta:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
   }
@@ -5461,7 +5461,7 @@ function remoteDefenseAnswer(idx) {
   }
   const fb = document.getElementById('duelQFeedback');
   if (fb) {
-    if (timeout) fb.innerHTML = `<span style="color:var(--rose)">⏰ ${LANG==='en'?'Time's up! Correct:':'¡Tiempo! Correcto:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
+    if (timeout) fb.innerHTML = `<span style="color:var(--rose)">⏰ ${LANG==='en'?'Time’s up! Correct:':'¡Tiempo! Correcto:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
     else if (ok) fb.innerHTML = `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>`;
     else fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Correct answer:':'Respuesta correcta:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
   }
