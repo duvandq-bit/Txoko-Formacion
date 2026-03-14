@@ -21,9 +21,10 @@
 :root{
   /* palette — light theme */
   --ink:       #faf9f7;
-  --ink2:      #f4f1ec;
-  --ink3:      #ede9e2;
-  --ink4:      #e5e0d7;
+  --ink2:      #f2eee7;
+  --ink3:      #e8e2d8;
+  --ink4:      #ddd5c8;
+  --ink5:      #d0c7b8;
   --parchment: #1a1714;
   --parch2:    rgba(26,23,20,.72);
   --parch3:    rgba(26,23,20,.42);
@@ -42,8 +43,9 @@
   --line:      rgba(154,115,64,.14);
   --line2:     rgba(154,115,64,.28);
   --r:14px; --r2:9px; --r3:6px;
-  --shadow: 0 2px 16px rgba(0,0,0,.07);
-  --shadow2: 0 8px 40px rgba(0,0,0,.12);
+  --shadow: 0 2px 16px rgba(0,0,0,.09), 0 1px 3px rgba(0,0,0,.06);
+  --shadow2: 0 8px 40px rgba(0,0,0,.15), 0 2px 8px rgba(0,0,0,.08);
+  --shadow3: 0 20px 60px rgba(0,0,0,.18), 0 4px 12px rgba(0,0,0,.1);
 }
 html{font-size:16px;scroll-behavior:smooth}
 body{
@@ -59,7 +61,7 @@ body{
 /* subtle noise texture */
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23f)' opacity='0.018'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23f)' opacity='0.025'/%3E%3C/svg%3E");
   opacity:1;
 }
 
@@ -76,8 +78,9 @@ body::before{
   flex-direction:column;align-items:center;justify-content:center;
   padding:2rem;gap:0;
   background:
-    radial-gradient(ellipse 60% 45% at 50% 0%, rgba(154,115,64,.06) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(154,115,64,.04) 0%, transparent 60%);
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(154,115,64,.10) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(154,115,64,.07) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 25% at 10% 60%, rgba(154,115,64,.04) 0%, transparent 50%);
 }
 
 /* Decorative horizontal rules flanking the logo */
@@ -108,11 +111,11 @@ body::before{
 
 .login-card{
   background:#ffffff;
-  border:1px solid var(--line);
+  border:1px solid var(--line2);
   border-radius:var(--r);
   padding:2rem 2rem 1.75rem;
   width:100%;max-width:400px;
-  box-shadow:var(--shadow2);
+  box-shadow:var(--shadow3);
   position:relative;overflow:hidden;
 }
 /* top accent line */
@@ -192,9 +195,10 @@ body::before{
 .app-header{
   position:sticky;top:0;z-index:100;
   height:56px;
-  background:rgba(250,249,247,.95);
-  backdrop-filter:blur(24px) saturate(160%);
-  border-bottom:1px solid var(--line);
+  background:rgba(246,242,237,.96);
+  backdrop-filter:blur(32px) saturate(180%);
+  border-bottom:1px solid var(--line2);
+  box-shadow:0 1px 0 rgba(154,115,64,.08), 0 2px 12px rgba(0,0,0,.06);
   display:flex;align-items:center;padding:0 1.75rem;gap:1rem;
 }
 .header-logo{
@@ -227,13 +231,25 @@ body::before{
 
 /* Navigation */
 .app-nav{
-  background:var(--ink2);
-  border-bottom:1px solid var(--line);
+  background:var(--ink3);
+  border-bottom:1px solid var(--line2);
   display:flex;overflow-x:auto;scrollbar-width:none;
   padding:0 1.75rem;
   position:sticky;top:56px;z-index:90;
+  box-shadow:0 1px 0 rgba(154,115,64,.06);
 }
 .app-nav::-webkit-scrollbar{display:none}
+
+.nav-fade{
+  position:fixed;
+  width:56px;
+  background:linear-gradient(to right, transparent, var(--ink2) 85%);
+  pointer-events:none;
+  transition:opacity .25s;
+  z-index:91;
+}
+.nav-fade.hidden{opacity:0;}
+
 .nav-btn{
   background:none;border:none;
   color:var(--parch3);
@@ -409,12 +425,15 @@ body::before{
   text-align:center;
 }
 .fc-front{
-  background:#ffffff;border:1px solid var(--line);
+  background:#ffffff;
+  border:1px solid var(--line2);
+  box-shadow:var(--shadow2);
 }
 .fc-back{
-  background:var(--ink2);
+  background:var(--ink3);
   border:1px solid var(--line2);
   transform:rotateY(180deg);
+  box-shadow:var(--shadow2);
 }
 /* decorative corner marks */
 .fc-front::before,.fc-front::after,
@@ -1096,6 +1115,26 @@ body::before{
 .txoko-stat-lbl{font-size:.65rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.1em;}
 
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.06)}70%{transform:scale(.97)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes confettiBurst{0%{opacity:1;transform:scale(0) rotate(0deg)}100%{opacity:0;transform:scale(1.5) rotate(720deg)}}
+@keyframes greenFlash{0%{background:transparent}30%{background:rgba(107,171,130,.18)}100%{background:transparent}}
+@keyframes redFlash{0%{background:transparent}30%{background:rgba(201,112,112,.15)}100%{background:transparent}}
+.choice.correct.pop{animation:correctPop .35s cubic-bezier(.25,.46,.45,.94) both}
+.choice.wrong.shake{animation:wrongShake .4s cubic-bezier(.25,.46,.45,.94) both}
+.fc-scene.correct-flash{animation:greenFlash .5s ease both}
+.fc-scene.wrong-flash{animation:redFlash .5s ease both}
+.exam-correct-flash{animation:greenFlash .6s ease both}
+.exam-wrong-flash{animation:redFlash .5s ease both}
+.xp-burst{
+  position:fixed;pointer-events:none;z-index:9999;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;
+  color:var(--gold);text-shadow:0 1px 4px rgba(0,0,0,.5);
+  animation:xpFloat .9s ease-out forwards;
+}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-48px) scale(.8)}}
+
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
 
 /* ═══ XP BAR ═══ */
@@ -1239,6 +1278,28 @@ body::before{
 .duel-answer-btn.wrong{background:#fdecea;border-color:var(--rose);color:var(--rose);}
 .trophy-badge{font-size:.75rem;letter-spacing:-.05em;}
 
+
+/* ═══ CATEGORY COLORS ═══ */
+:root{
+  --cat-entrantes: #c8a96e;
+  --cat-hamburguesas: #c87d3e;
+  --cat-principales: #7095c8;
+  --cat-guarniciones: #6bab82;
+  --cat-postres: #ab88c8;
+  --cat-vegetariano: #c87070;
+}
+.fc-cat-chip{
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
+  text-transform:uppercase;
+  border-radius:20px;
+  padding:.25rem .8rem;margin-bottom:.5rem;
+  display:inline-block;
+}
+.fc-cat-bar{
+  height:3px;border-radius:2px;width:40px;margin:0 auto .9rem;opacity:.7;
+}
+.opt-tile.sel{border-color:var(--tile-cat-color, var(--gold-a)) !important; background:color-mix(in srgb, var(--tile-cat-color, var(--gold)), transparent 88%) !important;}
+
 /* ═══ DUELO 1v1 ═══ (legacy) ═══ */
 .duel-wrap{padding:.75rem;max-width:480px;margin:0 auto;}
 .duel-vs{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;}
@@ -1315,6 +1376,19 @@ body::before{
 </head>
 <body>
 
+<!-- ═══════ SPLASH ═══════ -->
+<div id="splashScreen">
+  <div class="splash-eyebrow">Ritz-Carlton Abama · Tenerife</div>
+  <div class="splash-logo">TXOKO</div>
+  <div class="splash-sub">by Martín Berasategui</div>
+  <div class="splash-rule"></div>
+  <div class="splash-loader">
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+  </div>
+</div>
+
 <!-- ═══════ LOGIN ═══════ -->
 <div id="screenLogin" class="screen active">
   <div class="login-eyebrow"><span>Ritz-Carlton Abama · Tenerife</span></div>
@@ -1355,7 +1429,7 @@ body::before{
     </div>
   </header>
 
-  <nav class="app-nav">
+  <nav class="app-nav" id="appNav">
     <button class="nav-btn active" id="navDashboard" onclick="showTab('dashboard')">Inicio</button>
     <button class="nav-btn" id="navFlashcards" onclick="showTab('flashcards')">Flashcards</button>
     <button class="nav-btn" id="navExam" onclick="showTab('exam')">Examen</button>
@@ -1365,6 +1439,7 @@ body::before{
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')">🏆 Ranking</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none">👁️ Sup.</button>
   </nav>
+  <div class="nav-fade" id="navFade"></div>
 
   <div class="app-content" id="appContent"></div>
   <div class="app-credit">Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro · Developed by Duvan Stiven Ramírez Duque</div>
@@ -1686,6 +1761,99 @@ let livePlayerLastQ = -1;
 // ═══ DUELO 1v1 ═══
 let duelState=null;
 
+
+
+function updateNavFade(){
+  const nav = document.getElementById('appNav');
+  const fade = document.getElementById('navFade');
+  if(!nav||!fade) return;
+  const r = nav.getBoundingClientRect();
+  fade.style.top = r.top + 'px';
+  fade.style.height = r.height + 'px';
+  fade.style.right = (window.innerWidth - r.right) + 'px';
+  const atEnd = nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 4;
+  fade.classList.toggle('hidden', atEnd);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('appNav');
+  if(nav){
+    nav.addEventListener('scroll', updateNavFade);
+    updateNavFade();
+  }
+});
+window.addEventListener('resize', updateNavFade);
+
+
+
+// ═══ AVATAR SYSTEM ═══
+const AVATAR_OPTIONS = [
+  '😊','😎','🧑‍🍳','👨‍🍳','👩‍🍳','🤵','👑','⭐','🌟','✨',
+  '🦁','🐯','🦊','🐺','🦅','🦋','🌹','🌿','🍀','🎯',
+  '💎','🏆','⚡','🔥','🌊','🎸','🎭','🎩','🍷','☕'
+];
+
+function getEmpAvatar(name) {
+  const emp = getEmp(name);
+  return emp.avatar || name[0].toUpperCase();
+}
+
+function renderAvatarDisplay(name, size='28px', fontSize='1rem') {
+  const av = getEmpAvatar(name);
+  const isEmoji = av.length > 1 || av.charCodeAt(0) > 127;
+  if(isEmoji) {
+    return `<div class="avatar-display" style="width:${size};height:${size};font-size:${fontSize}" onclick="openAvatarPicker()">${av}</div>`;
+  }
+  return `<div class="avatar-display" style="width:${size};height:${size};font-size:.8rem" onclick="openAvatarPicker()">${av}</div>`;
+}
+
+function openAvatarPicker() {
+  const current = getEmpAvatar(currentUser);
+  const overlay = document.createElement('div');
+  overlay.className = 'avatar-picker-overlay';
+  overlay.id = 'avatarPickerOverlay';
+  overlay.innerHTML = `
+    <div class="avatar-picker-modal">
+      <div class="avatar-picker-title">Tu avatar</div>
+      <div class="avatar-picker-sub">Elige tu icono</div>
+      <div class="avatar-grid">
+        ${AVATAR_OPTIONS.map(a => `
+          <div class="avatar-opt${a===current?' selected':''}" onclick="selectAvatar('${a}')">${a}</div>
+        `).join('')}
+      </div>
+      <button onclick="document.getElementById('avatarPickerOverlay').remove()"
+        style="width:100%;padding:.55rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parch3);cursor:pointer">
+        ${LANG==='en'?'Cancel':'Cancelar'}
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+}
+
+function selectAvatar(emoji) {
+  const emp = getEmp(currentUser);
+  emp.avatar = emoji;
+  saveDB();
+  supaUpsertEmployee(currentUser);
+  // Update header
+  const headerAv = document.getElementById('headerAvatar');
+  if(headerAv) { headerAv.textContent = emoji; headerAv.style.fontSize = '1rem'; }
+  document.getElementById('avatarPickerOverlay')?.remove();
+}
+
+// ═══ SPLASH SCREEN ═══
+function hideSplash() {
+  const splash = document.getElementById('splashScreen');
+  if (!splash) return;
+  splash.classList.add('hiding');
+  setTimeout(() => splash.remove(), 520);
+}
+// Hide splash once fonts and DOM are ready — min 1.2s for elegance
+const _splashStart = Date.now();
+document.addEventListener('DOMContentLoaded', () => {
+  const elapsed = Date.now() - _splashStart;
+  const minDuration = 1400;
+  setTimeout(hideSplash, Math.max(0, minDuration - elapsed));
+});
 
 // ═══ SOUNDS ═══
 let soundEnabled=true;
@@ -2101,6 +2269,7 @@ async function supaUpsertEmployee(name) {
         sessions_count: (emp.sessions || []).length,
         sessions_data: JSON.stringify((emp.sessions || []).slice(-20)),
         txoko_record: emp.txokoRecord || 0,
+        avatar: emp.avatar || null,
         updated_at: new Date().toISOString()
       })
     });
@@ -2124,6 +2293,7 @@ async function supaRestoreEmployee(name) {
     emp.lastStudyDay = r.last_study_day || emp.lastStudyDay;
     emp.txokoRecord = r.txoko_record || emp.txokoRecord;
     try { const ts = JSON.parse(r.topic_scores||'{}'); if(Object.keys(ts).length) emp.topicScores = ts; } catch(e){}
+    if(r.avatar) emp.avatar = r.avatar;
     try { const kd = JSON.parse(r.known_dishes||'{}'); if(Object.keys(kd).length) emp.knownDishes = kd; } catch(e){}
     try { const ec = JSON.parse(r.exam_correct||'{}'); if(Object.keys(ec).length) emp.examCorrect = ec; } catch(e){}
     try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){}
@@ -2780,7 +2950,7 @@ function renderLogin(){
     const avg=s.length?Math.round(s.reduce((a,x)=>a+(x.score/x.total*100),0)/s.length):0;
     return `<div class="emp-row" style="display:flex;align-items:center;gap:.4rem;position:relative">
       <button class="employee-btn" style="flex:1" onclick="login('${n}')">
-        <div class="avatar">${n[0].toUpperCase()}</div>
+        <div class="avatar" style="font-size:${getEmpAvatar(n).length>1||getEmpAvatar(n).charCodeAt(0)>127?'1rem':'.85rem'}">${getEmpAvatar(n)}</div>
         <div>
           <div class="emp-name">${n}</div>
           <div class="emp-stats">${s.length} ${t('sessions')}${s.length?' · '+avg+'% '+t('sessionsMedia'):''}</div>
@@ -2973,7 +3143,13 @@ function closePinAndEnter(){
   const empH=getEmp(pinTarget);
   const trophyH=getTrophyBadge(empH?.trophies||0);
   document.getElementById('headerUsername').innerHTML=pinTarget+(trophyH?trophyH:'');
-  document.getElementById('headerAvatar').textContent=pinTarget[0].toUpperCase();
+  const _av = getEmpAvatar(pinTarget);
+  const _headerAv = document.getElementById('headerAvatar');
+  _headerAv.textContent = _av;
+  _headerAv.style.fontSize = _av.length > 1 || _av.charCodeAt(0) > 127 ? '1rem' : '.8rem';
+  _headerAv.onclick = openAvatarPicker;
+  _headerAv.style.cursor = 'pointer';
+  _headerAv.title = LANG==='en'?'Change avatar':'Cambiar avatar';
   document.getElementById('screenLogin').classList.remove('active');
   document.getElementById('screenApp').classList.add('active');
   applyLangToApp();
@@ -3134,6 +3310,99 @@ let livePlayerLastQ = -1;
 let duelState=null;
 
 
+
+function updateNavFade(){
+  const nav = document.getElementById('appNav');
+  const fade = document.getElementById('navFade');
+  if(!nav||!fade) return;
+  const r = nav.getBoundingClientRect();
+  fade.style.top = r.top + 'px';
+  fade.style.height = r.height + 'px';
+  fade.style.right = (window.innerWidth - r.right) + 'px';
+  const atEnd = nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 4;
+  fade.classList.toggle('hidden', atEnd);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('appNav');
+  if(nav){
+    nav.addEventListener('scroll', updateNavFade);
+    updateNavFade();
+  }
+});
+window.addEventListener('resize', updateNavFade);
+
+
+
+// ═══ AVATAR SYSTEM ═══
+const AVATAR_OPTIONS = [
+  '😊','😎','🧑‍🍳','👨‍🍳','👩‍🍳','🤵','👑','⭐','🌟','✨',
+  '🦁','🐯','🦊','🐺','🦅','🦋','🌹','🌿','🍀','🎯',
+  '💎','🏆','⚡','🔥','🌊','🎸','🎭','🎩','🍷','☕'
+];
+
+function getEmpAvatar(name) {
+  const emp = getEmp(name);
+  return emp.avatar || name[0].toUpperCase();
+}
+
+function renderAvatarDisplay(name, size='28px', fontSize='1rem') {
+  const av = getEmpAvatar(name);
+  const isEmoji = av.length > 1 || av.charCodeAt(0) > 127;
+  if(isEmoji) {
+    return `<div class="avatar-display" style="width:${size};height:${size};font-size:${fontSize}" onclick="openAvatarPicker()">${av}</div>`;
+  }
+  return `<div class="avatar-display" style="width:${size};height:${size};font-size:.8rem" onclick="openAvatarPicker()">${av}</div>`;
+}
+
+function openAvatarPicker() {
+  const current = getEmpAvatar(currentUser);
+  const overlay = document.createElement('div');
+  overlay.className = 'avatar-picker-overlay';
+  overlay.id = 'avatarPickerOverlay';
+  overlay.innerHTML = `
+    <div class="avatar-picker-modal">
+      <div class="avatar-picker-title">Tu avatar</div>
+      <div class="avatar-picker-sub">Elige tu icono</div>
+      <div class="avatar-grid">
+        ${AVATAR_OPTIONS.map(a => `
+          <div class="avatar-opt${a===current?' selected':''}" onclick="selectAvatar('${a}')">${a}</div>
+        `).join('')}
+      </div>
+      <button onclick="document.getElementById('avatarPickerOverlay').remove()"
+        style="width:100%;padding:.55rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parch3);cursor:pointer">
+        ${LANG==='en'?'Cancel':'Cancelar'}
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+}
+
+function selectAvatar(emoji) {
+  const emp = getEmp(currentUser);
+  emp.avatar = emoji;
+  saveDB();
+  supaUpsertEmployee(currentUser);
+  // Update header
+  const headerAv = document.getElementById('headerAvatar');
+  if(headerAv) { headerAv.textContent = emoji; headerAv.style.fontSize = '1rem'; }
+  document.getElementById('avatarPickerOverlay')?.remove();
+}
+
+// ═══ SPLASH SCREEN ═══
+function hideSplash() {
+  const splash = document.getElementById('splashScreen');
+  if (!splash) return;
+  splash.classList.add('hiding');
+  setTimeout(() => splash.remove(), 520);
+}
+// Hide splash once fonts and DOM are ready — min 1.2s for elegance
+const _splashStart = Date.now();
+document.addEventListener('DOMContentLoaded', () => {
+  const elapsed = Date.now() - _splashStart;
+  const minDuration = 1400;
+  setTimeout(hideSplash, Math.max(0, minDuration - elapsed));
+});
+
 // ═══ SOUNDS ═══
 let soundEnabled=true;
 try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
@@ -3153,8 +3422,21 @@ function showTab(tab){
     b.classList.toggle('active',['dashboard','flashcards','exam','repaso','stats','txoko','ranking','supervisor'][i]===tab);
   });
   const c=document.getElementById('appContent');
-  c.innerHTML='';
-  ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor})[tab]();
+  // Fade out current content then render new tab
+  c.style.opacity='0';
+  c.style.transform='translateY(-5px)';
+  c.style.transition='opacity .12s ease, transform .12s ease';
+  setTimeout(()=>{
+    c.innerHTML='';
+    c.style.transition='none';
+    c.style.opacity='1';
+    c.style.transform='translateY(0)';
+    ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor})[tab]();
+    // Animate in
+    c.classList.remove('tab-entering');
+    void c.offsetWidth; // force reflow
+    c.classList.add('tab-entering');
+  }, 120);
 }
 
 // ═══════ DASHBOARD ═══════
@@ -3304,17 +3586,23 @@ function renderFcCard(){
   document.getElementById('fcCounter').textContent=`${fcIndex+1} / ${fcDishes.length}`;
   document.getElementById('fcRibbon').style.width=pct+'%';
   const dd=getDish(d);
+  const _catColor = getCatColor(dd.cat||'Entrantes');
+  const _catAlpha = getCatColorAlpha(dd.cat||'Entrantes', 0.18);
+  const _catIllustration = getCatIllustration(dd.cat||'Entrantes');
   document.getElementById('fcFront').innerHTML=`
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:var(--r) var(--r) 0 0;opacity:.6"></div>
+    <div class="fc-cat-chip" style="color:${_catColor};border:1px solid ${_catColor};background:${_catAlpha}">${CAT_ICONS[dd.cat]||'🍽️'} ${dd.cat||''}</div>
     <div class="fc-topic-chip">${topic.label}</div>
     <div class="fc-dish">${dd.name}</div>
     <div class="fc-q">${topic.q(d)}</div>
     <div class="fc-flip-hint">${t('revealHint')}</div>
   `;
   document.getElementById('fcBack').innerHTML=`
-    <div class="fc-answer-label">${t('answerLabel')}</div>
-    <div class="fc-dish-small">${dd.name}</div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:0 0 var(--r) var(--r);opacity:.5"></div>
+    <div class="fc-answer-label" style="color:${_catColor}">${t('answerLabel')}</div>
+    <div class="fc-dish-small" style="border-bottom:2px solid ${_catColor};padding-bottom:.4rem;margin-bottom:.6rem">${dd.name}</div>
     <div class="fc-answer">${topic.a(d)}</div>
-    ${dd.notes ? `<div style="margin-top:.75rem;padding:.6rem .8rem;background:rgba(184,152,90,.08);border:1px solid var(--gold-a);border-radius:var(--r2);font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${dd.notes}</div>` : ''}
+    ${dd.notes ? `<div style="margin-top:.75rem;padding:.6rem .8rem;background:${_catAlpha};border:1px solid ${_catColor};border-radius:var(--r2);font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${dd.notes}</div>` : ''}
   `;
   const card=document.getElementById('fcCard');
   card.classList.remove('flipped');
@@ -3336,6 +3624,13 @@ function flipCard(){
 }
 
 function fcRate(score){
+  // Visual feedback on rating
+  const scene = document.getElementById('fcScene');
+  if(scene){
+    scene.classList.remove('correct-flash','wrong-flash');
+    void scene.offsetWidth;
+    scene.classList.add(score>=1 ? 'correct-flash' : 'wrong-flash');
+  }
   const emp=getEmp(currentUser);
   const d=fcDishes[fcIndex];
   emp.topicScores[fcTopic]=emp.topicScores[fcTopic]||{correct:0,total:0};
@@ -3381,7 +3676,7 @@ function renderExamSetup(){
       <div class="section-eyebrow">${t('topicCategory')}</div>
       <div class="opt-grid" id="catOpts">
         <div class="opt-tile sel" data-cat="all" onclick="selCat(this)"><div class="opt-tile-icon">🍽️</div><div class="opt-tile-name">${t('allCats')}</div><div class="opt-tile-sub">${DISHES.length} ${t('dishes')}</div></div>
-        ${getCats().map((c,i)=>`<div class="opt-tile" data-cat="${CATS_ES[i]}" onclick="selCat(this)"><div class="opt-tile-icon">${CAT_ICONS[CATS_ES[i]]}</div><div class="opt-tile-name">${c}</div><div class="opt-tile-sub">${DISHES.filter(d=>d.cat===CATS_ES[i]).length} ${t('dishes')}</div></div>`).join('')}
+        ${getCats().map((c,i)=>`<div class="opt-tile" data-cat="${CATS_ES[i]}" style="--tile-cat-color:${getCatColor(CATS_ES[i])};border-top:2px solid ${getCatColor(CATS_ES[i])}" onclick="selCat(this)"><div class="opt-tile-icon">${CAT_ICONS[CATS_ES[i]]}</div><div class="opt-tile-name">${c}</div><div class="opt-tile-sub">${DISHES.filter(d=>d.cat===CATS_ES[i]).length} ${t('dishes')}</div></div>`).join('')}
       </div>
 
       <div class="section-eyebrow">${t('topicTheme')}</div>
@@ -3491,12 +3786,23 @@ function answerExam(idx){
   saveDB();
   document.querySelectorAll('.choice').forEach((el,i)=>{
     el.classList.add('locked');
-    if(norm(q.choices[i])===norm(q.correct))el.classList.add('correct');
-    else if(i===idx&&!ok)el.classList.add('wrong');
+    if(norm(q.choices[i])===norm(q.correct)){
+      el.classList.add('correct');
+      setTimeout(()=>el.classList.add('pop'), 10);
+    } else if(i===idx&&!ok){
+      el.classList.add('wrong');
+      setTimeout(()=>el.classList.add('shake'), 10);
+    }
   });
+  // Flash exam container
+  const examWrap = document.querySelector('.exam-wrap, .sup-wrap, [class*="exam"]');
+  const appC = document.getElementById('appContent');
+  if(appC){ appC.classList.remove('exam-correct-flash','exam-wrong-flash'); void appC.offsetWidth; appC.classList.add(ok?'exam-correct-flash':'exam-wrong-flash'); }
   const fb=document.getElementById('examFeedback');
   fb.className=`exam-feedback show ${ok?'ok':'ko'}`;
   fb.textContent=ok?t('correct'):t('wrongPrefix')+q.correct;
+  // XP burst on correct
+  if(ok){ const btn=document.getElementById('choice'+idx); if(btn){ const r=btn.getBoundingClientRect(); showXpBurst(5, r.left+r.width/2, r.top); } }
   document.getElementById('btnNextQ').classList.add('show');
 }
 
@@ -3650,7 +3956,7 @@ function renderStats(){
     const kn=dishes.filter(d=>known[d.id]).length;
     const pct=Math.round(kn/dishes.length*100);
     return `<div class="c-stat-row">
-      <div class="c-dot" style="background:${CAT_COLORS[c]}"></div>
+      <div class="c-dot" style="background:${getCatColor(c)}"></div>
       <span class="c-label">${catLocal(c)}</span>
       <span class="c-val">${kn}/${dishes.length} · ${pct}%</span>
     </div>`;
@@ -3820,7 +4126,7 @@ function renderRanking(){
       const sessions = (emp.sessions||[]).length;
       return `<div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;background:${isMe?'var(--gold-b)':'#fff'};border:1px solid ${isMe?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);margin-bottom:.45rem;transition:all .2s">
         <div style="font-size:1.3rem;width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch3)">${i+1}</span>`}</div>
-        <div style="width:32px;height:32px;border-radius:50%;background:${isMe?'var(--gold-a)':'var(--ink3)'};border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);flex-shrink:0">${emp.name[0].toUpperCase()}</div>
+        <div style="width:32px;height:32px;border-radius:50%;background:${isMe?'var(--gold-a)':'var(--ink3)'};border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-size:${getEmpAvatar(emp.name).length>1||getEmpAvatar(emp.name).charCodeAt(0)>127?'1rem':'.85rem'};color:var(--gold);flex-shrink:0">${getEmpAvatar(emp.name)}</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:.85rem;font-weight:500;color:var(--parchment);${isMe?'color:var(--gold)':''}">${emp.name}${isMe?' ← tú':''}</div>
           <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
@@ -3946,7 +4252,7 @@ function renderSupDashboard(){
       const isCloud = !DB.employees[name];
       return `<div class="sup-emp-card">
         <div class="sup-emp-header">
-          <div class="sup-emp-avatar">${name.charAt(0).toUpperCase()}</div>
+          <div class="sup-emp-avatar" style="font-size:${getEmpAvatar(name).length>1||getEmpAvatar(name).charCodeAt(0)>127?'1.1rem':'.85rem'}">${getEmpAvatar(name)}</div>
           <div style="flex:1">
             <div class="sup-emp-name">${name}${isCloud?` <span style="font-size:.55rem;color:var(--gold);font-family:'DM Mono',monospace;opacity:.7">☁️</span>`:''}</div>
             <div style="font-size:.65rem;color:var(--parch3)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
@@ -4965,6 +5271,89 @@ function startErrorMode(){
 
 
 
+
+
+
+function showXpBurst(amount, x, y) {
+  const el = document.createElement('div');
+  el.className = 'xp-burst';
+  el.textContent = '+' + amount + ' XP';
+  el.style.left = (x - 20) + 'px';
+  el.style.top = (y - 10) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 950);
+}
+
+function getCatIllustration(cat) {
+  const svgs = {
+    'Entrantes': `<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="38" stroke="currentColor" stroke-width=".8" opacity=".4"/>
+      <circle cx="60" cy="60" r="28" stroke="currentColor" stroke-width=".5" opacity=".25"/>
+      <path d="M44 72 C44 72 48 58 60 54 C72 50 76 58 76 58" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+      <path d="M52 68 C52 68 55 62 60 60 C65 58 68 62 68 62" stroke="currentColor" stroke-width=".9" stroke-linecap="round" opacity=".5"/>
+      <circle cx="60" cy="52" r="2.5" fill="currentColor" opacity=".6"/>
+      <line x1="60" y1="38" x2="60" y2="46" stroke="currentColor" stroke-width=".8" opacity=".4"/>
+      <line x1="46" y1="44" x2="51" y2="50" stroke="currentColor" stroke-width=".8" opacity=".4"/>
+      <line x1="74" y1="44" x2="69" y2="50" stroke="currentColor" stroke-width=".8" opacity=".4"/>
+    </svg>`,
+    'Platos Principales': `<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="60" cy="68" rx="32" ry="8" stroke="currentColor" stroke-width=".8" opacity=".3"/>
+      <path d="M36 68 C36 68 38 46 60 46 C82 46 84 68 84 68" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <path d="M44 65 C46 55 52 50 60 50 C68 50 74 55 76 65" stroke="currentColor" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+      <line x1="60" y1="36" x2="60" y2="46" stroke="currentColor" stroke-width="1" opacity=".5"/>
+      <line x1="55" y1="38" x2="65" y2="38" stroke="currentColor" stroke-width=".8" opacity=".4"/>
+      <circle cx="60" cy="35" r="2" fill="currentColor" opacity=".5"/>
+    </svg>`,
+    'Postres': `<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M42 72 L42 58 C42 50 50 44 60 44 C70 44 78 50 78 58 L78 72 Z" stroke="currentColor" stroke-width="1" stroke-linejoin="round" opacity=".55"/>
+      <line x1="38" y1="72" x2="82" y2="72" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <line x1="60" y1="44" x2="60" y2="36" stroke="currentColor" stroke-width="1" opacity=".5"/>
+      <path d="M56 36 C56 36 56 30 60 30 C64 30 64 36 64 36" stroke="currentColor" stroke-width=".9" stroke-linecap="round" opacity=".5"/>
+      <circle cx="60" cy="58" r="5" stroke="currentColor" stroke-width=".8" opacity=".4"/>
+      <path d="M48 64 Q54 60 60 62 Q66 64 72 60" stroke="currentColor" stroke-width=".7" stroke-linecap="round" opacity=".35"/>
+    </svg>`,
+    'Hamburguesas y Bocatas': `<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M38 58 C38 46 48 40 60 40 C72 40 82 46 82 58" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <line x1="36" y1="64" x2="84" y2="64" stroke="currentColor" stroke-width="1" opacity=".5"/>
+      <line x1="36" y1="70" x2="84" y2="70" stroke="currentColor" stroke-width="1" opacity=".5"/>
+      <path d="M38 76 L38 78 C38 80 40 82 42 82 L78 82 C80 82 82 80 82 78 L82 76 Z" stroke="currentColor" stroke-width="1" opacity=".5"/>
+      <path d="M44 64 Q52 60 60 62 Q68 64 76 60" stroke="currentColor" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+    </svg>`,
+    'Guarniciones y Salsas': `<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 76 L50 48 C50 44 52 42 60 42 C68 42 70 44 70 48 L70 76" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".6"/>
+      <line x1="46" y1="76" x2="74" y2="76" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <path d="M54 56 C54 56 60 52 66 56" stroke="currentColor" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+      <path d="M54 64 C54 64 60 60 66 64" stroke="currentColor" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+      <path d="M60 42 C60 42 58 36 54 34 C58 36 60 30 60 30 C60 30 62 36 66 34 C62 36 60 42 60 42" stroke="currentColor" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/>
+    </svg>`,
+    'Vegetariano': `<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60 78 C60 78 60 54 60 44" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <path d="M60 60 C60 60 46 54 40 42 C52 42 60 52 60 60" stroke="currentColor" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+      <path d="M60 54 C60 54 74 48 80 36 C68 36 60 46 60 54" stroke="currentColor" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+      <path d="M60 68 C60 68 50 64 46 56 C54 56 60 64 60 68" stroke="currentColor" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round" opacity=".4"/>
+      <ellipse cx="60" cy="80" rx="12" ry="3" stroke="currentColor" stroke-width=".7" opacity=".3"/>
+    </svg>`
+  };
+  return svgs[cat] || svgs['Entrantes'];
+}
+
+function getCatColor(cat) {
+  const map = {
+    'Entrantes': '#c8a96e',
+    'Hamburguesas y Bocatas': '#c87d3e',
+    'Platos Principales': '#7095c8',
+    'Guarniciones y Salsas': '#6bab82',
+    'Postres': '#ab88c8',
+    'Vegetariano': '#c87070'
+  };
+  return map[cat] || '#c8a96e';
+}
+function getCatColorAlpha(cat, alpha=0.15) {
+  const hex = getCatColor(cat).replace('#','');
+  const r=parseInt(hex.slice(0,2),16), g=parseInt(hex.slice(2,4),16), b=parseInt(hex.slice(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 // ═══ SUPABASE DUELS ═══
 
 async function supaCreateChallenge(fromUser, toUser, questions) {
@@ -5276,7 +5665,7 @@ async function renderDuel() {
         const rival = getEmp(n);
         const reason = !canChallengeToday(allDuels, currentUser, n) ? (LANG==='en'?'Already challenged today':'Ya retado hoy') : pendingDefense ? (LANG==='en'?'Defend first':'Defiéndete primero') : '';
         return `<div class="duel-rival-card ${canChallenge?'':'duel-rival-disabled'}" onclick="${canChallenge?`startChallenge('${n}')`:''}" title="${reason}">
-          <div class="duel-rival-avatar">${n[0].toUpperCase()}</div>
+          <div class="duel-rival-avatar" style="font-size:${getEmpAvatar(n).length>1||getEmpAvatar(n).charCodeAt(0)>127?'1.1rem':'.85rem'}">${getEmpAvatar(n)}</div>
           <div class="duel-rival-name">${n}${getTrophyBadge(rival?.trophies)}</div>
           ${!canChallenge ? `<div style="font-size:.6rem;color:var(--parch3)">${reason}</div>` : '<div style="font-size:.7rem;color:var(--gold)">⚔️</div>'}
         </div>`;
@@ -5674,6 +6063,99 @@ function duelGameOver(){
     </div>`;
 }
 
+
+
+function updateNavFade(){
+  const nav = document.getElementById('appNav');
+  const fade = document.getElementById('navFade');
+  if(!nav||!fade) return;
+  const r = nav.getBoundingClientRect();
+  fade.style.top = r.top + 'px';
+  fade.style.height = r.height + 'px';
+  fade.style.right = (window.innerWidth - r.right) + 'px';
+  const atEnd = nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 4;
+  fade.classList.toggle('hidden', atEnd);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('appNav');
+  if(nav){
+    nav.addEventListener('scroll', updateNavFade);
+    updateNavFade();
+  }
+});
+window.addEventListener('resize', updateNavFade);
+
+
+
+// ═══ AVATAR SYSTEM ═══
+const AVATAR_OPTIONS = [
+  '😊','😎','🧑‍🍳','👨‍🍳','👩‍🍳','🤵','👑','⭐','🌟','✨',
+  '🦁','🐯','🦊','🐺','🦅','🦋','🌹','🌿','🍀','🎯',
+  '💎','🏆','⚡','🔥','🌊','🎸','🎭','🎩','🍷','☕'
+];
+
+function getEmpAvatar(name) {
+  const emp = getEmp(name);
+  return emp.avatar || name[0].toUpperCase();
+}
+
+function renderAvatarDisplay(name, size='28px', fontSize='1rem') {
+  const av = getEmpAvatar(name);
+  const isEmoji = av.length > 1 || av.charCodeAt(0) > 127;
+  if(isEmoji) {
+    return `<div class="avatar-display" style="width:${size};height:${size};font-size:${fontSize}" onclick="openAvatarPicker()">${av}</div>`;
+  }
+  return `<div class="avatar-display" style="width:${size};height:${size};font-size:.8rem" onclick="openAvatarPicker()">${av}</div>`;
+}
+
+function openAvatarPicker() {
+  const current = getEmpAvatar(currentUser);
+  const overlay = document.createElement('div');
+  overlay.className = 'avatar-picker-overlay';
+  overlay.id = 'avatarPickerOverlay';
+  overlay.innerHTML = `
+    <div class="avatar-picker-modal">
+      <div class="avatar-picker-title">Tu avatar</div>
+      <div class="avatar-picker-sub">Elige tu icono</div>
+      <div class="avatar-grid">
+        ${AVATAR_OPTIONS.map(a => `
+          <div class="avatar-opt${a===current?' selected':''}" onclick="selectAvatar('${a}')">${a}</div>
+        `).join('')}
+      </div>
+      <button onclick="document.getElementById('avatarPickerOverlay').remove()"
+        style="width:100%;padding:.55rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.8rem;color:var(--parch3);cursor:pointer">
+        ${LANG==='en'?'Cancel':'Cancelar'}
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+}
+
+function selectAvatar(emoji) {
+  const emp = getEmp(currentUser);
+  emp.avatar = emoji;
+  saveDB();
+  supaUpsertEmployee(currentUser);
+  // Update header
+  const headerAv = document.getElementById('headerAvatar');
+  if(headerAv) { headerAv.textContent = emoji; headerAv.style.fontSize = '1rem'; }
+  document.getElementById('avatarPickerOverlay')?.remove();
+}
+
+// ═══ SPLASH SCREEN ═══
+function hideSplash() {
+  const splash = document.getElementById('splashScreen');
+  if (!splash) return;
+  splash.classList.add('hiding');
+  setTimeout(() => splash.remove(), 520);
+}
+// Hide splash once fonts and DOM are ready — min 1.2s for elegance
+const _splashStart = Date.now();
+document.addEventListener('DOMContentLoaded', () => {
+  const elapsed = Date.now() - _splashStart;
+  const minDuration = 1400;
+  setTimeout(hideSplash, Math.max(0, minDuration - elapsed));
+});
 
 // ═══ SOUNDS ═══
 let soundEnabled=true;
