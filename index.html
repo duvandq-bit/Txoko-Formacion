@@ -3314,6 +3314,7 @@ function renderFcCard(){
     <div class="fc-answer-label">${t('answerLabel')}</div>
     <div class="fc-dish-small">${dd.name}</div>
     <div class="fc-answer">${topic.a(d)}</div>
+    ${dd.notes ? `<div style="margin-top:.75rem;padding:.6rem .8rem;background:rgba(184,152,90,.08);border:1px solid var(--gold-a);border-radius:var(--r2);font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${dd.notes}</div>` : ''}
   `;
   const card=document.getElementById('fcCard');
   card.classList.remove('flipped');
