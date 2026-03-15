@@ -544,85 +544,112 @@ body::before{
 .fc-ribbon-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:1px;transition:width .4s ease}
 
 /* The card itself */
-.fc-scene{perspective:1400px;cursor:pointer;margin-bottom:1.5rem;min-height:280px}
+.fc-scene{cursor:pointer;margin-bottom:1.5rem;position:relative}
 .fc-card{
-  position:relative;width:100%;min-height:280px;
-  transform-style:preserve-3d;
-  transition:transform .6s cubic-bezier(.4,0,.2,1);
+  width:100%;min-height:300px;
+  filter:drop-shadow(0 8px 28px rgba(0,0,0,.09));
 }
-.fc-card.flipped{transform:rotateY(180deg)}
-
+@keyframes fcFlipOut{
+  from{transform:perspective(900px) rotateY(0deg)}
+  to{transform:perspective(900px) rotateY(-90deg)}
+}
+@keyframes fcFlipIn{
+  from{transform:perspective(900px) rotateY(90deg)}
+  to{transform:perspective(900px) rotateY(0deg)}
+}
 .fc-face{
-  position:absolute;inset:0;backface-visibility:hidden;
   border-radius:var(--r);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:2.5rem 2rem;
-  text-align:center;
+  align-items:center;justify-content:center;padding:2.5rem 1.75rem;
+  text-align:center;overflow:hidden;min-height:300px;width:100%;
 }
-.fc-front{
-  background:#ffffff;
+.fc-card.fc-animating-out .fc-face{
+  animation:fcFlipOut .22s cubic-bezier(.4,0,.6,1) forwards;
+}
+.fc-card.fc-animating-in .fc-face{
+  animation:fcFlipIn .22s cubic-bezier(.2,0,.4,1) forwards;
+}
+
+/* Front — clean white with subtle warmth */
+.fc-front,.fc-back-style{
+  background:linear-gradient(160deg,#ffffff 0%,#fdfaf6 100%);
   border:1px solid var(--line2);
-  box-shadow:var(--shadow2);
+  box-shadow:0 2px 8px rgba(0,0,0,.04),0 12px 32px rgba(0,0,0,.06);
 }
-.fc-back{
-  background:var(--ink3);
-  border:1px solid var(--line2);
-  transform:rotateY(180deg);
-  box-shadow:var(--shadow2);
-}
-/* decorative corner marks */
+
+/* Decorative corner marks */
 .fc-front::before,.fc-front::after,
 .fc-back::before,.fc-back::after{
-  content:'';position:absolute;width:14px;height:14px;
-  border-color:var(--gold-a);border-style:solid;opacity:.5;
+  content:'';position:absolute;width:16px;height:16px;
+  border-color:var(--gold-a);border-style:solid;opacity:.6;
 }
-.fc-front::before{top:14px;left:14px;border-width:1px 0 0 1px}
-.fc-front::after{bottom:14px;right:14px;border-width:0 1px 1px 0}
-.fc-back::before{top:14px;right:14px;border-width:1px 1px 0 0}
-.fc-back::after{bottom:14px;left:14px;border-width:0 0 1px 1px}
+.fc-front::before{top:16px;left:16px;border-width:1.5px 0 0 1.5px}
+.fc-front::after{bottom:16px;right:16px;border-width:0 1.5px 1.5px 0}
+.fc-back::before{top:16px;right:16px;border-width:1.5px 1.5px 0 0}
+.fc-back::after{bottom:16px;left:16px;border-width:0 0 1.5px 1.5px}
 
 .fc-topic-chip{
-  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
+  font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.18em;
   text-transform:uppercase;color:var(--gold);
   border:1px solid var(--gold-a);border-radius:20px;
-  padding:.25rem .8rem;margin-bottom:1.2rem;
+  padding:.22rem .85rem;margin-bottom:1rem;
+  background:var(--gold-b);
 }
 .fc-dish{
-  font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;
-  color:var(--parchment);line-height:1.2;margin-bottom:.7rem;
+  font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:400;
+  color:var(--parchment);line-height:1.2;margin-bottom:.65rem;
+  letter-spacing:-.01em;
 }
-.fc-q{font-size:.85rem;color:var(--parch2);line-height:1.65;max-width:480px}
+.fc-q{font-size:.83rem;color:var(--parch2);line-height:1.7;max-width:480px}
 .fc-flip-hint{
-  position:absolute;bottom:1.25rem;
-  font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;
+  position:absolute;bottom:1.1rem;
+  font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.16em;
   color:var(--parch4);text-transform:uppercase;
+  display:flex;align-items:center;gap:.4rem;
+}
+.fc-flip-hint::before{
+  content:'';display:inline-block;width:18px;height:1px;
+  background:var(--gold-a);opacity:.5;
+}
+.fc-flip-hint::after{
+  content:'';display:inline-block;width:18px;height:1px;
+  background:var(--gold-a);opacity:.5;
 }
 
 .fc-answer-label{
-  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--sage);margin-bottom:.75rem;
+  font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--sage);margin-bottom:.6rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.fc-answer-label::before,.fc-answer-label::after{
+  content:'';flex:0 0 20px;height:1px;background:var(--sage);opacity:.4;
 }
 .fc-answer{
-  font-size:.85rem;color:var(--parch2);line-height:1.7;max-width:520px;
+  font-size:.85rem;color:var(--parch2);line-height:1.75;max-width:520px;
   white-space:pre-line;
 }
 .fc-dish-small{
-  font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;
-  color:var(--gold);margin-bottom:.75rem;
+  font-family:'Playfair Display',serif;font-size:1.15rem;font-style:italic;
+  color:var(--gold);margin-bottom:.7rem;
+  padding-bottom:.5rem;
 }
 
-.fc-rating{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap}
+/* Rating buttons — larger, more tactile */
+.fc-rating{display:flex;gap:.55rem;justify-content:center;flex-wrap:wrap;padding-top:.25rem}
 .fc-rate-btn{
-  display:flex;align-items:center;gap:.5rem;
-  padding:.65rem 1.3rem;border-radius:var(--r2);
-  font-family:'Jost',sans-serif;font-size:.8rem;font-weight:400;
-  cursor:pointer;transition:all .2s;border:1px solid;letter-spacing:.03em;
+  display:flex;align-items:center;gap:.45rem;
+  padding:.7rem 1.4rem;border-radius:var(--r2);
+  font-family:'Jost',sans-serif;font-size:.82rem;font-weight:500;
+  cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);
+  border:1px solid;letter-spacing:.02em;
+  box-shadow:0 2px 6px rgba(0,0,0,.04);
 }
-.fc-rate-again{color:var(--rose);border-color:rgba(201,112,112,.25);background:var(--rose-a)}
-.fc-rate-again:hover{background:rgba(201,112,112,.25);transform:translateY(-1px)}
-.fc-rate-ok{color:var(--azure);border-color:rgba(112,149,200,.25);background:var(--azure-a)}
-.fc-rate-ok:hover{background:rgba(112,149,200,.25);transform:translateY(-1px)}
-.fc-rate-good{color:var(--sage);border-color:rgba(107,171,130,.25);background:var(--sage-a)}
-.fc-rate-good:hover{background:rgba(107,171,130,.25);transform:translateY(-1px)}
+.fc-rate-btn:active{transform:scale(.97) translateY(1px)}
+.fc-rate-again{color:var(--rose);border-color:rgba(201,112,112,.3);background:var(--rose-a)}
+.fc-rate-again:hover{background:rgba(201,112,112,.2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,112,112,.15)}
+.fc-rate-ok{color:var(--azure);border-color:rgba(112,149,200,.3);background:var(--azure-a)}
+.fc-rate-ok:hover{background:rgba(112,149,200,.2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(112,149,200,.15)}
+.fc-rate-good{color:var(--sage);border-color:rgba(107,171,130,.3);background:var(--sage-a)}
+.fc-rate-good:hover{background:rgba(107,171,130,.2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(107,171,130,.15)}
 
 /* ─────────────────────────────────────────────────
    EXAM SETUP
@@ -1239,8 +1266,7 @@ body::before{
 @keyframes redFlash{0%{background:transparent}30%{background:rgba(201,112,112,.15)}100%{background:transparent}}
 .choice.correct.pop{animation:correctPop .35s cubic-bezier(.25,.46,.45,.94) both}
 .choice.wrong.shake{animation:wrongShake .4s cubic-bezier(.25,.46,.45,.94) both}
-.fc-scene.correct-flash{animation:greenFlash .5s ease both}
-.fc-scene.wrong-flash{animation:redFlash .5s ease both}
+
 .exam-correct-flash{animation:greenFlash .6s ease both}
 .exam-wrong-flash{animation:redFlash .5s ease both}
 .xp-burst{
@@ -3639,7 +3665,7 @@ function renderXPBar(){
         <span class="xp-bar-lvl">Nv.${cur.level}</span>
       </div>
       <div class="xp-bar-track">
-        <div class="xp-bar-fill" style="width:${pct}%"></div>
+        <div class="xp-bar-fill xp-bar-shimmer" style="width:${pct}%;transition:width 1.2s cubic-bezier(.4,0,.2,1)"></div>
       </div>
       <div class="xp-bar-sub">${xp.toLocaleString()} XP${next?` · Faltan ${needed.toLocaleString()} para Nv.${next.level}`:' · ¡Nivel máximo!'}${(getEmp(currentUser).streak||0)>1?' · ◈'+((getEmp(currentUser).streak||0))+' días':''}</div>
       ${renderCertBadges(getEmp(currentUser))}
@@ -4240,7 +4266,7 @@ function renderDashboard(){
         <circle cx="34" cy="34" r="${r}" fill="none" stroke="${col}" stroke-width="5"
           stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
           stroke-linecap="round" transform="rotate(-90 34 34)"
-          style="transition:stroke-dashoffset .8s ease"/>
+          style="transition:stroke-dashoffset .8s ease;animation:ringPulse 4s ease-in-out infinite"/>
         <text x="34" y="38" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" fill="var(--parchment)" font-weight="600">${tp.pct}%</text>
       </svg>
       <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch3);text-align:center;letter-spacing:.04em;text-transform:uppercase;max-width:60px;line-height:1.3">${tp.label}</div>
@@ -4250,7 +4276,8 @@ function renderDashboard(){
   document.getElementById('appContent').innerHTML=`
 
     <!-- ── HERO ── -->
-    <div style="background:linear-gradient(135deg,#1a1610 0%,#2a1f14 60%,#1a1610 100%);border-radius:var(--r);padding:1.5rem 1.4rem 1.25rem;margin-bottom:1rem;position:relative;overflow:hidden">
+    <div class="dash-hero-alive" style="background:linear-gradient(135deg,#1a1610 0%,#2a1f14 60%,#1a1610 100%);border-radius:var(--r);padding:1.5rem 1.4rem 1.25rem;margin-bottom:1rem;position:relative;overflow:hidden">
+      <div class="dashboard-particles" id="dashParticles"></div>
       <!-- Decorative glow -->
       <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(200,169,110,.12) 0%,transparent 70%);pointer-events:none"></div>
       <!-- Top row -->
@@ -4277,12 +4304,12 @@ function renderDashboard(){
     <!-- ── STATS STRIP ── -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:1rem">
       ${[
-        {num:sessions.length, lbl:LANG==='en'?'Exams':'Exámenes'},
-        {num:(avg||0)+'%', lbl:LANG==='en'?'Average':'Media'},
-        {num:known, lbl:LANG==='en'?'Mastered':'Dominados'},
-        {num:fc, lbl:LANG==='en'?'Cards':'Tarjetas'}
-      ].map(s=>`<div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:.6rem .4rem;text-align:center">
-        <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);line-height:1">${s.num}</div>
+        {num:sessions.length, lbl:LANG==='en'?'Exams':'Exámenes', target:sessions.length},
+        {num:(avg||0)+'%', lbl:LANG==='en'?'Average':'Media', target:avg||0, suffix:'%'},
+        {num:known, lbl:LANG==='en'?'Mastered':'Dominados', target:known},
+        {num:fc, lbl:LANG==='en'?'Cards':'Tarjetas', target:fc}
+      ].map((s,i)=>`<div class="stat-tile-animate" style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:.6rem .4rem;text-align:center;animation-delay:${i*0.08}s">
+        <div class="dash-stat-num" data-target="${s.target||0}" data-suffix="${s.suffix||''}" style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);line-height:1">0${s.suffix||''}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem">${s.lbl}</div>
       </div>`).join('')}
     </div>
@@ -4352,8 +4379,62 @@ function renderDashboard(){
     </div>
   `;
   checkActiveLiveSession();
+  setTimeout(initDashboardAlive, 50);
 }
 
+
+// ─── Dashboard alive effects ───
+function initDashboardAlive(){
+  // Floating particles in hero
+  const container = document.getElementById('dashParticles');
+  if(container){
+    container.innerHTML = '';
+    const count = 12;
+    for(let i=0;i<count;i++){
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const x = Math.random()*100;
+      const y = Math.random()*100;
+      const dur = (4+Math.random()*6).toFixed(1)+'s';
+      const delay = (Math.random()*6).toFixed(1)+'s';
+      const dx = ((Math.random()-0.5)*60).toFixed(0)+'px';
+      const size = (2+Math.random()*3).toFixed(1)+'px';
+      p.style.cssText = `left:${x}%;top:${y}%;--dur:${dur};--delay:${delay};--dx:${dx};width:${size};height:${size};opacity:0`;
+      container.appendChild(p);
+    }
+  }
+  // Count-up animation for stat numbers
+  const statNums = document.querySelectorAll('.dash-stat-num');
+  statNums.forEach((el, i) => {
+    const target = parseInt(el.dataset.target||0);
+    const suffix = el.dataset.suffix||'';
+    if(target === 0){ el.textContent = '0'+suffix; return; }
+    const duration = 800;
+    const delay = i * 80;
+    const start = Date.now() + delay;
+    function tick(){
+      const now = Date.now();
+      if(now < start){ requestAnimationFrame(tick); return; }
+      const elapsed = now - start;
+      const progress = Math.min(elapsed/duration, 1);
+      const eased = 1 - Math.pow(1-progress, 3); // ease-out cubic
+      const current = Math.round(eased * target);
+      el.textContent = current + suffix;
+      if(progress < 1) requestAnimationFrame(tick);
+      else el.textContent = target + suffix;
+    }
+    requestAnimationFrame(tick);
+  });
+  // XP bar — animate width from 0
+  const xpFill = document.querySelector('.xp-bar-fill');
+  if(xpFill){
+    const targetWidth = xpFill.style.width;
+    xpFill.style.width = '0%';
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{ xpFill.style.width = targetWidth; });
+    });
+  }
+}
 async function checkActiveLiveSession(){
   try {
     const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?state=eq.active&order=created_at.desc&limit=1`,
@@ -4389,8 +4470,7 @@ function renderFlashcards(){
     <div class="fc-ribbon"><div class="fc-ribbon-fill" id="fcRibbon"></div></div>
     <div class="fc-scene" onclick="flipCard()" id="fcScene">
       <div class="fc-card" id="fcCard">
-        <div class="fc-face fc-front" id="fcFront"></div>
-        <div class="fc-face fc-back" id="fcBack"></div>
+        <div class="fc-face" id="fcFront"></div>
       </div>
     </div>
     <div class="fc-rating" id="fcRating" style="display:none">
@@ -4412,23 +4492,28 @@ function renderFcCard(){
   const _catColor = getCatColor(dd.cat||'Entrantes');
   const _catAlpha = getCatColorAlpha(dd.cat||'Entrantes', 0.18);
   const _catIllustration = getCatIllustration(dd.cat||'Entrantes');
-  document.getElementById('fcFront').innerHTML=`
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:var(--r) var(--r) 0 0;opacity:.6"></div>
-    <div class="fc-cat-chip" style="color:${_catColor};border:1px solid ${_catColor};background:${_catAlpha}">${CAT_ICONS[dd.cat]||''} ${dd.cat||''}</div>
+  const card=document.getElementById('fcCard');
+  card.querySelector('.fc-face').innerHTML=`
+    <!-- Top color bar -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:var(--r) var(--r) 0 0"></div>
+    <!-- Watermark category icon -->
+    <div style="position:absolute;bottom:-8px;right:-8px;width:120px;height:120px;opacity:.05;color:${_catColor};display:flex;align-items:center;justify-content:center;pointer-events:none">
+      <svg width="120" height="120" viewBox="0 0 24 24" fill="${_catColor}" stroke="none">${(CAT_ICONS[dd.cat]||'').replace(/stroke="currentColor"/g,'fill="'+_catColor+'"').replace(/fill="none"/g,'')}</svg>
+    </div>
+    <!-- Number badge -->
+    <div style="position:absolute;top:16px;right:16px;font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4);letter-spacing:.08em">${fcIndex+1}/${fcDishes.length}</div>
+    <!-- Category chip -->
+    <div class="fc-cat-chip" style="color:${_catColor};border:1px solid ${_catColor}20;background:${_catAlpha};display:flex;align-items:center;gap:.4rem">
+      <span style="display:inline-flex;align-items:center;color:${_catColor}">${CAT_ICONS[dd.cat]||''}</span>
+      <span>${dd.cat||''}</span>
+    </div>
     <div class="fc-topic-chip">${topic.label}</div>
     <div class="fc-dish">${dd.name}</div>
     <div class="fc-q">${topic.q(d)}</div>
     <div class="fc-flip-hint">${t('revealHint')}</div>
   `;
-  document.getElementById('fcBack').innerHTML=`
-    <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:0 0 var(--r) var(--r);opacity:.5"></div>
-    <div class="fc-answer-label" style="color:${_catColor}">${t('answerLabel')}</div>
-    <div class="fc-dish-small" style="border-bottom:2px solid ${_catColor};padding-bottom:.4rem;margin-bottom:.6rem">${dd.name}</div>
-    <div class="fc-answer">${topic.a(d)}</div>
-    ${dd.notes ? `<div style="margin-top:.75rem;padding:.6rem .8rem;background:${_catAlpha};border:1px solid ${_catColor};border-radius:var(--r2);font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${dd.notes}</div>` : ''}
-  `;
-  const card=document.getElementById('fcCard');
-  card.classList.remove('flipped');
+
+  card.classList.remove('fc-animating-out','fc-animating-in');
   fcFlipped=false;
   document.getElementById('fcRating').style.display='none';
   document.getElementById('fcScene').style.cursor='pointer';
@@ -4436,10 +4521,38 @@ function renderFcCard(){
 
 function flipCard(){
   if(fcFlipped)return;
-  document.getElementById('fcCard').classList.add('flipped');
-  document.getElementById('fcRating').style.display='flex';
-  document.getElementById('fcScene').style.cursor='default';
   fcFlipped=true;
+  const card=document.getElementById('fcCard');
+  const face=card.querySelector('.fc-face');
+  const scene=document.getElementById('fcScene');
+  const dd=getDish(fcDishes[fcIndex]);
+  const topic=TOPICS.find(t=>t.key===fcTopic)||TOPICS[0];
+  const _catColor=getCatColor(dd.cat||'Entrantes');
+  const _catAlpha=getCatColorAlpha(dd.cat||'Entrantes',0.18);
+
+  // Phase 1: rotate out
+  card.classList.add('fc-animating-out');
+  setTimeout(()=>{
+    // At 90deg — swap content
+    card.classList.remove('fc-animating-out');
+    // Render back content
+    face.innerHTML=`
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:var(--r) var(--r) 0 0"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:0 0 var(--r) var(--r)"></div>
+      <div class="fc-answer-label">${t('answerLabel')}</div>
+      <div class="fc-dish-small" style="border-bottom:1px solid ${_catColor}40;padding-bottom:.5rem;margin-bottom:.8rem;width:100%;max-width:420px">${dd.name}</div>
+      <div class="fc-answer">${topic.a(fcDishes[fcIndex])}</div>
+      ${dd.notes?`<div style="margin-top:.85rem;padding:.65rem .85rem;background:rgba(200,169,110,.06);border-left:2px solid var(--gold-a);border-radius:0 var(--r2) var(--r2) 0;font-size:.7rem;color:var(--parch2);line-height:1.55;text-align:left;width:100%;max-width:420px">${dd.notes}</div>`:''}
+    `;
+    // Phase 2: rotate in
+    card.classList.add('fc-animating-in');
+    setTimeout(()=>{
+      card.classList.remove('fc-animating-in');
+      document.getElementById('fcRating').style.display='flex';
+      scene.style.cursor='default';
+    }, 220);
+  }, 220);
+
   const emp=getEmp(currentUser);
   emp.fcHistory=emp.fcHistory||[];
   emp.fcHistory.push({topic:fcTopic,dishId:fcDishes[fcIndex].id,ts:Date.now()});
@@ -4447,13 +4560,6 @@ function flipCard(){
 }
 
 function fcRate(score){
-  // Visual feedback on rating
-  const scene = document.getElementById('fcScene');
-  if(scene){
-    scene.classList.remove('correct-flash','wrong-flash');
-    void scene.offsetWidth;
-    scene.classList.add(score>=1 ? 'correct-flash' : 'wrong-flash');
-  }
   const emp=getEmp(currentUser);
   const d=fcDishes[fcIndex];
   emp.topicScores[fcTopic]=emp.topicScores[fcTopic]||{correct:0,total:0};
