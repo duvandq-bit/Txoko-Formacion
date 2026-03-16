@@ -1583,6 +1583,7 @@ body::before{
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
     <button class="nav-btn" id="navRepaso" onclick="showTab('repaso')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Explorar</button>
     <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Protocolo</button>
+    <button class="nav-btn" id="navVideos" onclick="showTab('videos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Videos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="16" cy="11" r="1" fill="currentColor"/><circle cx="18" cy="13" r="1" fill="currentColor"/></svg> Juegos</button>
     <button class="nav-btn" id="navStats" onclick="showTab('stats')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg> Estadísticas</button>
@@ -4248,7 +4249,7 @@ function showTab(tab){
     c.style.transition='none';
     c.style.opacity='1';
     c.style.transform='translateY(0)';
-    ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor,protocolo:renderProtocolo})[tab]();
+    ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor,protocolo:renderProtocolo,videos:renderVideos})[tab]();
     // Animate in
     c.classList.remove('tab-entering');
     void c.offsetWidth; // force reflow
@@ -5029,6 +5030,203 @@ function renderCertBadges(emp){
 }
 
 // ═══ RANKING (visible to all) ═══
+
+// ═══════ VIDEOS ═══════
+const VIDEOS = {
+  'Entrantes': [
+    {
+      id: 'v001',
+      dish: 'Tartar de tomate y queso',
+      youtubeId: 'O79nXtskXD4',
+      duration: null,
+      type: 'Shorts'
+    }
+  ],
+  'Hamburguesas y Bocatas': [],
+  'Platos Principales': [],
+  'Guarniciones y Salsas': [],
+  'Postres': [],
+  'Vegetariano': []
+};
+
+function renderVideos(){
+  const c = document.getElementById('appContent');
+  const cats = Object.keys(VIDEOS);
+  
+  const catsWithVideos = cats.filter(cat => VIDEOS[cat].length > 0);
+  const totalVideos = cats.reduce((sum, cat) => sum + VIDEOS[cat].length, 0);
+
+  c.innerHTML = `
+    <div class="sup-wrap">
+      <!-- Videos hero -->
+      <div style="background:linear-gradient(135deg,#1a1610 0%,#2a1f14 60%,#1a1610 100%);border-radius:var(--r);padding:1.5rem 1.4rem 1.25rem;margin-bottom:1.25rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(200,169,110,.1) 0%,transparent 70%);pointer-events:none"></div>
+        <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(200,169,110,.06) 0%,transparent 70%);pointer-events:none"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;color:rgba(200,169,110,.5);text-transform:uppercase;margin-bottom:.5rem">Txoko by Martín Berasategui</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:#f2eae0;line-height:1.1;margin-bottom:.3rem">${LANG==='en'?'Plating':'Emplatado'}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:#c8a96e;font-style:italic;line-height:1.1;margin-bottom:.75rem">${LANG==='en'?'& Preparation':'y Preparación'}</div>
+        <div style="height:1px;background:linear-gradient(90deg,rgba(200,169,110,.3),transparent);margin-bottom:.75rem"></div>
+        <!-- YouTube-style description -->
+        <div id="videoHeroDesc" style="margin-top:.75rem">
+          <div id="videoHeroShort" style="font-family:'Jost',sans-serif;font-size:.78rem;color:rgba(200,169,110,.6);line-height:1.7">
+            ${LANG==='en'
+              ? 'A visual guide to the plating and preparation of each dish...'
+              : 'Guía visual del emplatado y preparación de cada plato en Txoko by Martín Berasategui...'}
+            <span onclick="toggleVideoDesc(true)" style="color:rgba(200,169,110,.9);cursor:pointer;font-weight:500"> ${LANG==='en'?'more':'más'}</span>
+          </div>
+          <div id="videoHeroFull" style="display:none;font-family:'Jost',sans-serif;font-size:.78rem;color:rgba(200,169,110,.6);line-height:1.7">
+            ${LANG==='en'
+              ? 'A visual guide to the plating and preparation of each dish at Txoko by Martín Berasategui. Watch the technique, then study the allergens, cutlery and storytelling of each dish to be fully prepared for service.'
+              : 'Guía visual del emplatado y preparación de cada plato en Txoko by Martín Berasategui. Observa la técnica y después repasa los alérgenos, el marcaje y el storytelling de cada plato para llegar preparado al servicio.'}
+            <span onclick="toggleVideoDesc(false)" style="color:rgba(200,169,110,.9);cursor:pointer;font-weight:500"> ${LANG==='en'?'Show less':'Mostrar menos'}</span>
+          </div>
+        </div>
+      </div>
+
+      ${cats.map(cat => {
+        const videos = VIDEOS[cat];
+        const catIcon = CAT_ICONS[cat] || '';
+        return `
+          <div style="margin-bottom:1.5rem">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
+              <span style="color:var(--gold)">${catIcon}</span>
+              <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);opacity:.8">${cat}</div>
+              <div style="flex:1;height:1px;background:var(--line2);margin-left:.3rem"></div>
+            </div>
+            ${videos.length === 0 ? `
+              <div style="padding:.85rem 1rem;background:#fff;border:1px dashed var(--line2);border-radius:var(--r2);font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);text-align:center;letter-spacing:.08em">
+                ${LANG==='en'?'Videos coming soon':'Próximamente'}
+              </div>
+            ` : videos.map(v => `
+              <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;margin-bottom:.6rem;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+                <!-- Video embed -->
+                <div style="position:relative;width:100%;padding-bottom:56.25%;background:#000;overflow:hidden">
+                  <iframe
+                    src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1&playsinline=1&fs=1"
+                    style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy"
+                    title="${v.dish}"
+                  ></iframe>
+                </div>
+                <!-- Info accordion -->
+                <div style="padding:.75rem .85rem .85rem">
+                  <!-- Dish name + badges -->
+                  <div style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--parchment);margin-bottom:.4rem">${v.dish}</div>
+                  <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.6rem;flex-wrap:wrap">
+                    <span style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.08em;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.12rem .5rem">${v.type}</span>
+                    <span style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch3);letter-spacing:.06em">${cat}</span>
+                  </div>
+                  <!-- Accordion tabs -->
+                  ${renderVideoAccordion(v.dish, v.id)}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('')}
+    </div>`;
+}
+
+
+function renderVideoAccordion(dishName, videoId) {
+  const d = DISHES.find(x => x.name === dishName);
+  if(!d) return '';
+  const uid = (videoId||'v0').replace(/[^a-z0-9]/gi,'');
+  const allergens = d.allergens&&d.allergens.length ? d.allergens.join(' · ') : (LANG==='en'?'None':'Ninguno');
+  const allergenColor = d.allergens&&d.allergens.length ? '#a84040' : '#6bab82';
+  const tabs = [
+    {id:'ing', label:LANG==='en'?'Ingredients':'Ingredientes', content:d.ingredients||'—', color:'var(--gold)'},
+    {id:'alg', label:LANG==='en'?'Allergens':'Alérgenos', content:allergens, color:allergenColor},
+    {id:'cut', label:LANG==='en'?'Cutlery':'Marcaje', content:d.cutlery||'—', color:'var(--gold)'},
+    {id:'str', label:'Storytelling', content:d.history||(LANG==='en'?'Coming soon':'Próximamente'), color:'var(--gold)'},
+  ];
+  if(d.notes) tabs.push({id:'not', label:LANG==='en'?'Notes':'Notas', content:d.notes, color:'#c8a96e'});
+  tabs.push({id:'rec', label:LANG==='en'?'Recipe':'Receta', content:LANG==='en'?'PDF coming soon':'PDF próximamente', color:'var(--parch3)'});
+  return '<div style="border:1px solid var(--line2);border-radius:var(--r2);overflow:hidden;margin-top:.1rem">' +
+    tabs.map((tab,i) =>
+      '<div style="'+(i<tabs.length-1?'border-bottom:1px solid var(--line2)':'')+'">' +
+        '<button data-bid="vb_'+uid+'_'+tab.id+'" onclick="toggleVidTab(this.getAttribute(\'data-bid\'))" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:.6rem .85rem;background:#fff;border:none;cursor:pointer;text-align:left">' +
+          '<span style="font-family:\'DM Mono\',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:'+tab.color+'">'+tab.label+'</span>' +
+          '<span id="varr_'+uid+'_'+tab.id+'" style="font-size:.6rem;color:var(--parch4);display:inline-block;transition:transform .2s">&#9662;</span>' +
+        '</button>' +
+        '<div id="vb_'+uid+'_'+tab.id+'" style="display:none;padding:.65rem .85rem .8rem;background:var(--ink2);border-top:1px solid var(--line2);font-size:.78rem;color:var(--parch2);line-height:1.65">'+tab.content+'</div>' +
+      '</div>'
+    ).join('') +
+  '</div>';
+}
+
+function toggleVideoDesc(expand){
+  const s=document.getElementById('videoHeroShort');
+  const f=document.getElementById('videoHeroFull');
+  if(!s||!f) return;
+  s.style.display=expand?'none':'block';
+  f.style.display=expand?'block':'none';
+}
+function toggleVideoHeroInfo(){}
+
+function toggleVidTab(bodyId) {
+  if(typeof bodyId !== 'string') bodyId = bodyId.dataset ? bodyId.dataset.bid : bodyId;
+  const body = document.getElementById(bodyId);
+  if(!body) return;
+  const parts = bodyId.split('_');
+  const uid = parts[1];
+  const isOpen = body.style.display !== 'none';
+  // Close all tabs in same accordion
+  const accordion = body.parentElement.parentElement;
+  accordion.querySelectorAll('div[id^="vb_'+uid+'_"]').forEach(b => b.style.display='none');
+  accordion.querySelectorAll('span[id^="varr_'+uid+'_"]').forEach(a => a.style.transform='');
+  // Open if was closed
+  if(!isOpen){
+    body.style.display='block';
+    const arr = document.getElementById(bodyId.replace('vb_','varr_'));
+    if(arr) arr.style.transform='rotate(180deg)';
+  }
+}
+
+function renderVideoDishInfo(dishName, cat) {
+  const dishData = DISHES.find(d => d.name === dishName);
+  if(!dishData) return '';
+  
+  const allergenList = dishData.allergens && dishData.allergens.length
+    ? dishData.allergens.join(' · ')
+    : (LANG==='en'?'None':'Ninguno');
+  const allergenColor = dishData.allergens && dishData.allergens.length ? '#a84040' : '#6bab82';
+  
+  const sections = [
+    { label: LANG==='en'?'Ingredients':'Ingredientes', value: dishData.ingredients||'—', 
+      icon: '<path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>', color: 'var(--gold)' },
+    { label: LANG==='en'?'Allergens':'Alérgenos', value: allergenList,
+      icon: '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 
+      color: allergenColor },
+    { label: LANG==='en'?'Cutlery':'Marcaje', value: dishData.cutlery||'—',
+      icon: '<line x1="8" y1="2" x2="8" y2="22"/><path d="M5 2v6a3 3 0 006 0V2"/><line x1="17" y1="2" x2="17" y2="22"/><path d="M14 7.5C14 5 15.5 2 17 2s3 3 3 5.5c0 2-1 3.5-3 3.5h-2"/>', 
+      color: 'var(--gold)' },
+    { label: 'Storytelling', value: dishData.history||(LANG==='en'?'Coming soon':'Próximamente'),
+      icon: '<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>', 
+      color: 'var(--gold)' },
+  ];
+  
+  if(dishData.notes){
+    sections.push({ 
+      label: LANG==='en'?'Service notes':'Notas de servicio', 
+      value: dishData.notes,
+      icon: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 
+      color: '#c8a96e' 
+    });
+  }
+
+  return sections.map(s => 
+    '<div style="margin-bottom:.75rem;padding:.7rem .85rem;background:var(--ink2);border-radius:var(--r2);border-left:2px solid '+s.color+'">' +
+      '<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem">' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="'+s.color+'" stroke-width="1.5">'+s.icon+'</svg>' +
+        '<span style="font-family:\"DM Mono\",monospace;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:'+s.color+';opacity:.9">'+s.label+'</span>' +
+      '</div>' +
+      '<div style="font-size:.78rem;color:var(--parch2);line-height:1.6">'+s.value+'</div>' +
+    '</div>'
+  ).join('');
+}
 function renderRanking(){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
