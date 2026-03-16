@@ -8060,28 +8060,41 @@ const TXOKO_LEVELS=[
 ];
 const WAITER_MSGS={
   allergens:[
-    d=>LANG==='en'?`Table 4 has an allergy — what allergens does <strong>${d}</strong> contain?`:`Mesa 4 tiene una alergia — ¿qué alérgenos lleva <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 4 has a declared allergy — what allergens does <strong>${d}</strong> contain?`:`Mesa 4 ha declarado una alergia — ¿qué alérgenos lleva <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 7 is asking about allergens in <strong>${d}</strong>`:`Mesa 7 pregunta por los alérgenos de <strong>${d}</strong>`,
     d=>LANG==='en'?`Table 2: Is <strong>${d}</strong> safe for allergies?`:`Mesa 2: ¿Es apto para alérgicos? ¿Qué contiene <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 9 asks: does <strong>${d}</strong> have allergens?`:`Mesa 9 pregunta: ¿tiene alérgenos <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Mr. Shoesmith declares a nut allergy. Does <strong>${d}</strong> contain nuts?`:`Mr. Shoesmith declara alergia a los frutos de cáscara. ¿Los tiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`VIP guest — gluten intolerance. What allergens does <strong>${d}</strong> have?`:`Huésped VIP — intolerancia al gluten. ¿Qué alérgenos lleva <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 3: the guest is celiac. What should we warn about <strong>${d}</strong>?`:`Mesa 3: el cliente es celiaco. ¿Qué debemos avisar sobre <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 6 asks if <strong>${d}</strong> contains shellfish`:`Mesa 6 pregunta si <strong>${d}</strong> contiene crustáceos`,
   ],
   cutlery:[
     d=>LANG==='en'?`How do we set the cutlery for <strong>${d}</strong>?`:`¿Cómo marcamos <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 3 ordered <strong>${d}</strong> — what cutlery do we use?`:`Mesa 3 pide <strong>${d}</strong> — ¿qué cubiertos ponemos?`,
     d=>LANG==='en'?`Floor manager asks: cutlery for <strong>${d}</strong>`:`El jefe de sala pregunta: marcaje para <strong>${d}</strong>`,
     d=>LANG==='en'?`What cutlery does <strong>${d}</strong> need?`:`¿Qué cubiertos necesita <strong>${d}</strong>?`,
+    d=>LANG==='en'?`The dish is ready — quickly, what cutlery for <strong>${d}</strong>?`:`El plato ya sale — rápido, ¿qué marcaje para <strong>${d}</strong>?`,
+    d=>LANG==='en'?`New colleague asks: how do we mark the table for <strong>${d}</strong>?`:`Tu compañero nuevo pregunta: ¿cómo se marca la mesa para <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Supervisor check: correct cutlery for <strong>${d}</strong>?`:`El supervisor comprueba: ¿cubiertos correctos para <strong>${d}</strong>?`,
   ],
   ingredients:[
     d=>LANG==='en'?`Table 5 wants to know what's in <strong>${d}</strong>`:`Mesa 5 quiere saber qué lleva <strong>${d}</strong>`,
-    d=>LANG==='en'?`Guest at table 501 is asking for the ingredients of <strong>${d}</strong>`:`El cliente de la mesa 501 pregunta los ingredientes de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Mr. Shoesmith is asking for the ingredients of <strong>${d}</strong>`:`Mr. Shoesmith pregunta los ingredientes de <strong>${d}</strong>`,
     d=>LANG==='en'?`What ingredients does <strong>${d}</strong> have?`:`¿Qué ingredientes tiene <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 1: exactly what goes into <strong>${d}</strong>?`:`Mesa 1: ¿Qué lleva exactamente <strong>${d}</strong>?`,
+    d=>LANG==='en'?`A vegetarian guest asks what is in <strong>${d}</strong>`:`Un cliente vegetariano pregunta qué lleva <strong>${d}</strong>`,
+    d=>LANG==='en'?`Table 8: the guest wants to know the main ingredients of <strong>${d}</strong>`:`Mesa 8: el cliente quiere saber los ingredientes principales de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Kitchen calls: can you describe the components of <strong>${d}</strong>?`:`Cocina llama: ¿puedes describir los componentes de <strong>${d}</strong>?`,
   ],
   history:[
     d=>LANG==='en'?`Table 8 wants to know the story behind <strong>${d}</strong>`:`Mesa 8 quiere saber la historia de <strong>${d}</strong>`,
-    d=>LANG==='en'?`Guest at table 501 is asking about the origin of <strong>${d}</strong>`:`El cliente de la mesa 501 pregunta por el origen de <strong>${d}</strong>`,
+    d=>LANG==='en'?`Mr. Shoesmith is asking about the origin of <strong>${d}</strong>`:`Mr. Shoesmith pregunta por el origen de <strong>${d}</strong>`,
     d=>LANG==='en'?`What do we tell the guest about <strong>${d}</strong>?`:`¿Qué le contamos al cliente sobre <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 6 wants the storytelling for <strong>${d}</strong>`:`Mesa 6 quiere saber el storytelling de <strong>${d}</strong>`,
+    d=>LANG==='en'?`VIP table — impress them with the story of <strong>${d}</strong>`:`Mesa VIP — impresionales con la historia de <strong>${d}</strong>`,
+    d=>LANG==='en'?`The guest asks: why is <strong>${d}</strong> special?`:`El cliente pregunta: ¿qué hace especial a <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 2 asks about the provenance of <strong>${d}</strong>`:`Mesa 2 pregunta por el origen y proveedores de <strong>${d}</strong>`,
   ],
 };
 const WAITER_OK_ES=['¡Perfecto, gracias! ','¡Eso es! ','¡Correcto! ▲','¡Excelente! ','¡Muy bien! '];
@@ -8260,9 +8273,6 @@ function renderTxoko(){
         <div class="game-card-arrow">▶</div>
       </div>
 
-      <!-- TOP 10 inline under Txoko -->
-      ${renderTxTop10()}
-
       <!-- ERROR MODE -->
       <div class="game-card ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}">
         <div class="game-card-bg"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
@@ -8291,6 +8301,9 @@ function renderTxoko(){
         </div>
         <div class="game-card-arrow">▶</div>
       </div>
+
+      <!-- TOP 10 at bottom — loads after games -->
+      <div id="txTop10Wrap" style="margin-top:.5rem">${renderTxTop10()}</div>
     </div>`;
   refreshTxTop10();
 }
@@ -8331,12 +8344,12 @@ function buildTxTop10Html(entries){
 
 function refreshTxTop10(){
   supaFetchTxokoTop10().then(remote=>{
+    const wrap=document.getElementById('txTop10Wrap');
     const container=document.getElementById('txTop10Container');
-    if(!container) return;
+    if(!container&&!wrap) return;
     const spinner=document.getElementById('txTop10Loading');
     if(spinner) spinner.remove();
     if(!remote||!remote.length) return;
-    // Merge with local: take best record per employee
     const merged={};
     Object.values(DB.employees).filter(e=>e.txokoRecord>0).forEach(e=>{
       merged[e.name]={employee:e.name,record:e.txokoRecord};
@@ -8346,9 +8359,8 @@ function refreshTxTop10(){
         merged[r.employee]={employee:r.employee,record:r.record};
     });
     const sorted=Object.values(merged).sort((a,b)=>b.record-a.record).slice(0,10);
-    const parent=container.parentNode;
-    if(parent) parent.insertAdjacentHTML('afterbegin', buildTxTop10Html(sorted));
-    container.remove();
+    if(wrap) wrap.innerHTML=buildTxTop10Html(sorted);
+    else if(container){ const parent=container.parentNode; if(parent) parent.insertAdjacentHTML('afterbegin',buildTxTop10Html(sorted)); container.remove(); }
   });
 }
 
