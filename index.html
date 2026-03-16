@@ -4859,11 +4859,80 @@ function renderRepasoCats(){
     </div>`;
   }).join('');
   document.getElementById('appContent').innerHTML=`
-    <div class="section-eyebrow" style="animation:slideUp .3s ease both">${t('selectSection')}</div>
-    <div class="repaso-grid">${cards}</div>
+    <!-- Search bar -->
+    <div style="position:relative;margin-bottom:1rem;animation:slideUp .3s ease both">
+      <svg style="position:absolute;left:.85rem;top:50%;transform:translateY(-50%);pointer-events:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--parch4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input
+        id="repasoSearch"
+        type="search"
+        placeholder="${LANG==='en'?'Search dish...':'Buscar plato...'}"
+        oninput="searchRepaso(this.value)"
+        style="width:100%;padding:.7rem .9rem .7rem 2.5rem;border:1px solid var(--line2);border-radius:var(--r2);font-family:'Jost',sans-serif;font-size:.88rem;color:var(--parchment);background:#fff;outline:none;-webkit-appearance:none"
+      />
+    </div>
+    <!-- Search results -->
+    <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
+    <!-- Category grid -->
+    <div id="repasoCatGrid">
+      <div class="section-eyebrow" style="animation:slideUp .3s ease both">${t('selectSection')}</div>
+      <div class="repaso-grid">${cards}</div>
+    </div>
   `;
 }
 
+
+function searchRepaso(query) {
+  const results = document.getElementById('repasoSearchResults');
+  const grid = document.getElementById('repasoCatGrid');
+  const q = query.trim().toLowerCase();
+
+  if(!q) {
+    results.style.display = 'none';
+    grid.style.display = 'block';
+    return;
+  }
+
+  grid.style.display = 'none';
+  results.style.display = 'block';
+
+  const emp = getEmp(currentUser);
+  const known = emp.knownDishes || {};
+  const topic = TOPICS.find(tp => tp.key === repasoTopic) || TOPICS[0];
+
+  const matched = DISHES.filter(d => {
+    const dd = getDish(d);
+    return dd.name.toLowerCase().includes(q)
+      || (dd.ingredients||'').toLowerCase().includes(q)
+      || (dd.allergens||[]).some(a => allergenLocal(a).toLowerCase().includes(q))
+      || (dd.cat||'').toLowerCase().includes(q);
+  });
+
+  if(!matched.length) {
+    results.innerHTML = `<div style="text-align:center;padding:2rem;font-size:.82rem;color:var(--parch4);font-family:'DM Mono',monospace;letter-spacing:.08em">${LANG==='en'?'No results':'Sin resultados'}</div>`;
+    return;
+  }
+
+  const rows = matched.map(d => {
+    const dd = getDish(d);
+    const isKnown = !!known[d.id];
+    const catCol = CAT_COLORS[dd.cat] || 'var(--gold)';
+    const allergenHtml = `<div class="repaso-allergen-row">${dd.allergens.length===0?`<span class="allergen-tag">${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">${allergenLocal(a)}</span>`).join('')}</div>`;
+    return `<div class="repaso-row" id="ritem${d.id}">
+      <div class="repaso-row-body">
+        <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:${catCol};margin-bottom:.2rem">${catLocal(dd.cat)}</div>
+        <div class="repaso-row-name">${dd.name}</div>
+        ${allergenHtml}
+        ${dd.notes?`<div class="repaso-note">${dd.notes}</div>`:''}
+      </div>
+      <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="Marcar como dominado">${isKnown?'✓':'○'}</button>
+    </div>`;
+  }).join('');
+
+  results.innerHTML = `
+    <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem">${matched.length} ${LANG==='en'?'result'+(matched.length!==1?'s':''):'resultado'+(matched.length!==1?'s':'')}</div>
+    <div class="repaso-list">${rows}</div>
+  `;
+}
 function openRepasoCat(cat){repasoCat=cat;repasoView='topic';renderRepasoTopic();}
 
 function renderRepasoTopic(){
