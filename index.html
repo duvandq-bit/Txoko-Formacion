@@ -4379,36 +4379,49 @@ function renderDashboard(){
     </div>
   `;
   checkActiveLiveSession();
-  setTimeout(initDashboardAlive, 300);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(initDashboardAlive, 600)));
 }
 
 
 // ─── Dashboard alive effects ───
 function initDashboardAlive(){
+  // Run in idle time to not block main thread
   // Floating particles in hero
   const container = document.getElementById('dashParticles');
   if(container){
     container.innerHTML = '';
-    container.style.opacity = '0';
-    container.style.transition = 'opacity 1.5s ease';
-    setTimeout(()=>{ container.style.opacity = '1'; }, 100);
     let styleEl = document.getElementById('particleStyles');
     if(!styleEl){ styleEl = document.createElement('style'); styleEl.id='particleStyles'; document.head.appendChild(styleEl); }
     let keyframesCSS = '';
-    const count = 12;
+    const ts = Date.now();
+    const count = 10;
     for(let i=0;i<count;i++){
-      const x = (5 + Math.random()*88).toFixed(1);
-      const y = (15 + Math.random()*65).toFixed(1);
-      const dur = (5 + Math.random()*8).toFixed(1);
-      const delay = (Math.random()*6).toFixed(1);
-      const dx = ((Math.random()-0.5)*70).toFixed(0);
-      const dy = (60 + Math.random()*60).toFixed(0);
-      const size = (1.5 + Math.random()*2.5).toFixed(1);
-      const op = (0.4 + Math.random()*0.5).toFixed(2);
-      const name = `pd${i}_${Date.now()}`;
-      keyframesCSS += `@keyframes ${name}{0%{transform:translate(0,0);opacity:0}25%{opacity:${op}}75%{opacity:${op*.5}}100%{transform:translate(${dx}px,-${dy}px);opacity:0}}`;
+      const x    = (4 + Math.random()*90).toFixed(1);
+      const y    = (30 + Math.random()*60).toFixed(1);
+      const dur  = (5 + Math.random()*6).toFixed(1);
+      const delay= (2 + i * 0.6 + Math.random()*2).toFixed(1); // staggered: each particle appears later
+      const dx   = ((Math.random()-0.5)*40).toFixed(0);
+      const dy   = (60 + Math.random()*70).toFixed(0);
+      const size = (2 + Math.random()*2.5).toFixed(1);  // 2-4.5px
+      const op   = (0.5 + Math.random()*0.3).toFixed(2);
+      const glow = (parseFloat(size)*2).toFixed(0);
+      const name = `pd${i}_${ts}`;
+      keyframesCSS +=
+        `@keyframes ${name}{` +
+        `0%{transform:translate(0,0);opacity:0}` +
+        `20%{opacity:${op}}` +
+        `75%{opacity:${(op*0.4).toFixed(2)}}` +
+        `100%{transform:translate(${dx}px,-${dy}px);opacity:0}` +
+        `}`;
       const p = document.createElement('div');
-      p.style.cssText = `position:absolute;left:${x}%;top:${y}%;width:${size}px;height:${size}px;border-radius:50%;background:rgba(200,169,110,${op});animation:${name} ${dur}s ease-in-out ${delay}s infinite`;
+      p.style.cssText =
+        `position:absolute;` +
+        `left:${x}%;top:${y}%;` +
+        `width:${size}px;height:${size}px;` +
+        `border-radius:50%;` +
+        `background:rgba(200,169,110,${op});` +
+        `box-shadow:0 0 ${glow}px rgba(200,169,110,0.4);` +
+        `animation:${name} ${dur}s ease-out ${delay}s infinite`;
       container.appendChild(p);
     }
     styleEl.textContent = keyframesCSS;
