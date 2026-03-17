@@ -1576,6 +1576,11 @@ body::before{
       <button id="notifBell" onclick="renderNotifPanel()" style="display:none;background:transparent;border:none;cursor:pointer;padding:4px;position:relative;font-size:1.2rem;line-height:1">
         ◉<span id="notifBadge" style="position:absolute;top:0;right:0;background:var(--rose);color:#fff;border-radius:50%;width:14px;height:14px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
+      <!-- Language toggle in header -->
+      <div style="display:flex;gap:.25rem;margin-right:.25rem">
+        <button id="appLangEs" onclick="setLangApp('es')" style="background:transparent;border:none;cursor:pointer;padding:2px 4px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.05em;opacity:.6">ES</button>
+        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:2px 4px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.05em;opacity:.6">EN</button>
+      </div>
       <button class="btn-logout" id="logoutBtn" onclick="logout()">Salir</button>
     </div>
   </header>
@@ -1809,6 +1814,18 @@ function t(key, ...args) {
   return val || T['es'][key] || key;
 }
 
+function setLangApp(lang) {
+  setLang(lang);
+  // Update header buttons
+  const es = document.getElementById('appLangEs');
+  const en = document.getElementById('appLangEn');
+  if(es) es.style.cssText = es.style.cssText.replace(/opacity:[^;]+/, 'opacity:' + (lang==='es'?'1':'0.4'));
+  if(en) en.style.cssText = en.style.cssText.replace(/opacity:[^;]+/, 'opacity:' + (lang==='en'?'1':'0.4'));
+  if(en) en.style.color = lang==='en' ? 'var(--gold)' : 'var(--parch3)';
+  if(es) es.style.color = lang==='es' ? 'var(--gold)' : 'var(--parch3)';
+  // Refresh current tab
+  if(currentUser && currentTab) showTab(currentTab);
+}
 function setLang(lang) {
   LANG = lang;
   localStorage.setItem('txoko_lang', lang);
@@ -4286,10 +4303,6 @@ try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
 
 
 // ═══ DISH ANIMATION ═══
-
-
-  setTimeout(hideSplash, 900);
-}
 
 // ═══════ TABS ═══════
 function showTab(tab){
