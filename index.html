@@ -3035,7 +3035,7 @@ const DISHES = [
   {id:43,cat:'Postres',name:'Mousse de gofio con helado de plátano canario',allergens:['Frutos secos','Lácteos','Huevos','Sulfitos','Gluten'],cutlery:'Tenedor de postre, Cuchara de postre',ingredients:'Leche, Plátano, Gofio, Huevo, Xantana, Nata, Azúcar, Sal maldon, Mantequilla, Harina, Vinagre de manzana, Almendras tostadas, Glucosa atomizada, Plátano osmotizado, Toffe.',history:null,notes:'Mousse de gofio y plátano canario, con plátano osmotizado y helado del mismo. Feuilletine, almendras tostadas y toffee.'},
   {id:44,cat:'Postres',name:'Pastel Vasco invertido con tartar de manzana',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchillo de postre, Cuchara de postre',ingredients:'Harina, Azúcar, Mantequilla, Huevo, Levadura, Ron, Sal, Leche, Maizena, Limón, Vainilla, Hinojo, Nata, Glucosa, Cremodan.',history:'Receta centenaria del País Vasco, tierra de origen de Martín Berasategui. Bizcocho recién horneado al momento, relleno de crema pastelera y tartar de manzana. Un postre que viajó desde el País Vasco hasta los acantilados de Abama, donde el Atlántico y la brisa canaria lo convierten en algo único. Treinta minutos de espera que siempre valen la pena.',notes:'⏱ Mínimo 30 minutos de espera (recién horneado). Avisar al huésped al tomar la comanda. Bizcocho con capa de crema pastelera y tartar de manzana. Terminamos con helado artesanal de hinojo.'},
   {id:45,cat:'Vegetariano',name:'Tomates aliñados con granizado de gazpacho',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Tomate, Aguacate, Cebolleta, Granizado de gazpacho, Granadina, Vinagreta de Cabernet Sauvignon.',history:'Es nuestra versión vegetariana de nuestro plato mítico de tomates, anchoas y ventresca.',notes:'Versión VEGAN adaptable. Tomates ecológicos con cebolletas encurtidas y granizado de gazpacho (sin pan). Terminado con brotes de berros.'},
-  {id:46,cat:'Vegetariano',name:'Ensalada Niçoise vegetariana',allergens:['Mostaza','Sulfitos','Huevos'],cutlery:'Tenedor trinchero, Cuchara sopera',ingredients:'Papa, Lechuga, Tomate, Judías verdes, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Carpaccio de papa canaria confitada, acompañada de verduras ecológicas de la isla y aliñada con mayonesa cítrica.',notes:'Versión VEGAN adaptable. ⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. ⚠ Huevos en el huevo de codorniz y en la yema — Comandar SIN HUEVO DE CODORNIZ Y SIN YEMA.'},
+  {id:46,cat:'Vegetariano',name:'Ensalada Niçoise vegetariana',allergens:['Mostaza','Sulfitos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Papa, Lechuga, Tomate, Judías verdes, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Carpaccio de papa canaria confitada, acompañada de verduras ecológicas de la isla y aliñada con mayonesa cítrica.',notes:'Versión VEGAN adaptable. ⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. ⚠ Huevos en el huevo de codorniz y en la yema — Comandar SIN HUEVO DE CODORNIZ Y SIN YEMA.'},
   {id:48,cat:'Vegetariano',name:'Tartar de remolacha, aguacate y manzana ácida',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' 100% VEGANO. Tartar de remolacha y manzana con cremoso de aguacate, remolacha en texturas y sorbete de manzana verde.'},
   {id:49,cat:'Vegetariano',name:'Tartar de tomate y queso stracciatella',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'Versión VEGAN adaptable. ⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Huevos en la yema de huevo — Comandar SIN YEMA.'},
   {id:50,cat:'Vegetariano',name:'Croquetas de boletus',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:null,history:'Nacidas del ingenio y el amor por no desperdiciar, las croquetas viajaron desde Francia hasta el alma de España. En cada casa, una receta; en cada bocado, un recuerdo. Crujientes por fuera, suaves por dentro, son el abrazo dorado de la cocina casera, el sabor de la abuela que nunca se olvida.',notes:'Clásicas croquetas vegetarianas de boletus acompañadas de manzana confitada.'},
@@ -3259,11 +3259,13 @@ async function supaUpsertEmployee(name, retries=2) {
         updated_at: new Date().toISOString()
       })
     });
-    if(!res.ok && retries > 0) {
-      setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
+    if(!res.ok) {
+      const errText = await res.text().catch(()=>'');
+      console.warn(`[Txoko] Supabase upsert failed (${res.status}) for ${name}:`, errText);
+      if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
     }
   } catch(e) {
-    // Retry on network error
+    console.warn(`[Txoko] Supabase upsert error for ${name}:`, e.message);
     if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
   }
 }
@@ -4288,7 +4290,8 @@ function pinCancel(){
   pinTarget=null; pinBuffer=''; pinStep='enter'; pinFirst='';
 }
 function logout(){
-  if(currentUser) supaUpsertEmployee(currentUser); // Final sync before logout
+  if(currentUser) supaUpsertEmployee(currentUser);
+  stopLiveQuizPolling();
   currentUser=null;
   document.getElementById('screenLogin').classList.add('active');
   document.getElementById('screenApp').classList.remove('active');
@@ -4523,7 +4526,7 @@ function renderDashboard(){
     </div>
   `;
   checkActiveLiveSession();
-
+  startLiveQuizPolling();
 }
 
 
@@ -4535,8 +4538,20 @@ async function checkActiveLiveSession(){
     if(!res.ok) return;
     const rows = await res.json();
     const tile = document.getElementById('liveQuizTile');
-    if(tile) tile.style.display = rows.length ? '' : 'none';
+    if(tile) tile.style.display = rows.length ? 'flex' : 'none';
   } catch(e){}
+}
+
+// Check for live quiz every 15 seconds while on dashboard
+let _liveCheckInterval = null;
+function startLiveQuizPolling(){
+  if(_liveCheckInterval) return;
+  _liveCheckInterval = setInterval(()=>{
+    if(currentTab === 'dashboard') checkActiveLiveSession();
+  }, 15000);
+}
+function stopLiveQuizPolling(){
+  if(_liveCheckInterval){ clearInterval(_liveCheckInterval); _liveCheckInterval = null; }
 }
 
 // ═══════ FLASHCARDS ═══════
@@ -9248,6 +9263,37 @@ window.addEventListener('beforeunload', () => {
   if(currentUser) supaUpsertEmployee(currentUser);
 });
 
+
+// ── Diagnóstico Supabase — ejecutar desde consola: txokoDiag() ──
+async function txokoDiag() {
+  console.log('=== TXOKO DIAGNÓSTICO ===');
+  console.log('Usuario actual:', currentUser);
+  const emp = currentUser ? DB.employees[currentUser] : null;
+  if(emp) console.log('XP local:', emp.xp, '| Streak:', emp.streak);
+  
+  // Test connection
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/employees?select=name,xp&order=xp.desc&limit=5`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }});
+    if(res.ok) {
+      const rows = await res.json();
+      console.log('✓ Supabase OK — Top 5:', rows.map(r=>r.name+'('+r.xp+')').join(', '));
+    } else {
+      const err = await res.text();
+      console.error('✗ Supabase error', res.status, err);
+    }
+  } catch(e) {
+    console.error('✗ Sin conexión a Supabase:', e.message);
+  }
+  
+  // Force sync current user
+  if(currentUser) {
+    console.log('Forzando sync de', currentUser, '...');
+    await supaUpsertEmployee(currentUser, 0);
+    console.log('Sync completado');
+  }
+}
+window.txokoDiag = txokoDiag;
 // Init
 renderLogin();
 
