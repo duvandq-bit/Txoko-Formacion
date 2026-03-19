@@ -1816,6 +1816,8 @@ function t(key, ...args) {
 
 function setLangApp(lang) {
   setLang(lang);
+  // Save lang preference for current user
+  if(currentUser){ const _e=getEmp(currentUser); if(_e) { _e.lang=lang; saveDB(); } }
   // Update header buttons
   const es = document.getElementById('appLangEs');
   const en = document.getElementById('appLangEn');
@@ -3029,14 +3031,14 @@ const DISHES = [
   {id:20,cat:'Entrantes',name:'Pulpo a la brasa sobre trinxat de papa canaria',allergens:['Moluscos','Huevos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pulpo, Papa, Col blanca y morada, Panceta ibérica, Morcilla, Chorizo, Huevo, Ajo, Aceite de girasol, Sal, Pimentón, Brotes de guisantes.',history:null,notes:'Pulpo a la brasa acompañado con trinxat de col e ibéricos, terminado con puntos de alioli de pimentón, brotes de guisantes y pimentón espolvoreado.'},
   {id:21,cat:'Platos Principales',name:'Txuleta de atún con tomate en texturas',allergens:['Pescado','Sulfitos','Soja','Huevos'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Atún, Sake, Soja, Azúcar, Tomate, Vinagre de jerez, Sal, Dextrosa, Huevo, Gelatinas, Cebolleta, Pepinillo, Vinagreta de cabernet.',history:null,notes:'Lomo de atún marcado al josper y pincelado con teriyaki. Con guarnición de tomates en texturas: Tartar de tomate, Helado de tomate y Espuma de tomate.'},
   {id:22,cat:'Platos Principales',name:'Lubina a la brasa con ensalada de papaya',allergens:['Pescado','Sulfitos'],cutlery:'Tenedor de pescado, Cuchillo de pescado',ingredients:'Zanahoria, Cardamomo, Piel de limón, Batata, Pimienta rosa, Aceite girasol, Calabaza, Vainilla, Vinagre de manzana, Azúcar, Guindilla, Papaya verde, Gajos de pomelo, Huevas de aceite oliva, Hojas de cilantro, Láminas de ají Amarillo.',history:null,notes:'Lubina a la brasa con ensalada de papaya verde, batata, zanahoria y calabaza. Terminamos con gajos de pomelo, huevas de aceite de oliva, hojas de cilantro y láminas de ají amarillo.'},
-  {id:23,cat:'Platos Principales',name:'Ravioli de pularda',allergens:['Lácteos','Sulfitos','Gluten','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'1 Pularda, Cebolla, Zanahoria, Puerro, Tomates, Champiñón, Ajo, Coñac, Porto, Lima, Tomillo, Sal y pimienta, Caldo de pollo, Tocineta curada, Boletus, Leche, Mantequilla, Harina, Foie, Huevo.',history:null,notes:'Raviolis rellenos de pularda y boletus, con bechamel de foie.'},
+  {id:23,cat:'Platos Principales',name:'Ravioli de pularda',allergens:['Lácteos','Sulfitos','Gluten','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'1 Pularda, Cebolla, Zanahoria, Puerro, Tomates, Champiñón, Ajo, Coñac, Porto, Lima, Tomillo, Sal y pimienta, Caldo de pollo, Tocineta curada, Boletus, Leche, Mantequilla, Harina, Foie, Huevo.',history:null,notes:'Raviolis rellenos de pularda y boletus, con bechamel de foie.'},
   {id:24,cat:'Platos Principales',name:'Carrillera de Wagyu',allergens:['Lácteos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Ajo, Puerros, Cebolla, Zanahoria, Vino tinto, Caldo de pollo, Espuma de hongo y papas, Nata, Crudité de espárragos.',history:'Plato emblemático de Martín en el menú de Txoko. Hecha de forma tradicional con cocciones largas que nos aportan una textura muy suave en boca, redondeamos este sabor con espuma de hongos que ayuda a neutralizar la intensidad de la carrillera.',notes:' Plato emblemático de Martín. Carrillera de ternera a baja temperatura en cremoso de papa y hongos, espárrago verde crujiente y trufa (si disponible en temporada).'},
   {id:25,cat:'Platos Principales',name:'Pluma de cerdo Ibérico',allergens:['Lácteos','Sulfitos','Apio'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Cerdo ibérico, Manzana encurtida, Hinojo encurtido, Puré de apiobola (mantequilla), Vinagre.',history:'Casalba tiene su origen en la sierra de la Demanda. Julio, su dueño, en estrecha relación con nuestros chefs, selecciona las piezas que vienen desde la península a nuestro restaurante. La pluma a la brasa y la presa ibérica destacan por la delicadeza de su sabor suave y textura muy agradable.',notes:'⚠ Apio y Lácteos en el puré de apio bola (mantequilla) — se pueden retirar. Comandar SIN PURÉ DE APIO. Pluma de cerdo ibérico a la brasa, puré de Apio bola y puntos de crema de zanahoria. Terminada con manzana, zanahoria y remolacha encurtidas.'},
   {id:26,cat:'Platos Principales',name:'Costillas melosas de cordero sobre salsa de curry verde',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Cordero, Cebollas, Puerro, Tomates, Vino tinto, Pimienta y Sal, Demi de jarrete, Vinagre de cabernet, Miel, Azúcar moscovado, Zanahoria, Curry verde, Leche de coco, Caldo de pollo, Naranja, Lima, Limón, Pomelo.',history:null,notes:'⏱ Cocción de 8 horas. Costillas selladas en el josper, envasadas al vacío con marinada. Servidas con demi glace y salsa de curry verde. Terminamos con gajos de cítricos caramelizados.'},
   {id:27,cat:'Guarniciones y Salsas',name:'Ensalada verde',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Lechuga, Cebolla morada. Aderezo: Vinagre, Aceite de oliva, Sal.',history:'Lechuga de nuestro proveedor ecológico de Granadilla de Abona.',notes:'⚠ Sulfitos en el aderezo — Comandar SIN ADEREZO.'},
   {id:28,cat:'Guarniciones y Salsas',name:'Coliflor frita',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Coliflor.',history:null,notes:'Coliflor blanqueada dos minutos en agua sal, luego frita.'},
   {id:29,cat:'Guarniciones y Salsas',name:'Alcachofas a la brasa',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Alcachofas nacionales.',history:null,notes:'Corazones de alcachofa confitados en aceite de oliva y luego fritos.'},
-  {id:30,cat:'Guarniciones y Salsas',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:null},
+  {id:30,cat:'Guarniciones y Salsas',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
   {id:32,cat:'Guarniciones y Salsas',name:'Patatas cerilla fritas',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠ Comandar SIN GLUTEN — freidora aparte. Servir siempre salsas para los niños (Mayonesa, Kéchup, etc.).'},
   {id:33,cat:'Guarniciones y Salsas',name:'Tomate Cherry al ajillo',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Tomates ecológicos, Aceite, Ajo laminado, Guindilla.',history:null,notes:'Tomates ecológicos de la isla fritos en ajillo. ℹ️ Contiene ajo (no es alérgeno oficial UE, pero informar si el cliente lo indica).'},
   {id:34,cat:'Guarniciones y Salsas',name:'Parmentier de papa canaria',allergens:['Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:null,history:null,notes:null},
@@ -3058,7 +3060,7 @@ const DISHES = [
   {id:53,cat:'Vegetariano',name:'Arroz cremoso de verduras',allergens:['Lácteos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:null,history:'Arroz cremoso con mini verduras ecológicas provenientes de Guía de Isora.',notes:'Versión VEGAN adaptable. Arroz cremoso con verduras ecológicas de temporada.'},
   {id:54,cat:'Vegetariano',name:'Raviolis de espinaca y queso parmesano',allergens:['Gluten','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:null,history:'Este ravioli nace del encuentro entre la huerta y la tradición italiana. La espinaca fresca se envuelve en una pasta fresca. La espuma de parmesano aporta una profundidad y carácter.',notes:'Pasta artesanal elaborada en casa, rellena de espinaca, ricota, parmesano, nuez moscada, orégano, sal y pimienta. Finalizamos con espuma de parmesano gratinada en salamandra.'},
   {id:55,cat:'Vegetariano',name:'Ensalada verde',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Lechuga, Cebolla morada. Aderezo: Vinagre, Aceite de oliva, Sal.',history:'Lechuga de nuestro proveedor ecológico de Granadilla de Abona.',notes:'Versión VEGAN adaptable. ⚠ Sulfitos en el aderezo — Comandar SIN ADEREZO.'},
-  {id:56,cat:'Vegetariano',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'Versión VEGAN adaptable.'},
+  {id:56,cat:'Vegetariano',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'Versión VEGAN adaptable. ⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
   {id:57,cat:'Vegetariano',name:'Puré cremoso de patatas',allergens:['Lácteos'],cutlery:'Cuchara sopera',ingredients:'Patatas locales, Nata, Leche, Mantequilla, Caldo de pollo.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠ ATENCIÓN: NO es vegetariano ya que contiene caldo de pollo.'},
   {id:58,cat:'Vegetariano',name:'Patatas cerilla fritas',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'Versión VEGAN adaptable. ⚠ Comandar SIN GLUTEN — freidora aparte. Servir siempre salsas para los niños.'},
   // ===== NUEVOS ENTRANTES =====
@@ -4120,6 +4122,8 @@ let pinFirst=''; // store first entry during setup
 
 function login(name){
   localStorage.setItem('txoko_last_user', name);
+  // Save lang preference per user
+  const _empLang = getEmp(name); if(_empLang) _empLang.lang = LANG;
   const emp=getEmp(name);
   if(emp.pin){
     // Has PIN — ask for it
@@ -5663,6 +5667,12 @@ function renderSupDashboard(){
         const diff=Math.floor((new Date(today)-new Date(lastDay))/(86400000));
         activityLabel = diff===0?(LANG==='en'?'Today':'Hoy'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
       }
+      const totalTimeSec = sessions.reduce((a,s) => a + (s.time||0), 0);
+      const totalTimeStr = totalTimeSec >= 3600
+        ? `${Math.floor(totalTimeSec/3600)}h ${Math.floor((totalTimeSec%3600)/60)}m`
+        : totalTimeSec >= 60
+          ? `${Math.floor(totalTimeSec/60)}m`
+          : totalTimeSec > 0 ? `${totalTimeSec}s` : '—';
       const isCloud = !DB.employees[name];
       return `<div class="sup-emp-card">
         <div class="sup-emp-header">
@@ -5678,6 +5688,7 @@ function renderSupDashboard(){
           <div class="sup-emp-stat"><div class="sup-emp-stat-num">${sessions.length}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Exams':'Exámenes'}</div></div>
           <div class="sup-emp-stat"><div class="sup-emp-stat-num">${known}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Known':'Dominados'}</div></div>
           <div class="sup-emp-stat"><div class="sup-emp-stat-num">${xp.toLocaleString()}</div><div class="sup-emp-stat-lbl">XP</div></div>
+          <div class="sup-emp-stat"><div class="sup-emp-stat-num">${totalTimeStr}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Time':'Tiempo'}</div></div>
           <div class="sup-emp-stat"><div class="sup-emp-stat-num">${streak>0?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg> `+streak:'—'}</div><div class="sup-emp-stat-lbl">${LANG==='en'?'Streak':'Racha'}</div></div>
         </div>
         <div class="sup-topic-bars">${topicBars}</div>
@@ -7964,7 +7975,7 @@ async function renderDuel() {
     </div>
 
     <!-- CHALLENGE SOMEONE -->
-    ${!pendingChallenge && sentToday < 2 ? `
+    ${!pendingChallenge && sentToday < 5 ? `
     <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;opacity:.8">
       — ${LANG==='en'?'Challenge a colleague':'Retar a un compañero'} (${2-sentToday} ${LANG==='en'?'left today':'restantes hoy'}) —
     </div>
@@ -7981,7 +7992,7 @@ async function renderDuel() {
       }).join('')}
     </div>` : !pendingChallenge ? `
     <div style="text-align:center;padding:1rem;font-size:.75rem;color:var(--parch3)">
-      ${LANG==='en'?'You have sent 2 challenges today. Come back tomorrow!':'Has enviado 2 retos hoy. ¡Vuelve mañana!'}
+      ${LANG==='en'?'You have sent 5 challenges today. Come back tomorrow!':'Has enviado 5 retos hoy. ¡Vuelve mañana!'}
     </div>` : ''}
 
     <!-- RECENT FEED -->
@@ -8259,12 +8270,15 @@ function duelNextRound(){
   duelState.answered={[duelState.p1]:false,[duelState.p2]:false};
   duelState.p1Answer=null;
   duelState.p2Answer=null;
+  LANG = localStorage.getItem('txoko_lang') || 'es'; // Reset to current user lang before question build
   duelRender();
 }
 
 function duelAnswer(idx){
   const {current,p1,p2,question}=duelState;
   if(duelState.answered[current]) return;
+  // Restore global lang before processing
+  LANG = localStorage.getItem('txoko_lang') || 'es';
   duelState.answered[current]=true;
   const ok=idx===question.correctIdx;
   if(current===p1) duelState.p1Answer={idx,ok};
@@ -8310,6 +8324,10 @@ function duelShowRoundResult(){
 
 function duelRender(){
   const {p1,p2,scores,round,totalRounds,current,question}=duelState;
+  // Use current player's language preference
+  const _savedLang = LANG;
+  const _currentEmp = getEmp(current);
+  if(_currentEmp && _currentEmp.lang) LANG = _currentEmp.lang;
   const letters=['A','B','C','D'];
   document.getElementById('appContent').innerHTML=`
     <div class="duel-wrap">
