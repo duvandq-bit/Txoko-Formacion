@@ -5595,8 +5595,24 @@ function renderSupDashboard(){
     </div>`;
   supaFetchAllEmployees().then(remoteEmps => {
     let allEmps = {};
-    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => { allEmps[e.name] = e; });
-    Object.keys(DB.employees).forEach(name => { if(name) allEmps[name] = DB.employees[name]; });
+    // Start with local data
+    Object.keys(DB.employees).forEach(name => { if(name) allEmps[name] = {...DB.employees[name], name}; });
+    // Merge remote data — remote wins for knownDishes, sessions, xp
+    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => {
+      if(!e.name) return;
+      const local = allEmps[e.name] || {};
+      allEmps[e.name] = {
+        ...local,
+        ...e,
+        xp: Math.max(local.xp||0, e.xp||0),
+        streak: Math.max(local.streak||0, e.streak||0),
+        // Use whichever knownDishes has more entries
+        knownDishes: Object.keys(e.knownDishes||{}).length >= Object.keys(local.knownDishes||{}).length
+          ? e.knownDishes : (local.knownDishes||{}),
+        sessions: (e.sessions||[]).length >= (local.sessions||[]).length
+          ? e.sessions : (local.sessions||[]),
+      };
+    });
     const empNames = Object.keys(allEmps).filter(n => n !== '');
     // Expose globally so supervisor action buttons can access them
     window._supAllEmps = allEmps;
