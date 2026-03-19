@@ -3226,19 +3226,34 @@ async function supaInsertTxokoRecord(employee, record) {
 
 async function supaFetchTxokoTop10() {
   try {
-    // Fetch all txoko rows, then keep best per employee
-    const res = await fetch(
-      `${SUPA_URL}/rest/v1/scores?select=employee,score&topic=eq.txoko&order=score.desc&limit=200`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
-    );
-    if (!res.ok) return null;
-    const rows = await res.json();
-    if (!Array.isArray(rows) || !rows.length) return null;
-    // Best record per employee
+    // Fetch from scores table (topic=txoko)
+    const [scoresRes, empsRes] = await Promise.all([
+      fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score&topic=eq.txoko&order=score.desc&limit=200`,
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }),
+      fetch(`${SUPA_URL}/rest/v1/employees?select=name,txoko_record&txoko_record=gt.0&order=txoko_record.desc`,
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } })
+    ]);
+
     const best = {};
-    rows.forEach(r => {
-      if (!best[r.employee] || r.score > best[r.employee]) best[r.employee] = r.score;
-    });
+
+    // Merge scores table
+    if(scoresRes.ok) {
+      const rows = await scoresRes.json();
+      if(Array.isArray(rows)) rows.forEach(r => {
+        if(!best[r.employee] || r.score > best[r.employee]) best[r.employee] = r.score;
+      });
+    }
+
+    // Merge employees table (txoko_record column)
+    if(empsRes.ok) {
+      const emps = await empsRes.json();
+      if(Array.isArray(emps)) emps.forEach(e => {
+        if(e.txoko_record && (!best[e.name] || e.txoko_record > best[e.name]))
+          best[e.name] = e.txoko_record;
+      });
+    }
+
+    if(!Object.keys(best).length) return null;
     return Object.entries(best)
       .map(([employee, record]) => ({ employee, record }))
       .sort((a, b) => b.record - a.record)
@@ -5105,104 +5120,150 @@ function renderStats(){
   const totalQ=Object.values(topics).reduce((a,t)=>a+t.total,0);
   const totalC=Object.values(topics).reduce((a,t)=>a+t.correct,0);
   const overall=totalQ?Math.round(totalC/totalQ*100):0;
+  const xp=emp.xp||0;
+  const lvl=getLevelInfo(xp);
+  const streak=emp.streak||0;
+  const knownCount=Object.values(known).filter(Boolean).length;
+  const totalDishes=DISHES.length;
+  const pctKnown=Math.round(knownCount/totalDishes*100);
+
+  // Time stats
+  const totalTimeSec = sessions.reduce((a,s)=>a+(s.time||0),0);
+  const totalTimeStr = totalTimeSec>=3600
+    ? `${Math.floor(totalTimeSec/3600)}h ${Math.floor((totalTimeSec%3600)/60)}m`
+    : totalTimeSec>=60 ? `${Math.floor(totalTimeSec/60)}m` : totalTimeSec>0?`${totalTimeSec}s`:'—';
+
+  // Best session
+  const bestSession = sessions.length ? sessions.reduce((a,s)=>((s.score/s.total)>(a.score/a.total)?s:a)) : null;
+  const bestPct = bestSession&&bestSession.total ? Math.round(bestSession.score/bestSession.total*100) : 0;
+
+  // Sessions this week
+  const weekAgo = Date.now() - 7*24*3600*1000;
+  const sessionsThisWeek = sessions.filter(s=>s.ts&&s.ts>weekAgo).length;
+
+  // Mr. Shoesmith record
+  const txokoRecord = emp.txokoRecord||0;
+
+  // Duel wins
+  const duelWins = emp.duelWins||0;
+
+  // Known by category
+  const knownByCat = {};
+  DISHES.forEach(d=>{
+    if(!knownByCat[d.cat]) knownByCat[d.cat]={known:0,total:0};
+    knownByCat[d.cat].total++;
+    if(known[d.id]) knownByCat[d.cat].known++;
+  });
 
   const topicBars=TOPICS.map(tp=>{
     const s=topics[tp.key]||{correct:0,total:0};
     const pct=s.total?Math.round(s.correct/s.total*100):0;
     const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-    return `<div class="t-stat-row">
-      <span class="t-stat-name">${tp.label}</span>
-      <div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div>
-      <span class="t-stat-pct">${pct}%</span>
-    </div>`;
+    return `<div class="t-stat-row"><span class="t-stat-label">${tp.label}</span><div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div><span class="t-stat-pct" style="color:${col}">${pct}%</span></div>`;
   }).join('');
 
-  const catRows=CATS_ES.filter(c=>DISHES.some(d=>d.cat===c)).map(c=>{
-    const dishes=DISHES.filter(d=>d.cat===c);
-    const kn=dishes.filter(d=>known[d.id]).length;
-    const pct=Math.round(kn/dishes.length*100);
-    return `<div class="c-stat-row">
-      <div class="c-dot" style="background:${getCatColor(c)}"></div>
-      <span class="c-label">${catLocal(c)}</span>
-      <span class="c-val">${kn}/${dishes.length} · ${pct}%</span>
-    </div>`;
+  const catBars = Object.entries(knownByCat).map(([cat,[data]])=>{
+    const pct = data ? Math.round(data.known/data.total*100) : 0;
+    const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+    return `<div class="t-stat-row"><span class="t-stat-label" style="font-size:.72rem">${cat}</span><div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div><span class="t-stat-pct" style="color:${col}">${data.known}/${data.total}</span></div>`;
   }).join('');
 
-  const histHtml=!sessions.length?`<div class="empty-state">${t('noSessions')}</div>`:
-    [...sessions].reverse().slice(0,10).map(s=>{
-      const pct=Math.round(s.score/s.total*100);
-      const cls=pct>=80?'score-hi':pct>=50?'score-mid':'score-lo';
-      const d=new Date(s.ts);
-      const dt=`${d.getDate()}/${d.getMonth()+1} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-      return `<div class="history-row">
-        <div>
-          <div class="hist-mode">${s.topic==='mixed'?t('mixed'):TOPICS.find(tp=>tp.key===s.topic)?.label||s.topic} · ${s.cat==='all'?t('allCats'):catLocal(s.cat)}</div>
-          <div class="hist-score">${s.score}/${s.total} ${t('correct_short')}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:.65rem">
-          <span class="hist-date">${dt}</span>
-          <span class="score-badge ${cls}">${pct}%</span>
-        </div>
-      </div>`;
-    }).join('');
+  // Fix catBars — knownByCat entries are objects not arrays
+  const catBars2 = Object.entries(knownByCat).map(([cat,data])=>{
+    const pct = data.total ? Math.round(data.known/data.total*100) : 0;
+    const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+    return `<div class="t-stat-row"><span class="t-stat-label" style="font-size:.72rem">${cat}</span><div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div><span class="t-stat-pct" style="color:${col}">${data.known}/${data.total}</span></div>`;
+  }).join('');
 
-  const empXP = getEmp(currentUser).xp||0;
-  const curLvl = getLevelInfo(empXP);
-  const nxtLvl = getNextLevel(empXP);
-  const xpPct = xpProgress(empXP);
-  const levelsHtml = XP_LEVELS.map(l=>{
-    const unlocked=empXP>=l.xp;
-    const current=l.level===curLvl.level;
-    return `<div class="xp-lvl-tile ${current?'current':unlocked?'unlocked':''}">
-      <span class="xp-lvl-tile-icon">${unlocked?l.icon:'○'}</span>
-      <div class="xp-lvl-tile-name">${unlocked?l.title:'???'}</div>
-      <div class="xp-lvl-tile-lvl">Nv.${l.level}</div>
+  const recentSessions = [...sessions].reverse().slice(0,5).map(s=>{
+    const pct=s.total?Math.round((s.score||0)/s.total*100):0;
+    const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+    const d=s.ts?new Date(s.ts):null;
+    const dt=d?`${d.getDate()}/${d.getMonth()+1}`:'—';
+    const topic=s.topic==='mixed'?t('mixed'):(TOPICS.find(tp=>tp.key===s.topic)?.label||s.topic||'—');
+    const timeStr=s.time?`${s.time}s`:'';
+    return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--line2)">
+      <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);width:32px">${dt}</span>
+      <span style="font-size:.75rem;color:var(--parch2);flex:1">${topic}</span>
+      ${timeStr?`<span style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">${timeStr}</span>`:''}
+      <span style="font-family:'DM Mono',monospace;font-size:.68rem;font-weight:600;color:${col}">${pct}%</span>
     </div>`;
   }).join('');
 
   document.getElementById('appContent').innerHTML=`
-    <div class="stats-header">
-      <h2>${t('statsTitle')} — ${currentUser}</h2>
-    </div>
-    <div class="xp-level-card" style="animation:slideUp .3s ease both">
-      <div class="xp-level-icon">${curLvl.icon}</div>
-      <div class="xp-level-num">Nivel ${curLvl.level}</div>
-      <div class="xp-level-name">${curLvl.title}</div>
-      <div style="font-size:.75rem;color:var(--parch2);margin-bottom:.75rem;font-style:italic">"${curLvl.desc}"</div>
-      <div class="xp-bar-track" style="margin-bottom:.4rem">
-        <div class="xp-bar-fill" style="width:${xpPct}%"></div>
-      </div>
-      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3)">
-        ${empXP.toLocaleString()} XP${nxtLvl?` · ${(nxtLvl.xp-empXP).toLocaleString()} para "${nxtLvl.title}"`:' · ¡Nivel máximo!'}
-      </div>
-      <div class="xp-levels-grid" style="margin-top:1rem">${levelsHtml}</div>
-    </div>
+  <div style="padding:1rem 1rem 5rem">
 
-    ${renderCertBadges(emp)}
-    <div class="stats-row" style="animation:slideUp .35s ease both">
-      <div class="stat-tile"><div class="stat-num">${overall}<sup>%</sup></div><div class="stat-lbl">${t('globalAccuracy')}</div></div>
-      <div class="stat-tile"><div class="stat-num">${totalQ}</div><div class="stat-lbl">${t('questionsAnswered')}</div></div>
-      <div class="stat-tile"><div class="stat-num">${sessions.length}</div><div class="stat-lbl">${t('statExams')}</div></div>
-      <div class="stat-tile"><div class="stat-num">${Object.values(known).filter(Boolean).length}/${DISHES.length}</div><div class="stat-lbl">${t('knownDishes')}</div></div>
-    </div>
-
-    <div class="stats-2col">
-      <div class="stats-panel">
-        <div class="panel-title">${t('topicPerf')}</div>${topicBars}
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--gold-b);border:1.5px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-size:1.2rem">${getEmpAvatar(currentUser)}</div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--parchment)">${currentUser}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold)">${lvl.icon} ${lvl.title} · Nv.${lvl.level}</div>
       </div>
-      <div class="stats-panel">
-        <div class="panel-title">${t('knownByCat')}</div>${catRows}
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold)">${xp.toLocaleString()}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4)">XP TOTAL</div>
       </div>
     </div>
 
-    <div class="section-eyebrow" style="animation:slideUp .35s .08s ease both">${t('lastSessions')}</div>
-    <div class="history-list">${histHtml}</div>
-  `;
+    <!-- Key stats grid -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem">
+      <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.65rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${sessions.length}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'EXAMS':'EXÁMENES'}</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.65rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${streak>0?'🔥':''} ${streak}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'STREAK':'RACHA'}</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.65rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${overall}%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'ACCURACY':'PRECISIÓN'}</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.65rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${totalTimeStr}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'TIME':'TIEMPO'}</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.65rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${txokoRecord}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">MR. S.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.65rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--parchment)">${duelWins}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'DUELS WON':'DUELOS'}</div>
+      </div>
+    </div>
+
+    <!-- This week -->
+    <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'THIS WEEK':'ESTA SEMANA'}</div>
+      <div style="display:flex;gap:1rem">
+        <div><span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--parchment)">${sessionsThisWeek}</span> <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4)">${LANG==='en'?'exams':'exámenes'}</span></div>
+        ${bestSession?`<div><span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--sage)">${bestPct}%</span> <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4)">${LANG==='en'?'best score':'mejor nota'}</span></div>`:''}
+      </div>
+    </div>
+
+    <!-- Dominados por categoría -->
+    <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'DISHES MASTERED':'PLATOS DOMINADOS'} — ${knownCount}/${totalDishes} (${pctKnown}%)</div>
+      ${catBars2}
+    </div>
+
+    <!-- Topic accuracy -->
+    <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'ACCURACY BY TOPIC':'PRECISIÓN POR TEMA'}</div>
+      ${topicBars}
+    </div>
+
+    <!-- Recent sessions -->
+    ${sessions.length>0?`
+    <div style="background:var(--card);border:1px solid var(--line2);border-radius:var(--r2);padding:.8rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'RECENT EXAMS':'ÚLTIMOS EXÁMENES'}</div>
+      ${recentSessions}
+    </div>`:''}
+
+  </div>`;
 }
-
-
-
-// ═══ CERTIFICACIONES POR CATEGORÍA ═══
 
 function getCertifications(emp){
   const known = emp.knownDishes || {};
@@ -7690,7 +7751,16 @@ async function supaCreateChallenge(fromUser, toUser, questions) {
     });
     if (!res.ok) return null;
     const rows = await res.json();
-    return rows[0] || null;
+    const duel = rows[0] || null;
+    // Notify the challenged player
+    if(duel) {
+      await supaCreateNotification(
+        toUser,
+        `⚡ ${fromUser} te ha retado a un duelo. ¡Tienes 24h para responder!`,
+        'duel'
+      );
+    }
+    return duel;
   } catch(e) { return null; }
 }
 
@@ -8793,6 +8863,8 @@ function renderTxoko(){
         <div class="game-card-arrow">▶</div>
       </div>
 
+
+
       <!-- TOP 10 at bottom — loads after games -->
       <div id="txTop10Wrap" style="margin-top:.5rem">${renderTxTop10()}</div>
     </div>`;
@@ -9351,6 +9423,28 @@ async function txokoDiag() {
   }
 }
 window.txokoDiag = txokoDiag;
+
+// ═══════════════════════════════════════════════════════
+// 🎭 UNA NOCHE EN TXOKO — RPG
+// ═══════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// 🎭 UNA NOCHE EN TXOKO — RPG Engine
+// ═══════════════════════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════════════════
+// 🎭 LA LEYENDA DE TXOKO — Motor Generativo v2.0
+// Arquitectura basada en sistemas interactivos (Dwarf Fortress style)
+// ═══════════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
 // Init
 renderLogin();
 
