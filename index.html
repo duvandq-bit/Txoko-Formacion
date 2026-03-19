@@ -8657,13 +8657,16 @@ function txBuildQuestion(){
   const choices = pool.map(x=>x.display);
 
   const dd = getDish(chosenDish);
+  // Use EN dish name if available
+  const ddEn = LANG==='en' ? (DISHES_EN.find(x=>x.id===chosenDish.id)||dd) : dd;
+  const dishNameDisplay = ddEn.name || dd.name;
   const topicObj = TOPICS.find(t=>t.key===chosenTopicKey);
   const topicLabel = topicObj ? topicObj.label : chosenTopicKey;
   const msgs = WAITER_MSGS[chosenTopicKey]||WAITER_MSGS.allergens;
   const msgFn = msgs[Math.floor(Math.random()*msgs.length)];
 
   return {
-    dishName:   dd.name,
+    dishName:   dishNameDisplay,
     topicKey:   chosenTopicKey,
     topicLabel: topicLabel,
     msg:        msgFn(dd.name),
@@ -8948,6 +8951,7 @@ function txAnswer(idx){
   } else { playSound('wrong'); txokoState.lives--; txokoState.streak=0; }
 
   // Highlight buttons using correctIdx — no string comparison needed
+  document.querySelectorAll('.txoko-choice').forEach(b=>{b.classList.remove('correct','wrong');b.disabled=false;});
   document.querySelectorAll('.txoko-choice').forEach((el,i)=>{
     el.disabled=true;
     if(i===q.correctIdx)          el.classList.add('correct');
