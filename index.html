@@ -1,3 +1,25 @@
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║           TXOKO FORMACIÓN — Aplicación de Formación          ║
+  ║         Txoko by Martín Berasategui · Ritz-Carlton Abama     ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║  © 2026 Duvan Stiven Ramírez Duque. Todos los derechos    ║
+  ║  reservados.                                                  ║
+  ║                                                               ║
+  ║  Este software es propiedad intelectual de su autor.          ║
+  ║  Queda prohibida su reproducción, distribución, modificación  ║
+  ║  o uso comercial sin autorización expresa y por escrito del   ║
+  ║  autor.                                                       ║
+  ║                                                               ║
+  ║  Licencia de uso concedida exclusivamente a:                  ║
+  ║  Txoko by Martín Berasategui · Ritz-Carlton Abama · Tenerife  ║
+  ║  Uso interno · Fines educativos · Sin ánimo de lucro          ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║  Developed by: Duvan Stiven Ramírez Duque                     ║
+  ║  Fecha de creación: 2024                                       ║
+  ║  Versión: 4.6 · March 2026                          ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
 <!DOCTYPE html>
 <html lang="es" id="htmlRoot">
 <head>
@@ -1551,7 +1573,7 @@ body::before{
   <div class="legal-notice">
     <p>Esta aplicación es de uso exclusivo para el equipo de <strong>Txoko by Martín Berasategui</strong> y ha sido creada únicamente con fines educativos y formativos internos, sin ánimo de lucro.</p>
     <p>Marriott International, The Ritz-Carlton y Martín Berasategui son marcas registradas independientes. Sus nombres, logotipos y denominaciones se mencionan únicamente en contexto formativo. Esta aplicación no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
-    <p>Developed by Duvan Stiven Ramírez Duque · Uso interno · © 2025</p>
+    <p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>
   </div>
   <div style="display:flex;gap:.6rem;margin-top:1rem;justify-content:center;flex-wrap:wrap">
     <button onclick="shareApp()" style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1.1rem;background:transparent;border:1px solid rgba(37,211,102,.3);border-radius:2rem;cursor:pointer;transition:all .2s;font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(37,211,102,.7);letter-spacing:.08em">
@@ -1600,7 +1622,7 @@ body::before{
   <div class="nav-fade" id="navFade"></div>
 
   <div class="app-content" id="appContent"></div>
-  <div class="app-credit">Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro · Developed by Duvan Stiven Ramírez Duque</div>
+  <div class="app-credit">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido">◉</button>
 </div>
 
@@ -5162,13 +5184,7 @@ function renderStats(){
     return `<div class="t-stat-row"><span class="t-stat-label">${tp.label}</span><div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div><span class="t-stat-pct" style="color:${col}">${pct}%</span></div>`;
   }).join('');
 
-  const catBars = Object.entries(knownByCat).map(([cat,[data]])=>{
-    const pct = data ? Math.round(data.known/data.total*100) : 0;
-    const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-    return `<div class="t-stat-row"><span class="t-stat-label" style="font-size:.72rem">${cat}</span><div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div><span class="t-stat-pct" style="color:${col}">${data.known}/${data.total}</span></div>`;
-  }).join('');
-
-  // Fix catBars — knownByCat entries are objects not arrays
+  // Known by category bars
   const catBars2 = Object.entries(knownByCat).map(([cat,data])=>{
     const pct = data.total ? Math.round(data.known/data.total*100) : 0;
     const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
