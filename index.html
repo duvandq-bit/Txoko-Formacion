@@ -2078,71 +2078,128 @@ body::before{
   border:1px solid var(--gold);transform:rotate(45deg);
 }
 
-/* ═══════════════════════════════════════
-   LAYOUT FIX — sticky nav + scroll
-═══════════════════════════════════════ */
-html, body {
-  height: 100%;
-  overflow: hidden;
+/* ═══════ ACHIEVEMENT DETAIL MODAL ═══════ */
+.achievement-modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(2px);
+  z-index:9999;display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .3s cubic-bezier(.22,1,.36,1);opacity:1;
 }
-body {
-  display: flex;
-  flex-direction: column;
+.achievement-modal-overlay.closing{
+  animation:fadeOut .3s cubic-bezier(.22,1,.36,1);opacity:0;
 }
-.screen {
-  display: none;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+
+.achievement-modal{
+  background:linear-gradient(135deg,#1c2a22 0%,#253530 50%,#1f2d28 100%);
+  border:2px solid rgba(196,154,60,.4);border-radius:16px;padding:2rem;
+  max-width:380px;width:90%;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(196,154,60,.15),inset 0 1px 0 rgba(255,255,255,.05);
+  animation:slideIn .4s cubic-bezier(.22,1,.36,1);
 }
-.screen.active {
-  display: flex;
-}
-#screenLogin {
-  overflow-y: auto;
-  height: 100vh;
-}
-#screenApp {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-.app-header {
-  flex-shrink: 0;
-  position: relative !important;
-  top: auto !important;
-  z-index: 100;
-}
-.app-nav {
-  flex-shrink: 0;
-  position: relative !important;
-  top: auto !important;
-  z-index: 90;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.app-nav::-webkit-scrollbar { display: none; }
-.app-content, #appContent {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding: 1.5rem 1.25rem 2rem;
-  max-width: 680px;
-  margin: 0 auto;
-  width: 100%;
+@keyframes slideIn{
+  from{
+    transform:translate(-50%,-50%) scale(.85) rotateX(15deg);
+    opacity:0;
+  }
+  to{
+    transform:translate(-50%,-50%) scale(1) rotateX(0);
+    opacity:1;
+  }
 }
 
-@keyframes gemDetailIn {
-  from { opacity:0; transform:scale(.88) translateY(12px); }
-  to   { opacity:1; transform:scale(1)   translateY(0); }
+.achievement-modal::before{
+  content:'';position:absolute;inset:0;border-radius:14px;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.08)' stroke-width='0.4'/%3E%3C/svg%3E");
+  pointer-events:none;opacity:.5;
 }
-@keyframes gemShinePopup {
-  0%,100% { filter:brightness(1) drop-shadow(0 4px 12px rgba(196,154,60,.3)); }
-  50%     { filter:brightness(1.2) drop-shadow(0 6px 20px rgba(196,154,60,.55)); }
+
+.achievement-modal-content{
+  position:relative;z-index:1;text-align:center;
 }
+
+.achievement-modal-gem{
+  width:80px;height:80px;margin:0 auto 1.5rem;
+  animation:gemPulse .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes gemPulse{
+  0%{transform:scale(.8) rotateZ(0deg);opacity:0}
+  50%{transform:scale(1.15) rotateZ(10deg)}
+  100%{transform:scale(1) rotateZ(0deg);opacity:1}
+}
+
+.achievement-modal-title{
+  font-family:'Cinzel',serif;font-size:1.8rem;color:#f2eae0;
+  margin-bottom:.5rem;letter-spacing:1px;text-shadow:0 2px 4px rgba(0,0,0,.4);
+}
+
+.achievement-modal-desc{
+  font-family:'Quicksand',sans-serif;font-size:.95rem;color:rgba(242,234,224,.85);
+  line-height:1.6;margin-bottom:1.5rem;
+}
+
+.achievement-modal-close{
+  font-family:'DM Mono',monospace;font-size:.75rem;color:rgba(196,154,60,.8);
+  letter-spacing:.1em;text-transform:uppercase;opacity:.8;margin-top:1rem;
+  transition:opacity .2s;cursor:pointer;user-select:none;
+}
+.achievement-modal-close:hover{opacity:1}
+
+.achievement-modal-locked{
+  font-family:'Cinzel',serif;font-size:2.5rem;color:rgba(196,154,60,.4);
+  letter-spacing:2px;margin-bottom:1rem;text-shadow:0 2px 4px rgba(0,0,0,.4);
+}
+
+/* ═══════════ LQA STYLES ═══════════ */
+.lqa-score-ring{
+  width:180px;height:180px;position:relative;margin:0 auto 1.5rem;
+}
+.lqa-score-ring svg{
+  transform:rotate(-90deg);
+}
+.lqa-score-ring-bg{
+  fill:none;stroke:rgba(196,154,60,.15);stroke-width:8;
+}
+.lqa-score-ring-progress{
+  fill:none;stroke:#c49a3c;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s ease;
+}
+.lqa-score-ring-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;
+}
+.lqa-score-ring-num{
+  font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:#c49a3c;line-height:1;
+}
+.lqa-score-ring-label{
+  font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem;
+}
+
+.lqa-verdict-btn{
+  flex:1;padding:1rem;border-radius:var(--r);border:2px solid;font-family:'Quicksand',sans-serif;font-weight:700;text-transform:uppercase;cursor:pointer;transition:all .2s;font-size:.85rem;letter-spacing:.06em;
+}
+.lqa-verdict-meet{
+  background:rgba(77,138,94,.08);border-color:#4d8a5e;color:#4d8a5e;
+}
+.lqa-verdict-meet:hover{
+  background:rgba(77,138,94,.15);
+}
+.lqa-verdict-below{
+  background:rgba(196,112,104,.08);border-color:#c47068;color:#c47068;
+}
+.lqa-verdict-below:hover{
+  background:rgba(196,112,104,.15);
+}
+
+.lqa-ei-scale{
+  display:flex;gap:.5rem;margin:.8rem 0;
+}
+.lqa-ei-dot{
+  flex:1;height:20px;border-radius:50%;background:#e0e0e0;border:2px solid #fff;box-shadow:inset 0 1px 3px rgba(0,0,0,.1);
+}
+.lqa-ei-scale-1 .lqa-ei-dot:nth-child(-n+1){background:#d32f2f;border-color:#fff;}
+.lqa-ei-scale-2 .lqa-ei-dot:nth-child(-n+2){background:#f57c00;border-color:#fff;}
+.lqa-ei-scale-3 .lqa-ei-dot:nth-child(-n+3){background:#fbc02d;border-color:#fff;}
+.lqa-ei-scale-4 .lqa-ei-dot:nth-child(-n+4){background:#689f38;border-color:#fff;}
+.lqa-ei-scale-5 .lqa-ei-dot:nth-child(-n+5){background:#1565c0;border-color:#fff;}
 
 </style>
 </head>
@@ -2221,6 +2278,7 @@ body {
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
     <button class="nav-btn" id="navRepaso" onclick="showTab('repaso')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Explorar</button>
     <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Protocolo</button>
+    <button class="nav-btn" id="navLqa" onclick="showTab('lqa')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg> LQA</button>
     <button class="nav-btn" id="navVideos" onclick="showTab('videos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Videos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="16" cy="11" r="1" fill="currentColor"/><circle cx="18" cy="13" r="1" fill="currentColor"/></svg> Juegos</button>
@@ -4975,10 +5033,13 @@ function closePinAndEnter(){
   // Restore from Supabase first, then show dashboard, then sync back
   supaRestoreEmployee(currentUser).then(() => {
     const emp = getEmp(currentUser);
-    // Show onboarding on every login; it stops showing once user earns XP
-    emp.onboardingSeen = false;
-    saveDB();
-    showOnboarding();
+    // Show onboarding only if user has never earned XP; once they earn XP it stops
+    if(!emp.xp || emp.xp <= 0){
+      showOnboarding();
+    } else {
+      showTab('dashboard');
+      checkStreak();
+    }
     if(emp.xp && emp.xp > 0) supaUpsertEmployee(currentUser);
     requestNotifPermission();
     checkAndShowNotifications(currentUser);
@@ -5059,7 +5120,7 @@ function showTab(tab){
     if(_emp){ _emp.nightStudy = true; saveDB(); }
   }
   document.querySelectorAll('.nav-btn').forEach(b=>{
-    const btnTab = b.id.replace('nav','').replace('Protocolo','protocolo').replace('Flashcards','flashcards').replace('Dashboard','dashboard').replace('Exam','exam').replace('Repaso','repaso').replace('Stats','stats').replace('Txoko','txoko').replace('Ranking','ranking').replace('Supervisor','supervisor');
+    const btnTab = b.id.replace('nav','').replace('Protocolo','protocolo').replace('Flashcards','flashcards').replace('Dashboard','dashboard').replace('Exam','exam').replace('Repaso','repaso').replace('Stats','stats').replace('Txoko','txoko').replace('Ranking','ranking').replace('Supervisor','supervisor').replace('Lqa','lqa');
     b.classList.toggle('active', btnTab === tab);
   });
   const c=document.getElementById('appContent');
@@ -5072,7 +5133,7 @@ function showTab(tab){
     c.style.transition='none';
     c.style.opacity='1';
     c.style.transform='translateY(0)';
-    ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor,protocolo:renderProtocolo,videos:renderVideos})[tab]();
+    ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor,protocolo:renderProtocolo,videos:renderVideos,lqa:renderLqa})[tab]();
     // Animate in
     c.classList.remove('tab-entering');
     void c.offsetWidth; // force reflow
@@ -9843,7 +9904,94 @@ function gemSVG(color1, color2, color3, shape){
       <ellipse cx="22" cy="18" rx="8" ry="4" fill="${lt}" opacity=".6" transform="rotate(-28,22,18)"/>
       <ellipse cx="18" cy="25" rx="3" ry="1.2" fill="${lt}" opacity=".35" transform="rotate(-28,18,25)"/>
       <circle cx="38" cy="12" r="1.8" fill="${lt}" opacity=".6"/>
-      <circle cx="42" cy="16" r=".8" fill="${lt}" opacity=".35"/>`
+      <circle cx="42" cy="16" r=".8" fill="${lt}" opacity=".35"/>`,
+    book:`<rect x="8" y="8" width="48" height="48" rx="4" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <line x1="32" y1="8" x2="32" y2="56" stroke="${color2}" stroke-width="2" opacity=".4"/>
+      <path d="M14,16 Q14,20 18,22 L18,28 Q14,30 14,34" fill="none" stroke="${lt}" stroke-width="1.2" opacity=".5" stroke-linecap="round"/>
+      <path d="M22,16 Q22,20 26,22 L26,28 Q22,30 22,34" fill="none" stroke="${lt}" stroke-width="1.2" opacity=".4" stroke-linecap="round"/>
+      <path d="M30,16 L30,34" fill="none" stroke="${lt}" stroke-width=".8" opacity=".2"/>
+      <ellipse cx="20" cy="12" rx="8" ry="3" fill="${lt}" opacity=".7" transform="rotate(-20,20,12)"/>
+      <circle cx="44" cy="14" r="1.8" fill="${lt}" opacity=".6"/>
+      <circle cx="48" cy="18" r=".8" fill="${lt}" opacity=".4"/>`,
+    scroll:`<path d="M12,8 L52,8 Q56,8 56,12 L56,48 Q56,52 52,52 L12,52 Q8,52 8,48 L8,12 Q8,8 12,8Z" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <ellipse cx="14" cy="10" rx="2.5" ry="1.5" fill="${color2}" opacity=".3"/>
+      <ellipse cx="50" cy="10" rx="2.5" ry="1.5" fill="${color2}" opacity=".3"/>
+      <path d="M16,18 Q32,22 48,18" fill="none" stroke="${lt}" stroke-width="1.2" opacity=".5" stroke-linecap="round"/>
+      <path d="M16,28 Q32,32 48,28" fill="none" stroke="${lt}" stroke-width="1.2" opacity=".35" stroke-linecap="round"/>
+      <path d="M18,38 Q32,40 46,38" fill="none" stroke="${lt}" stroke-width="1" opacity=".25" stroke-linecap="round"/>
+      <ellipse cx="18" cy="14" rx="6" ry="3" fill="${lt}" opacity=".65" transform="rotate(-18,18,14)"/>
+      <circle cx="42" cy="12" r="1.5" fill="${lt}" opacity=".6"/>`,
+    flame:`<path d="M32,2 C28,8 24,12 24,18 C24,26 28,32 32,36 C36,32 40,26 40,18 C40,12 36,8 32,2Z" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <path d="M28,16 C28,20 30,24 32,26 C34,24 36,20 36,16 C36,13 34,11 32,11 C30,11 28,13 28,16Z" fill="${color2}" opacity=".3"/>
+      <ellipse cx="24" cy="18" rx="3" ry="5" fill="${lt}" opacity=".6" transform="rotate(-25,24,18)"/>
+      <ellipse cx="40" cy="18" rx="3" ry="5" fill="${lt}" opacity=".5" transform="rotate(25,40,18)"/>
+      <path d="M32,20 Q28,26 28,32" fill="none" stroke="${lt}" stroke-width="1" opacity=".4" stroke-linecap="round"/>
+      <circle cx="32" cy="8" r="1.5" fill="${lt}" opacity=".7"/>
+      <circle cx="26" cy="12" r="1" fill="${lt}" opacity=".5"/>
+      <circle cx="38" cy="12" r="1" fill="${lt}" opacity=".5"/>`,
+    shield:`<path d="M32,4 L50,12 L50,28 Q50,40 32,52 Q14,40 14,28 L14,12 Z" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <path d="M32,8 L46,14 L46,28 Q46,38 32,48 Q18,38 18,28 L18,14 Z" fill="${color2}" opacity=".15"/>
+      <path d="M32,4 L46,12 L46,28" fill="none" stroke="${lt}" stroke-width=".8" opacity=".4"/>
+      <line x1="32" y1="8" x2="32" y2="48" stroke="${lt}" stroke-width=".6" opacity=".3"/>
+      <ellipse cx="28" cy="10" rx="5" ry="2.5" fill="${lt}" opacity=".6" transform="rotate(-25,28,10)"/>
+      <circle cx="40" cy="12" r="1.8" fill="${lt}" opacity=".5"/>
+      <circle cx="44" cy="18" r=".8" fill="${lt}" opacity=".3"/>`,
+    crown:`<path d="M12,32 L16,12 L24,22 L32,8 L40,22 L48,12 L52,32 Z" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <rect x="10" y="32" width="44" height="24" rx="3" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.6" opacity=".9"/>
+      <polygon points="12,32 16,12 24,22 32,8 40,22 48,12 52,32" fill="${color2}" opacity=".12"/>
+      <circle cx="16" cy="18" r="3" fill="${lt}" opacity=".5"/>
+      <circle cx="32" cy="10" r="3.5" fill="${lt}" opacity=".65"/>
+      <circle cx="48" cy="18" r="3" fill="${lt}" opacity=".5"/>
+      <ellipse cx="22" cy="16" rx="4" ry="2" fill="${lt}" opacity=".6" transform="rotate(-20,22,16)"/>
+      <circle cx="42" cy="20" r="1.5" fill="${lt}" opacity=".4"/>
+      <line x1="15" y1="32" x2="15" y2="50" stroke="${lt}" stroke-width=".5" opacity=".2"/>`,
+    lightning:`<polygon points="40,2 24,28 32,28 28,62 44,32 36,32 48,2" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <path d="M40,2 L32,28 L36,32 L28,62" fill="none" stroke="${lt}" stroke-width="1.2" opacity=".5" stroke-linecap="round"/>
+      <path d="M28,28 L32,40" fill="none" stroke="${color2}" stroke-width=".8" opacity=".2"/>
+      <ellipse cx="35" cy="12" rx="5" ry="3" fill="${lt}" opacity=".6" transform="rotate(-25,35,12)"/>
+      <circle cx="42" cy="8" r="1.8" fill="${lt}" opacity=".65"/>
+      <circle cx="46" cy="14" r=".8" fill="${lt}" opacity=".4"/>
+      <circle cx="32" cy="35" r="1.2" fill="${lt}" opacity=".35"/>`,
+    fork:`<path d="M14,8 L14,48 L12,58 L16,58 L16,48 M28,8 L28,42 L26,58 L30,58 L30,42 M42,8 L42,48 L40,58 L44,58 L44,48" stroke="url(#${uid}s)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="10" y="6" width="44" height="6" rx="2" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.5"/>
+      <rect x="12" y="8" width="40" height="4" rx="1.5" fill="${color2}" opacity=".15"/>
+      <ellipse cx="20" cy="8" rx="6" ry="2" fill="${lt}" opacity=".65" transform="rotate(-18,20,8)"/>
+      <circle cx="40" cy="10" r="1.5" fill="${lt}" opacity=".6"/>`,
+    trophy:`<path d="M18,8 L18,24 Q18,32 26,36 L26,48 L38,48 L38,36 Q46,32 46,24 L46,8 Z" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <rect x="20" y="10" width="24" height="12" rx="2" fill="${color2}" opacity=".15"/>
+      <path d="M26,36 L38,36 Q42,36 42,40 Q42,44 38,44 L26,44 Q22,44 22,40 Q22,36 26,36" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.5"/>
+      <line x1="26" y1="48" x2="38" y2="48" stroke="url(#${uid}s)" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse cx="24" cy="14" rx="4" ry="3" fill="${lt}" opacity=".6" transform="rotate(-22,24,14)"/>
+      <circle cx="42" cy="12" r="1.8" fill="${lt}" opacity=".6"/>
+      <circle cx="46" cy="18" r=".8" fill="${lt}" opacity=".4"/>`,
+    moon:`<path d="M32,4 Q16,4 12,20 Q8,36 24,48 Q40,48 44,32 Q48,16 32,4Z" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <path d="M32,8 Q48,16 48,28 Q48,40 32,44 Q20,40 18,28 Q20,16 32,8Z" fill="${color2}" opacity=".2"/>
+      <ellipse cx="28" cy="14" rx="6" ry="4" fill="${lt}" opacity=".7" transform="rotate(-25,28,14)"/>
+      <ellipse cx="20" cy="22" rx="3" ry="2" fill="${lt}" opacity=".4" transform="rotate(-25,20,22)"/>
+      <circle cx="40" cy="16" r="1.8" fill="${lt}" opacity=".65"/>
+      <circle cx="42" cy="24" r=".8" fill="${lt}" opacity=".35"/>`,
+    sword:`<path d="M32,2 L28,24 L22,28 L20,34 L24,36 L30,32 L36,32 L42,36 L44,34 L42,28 L36,24 Z" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <polygon points="32,2 28,24 36,24" fill="${lt}" opacity=".5"/>
+      <line x1="32" y1="2" x2="32" y2="26" stroke="${lt}" stroke-width=".6" opacity=".4"/>
+      <line x1="24" y1="36" x2="44" y2="36" stroke="url(#${uid}s)" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+      <ellipse cx="28" cy="12" rx="4" ry="2.5" fill="${lt}" opacity=".65" transform="rotate(-20,28,12)"/>
+      <circle cx="38" cy="10" r="1.5" fill="${lt}" opacity=".55"/>`,
+    clock:`<circle cx="32" cy="32" r="26" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <circle cx="32" cy="32" r="20" fill="${color2}" opacity=".1"/>
+      <line x1="32" y1="10" x2="32" y2="18" stroke="url(#${uid}s)" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="32" y1="18" x2="32" y2="32" stroke="url(#${uid}s)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="32" y1="32" x2="42" y2="26" stroke="url(#${uid}s)" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="32" cy="32" r="2" fill="${lt}" opacity=".7"/>
+      <ellipse cx="22" cy="14" rx="5" ry="2.5" fill="${lt}" opacity=".6" transform="rotate(-20,22,14)"/>
+      <circle cx="44" cy="12" r="1.8" fill="${lt}" opacity=".5"/>`,
+    allergen:`<polygon points="32,4 54,52 10,52" fill="url(#${uid})" stroke="url(#${uid}s)" stroke-width="1.8"/>
+      <path d="M32,8 L50,48 L14,48" fill="${color2}" opacity=".15"/>
+      <line x1="32" y1="8" x2="32" y2="48" stroke="${lt}" stroke-width=".8" opacity=".4"/>
+      <line x1="14" y1="48" x2="50" y2="48" stroke="${lt}" stroke-width=".8" opacity=".3"/>
+      <circle cx="32" cy="32" r="5" fill="none" stroke="${lt}" stroke-width="1.2" opacity=".6"/>
+      <line x1="27" y1="32" x2="37" y2="32" stroke="${lt}" stroke-width="1" opacity=".5"/>
+      <ellipse cx="24" cy="16" rx="5" ry="3" fill="${lt}" opacity=".65" transform="rotate(-22,24,16)"/>
+      <circle cx="42" cy="14" r="1.8" fill="${lt}" opacity=".6"/>`
   };
   const s=shapes[shape]||shapes.diamond;
   return `<svg viewBox="0 0 64 64" width="38" height="38" xmlns="http://www.w3.org/2000/svg">
@@ -9881,21 +10029,39 @@ function gemSVG(color1, color2, color3, shape){
 
 // ═══════ ACHIEVEMENTS ═══════
 const ACHIEVEMENTS = [
-  {id:'a_first_exam', gemColors:['#e85850','#c03030','#ffb0a8'], gemShape:'ruby', title:'Primer examen', title_en:'First exam', desc:'Completa tu primer examen', desc_en:'Complete your first exam', check:emp=>(emp.sessions||[]).length>=1},
-  {id:'a_5_exams', gemColors:['#38a8d0','#1878a8','#90e0f8'], gemShape:'emerald', title:'Estudioso', title_en:'Studious', desc:'Completa 5 exámenes', desc_en:'Complete 5 exams', check:emp=>(emp.sessions||[]).length>=5},
-  {id:'a_20_exams', gemColors:['#9070cc','#6848a8','#c8b0f0'], gemShape:'hexagon', title:'Académico', title_en:'Academic', desc:'Completa 20 exámenes', desc_en:'Complete 20 exams', check:emp=>(emp.sessions||[]).length>=20},
-  {id:'a_perfect', gemColors:['#40b8e0','#2090b8','#a8e8ff'], gemShape:'diamond', title:'Perfección', title_en:'Perfection', desc:'Saca 100% en un examen', desc_en:'Score 100% on an exam', check:emp=>(emp.sessions||[]).some(s=>s.score===s.total)},
-  {id:'a_know10', gemColors:['#40c870','#20a048','#90f0b0'], gemShape:'emerald', title:'Conocedor', title_en:'Connoisseur', desc:'Domina 10 platos', desc_en:'Master 10 dishes', check:emp=>Object.values(emp.knownDishes||{}).filter(Boolean).length>=10},
-  {id:'a_know_all', gemColors:['#f0b830','#d09018','#ffe888'], gemShape:'star', title:'Chef de carta', title_en:'Menu Master', desc:'Domina todos los platos', desc_en:'Master all dishes', check:emp=>{const DISHES_REF=typeof DISHES!=='undefined'?DISHES:[];return DISHES_REF.length>0&&Object.values(emp.knownDishes||{}).filter(Boolean).length>=DISHES_REF.length;}},
-  {id:'a_streak7', gemColors:['#f0882e','#d06818','#ffc088'], gemShape:'teardrop', title:'Semana de fuego', title_en:'Fire week', desc:'Racha de 7 días', desc_en:'7-day streak', check:emp=>(emp.streak||0)>=7},
-  {id:'a_streak30', gemColors:['#f8d040','#d8b020','#fff0a0'], gemShape:'star', title:'Mes dedicado', title_en:'Dedicated month', desc:'Racha de 30 días', desc_en:'30-day streak', check:emp=>(emp.streak||0)>=30},
-  {id:'a_fc50', gemColors:['#f07088','#d04860','#ffb0c0'], gemShape:'heart', title:'Rey de flashcards', title_en:'Flashcard king', desc:'Repasa 50 flashcards', desc_en:'Review 50 flashcards', check:emp=>(emp.fcHistory||[]).length>=50},
-  {id:'a_fc200', gemColors:['#f0c030','#d0a018','#fff0a0'], gemShape:'diamond', title:'Maestro de flashcards', title_en:'Flashcard master', desc:'Repasa 200 flashcards', desc_en:'Review 200 flashcards', check:emp=>(emp.fcHistory||[]).length>=200},
-  {id:'a_allergy', gemColors:['#f09030','#d07018','#ffc888'], gemShape:'hexagon', title:'Experto en alérgenos', title_en:'Allergen expert', desc:'Aprueba test de alérgenos 90%+', desc_en:'Pass allergen test 90%+', check:emp=>(emp.allergenBest||0)>=90},
-  {id:'a_night', gemColors:['#6878cc','#4858a8','#a8b8f0'], gemShape:'teardrop', title:'Búho nocturno', title_en:'Night owl', desc:'Estudia después de las 23h', desc_en:'Study after 11PM', check:emp=>emp.nightStudy||false},
-  {id:'a_speed', gemColors:['#38c8b0','#18a890','#88f0e0'], gemShape:'round', title:'Rayo', title_en:'Lightning', desc:'Completa un examen en menos de 2 min', desc_en:'Complete exam in under 2 min', check:emp=>(emp.sessions||[]).some(s=>(s.time||999)<120)},
-  {id:'a_duel_win', gemColors:['#e05040','#c03028','#ffa098'], gemShape:'ruby', title:'Duelista', title_en:'Duelist', desc:'Gana tu primer duelo', desc_en:'Win your first duel', check:emp=>(emp.duelWins||0)>=1},
-  {id:'a_protocol', gemColors:['#48d080','#28b058','#a0f8c0'], gemShape:'oval', title:'Maestro del protocolo', title_en:'Protocol master', desc:'Aprueba protocolo con 90%+', desc_en:'Pass protocol exam 90%+', check:emp=>(emp.protoBest||0)>=90},
+  {id:'a_first_exam', gemColors:['#e85850','#c03030','#ffb0a8'], gemShape:'scroll', title:'Primer examen', title_en:'First exam', desc:'Completa tu primer examen', desc_en:'Complete your first exam', check:emp=>(emp.sessions||[]).length>=1},
+  {id:'a_5_exams', gemColors:['#38a8d0','#1878a8','#90e0f8'], gemShape:'book', title:'Estudioso', title_en:'Studious', desc:'Completa 5 exámenes', desc_en:'Complete 5 exams', check:emp=>(emp.sessions||[]).length>=5},
+  {id:'a_10_exams', gemColors:['#40c8a8','#2098a0','#88f0d0'], gemShape:'scroll', title:'10 exámenes', title_en:'10 exams', desc:'Completa 10 exámenes', desc_en:'Complete 10 exams', check:emp=>(emp.sessions||[]).length>=10},
+  {id:'a_20_exams', gemColors:['#9070cc','#6848a8','#c8b0f0'], gemShape:'crown', title:'Académico', title_en:'Academic', desc:'Completa 20 exámenes', desc_en:'Complete 20 exams', check:emp=>(emp.sessions||[]).length>=20},
+  {id:'a_50_exams', gemColors:['#f0b830','#d09018','#ffe888'], gemShape:'crown', title:'50 exámenes', title_en:'50 exams', desc:'Completa 50 exámenes', desc_en:'Complete 50 exams', check:emp=>(emp.sessions||[]).length>=50},
+  {id:'a_perfect', gemColors:['#40b8e0','#2090b8','#a8e8ff'], gemShape:'trophy', title:'Perfección', title_en:'Perfection', desc:'Saca 100% en un examen', desc_en:'Score 100% on an exam', check:emp=>(emp.sessions||[]).some(s=>s.score===s.total)},
+  {id:'a_3_perfect', gemColors:['#f8d840','#d8b820','#fff8b0'], gemShape:'trophy', title:'Trilogía perfecta', title_en:'Triple perfection', desc:'Saca 100% en 3 exámenes', desc_en:'Score 100% on 3 exams', check:emp=>(emp.sessions||[]).filter(s=>s.score===s.total).length>=3},
+  {id:'a_know10', gemColors:['#40c870','#20a048','#90f0b0'], gemShape:'fork', title:'Conocedor', title_en:'Connoisseur', desc:'Domina 10 platos', desc_en:'Master 10 dishes', check:emp=>Object.values(emp.knownDishes||{}).filter(Boolean).length>=10},
+  {id:'a_know25', gemColors:['#48d880','#28b860','#a8f8c8'], gemShape:'fork', title:'25 especialidades', title_en:'25 specialties', desc:'Domina 25 platos', desc_en:'Master 25 dishes', check:emp=>Object.values(emp.knownDishes||{}).filter(Boolean).length>=25},
+  {id:'a_know_all', gemColors:['#f0b830','#d09018','#ffe888'], gemShape:'crown', title:'Chef de carta', title_en:'Menu Master', desc:'Domina todos los platos', desc_en:'Master all dishes', check:emp=>{const DISHES_REF=typeof DISHES!=='undefined'?DISHES:[];return DISHES_REF.length>0&&Object.values(emp.knownDishes||{}).filter(Boolean).length>=DISHES_REF.length;}},
+  {id:'a_streak3', gemColors:['#ff9040','#d97020','#ffc880'], gemShape:'flame', title:'3 días seguidos', title_en:'3-day streak', desc:'Racha de 3 días', desc_en:'3-day streak', check:emp=>(emp.streak||0)>=3},
+  {id:'a_streak7', gemColors:['#f0882e','#d06818','#ffc088'], gemShape:'flame', title:'Semana de fuego', title_en:'Fire week', desc:'Racha de 7 días', desc_en:'7-day streak', check:emp=>(emp.streak||0)>=7},
+  {id:'a_streak14', gemColors:['#f87030','#d84818','#ffb080'], gemShape:'flame', title:'Quincena dedicada', title_en:'Fortnight flame', desc:'Racha de 14 días', desc_en:'14-day streak', check:emp=>(emp.streak||0)>=14},
+  {id:'a_streak30', gemColors:['#f8d040','#d8b020','#fff0a0'], gemShape:'crown', title:'Mes dedicado', title_en:'Dedicated month', desc:'Racha de 30 días', desc_en:'30-day streak', check:emp=>(emp.streak||0)>=30},
+  {id:'a_fc50', gemColors:['#f07088','#d04860','#ffb0c0'], gemShape:'book', title:'Rey de flashcards', title_en:'Flashcard king', desc:'Repasa 50 flashcards', desc_en:'Review 50 flashcards', check:emp=>(emp.fcHistory||[]).length>=50},
+  {id:'a_fc100', gemColors:['#40d8e8','#2098b8','#90f8ff'], gemShape:'book', title:'100 flashcards', title_en:'100 flashcards', desc:'Repasa 100 flashcards', desc_en:'Review 100 flashcards', check:emp=>(emp.fcHistory||[]).length>=100},
+  {id:'a_fc200', gemColors:['#f0c030','#d0a018','#fff0a0'], gemShape:'book', title:'Maestro de flashcards', title_en:'Flashcard master', desc:'Repasa 200 flashcards', desc_en:'Review 200 flashcards', check:emp=>(emp.fcHistory||[]).length>=200},
+  {id:'a_fc500', gemColors:['#c878f0','#a850c8','#e0b8ff'], gemShape:'book', title:'500 flashcards', title_en:'500 flashcards', desc:'Repasa 500 flashcards', desc_en:'Review 500 flashcards', check:emp=>(emp.fcHistory||[]).length>=500},
+  {id:'a_allergy', gemColors:['#f09030','#d07018','#ffc888'], gemShape:'allergen', title:'Experto en alérgenos', title_en:'Allergen expert', desc:'Aprueba test de alérgenos 90%+', desc_en:'Pass allergen test 90%+', check:emp=>(emp.allergenBest||0)>=90},
+  {id:'a_allergy100', gemColors:['#f85040','#d82828','#ffa898'], gemShape:'allergen', title:'Perfección alérgenos', title_en:'Allergen perfect', desc:'100% en test de alérgenos', desc_en:'Score 100% on allergen test', check:emp=>(emp.allergenBest||0)>=100},
+  {id:'a_night', gemColors:['#6878cc','#4858a8','#a8b8f0'], gemShape:'moon', title:'Búho nocturno', title_en:'Night owl', desc:'Estudia después de las 23h', desc_en:'Study after 11PM', check:emp=>emp.nightStudy||false},
+  {id:'a_speed', gemColors:['#38c8b0','#18a890','#88f0e0'], gemShape:'lightning', title:'Rayo', title_en:'Lightning', desc:'Completa un examen en menos de 2 min', desc_en:'Complete exam in under 2 min', check:emp=>(emp.sessions||[]).some(s=>(s.time||999)<120)},
+  {id:'a_speed60', gemColors:['#40b8f0','#2088c8','#88d8ff'], gemShape:'lightning', title:'Velocidad extrema', title_en:'Extreme speed', desc:'Completa un examen en menos de 60 segundos', desc_en:'Complete exam in under 60 seconds', check:emp=>(emp.sessions||[]).some(s=>(s.time||999)<60)},
+  {id:'a_duel_win', gemColors:['#e05040','#c03028','#ffa098'], gemShape:'sword', title:'Duelista', title_en:'Duelist', desc:'Gana tu primer duelo', desc_en:'Win your first duel', check:emp=>(emp.duelWins||0)>=1},
+  {id:'a_duel3', gemColors:['#c878f0','#a850c8','#e0b8ff'], gemShape:'sword', title:'Triple duelo', title_en:'Triple duel', desc:'Gana 3 duelos', desc_en:'Win 3 duels', check:emp=>(emp.duelWins||0)>=3},
+  {id:'a_duel10', gemColors:['#f85840','#d82828','#ffb8a8'], gemShape:'sword', title:'Maestro de duelos', title_en:'Duel master', desc:'Gana 10 duelos', desc_en:'Win 10 duels', check:emp=>(emp.duelWins||0)>=10},
+  {id:'a_txoko5', gemColors:['#48d0a0','#28a880','#a8f0d0'], gemShape:'shield', title:'Zapatero novato', title_en:'Shoesmith novice', desc:'Puntúa 5+ con Mr. Shoesmith', desc_en:'Score 5+ in Mr. Shoesmith', check:emp=>(emp.txokoRecord||0)>=5},
+  {id:'a_txoko15', gemColors:['#f0b830','#d09018','#ffe888'], gemShape:'trophy', title:'Zapatero experto', title_en:'Shoesmith expert', desc:'Puntúa 15+ con Mr. Shoesmith', desc_en:'Score 15+ in Mr. Shoesmith', check:emp=>(emp.txokoRecord||0)>=15},
+  {id:'a_txoko30', gemColors:['#f85050','#d82840','#ffa8b8'], gemShape:'crown', title:'Zapatero maestro', title_en:'Shoesmith master', desc:'Puntúa 30+ con Mr. Shoesmith', desc_en:'Score 30+ in Mr. Shoesmith', check:emp=>(emp.txokoRecord||0)>=30},
+  {id:'a_protocol', gemColors:['#48d080','#28b058','#a0f8c0'], gemShape:'shield', title:'Maestro del protocolo', title_en:'Protocol master', desc:'Aprueba protocolo con 90%+', desc_en:'Pass protocol exam 90%+', check:emp=>(emp.protoBest||0)>=90},
+  {id:'a_xp500', gemColors:['#f0b840','#d08820','#ffe8a0'], gemShape:'star', title:'500 XP', title_en:'500 XP', desc:'Gana 500 puntos de experiencia', desc_en:'Earn 500 experience points', check:emp=>(emp.xp||0)>=500},
+  {id:'a_xp2000', gemColors:['#f8d040','#d8b020','#fff0a0'], gemShape:'star', title:'2000 XP', title_en:'2000 XP', desc:'Gana 2000 puntos de experiencia', desc_en:'Earn 2000 experience points', check:emp=>(emp.xp||0)>=2000},
+  {id:'a_xp5000', gemColors:['#f8b050','#d8802a','#ffe8a8'], gemShape:'crown', title:'5000 XP Elite', title_en:'5000 XP Elite', desc:'Gana 5000 puntos de experiencia', desc_en:'Earn 5000 experience points', check:emp=>(emp.xp||0)>=5000},
 ];
 
 function getUnlockedAchievements(emp){
@@ -9919,6 +10085,45 @@ function checkNewAchievements(){
       }
     });
   }
+}
+
+function showAchievementDetail(achievementId){
+  const ach=ACHIEVEMENTS.find(a=>a.id===achievementId);
+  if(!ach) return;
+  const emp=getEmp(currentUser);
+  const isUnlocked=getUnlockedAchievements(emp).map(a=>a.id).includes(achievementId);
+
+  // Close any existing modal
+  const existing=document.querySelector('.achievement-modal-overlay');
+  if(existing) existing.remove();
+
+  const overlay=document.createElement('div');
+  overlay.className='achievement-modal-overlay';
+  overlay.innerHTML=`
+    <div class="achievement-modal" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:10001">
+      <div class="achievement-modal-content">
+        <div class="achievement-modal-gem">
+          ${isUnlocked?gemSVG(ach.gemColors[0],ach.gemColors[1],ach.gemColors[2],ach.gemShape):'<div class="achievement-modal-locked">???</div>'}
+        </div>
+        <div class="achievement-modal-title">${LANG==='en'?ach.title_en:ach.title}</div>
+        <div class="achievement-modal-desc">${LANG==='en'?ach.desc_en:ach.desc}</div>
+        <div class="achievement-modal-close">${LANG==='en'?'TAP TO CLOSE':'TOCA PARA CERRAR'}</div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+
+  const closeModal=()=>{
+    overlay.classList.add('closing');
+    setTimeout(()=>overlay.remove(),300);
+  };
+
+  overlay.addEventListener('click',(e)=>{
+    if(e.target===overlay) closeModal();
+  });
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape') closeModal();
+  },{once:true});
 }
 
 function showAchievementToast(ach){
@@ -9951,106 +10156,629 @@ function renderAchievementsSection(){
         const isUnlocked=unlockedIds.includes(a.id);
         const gemIcon=gemSVG(a.gemColors[0],a.gemColors[1],a.gemColors[2],a.gemShape);
         const lockedGem=`<svg viewBox="0 0 64 64" width="38" height="38"><defs><linearGradient id="lkg_${a.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ccc" stop-opacity=".5"/><stop offset="100%" stop-color="#999" stop-opacity=".3"/></linearGradient><radialGradient id="lkr_${a.id}" cx=".4" cy=".3" r=".5"><stop offset="0%" stop-color="#ddd" stop-opacity=".3"/><stop offset="100%" stop-color="#aaa" stop-opacity="0"/></radialGradient></defs><polygon points="32,2 62,24 51,62 13,62 2,24" fill="url(#lkg_${a.id})" stroke="#bbb" stroke-width="1" opacity=".5"/><polygon points="32,2 48,24 32,17 16,24" fill="#eee" opacity=".2"/><rect x="0" y="0" width="64" height="64" fill="url(#lkr_${a.id})" opacity=".5"/><line x1="2" y1="24" x2="62" y2="24" stroke="#ccc" stroke-width=".4" opacity=".2"/><rect x="25" y="28" width="14" height="16" rx="3" fill="#b0b0b0" opacity=".3"/><rect x="27" y="30" width="10" height="12" rx="2" fill="#a0a0a0" opacity=".15"/><path d="M27,30 L27,26 Q27,20 32,20 Q37,20 37,26 L37,30" fill="none" stroke="#aaa" stroke-width="2" opacity=".35" stroke-linecap="round"/><circle cx="32" cy="37" r="1.8" fill="#999" opacity=".3"/><line x1="32" y1="37" x2="32" y2="41" stroke="#999" stroke-width="1" opacity=".25"/></svg>`;
-        const tooltip = LANG==='en'?(isUnlocked?a.title_en+': '+a.desc_en:'???'):(isUnlocked?a.title+': '+a.desc:'???');
-        return `<div class="achievement-badge ${isUnlocked?'unlocked':'locked'}" title="${tooltip}"
-          style="${isUnlocked?'cursor:pointer':''}"
-          onclick="${isUnlocked?`showGemDetail('${a.id}')`:''}"
-        ><span>${isUnlocked?gemIcon:lockedGem}</span></div>`;
+        const clickHandler=isUnlocked?`onclick="showAchievementDetail('${a.id}')"`:'';
+        return `<div class="achievement-badge ${isUnlocked?'unlocked':'locked'}" ${clickHandler} style="${isUnlocked?'cursor:pointer;':''}">
+          <span>${isUnlocked?gemIcon:lockedGem}</span>
+        </div>`;
       }).join('')}
     </div>
   </div>`;
 }
 
+// ═══════════════════════════════════════════════════
+//  LQA — LEADING QUALITY ASSURANCE
+// ═══════════════════════════════════════════════════
 
+let lqaView = 'menu';
 
-// ── Gem detail popup ──────────────────────────────
-function showGemDetail(achId){
-  const a = ACHIEVEMENTS.find(x=>x.id===achId);
-  if(!a) return;
-  const isEN = LANG==='en';
-  const title = isEN ? a.title_en : a.title;
-  const desc  = isEN ? a.desc_en  : a.desc;
-  const gemIcon = gemSVG(a.gemColors[0],a.gemColors[1],a.gemColors[2],a.gemShape);
+const LQA_CATEGORIES = [
+  {id:'reserva', title:'Reserva', title_en:'Reservation', color:'#4888a0', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>'},
+  {id:'llegada', title:'Llegada y Asiento', title_en:'Arrival & Seating', color:'#4d8a5e', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>'},
+  {id:'servicio', title:'Servicio', title_en:'Service', color:'#d4944c', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>'},
+  {id:'vino', title:'Vino y Bebidas', title_en:'Wine & Beverage', color:'#c47068', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2h8l-1 9a5 5 0 01-3 4.5A5 5 0 019 11L8 2z"/><line x1="12" y1="15.5" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>'},
+  {id:'carta', title:'Carta y Comida', title_en:'Menu & Food', color:'#c49a3c', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>'},
+  {id:'montaje', title:'Montaje del Restaurante', title_en:'Table Layout', color:'#7a6aaa', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>'},
+  {id:'comportamiento', title:'EI Comportamiento', title_en:'EI Behavioural', color:'#4d8a5e', icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'},
+];
 
-  // Remove any existing popup
-  const existing = document.getElementById('gemDetailPopup');
-  if(existing) existing.remove();
+const LQA_STANDARDS = [
+  // Reserva (1-6)
+  {id:1, cat:'reserva', std:'¿Se contestó al teléfono en 3 tonos o 10 segundos con un saludo apropiado, o en el caso de una reserva en persona se reconoció al huésped en 1 minuto, o en comunicación digital se respondió en 3 minutos?', std_en:'Was the telephone answered within 3 rings or 10 seconds with an appropriate greeting, or in-person reservation acknowledged within 1 minute, or digital communication responded within 3 minutes?', cls:'Efficiency', met:true},
+  {id:2, cat:'reserva', std:'¿Obtuvo el empleado el nombre del huésped y lo usó al menos una vez durante la conversación?', std_en:'Did the employee obtain the guest name and use it at least once during the conversation?', cls:'EI Behavioral', met:true},
+  {id:3, cat:'reserva', std:'¿Obtuvo el empleado el número de comensales, la hora de la cena y el número de teléfono/habitación?', std_en:'Did the employee obtain the number of people dining, the dining time and the telephone/room number?', cls:'Service', met:true},
+  {id:4, cat:'reserva', std:'¿Repitió el empleado los detalles para confirmarlos?', std_en:'Did the employee repeat and confirm the details?', cls:'Efficiency', met:true},
+  {id:5, cat:'reserva', std:'¿Terminó la interacción con una despedida cálida y sincera?', std_en:'Did the interaction end with a warm and sincere closing?', cls:'Service', met:true},
+  {id:6, cat:'reserva', std:'¿Preguntó el empleado si la reserva era para una ocasión especial y si tenían requisitos especiales?', std_en:'Did the employee enquire if the reservation was for a special occasion and if there were any special requirements?', cls:'Service', met:true},
+  // Llegada y Asiento (7-12)
+  {id:7, cat:'llegada', std:'¿Fue el huésped saludado y sentado en una mesa completamente montada en 1 minuto de su llegada, o si el restaurante estaba lleno, se informó del tiempo de espera y se cumplió?', std_en:'Was the guest greeted and seated at a fully laid table within 1 minute of arrival, or if full, was the wait time communicated and adhered to?', cls:'Efficiency', met:false},
+  {id:8, cat:'llegada', std:'Si el huésped tuvo que esperar, ¿reconoció el empleado la espera y se disculpó?', std_en:'If the guest was kept waiting, did the employee acknowledge this and apologize for the delay?', cls:'Service', met:true},
+  {id:9, cat:'llegada', std:'¿Ofrecieron los empleados ayuda con el asiento y retiraron las cubiertas sobrantes si fue necesario?', std_en:'Did employees offer seating assistance and remove covers if necessary?', cls:'Service', met:true},
+  {id:10, cat:'llegada', std:'¿Presentó el empleado la carta de menú/vinos en 5 minutos desde el asiento?', std_en:'Did the employee present the menu/wine list within 5 minutes of being seated?', cls:'Service', met:true},
+  {id:11, cat:'llegada', std:'Cuando la iluminación estaba tenue, ¿se ofreció una fuente de luz alternativa para el menú y gafas de lectura a petición?', std_en:'Where restaurant lighting was dimmed, was alternative lighting provided for the menu and reading glasses available on request?', cls:'Service', met:true},
+  {id:12, cat:'llegada', std:'En el caso de comida al aire libre, ¿se ofreció pashmina/manta o calefacción directa en condiciones frías?', std_en:'In the case of al fresco dining, was a pashmina/blanket or direct heating offered in cool conditions?', cls:'Service', met:true},
+  // Servicio (13-24)
+  {id:13, cat:'servicio', std:'¿Saludó un empleado al huésped en 1 minuto desde que se sentó y ofreció una bebida previa?', std_en:'Did an employee greet the guest within 1 minute of seating and offer a pre-meal drink?', cls:'Efficiency', met:true},
+  {id:14, cat:'servicio', std:'¿Explicó el empleado los especiales del día, sopas, pescados, menús con precio fijo o platos no disponibles?', std_en:'Did the employee explain any specials of the day, soups, fish, set priced menus and unavailable items?', cls:'Service', met:true},
+  {id:15, cat:'servicio', std:'Para huéspedes primerizos, ¿ofreció el empleado una breve introducción al concepto del restaurante?', std_en:'For first time guests, did the employee offer a brief introduction to the concept of the restaurant?', cls:'Service', met:false},
+  {id:16, cat:'servicio', std:'¿Sugirió automáticamente el camarero agua y determinó la preferencia del huésped (con gas/sin gas/filtrada)?', std_en:'Did the waiter automatically suggest water and ascertain the guest preference (still/sparkling/filtered)?', cls:'Sales Opportunity', met:true},
+  {id:17, cat:'servicio', std:'¿Se promovió agua mineral local o agua filtrada del hotel?', std_en:'Was local mineral water or hotel filtered bottled water promoted?', cls:'Sustainability', met:true},
+  {id:18, cat:'servicio', std:'¿Se tomó la comanda de comida y bebida en 10 minutos de recibir el menú?', std_en:'Was the food and beverage order taken within 10 minutes of menu being offered?', cls:'Efficiency', met:true},
+  {id:19, cat:'servicio', std:'¿Pudo el empleado responder a cualquier pregunta sobre el menú, ingredientes y alérgenos?', std_en:'Was the employee able to answer any questions about the menu, ingredients and allergies?', cls:'Service', met:true},
+  {id:20, cat:'servicio', std:'¿Acomodó el empleado solicitudes razonables fuera de carta?', std_en:'Did the employee accommodate any reasonable off menu requests?', cls:'Service', met:true},
+  {id:21, cat:'servicio', std:'¿Obtuvo el empleado una comanda completa (instrucciones de cocción, acompañamientos, etc.)?', std_en:'Did the employee obtain a full and complete order (cooking instructions, accompaniments etc.)?', cls:'Efficiency', met:false},
+  {id:22, cat:'servicio', std:'Si se indicaron requisitos dietéticos especiales durante la estancia, ¿se reconocieron automáticamente?', std_en:'If special dietary requirements were provided during stay, were they automatically acknowledged?', cls:'Service', met:true},
+  {id:23, cat:'servicio', std:'¿Sugirió automáticamente el camarero un entrante y guarniciones para cada huésped?', std_en:'Did the waiter automatically suggest a starter and side orders for each guest?', cls:'Sales Opportunity', met:true},
+  {id:24, cat:'servicio', std:'¿Se sirvieron pan/bollos o equivalente de cocina de especialidad de excelente calidad?', std_en:'Were bread/rolls or specialty cuisine equivalent served, of excellent quality?', cls:'Food Quality', met:true},
+  // Vino y Bebidas (25-49)
+  {id:25, cat:'vino', std:'¿Tenía el empleado/sommelier buen conocimiento de vinos y recomendó un vino adecuado para acompañar la comida?', std_en:'Did the employee/sommelier have good product knowledge of wines and recommend a suitable wine?', cls:'Sales Opportunity', met:true},
+  {id:26, cat:'vino', std:'¿Se sirvieron las bebidas correctas en 5 minutos del pedido (8 minutos para cócteles)?', std_en:'Was the correct drinks order served within 5 minutes of order (8 minutes for cocktails) unless advised of delay?', cls:'Efficiency', met:true},
+  {id:27, cat:'vino', std:'¿Se sirvieron y retiraron las bebidas usando bandeja?', std_en:'Were drinks served and cleared using a tray?', cls:'Service', met:false},
+  {id:28, cat:'vino', std:'¿Se sirvió el entrante en 15 minutos del pedido o del curso previo?', std_en:'Was the starter served within 15 minutes of order or previous course?', cls:'Efficiency', met:true},
+  {id:29, cat:'vino', std:'¿Se sirvió el plato principal en 20 minutos del entrante o 30 minutos si no se pidió entrante?', std_en:'Was the main course served within 20 minutes of starter or 30 minutes if no starter?', cls:'Efficiency', met:true},
+  {id:30, cat:'vino', std:'¿Se sirvieron todos los platos con mínima interrupción y el pedido correcto a cada huésped sin preguntar?', std_en:'Were all plated items served with minimal disruption and correct order to each guest without prompting?', cls:'Service', met:true},
+  {id:31, cat:'vino', std:'¿Se ofrecieron todos los condimentos/salsas apropiados y se sirvieron en recipientes adecuados?', std_en:'Were all appropriate condiments/sauces offered and served in appropriate containers?', cls:'Service', met:true},
+  {id:32, cat:'vino', std:'¿Se retiraron los platos en 5 minutos de que los huéspedes terminaran?', std_en:'Were dishes cleared within 5 minutes of guests finishing their meals?', cls:'Efficiency', met:true},
+  {id:33, cat:'vino', std:'¿Retiró el camarero plato lateral, cuchillo, mantequilla y cruets y después recogió las migas al completar el plato principal?', std_en:'Did the waiter remove side plate, side knife, butter and cruets and then crumb down the table on completion of the main course?', cls:'Service', met:true},
+  {id:34, cat:'vino', std:'¿Ofreció automáticamente el camarero los postres, verbalmente o presentando el menú?', std_en:'Did the waiter automatically offer desserts, either verbally or by presenting the menu?', cls:'Sales Opportunity', met:true},
+  {id:35, cat:'vino', std:'¿Se sirvió el postre en 10 minutos del pedido?', std_en:'Was the dessert served within 10 minutes of order being taken?', cls:'Efficiency', met:true},
+  {id:36, cat:'vino', std:'¿Ofreció automáticamente el camarero café/té y aclaró la preferencia (capuchino, espresso, etc.)?', std_en:'Did the waiter automatically offer coffee/tea and clarify the preference?', cls:'Sales Opportunity', met:true},
+  {id:37, cat:'vino', std:'¿Se sirvió el café/té en 5 minutos del pedido?', std_en:'Was the coffee/tea served within 5 minutes of order?', cls:'Efficiency', met:true},
+  {id:38, cat:'vino', std:'¿Se ofreció leche/nata y azúcar completo (blanco, moreno, edulcorante/stevia) con un dulce acompañante?', std_en:'Were milk/cream and full sugar selection offered with a sweet accompaniment (cookie, petit four)?', cls:'Product', met:true},
+  {id:39, cat:'vino', std:'En restaurante formal, ¿sugirió el camarero vino de postre y/o bebidas post-comida?', std_en:'In formal restaurant, did the waiter suggest dessert wine and/or post-meal drinks?', cls:'Sales Opportunity', met:true},
+  {id:40, cat:'vino', std:'¿Visitó un empleado la mesa para comprobar si el servicio era satisfactorio?', std_en:'Did an employee visit the table to ascertain if service was satisfactory?', cls:'Service', met:true},
+  {id:41, cat:'vino', std:'¿Estaba la cuenta claramente desglosada, correcta y presentada puntualmente en un portacuentas limpio y en buen estado?', std_en:'Was the bill clearly itemized, correct and promptly presented in a clean billfold in good condition?', cls:'Efficiency', met:false},
+  {id:42, cat:'vino', std:'¿Ofreció el empleado una despedida sincera y mostró agradecimiento al final de la conversación?', std_en:'Did the employee offer a sincere farewell and show appreciation at the end?', cls:'Service', met:true},
+  {id:43, cat:'vino', std:'¿Presentó el camarero el vino al huésped y abrió la botella en la mesa (o sistema Enomatic)?', std_en:'Did the waiter present the wine to the guest and open the bottle at the table?', cls:'Service', met:true},
+  {id:44, cat:'vino', std:'¿Sirvió el camarero una pequeña cantidad para probar y tras confirmar, llenó la copa adecuadamente?', std_en:'Did the waiter pour a small amount for tasting and upon confirmation, fill the glass accordingly?', cls:'Service', met:true},
+  {id:45, cat:'vino', std:'¿Se sirvió el vino tinto a temperatura ambiente y el blanco/rosado fríos?', std_en:'Was red wine served at room temperature and white/rosé wine chilled?', cls:'Service', met:true},
+  {id:46, cat:'vino', std:'¿Rellenó el camarero la copa según fue necesario?', std_en:'Did the waiter top up the glass as required?', cls:'Service', met:true},
+  {id:47, cat:'vino', std:'¿Ofreció automáticamente el camarero una botella adicional de vino/agua al terminar la primera?', std_en:'Did the waiter automatically offer an additional bottle of wine/water upon completion of the first?', cls:'Sales Opportunity', met:true},
+  {id:48, cat:'vino', std:'¿Se sirvió la bebida delante del huésped (no pre-servida), excepto cócteles?', std_en:'Was the beverage poured in front of the guest (not pre-poured), except for cocktails?', cls:'Service', met:true},
+  {id:49, cat:'vino', std:'¿Ofreció el camarero una bebida adicional en 2 minutos de que la copa estuviera vacía?', std_en:'Did the waiter offer an additional beverage within 2 minutes of drink being empty?', cls:'Sales Opportunity', met:true},
+  // Carta y Comida (50-59)
+  {id:50, cat:'carta', std:'¿Estaba la carta/lista de vinos limpia, en buen estado, gramaticalmente correcta y fácil de leer?', std_en:'Was the menu/wine list clean, in good repair, grammatically correct and easy to read?', cls:'Product', met:false},
+  {id:51, cat:'carta', std:'¿Había al menos dos entrantes, dos principales y un postre con opciones veganas, sin gluten y sin lactosa?', std_en:'Were at least two starters, two main courses and one dessert available with vegan, gluten-free and lactose-free options?', cls:'Sustainability', met:true},
+  {id:52, cat:'carta', std:'¿Se presentó la comida de forma atractiva y se parecía a la descripción del menú?', std_en:'Was the food presented in an appealing manner and did it resemble the menu description?', cls:'Food Quality', met:true},
+  {id:53, cat:'carta', std:'¿Estaba la comida fresca y de buen sabor?', std_en:'Was the food fresh and of good flavor?', cls:'Food Quality', met:true},
+  {id:54, cat:'carta', std:'¿Era la textura de la comida apropiada?', std_en:'Was the texture of the food appropriate?', cls:'Food Quality', met:true},
+  {id:55, cat:'carta', std:'¿Se cocinó la comida como se pidió y se sirvió a la temperatura correcta?', std_en:'Was the food cooked as requested and served at the correct temperature?', cls:'Food Quality', met:true},
+  {id:56, cat:'carta', std:'¿Había opción de pescado/marisco de origen sostenible indicada en el menú o por el empleado?', std_en:'Was the option of locally sourced/sustainably certified fish stated on menu or advised by employee?', cls:'Sustainability', met:true},
+  {id:57, cat:'carta', std:'¿Había comida local disponible indicada en el menú o por el empleado?', std_en:'Was locally sourced food available and stated on menu or advised by employee?', cls:'Sustainability', met:true},
+  {id:58, cat:'carta', std:'¿Había selección de tés/cafés de especialidad y estaban calientes y recién preparados?', std_en:'Was a selection of specialty teas/coffees available and were they hot and freshly brewed?', cls:'Food Quality', met:true},
+  {id:59, cat:'carta', std:'¿Eran el té y café de origen sostenible/certificado, indicado en el menú o por el empleado?', std_en:'Were tea and coffee locally sourced/sustainably certified and stated on menu or advised by employee?', cls:'Sustainability', met:true},
+  // Montaje del Restaurante (60-67)
+  {id:60, cat:'montaje', std:'¿Proporcionaba el establecimiento un ambiente cómodo (mesas espaciadas, temperatura confortable, música a nivel apropiado)?', std_en:'Did the outlet provide a comfortable dining experience (tables spaced, temperature comfortable, music at appropriate level)?', cls:'Product', met:true},
+  {id:61, cat:'montaje', std:'¿Estaban todas las mesas consistentemente montadas y se recogieron/remontaron en 5 minutos cuando los huéspedes se fueron?', std_en:'Were all tables consistently laid up and promptly cleared and re-laid within 5 minutes when guests departed?', cls:'Efficiency', met:false},
+  {id:62, cat:'montaje', std:'¿Estaba el mantel/individual limpio, planchado y sin manchas ni roturas?', std_en:'Was the tablecloth/place mat clean, pressed and free of any stains/tears?', cls:'Product', met:true},
+  {id:63, cat:'montaje', std:'¿Eran la cubertería, vajilla y cristalería correctas, limpias y en buen estado?', std_en:'Were the correct cutlery, crockery and glassware provided, clean and in good repair?', cls:'Product', met:false},
+  {id:64, cat:'montaje', std:'¿Estaban todos los alimentos y bebidas libres de plástico de un solo uso?', std_en:'Were all food and beverages free of single-use plastic?', cls:'Sustainability', met:true},
+  {id:65, cat:'montaje', std:'¿Se proporcionó toda el agua en botellas de cristal o recipientes eco-amigables?', std_en:'Was all water provided in glass bottles or alternative eco-friendly containers only?', cls:'Sustainability', met:true},
+  {id:66, cat:'montaje', std:'Si se proporcionó mantequilla/aceite de oliva, ¿estaba fresco y bien presentado?', std_en:'If butter/olive oil was provided, was it fresh and well presented?', cls:'Food Quality', met:true},
+  {id:67, cat:'montaje', std:'¿Había saleros y pimenteros disponibles u ofrecidos, y estaban limpios y llenos?', std_en:'Were salt and pepper cruets available or offered, and were they clean and full?', cls:'Product', met:false},
+  // EI Comportamiento (68-80)
+  {id:68, cat:'comportamiento', std:'¿Estaban los empleados bien arreglados y con uniformes limpios, bien ajustados, con identificación visible, dando una primera impresión positiva?', std_en:'Were employees well groomed and neatly presented in clean, well fitted uniforms, wearing name badges, resulting in a positive first impression?', cls:'EI Behavioral', met:false},
+  {id:69, cat:'comportamiento', std:'¿Era el habla del empleado clara y su uso del inglés satisfactorio, permitiendo conversación bidireccional?', std_en:'Was the employee speech clear and use of English satisfactory, enabling two-way conversation?', cls:'EI Behavioral', met:true},
+  {id:70, cat:'comportamiento', std:'¿Se comunicaron los empleados de forma natural, sin guion, amigable e interesada?', std_en:'Did employees engage in a well-paced, natural, jargon-free, friendly and interested manner?', cls:'EI Behavioral', met:true},
+  {id:71, cat:'comportamiento', std:'¿Usó el empleado el nombre del huésped de forma natural y sin abusar?', std_en:'Did the employee use the guest name naturally and discreetly without overusing it?', cls:'EI Behavioral', met:true},
+  {id:72, cat:'comportamiento', std:'¿Mostró el empleado un alto nivel de confianza y conocimiento al llevar platos o responder preguntas sobre instalaciones del hotel?', std_en:'Did the employee display a high level of confidence and knowledge when carrying out duties or answering questions about hotel facilities?', cls:'EI Behavioral', met:false},
+  {id:73, cat:'comportamiento', std:'¿Fue el servicio anticipativo/intuitivo, pensando en necesidades futuras del huésped?', std_en:'Was service anticipatory/intuitive with the employee thinking ahead to act on guest needs?', cls:'EI Behavioral', met:true},
+  {id:74, cat:'comportamiento', std:'¿Se adaptó el empleado a una situación cambiante o necesidad del huésped?', std_en:'Did the employee adapt to a changing situation and/or guest need?', cls:'EI Behavioral', met:true},
+  {id:75, cat:'comportamiento', std:'¿Hizo el empleado todo lo posible para cumplir las peticiones del huésped u ofrecer una alternativa adecuada?', std_en:'Did the employee make every effort to meet guest requests or offer a suitable alternative?', cls:'EI Behavioral', met:true},
+  {id:76, cat:'comportamiento', std:'¿Personalizó un empleado la interacción y se dirigió al huésped como individuo?', std_en:'Did an employee personalize the interaction and engage the guest as an individual?', cls:'EI Behavioral', met:true},
+  {id:77, cat:'comportamiento', std:'¿Colaboraron los empleados sin problemas para que el servicio fuera organizado y profesional?', std_en:'Did employees collaborate seamlessly to ensure service was organized and professional?', cls:'EI Behavioral', met:true},
+  {id:78, cat:'comportamiento', std:'¿Escuchó activamente el empleado, evitó interrumpir y dio atención completa al huésped?', std_en:'Did the employee actively listen, avoid interrupting and give the guest undivided attention?', cls:'EI Behavioral', met:true},
+  {id:79, cat:'comportamiento', std:'¿Mantuvieron los empleados posturas alertas y respetaron la presencia del huésped al interactuar entre ellos?', std_en:'Did employees maintain alert postures and respect the guest presence when interacting with each other?', cls:'EI Behavioral', met:true},
+  {id:80, cat:'comportamiento', std:'Cuando fue aplicable, ¿mostró el empleado autocontrol y empatía en interacciones difíciles y ofreció una resolución adecuada?', std_en:'Where applicable, did the employee display self-control and empathy in challenging interactions and offer a suitable resolution?', cls:'EI Behavioral', met:true},
+];
 
-  const popup = document.createElement('div');
-  popup.id = 'gemDetailPopup';
-  popup.style.cssText = [
-    'position:fixed','inset:0','z-index:9999',
-    'background:rgba(20,16,10,.75)',
-    'backdrop-filter:blur(8px)',
-    '-webkit-backdrop-filter:blur(8px)',
-    'display:flex','align-items:center','justify-content:center',
-    'padding:1.5rem'
-  ].join(';');
+const LQA_SITUATIONS = [
+  {id:1, cat:'llegada', scn:'Un huésped llega pero la mesa aún no está completamente montada. Tiene sitios para 4 personas pero falta cubertería.', scn_en:'A guest arrives but the table isn\'t fully set up yet. It\'s set for 4 people but cutlery is missing.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Acomodar al huésped y obtener la cubertería rápidamente','Pedir al huésped que espere 10 minutos mientras terminas de montar la mesa','Ofrecerle una bebida de bienvenida y después montar la mesa','Disculparse por el inconveniente sin ofrecer solución'], opts_en:['Seat the guest and quickly obtain the missing cutlery','Ask the guest to wait 10 minutes while you finish setting the table','Offer a welcome drink and then set the table','Apologize for the inconvenience without offering a solution'], corr:0, expl:'El estándar #7 requiere que el huésped sea saludado y sentado en una mesa completamente montada en 1 minuto. Si falta cubertería, la mesa no está completamente lista. Lo correcto es acomodar al huésped y completar el montaje rápidamente.', expl_en:'Standard #7 requires the guest be greeted and seated at a fully laid table within 1 minute. If cutlery is missing, the table is not fully ready. The correct action is to seat the guest and quickly complete the setup.', real:true},
+  {id:2, cat:'servicio', scn:'Es la primera vez que unos huéspedes vienen al restaurante. Se sientan y esperan que empieces a hablar.', scn_en:'First-time guests sit down at the restaurant. They settle in and wait for you to speak.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Buscar al maître para que le haga la introducción','Dar una breve introducción calorosa al concepto del restaurante y sus valores','Ofrecer agua e inmediatamente presentar la carta','Preguntar si es su primera vez (aunque es obvio) y pasar directamente a bebidas'], opts_en:['Find the head waiter to do the introduction','Give a warm brief introduction to the restaurant\'s concept and values','Offer water and immediately present the menu','Ask if it\'s their first time (though it\'s obvious) and move to drinks'], corr:1, expl:'El estándar #15 explícitamente dice que para huéspedes primerizos debe ofrecerse una breve introducción al concepto del restaurante. Este es un momento valioso para EI Behavioral.', expl_en:'Standard #15 explicitly states that first-time guests should be offered a brief introduction to the restaurant concept. This is a valuable EI Behavioral moment.', real:true},
+  {id:3, cat:'servicio', scn:'Traes un plato principal a una mesa. El huésped te pregunta: "¿Tiene alérgenos este plato?" y tú no estás seguro de todos los ingredientes exactos.', scn_en:'You bring a main course to a table. The guest asks: "Does this have any allergens?" and you\'re not 100% sure of all ingredients.', q:'¿Cuál es la mejor respuesta?', q_en:'What is the best response?', opts:['Leer la descripción del menú en lugar de saber exactamente qué contiene','Prometer volver en 2 minutos con información precisa del chef','Decir "No creo que tenga alérgenos" y marcharte rápidamente','Sugerir que pruebe un poco primero, ya que verá si le sienta mal'], opts_en:['Read the menu description instead of knowing exact contents','Promise to return within 2 minutes with accurate information from the chef','Say "I don\'t think it has allergens" and leave quickly','Suggest they try a bit first since they\'ll see if it bothers them'], corr:1, expl:'El estándar #21 requiere una comanda COMPLETA con instrucciones claras. El estándar #19 requiere que puedas responder preguntas sobre ingredientes y alérgenos. Si no estás seguro, debes ir al chef para obtener información precisa.', expl_en:'Standard #21 requires a COMPLETE order with clear instructions. Standard #19 requires you to answer questions about menu items, ingredients and allergies. If unsure, go to the chef for accurate information.', real:true},
+  {id:4, cat:'vino', scn:'Observas que los platos principales están vacíos y los vasos de vino también. El cliente está en una conversación importante.', scn_en:'You notice the main course plates are empty and wine glasses are too. The guest is in an important conversation.', q:'¿Cuándo y cómo deberías actuar?', q_en:'When and how should you act?', opts:['Retirar los platos uno por uno con la mano en lugar de bandeja','Inmediatamente retirar los platos sin interrumpir y usar bandeja','Interrumpir delicadamente la conversación para confirmar si han terminado','Esperar a que terminen de hablar, entonces retirar TODO de una vez'], opts_en:['Remove plates one at a time by hand instead of using a tray','Immediately remove plates without interrupting and use a tray','Gently interrupt their conversation to confirm they\'re finished','Wait until they finish talking then clear everything at once'], corr:1, expl:'El estándar #32 requiere retirar platos en 5 minutos de que terminen. El estándar #27 requiere usar bandeja para servir Y retirar bebidas. Ser anticipativo (#73) significa no interrumpir pero estar listo.', expl_en:'Standard #32 requires clearing dishes within 5 minutes of guests finishing. Standard #27 requires using a tray for both serving and clearing beverages. Being anticipatory (#73) means not interrupting but being ready.', real:true},
+  {id:5, cat:'vino', scn:'Es hora de llevar la cuenta. Observas que el portacuentas está ligeramente desgastado y decolorado.', scn_en:'It\'s time to bring the bill. You notice the billfold is slightly worn and discolored.', q:'¿Qué deberías haber hecho?', q_en:'What should you have done?', opts:['Traer la cuenta sin portacuentas, directamente en la mesa','Traer la cuenta en una carpeta de plástico en su lugar','Buscar otro portacuentas en mejor estado antes de traer la cuenta','Traer la cuenta en ese portacuentas porque está limpio'], opts_en:['Bring the bill without a billfold directly on the table','Bring the bill in a plastic folder instead','Find another billfold in better condition before bringing the bill','Bring the bill in that billfold because it\'s clean'], corr:2, expl:'El estándar #41 especifica que la cuenta debe presentarse "en un portacuentas LIMPIO Y EN BUEN ESTADO". Un portacuenta desgastado o decolorado no cumple este estándar. La presentación final es crítica.', expl_en:'Standard #41 specifies the bill must be presented "in a clean billfold in good condition". A worn or discolored billfold doesn\'t meet this standard. The final presentation is critical.', real:true},
+  {id:6, cat:'carta', scn:'Observas que la cubierta exterior de la carta tiene una mancha de vino vieja. La página interior está limpia.', scn_en:'You notice the menu cover has an old wine stain on it. The inside pages are clean.', q:'¿Qué significaría esto según los estándares LQA?', q_en:'What would this mean according to LQA standards?', opts:['Es un problema menor que no afecta la calidad de servicio','Solo incumple si el cliente se queja directamente','Incumple el estándar #50 - la carta debe estar limpia y en buen estado','Es aceptable porque el interior está limpio'], opts_en:['It\'s a minor issue that doesn\'t affect service quality','It only violates the standard if the guest complains','It violates standard #50 - the menu must be clean and in good condition','It\'s acceptable because the inside is clean'], corr:2, expl:'El estándar #50 requiere que la carta esté "LIMPIA, EN BUEN ESTADO, gramaticalmente correcta y fácil de leer". Una mancha visible en la cubierta incumple este requisito, sin importar lo que haya dentro.', expl_en:'Standard #50 requires the menu to be "CLEAN, in good repair, grammatically correct and easy to read". A visible stain on the cover violates this requirement, regardless of what\'s inside.', real:true},
+  {id:7, cat:'montaje', scn:'Observas que dos mesas en el mismo comedor están montadas de formas diferentes: una tiene copas pequeñas y la otra grandes; una tiene platos de pan y la otra no.', scn_en:'You notice two tables in the same dining room are set up differently: one has small glasses and the other large ones; one has bread plates and the other doesn\'t.', q:'¿Cuál es el problema?', q_en:'What is the problem?', opts:['Habría que revisar con los clientes qué prefieren','Es un detalle menor mientras se mantenga la limpieza','Incumple el estándar #61 - todas las mesas deben estar montadas de forma consistente','No hay problema - cada mesa debe ser personalizada según los huéspedes'], opts_en:['You should ask the clients what they prefer','It\'s a minor detail as long as cleanliness is maintained','It violates standard #61 - all tables must be consistently laid up','There\'s no problem - each table should be personalized per guest'], corr:2, expl:'El estándar #61 exige que "TODAS LAS MESAS estén consistentemente montadas". Esto es parte del estándar de Producto y experiencia de marca. La inconsistencia comunica falta de control.', expl_en:'Standard #61 requires "ALL TABLES be consistently laid up". This is part of the Product standard and brand experience. Inconsistency communicates lack of control.', real:true},
+  {id:8, cat:'montaje', scn:'Necesitas servirle agua a 6 huéspedes pero te faltan 2 copas de agua que coincidan con el resto. Hay 2 copas diferentes de otro juego de cristalería.', scn_en:'You need to serve water to 6 guests but you\'re missing 2 matching water glasses. There are 2 different glasses from another set available.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Decir al cliente que no hay suficientes vasos de agua del mismo tipo','Servir a 4 personas primero y después a las otras 2 con los vasos correctos','Buscar o preparar 2 vasos que coincidan antes de servir','Servir con los 2 vasos diferentes - son solo vasos de agua'], opts_en:['Tell the guest there aren\'t enough matching water glasses','Serve 4 guests first then the other 2 with matching glasses later','Find or prepare 2 matching glasses before serving','Serve with the 2 different glasses - they\'re just water glasses'], corr:2, expl:'El estándar #63 requiere que la cubertería, vajilla y cristalería sean CORRECTAS, LIMPIAS Y EN BUEN ESTADO. Mezclar juegos de cristalería incumple el requisito de ser "correcto". La consistencia visual es parte del estándar de Producto.', expl_en:'Standard #63 requires cutlery, crockery and glassware be CORRECT, CLEAN and in good repair. Mixing glassware sets violates the "correct" requirement. Visual consistency is part of the Product standard.', real:true},
+  {id:9, cat:'montaje', scn:'Acabas de limpiar una mesa para nuevos clientes. Las servilletas están en la copa, la cubertería está colocada. Pero observas que no hay ni saleros ni pimenteros en la mesa.', scn_en:'You\'ve just cleared a table for new guests. Napkins are in the glass, cutlery is placed. But you notice there are no salt or pepper shakers on the table.', q:'¿Es importante ofrecerlos o dejarlos en la mesa?', q_en:'Is it important to offer them or leave them on the table?', opts:['Es solo un detalle menor de confort','Solo necesarios si el plato lo requiere específicamente','Sí - el estándar #67 requiere que estén disponibles u ofrecidos, limpios y llenos','No es necesario - los huéspedes los pedirán si los necesitan'], opts_en:['It\'s just a minor comfort detail','Only necessary if the specific dish requires them','Yes - standard #67 requires they be available or offered, clean and full','Not necessary - guests will ask if they need them'], corr:2, expl:'El estándar #67 es explícito: "¿Había saleros y pimenteros disponibles u ofrecidos, y estaban limpios y llenos?" No es opcional. O están en la mesa u ofrecen verbalmente al momento.', expl_en:'Standard #67 is explicit: "Were salt and pepper cruets available or offered, and were they clean and full?" It\'s not optional. They must either be on the table or offered verbally at seating.', real:true},
+  {id:10, cat:'comportamiento', scn:'Es hora de servir a la mesa y observas que tienes una mancha de vino en tu camisa, claramente visible.', scn_en:'It\'s time to serve the table and you realize you have a wine stain on your shirt, clearly visible.', q:'¿Deberías continuar sirviendo o cambiar de uniforme?', q_en:'Should you continue serving or change uniforms?', opts:['Disculparse por la mancha ante los huéspedes','Servir rápidamente y alejarse para que no lo vean','Cambiar de uniforme antes de servir a la mesa','Continuar sirviendo - es solo una mancha pequeña'], opts_en:['Apologize to the guests for the stain','Serve quickly and leave so they don\'t see it','Change uniforms before serving the table','Continue serving - it\'s just a small stain'], corr:2, expl:'El estándar #68 requiere "empleados bien arreglados y con uniformes LIMPIOS, bien ajustados, con identificación visible". Una mancha visible incumple este requisito. La presentación personal es un estándar EI Behavioral crítico para la primera impresión.', expl_en:'Standard #68 requires "employees well groomed and neatly presented in CLEAN, well fitted uniforms". A visible stain violates this. Personal presentation is a critical EI Behavioral standard for first impression.', real:true},
+  {id:11, cat:'vino', scn:'Un huésped pide vino blanco. La botella llega muy fría. El huésped dice: "Prefiero que esté menos frío."', scn_en:'A guest orders a white wine. The bottle arrives chilled. The guest says "I prefer it less cold."', q:'¿Cuál es la mejor acción?', q_en:'What is the best action?', opts:['Traer una cubeta con hielo para que se enfríe aún más lentamente','Decir que el vino blanco debe servirse frío y que ya está correcto','Dejar la botella en la mesa a temperatura ambiente gradualmente','Ofrecer inmediatamente colocar la botella en agua tibia para temperarla'], opts_en:['Bring an ice bucket so it cools more slowly','Say that white wine must be served cold and it\'s already correct','Leave the bottle on the table to gradually reach room temperature','Immediately offer to place the bottle in warm water to temper it'], corr:3, expl:'El estándar #47 requiere anticipar y resolver preferencias del huésped. Aunque el estándar #45 especifica temperaturas correctas, la preferencia del cliente es prioritaria. La solución correcta es ofrecer temperarla de manera controlada.', expl_en:'Standard #47 requires anticipating and resolving guest preferences. Although standard #45 specifies correct temperatures, guest preference takes priority. The correct solution is to offer controlled tempering.', real:false},
+  {id:12, cat:'comportamiento', scn:'Es una mesa en una terraza exterior. Observas que un huésped se está frotando los brazos pero no ha dicho nada sobre el frío.', scn_en:'It\'s an outdoor table on a terrace. You notice a guest rubbing their arms but hasn\'t mentioned being cold.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Ofrecerle una manta o calefactor antes de que lo pida','Esperar a que el huésped se queje del frío','Preguntar si tiene frío en tono casual','Ignorar el comportamiento y continuar con el servicio normal'], opts_en:['Offer them a blanket or heater before they ask','Wait until the guest complains about being cold','Casually ask if they\'re feeling cold','Ignore the behavior and continue normal service'], corr:0, expl:'El estándar #73 requiere servicio ANTICIPATORIO. Detectar signos no verbales y ofrecer soluciones sin esperar a que el cliente pida es EI Behavioral crítico. Esta es una oportunidad para demostrar excelencia.', expl_en:'Standard #73 requires ANTICIPATORY service. Detecting non-verbal signs and offering solutions without waiting for the client to ask is critical EI Behavioral. This is an opportunity to demonstrate excellence.', real:false},
+  {id:13, cat:'vino', scn:'Estás sirviendo a una mesa de 8 personas. Un huésped pide una recomendación de vino para su plato de pescado. El sommelier está ocupado en otra sección.', scn_en:'You\'re serving a table of 8 people. A guest asks for a wine recommendation for their fish dish. The sommelier is busy in another section.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Dar una recomendación básica (vino blanco seco o espumante) o buscar al sommelier','Decir: "No sé de vinos, debe esperar al sommelier"','Cambiar de tema y sugerir agua en su lugar','Buscar cualquier botella de vino blanco y presentarla como la mejor opción'], opts_en:['Give a basic recommendation (dry white or sparkling) or find the sommelier','Say: "I don\'t know about wine, you\'ll have to wait for the sommelier"','Change the subject and suggest water instead','Find any white wine bottle and present it as the best option'], corr:0, expl:'El estándar #54 requiere que el personal conozca opciones de vino básicas. El estándar #72 requiere confianza. Si no estás seguro, puedes dar una opción básica o traer al sommelier. Nunca digas que no sabes.', expl_en:'Standard #54 requires staff to know basic wine options. Standard #72 requires confidence. If unsure, you can give a basic option or bring the sommelier. Never say you don\'t know.', real:false},
+  {id:14, cat:'servicio', scn:'Un huésped dice: "Este es el mejor filete que he comido en mi vida."', scn_en:'A guest says: "This is the best steak I\'ve ever had."', q:'¿Cuál es la respuesta ideal según LQA?', q_en:'What is the ideal response according to LQA?', opts:['Preguntarle si quiere hablar directamente con el chef','Simplemente decir: "Gracias, le diremos al chef"','Aceptar el cumplido y continuar con el servicio','Usar el cumplido como oportunidad para ofrecer postre o digestivo'], opts_en:['Ask if they want to speak directly with the chef','Simply say: "Thank you, we\'ll tell the chef"','Accept the compliment and continue service','Use the compliment as an opportunity to offer dessert or digestif'], corr:3, expl:'El estándar #75 (EI Behavioral - Service Recovery and Upsell) requiere aprovechar momentos positivos para mejorar la experiencia. Un cumplido es una puerta abierta para ofrecer más. Esto demuestra servicio consultivo.', expl_en:'Standard #75 (EI Behavioral - Service Recovery and Upsell) requires leveraging positive moments to enhance the experience. A compliment is an open door to offer more. This demonstrates consultative service.', real:false},
+  {id:15, cat:'comportamiento', scn:'Ves a un compañero cargando demasiados platos y está luchando. Tus mesas están servidas y todos están cómodos.', scn_en:'You see a colleague carrying too many plates and struggling. Your tables are all served and comfortable.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Enfocarte en tus propias responsabilidades y tareas','Esperar a ver si el compañero pide ayuda específicamente','Llamar la atención del gerente para que ayude','Ayudar al compañero de forma discreta sin que los clientes lo noten'], opts_en:['Focus on your own responsibilities and tasks','Wait to see if the colleague asks for specific help','Call the manager to help','Help your colleague discreetly without guests noticing'], corr:3, expl:'El estándar #73 (Anticipatory Service) también aplica al trabajo en equipo. El estándar #70 requiere apoyo entre empleados y teamwork. Ayudar de forma discreta es parte de la excelencia operacional y demuestra liderazgo.', expl_en:'Standard #73 (Anticipatory Service) also applies to teamwork. Standard #70 requires employee support and teamwork. Helping discreetly is part of operational excellence and demonstrates leadership.', real:false},
+  {id:16, cat:'vino', scn:'Son las 10:35 PM. Un huésped ya terminó el plato principal hace 12 minutos. El postre aún no ha salido de la cocina. El cliente no ha reclamado.', scn_en:'It\'s 10:35 PM. A guest finished their main course 12 minutes ago. The dessert hasn\'t come out yet. The guest hasn\'t complained.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Esperar a que el cliente pida el postre','Informar al cliente proactivamente que el postre está en preparación','Preguntar si desean el postre','Cambiar automáticamente el postre por un digestivo rápido'], opts_en:['Wait until the guest asks for dessert','Proactively inform the guest that dessert is being prepared','Ask if they want dessert','Automatically switch the dessert for a quick digestif'], corr:1, expl:'El estándar #35 dice que el postre debe llegar en 10 minutos máximo. A los 12 minutos, ya es tardío. El estándar #73 (Anticipatory Service) requiere comunicar proactivamente cuando hay un delay. Debes informar al cliente y ofrecer opciones.', expl_en:'Standard #35 says dessert must arrive within 10 minutes maximum. At 12 minutes, it\'s late. Standard #73 (Anticipatory Service) requires proactively communicating delays. You must inform the guest and offer options.', real:false},
+  {id:17, cat:'llegada', scn:'Un cliente VIP habitual llega sin reserva en una noche completamente llena. No hay mesas disponibles.', scn_en:'A regular VIP guest arrives without a reservation on a fully booked night. There are no tables available.', q:'¿Cuál es la mejor acción?', q_en:'What is the best action?', opts:['Sugerir que regresen otro día cuando haya disponibilidad','Disculparse pero informar que está imposible sentarlos','Preguntar al gerente si es posible crear una mesa o dar un tiempo de espera','Ofrecerles una bebida en la barra mientras se busca solución creativa'], opts_en:['Suggest they return another day when there\'s availability','Apologize but inform them it\'s impossible to seat them','Ask the manager if it\'s possible to create a table or offer a wait time','Offer them a drink at the bar while seeking a creative solution'], corr:3, expl:'El estándar #6 y #11 requieren que clientes VIP reciban trato diferenciado. El estándar #73 (Anticipatory) requiere pensar creativo. La acción correcta es no dejarlos ir: ofrece bebida de bienvenida y busca soluciones (mover mesa, crear espacio, ofrecerles la mejor opción disponible).', expl_en:'Standard #6 and #11 require VIP customers receive differentiated treatment. Standard #73 (Anticipatory) requires creative thinking. The correct action is not to let them leave: offer a welcome drink and seek solutions (relocate a table, create space, offer the best available option).', real:false},
+  {id:18, cat:'comportamiento', scn:'Una familia con un niño pequeño (6 años) se sienta en tu sección. El niño parece aburrido e inquieto durante la conversación de los adultos.', scn_en:'A family with a young child (6 years old) sits in your section. The child seems bored and restless during adult conversation.', q:'¿Cuál es la mejor acción de servicio?', q_en:'What is the best service action?', opts:['Ofrecer al niño un pequeño ajetreo (colores, juego simple, pan) sin que afecte la experiencia de los adultos','Ignorar al niño y enfocarse en los adultos','Preguntar si el niño necesita algo específico','Sugerir a los padres que ordenen rápido para que el niño no se aburra'], opts_en:['Offer the child a small distraction (colors, simple game, bread) without affecting the adults\' experience','Ignore the child and focus on the adults','Ask if the child needs anything specific','Suggest to the parents to order quickly so the child doesn\'t get bored'], corr:0, expl:'El estándar #73 (Anticipatory Service) y #75 (EI Behavioral) requieren personalizar la experiencia para TODOS los clientes. Un niño entrettenido = padres felices. Esta es una oportunidad para brillar en servicio centrado en la familia.', expl_en:'Standard #73 (Anticipatory Service) and #75 (EI Behavioral) require personalizing the experience for ALL guests. A happy child = happy parents. This is an opportunity to shine in family-focused service.', real:false},
+  {id:19, cat:'carta', scn:'Un huésped pregunta: "¿Su pescado es de fuente sostenible?"', scn_en:'A guest asks: "Is your fish from a sustainable source?"', q:'¿Cuál es la respuesta correcta según LQA?', q_en:'What is the correct answer according to LQA?', opts:['Responder con confianza: "Sí, nuestros pescados provienen de fuentes certificadas y sostenibles"','Responder vagamente: "Creemos que sí"','Decir: "No estoy seguro, déjame preguntar"','Cambiar de tema diciendo que todo nuestro menú es de calidad'], opts_en:['Respond confidently: "Yes, our fish comes from certified sustainable sources"','Respond vaguely: "I think so"','Say: "I\'m not sure, let me ask"','Change the subject by saying our entire menu is quality'], corr:0, expl:'El estándar #54 requiere que el personal conozca detalles del menú, origen e ingredientes. El estándar #19 requiere precisión en información. Una respuesta vaga o evasiva incumple estos estándares. La confianza y precisión son críticas.', expl_en:'Standard #54 requires staff to know menu details, origins and ingredients. Standard #19 requires precision in information. A vague or evasive response violates these standards. Confidence and precision are critical.', real:false},
+  {id:20, cat:'vino', scn:'Acabas de retirar los platos principales. Hay migas en la mesa, el plato de pan está vacío pero aún en la mesa, y una servilleta está en el piso.', scn_en:'You\'ve just cleared the main course plates. There are crumbs on the table, the bread plate is empty but still on the table, and a napkin is on the floor.', q:'¿Cuál es el siguiente paso ANTES de servir postre?', q_en:'What is the NEXT step before serving dessert?', opts:['Ir directamente a servir el postre','Simplemente retirar el plato de pan y continuar','Preguntar al cliente si desea el postre','Recoger las migas, retirar el plato de pan, y limpiar el piso sin que lo noten'], opts_en:['Go directly to serve the dessert','Simply remove the bread plate and continue','Ask the guest if they want dessert','Crumb down the table, remove the bread plate, and clean the floor without being noticed'], corr:3, expl:'El estándar #33 requiere: "¿Retiró el camarero plato lateral, cuchillo, mantequilla y cruets y después recogió las migas al completar el plato principal?" Este paso DEBE completarse antes del postre. Es un estándar de Producto crítico.', expl_en:'Standard #33 requires: "Did the waiter remove side plate, side knife, butter and cruets and then crumb down the table on completion of the main course?" This step MUST be completed before dessert. It\'s a critical Product standard.', real:false},
+  {id:21, cat:'vino', scn:'Notas que el vaso de agua de un huésped ha estado vacío durante aproximadamente 3 minutos. El huésped no ha dicho nada.', scn_en:'You notice a guest\'s water glass has been empty for about 3 minutes. The guest hasn\'t said anything.', q:'¿Cuál es el estándar LQA para el servicio de agua?', q_en:'What is the LQA standard for water service?', opts:['Llenar el vaso solo si es durante la comida principal','Esperar a que el vaso esté completamente vacío por 5 minutos','Esperar a que el cliente pida agua','Rellenar proactivamente cuando el vaso está a media capacidad'], opts_en:['Fill the glass only if it\'s during the main course','Wait until the glass is completely empty for 5 minutes','Wait until the guest asks for water','Proactively refill when the glass is half full'], corr:3, expl:'El estándar #48 requiere que el agua se ofrezca regularmente y se mantenga disponible. El estándar #73 (Anticipatory Service) dice que el personal debe anticipar necesidades. Agua es un elemento crítico: nunca debe estar vacía. Rellena proactivamente.', expl_en:'Standard #48 requires water to be offered regularly and kept available. Standard #73 (Anticipatory Service) says staff must anticipate needs. Water is a critical element: it should never be empty. Refill proactively.', real:false},
+  {id:22, cat:'comportamiento', scn:'Un huésped dice: "Este carne está muy cocida, la quería más roja." El steak en realidad está perfectamente hecho a término medio (medium).', scn_en:'A guest says: "This meat is too cooked, I wanted it rarer." The steak is actually perfectly cooked to medium.', q:'¿Cómo responder según LQA?', q_en:'How to respond according to LQA?', opts:['Mostrar empatía, ofrecer inmediatamente cambiarla sin discusión, y resolver','Decir: "Este es el término que pediste"','Explicar científicamente por qué el término es correcto','Insistir en que está bien cocinada'], opts_en:['Show empathy, immediately offer to change it without discussion, and resolve','Say: "This is the temperature you ordered"','Explain scientifically why the temperature is correct','Insist that it\'s cooked correctly'], corr:0, expl:'El estándar #75 (Service Recovery y EI Behavioral) y #76 (Conflict Resolution) requieren que SIEMPRE empatices con la percepción del cliente. Si el cliente dice que no le gusta, es su verdad. La acción correcta es resolver sin discutir: "Permíteme cambiarla de inmediato."', expl_en:'Standard #75 (Service Recovery and EI Behavioral) and #76 (Conflict Resolution) require you to ALWAYS empathize with the guest\'s perception. If the guest says they don\'t like it, that\'s their truth. The correct action is to resolve without arguing: "Let me change that right away."', real:false},
+  {id:23, cat:'vino', scn:'Es una noche muy ocupada. Para ahorrar tiempo, viertes agua con gas en las copas en el área de servicio antes de llevarlas a la mesa.', scn_en:'It\'s a very busy night. To save time, you pour sparkling water into glasses in the service area before bringing them to the table.', q:'¿Es esto correcto según los estándares?', q_en:'Is this correct according to the standards?', opts:['Sí, ahorras tiempo y eficiencia','No, el estándar #48 requiere que el agua se sirva frente al cliente','Es aceptable solo si el agua ya está fría','Depende si el cliente está mirando o no'], opts_en:['Yes, you save time and efficiency','No, standard #48 requires water to be served in front of the guest','It\'s acceptable only if the water is already cold','It depends on whether the guest is watching or not'], corr:1, expl:'El estándar #48 es CLARO: el agua debe ofrecerse y servirse FRENTE al cliente. Servir pre-llenado en el área de servicio viola este estándar. La PRESENTACIÓN y CONTROL son críticos. No hay excepciones por eficiencia.', expl_en:'Standard #48 is CLEAR: water must be offered and served IN FRONT of the guest. Serving pre-filled in the service area violates this standard. PRESENTATION and CONTROL are critical. There are no exceptions for efficiency.', real:false},
+  {id:24, cat:'llegada', scn:'La iluminación ambiente del restaurante es tenue para crear atmósfera. Un huésped está entrecérrando los ojos intentando leer el menú. No ha pedido ayuda.', scn_en:'The restaurant\'s ambient lighting is dim for atmosphere. A guest is squinting trying to read the menu. They haven\'t asked for help.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Esperar a que el huésped pida una luz','Ofrecer proactivamente una luz de lectura o lámpara de mesa','Cambiar la iluminación general del restaurante','Sugerir un menú en letra grande'], opts_en:['Wait until the guest asks for light','Proactively offer a reading light or table lamp','Change the restaurant\'s overall lighting','Suggest a large-print menu'], corr:1, expl:'El estándar #50 requiere que la carta esté "clara y fácil de leer". El estándar #73 (Anticipatory Service) requiere detectar dificultades. Si la atmósfera crea un problema, la acción correcta es ofrecer soluciones sin que pidan: "¿Puedo traerle una luz para leer cómodo?"', expl_en:'Standard #50 requires the menu to be "clear and easy to read". Standard #73 (Anticipatory Service) requires detecting difficulties. If the atmosphere creates a problem, the correct action is to offer solutions without asking: "Can I bring you a light to read comfortably?"', real:false},
+  {id:25, cat:'vino', scn:'Los huéspedes están poniéndose los abrigos y listos para irse. Ya has dado la cuenta. Han pagado y se despiden.', scn_en:'The guests are putting on their coats and getting ready to leave. You\'ve already given the bill. They\'ve paid and are saying goodbye.', q:'¿Cuál es la acción requerida por LQA en la despedida?', q_en:'What is the LQA-required action at the farewell?', opts:['Solo decir "Gracias por venir"','Despedida sincera, expresando aprecio por su visita y invitándoles a volver','Ayudar con los abrigos sin decir nada','Simplemente agitar la mano mientras se van'], opts_en:['Just say "Thank you for coming"','Sincere farewell expressing appreciation for their visit and inviting them back','Help with coats without saying anything','Simply wave as they leave'], corr:1, expl:'El estándar #77 (Despedida/Farewell) requiere una despedida SINCERA, cálida, y que exprese aprecio genuino. Debes hacer que se sientan valorados. La última impresión es tan importante como la primera. Esta es tu última oportunidad de crear memoria positiva.', expl_en:'Standard #77 (Farewell) requires a SINCERE, warm farewell that expresses genuine appreciation. You must make them feel valued. The last impression is as important as the first. This is your last chance to create a positive memory.', real:false},
+];
 
-  popup.innerHTML = `
-    <div style="
-      background:linear-gradient(155deg,#faf6ee,#f4ede2);
-      border:1.5px solid rgba(196,154,60,.35);
-      border-radius:18px;
-      padding:2rem 1.75rem 1.5rem;
-      max-width:300px;width:100%;
-      text-align:center;
-      box-shadow:0 24px 64px rgba(0,0,0,.25),0 0 0 1px rgba(196,154,60,.1);
-      animation:gemDetailIn .35s cubic-bezier(.34,1.4,.64,1) both;
-      position:relative;overflow:hidden;
-    ">
-      <!-- Gold top line -->
-      <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.5),transparent)"></div>
+const LQA_AUDIT_SCENARIOS = [
+  {id:1, scn:'El camarero nos saludó calurosamente. Mencionamos que era nuestro aniversario. Anotó la ocasión pero no preguntó sobre requisitos dietéticos especiales ni preferencias para la noche.', scn_en:'The waiter greeted us warmly. We mentioned it was our anniversary. He noted the occasion but didn\'t ask about any special dietary needs or preferences for the evening.', std:6, verd:'below', expl:'El estándar #6 requiere: "¿Preguntó el empleado si la reserva era para una ocasión especial y si tenían requisitos especiales?" El empleado reconoció la ocasión pero no preguntó sobre requisitos especiales.', expl_en:'Standard #6 requires: "Did the employee enquire if the reservation was for a special occasion and if there were any special requirements?" The employee acknowledged the occasion but didn\'t ask about special requirements.'},
+  {id:2, scn:'Llegamos al restaurante. La anfitriona nos recibió inmediatamente. Nos llevó a nuestra mesa en aproximadamente 1 minuto. La mesa estaba perfectamente montada con toda la cubertería y cristalería.', scn_en:'We arrived at the restaurant. The hostess greeted us immediately. She took us to our table in approximately 1 minute. The table was perfectly set with all cutlery and glassware.', std:7, verd:'meet', expl:'El estándar #7 requiere ser saludado y sentado en una mesa completamente montada en 1 minuto de la llegada. Este escenario cumple exactamente con estos requisitos.', expl_en:'Standard #7 requires being greeted and seated at a fully laid table within 1 minute of arrival. This scenario exactly meets these requirements.'},
+  {id:3, scn:'El camarero presentó la botella de vino, la abrió en nuestra presencia en la mesa, vertió una pequeña cantidad para probar. Nosotros aprobamos y llenó las copas adecuadamente. El vino tinto se servía a temperatura ambiente.', scn_en:'The waiter presented the wine bottle, opened it at our table, poured a small amount for tasting. We approved and he filled the glasses properly. The red wine was served at room temperature.', std:43, verd:'meet', expl:'El estándar #43 requiere que el camarero presente el vino y lo abra en la mesa (cumplido), el #44 requiere que sirva una pequeña cantidad para probar y luego llene la copa (cumplido), y el #45 requiere que el vino tinto se sirva a temperatura ambiente (cumplido). Todos estos estándares se cumplen.', expl_en:'Standard #43 requires the waiter present the wine and open it at the table (met), #44 requires pouring a small taste amount then filling properly (met), and #45 requires red wine served at room temperature (met). All standards are met.'},
+  {id:4, scn:'Nuestro camarero nos leyó la lista de especiales del día, explicó brevemente qué había y qué no estaba disponible. Preguntó si teníamos preguntas sobre cualquier alérgeno antes de tomar la comanda.', scn_en:'Our waiter read us the list of specials, briefly explained what was available and what wasn\'t. He asked if we had any questions about allergens before taking the order.', std:14, verd:'meet', expl:'El estándar #14 requiere que el empleado explique "los especiales del día, sopas, pescados, menús con precio fijo o platos no disponibles". Esto fue cumplido. Además, la pregunta sobre alérgenos demuestra cumplimiento del estándar #19.', expl_en:'Standard #14 requires the employee explain "specials of the day, soups, fish, set priced menus and unavailable items". This was met. Additionally, asking about allergens demonstrates compliance with standard #19.'},
+  {id:5, scn:'Después de terminar el plato principal, observé que el camarero esperó 3 minutos antes de retirar los platos. No retiró el plato lateral, el cuchillo lateral ni recolectó las migas antes de servir el postre.', scn_en:'After finishing the main course, I noticed the waiter waited only 3 minutes before clearing the plates. He didn\'t remove the side plate, side knife, or crumb down the table before bringing dessert.', std:33, verd:'below', expl:'El estándar #33 requiere: "¿Retiró el camarero plato lateral, cuchillo, mantequilla y cruets y después recogió las migas al completar el plato principal?" Este paso es crítico entre el plato principal y el postre y no fue completado.', expl_en:'Standard #33 requires: "Did the waiter remove side plate, side knife, butter and cruets and then crumb down the table on completion of the main course?" This step is critical between main and dessert courses and was not completed.'},
+  {id:6, scn:'Las bebidas fueron servidas en 4 minutos desde que las pedimos. El camarero usó una bandeja para servir. La temperatura de las bebidas era la correcta.', scn_en:'The drinks were served in 4 minutes from when we ordered them. The waiter used a tray to serve. The temperature of the beverages was correct.', std:26, verd:'meet', expl:'El estándar #26 requiere que las bebidas correctas se sirvan en 5 minutos del pedido (4 minutos es dentro del límite) y se use bandeja. Ambos requisitos se cumplieron.', expl_en:'Standard #26 requires correct drinks be served within 5 minutes of order (4 minutes is within the limit) and a tray be used. Both requirements were met.'},
+  {id:7, scn:'El menú tenía una página con una grieta pequeña en la esquina pero legible. Había algunas palabras con tildes faltantes. Aún así, era fácil de leer.', scn_en:'The menu had a page with a small crack in the corner but was still readable. There were some words with missing accents. Still, it was easy to read.', std:50, verd:'below', expl:'El estándar #50 requiere que la carta esté "limpia, EN BUEN ESTADO, gramaticalmente correcta y fácil de leer". La grieta incumple "en buen estado" y las tildes faltantes incumplen "gramaticalmente correcta". Aunque es legible, no cumple todos los requisitos.', expl_en:'Standard #50 requires the menu be "clean, IN GOOD REPAIR, grammatically correct and easy to read". The crack violates "in good condition" and missing accents violate "grammatically correct". Although readable, it doesn\'t meet all requirements.'},
+  {id:8, scn:'Llegamos a nuestra mesa. En 1 minuto el camarero nos saludó cálidamente, se presentó por su nombre, y nos ofreció una bebida previa.', scn_en:'We were seated at our table. Within 1 minute, the waiter greeted us warmly, introduced himself by name, and offered a pre-meal drink.', std:13, verd:'meet', expl:'El estándar #13 requiere: "¿Saludó un empleado al huésped en 1 minuto desde que se sentó y ofreció una bebida previa?" Esto fue cumplido en todos los aspectos.', expl_en:'Standard #13 requires: "Did an employee greet the guest within 1 minute of seating and offer a pre-meal drink?" This was met in all aspects.'},
+  {id:9, scn:'Cuando pedimos la cuenta, se presentó en un portacuentas elegante, limpio y bien mantenido. La cuenta estaba claramente desglosada y fue exacta.', scn_en:'When we asked for the bill, it was presented in an elegant, clean and well-maintained billfold. The bill was clearly itemized and accurate.', std:41, verd:'meet', expl:'El estándar #41 requiere que la cuenta esté "claramente desglosada, correcta y presentada puntualmente en un portacuentas limpio y en buen estado". Todos estos requisitos fueron cumplidos.', expl_en:'Standard #41 requires the bill be "clearly itemized, correct and promptly presented in a clean billfold in good condition". All these requirements were met.'},
+  {id:10, scn:'El uniforme del camarero estaba limpio, bien ajustado y llevaba una identificación con su nombre visible. Su presentación fue impecable.', scn_en:'The waiter\'s uniform was clean, well fitted and he wore a clearly visible name badge. His presentation was impeccable.', std:68, verd:'meet', expl:'El estándar #68 requiere: "¿Estaban los empleados bien arreglados y con uniformes limpios, bien ajustados, con identificación visible?" Todos estos requisitos fueron cumplidos perfectamente.', expl_en:'Standard #68 requires: "Were employees well groomed and neatly presented in clean, well fitted uniforms, wearing name badges?" All these requirements were perfectly met.'},
+  {id:11, scn:'El camarero nos saludó dentro de 2 minutos de sentarnos y nos ofreció agua.', scn_en:'The waiter greeted us within 2 minutes of seating and offered water.', std:13, verd:'below', expl:'El estándar #13 requiere saludar al huésped dentro de 1 MINUTO de sentarse, no 2 minutos. Este es un requisito de tiempo específico y crítico. Aunque ofrecer agua es correcto, el saludo se atrasó.', expl_en:'Standard #13 requires greeting the guest within 1 MINUTE of seating, not 2 minutes. This is a specific and critical time requirement. Although offering water is correct, the greeting was delayed.'},
+  {id:12, scn:'Le preguntamos al camarero si el pescado era local. Él dijo: "Creo que sí" pero no parecía seguro.', scn_en:'We asked the waiter if the fish was local. He said: "I think so" but didn\'t seem certain.', std:56, verd:'below', expl:'El estándar #56/57 requiere que el personal pueda responder preguntas sobre procedencia y características del menú de forma DEFINITIVA. Una respuesta incierta como "Creo que sí" no cumple el estándar. El personal debe conocer o consultar.', expl_en:'Standard #56/57 requires staff be able to answer questions about menu origin and characteristics DEFINITIVELY. An uncertain response like "I think so" does not meet the standard. Staff must know or check.'},
+  {id:13, scn:'Después del plato principal, el camarero retiró nuestros platos, removió los platos laterales y mantequilla, recogió las migas de la mesa, y luego presentó la carta de postres.', scn_en:'After the main course, the waiter cleared our plates, removed the side plates and butter, crumbed down the table, and then presented the dessert menu.', std:33, verd:'meet', expl:'El estándar #33 requiere completar todos estos pasos al terminar el plato principal: retirar plato lateral, cuchillo, mantequilla, cruets, y recoger migas. Todo fue hecho correctamente en este escenario.', expl_en:'Standard #33 requires completing all these steps when finishing the main course: removing side plate, knife, butter, cruets, and crumbing. Everything was done correctly in this scenario.'},
+  {id:14, scn:'Después del postre, el camarero nos ofreció café, preguntó si preferíamos capuchino o espresso, y el café llegó en 7 minutos.', scn_en:'After dessert, the waiter offered us coffee, asked cappuccino or espresso, and the coffee arrived in 7 minutes.', std:37, verd:'below', expl:'El estándar #37 requiere que el café se sirva en 5 MINUTOS máximo después de tomar la comanda, no 7 minutos. Aunque el camarero hizo lo correcto ofreciendo y preguntando preferencias, el tiempo es un incumplimiento.', expl_en:'Standard #37 requires coffee be served within 5 MINUTES maximum after ordering, not 7 minutes. Although the waiter correctly offered and asked preferences, the timing is non-compliant.'},
+  {id:15, scn:'Notamos que teníamos frío durante la cena en la terraza exterior. El camarero se dio cuenta por nuestro lenguaje corporal y proactivamente nos ofreció mantas sin que las pidiéramos.', scn_en:'We felt cold during dinner on the outdoor terrace. The waiter noticed from our body language and proactively offered us blankets without us asking.', std:73, verd:'meet', expl:'El estándar #73 requiere servicio ANTICIPATORIO detectando necesidades no expresadas. El camarero detectó signos no verbales y ofreció soluciones sin que pidieran. Este es un ejemplo perfecto de excelencia en EI Behavioral.', expl_en:'Standard #73 requires ANTICIPATORY service by detecting unexpressed needs. The waiter detected non-verbal signs and offered solutions without being asked. This is a perfect example of EI Behavioral excellence.'},
+  {id:16, scn:'El camarero sirvió el agua con gas en copas antes de llegar a la mesa. Las copas estaban pre-llenadas en el área de servicio.', scn_en:'The waiter served the sparkling water in glasses before arriving at the table. The glasses were pre-filled in the service area.', std:48, verd:'below', expl:'El estándar #48 requiere que el agua se sirva FRENTE al cliente, no pre-llenada en el área de servicio. Aunque el agua se sirvió, la forma de presentación viola el estándar de servicio correcto.', expl_en:'Standard #48 requires water be served IN FRONT of the guest, not pre-filled in the service area. Although water was served, the presentation method violates the correct service standard.'},
+  {id:17, scn:'Nuestra botella de vino estaba casi vacía. Después de 5 minutos, el camarero preguntó si deseábamos otra botella.', scn_en:'Our wine bottle was almost empty. After 5 minutes, the waiter asked if we wanted another bottle.', std:47, verd:'below', expl:'El estándar #47 requiere que cuando la botella de vino se completa, el camarero AUTOMÁTICAMENTE ofrezca otra sin esperar. Esperar 5 minutos después de terminar es incorrecto. Debe ser inmediato cuando se detecta que está casi vacía.', expl_en:'Standard #47 requires that when the wine bottle is finished, the waiter AUTOMATICALLY offers another without waiting. Waiting 5 minutes after finishing is incorrect. It should be immediate when it\'s nearly empty.'},
+  {id:18, scn:'El postre llegó 9 minutos después de ordenarlo. Estaba bellamente presentado y coincidía perfectamente con la descripción del menú.', scn_en:'The dessert arrived 9 minutes after ordering. It was beautifully presented and perfectly matched the menu description.', std:35, verd:'meet', expl:'El estándar #35 requiere que el postre se sirva en 10 minutos máximo (9 minutos está dentro del límite). El estándar #52 requiere que la presentación y descripción sean correctas. Ambos se cumplieron perfectamente.', expl_en:'Standard #35 requires dessert be served within 10 minutes maximum (9 minutes is within the limit). Standard #52 requires correct presentation and description. Both were perfectly met.'},
+  {id:19, scn:'Un camarero tenía un pequeño rasguño cerca del bolsillo de su camisa. De lejos no era muy notorio, pero de cerca era visible cuando se inclinaba a servir.', scn_en:'A waiter had a small tear near the pocket of their shirt. From across the room it wasn\'t very noticeable, but up close it was visible when they leaned to serve.', std:68, verd:'below', expl:'El estándar #68 requiere uniformes "LIMPIOS, bien ajustados" en buen estado. Una rasguño o defecto visible de cerca, especialmente durante el servicio cercano al cliente, incumple el requisito de estar en buen estado. La presentación personal debe ser impecable.', expl_en:'Standard #68 requires uniforms "CLEAN, well fitted" in good condition. A tear or defect visible up close, especially during close service to the guest, violates the good condition requirement. Personal presentation must be impeccable.'},
+  {id:20, scn:'El huésped preguntó sobre el horario del spa del hotel. El camarero respondió con seguridad con la hora correcta y se ofreció a hacer una reserva.', scn_en:'The guest asked about the hotel spa hours. The waiter confidently replied with the correct hours and offered to make a reservation.', std:72, verd:'meet', expl:'El estándar #72 requiere que el personal demuestre confianza y conocimiento sobre instalaciones del hotel. El camarero proporcionó información correcta de forma confiada y ofreció servicio adicional (reserva). Esto cumple perfectamente con el estándar.', expl_en:'Standard #72 requires staff demonstrate confidence and knowledge about hotel facilities. The waiter provided correct information confidently and offered additional service (reservation). This perfectly meets the standard.'},
+];
 
-      <!-- Gem -->
-      <div style="display:flex;justify-content:center;margin-bottom:1.1rem">
-        <div style="width:72px;height:72px;animation:gemShinePopup 2s ease-in-out infinite">
-          ${gemIcon}
+const LQA_EXAM_QUESTIONS=[
+  {id:1, question:'¿Cuánto tiempo máximo tienes para saludar y sentar al huésped?', question_en:'What is the maximum time to greet and seat a guest?', options:['1 minuto','2 minutos','3 minutos','5 minutos'], options_en:['1 minute','2 minutes','3 minutes','5 minutes'], correct:0, explanation:'El estándar #7 requiere saludar y sentar al huésped dentro de 1 minuto de su llegada.', explanation_en:'Standard #7 requires greeting and seating within 1 minute of arrival.', standardRef:7},
+  {id:2, question:'¿En cuánto tiempo debes presentar la carta de menú después de sentarse el huésped?', question_en:'How long after seating should you present the menu?', options:['10 minutos','3 minutos','5 minutos','Inmediatamente'], options_en:['10 minutes','3 minutes','5 minutes','Immediately'], correct:2, explanation:'El estándar #10 requiere presentar la carta dentro de 5 minutos de ser sentado.', explanation_en:'Standard #10 requires presenting the menu within 5 minutes of being seated.', standardRef:10},
+  {id:3, question:'¿Qué debes hacer cuando llegan huéspedes por primera vez?', question_en:'What should you do when first-time guests arrive?', options:['Sentarlos y esperar','Dar una introducción al concepto del restaurante','Ofrecer solo la carta','Preguntar si quieren bebida'], options_en:['Seat them and wait','Give a brief intro to the restaurant concept','Offer only the menu','Ask if they want a drink'], correct:1, explanation:'El estándar #15 requiere ofrecer una breve introducción al concepto del restaurante para huéspedes primerizos.', explanation_en:'Standard #15 requires offering a brief introduction to the restaurant concept for first-time guests.', standardRef:15},
+  {id:4, question:'¿En cuánto tiempo se deben tomar las comandas después de entregar el menú?', question_en:'How long after giving the menu should you take the order?', options:['Inmediatamente','10 minutos','20 minutos','15 minutos'], options_en:['Immediately','10 minutes','20 minutes','15 minutes'], correct:1, explanation:'El estándar #18 requiere tomar la comanda dentro de 10 minutos de recibir el menú.', explanation_en:'Standard #18 requires taking the order within 10 minutes of menu being offered.', standardRef:18},
+  {id:5, question:'¿Cómo se deben servir y retirar las bebidas?', question_en:'How should drinks be served and cleared?', options:['Rápidamente','Con bandeja','Con la mano','No importa el método'], options_en:['Quickly','Using a tray','By hand','It doesn\'t matter'], correct:1, explanation:'El estándar #27 requiere que las bebidas se sirvan y retiren usando bandeja.', explanation_en:'Standard #27 requires drinks be served and cleared using a tray.', standardRef:27},
+  {id:6, question:'¿En cuántos minutos se debe servir el entrante tras el pedido?', question_en:'How long after ordering should the starter be served?', options:['15 minutos','5 minutos','20 minutos','10 minutos'], options_en:['15 minutes','5 minutes','20 minutes','10 minutes'], correct:0, explanation:'El estándar #28 requiere servir el entrante dentro de 15 minutos del pedido.', explanation_en:'Standard #28 requires serving the starter within 15 minutes of order.', standardRef:28},
+  {id:7, question:'¿En cuántos minutos se debe servir el plato principal tras el entrante?', question_en:'How long after the starter should the main course be served?', options:['20 minutos','30 minutos','15 minutos','10 minutos'], options_en:['20 minutes','30 minutes','15 minutes','10 minutes'], correct:0, explanation:'El estándar #29 requiere servir el plato principal dentro de 20 minutos del entrante.', explanation_en:'Standard #29 requires serving the main course within 20 minutes of starter.', standardRef:29},
+  {id:8, question:'¿Cuánto tiempo tienes para retirar los platos después de que los huéspedes terminen?', question_en:'How long after guests finish should you clear their plates?', options:['5 minutos','3 minutos','15 minutos','10 minutos'], options_en:['5 minutes','3 minutes','15 minutes','10 minutes'], correct:0, explanation:'El estándar #32 requiere retirar los platos dentro de 5 minutos de que los huéspedes terminen.', explanation_en:'Standard #32 requires clearing plates within 5 minutes of guests finishing.', standardRef:32},
+  {id:9, question:'Tras el plato principal y antes del postre, ¿qué debes hacer?', question_en:'What should you do between main course and dessert?', options:['Retirar plato lateral, cuchillo, mantequilla y recoger migas','Traer la carta de postres','Preguntar si quieren postre','Solo retirar los platos principales'], options_en:['Remove side plate, knife, butter and crumb the table','Bring the dessert menu','Ask if they want dessert','Just clear main plates'], correct:0, explanation:'El estándar #33 requiere retirar plato lateral, cuchillo, mantequilla y recoger las migas al completar el plato principal.', explanation_en:'Standard #33 requires removing side plate, knife, butter and crumbing the table on completion of main course.', standardRef:33},
+  {id:10, question:'¿En cuántos minutos máximo se debe servir el postre?', question_en:'What is the maximum time to serve dessert after ordering?', options:['10 minutos','5 minutos','15 minutos','20 minutos'], options_en:['10 minutes','5 minutes','15 minutes','20 minutes'], correct:0, explanation:'El estándar #35 requiere servir el postre dentro de 10 minutos del pedido.', explanation_en:'Standard #35 requires serving dessert within 10 minutes of order.', standardRef:35},
+  {id:11, question:'¿En cuántos minutos máximo se debe servir el café/té?', question_en:'What is the maximum time to serve coffee/tea?', options:['5 minutos','3 minutos','15 minutos','10 minutos'], options_en:['5 minutes','3 minutes','15 minutes','10 minutes'], correct:0, explanation:'El estándar #37 requiere servir el café/té dentro de 5 minutos del pedido.', explanation_en:'Standard #37 requires serving coffee/tea within 5 minutes of order.', standardRef:37},
+  {id:12, question:'¿Cómo debe estar el portacuentas al presentar la factura?', question_en:'How should the billfold be when presenting the bill?', options:['Limpio y en buen estado','Cualquier carpeta sirve','Solo limpio por dentro','No importa si la cuenta es correcta'], options_en:['Clean and in good condition','Any folder works','Just clean inside','It doesn\'t matter if the bill is correct'], correct:0, explanation:'El estándar #41 requiere que la cuenta sea presentada en un portacuentas limpio y en buen estado.', explanation_en:'Standard #41 requires the bill be presented in a clean billfold in good condition.', standardRef:41},
+  {id:13, question:'¿Se debe servir el vino delante del huésped o se puede pre-servir?', question_en:'Should wine be served in front of the guest or can it be pre-poured?', options:['Depende de la temperatura','Siempre delante del huésped (excepto cócteles)','Se puede pre-servir para ahorrar tiempo','Solo el vino tinto delante'], options_en:['Depends on temperature','Always in front of guest (except cocktails)','Can be pre-poured to save time','Only red wine in front'], correct:1, explanation:'El estándar #48 requiere que el vino se sirva delante del huésped, no pre-servido, con excepción de cócteles.', explanation_en:'Standard #48 requires wine be poured in front of guest (not pre-poured) except for cocktails.', standardRef:48},
+  {id:14, question:'Si la copa del huésped está vacía, ¿cuánto tiempo tienes para ofrecerle otra bebida?', question_en:'How long to offer another drink when guest\'s glass is empty?', options:['5 minutos','10 minutos','2 minutos','Cuando lo pida'], options_en:['5 minutes','10 minutes','2 minutes','When they ask'], correct:2, explanation:'El estándar #49 requiere ofrecer una bebida adicional dentro de 2 minutos de que la copa esté vacía.', explanation_en:'Standard #49 requires offering another drink within 2 minutes of glass being empty.', standardRef:49},
+  {id:15, question:'¿Qué requisitos debe cumplir la carta del restaurante?', question_en:'What requirements must the menu meet?', options:['Con fotos de los platos','Actualizada y en varios idiomas','Limpia, en buen estado, correcta gramaticalmente y fácil de leer','Solo legible'], options_en:['With photos of dishes','Updated in multiple languages','Clean, in good repair, grammatically correct and easy to read','Just readable'], correct:2, explanation:'El estándar #50 requiere que la carta esté limpia, en buen estado, gramaticalmente correcta y fácil de leer.', explanation_en:'Standard #50 requires menu be clean, in good repair, grammatically correct and easy to read.', standardRef:50},
+  {id:16, question:'¿Qué opciones dietéticas mínimas debe ofrecer la carta?', question_en:'What dietary options must the menu include?', options:['No hay requisito específico','Vegetariana y sin gluten','Sin gluten solamente','Vegana, sin gluten y sin lactosa'], options_en:['No specific requirement','Vegetarian and gluten-free','Gluten-free only','Vegan, gluten-free and lactose-free'], correct:3, explanation:'El estándar #51 requiere al menos dos entrantes, dos principales y un postre con opciones veganas, sin gluten y sin lactosa.', explanation_en:'Standard #51 requires vegan, gluten-free and lactose-free options available.', standardRef:51},
+  {id:17, question:'¿Qué se debe hacer si ves que las mesas del restaurante están montadas de forma diferente?', question_en:'What if tables are set up differently?', options:['Solo importa si el auditor está presente','Igualarlas - todas deben ser consistentes','No pasa nada si están limpias','Cada zona puede tener su estilo'], options_en:['Only matters if auditor is present','Make them uniform - all must be consistent','It\'s fine if they\'re clean','Each zone can have its own style'], correct:1, explanation:'El estándar #61 requiere que todas las mesas estén consistentemente montadas.', explanation_en:'Standard #61 requires all tables be consistently laid up.', standardRef:61},
+  {id:18, question:'¿Qué hacer con los saleros y pimenteros?', question_en:'What about salt and pepper cruets?', options:['No son necesarios en alta cocina','Solo para platos de carne','Solo si el huésped los pide','Deben estar disponibles u ofrecidos, limpios y llenos'], options_en:['Not necessary in fine dining','Only for meat dishes','Only if guest asks','Must be available or offered, clean and full'], correct:3, explanation:'El estándar #67 requiere que los saleros y pimenteros estén disponibles u ofrecidos, limpios y llenos.', explanation_en:'Standard #67 requires salt and pepper cruets be available or offered, clean and full.', standardRef:67},
+  {id:19, question:'¿Cómo debe ser tu uniforme según LQA?', question_en:'What should your uniform be like according to LQA?', options:['Solo que no haya manchas grandes','Depende del turno','Limpio, bien ajustado, con identificación visible','Limpio es suficiente'], options_en:['Just no big stains','Depends on shift','Clean, well fitted, with visible ID','Just clean'], correct:2, explanation:'El estándar #68 requiere que los empleados lleven uniformes limpios, bien ajustados, con identificación visible.', explanation_en:'Standard #68 requires clean, well fitted uniforms with visible name badges.', standardRef:68},
+  {id:20, question:'¿Qué hacer si no sabes la respuesta a una pregunta del huésped sobre el hotel?', question_en:'What if you don\'t know the answer to a guest question?', options:['Inventar una respuesta aproximada','Sugerir que pregunte en recepción','Decir que no es tu departamento','Ofrecer inmediatamente buscar la información'], options_en:['Make up an approximate answer','Suggest they ask at reception','Say it\'s not your department','Immediately offer to find the information'], correct:3, explanation:'El estándar #72 requiere mostrar confianza y conocimiento, y si no se sabe, ofrecer buscar la información.', explanation_en:'Standard #72 requires showing confidence and offering to find information if uncertain.', standardRef:72},
+  {id:21, question:'¿Cuál es un ejemplo de servicio anticipativo?', question_en:'What is an example of anticipatory service?', options:['Solo actuar cuando hay una queja','Notar que el huésped tiene frío y traer una manta sin que lo pida','Esperar a que pida lo que necesita','Preguntar cada 5 minutos si necesita algo'], options_en:['Only act when there\'s a complaint','Notice guest is cold and offer a blanket without being asked','Wait for them to ask','Ask every 5 minutes if they need anything'], correct:1, explanation:'El estándar #73 requiere servicio anticipatorio/intuitivo, pensando en necesidades futuras del huésped.', explanation_en:'Standard #73 requires anticipatory service, thinking ahead to guest needs.', standardRef:73},
+  {id:22, question:'Si un huésped pide algo que no está en la carta, ¿qué debes hacer?', question_en:'If a guest requests something not on the menu?', options:['Preguntar al manager','Sugerir otro plato similar','Decir que no es posible','Intentar acomodarlo o ofrecer una alternativa adecuada'], options_en:['Ask the manager','Suggest a similar dish','Say it\'s not possible','Try to accommodate or offer suitable alternative'], correct:3, explanation:'El estándar #75 requiere hacer todo lo posible para cumplir las peticiones del huésped u ofrecer una alternativa adecuada.', explanation_en:'Standard #75 requires making every effort to meet requests or offer suitable alternative.', standardRef:75},
+  {id:23, question:'¿Cómo debes usar el nombre del huésped?', question_en:'How should you use the guest\'s name?', options:['No usarlo para mantener privacidad','Solo al principio y al final','De forma natural y sin abusar','Repetirlo en cada interacción'], options_en:['Don\'t use to protect privacy','Only at beginning and end','Naturally and discreetly without overusing','Repeat it in every interaction'], correct:2, explanation:'El estándar #71 requiere usar el nombre del huésped de forma natural y sin abusar.', explanation_en:'Standard #71 requires using guest name naturally and discreetly.', standardRef:71},
+  {id:24, question:'¿Qué debes hacer al final de la interacción con el huésped?', question_en:'What should you do at the end of guest interaction?', options:['Preguntar si quiere reservar para mañana','Solo si el huésped se despide primero','Decir "buenas noches" y retirar la vajilla','Ofrecer una despedida sincera mostrando agradecimiento'], options_en:['Ask if they want to book tomorrow','Only if guest says goodbye first','Say "goodnight" and clear dishes','Offer sincere farewell showing appreciation'], correct:3, explanation:'El estándar #42 requiere ofrecer una despedida sincera y mostrar agradecimiento al final.', explanation_en:'Standard #42 requires sincere farewell and appreciation at the end.', standardRef:42},
+  {id:25, question:'¿Cuánto tiempo máximo para servir las bebidas correctas después del pedido?', question_en:'Maximum time to serve drinks after ordering?', options:['10 minutos','5 minutos (8 para cócteles)','3 minutos (8 para cócteles)','15 minutos'], options_en:['10 minutes','5 minutes (8 for cocktails)','3 minutes (8 for cocktails)','15 minutes'], correct:1, explanation:'El estándar #26 requiere servir las bebidas correctas en 5 minutos del pedido (8 minutos para cócteles).', explanation_en:'Standard #26 requires drinks within 5 minutes of order (8 minutes for cocktails).', standardRef:26},
+  {id:26, question:'Al tomar una reserva, ¿qué información mínima debes obtener?', question_en:'When taking a reservation, what minimum info is needed?', options:['Toda la información disponible','Solo nombre y hora','Nombre, teléfono/habitación, y hora','Nombre, hora y preferencias dietéticas'], options_en:['All available information','Just name and time','Name, phone/room number, and time','Name, time and dietary preferences'], correct:2, explanation:'El estándar #3 requiere obtener el número de comensales, la hora y el número de teléfono/habitación. El estándar #2 requiere el nombre del huésped.', explanation_en:'Standard #3 requires number of guests, time and phone/room. Standard #2 requires guest name.', standardRef:3},
+  {id:27, question:'¿Qué hacer al contestar el teléfono para una reserva?', question_en:'When answering phone for a reservation?', options:['Poner en espera y atender en orden','Dejar que suene 5 veces antes de contestar','Contestar en 3 tonos o 10 segundos con un saludo apropiado','Contestar dentro de 30 segundos con un saludo apropiado'], options_en:['Put on hold and answer in order','Let it ring 5 times before answering','Answer within 3 rings or 10 seconds with greeting','Answer within 30 seconds with greeting'], correct:2, explanation:'El estándar #1 requiere contestar el teléfono en 3 tonos o 10 segundos con un saludo apropiado.', explanation_en:'Standard #1 requires answering within 3 rings or 10 seconds with appropriate greeting.', standardRef:1},
+  {id:28, question:'¿Debes preguntar si la reserva es para una ocasión especial?', question_en:'Should you ask if the reservation is for special occasion?', options:['Solo si el huésped lo menciona','No, es información privada','Solo si parece una celebración','Sí, siempre, y preguntar por requisitos especiales'], options_en:['Only if guest mentions it','No, it\'s private information','Only if it looks like a celebration','Yes, always, and ask about special requirements'], correct:3, explanation:'El estándar #6 requiere preguntar si la reserva es para una ocasión especial y si tienen requisitos especiales.', explanation_en:'Standard #6 requires asking if reservation is for special occasion and any special requirements.', standardRef:6},
+  {id:29, question:'Al servir vino, ¿cuál es el procedimiento correcto?', question_en:'What is the correct wine service procedure?', options:['Servir directamente sin presentar','Preguntar si quieren probarlo primero','Presentar la botella, abrir en la mesa, servir una prueba','Abrir en el office y servir directamente'], options_en:['Serve directly without presenting','Ask if they want to taste','Present bottle, open at table, pour taste','Open in office and serve directly'], correct:2, explanation:'Los estándares #43-44 requieren presentar la botella, abrir en la mesa, servir una pequeña cantidad para probar.', explanation_en:'Standards #43-44 require presenting bottle, opening at table, and pouring small tasting amount.', standardRef:43},
+  {id:30, question:'¿Qué debes sugerir automáticamente después del postre?', question_en:'What should you automatically suggest after dessert?', options:['La cuenta directamente','Solo café','Nada, esperar a que pidan','Café/té y aclarar preferencia (capuchino, espresso...)'], options_en:['The bill directly','Just coffee','Nothing, wait for them to ask','Coffee/tea and clarify preference (cappuccino, espresso...)'], correct:3, explanation:'El estándar #36 requiere ofrecer automáticamente café/té y aclarar la preferencia.', explanation_en:'Standard #36 requires automatically offering coffee/tea and clarifying preference.', standardRef:36},
+];
+
+// LQA Render Functions
+function renderLqa(){
+  lqaView='menu';
+  const c=document.getElementById('appContent');
+  const totalMet=LQA_STANDARDS.filter(s=>s.met).length;
+  const score=Math.round(totalMet/LQA_STANDARDS.length*100*10)/10;
+
+  c.innerHTML=`<div class="sup-wrap">
+    <div class="sup-hero" style="background:linear-gradient(135deg,#1a3a5c 0%,#2d5a8c 50%,#1a3a5c 100%);border:1px solid rgba(91,141,184,.4)">
+      <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></div>
+      <div class="sup-hero-title" style="color:#fff">Leading Quality Assurance</div>
+      <div class="sup-hero-sub" style="color:rgba(255,255,255,.7)">${LANG==='en'?'Prepare for the audit':'Prepárate para la auditoría'}</div>
+    </div>
+
+    <!-- Quick access buttons -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.25rem">
+      <button onclick="lqaView='info';renderLqaInfo()" style="display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem .5rem;background:linear-gradient(135deg,rgba(72,136,160,.08),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);cursor:pointer;transition:all .2s;box-shadow:0 3px 0 rgba(72,136,160,.08)">
+        <span style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(72,136,160,.15),rgba(72,136,160,.06));border:2px solid rgba(72,136,160,.2);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4888a0" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+        <span style="font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:700;color:#4888a0;text-transform:uppercase">${LANG==='en'?'LQA Info':'Info LQA'}</span>
+        <span style="font-size:.65rem;color:var(--parch3);font-weight:500">${LANG==='en'?'What auditor checks · Prepare':'Qué mide auditor · Prepárate'}</span>
+      </button>
+      <button onclick="startLqaExam()" style="display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem .5rem;background:linear-gradient(135deg,rgba(212,148,76,.06),rgba(255,200,0,.04));border:2px solid rgba(212,148,76,.2);border-radius:var(--r);cursor:pointer;transition:all .2s;box-shadow:0 3px 0 rgba(212,148,76,.08)">
+        <span style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(212,148,76,.15),rgba(255,200,0,.06));border:2px solid rgba(212,148,76,.2);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4944c" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+        <span style="font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:700;color:#d4944c;text-transform:uppercase">${LANG==='en'?'LQA Exam':'Examen LQA'}</span>
+        <span style="font-size:.65rem;color:var(--parch3);font-weight:500">${LANG==='en'?'Do you know the standards?':'¿Conoces los estándares?'}</span>
+      </button>
+      <button onclick="startLqaSituations()" style="display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem .5rem;background:#fff;border:2px solid rgba(122,106,170,.2);border-radius:var(--r);cursor:pointer;transition:all .2s;grid-column:span 2;box-shadow:0 3px 0 rgba(122,106,170,.08)">
+        <span style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(122,106,170,.12),rgba(122,106,170,.04));border:2px solid rgba(122,106,170,.2);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7a6aaa" stroke-width="1.5"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg></span>
+        <span style="font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:700;color:#7a6aaa;text-transform:uppercase">${LANG==='en'?'Real Situations':'Situaciones Reales'}</span>
+        <span style="font-size:.65rem;color:var(--parch3);font-weight:500">${LANG==='en'?'Scenario learning':'Aprendizaje de escenarios'}</span>
+      </button>
+      <button onclick="startLqaAuditor()" style="grid-column:span 2;display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#2d5c2d 0%,#3a7a3a 50%,#2d5c2d 100%);border:1px solid rgba(77,138,94,.4);border-radius:var(--r);cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none"></div>
+        <div style="flex-shrink:0;width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-family:'Cinzel',serif;font-size:.95rem;color:#fff;font-weight:400;margin-bottom:.15rem">${LANG==='en'?'Would It Pass?':'¿Pasaría?'}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase">${LANG==='en'?'Evaluate your service':'Evalúa tu servicio'}</div>
+        </div>
+        <div style="color:rgba(255,255,255,.4);font-size:.9rem">›</div>
+      </button>
+    </div>
+
+    <!-- Categories -->
+    <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;color:#7a6aaa;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem">— ${LANG==='en'?'Browse Categories':'Explorar Categorías'} —</div>
+    ${LQA_CATEGORIES.map(cat=>{
+      const catStds=LQA_STANDARDS.filter(s=>s.cat===cat.id);
+      const metStds=catStds.filter(s=>s.met).length;
+      return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);margin-bottom:.6rem;overflow:hidden;box-shadow:0 2px 8px rgba(28,42,34,.04);transition:all .2s;position:relative">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${cat.color};border-radius:var(--r) var(--r) 0 0"></div>
+        <div style="display:flex;align-items:center;gap:.85rem;padding:1rem 1.1rem .85rem;cursor:pointer" onclick="renderLqaCategory('${cat.id}')">
+          <div style="width:42px;height:42px;border-radius:12px;background:${cat.color}15;border:2px solid ${cat.color}30;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:${cat.color}">${cat.icon}</div>
+          <div style="flex:1">
+            <div style="font-size:.9rem;font-weight:700;color:var(--parchment)">${LANG==='en'?cat.title_en:cat.title}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;font-weight:500;color:var(--parch3);margin-top:.15rem">${metStds}/${catStds.length} ${LANG==='en'?'met':'cumplidos'}</div>
+          </div>
+          <div style="color:var(--parch4);font-size:1.2rem">›</div>
+        </div>
+      </div>`}).join('')}
+  </div>`;
+}
+
+function renderLqaCategory(catId){
+  const cat=LQA_CATEGORIES.find(c=>c.id===catId);
+  const stds=LQA_STANDARDS.filter(s=>s.cat===catId);
+  if(!cat || !stds.length) return;
+
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqa()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-size:1.2rem">${cat.icon}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?cat.title_en:cat.title}</div>
+    </div>
+    ${stds.map((s,i)=>`
+      <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:.5rem;border-left:3px solid ${s.met?'#4d8a5e':'#c47068'}">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">
+          <span style="font-size:.7rem;font-family:'DM Mono',monospace;color:${cat.color};letter-spacing:.08em;text-transform:uppercase">${String(s.id).padStart(2,'0')}</span>
+          <span style="font-size:.65rem;background:${s.met?'rgba(77,138,94,.1)':'rgba(196,112,104,.1)'};color:${s.met?'#4d8a5e':'#c47068'};padding:.15rem .5rem;border-radius:var(--r3);font-weight:600;text-transform:uppercase">${s.met?'✓ Met':'✗ Below'}</span>
+        </div>
+        <div style="font-size:.88rem;font-weight:500;color:var(--parchment);margin-bottom:.4rem">${LANG==='en'?s.std_en:s.std}</div>
+        <div style="font-size:.7rem;color:var(--parch4);margin-top:.3rem"><strong>${LANG==='en'?'Classification:':'Clasificación:'}</strong> ${s.cls}</div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function renderLqaInfo(){
+  const c=document.getElementById('appContent');
+  const emp=getEmp(currentUser);
+  const lqaScores=emp&&emp.lqaScores?emp.lqaScores:[];
+  const totalMet=LQA_STANDARDS.filter(s=>s.met).length;
+  const auditScore=Math.round(totalMet/LQA_STANDARDS.length*100*10)/10;
+  let userScore=auditScore;
+  if(lqaScores.length>0){
+    const recentScores=lqaScores.slice(-5);
+    const avgPct=Math.round(recentScores.reduce((a,s)=>a+(s.score/s.total*100),0)/recentScores.length*10)/10;
+    userScore=avgPct;
+  }
+  const score=userScore;
+  const circumference=2*Math.PI*54;
+  const strokeDashoffset=circumference-(score/100*circumference);
+
+  const eiLevels = [
+    {n:5, color:'#1a5c3a', bg:'rgba(26,92,58,.08)', border:'rgba(26,92,58,.2)', label_es:'Excepcional', label_en:'Exceptional', desc_es:'Mimado, Especial, Indulgente', desc_en:'Pampered, Special, Indulged'},
+    {n:4, color:'#4d8a5e', bg:'rgba(77,138,94,.08)', border:'rgba(77,138,94,.25)', label_es:'Positivo', label_en:'Positive', desc_es:'Encantado, Apreciado, Individual', desc_en:'Delighted, Appreciated, Individual'},
+    {n:3, color:'#c49a3c', bg:'rgba(196,154,60,.06)', border:'rgba(196,154,60,.15)', label_es:'Suficiente', label_en:'Sufficient', desc_es:'Respetado, Comprendido, Contento', desc_en:'Respected, Understood, Content'},
+    {n:2, color:'#d4944c', bg:'rgba(212,148,76,.06)', border:'rgba(212,148,76,.15)', label_es:'Insatisfecho', label_en:'Dissatisfied', desc_es:'Desinteresado, Desconectado', desc_en:'Disinterested, Disconnected'},
+    {n:1, color:'#c47068', bg:'rgba(196,112,104,.06)', border:'rgba(196,112,104,.15)', label_es:'Muy insatisfecho', label_en:'Very dissatisfied', desc_es:'Ignorado, Estresado, Frustrado', desc_en:'Ignored, Stressed, Frustrated'},
+  ];
+  // Determine user's EI level from their score (1-5)
+  const userEiLevel = lqaScores.length>0 ? (score>=90?5:score>=75?4:score>=55?3:score>=30?2:1) : 0;
+  const eiScaleHtml = eiLevels.map(l => {
+    const isActive = userEiLevel>0 && l.n === userEiLevel;
+    const badge = isActive ? (LANG==='en'?'YOU':'TÚ') : '';
+    return '<div style="display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;margin-bottom:.35rem;border-radius:var(--r2);background:'+(isActive?l.bg:'transparent')+';border:1.5px solid '+(isActive?l.border:'transparent')+';position:relative;transition:all .2s'+(isActive?';box-shadow:0 2px 8px rgba(0,0,0,.04)':'')+'">'
+      +'<div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;font-weight:700;font-size:.85rem;color:'+(isActive?'#fff':l.color)+';background:'+(isActive?l.color:l.bg)+';border:2px solid '+l.border+';flex-shrink:0">'+l.n+'</div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-family:Quicksand,sans-serif;font-size:.78rem;font-weight:700;color:'+(isActive?l.color:'var(--parch2)')+'">'+( LANG==='en'?l.label_en:l.label_es)+' — '+l.n+' pts'+(isActive?' ◆':'')+'</div>'
+      +'<div style="font-family:DM Mono,monospace;font-size:.58rem;color:var(--parch3);letter-spacing:.03em;margin-top:.1rem">'+(LANG==='en'?l.desc_en:l.desc_es)+'</div>'
+      +'</div>'
+      +(isActive?'<div style="font-family:DM Mono,monospace;font-size:.55rem;color:'+l.color+';text-transform:uppercase;letter-spacing:.06em;font-weight:600;flex-shrink:0">'+badge+'</div>':'')
+      +'</div>';
+  }).join('')
+  + (userEiLevel===0?'<div style="text-align:center;padding:.6rem;font-family:DM Mono,monospace;font-size:.6rem;color:var(--parch3);letter-spacing:.04em">'+(LANG==='en'?'Complete exams to see your level here':'Completa exámenes para ver tu nivel aquí')+'</div>':'');
+
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqa()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?'LQA Information':'Información LQA'}</div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fff8f0,#faf4e8);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r);padding:1.2rem;margin-bottom:1.2rem">
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem">${LANG==='en'?'What is LQA?':'¿Qué es LQA?'}</div>
+      <div style="font-size:.8rem;color:var(--parch2);line-height:1.6">${LANG==='en'?'Leading Quality Assurance (LQA) is a comprehensive audit system measuring service excellence across 80 standards. It evaluates efficiency, service quality, emotional intelligence, sustainability, and guest experience using real-world scenarios and behavioral indicators.':'Leading Quality Assurance (LQA) es un sistema integral de auditoría que mide la excelencia del servicio en 80 estándares. Evalúa eficiencia, calidad del servicio, inteligencia emocional, sostenibilidad y experiencia del huésped utilizando escenarios reales e indicadores de comportamiento.'}</div>
+    </div>
+
+    <div style="font-size:.72rem;font-weight:700;color:#7a6aaa;text-transform:uppercase;margin-bottom:.8rem;letter-spacing:.06em">— ${LANG==='en'?'EI Guest Connection':'Conexión Emocional con el Huésped'} —</div>
+
+    <div style="background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 50%,#f0e8d8 100%);border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);padding:1rem;margin-bottom:1.2rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle,rgba(196,154,60,.06) 0%,transparent 70%);pointer-events:none"></div>
+      ${eiScaleHtml}
+    </div>
+
+    <div style="font-size:.72rem;font-weight:700;color:#7a6aaa;text-transform:uppercase;margin-bottom:.8rem;letter-spacing:.06em">— ${LANG==='en'?'Current Performance':'Desempeño Actual'} —</div>
+
+    <div class="lqa-score-ring">
+      <svg width="180" height="180" style="display:block">
+        <circle cx="90" cy="90" r="54" class="lqa-score-ring-bg"/>
+        <circle cx="90" cy="90" r="54" class="lqa-score-ring-progress" style="stroke-dasharray:${circumference};stroke-dashoffset:${strokeDashoffset}"/>
+      </svg>
+      <div class="lqa-score-ring-text">
+        <div class="lqa-score-ring-num">${score}%</div>
+        <div class="lqa-score-ring-label">${lqaScores.length>0?(LANG==='en'?'Your level (last 5)':'Tu nivel (últimos 5)'):(LANG==='en'?'Audit Oct 2025':'Auditoría Oct 2025')}</div>
+      </div>
+    </div>
+
+    <div style="font-size:.72rem;font-weight:700;color:#7a6aaa;text-transform:uppercase;margin-bottom:.8rem;margin-top:1.5rem;letter-spacing:.06em">— ${LANG==='en'?'Standards by Category':'Estándares por Categoría'} —</div>
+    ${LQA_CATEGORIES.map(cat=>{
+      const catStds=LQA_STANDARDS.filter(s=>s.cat===cat.id);
+      const metStds=catStds.filter(s=>s.met).length;
+      const pct=Math.round(metStds/catStds.length*100);
+      return `<div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:.8rem;margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem">
+          <span style="width:28px;height:28px;border-radius:8px;background:${cat.color}15;border:1.5px solid ${cat.color}30;display:flex;align-items:center;justify-content:center;color:${cat.color};font-size:.7rem">${cat.icon}</span>
+          <div style="flex:1">
+            <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?cat.title_en:cat.title}</div>
+          </div>
+          <span style="font-size:.75rem;font-weight:600;color:${cat.color}">${metStds}/${catStds.length}</span>
+        </div>
+        <div style="background:var(--parch4);border-radius:var(--r3);height:6px;overflow:hidden">
+          <div style="background:${cat.color};height:100%;width:${pct}%;transition:width .3s"></div>
+        </div>
+      </div>`}).join('')}
+  </div>`;
+}
+
+let lqaExamIndex=0;let lqaExamQuestions=[];let lqaExamScore=0;
+function startLqaExam(){
+  lqaExamQuestions=[...LQA_EXAM_QUESTIONS].sort(()=>Math.random()-.5).slice(0,10);
+  lqaExamIndex=0;lqaExamScore=0;
+  lqaExamAnswered=false;
+  renderLqaExamQuestion();
+}
+function renderLqaExamQuestion(){
+  if(lqaExamIndex>=lqaExamQuestions.length){renderLqaExamResults();return;}
+  const q=lqaExamQuestions[lqaExamIndex];
+  const c=document.getElementById('appContent');
+
+  if(!lqaExamAnswered){
+    c.innerHTML=`<div class="sup-wrap">
+      <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Question':'Pregunta'} ${lqaExamIndex+1}/10</div>
+        <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
+          <div style="background:#c49a3c;height:100%;width:${(lqaExamIndex+1)/10*100}%;transition:width .3s"></div>
         </div>
       </div>
 
-      <!-- Title -->
-      <div style="
-        font-family:'Cinzel',serif;font-size:1rem;font-weight:600;
-        color:#7d5c2f;letter-spacing:.06em;margin-bottom:.5rem;
-        text-transform:uppercase;
-      ">${title}</div>
+      <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
+        <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;font-weight:600">${LANG==='en'?q.question_en:q.question}</div>
+      </div>
 
-      <!-- Description -->
-      <div style="
-        font-family:'Quicksand',sans-serif;font-size:.82rem;
-        color:rgba(60,40,15,.65);line-height:1.7;margin-bottom:1.1rem;
-      ">${desc}</div>
+      <div style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
+        ${q.options.map((opt,idx)=>`<button onclick="lqaExamAnswer(${idx})" style="padding:.9rem;background:linear-gradient(135deg,rgba(72,136,160,.06),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);color:var(--parch2);font-weight:600;cursor:pointer;transition:all .2s;text-align:left">${LANG==='en'?q.options_en[idx]:opt}</button>`).join('')}
+      </div>
 
-      <!-- XP reward -->
-      <div style="
-        display:inline-flex;align-items:center;gap:.4rem;
-        background:rgba(196,154,60,.1);border:1px solid rgba(196,154,60,.25);
-        border-radius:20px;padding:.3rem .85rem;
-        font-family:'DM Mono',monospace;font-size:.62rem;
-        color:#9a7340;letter-spacing:.08em;margin-bottom:1.25rem;
-      ">+${a.xp} XP</div>
-
-      <!-- Close -->
-      <button onclick="document.getElementById('gemDetailPopup').remove()" style="
-        width:100%;padding:.62rem;
-        background:transparent;
-        border:1.5px solid rgba(196,154,60,.25);border-radius:10px;
-        font-family:'DM Mono',monospace;font-size:.58rem;
-        letter-spacing:.1em;text-transform:uppercase;
-        color:rgba(60,40,15,.4);cursor:pointer;
-        transition:all .18s;
-      " onmouseover="this.style.borderColor='rgba(196,154,60,.5)';this.style.color='rgba(60,40,15,.65)'"
-         onmouseout="this.style.borderColor='rgba(196,154,60,.25)';this.style.color='rgba(60,40,15,.4)'">
-        ${isEN?'Close':'Cerrar'}
-      </button>
+      <div onclick="renderLqa()" style="text-align:center;color:var(--parch3);font-size:.75rem;cursor:pointer;text-decoration:underline">${LANG==='en'?'Back to menu':'Volver al menú'}</div>
     </div>`;
+  }
+}
+function lqaExamAnswer(optIdx){
+  const q=lqaExamQuestions[lqaExamIndex];
+  const isCorrect=(optIdx===q.correct);
+  if(isCorrect) lqaExamScore++;
 
-  popup.addEventListener('click', e => {
-    if(e.target === popup) popup.remove();
-  });
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="text-align:center;margin:1.5rem 0">
+      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct!':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
+    </div>
 
-  document.body.appendChild(popup);
+    <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Explanation':'Explicación'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.6">${LANG==='en'?q.explanation_en:q.explanation}</div>
+      <div style="font-size:.8rem;color:var(--parch3);margin-top:1rem;font-style:italic">${LANG==='en'?'Standard #':'Estándar #'}${q.standardRef}</div>
+    </div>
+
+    <button onclick="lqaExamIndex++;lqaExamAnswered=false;renderLqaExamQuestion()" style="width:100%;padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+  </div>`;
+  lqaExamAnswered=true;
+}
+function renderLqaExamResults(){
+  const pct=Math.round(lqaExamScore/lqaExamQuestions.length*100);
+  const xpEarned=Math.round(lqaExamScore*50);
+  const emp=getEmp(currentUser);
+  if(emp){
+    emp.xp=(emp.xp||0)+xpEarned;
+    if(!emp.lqaScores) emp.lqaScores=[];
+    emp.lqaScores.push({type:'exam',score:lqaExamScore,total:lqaExamQuestions.length,date:Date.now()});
+    saveDB();
+  }
+
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="text-align:center;margin:2rem 0">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#c49a3c;margin-bottom:.5rem">${lqaExamScore}/10</div>
+      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:2rem">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</div>
+      <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1.5rem">
+        <div style="font-size:.85rem;color:var(--parch3);text-transform:uppercase;margin-bottom:.3rem">${LANG==='en'?'Score':'Puntuación'}</div>
+        <div style="font-size:2rem;font-weight:700;color:#c49a3c">${pct}%</div>
+        <div style="font-size:.75rem;color:var(--parch3);margin-top:.3rem">+${xpEarned} XP ${LANG==='en'?'earned':'ganados'}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Try Again':'Intentar de Nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Back to Menu':'Volver al Menú'}</button>
+    </div>
+  </div>`;
+}
+
+let lqaSituationIndex=0;let lqaSituationQuestions=[];let lqaSituationScore=0;
+function startLqaSituations(){
+  lqaSituationQuestions=[...LQA_SITUATIONS].sort(()=>Math.random()-.5).slice(0,10);
+  lqaSituationIndex=0;lqaSituationScore=0;
+  renderLqaSituationQuestion();
+}
+function renderLqaSituationQuestion(){
+  if(lqaSituationIndex>=lqaSituationQuestions.length){renderLqaSituationResults();return;}
+  const s=lqaSituationQuestions[lqaSituationIndex];
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${lqaSituationIndex+1}/${lqaSituationQuestions.length}</div>
+      <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
+        <div style="background:#7a6aaa;height:100%;width:${(lqaSituationIndex+1)/lqaSituationQuestions.length*100}%;transition:width .3s"></div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem">${LANG==='en'?'Situation':'Situación'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;margin-bottom:1rem">${LANG==='en'?s.scn_en:s.scn}</div>
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?s.q_en:s.q}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
+      ${s.opts.map((o,i)=>`
+        <button onclick="lqaSituationAnswer(${i})" style="padding:.8rem;background:#fff;border:2px solid var(--line2);border-radius:var(--r2);text-align:left;cursor:pointer;transition:all .2s;color:var(--parch2);font-size:.85rem;line-height:1.5">
+          <div style="font-weight:600;color:var(--parchment);margin-bottom:.3rem">${String.fromCharCode(65+i)}.</div>
+          ${LANG==='en'?s.opts_en[i]:o}
+        </button>
+      `).join('')}
+    </div>
+
+    <div onclick="renderLqa()" style="text-align:center;color:var(--parch3);font-size:.75rem;cursor:pointer;text-decoration:underline">${LANG==='en'?'Back to menu':'Volver al menú'}</div>
+  </div>`;
+}
+function lqaSituationAnswer(idx){
+  const s=lqaSituationQuestions[lqaSituationIndex];
+  const isCorrect=idx===s.corr;
+  if(isCorrect) lqaSituationScore++;
+
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="text-align:center;margin:1.5rem 0">
+      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct!':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Explanation':'Explicación'}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?s.expl_en:s.expl}</div>
+    </div>
+
+    <button onclick="lqaSituationIndex++;renderLqaSituationQuestion()" style="width:100%;padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+  </div>`;
+}
+function renderLqaSituationResults(){
+  const pct=Math.round(lqaSituationScore/lqaSituationQuestions.length*100);
+  const emp=getEmp(currentUser);
+  if(emp){
+    if(!emp.lqaScores) emp.lqaScores=[];
+    emp.lqaScores.push({type:'situations',score:lqaSituationScore,total:lqaSituationQuestions.length,date:Date.now()});
+    saveDB();
+  }
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="text-align:center;margin:2rem 0">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${lqaSituationScore}/${lqaSituationQuestions.length}</div>
+      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:2rem">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Again':'De Nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Menu':'Menú'}</button>
+    </div>
+  </div>`;
+}
+
+let lqaAuditorIndex=0;let lqaAuditorScenarios=[];let lqaAuditorScore=0;
+function startLqaAuditor(){
+  lqaAuditorScenarios=[...LQA_AUDIT_SCENARIOS].sort(()=>Math.random()-.5).slice(0,10);
+  lqaAuditorIndex=0;lqaAuditorScore=0;
+  renderLqaAuditorScenario();
+}
+function renderLqaAuditorScenario(){
+  if(lqaAuditorIndex>=lqaAuditorScenarios.length){renderLqaAuditorResults();return;}
+  const s=lqaAuditorScenarios[lqaAuditorIndex];
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${lqaAuditorIndex+1}/${lqaAuditorScenarios.length}</div>
+      <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
+        <div style="background:#4d8a5e;height:100%;width:${(lqaAuditorIndex+1)/lqaAuditorScenarios.length*100}%;transition:width .3s"></div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Self-Evaluation':'Auto-Evaluación'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Would this service pass the LQA audit?':'¿Este servicio pasaría la auditoría LQA?'}</div>
+
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem;margin-top:1rem">${LANG==='en'?'What You Observed':'Lo Que Observaste'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;background:rgba(242,234,224,.3);padding:.8rem;border-radius:var(--r2);margin-bottom:1rem">${LANG==='en'?s.scn_en:s.scn}</div>
+
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem">${LANG==='en'?'Your Assessment':'Tu Evaluación'}</div>
+    </div>
+
+    <div style="display:flex;gap:.6rem;margin-bottom:1rem">
+      <button onclick="lqaAuditorAnswer('meet')" style="flex:1;padding:.9rem;background:rgba(77,138,94,.1);border:2px solid #4d8a5e;border-radius:var(--r);color:#4d8a5e;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Yes, It Passes ✓':'Sí, Pasaría ✓'}</button>
+      <button onclick="lqaAuditorAnswer('below')" style="flex:1;padding:.9rem;background:rgba(196,112,104,.1);border:2px solid #c47068;border-radius:var(--r);color:#c47068;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'No, It Fails ✗':'No, Suspendería ✗'}</button>
+    </div>
+
+    <div onclick="renderLqa()" style="text-align:center;color:var(--parch3);font-size:.75rem;cursor:pointer;text-decoration:underline">${LANG==='en'?'Back to menu':'Volver al menú'}</div>
+  </div>`;
+}
+function lqaAuditorAnswer(verdict){
+  const s=lqaAuditorScenarios[lqaAuditorIndex];
+  const isCorrect=(verdict===s.verd);
+  if(isCorrect) lqaAuditorScore++;
+
+  const std=LQA_STANDARDS.find(x=>x.id===s.std);
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="text-align:center;margin:1.5rem 0">
+      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct Judgment':'Incorrect Judgment'):(isCorrect?'Juicio Correcto':'Juicio Incorrecto')}</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Standard':'Estándar'} #${s.std}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6;margin-bottom:1rem">${LANG==='en'?std?.std_en:std?.std}</div>
+
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-top:1rem;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Analysis':'Análisis'}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?s.expl_en:s.expl}</div>
+    </div>
+
+    <button onclick="lqaAuditorIndex++;renderLqaAuditorScenario()" style="width:100%;padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+  </div>`;
+}
+function renderLqaAuditorResults(){
+  const pct=Math.round(lqaAuditorScore/lqaAuditorScenarios.length*100);
+  const emp=getEmp(currentUser);
+  if(emp){
+    if(!emp.lqaScores) emp.lqaScores=[];
+    emp.lqaScores.push({type:'audit',score:lqaAuditorScore,total:lqaAuditorScenarios.length,date:Date.now()});
+    saveDB();
+  }
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="text-align:center;margin:2rem 0">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#4d8a5e;margin-bottom:.5rem">${lqaAuditorScore}/${lqaAuditorScenarios.length}</div>
+      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${LANG==='en'?'Evaluation Accuracy':'Precisión de Evaluación'}: <strong>${pct}%</strong></div>
+      <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem">
+        <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${pct>=80?LANG==='en'?'Great job! You have a solid understanding of the audit standards and what needs to pass.':'¡Excelente! Tienes un sólido conocimiento de los estándares de auditoría.':LANG==='en'?'Keep studying the standards to improve your audit readiness.':'Sigue estudiando los estándares para mejorar tu preparación.'}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Try Again':'Intentar de Nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Menu':'Menú'}</button>
+    </div>
+  </div>`;
 }
 
 // ═══════════════════════════════════════════════════
