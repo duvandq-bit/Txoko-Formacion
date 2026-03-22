@@ -4060,7 +4060,11 @@ async function supaFetchNotifications(name) {
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if(!res.ok) return [];
-    return await res.json();
+    const all = await res.json();
+    // Filter out notifications already read locally (covers target=all and failed PATCHes)
+    const emp = getEmp(name);
+    const readIds = emp.readNotifIds || [];
+    return all.filter(n => !readIds.includes(n.id));
   } catch(e) { return []; }
 }
 
@@ -4202,6 +4206,17 @@ async function renderNotifPanel() {
 
 async function markNotifRead(id, el) {
   await supaMarkNotifRead(id);
+  // Also persist locally so it never reappears even if Supabase PATCH fails
+  if(currentUser) {
+    const emp = getEmp(currentUser);
+    if(!emp.readNotifIds) emp.readNotifIds = [];
+    if(!emp.readNotifIds.includes(id)) {
+      emp.readNotifIds.push(id);
+      // Keep only last 100 to avoid bloating localStorage
+      if(emp.readNotifIds.length > 100) emp.readNotifIds = emp.readNotifIds.slice(-100);
+      saveDB();
+    }
+  }
   el.style.opacity = '.4';
   el.style.pointerEvents = 'none';
   const badge = document.getElementById('notifBadge');
@@ -10446,15 +10461,11 @@ function renderLqaInfo(){
   const c=document.getElementById('appContent');
   const emp=getEmp(currentUser);
   const lqaScores=emp&&emp.lqaScores?emp.lqaScores:[];
-  const totalMet=LQA_STANDARDS.filter(s=>s.met).length;
-  const auditScore=Math.round(totalMet/LQA_STANDARDS.length*100*10)/10;
-  let userScore=auditScore;
+  let score=0;
   if(lqaScores.length>0){
     const recentScores=lqaScores.slice(-5);
-    const avgPct=Math.round(recentScores.reduce((a,s)=>a+(s.score/s.total*100),0)/recentScores.length*10)/10;
-    userScore=avgPct;
+    score=Math.round(recentScores.reduce((a,s)=>a+(s.score/s.total*100),0)/recentScores.length*10)/10;
   }
-  const score=userScore;
   const circumference=2*Math.PI*54;
   const strokeDashoffset=circumference-(score/100*circumference);
 
@@ -10508,7 +10519,7 @@ function renderLqaInfo(){
       </svg>
       <div class="lqa-score-ring-text">
         <div class="lqa-score-ring-num">${score}%</div>
-        <div class="lqa-score-ring-label">${lqaScores.length>0?(LANG==='en'?'Your level (last 5)':'Tu nivel (últimos 5)'):(LANG==='en'?'Audit Oct 2025':'Auditoría Oct 2025')}</div>
+        <div class="lqa-score-ring-label">${lqaScores.length>0?(LANG==='en'?'Your level (last 5)':'Tu nivel (últimos 5)'):(LANG==='en'?'Take exams to start':'Haz exámenes para empezar')}</div>
       </div>
     </div>
 
