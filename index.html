@@ -2077,6 +2077,73 @@ body::before{
   content:'';position:absolute;width:100%;height:100%;
   border:1px solid var(--gold);transform:rotate(45deg);
 }
+
+/* ═══════════════════════════════════════
+   LAYOUT FIX — sticky nav + scroll
+═══════════════════════════════════════ */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+.screen {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.screen.active {
+  display: flex;
+}
+#screenLogin {
+  overflow-y: auto;
+  height: 100vh;
+}
+#screenApp {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.app-header {
+  flex-shrink: 0;
+  position: relative !important;
+  top: auto !important;
+  z-index: 100;
+}
+.app-nav {
+  flex-shrink: 0;
+  position: relative !important;
+  top: auto !important;
+  z-index: 90;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.app-nav::-webkit-scrollbar { display: none; }
+.app-content, #appContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 1.5rem 1.25rem 2rem;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@keyframes gemDetailIn {
+  from { opacity:0; transform:scale(.88) translateY(12px); }
+  to   { opacity:1; transform:scale(1)   translateY(0); }
+}
+@keyframes gemShinePopup {
+  0%,100% { filter:brightness(1) drop-shadow(0 4px 12px rgba(196,154,60,.3)); }
+  50%     { filter:brightness(1.2) drop-shadow(0 6px 20px rgba(196,154,60,.55)); }
+}
+
 </style>
 </head>
 <body>
@@ -9885,14 +9952,106 @@ function renderAchievementsSection(){
         const gemIcon=gemSVG(a.gemColors[0],a.gemColors[1],a.gemColors[2],a.gemShape);
         const lockedGem=`<svg viewBox="0 0 64 64" width="38" height="38"><defs><linearGradient id="lkg_${a.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ccc" stop-opacity=".5"/><stop offset="100%" stop-color="#999" stop-opacity=".3"/></linearGradient><radialGradient id="lkr_${a.id}" cx=".4" cy=".3" r=".5"><stop offset="0%" stop-color="#ddd" stop-opacity=".3"/><stop offset="100%" stop-color="#aaa" stop-opacity="0"/></radialGradient></defs><polygon points="32,2 62,24 51,62 13,62 2,24" fill="url(#lkg_${a.id})" stroke="#bbb" stroke-width="1" opacity=".5"/><polygon points="32,2 48,24 32,17 16,24" fill="#eee" opacity=".2"/><rect x="0" y="0" width="64" height="64" fill="url(#lkr_${a.id})" opacity=".5"/><line x1="2" y1="24" x2="62" y2="24" stroke="#ccc" stroke-width=".4" opacity=".2"/><rect x="25" y="28" width="14" height="16" rx="3" fill="#b0b0b0" opacity=".3"/><rect x="27" y="30" width="10" height="12" rx="2" fill="#a0a0a0" opacity=".15"/><path d="M27,30 L27,26 Q27,20 32,20 Q37,20 37,26 L37,30" fill="none" stroke="#aaa" stroke-width="2" opacity=".35" stroke-linecap="round"/><circle cx="32" cy="37" r="1.8" fill="#999" opacity=".3"/><line x1="32" y1="37" x2="32" y2="41" stroke="#999" stroke-width="1" opacity=".25"/></svg>`;
         const tooltip = LANG==='en'?(isUnlocked?a.title_en+': '+a.desc_en:'???'):(isUnlocked?a.title+': '+a.desc:'???');
-        return `<div class="achievement-badge ${isUnlocked?'unlocked':'locked'}" title="${tooltip}">
-          <span>${isUnlocked?gemIcon:lockedGem}</span>
-        </div>`;
+        return `<div class="achievement-badge ${isUnlocked?'unlocked':'locked'}" title="${tooltip}"
+          style="${isUnlocked?'cursor:pointer':''}"
+          onclick="${isUnlocked?`showGemDetail('${a.id}')`:''}"
+        ><span>${isUnlocked?gemIcon:lockedGem}</span></div>`;
       }).join('')}
     </div>
   </div>`;
 }
 
+
+
+// ── Gem detail popup ──────────────────────────────
+function showGemDetail(achId){
+  const a = ACHIEVEMENTS.find(x=>x.id===achId);
+  if(!a) return;
+  const isEN = LANG==='en';
+  const title = isEN ? a.title_en : a.title;
+  const desc  = isEN ? a.desc_en  : a.desc;
+  const gemIcon = gemSVG(a.gemColors[0],a.gemColors[1],a.gemColors[2],a.gemShape);
+
+  // Remove any existing popup
+  const existing = document.getElementById('gemDetailPopup');
+  if(existing) existing.remove();
+
+  const popup = document.createElement('div');
+  popup.id = 'gemDetailPopup';
+  popup.style.cssText = [
+    'position:fixed','inset:0','z-index:9999',
+    'background:rgba(20,16,10,.75)',
+    'backdrop-filter:blur(8px)',
+    '-webkit-backdrop-filter:blur(8px)',
+    'display:flex','align-items:center','justify-content:center',
+    'padding:1.5rem'
+  ].join(';');
+
+  popup.innerHTML = `
+    <div style="
+      background:linear-gradient(155deg,#faf6ee,#f4ede2);
+      border:1.5px solid rgba(196,154,60,.35);
+      border-radius:18px;
+      padding:2rem 1.75rem 1.5rem;
+      max-width:300px;width:100%;
+      text-align:center;
+      box-shadow:0 24px 64px rgba(0,0,0,.25),0 0 0 1px rgba(196,154,60,.1);
+      animation:gemDetailIn .35s cubic-bezier(.34,1.4,.64,1) both;
+      position:relative;overflow:hidden;
+    ">
+      <!-- Gold top line -->
+      <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.5),transparent)"></div>
+
+      <!-- Gem -->
+      <div style="display:flex;justify-content:center;margin-bottom:1.1rem">
+        <div style="width:72px;height:72px;animation:gemShinePopup 2s ease-in-out infinite">
+          ${gemIcon}
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div style="
+        font-family:'Cinzel',serif;font-size:1rem;font-weight:600;
+        color:#7d5c2f;letter-spacing:.06em;margin-bottom:.5rem;
+        text-transform:uppercase;
+      ">${title}</div>
+
+      <!-- Description -->
+      <div style="
+        font-family:'Quicksand',sans-serif;font-size:.82rem;
+        color:rgba(60,40,15,.65);line-height:1.7;margin-bottom:1.1rem;
+      ">${desc}</div>
+
+      <!-- XP reward -->
+      <div style="
+        display:inline-flex;align-items:center;gap:.4rem;
+        background:rgba(196,154,60,.1);border:1px solid rgba(196,154,60,.25);
+        border-radius:20px;padding:.3rem .85rem;
+        font-family:'DM Mono',monospace;font-size:.62rem;
+        color:#9a7340;letter-spacing:.08em;margin-bottom:1.25rem;
+      ">+${a.xp} XP</div>
+
+      <!-- Close -->
+      <button onclick="document.getElementById('gemDetailPopup').remove()" style="
+        width:100%;padding:.62rem;
+        background:transparent;
+        border:1.5px solid rgba(196,154,60,.25);border-radius:10px;
+        font-family:'DM Mono',monospace;font-size:.58rem;
+        letter-spacing:.1em;text-transform:uppercase;
+        color:rgba(60,40,15,.4);cursor:pointer;
+        transition:all .18s;
+      " onmouseover="this.style.borderColor='rgba(196,154,60,.5)';this.style.color='rgba(60,40,15,.65)'"
+         onmouseout="this.style.borderColor='rgba(196,154,60,.25)';this.style.color='rgba(60,40,15,.4)'">
+        ${isEN?'Close':'Cerrar'}
+      </button>
+    </div>`;
+
+  popup.addEventListener('click', e => {
+    if(e.target === popup) popup.remove();
+  });
+
+  document.body.appendChild(popup);
+}
 
 // ═══════════════════════════════════════════════════
 //  TXOKO — MINIJUEGO
