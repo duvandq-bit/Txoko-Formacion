@@ -4350,24 +4350,24 @@ const XP_LEVELS = [
   {level:23, xp:4720,  title:'Domador de Clientes Furiosos',    title_en:'Furious Client Tamer',             icon:'🦖', color:'#f8e4a0'},
   {level:24, xp:5160,  title:'Canciller de la Cristalería',     title_en:'Chancellor of the Glassware',     icon:'🏆', color:'#fbe8a0'},
   {level:25, xp:5620,  title:'Gran Maestre del Servicio',       title_en:'Grand Maester of Service',         icon:'📜', color:'#ffd700'},
-  // ── TIER 6: MÍTICO (naranja épico) ──
-  {level:26, xp:6100,  title:'Fénix del Turno Doble',           title_en:'Double Shift Phoenix',             icon:'🦅', color:'#ffcc00'},
-  {level:27, xp:6600,  title:'Titán del Room Service',          title_en:'Room Service Titan',               icon:'🗿', color:'#ffc000'},
-  {level:28, xp:7120,  title:'Semidiós de la Sala',             title_en:'Demigod of the Dining Hall',       icon:'⚡', color:'#ffb400'},
-  {level:29, xp:7660,  title:'Kraken de las Mesas Grandes',     title_en:'Kraken of the Large Tables',       icon:'🐙', color:'#ffaa00'},
-  {level:30, xp:8220,  title:'Leyenda Viviente de Txoko',       title_en:'Living Legend of Txoko',           icon:'🌟', color:'#ff9e00'},
-  // ── TIER 7: DIVINO (rojo fuego) ──
-  {level:31, xp:8800,  title:'El que Susurra a los Chefs',      title_en:'The Chef Whisperer',               icon:'👂', color:'#ff9200'},
-  {level:32, xp:9400,  title:'Inmortal del Protocolo',          title_en:'Protocol Immortal',                icon:'💀', color:'#ff8600'},
-  {level:33, xp:10020, title:'Forjador de Estrellas Michelin',  title_en:'Michelin Star Forger',             icon:'⭐', color:'#ff7a00'},
-  {level:34, xp:10660, title:'Titán de las Tres Estrellas',     title_en:'Titan of the Three Stars',         icon:'💫', color:'#ff6e00'},
-  {level:35, xp:11320, title:'Arcángel del Hospitality',        title_en:'Archangel of Hospitality',         icon:'😇', color:'#ff6200'},
-  // ── TIER 8: SUPREMO (rojo intenso → carmesí) ──
-  {level:36, xp:12000, title:'Elegido por Berasategui',         title_en:'Chosen by Berasategui',            icon:'👁️', color:'#ff5500'},
-  {level:37, xp:12700, title:'Avatar del Ritz-Carlton',         title_en:'Avatar of the Ritz-Carlton',       icon:'🏨', color:'#ff4800'},
-  {level:38, xp:13420, title:'Entidad Cósmica de Sala',         title_en:'Cosmic Entity of the Floor',       icon:'🌌', color:'#ff3b00'},
-  {level:39, xp:14160, title:'Dios Supremo del Hospitality',    title_en:'Supreme God of Hospitality',       icon:'🔱', color:'#ff2200'},
-  {level:40, xp:15000, title:'TXOKO ASCENDIDO ∞',               title_en:'TXOKO ASCENDED ∞',                 icon:'♾️', color:'#ff0000'},
+  // ── TIER 6: MÍTICO (naranja épico) — XP gaps increase significantly ──
+  {level:26, xp:6500,  title:'Fénix del Turno Doble',           title_en:'Double Shift Phoenix',             icon:'🦅', color:'#ffcc00'},
+  {level:27, xp:7500,  title:'Titán del Room Service',          title_en:'Room Service Titan',               icon:'🗿', color:'#ffc000'},
+  {level:28, xp:8650,  title:'Semidiós de la Sala',             title_en:'Demigod of the Dining Hall',       icon:'⚡', color:'#ffb400'},
+  {level:29, xp:9950,  title:'Kraken de las Mesas Grandes',     title_en:'Kraken of the Large Tables',       icon:'🐙', color:'#ffaa00'},
+  {level:30, xp:11400, title:'Leyenda Viviente de Txoko',       title_en:'Living Legend of Txoko',           icon:'🌟', color:'#ff9e00'},
+  // ── TIER 7: DIVINO (rojo fuego) — steep curve ──
+  {level:31, xp:13100, title:'El que Susurra a los Chefs',      title_en:'The Chef Whisperer',               icon:'👂', color:'#ff9200'},
+  {level:32, xp:15100, title:'Inmortal del Protocolo',          title_en:'Protocol Immortal',                icon:'💀', color:'#ff8600'},
+  {level:33, xp:17400, title:'Forjador de Estrellas Michelin',  title_en:'Michelin Star Forger',             icon:'⭐', color:'#ff7a00'},
+  {level:34, xp:20000, title:'Titán de las Tres Estrellas',     title_en:'Titan of the Three Stars',         icon:'💫', color:'#ff6e00'},
+  {level:35, xp:23000, title:'Arcángel del Hospitality',        title_en:'Archangel of Hospitality',         icon:'😇', color:'#ff6200'},
+  // ── TIER 8: SUPREMO (rojo intenso → carmesí) — legendary grind ──
+  {level:36, xp:26500, title:'Elegido por Berasategui',         title_en:'Chosen by Berasategui',            icon:'👁️', color:'#ff5500'},
+  {level:37, xp:30500, title:'Avatar del Ritz-Carlton',         title_en:'Avatar of the Ritz-Carlton',       icon:'🏨', color:'#ff4800'},
+  {level:38, xp:35500, title:'Entidad Cósmica de Sala',         title_en:'Cosmic Entity of the Floor',       icon:'🌌', color:'#ff3b00'},
+  {level:39, xp:41500, title:'Dios Supremo del Hospitality',    title_en:'Supreme God of Hospitality',       icon:'🔱', color:'#ff2200'},
+  {level:40, xp:50000, title:'TXOKO ASCENDIDO ∞',               title_en:'TXOKO ASCENDED ∞',                 icon:'♾️', color:'#ff0000'},
 ];
 
 // TUNIC hex level icon generator
@@ -10077,6 +10077,17 @@ const ACHIEVEMENTS = [
   {id:'a_xp500', gemColors:['#f0b840','#d08820','#ffe8a0'], gemShape:'star', title:'500 XP', title_en:'500 XP', desc:'Gana 500 puntos de experiencia', desc_en:'Earn 500 experience points', check:emp=>(emp.xp||0)>=500},
   {id:'a_xp2000', gemColors:['#f8d040','#d8b020','#fff0a0'], gemShape:'star', title:'2000 XP', title_en:'2000 XP', desc:'Gana 2000 puntos de experiencia', desc_en:'Earn 2000 experience points', check:emp=>(emp.xp||0)>=2000},
   {id:'a_xp5000', gemColors:['#f8b050','#d8802a','#ffe8a8'], gemShape:'crown', title:'5000 XP Elite', title_en:'5000 XP Elite', desc:'Gana 5000 puntos de experiencia', desc_en:'Earn 5000 experience points', check:emp=>(emp.xp||0)>=5000},
+  // ── LQA Achievements ──
+  {id:'a_lqa_first', gemColors:['#4888a0','#306880','#88c8e0'], gemShape:'shield', title:'Iniciado LQA', title_en:'LQA Initiate', desc:'Completa tu primera actividad LQA', desc_en:'Complete your first LQA activity', check:emp=>(emp.lqaExamsCompleted||0)+(emp.lqaSituationsCompleted||0)+(emp.lqaAuditsCompleted||0)>=1},
+  {id:'a_lqa_exam5', gemColors:['#4888a0','#306880','#a0d8f0'], gemShape:'book', title:'Estudiante LQA', title_en:'LQA Student', desc:'Completa 5 exámenes LQA', desc_en:'Complete 5 LQA exams', check:emp=>(emp.lqaExamsCompleted||0)>=5},
+  {id:'a_lqa_exam90', gemColors:['#c49a3c','#a47a2c','#f0d888'], gemShape:'trophy', title:'Experto LQA', title_en:'LQA Expert', desc:'Saca 90%+ en examen LQA', desc_en:'Score 90%+ on LQA exam', check:emp=>(emp.lqaExamBest||0)>=90},
+  {id:'a_lqa_exam100', gemColors:['#f0c030','#d0a018','#fff8a0'], gemShape:'crown', title:'Perfección LQA', title_en:'LQA Perfection', desc:'100% en examen LQA', desc_en:'Score 100% on LQA exam', check:emp=>(emp.lqaExamBest||0)>=100},
+  {id:'a_lqa_sit5', gemColors:['#7a6aaa','#5a4a8a','#b8a8e0'], gemShape:'scroll', title:'Veterano de situaciones', title_en:'Situation Veteran', desc:'Completa 5 rondas de situaciones LQA', desc_en:'Complete 5 LQA situation rounds', check:emp=>(emp.lqaSituationsCompleted||0)>=5},
+  {id:'a_lqa_sit90', gemColors:['#7a6aaa','#5a4a8a','#d0c0f8'], gemShape:'trophy', title:'Maestro de situaciones', title_en:'Situation Master', desc:'90%+ en situaciones LQA', desc_en:'Score 90%+ on LQA situations', check:emp=>(emp.lqaSituationBest||0)>=90},
+  {id:'a_lqa_audit5', gemColors:['#4d8a5e','#2d6a3e','#a0e8b8'], gemShape:'shield', title:'Auditor interno', title_en:'Internal Auditor', desc:'Completa 5 simulaciones de auditoría', desc_en:'Complete 5 audit simulations', check:emp=>(emp.lqaAuditsCompleted||0)>=5},
+  {id:'a_lqa_audit90', gemColors:['#4d8a5e','#2d6a3e','#b8f0c8'], gemShape:'trophy', title:'Ojo de auditor', title_en:'Auditor\'s Eye', desc:'90%+ en simulador de auditoría', desc_en:'Score 90%+ on audit simulator', check:emp=>(emp.lqaAuditBest||0)>=90},
+  {id:'a_lqa_allround', gemColors:['#f0b830','#d09018','#ffe888'], gemShape:'crown', title:'Maestro LQA Completo', title_en:'Complete LQA Master', desc:'90%+ en las 3 actividades LQA', desc_en:'Score 90%+ on all 3 LQA activities', check:emp=>(emp.lqaExamBest||0)>=90&&(emp.lqaSituationBest||0)>=90&&(emp.lqaAuditBest||0)>=90},
+  {id:'a_lqa_20total', gemColors:['#d4944c','#b47430','#f8d0a0'], gemShape:'star', title:'Dedicado a la calidad', title_en:'Quality Dedicated', desc:'Completa 20 actividades LQA en total', desc_en:'Complete 20 total LQA activities', check:emp=>(emp.lqaExamsCompleted||0)+(emp.lqaSituationsCompleted||0)+(emp.lqaAuditsCompleted||0)>=20},
 ];
 
 function getUnlockedAchievements(emp){
@@ -10331,7 +10342,7 @@ const LQA_AUDIT_SCENARIOS = [
   {id:14, scn:'Después del postre, el camarero nos ofreció café, preguntó si preferíamos capuchino o espresso, y el café llegó en 7 minutos.', scn_en:'After dessert, the waiter offered us coffee, asked cappuccino or espresso, and the coffee arrived in 7 minutes.', std:37, verd:'below', expl:'El estándar #37 requiere que el café se sirva en 5 MINUTOS máximo después de tomar la comanda, no 7 minutos. Aunque el camarero hizo lo correcto ofreciendo y preguntando preferencias, el tiempo es un incumplimiento.', expl_en:'Standard #37 requires coffee be served within 5 MINUTES maximum after ordering, not 7 minutes. Although the waiter correctly offered and asked preferences, the timing is non-compliant.'},
   {id:15, scn:'Notamos que teníamos frío durante la cena en la terraza exterior. El camarero se dio cuenta por nuestro lenguaje corporal y proactivamente nos ofreció mantas sin que las pidiéramos.', scn_en:'We felt cold during dinner on the outdoor terrace. The waiter noticed from our body language and proactively offered us blankets without us asking.', std:73, verd:'meet', expl:'El estándar #73 requiere servicio ANTICIPATORIO detectando necesidades no expresadas. El camarero detectó signos no verbales y ofreció soluciones sin que pidieran. Este es un ejemplo perfecto de excelencia en EI Behavioral.', expl_en:'Standard #73 requires ANTICIPATORY service by detecting unexpressed needs. The waiter detected non-verbal signs and offered solutions without being asked. This is a perfect example of EI Behavioral excellence.'},
   {id:16, scn:'El camarero sirvió el agua con gas en copas antes de llegar a la mesa. Las copas estaban pre-llenadas en el área de servicio.', scn_en:'The waiter served the sparkling water in glasses before arriving at the table. The glasses were pre-filled in the service area.', std:48, verd:'below', expl:'El estándar #48 requiere que el agua se sirva FRENTE al cliente, no pre-llenada en el área de servicio. Aunque el agua se sirvió, la forma de presentación viola el estándar de servicio correcto.', expl_en:'Standard #48 requires water be served IN FRONT of the guest, not pre-filled in the service area. Although water was served, the presentation method violates the correct service standard.'},
-  {id:17, scn:'Nuestra botella de vino estaba casi vacía. Después de 5 minutos, el camarero preguntó si deseábamos otra botella.', scn_en:'Our wine bottle was almost empty. After 5 minutes, the waiter asked if we wanted another bottle.', std:47, verd:'below', expl:'El estándar #47 requiere que cuando la botella de vino se completa, el camarero AUTOMÁTICAMENTE ofrezca otra sin esperar. Esperar 5 minutos después de terminar es incorrecto. Debe ser inmediato cuando se detecta que está casi vacía.', expl_en:'Standard #47 requires that when the wine bottle is finished, the waiter AUTOMATICALLY offers another without waiting. Waiting 5 minutes after finishing is incorrect. It should be immediate when it\'s nearly empty.'},
+  {id:17, scn:'Pedimos una botella de vino tinto con la cena. Cuando la botella estaba casi vacía, pasaron 5 minutos antes de que el camarero se acercara a preguntar si deseábamos otra.', scn_en:'We ordered a bottle of red wine with dinner. When the bottle was almost empty, 5 minutes passed before the waiter came over to ask if we wanted another one.', std:47, verd:'below', expl:'El estándar #47 requiere que cuando la botella de vino se completa, el camarero AUTOMÁTICAMENTE ofrezca otra sin esperar. Esperar 5 minutos después de terminar es incorrecto. Debe ser inmediato cuando se detecta que está casi vacía.', expl_en:'Standard #47 requires that when the wine bottle is finished, the waiter AUTOMATICALLY offers another without waiting. Waiting 5 minutes after finishing is incorrect. It should be immediate when it\'s nearly empty.'},
   {id:18, scn:'El postre llegó 9 minutos después de ordenarlo. Estaba bellamente presentado y coincidía perfectamente con la descripción del menú.', scn_en:'The dessert arrived 9 minutes after ordering. It was beautifully presented and perfectly matched the menu description.', std:35, verd:'meet', expl:'El estándar #35 requiere que el postre se sirva en 10 minutos máximo (9 minutos está dentro del límite). El estándar #52 requiere que la presentación y descripción sean correctas. Ambos se cumplieron perfectamente.', expl_en:'Standard #35 requires dessert be served within 10 minutes maximum (9 minutes is within the limit). Standard #52 requires correct presentation and description. Both were perfectly met.'},
   {id:19, scn:'Un camarero tenía un pequeño rasguño cerca del bolsillo de su camisa. De lejos no era muy notorio, pero de cerca era visible cuando se inclinaba a servir.', scn_en:'A waiter had a small tear near the pocket of their shirt. From across the room it wasn\'t very noticeable, but up close it was visible when they leaned to serve.', std:68, verd:'below', expl:'El estándar #68 requiere uniformes "LIMPIOS, bien ajustados" en buen estado. Una rasguño o defecto visible de cerca, especialmente durante el servicio cercano al cliente, incumple el requisito de estar en buen estado. La presentación personal debe ser impecable.', expl_en:'Standard #68 requires uniforms "CLEAN, well fitted" in good condition. A tear or defect visible up close, especially during close service to the guest, violates the good condition requirement. Personal presentation must be impeccable.'},
   {id:20, scn:'El huésped preguntó sobre el horario del spa del hotel. El camarero respondió con seguridad con la hora correcta y se ofreció a hacer una reserva.', scn_en:'The guest asked about the hotel spa hours. The waiter confidently replied with the correct hours and offered to make a reservation.', std:72, verd:'meet', expl:'El estándar #72 requiere que el personal demuestre confianza y conocimiento sobre instalaciones del hotel. El camarero proporcionó información correcta de forma confiada y ofreció servicio adicional (reserva). Esto cumple perfectamente con el estándar.', expl_en:'Standard #72 requires staff demonstrate confidence and knowledge about hotel facilities. The waiter provided correct information confidently and offered additional service (reservation). This perfectly meets the standard.'},
@@ -10600,14 +10611,17 @@ function lqaExamAnswer(optIdx){
 }
 function renderLqaExamResults(){
   const pct=Math.round(lqaExamScore/lqaExamQuestions.length*100);
-  const xpEarned=Math.round(lqaExamScore*50);
+  const xpEarned=Math.round(lqaExamScore*15 + (pct>=90?50:pct>=70?25:0));
   const emp=getEmp(currentUser);
   if(emp){
-    emp.xp=(emp.xp||0)+xpEarned;
     if(!emp.lqaScores) emp.lqaScores=[];
     emp.lqaScores.push({type:'exam',score:lqaExamScore,total:lqaExamQuestions.length,date:Date.now()});
+    if(!emp.lqaExamBest || pct > emp.lqaExamBest) emp.lqaExamBest = pct;
+    emp.lqaExamsCompleted = (emp.lqaExamsCompleted||0) + 1;
     saveDB();
   }
+  awardXP(xpEarned, LANG==='en'?'LQA Exam':'Examen LQA');
+  checkNewAchievements();
 
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
@@ -10686,17 +10700,23 @@ function lqaSituationAnswer(idx){
 }
 function renderLqaSituationResults(){
   const pct=Math.round(lqaSituationScore/lqaSituationQuestions.length*100);
+  const xpEarned=Math.round(lqaSituationScore*12 + (pct>=90?40:pct>=70?20:0));
   const emp=getEmp(currentUser);
   if(emp){
     if(!emp.lqaScores) emp.lqaScores=[];
     emp.lqaScores.push({type:'situations',score:lqaSituationScore,total:lqaSituationQuestions.length,date:Date.now()});
+    if(!emp.lqaSituationBest || pct > emp.lqaSituationBest) emp.lqaSituationBest = pct;
+    emp.lqaSituationsCompleted = (emp.lqaSituationsCompleted||0) + 1;
     saveDB();
   }
+  awardXP(xpEarned, LANG==='en'?'LQA Situations':'Situaciones LQA');
+  checkNewAchievements();
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="text-align:center;margin:2rem 0">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${lqaSituationScore}/${lqaSituationQuestions.length}</div>
-      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:2rem">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</div>
+      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${pct}% · +${xpEarned} XP</div>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
@@ -10768,18 +10788,23 @@ function lqaAuditorAnswer(verdict){
 }
 function renderLqaAuditorResults(){
   const pct=Math.round(lqaAuditorScore/lqaAuditorScenarios.length*100);
+  const xpEarned=Math.round(lqaAuditorScore*10 + (pct>=90?35:pct>=70?15:0));
   const emp=getEmp(currentUser);
   if(emp){
     if(!emp.lqaScores) emp.lqaScores=[];
     emp.lqaScores.push({type:'audit',score:lqaAuditorScore,total:lqaAuditorScenarios.length,date:Date.now()});
+    if(!emp.lqaAuditBest || pct > emp.lqaAuditBest) emp.lqaAuditBest = pct;
+    emp.lqaAuditsCompleted = (emp.lqaAuditsCompleted||0) + 1;
     saveDB();
   }
+  awardXP(xpEarned, LANG==='en'?'LQA Audit Sim':'Simulador Auditoría');
+  checkNewAchievements();
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="text-align:center;margin:2rem 0">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#4d8a5e;margin-bottom:.5rem">${lqaAuditorScore}/${lqaAuditorScenarios.length}</div>
       <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${LANG==='en'?'Evaluation Accuracy':'Precisión de Evaluación'}: <strong>${pct}%</strong></div>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${LANG==='en'?'Evaluation Accuracy':'Precisión de Evaluación'}: <strong>${pct}%</strong> · +${xpEarned} XP</div>
       <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem">
         <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${pct>=80?LANG==='en'?'Great job! You have a solid understanding of the audit standards and what needs to pass.':'¡Excelente! Tienes un sólido conocimiento de los estándares de auditoría.':LANG==='en'?'Keep studying the standards to improve your audit readiness.':'Sigue estudiando los estándares para mejorar tu preparación.'}</div>
       </div>
