@@ -7662,7 +7662,7 @@ function buildAllergenQuestions(cat) {
     const enAllergenSlice = enAllergen.toLowerCase().slice(0,5);
 
     // Find the sentence/segment mentioning THIS specific allergen
-    const noteSegments = notesLower.split(/[·]/);
+    const noteSegments = notesLower.split(/[·—]/);
     const relevantSegment = noteSegments.find(seg =>
       seg.includes(allergenSlice) || seg.includes(enAllergenSlice)
     ) || '';
@@ -7704,8 +7704,8 @@ function buildAllergenQuestions(cat) {
     let comandaInstr = '';
     if(dish.notes) {
       // Split by · or sentence and find segment mentioning this allergen
-      const noteSegs = dish.notes.split(/[·]/);
-      const allergenSeg = noteSegs.find(seg => 
+      const noteSegs = dish.notes.split(/[·—]/);
+      const allergenSeg = noteSegs.find(seg =>
         seg.toLowerCase().includes(allergenSlice) || seg.toLowerCase().includes(enAllergenSlice)
       ) || '';
       const segMatch = allergenSeg.match(/Comandar ([^.]+)\./);
