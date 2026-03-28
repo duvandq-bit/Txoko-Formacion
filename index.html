@@ -2537,7 +2537,7 @@ const CERT_THRESHOLD = 0.80; // 80% of dishes in category known = certified
 // ═══ RANKING (visible to all) ═══
 
 // ═══ SUPERVISOR PANEL ═══
-const SUP_PIN = '1966'; // Duvan's supervisor PIN
+const SUP_PIN_HASH = 'b3b4e87f15d85199ddc51683559221f8375b5cb7074da6d69409cc1ed64b0a98'; // hashed supervisor PIN
 
 let supAuthenticated = false;
 
@@ -3638,7 +3638,8 @@ const DISHES_EN = [
   {id:66,name:'Grilled asparagus',allergens:[],ingredients:'',history:'',notes:null},
   {id:67,name:'Sweetened wings',allergens:['Soy'],ingredients:'Chicken wings, Sunflower oil, Soy, Palm honey, Ginger, Vegetable stock (Onion, Leek, Carrot, Pumpkin and Chickpeas), Salt',history:'',notes:null},
   {id:68,name:'Txoko-style patatas bravas',allergens:['Eggs','Sulphites','Dairy'],ingredients:'Potato, Parmesan cheese, Chicken stock, Onion, Tomato, Sherry vinegar, Cayenne, Garlic, Egg, Sunflower oil, Salt',history:'Our patatas bravas are made with a potato terrine base (with parmesan cheese between each layer as a binder). Finished with dots of brava sauce and aioli.',notes:null},
-  {id:69,name:'Fish and chips',allergens:['Gluten','Eggs','Mustard','Fish','Sulphites'],ingredients:'Cod. Tempura: Soft flour, Trisol, Fresh yeast, Water, Beer, Salt. Sauce: Water, Sugar, Lemon, Clove, White wine. Potato chips',history:'',notes:null},
+  {id:69,name:'Fish and chips (Lunch)',allergens:['Gluten','Eggs','Mustard','Fish','Sulphites'],ingredients:'Cod. Batter: Soft flour, Panko, Egg, Trisol, Fresh yeast, Water, Beer, Salt. Tartar sauce: Mayonnaise, Hard-boiled egg, Gherkin, Dijon mustard, Anchovies, Capers, Shallot, Chives, Tarragon, Parsley. Potato chips',history:'',notes:null},
+  {id:109,name:'Fish and chips (Dinner)',allergens:['Gluten','Fish'],ingredients:'Cod. Tempura: Soft flour, Trisol, Fresh yeast, Water, Beer, Salt. Potato chips',history:'',notes:null},
   {id:70,name:'Premium croquettes',allergens:['Eggs','Gluten','Dairy'],ingredients:'ALL: Milk, Flour, Butter, Cream, Gelatine, Egg. Flavours: Ham / Squid ink with citrus aioli and squid ink / King prawn with bisque / Dry Age with pickled pepper jam / Boletus with candied apple / Chicken with Caesar dressing and Demi-glace',history:'Born from ingenuity and a love of avoiding waste, croquettes travelled from France to the heart of Spain. In every home, a recipe; in every bite, a memory. Crispy on the outside, soft within — the golden embrace of home cooking. Our croquettes are premium thanks to the unique topping each one carries to finish.',notes:'Dry Age, King prawn and Chicken contain additional allergens. Check with kitchen.'},
   {id:71,name:'Grilled mussels',allergens:['Sulphites','Molluscs'],ingredients:'Mussels. Sofrito: Garlic, Chilli, Olive oil, Apple vinegar',history:'',notes:null},
   {id:72,name:'Organic tomatoes',allergens:['Sulphites','Fish'],ingredients:'Tomato, Anchovies, Boquerones, Avocado, Spring onion, Kalamata olive powder, Cabernet vinaigrette, Watercress',history:'',notes:null},
@@ -3714,7 +3715,7 @@ const DISHES = [
   {id:11,cat:'Entrantes',name:'Tabla de embutidos',allergens:['Sulfitos','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Jamón ibérico, Salchichón ibérico, Chorizo ibérico, Lomo ibérico, Crujiente de pan y Tomata.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el crujiente de pan — Comandar SIN PAN.'},
   {id:12,cat:'Entrantes',name:'Jamón ibérico de bellota Gran Reserva',allergens:['Sulfitos','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Jamón ibérico, Crujiente de pan, Tomata.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el crujiente de pan — Comandar SIN PAN.'},
   {id:13,cat:'Entrantes',name:'Cecina de Wagyu Premium',allergens:['Sulfitos','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Cecina de Wagyu Premium, Pan tostado.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el pan tostado — Comandar SIN PAN.'},
-  {id:14,cat:'Entrantes',name:'Tartar de remolacha',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' ÚNICO plato 100% VEGANO en la carta de cena.'},
+  {id:14,cat:'Entrantes',name:'Tartar de remolacha',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' ÚNICO plato 100% VEGANO en la carta de cena.'},
   {id:15,cat:'Entrantes',name:'Tartar de tomate y queso',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA.'},
   {id:16,cat:'Entrantes',name:'Tartar de solomillo',allergens:['Huevos','Gluten','Pescado','Mostaza','Sulfitos','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Solomillo vacuno, Pan carasau, Yema de huevo, Salsa Perrins, Tabasco, Mostaza savora (Apio), Aceite de oliva, Cebolleta, Cebollino, Pepinillo, Pimienta.',history:'Un clásico de Martín con su receta de más de 30 años haciéndose de la misma manera.',notes:'⚠ Mostaza y Apio en la mostaza savora — puede prepararse sin mostaza savora pero requiere preparación desde cero (~30 min). Avisar al cliente antes de confirmar. Comandar SIN MOSTAZA SAVORA e informar al cliente de la espera. Gluten en el pan carasau — Comandar SIN PAN CARASAU.'},
   {id:17,cat:'Entrantes',name:'Tartar de lomo de atún',allergens:['Sulfitos','Pescado','Soja','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Lomo de atún rojo, Tabasco, Teriyaki, Espuma de tomate (Agua de tomate, claras de huevo y gelatina), Yema de huevo curada en soja, Brotes de cilantro y cebolleta verde, Aceite de girasol y de oliva, Soja, Ponzu, Katsuobusi, Sake.',history:'Para nosotros es un producto emblemático de Canarias. Gerardo, nuestro contacto en la cofradía del Hierro, selecciona las piezas de primera mano. A este tartar coronamos con otros dos productos canarios por excelencia: tomate en textura de espuma y perfume suave del cilantro.',notes:null},
@@ -3745,7 +3746,7 @@ const DISHES = [
   {id:44,cat:'Postres',name:'Pastel Vasco invertido con tartar de manzana',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchillo de postre, Cuchara de postre',ingredients:'Harina, Azúcar, Mantequilla, Huevo, Levadura, Ron, Sal, Leche, Maizena, Limón, Vainilla, Hinojo, Nata, Glucosa, Cremodan.',history:'Receta centenaria del País Vasco, tierra de origen de Martín Berasategui. Bizcocho recién horneado al momento, relleno de crema pastelera y tartar de manzana. Un postre que viajó desde el País Vasco hasta los acantilados de Abama, donde el Atlántico y la brisa canaria lo convierten en algo único. Treinta minutos de espera que siempre valen la pena.',notes:'⏱ Mínimo 30 minutos de espera (recién horneado). Avisar al huésped al tomar la comanda. Bizcocho con capa de crema pastelera y tartar de manzana. Terminamos con helado artesanal de hinojo.'},
   {id:45,cat:'Vegetariano',name:'Tomates aliñados con granizado de gazpacho',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Tomate, Aguacate, Cebolleta, Granizado de gazpacho, Granadina, Vinagreta de Cabernet Sauvignon.',history:'Es nuestra versión vegetariana de nuestro plato mítico de tomates, anchoas y ventresca.',notes:'Versión VEGAN adaptable. Tomates ecológicos con cebolletas encurtidas y granizado de gazpacho (sin pan). Terminado con brotes de berros.'},
   {id:46,cat:'Vegetariano',name:'Ensalada Niçoise vegetariana',allergens:['Mostaza','Sulfitos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Papa, Lechuga, Tomate, Judías verdes, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Carpaccio de papa canaria confitada, acompañada de verduras ecológicas de la isla y aliñada con mayonesa cítrica.',notes:'Versión VEGAN adaptable. ⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. ⚠ Huevos en el huevo de codorniz y en la yema — Comandar SIN HUEVO DE CODORNIZ Y SIN YEMA.'},
-  {id:48,cat:'Vegetariano',name:'Tartar de remolacha, aguacate y manzana ácida',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' 100% VEGANO. Tartar de remolacha y manzana con cremoso de aguacate, remolacha en texturas y sorbete de manzana verde.'},
+  {id:48,cat:'Vegetariano',name:'Tartar de remolacha, aguacate y manzana ácida',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' 100% VEGANO. Tartar de remolacha y manzana con cremoso de aguacate, remolacha en texturas y sorbete de manzana verde.'},
   {id:49,cat:'Vegetariano',name:'Tartar de tomate y queso stracciatella',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'Versión VEGAN adaptable. ⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA. ⚠ Huevos en la yema de huevo — Comandar SIN YEMA.'},
   {id:50,cat:'Vegetariano',name:'Croquetas de boletus',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:null,history:'Nacidas del ingenio y el amor por no desperdiciar, las croquetas viajaron desde Francia hasta el alma de España. En cada casa, una receta; en cada bocado, un recuerdo. Crujientes por fuera, suaves por dentro, son el abrazo dorado de la cocina casera, el sabor de la abuela que nunca se olvida.',notes:'Clásicas croquetas vegetarianas de boletus acompañadas de manzana confitada.'},
   {id:52,cat:'Vegetariano',name:'Pimiento a la brasa relleno de pisto manchego',allergens:['Sulfitos','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:null,history:'Relleno del pimiento es receta de la abuela de José, chef del restaurante. El pimiento relleno con salsa vizcaína es un plato típico vasco; unimos sabores y nació nuestro pimiento. Durante mucho tiempo este fue el plato preferido de Martín al venir al restaurante.',notes:'❤️ Plato preferido de Martín. Versión VEGAN adaptable. Pimiento relleno de cebolla, pimiento rojo confitado, berenjena, calabacín y salsa de tomate.'},
@@ -3760,7 +3761,8 @@ const DISHES = [
   {id:66,cat:'Entrantes',name:'Espárragos a la brasa',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Espárragos, Aceite de oliva, Sal.',history:'',notes:null},
   {id:67,cat:'Entrantes',name:'Alitas melosas glaseadas',allergens:['Soja'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Toallitas húmedas (Finger balls)',ingredients:'Alitas de pollo, Aceite girasol, Soja, Miel de palma, Jengibre, Caldo de verduras (Cebolla, Puerro, Zanahoria, Calabaza y Garbanzos), Sal',history:'',notes:null},
   {id:68,cat:'Entrantes',name:'Papas bravas al estilo Txoko',allergens:['Huevos','Sulfitos','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Papa, Queso Parmesano, Caldo de pollo, Cebolla, Tomate, Vinagre de jerez, Cayena, Ajo, Aceite de girasol, Sal. Ali-oli: Huevo, Aceite de girasol, Ajo.',history:'Nuestras papas bravas están hechas con una base de terrina de papa (entre capa y capa colocamos queso parmesano que sirve como pegamento). Terminamos con puntos de salsa brava y puntos de ali-oli.',notes:'⚠ Huevos en el ali-oli — Comandar SIN ALI-OLI.'},
-  {id:69,cat:'Entrantes',name:'Fish and chips',allergens:['Pescado','Gluten','Huevos','Mostaza','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Bacalao. Tempura: Harina floja, Panko, Huevo, Trisol, Levadura prensada, Agua, Cerveza, Sal. Salsa tártara: Mayonesa, Huevo duro, Pepinillo, Mostaza Dijon, Anchoas, Alcaparra, Chalota, Cebollino, Estragón, Perejil. Chips de papa',history:'',notes:'⚠ Mostaza y sulfitos en la salsa tártara — Comandar SIN SALSA TÁRTARA.'},
+  {id:69,cat:'Entrantes',name:'Fish and chips (Almuerzo)',allergens:['Pescado','Gluten','Huevos','Mostaza','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Bacalao. Rebozado: Harina floja, Panko, Huevo, Trisol, Levadura prensada, Agua, Cerveza, Sal. Salsa tártara: Mayonesa, Huevo duro, Pepinillo, Mostaza Dijon, Anchoas, Alcaparra, Chalota, Cebollino, Estragón, Perejil. Chips de papa',history:'',notes:'⚠ Mostaza y sulfitos en la salsa tártara — Comandar SIN SALSA TÁRTARA.'},
+  {id:109,cat:'Entrantes',name:'Fish and chips (Cena)',allergens:['Pescado','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Bacalao. Tempura: Harina floja, Trisol, Levadura prensada, Agua, Cerveza, Sal. Chips de papa',history:'',notes:null},
   {id:71,cat:'Entrantes',name:'Mejillones a la brasa',allergens:['Sulfitos','Moluscos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Mejillones. Refrito: Ajo, Guindilla, Aceite de oliva, Vinagre de manzana',history:'',notes:null},
   {id:72,cat:'Entrantes',name:'Tomates ecológicos',allergens:['Sulfitos','Pescado'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Tomate, Anchoas, Boquerones, Aguacate, Cebolleta, Polvo de aceituna calamata, Vinagreta de cabernet, Berro',history:'',notes:'⚠ Pescado en las anchoas y los boquerones — Comandar SIN ANCHOAS Y SIN BOQUERONES.'},
   {id:73,cat:'Entrantes',name:'Carpaccio con espuma de parmesano',allergens:['Mostaza','Lácteos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Picaña, Rúcula, Parmesano, Piparras. Vinagreta: Aceite, Mostaza, Vinagre de jerez, Zumo de limón, Pimienta molida, Sal, Agua de tomate. Espuma: Parmesano rayado, Leche, Nata, Sal, Pimienta. Polvo de aceituna calamata',history:'',notes:null},
@@ -4114,6 +4116,80 @@ function showBrowserNotif(title, body, icon='✦') {
   } catch(e) {}
 }
 
+// ═══ PUSH NOTIFICATIONS (Web Push API) ═══
+const VAPID_PUBLIC = 'BCuDF-0fItqmOGTU1u00Cizxbe7MHXf6FxLasMLKSX3unwXPpt5Qyo2P3og9x3v7Bd35wz08bYd-7z8QUk9QNik';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(base64);
+  const arr = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+
+async function registerServiceWorker() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  try {
+    const reg = await navigator.serviceWorker.register('./sw.js');
+    await navigator.serviceWorker.ready;
+    return reg;
+  } catch(e) { console.warn('[Txoko] SW register failed:', e); return null; }
+}
+
+async function subscribeToPush(employeeName) {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    const reg = await registerServiceWorker();
+    if (!reg) return;
+
+    // Check if already subscribed
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
+      });
+    }
+
+    const subJSON = sub.toJSON();
+    // Save subscription to Supabase
+    await fetch(`${SUPA_URL}/rest/v1/push_subscriptions`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=minimal'
+      },
+      body: JSON.stringify({
+        employee_name: employeeName,
+        endpoint: subJSON.endpoint,
+        keys_p256dh: subJSON.keys.p256dh,
+        keys_auth: subJSON.keys.auth
+      })
+    });
+    console.log('[Txoko] Push subscription saved for', employeeName);
+  } catch(e) { console.warn('[Txoko] Push subscribe error:', e); }
+}
+
+// Update last_active_at in Supabase
+async function supaUpdateLastActive(name) {
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ last_active_at: new Date().toISOString() })
+    });
+  } catch(e) {}
+}
+
 // Check for new notifications on login + show them
 
 async function checkDuelBanner(user) {
@@ -4304,6 +4380,43 @@ async function syncCustomDishesFromCloud() {
 }
 
 let DB={employees:{}};
+
+// ═══════ SECURITY HELPERS (OWASP) ═══════
+function escapeHTML(str){
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+async function hashPin(pin){
+  const enc = new TextEncoder().encode(pin+'txoko_salt_2026');
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+const _pinAttempts={count:0,lockedUntil:0};
+function checkPinRateLimit(){
+  if(Date.now()<_pinAttempts.lockedUntil) return false;
+  return true;
+}
+function recordPinFail(){
+  _pinAttempts.count++;
+  if(_pinAttempts.count>=3){
+    _pinAttempts.lockedUntil=Date.now()+30000; // 30s lockout
+    _pinAttempts.count=0;
+  }
+}
+function recordPinSuccess(){ _pinAttempts.count=0; _pinAttempts.lockedUntil=0; }
+function getPinLockRemaining(){ return Math.max(0,Math.ceil((_pinAttempts.lockedUntil-Date.now())/1000)); }
+
+// Session timeout (15 min inactivity)
+let _sessionTimer=null;
+function resetSessionTimer(){
+  clearTimeout(_sessionTimer);
+  if(!currentUser) return;
+  _sessionTimer=setTimeout(()=>{
+    if(currentUser){ logout(); alert(LANG==='en'?'Session expired due to inactivity':'Sesión cerrada por inactividad'); }
+  }, 15*60*1000);
+}
+['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{ if(currentUser) resetSessionTimer(); },{passive:true}));
+
 function loadDB(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){}}
 function saveDB(){
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));}catch(e){}
@@ -4795,10 +4908,10 @@ function renderLogin(){
     const e = DB.employees[n];
     const s = e.sessions||[];
     const avg = s.length ? Math.round(s.reduce((a,x)=>a+(x.score/x.total*100),0)/s.length) : 0;
-    return `<button class="employee-btn" style="width:100%;margin-bottom:.5rem;padding:1rem 1.1rem" onclick="login('${n}')">
+    return `<button class="employee-btn" style="width:100%;margin-bottom:.5rem;padding:1rem 1.1rem" onclick="login('${escapeHTML(n)}')">
       <div class="avatar" style="font-size:${getEmpAvatar(n).length>1||getEmpAvatar(n).charCodeAt(0)>127?'1.2rem':'1rem'};width:42px;height:42px">${getEmpAvatar(n)}</div>
       <div>
-        <div class="emp-name" style="font-size:1rem;color:var(--gold);font-weight:600;font-family:'Cinzel',serif">${n}</div>
+        <div class="emp-name" style="font-size:1rem;color:var(--gold);font-weight:600;font-family:'Cinzel',serif">${escapeHTML(n)}</div>
         <div class="emp-stats">${s.length} ${t('sessions')}${s.length?' · '+avg+'% '+t('sessionsMedia'):''}</div>
       </div>
     </button>`;
@@ -4850,8 +4963,11 @@ function toggleOtherProfiles(){
 }
 function addEmployee(){
   const inp=document.getElementById('newEmpInput');
-  const name=inp.value.trim();
+  let name=inp.value.trim();
   if(!name) return;
+  // OWASP: Strip any HTML/script characters, allow only letters, numbers, spaces, accents
+  name = name.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑA-Za-z0-9 ]/g,'').trim();
+  if(name.length > 30) name = name.substring(0,30);
   // At least 3 letters (not just numbers)
   const letters = name.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑA-Za-z]/g,'');
   if(letters.length < 3){
@@ -4883,7 +4999,7 @@ function deleteProfilePrompt(name){
         <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">
           ${[0,1,2,3].map(i=>`<div style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold-a);background:${i<entered.length?'var(--gold)':'transparent'}"></div>`).join('')}
         </div>
-        ${entered.length===4&&entered!==SUP_PIN?`<div style="color:var(--rose);font-size:.72rem;margin-bottom:.6rem">✗ PIN incorrecto</div>`:''}
+        <div id="delPinErr"></div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:180px;margin:0 auto .9rem">
           ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`
             <button id="delk_${k}" style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;font-size:.95rem;font-weight:500;color:var(--parchment);cursor:pointer;${k===''?'visibility:hidden;':''}">${k}</button>`).join('')}
@@ -4893,7 +5009,7 @@ function deleteProfilePrompt(name){
     // Attach key listeners
     [1,2,3,4,5,6,7,8,9,0].forEach(k=>{
       const btn=overlay.querySelector('#delk_'+k);
-      if(btn) btn.onclick=()=>{ if(entered.length<4){entered+=k; if(entered.length===4){ if(entered===SUP_PIN){ overlay.remove(); deleteProfileConfirmed(name); } else { draw(); } } else draw(); } };
+      if(btn) btn.onclick=()=>{ if(entered.length<4){entered+=k; if(entered.length===4){ hashPin(entered).then(h=>{ if(h===SUP_PIN_HASH){ overlay.remove(); deleteProfileConfirmed(name); } else { const err=document.getElementById('delPinErr'); if(err) err.innerHTML='<div style="color:var(--rose);font-size:.72rem;margin-bottom:.6rem">✗ PIN incorrecto</div>'; entered=''; draw(); } }); } else draw(); } };
     });
     const del=overlay.querySelector('#delk_⌫');
     if(del) del.onclick=()=>{ entered=entered.slice(0,-1); draw(); };
@@ -4939,7 +5055,7 @@ function showPinModal(name, title, subtitle, isSetup){
   overlay.className='pin-overlay';
   overlay.innerHTML=`
     <div class="pin-modal">
-      <div class="pin-modal-name">${name}</div>
+      <div class="pin-modal-name">${escapeHTML(name)}</div>
       <div class="pin-modal-sub">${title}</div>
       ${subtitle?`<div class="pin-setup-info">${subtitle}</div>`:''}
       <div class="pin-dots" id="pinDots">
@@ -4985,12 +5101,31 @@ function updatePinDots(error=false){
   }
 }
 
-function pinSubmit(){
+async function pinSubmit(){
   const emp=getEmp(pinTarget);
   if(pinStep==='enter'){
-    if(pinBuffer===emp.pin){
+    if(!checkPinRateLimit()){
+      const rem=getPinLockRemaining();
+      document.getElementById('pinErr').textContent=(LANG==='en'?`Too many attempts. Wait ${rem}s`:`Demasiados intentos. Espera ${rem}s`);
+      pinBuffer=''; updatePinDots(true);
+      setTimeout(()=>{ pinBuffer=''; updatePinDots(false); document.getElementById('pinErr').textContent=''; }, 1500);
+      return;
+    }
+    const inputHash=await hashPin(pinBuffer);
+    // Support migration: if stored pin is not a 64-char hex hash, it's legacy plaintext
+    let match=false;
+    if(emp.pin && emp.pin.length===64 && /^[0-9a-f]+$/.test(emp.pin)){
+      match=(inputHash===emp.pin);
+    } else {
+      // Legacy plaintext comparison + auto-migrate to hash
+      match=(pinBuffer===emp.pin);
+      if(match){ emp.pin=inputHash; saveDB(); }
+    }
+    if(match){
+      recordPinSuccess();
       closePinAndEnter();
     } else {
+      recordPinFail();
       document.getElementById('pinErr').textContent=t('pinWrong');
       updatePinDots(true);
       setTimeout(()=>{
@@ -5009,7 +5144,7 @@ function pinSubmit(){
     updatePinDots(false);
   } else if(pinStep==='setup2'){
     if(pinBuffer===pinFirst){
-      emp.pin=pinBuffer;
+      emp.pin=await hashPin(pinBuffer);
       saveDB();
       closePinAndEnter();
     } else {
@@ -5029,9 +5164,13 @@ function closePinAndEnter(){
   const overlay=document.getElementById('pinOverlay');
   if(overlay) overlay.remove();
   currentUser=pinTarget;
+  resetSessionTimer();
+  // Push notifications + activity tracking
+  subscribeToPush(pinTarget);
+  supaUpdateLastActive(pinTarget);
   const empH=getEmp(pinTarget);
   const trophyH=getTrophyBadge(empH?.trophies||0);
-  document.getElementById('headerUsername').innerHTML=pinTarget+(trophyH?trophyH:'');
+  document.getElementById('headerUsername').innerHTML=escapeHTML(pinTarget)+(trophyH?trophyH:'');
   const _av = getEmpAvatar(pinTarget);
   const _headerAv = document.getElementById('headerAvatar');
   _headerAv.textContent = _av;
@@ -5086,6 +5225,7 @@ function pinCancel(){
 function logout(){
   if(currentUser) supaUpsertEmployee(currentUser);
   stopLiveQuizPolling();
+  clearTimeout(_sessionTimer);
   currentUser=null;
   document.getElementById('screenLogin').classList.add('active');
   document.getElementById('screenApp').classList.remove('active');
@@ -5322,7 +5462,7 @@ function renderDashboard(){
         <div>
           <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:rgba(196,154,60,.6);text-transform:uppercase;margin-bottom:.3rem">Ritz-Carlton Abama</div>
           <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:#f2eae0;line-height:1.1">${greeting},</div>
-          <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:#d4944c;line-height:1.1;font-style:italic">${currentUser}</div>
+          <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:#d4944c;line-height:1.1;font-style:italic">${escapeHTML(currentUser)}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:${lvl.color};letter-spacing:.08em;display:flex;align-items:center;gap:.2rem;justify-content:flex-end">${tunicLevelIcon(lvl.level,lvl.color,16)} Lv.${lvl.level}</div>
@@ -6190,7 +6330,7 @@ function renderStats(){
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
       <div style="width:44px;height:44px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),var(--gold2));border:1.5px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-size:1.2rem">${getEmpAvatar(currentUser)}</div>
       <div>
-        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${currentUser}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${escapeHTML(currentUser)}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);display:flex;align-items:center;gap:.2rem">${tunicLevelIcon(lvl.level,lvl.color,14)} ${lvl.title} · Nv.${lvl.level}</div>
       </div>
       <div style="margin-left:auto;text-align:right">
@@ -6618,6 +6758,7 @@ function renderSupervisor(){
 
 function renderSupPinEntry(){
   let entered='';
+  let pinError=false;
   const c=document.getElementById('appContent');
   function draw(){
     c.innerHTML=`
@@ -6638,17 +6779,24 @@ function renderSupPinEntry(){
                 ${k===''?'visibility:hidden;':''}
               ">${k}</button>`).join('')}
           </div>
-          ${entered.length===4&&entered!==SUP_PIN?`<div style="color:var(--rose);font-size:.75rem;margin-top:.75rem">✗ ${LANG==='en'?'Wrong PIN':'PIN incorrecto'}</div>`:''}
+          ${pinError?`<div style="color:var(--rose);font-size:.75rem;margin-top:.75rem">✗ ${LANG==='en'?'Wrong PIN':'PIN incorrecto'}</div>`:''}
         </div>
       </div>`;
   }
   window.supPinKey=function(k){
-    if(k==='⌫'){ entered=entered.slice(0,-1); draw(); return; }
+    if(k==='⌫'){ entered=entered.slice(0,-1); pinError=false; draw(); return; }
     if(k===''||entered.length>=4) return;
     entered+=k;
     if(entered.length===4){
-      if(entered===SUP_PIN){ supAuthenticated=true; renderSupDashboard(); }
-      else { draw(); }
+      if(!checkPinRateLimit()){
+        const rem=getPinLockRemaining();
+        pinError=true; entered=''; draw();
+        return;
+      }
+      hashPin(entered).then(h=>{
+        if(h===SUP_PIN_HASH){ recordPinSuccess(); supAuthenticated=true; renderSupDashboard(); }
+        else { recordPinFail(); pinError=true; entered=''; draw(); }
+      });
     } else { draw(); }
   };
   draw();
@@ -8045,7 +8193,22 @@ async function sendNotification(){
   const msg = document.getElementById('notifMsg')?.value.trim();
   const type = document.querySelector('input[name="notifType"]:checked')?.value || 'info';
   if(!msg) return;
+  // In-app notification
   await supaCreateNotification(target, msg, type);
+  // Push notification (lock screen)
+  const typeIcons = { info:'ℹ️', warning:'⚠️', success:'🎉', urgent:'🚨' };
+  try {
+    await fetch(`${SUPA_URL}/functions/v1/send-push`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        target,
+        title: `${typeIcons[type]||'📣'} TXOKO Formación`,
+        body: msg,
+        tag: type
+      })
+    });
+  } catch(e) { console.warn('[Txoko] Push send error:', e); }
   const el = document.getElementById('notifSendMsg');
   if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
   document.getElementById('notifMsg').value = '';
@@ -9402,7 +9565,7 @@ async function submitDefense() {
         </div>
         <div style="font-size:1.5rem;color:var(--parch3);align-self:center">vs</div>
         <div style="text-align:center">
-          <div style="font-size:.7rem;color:var(--parch3);margin-bottom:.3rem">${currentUser}</div>
+          <div style="font-size:.7rem;color:var(--parch3);margin-bottom:.3rem">${escapeHTML(currentUser)}</div>
           <div style="font-family:'Cinzel',serif;font-size:2rem;color:${dWins?'var(--sage)':'var(--rose)'}">${dScore}</div>
         </div>
       </div>
@@ -11139,7 +11302,7 @@ function buildTxTop10Html(entries){
     const meLabel = isMe?(LANG==='en'?' (you)':' (tú)'):'';
     return '<div class="tx-top10-row">'
       +'<span class="tx-top10-pos '+posCls+'">'+pos+'</span>'
-      +'<span class="tx-top10-name'+(isMe?' me':'')+'">'+e.employee+meLabel+'</span>'
+      +'<span class="tx-top10-name'+(isMe?' me':'')+'">'+escapeHTML(e.employee)+meLabel+'</span>'
       +'<span class="tx-top10-score">'+e.record+' '+ordersLbl+'</span>'
       +'</div>';
   }).join('');
