@@ -2650,13 +2650,13 @@ body::before{
   display:flex;gap:.5rem;margin:.8rem 0;
 }
 .lqa-ei-dot{
-  flex:1;height:20px;border-radius:50%;background:#e0e0e0;border:2px solid #fff;box-shadow:inset 0 1px 3px rgba(0,0,0,.1);
+  flex:1;height:20px;border-radius:50%;background:rgba(196,154,60,.1);border:2px solid rgba(196,154,60,.15);box-shadow:inset 0 1px 3px rgba(0,0,0,.05);
 }
-.lqa-ei-scale-1 .lqa-ei-dot:nth-child(-n+1){background:#d32f2f;border-color:#fff;}
-.lqa-ei-scale-2 .lqa-ei-dot:nth-child(-n+2){background:#f57c00;border-color:#fff;}
-.lqa-ei-scale-3 .lqa-ei-dot:nth-child(-n+3){background:#fbc02d;border-color:#fff;}
-.lqa-ei-scale-4 .lqa-ei-dot:nth-child(-n+4){background:#689f38;border-color:#fff;}
-.lqa-ei-scale-5 .lqa-ei-dot:nth-child(-n+5){background:#1565c0;border-color:#fff;}
+.lqa-ei-scale-1 .lqa-ei-dot:nth-child(-n+1){background:var(--candy-red,#c47068);border-color:rgba(196,112,104,.3);}
+.lqa-ei-scale-2 .lqa-ei-dot:nth-child(-n+2){background:var(--candy-orange,#d4944c);border-color:rgba(212,148,76,.3);}
+.lqa-ei-scale-3 .lqa-ei-dot:nth-child(-n+3){background:var(--gold,#c49a3c);border-color:rgba(196,154,60,.3);}
+.lqa-ei-scale-4 .lqa-ei-dot:nth-child(-n+4){background:var(--sage,#4d8a5e);border-color:rgba(77,138,94,.3);}
+.lqa-ei-scale-5 .lqa-ei-dot:nth-child(-n+5){background:var(--azure,#4888a0);border-color:rgba(72,136,160,.3);}
 
 </style>
 </head>
@@ -3839,42 +3839,42 @@ function renderCredo() {
   // SVG: stylised crown + lion silhouette inspired by Ritz-Carlton symbolism
   const crownSVG = `<svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
     <!-- Crown base -->
-    <rect x="30" y="72" width="100" height="14" rx="3" fill="none" stroke="#5b8db8" stroke-width="1.5" opacity=".9"/>
+    <rect x="30" y="72" width="100" height="14" rx="3" fill="none" stroke="#c49a3c" stroke-width="1.5" opacity=".9"/>
     <!-- Crown body -->
-    <path d="M30 72 L30 48 L52 60 L80 30 L108 60 L130 48 L130 72 Z" fill="none" stroke="#5b8db8" stroke-width="1.5" stroke-linejoin="round" opacity=".9"/>
+    <path d="M30 72 L30 48 L52 60 L80 30 L108 60 L130 48 L130 72 Z" fill="none" stroke="#c49a3c" stroke-width="1.5" stroke-linejoin="round" opacity=".9"/>
     <!-- Crown jewels -->
-    <circle cx="80" cy="44" r="4" fill="#5b8db8" opacity=".7"/>
-    <circle cx="52" cy="63" r="3" fill="#5b8db8" opacity=".5"/>
-    <circle cx="108" cy="63" r="3" fill="#5b8db8" opacity=".5"/>
+    <circle cx="80" cy="44" r="4" fill="#c49a3c" opacity=".7"/>
+    <circle cx="52" cy="63" r="3" fill="#c49a3c" opacity=".5"/>
+    <circle cx="108" cy="63" r="3" fill="#c49a3c" opacity=".5"/>
     <!-- Crown top points -->
-    <circle cx="80" cy="28" r="3.5" fill="none" stroke="#5b8db8" stroke-width="1.2" opacity=".8"/>
-    <circle cx="30" cy="46" r="2.5" fill="none" stroke="#5b8db8" stroke-width="1.2" opacity=".6"/>
-    <circle cx="130" cy="46" r="2.5" fill="none" stroke="#5b8db8" stroke-width="1.2" opacity=".6"/>
+    <circle cx="80" cy="28" r="3.5" fill="none" stroke="#c49a3c" stroke-width="1.2" opacity=".8"/>
+    <circle cx="30" cy="46" r="2.5" fill="none" stroke="#c49a3c" stroke-width="1.2" opacity=".6"/>
+    <circle cx="130" cy="46" r="2.5" fill="none" stroke="#c49a3c" stroke-width="1.2" opacity=".6"/>
     <!-- Subtle inner glow line -->
-    <path d="M38 72 L38 54 L56 64 L80 38 L104 64 L122 54 L122 72" stroke="#5b8db8" stroke-width=".4" opacity=".25" stroke-linejoin="round"/>
+    <path d="M38 72 L38 54 L56 64 L80 38 L104 64 L122 54 L122 72" stroke="#c49a3c" stroke-width=".4" opacity=".25" stroke-linejoin="round"/>
     <!-- Base decorative line -->
-    <line x1="20" y1="90" x2="140" y2="90" stroke="#5b8db8" stroke-width=".8" opacity=".3"/>
-    <line x1="10" y1="94" x2="150" y2="94" stroke="#5b8db8" stroke-width=".4" opacity=".15"/>
+    <line x1="20" y1="90" x2="140" y2="90" stroke="#c49a3c" stroke-width=".8" opacity=".3"/>
+    <line x1="10" y1="94" x2="150" y2="94" stroke="#c49a3c" stroke-width=".4" opacity=".15"/>
   </svg>`;
 
   c.innerHTML = `
     <div style="background:linear-gradient(175deg,#f8f5f0 0%,#f2eae0 50%,#ede5d8 100%);min-height:100vh;padding:2rem 1.5rem 4rem;position:relative;overflow-x:hidden;overflow-y:auto">
 
       <!-- Subtle background texture -->
-      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(91,141,184,.06) 0%,transparent 60%);pointer-events:none"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(196,154,60,.04) 0%,transparent 60%);pointer-events:none"></div>
 
       <!-- Back button -->
-      <button onclick="renderProtocolo()" style="background:transparent;border:1px solid rgba(91,141,184,.25);border-radius:var(--r2);padding:.4rem .8rem;font-size:.72rem;color:rgba(91,141,184,.7);cursor:pointer;margin-bottom:1.5rem;font-family:'DM Mono',monospace;letter-spacing:.08em">← ${LANG==='en'?'Back':'Volver'}</button>
+      <button onclick="renderProtocolo()" style="background:transparent;border:1px solid rgba(196,154,60,.2);border-radius:var(--r2);padding:.4rem .8rem;font-size:.72rem;color:var(--gold);cursor:pointer;margin-bottom:1.5rem;font-family:'DM Mono',monospace;letter-spacing:.08em">← ${LANG==='en'?'Back':'Volver'}</button>
 
       <!-- Header with crown symbol -->
       <div style="text-align:center;margin-bottom:2.5rem">
         <div style="width:min(100px,25vw);margin:0 auto .75rem">${crownSVG}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.3em;color:#5b8db8;text-transform:uppercase;margin-bottom:.6rem;opacity:.8">The Ritz-Carlton</div>
-        <div style="font-family:'Cinzel',serif;font-size:2rem;font-weight:400;color:#1a3a5c;letter-spacing:.06em;line-height:1.1">
+        <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:.6rem;opacity:.8">The Ritz-Carlton</div>
+        <div style="font-family:'Cinzel',serif;font-size:2rem;font-weight:400;color:var(--parchment);letter-spacing:.06em;line-height:1.1">
           ${LANG==='en'?'The Credo':'El Credo'}
         </div>
-        <div style="width:50px;height:1px;background:linear-gradient(90deg,transparent,#5b8db8,transparent);margin:.9rem auto;opacity:.4"></div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:#5b8db8;letter-spacing:.12em;text-transform:uppercase;font-weight:300;opacity:.8">
+        <div style="width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.9rem auto;opacity:.4"></div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;font-weight:300;opacity:.8">
           ${LANG==='en'?'I am proud to be The Ritz-Carlton':'Estoy orgulloso de ser The Ritz-Carlton'}
         </div>
       </div>
@@ -3882,27 +3882,27 @@ function renderCredo() {
       <!-- 3 Pasos del Servicio -->
       <div style="margin-bottom:2.5rem">
         <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
-          <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(91,141,184,.3))"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.2em;color:#5b8db8;text-transform:uppercase;white-space:nowrap;opacity:.8">${LANG==='en'?'Three Steps of Service':'Tres Pasos de Servicio'}</div>
-          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(91,141,184,.3),transparent)"></div>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.2))"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;white-space:nowrap;opacity:.8">${LANG==='en'?'Three Steps of Service':'Tres Pasos de Servicio'}</div>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(196,154,60,.2),transparent)"></div>
         </div>
         ${[
           { n:'1', es:'Dar una cordial y sincera bienvenida utilizando el nombre del huésped.', en:'Give a warm and sincere greeting using the guest name.' },
           { n:'2', es:'Anticiparse y satisfacer las necesidades de cada huésped.', en:'Anticipate and fulfil the needs of each guest.' },
           { n:'3', es:'Dar una cordial y afectuosa despedida utilizando el nombre del huésped.', en:'Give a fond farewell using the guest name.' }
         ].map(s => `
-          <div style="display:flex;align-items:flex-start;gap:1rem;padding:.85rem 0;border-bottom:1px solid rgba(91,141,184,.1)">
-            <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid #5b8db8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Cinzel',serif;font-size:.85rem;color:#1a3a5c;margin-top:.1rem;background:rgba(91,141,184,.08)">${s.n}</div>
-            <div style="font-family:'Quicksand',sans-serif;font-size:.9rem;color:#2c3e50;line-height:1.6;font-weight:300">${LANG==='en'?s.en:s.es}</div>
+          <div style="display:flex;align-items:flex-start;gap:1rem;padding:.85rem 0;border-bottom:1px solid rgba(196,154,60,.08)">
+            <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-top:.1rem;background:rgba(196,154,60,.06)">${s.n}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.9rem;color:var(--parch2);line-height:1.6;font-weight:300">${LANG==='en'?s.en:s.es}</div>
           </div>`).join('')}
       </div>
 
       <!-- 12 Valores -->
       <div>
         <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
-          <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(91,141,184,.3))"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.2em;color:#5b8db8;text-transform:uppercase;white-space:nowrap;opacity:.8">${LANG==='en'?'Service Values':'Valores de Servicio'}</div>
-          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(91,141,184,.3),transparent)"></div>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.2))"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;white-space:nowrap;opacity:.8">${LANG==='en'?'Service Values':'Valores de Servicio'}</div>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(196,154,60,.2),transparent)"></div>
         </div>
         ${[
           { n:'1',  es:'Establezco relaciones sólidas fidelizando huéspedes Ritz-Carlton para toda la vida.', en:'I build strong relationships and create Ritz-Carlton guests for life.' },
@@ -3918,16 +3918,16 @@ function renderCredo() {
           { n:'11', es:'Protejo la intimidad y la seguridad, la información confidencial y los bienes de nuestros huéspedes, de los empleados y de la empresa.', en:'I protect the privacy and security of our guests, my fellow employees and the company\u2019s confidential information and assets.' },
           { n:'12', es:'Soy responsable de lograr unos niveles de limpieza absolutos y de crear un entorno seguro.', en:'I am responsible for uncompromising levels of cleanliness and creating a safe and accident-free environment.' }
         ].map(v => `
-          <div style="display:flex;align-items:flex-start;gap:1rem;padding:.8rem 0;border-bottom:1px solid rgba(91,141,184,.07)">
-            <div style="width:22px;text-align:center;flex-shrink:0;font-family:'DM Mono',monospace;font-size:.62rem;color:#5b8db8;margin-top:.25rem;opacity:.7">${v.n}</div>
-            <div style="font-family:'Quicksand',sans-serif;font-size:.87rem;color:#1a2a3a;line-height:1.65;font-weight:300">${LANG==='en'?v.en:v.es}</div>
+          <div style="display:flex;align-items:flex-start;gap:1rem;padding:.8rem 0;border-bottom:1px solid rgba(196,154,60,.06)">
+            <div style="width:22px;text-align:center;flex-shrink:0;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);margin-top:.25rem;opacity:.7">${v.n}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.87rem;color:var(--parch2);line-height:1.65;font-weight:300">${LANG==='en'?v.en:v.es}</div>
           </div>`).join('')}
       </div>
 
       <!-- Footer -->
       <div style="text-align:center;margin-top:2.5rem">
-        <div style="width:30px;height:1px;background:linear-gradient(90deg,transparent,#5b8db8,transparent);margin:0 auto .6rem;opacity:.3"></div>
-        <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.22em;color:#5b8db8;text-transform:uppercase;opacity:.4">The Ritz-Carlton · Abama · Tenerife</div>
+        <div style="width:30px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto .6rem;opacity:.3"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;opacity:.4">The Ritz-Carlton · Abama · Tenerife</div>
       </div>
     </div>`;
 }
@@ -4126,9 +4126,9 @@ const DISHES_EN = [
   {id:100,name:'Steamed vegetables',allergens:[],ingredients:'Broccoli, Carrot, Cauliflower, Salt, Pepper',history:'',notes:null},
   {id:101,name:'French fries',allergens:[],ingredients:'Local potatoes, Oil, Salt',history:'Our local potatoes come from Tacoronte.',notes:'No allergens, but possible cross-contamination with gluten. Alert kitchen in case of gluten allergy. Always serve with sauces for children (Mayonnaise, Ketchup, etc.)'},
   {id:102,name:'Goxua',allergens:['Gluten','Dairy','Eggs'],ingredients:'Sponge: Egg, Sugar, Vanilla, Baking powder, Flour. Chantilly: Cream, Mascarpone, Sugar, Vanilla, Gelatine. Syrup: Cream, Milk, Sugar, Rum, Vanilla. Pastry cream: Milk, Egg, Sugar, Cornflour, Lemon zest, Vanilla, Butter',history:'Traditional Basque Country dessert with a Chantilly cream base, soaked sponge and flambéed pastry cream.',notes:null},
-  {id:103,name:'Ben and Jerry\'s ice cream',allergens:['Gluten','Dairy','Eggs','Soy'],ingredients:'Available flavours: Cookie Dough, Chocolate Fudge Brownie, Strawberry Cheesecake, Vanilla Pecan Brittle',history:'Premium American ice cream.',notes:'Vanilla Pecan Brittle also contains Tree nuts.'},
+  {id:103,name:'Ben and Jerry\'s ice cream',allergens:['Gluten','Dairy','Eggs','Soy'],ingredients:'Available flavours: Cookie Dough, Chocolate Fudge Brownie, Strawberry Tarta de queso, Vanilla Pecan Brittle',history:'Premium American ice cream.',notes:'Vanilla Pecan Brittle also contains Tree nuts.'},
   {id:104,name:'Marbled chocolate and banana flan',allergens:['Dairy','Sulphites','Eggs'],ingredients:'Flan: Milk, Egg, Sugar, Orange, Condensed milk, Vanilla. Chocolate flan: Milk, Cream, Salt, Orange, Cinnamon, Egg, Sugar, Mascarpone, Chocolate, Cocoa. Banana cream: Banana, Apple vinegar, Sugar, Ginger. Syrup: Apple vinegar, Sugar, Ginger',history:'',notes:null},
-  {id:105,name:'Cheesecake',allergens:['Gluten','Eggs','Dairy'],ingredients:'Cheesecake: San Millán cheese, Sugar, Natural yogurt, Egg, Yolk, Lemon zest, Vanilla. Sablé: Flour, Butter, Icing sugar, Fleur de sel. Red fruit compote, Strawberry, Shoots',history:'',notes:null},
+  {id:105,name:'Tarta de queso',allergens:['Gluten','Eggs','Dairy'],ingredients:'Tarta de queso: San Millán cheese, Sugar, Natural yogurt, Egg, Yolk, Lemon zest, Vanilla. Sablé: Flour, Butter, Icing sugar, Fleur de sel. Red fruit compote, Strawberry, Shoots',history:'',notes:null},
 
   // ═══ SUGGESTIONS ═══
   {id:107,name:'Langoustines with light vanilla pumpkin sauce',allergens:['Tree nuts','Crustaceans'],ingredients:'Langoustines, Pumpkin cream, Vanilla, American sauce, Confit pumpkin, Chillies, Caramelised pine nuts.',history:'Daily special.',notes:'⚠ Tree nuts in the caramelised pine nuts — can be removed. Order WITHOUT PINE NUTS. Langoustines on vanilla pumpkin cream with intense American sauce dots, vanilla confit pumpkin and chillies.'},
@@ -4245,9 +4245,9 @@ const DISHES = [
   {id:100,cat:'Guarniciones y Salsas',name:'Verduras al vapor',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Brócoli, Zanahoria, Coliflor, Sal, Pimienta',history:'',notes:null},
   // ===== NUEVOS POSTRES =====
   {id:102,cat:'Postres',name:'Goxua',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Cuchara de postre',ingredients:'Bizcocho: Huevo, Azúcar, Vainilla, Polvo para hornear, Harina. Chantilly: Nata, Mascarpone, Azúcar, Vainilla, Gelatina. Baño: Nata, Leche, Azúcar, Ron, Vainilla. Crema Pastelera: Leche, Huevo, Azúcar, Maizena, Ralladura de limón, Vainilla, Mantequilla',history:'Postre típico del País Vasco. Con base de Crema Chantilly, bizcocho empapado con vainilla, ron, nata, azúcar y leche. Terminamos con Crema Pastelera flameada.',notes:null},
-  {id:103,cat:'Postres',name:'Helados Ben and Jerry\'s',allergens:['Gluten','Lácteos','Huevos','Soja'],cutlery:'Cuchara de postre',ingredients:'Sabores disponibles: Cookie Dough, Chocolate Fudge Brownie, Strawberry Cheesecake, Vainilla Pecan Brittle',history:'Helados premium de origen americano.',notes:'El sabor Vainilla Pecan Brittle contiene además Frutos secos.'},
+  {id:103,cat:'Postres',name:'Helados Ben and Jerry\'s',allergens:['Gluten','Lácteos','Huevos','Soja'],cutlery:'Cuchara de postre',ingredients:'Sabores disponibles: Cookie Dough, Chocolate Fudge Brownie, Strawberry Tarta de queso, Vainilla Pecan Brittle',history:'Helados premium de origen americano.',notes:'El sabor Vainilla Pecan Brittle contiene además Frutos secos.'},
   {id:104,cat:'Postres',name:'Flan marmolado de chocolate y plátano',allergens:['Lácteos','Sulfitos','Huevos'],cutlery:'Cuchara de postre',ingredients:'Flan: Leche, Huevo, Azúcar, Naranja, Leche condensada, Vainilla. Flan de Chocolate: Leche, Nata, Sal, Naranja, Canela, Huevo, Azúcar, Mascarpone, Chocolate, Cacao. Crema de Plátano: Plátano, Vinagre de manzana, Azúcar, Jengibre. Almíbar: Vinagre de manzana, Azúcar, Jengibre',history:'',notes:null},
-  {id:105,cat:'Postres',name:'Tarta de queso',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchillo de postre, Cuchara de postre',ingredients:'Cheesecake: Queso San Millán, Azúcar, Yogurt natural, Huevo, Yema, Ralladura de limón, Vainilla. Sablé: Harina, Mantequilla, Azúcar glass, Flor de sal. Confitura de frutos rojos, Fresa, Brotes',history:'Tarta de queso con base de Sablé, con confitura de frutos rojos, fruta fresca y brotes.',notes:null},
+  {id:105,cat:'Postres',name:'Tarta de queso',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchillo de postre, Cuchara de postre',ingredients:'Tarta de queso: Queso San Millán, Azúcar, Yogurt natural, Huevo, Yema, Ralladura de limón, Vainilla. Sablé: Harina, Mantequilla, Azúcar glass, Flor de sal. Confitura de frutos rojos, Fresa, Brotes',history:'Tarta de queso con base de Sablé, con confitura de frutos rojos, fruta fresca y brotes.',notes:null},
 
   // ═══ SUGERENCIAS ═══
   {id:107,cat:'Sugerencias',name:'Langostinos con salsa ligera de calabaza avainillada',allergens:['Frutos secos','Crustáceos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Langostinos, Crema de calabaza, Vainilla, Salsa americana, Calabaza confitada, Guindillas, Piñones garrapiñados.',history:'Sugerencia del día.',notes:'⚠ Frutos secos en los piñones garrapiñados — se puede retirar. Comandar SIN PIÑONES. Langostinos sobre crema de calabaza avainillada con puntos de salsa americana intensa, calabaza confitada con vainilla y guindillas.'},
@@ -4624,7 +4624,7 @@ async function subscribeToPush(employeeName) {
         keys_auth: subJSON.keys.auth
       })
     });
-    console.log('[Txoko] Push subscription saved for', employeeName);
+    // Push subscription saved successfully
   } catch(e) { console.warn('[Txoko] Push subscribe error:', e); }
 }
 
@@ -4658,7 +4658,7 @@ async function checkDuelBanner(user) {
     const hoursLeft = Math.max(0, Math.round((expires - Date.now()) / 3600000));
     const banner = document.createElement('div');
     banner.id = 'duelBanner';
-    banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#1a0a0a,#2d1010);border-bottom:2px solid var(--rose);padding:1rem 1.25rem;animation:slideDown .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.5)`;
+    banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#1c2a22,#2a3530);border-bottom:2px solid var(--rose);padding:1rem 1.25rem;animation:slideDown .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.3)`;
     banner.innerHTML = `
       <div style="max-width:480px;margin:0 auto">
         <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--rose);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">⚡ ${LANG==='en'?'INCOMING CHALLENGE':'RETO PENDIENTE'}</div>
@@ -5815,7 +5815,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Desde las faldas volcánicas de Tenerife emerge un vino que captura la esencia salada del Atlántico. Viñatigo revive la tradición vinícola canaria con la nobleza del Listán Blanco.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Tartar de lomo de atún'],
     notes: 'Fresco y mineral, con aromas de cítricos y flor blanca. Perfecto como aperitivo o con mariscos frescos.'
   },
   {
@@ -5833,7 +5833,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En la cuna de la viticultura canaria, Artifice elabora vinos que son reflejo de la identidad volcánica de la isla. Pureza en cada sorbo, terroir desenfrenado.',
-    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Calamares'],
+    pairings: ['Tataki de atún', 'Tartar de lomo de atún', 'Calamares a la Andaluza'],
     notes: 'Mineral y salado, con notas de hierba fresca y cítricos. Ideal para maridar con cefalópodos y pescados.'
   },
   {
@@ -5851,7 +5851,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Una expresión compleja que mezcla las variedades autóctonas canarias en perfecta armonía. El Vidueño de Artifice es un homenaje a la biodiversidad volcánica.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Tartar de remolacha'],
     notes: 'Complejo y equilibrado, con notas florales y herbáceas. Recomendado con platos de verduras y pescados blancos.'
   },
   {
@@ -5869,7 +5869,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lanzarote, isla de contrastes donde el vino brota del suelo volcánico más árido. Akaet descubre los parajes secretos donde la Malvasía reinaba hace siglos.',
-    pairings: ['Ceviche de corvina', 'Calamares', 'Fish and chips'],
+    pairings: ['Tataki de atún', 'Calamares a la Andaluza', 'Fish and chips'],
     notes: 'Aromático y fresco, con notas de miel y flores blancas. Excelente con mariscos y pescados.'
   },
   {
@@ -5887,7 +5887,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Entre volcanes y brisas oceánicas, Vegas el Pinalete cultiva el Albillo Criollo con la precisión de quienes entienden el terroir canario profundamente.',
-    pairings: ['Tartar de atún', 'Fish and chips', 'Ensalada César'],
+    pairings: ['Tartar de lomo de atún', 'Fish and chips', 'Ensalada Niçoise'],
     notes: 'Elegante y minerál, con toques cítricos delicados. Ideal como vino de aperitivo o con ensaladas frescas.'
   },
   {
@@ -5905,7 +5905,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En el corazón del Valle de Guimar, donde siete colinas custodian la tradición, Los Loros revive la magia de las variedades autóctonas tinerfeñas.',
-    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de remolacha'],
+    pairings: ['Tataki de atún', 'Calamares a la Andaluza', 'Tartar de remolacha'],
     notes: 'Fresco y expresivo, con aromas cítricos y minerales. Perfecto con mariscos y pescados a la parrilla.'
   },
   {
@@ -5923,7 +5923,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Tamerán atesora la historia de la Malvasía en Gran Canaria, variedad que cautivó a la nobleza europea. Cada botella es un viaje al pasado dorado.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Tartar de lomo de atún'],
     notes: 'Aromático y delicado, con notas de frutas tropicales y flores. Excelente como aperitivo o postre.'
   },
 
@@ -5943,7 +5943,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Desde las empinadas laderas del valle del Sil en Valdeorras, la Godello resurge como joya atlántica. Cepado captura la esencia mineral de sus ancestrales terrazas.',
-    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Fish and chips'],
+    pairings: ['Tataki de atún', 'Tartar de lomo de atún', 'Fish and chips'],
     notes: 'Fresco y mineral, con notas cítricas y de fruta blanca. Ideal como aperitivo o con mariscos.'
   },
   {
@@ -5961,7 +5961,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Amaren representa la sofisticación riojan, donde la Viura y la Garnacha blanca danzan en equilibrio perfecto. Un blanco de guarda con alma de reserva.',
-    pairings: ['Ensalada César', 'Risotto de boletus', 'Fish and chips'],
+    pairings: ['Ensalada Niçoise', 'Arroz negro con txipirones', 'Fish and chips'],
     notes: 'Complejo y elegante, con aromas de frutas blancas y minerales. Buen potencial de guarda.'
   },
   {
@@ -5979,7 +5979,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Predicador blanco es el testimonio de una filosofía riojana que abraza la tradición sin miedo a la experimentación. Tres variedades convergen en perfecta sinfonía.',
-    pairings: ['Calamares', 'Tartar de remolacha', 'Ensalada César'],
+    pairings: ['Calamares a la Andaluza', 'Tartar de remolacha', 'Ensalada Niçoise'],
     notes: 'Aromático y equilibrado, con toques florales. Ideal con platos ligeros y mariscos.'
   },
   {
@@ -5997,7 +5997,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Conde de los Andes elabora vinos que respiran la historia de La Rioja. Su Viura es elegancia pura, fruto de viñedos centenarios.',
-    pairings: ['Fish and chips', 'Ensalada César', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Ensalada Niçoise', 'Tartar de lomo de atún'],
     notes: 'Elegante y fresco, con notas de citrus y almendra. Buena acidez y potencial de envejecimiento.'
   },
   {
@@ -6015,7 +6015,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Placet es la búsqueda de la perfección en la Viura, donde la expresión del terroir se transforma en poesía enológica.',
-    pairings: ['Tartar de atún', 'Fish and chips', 'Risotto de boletus'],
+    pairings: ['Tartar de lomo de atún', 'Fish and chips', 'Arroz negro con txipirones'],
     notes: 'Mineral y complejo, con buen envejecimiento. Aromas de frutas blancas y flores.'
   },
   {
@@ -6033,7 +6033,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Remelluri es sinónimo de identidad riojana y tradición sin compromiso. Su blanco de Chardonnay y Garnacha es expresión de un terroir único y milenario.',
-    pairings: ['Salmón', 'Lomo de bacalao', 'Risotto de boletus'],
+    pairings: ['Ensalada de Mero', 'Lubina a la brasa', 'Arroz negro con txipirones'],
     notes: 'Sofisticado y complejo, con buena estructura. Aromas de frutas blancas, minerales y un toque especiado.'
   },
 
@@ -6053,7 +6053,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Alella, viñedo centenario que abraza Barcelona. Parvus cultiva Chardonnay en este terroir privilegiado donde la mar inspira cada vendimia.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Tartar de lomo de atún'],
     notes: 'Fresco y mineral, con notas de manzana y cítricos. Ideal como aperitivo o con pescados blancos.'
   },
   {
@@ -6071,7 +6071,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'La Fita es custodio de la tradición penedésana. Sus Xarel-lo y Macabeo honran siglos de sabiduría vitivinícola catalana.',
-    pairings: ['Calamares', 'Ensalada César', 'Tartar de remolacha'],
+    pairings: ['Calamares a la Andaluza', 'Ensalada Niçoise', 'Tartar de remolacha'],
     notes: 'Fresco y ligero, con aromas florales. Perfecto con mariscos y platos vegetales.'
   },
 
@@ -6091,7 +6091,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Godeval es la excelencia valdeorrana, donde la Godello alcanza su máxima expresión gracias al trabajo apasionado de sus viticultores.',
-    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Lomo de bacalao'],
+    pairings: ['Tataki de atún', 'Tartar de lomo de atún', 'Lubina a la brasa'],
     notes: 'Mineral y complejo, con aromas cítricos y florales. Vino de guarda con buena estructura.'
   },
   {
@@ -6109,7 +6109,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Entre dos laderas de pizarra, As 2 Ladeiras cultiva Godello con respeto absoluto al terroir. Cada botella cuenta una historia de tradición gallega.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Calamares a la Andaluza'],
     notes: 'Fresco y mineral, con notas de cítricos. Ideal con mariscos y pescados a la parrilla.'
   },
   {
@@ -6127,7 +6127,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Louro es la brújula que guía hacia el corazón de Valdeorras. Su Godello resuena con la mineralidad de sus terrazas ancestrales.',
-    pairings: ['Tartar de atún', 'Lomo de bacalao', 'Fish and chips'],
+    pairings: ['Tartar de lomo de atún', 'Lubina a la brasa', 'Fish and chips'],
     notes: 'Mineral y elegante, con aromas cítricos y florales. Buen potencial de envejecimiento.'
   },
   {
@@ -6145,7 +6145,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Cíes es el espíritu atlántico encapsulado. Su Albariño captura la esencia marina de las Rías Baixas en cada sorbo.',
-    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de atún'],
+    pairings: ['Tataki de atún', 'Calamares a la Andaluza', 'Tartar de lomo de atún'],
     notes: 'Fresco y salado, con aromas de frutas blancas y flores. Perfecto con mariscos.'
   },
   {
@@ -6163,7 +6163,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Pazo Barrantes es templo del Albariño gallego. Su Gran Vino 2021 es la culminación de generaciones de dedicación a la excelencia.',
-    pairings: ['Salmón', 'Lomo de bacalao', 'Ceviche de corvina'],
+    pairings: ['Ensalada de Mero', 'Lubina a la brasa', 'Tataki de atún'],
     notes: 'Complejo y elegante, con buen envejecimiento. Aromas de cítricos, flores blancas y minerales.'
   },
   {
@@ -6181,7 +6181,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En formato magnum, el Gran Vino 2021 de Pazo Barrantes revela toda su complejidad. Un monumento al Albariño gallego.',
-    pairings: ['Salmón', 'Lomo de bacalao', 'Lubina'],
+    pairings: ['Ensalada de Mero', 'Lubina a la brasa', 'Lubina a la brasa'],
     notes: 'Elegante y sofisticado, con notas de frutas blancas, flores y minerales. Ideal para celebraciones.'
   },
 
@@ -6201,7 +6201,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Albert Bichot trae desde Bourgogne la elegancia clásica del Chardonnay francés. Cada botella es expresión de terroir milenario.',
-    pairings: ['Fish and chips', 'Risotto de boletus', 'Lomo de bacalao'],
+    pairings: ['Fish and chips', 'Arroz negro con txipirones', 'Lubina a la brasa'],
     notes: 'Elegante y mineral, con aromas de frutas blancas y flores. Buen envejecimiento.'
   },
   {
@@ -6219,7 +6219,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sancerre es cuna del Sauvignon Blanc. Berthier expresa la pureza mineral de sus terrenos de sílex con precisión quirúrgica.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Tartar de remolacha'],
     notes: 'Mineral y cítrico, con aromas de hierba fresca y pedernal. Ideal con mariscos y ensaladas.'
   },
   {
@@ -6237,7 +6237,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Fanny Sabre es voz femenina emergente en Bourgogne. Su Chardonnay 2023 une tradición con innovación en perfecta armonía.',
-    pairings: ['Risotto de boletus', 'Salmón', 'Lomo de bacalao'],
+    pairings: ['Arroz negro con txipirones', 'Ensalada de Mero', 'Lubina a la brasa'],
     notes: 'Complejo y elegante, con notas de frutas blancas, almendra y minerales. Buen potencial de guarda.'
   },
 
@@ -6257,7 +6257,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gobelsburg cultiva Grüner Veltliner en el corazón de Kamptal. Su vino refleja la pureza alpina y la sabiduría vinícola austriaca.',
-    pairings: ['Fish and chips', 'Calamares', 'Ensalada César'],
+    pairings: ['Fish and chips', 'Calamares a la Andaluza', 'Ensalada Niçoise'],
     notes: 'Fresco y mineral, con aromas de cítricos y frutas blancas. Ideal como aperitivo o con platos ligeros.'
   },
 
@@ -6277,7 +6277,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Oremus es guardián de la tradición tokaji. Su Mandolás 2019 despierta la nobleza del Furmint en tierra húngara legendaria.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Tartar de lomo de atún'],
     notes: 'Complejo y mineral, con notas cítricas y florales. Vino de gran envejecimiento.'
   },
   {
@@ -6295,7 +6295,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'El Mandolás 2022 de Oremus es la quintaesencia del Furmint tokaji. Botella que encapsula la historia de siglos en la región.',
-    pairings: ['Ensalada César', 'Risotto de boletus', 'Tartar de remolacha'],
+    pairings: ['Ensalada Niçoise', 'Arroz negro con txipirones', 'Tartar de remolacha'],
     notes: 'Elegante y sofisticado, con aromas de cítricos, flores y minerales. Excelente envejecimiento.'
   },
 
@@ -6315,7 +6315,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Carl Loewen captura la esencia del Riesling mosela. Su Quant 2023 es frescura pura, expresión del clima continental alemán.',
-    pairings: ['Fish and chips', 'Calamares', 'Ceviche de corvina'],
+    pairings: ['Fish and chips', 'Calamares a la Andaluza', 'Tataki de atún'],
     notes: 'Fresco y aromático, con notas de frutas blancas y flores. Ideal como aperitivo.'
   },
 
@@ -6335,7 +6335,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Penfolds representa la excelencia australiana. Su Koonunga Hill Chardonnay es equilibrio entre fruta tropical y elegancia.',
-    pairings: ['Salmón', 'Risotto de boletus', 'Fish and chips'],
+    pairings: ['Ensalada de Mero', 'Arroz negro con txipirones', 'Fish and chips'],
     notes: 'Frutal y equilibrado, con aromas de manzana y melocotón. Ideal con pescados y platos ligeros.'
   },
 
@@ -6355,7 +6355,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Argentina brinda su joyas en Torrontés. Este vino de nombre poético es la esencia del Mendoza moderno.',
-    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Fish and chips'],
+    pairings: ['Tataki de atún', 'Tartar de lomo de atún', 'Fish and chips'],
     notes: 'Aromático y fresco, con notas de flores y frutas blancas. Perfecto con mariscos.'
   },
 
@@ -6375,7 +6375,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'La Bicicleta Voladora es poesía en movimiento. Su Tempranillo riojano vuela libre, sin ataduras convencionales.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Entrecôte'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Carrillera de Wagyu'],
     notes: 'Fresco y vibrante, con aromas de frutos rojos. Ideal con carnes a la brasa.'
   },
   {
@@ -6393,7 +6393,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sitio de Valderíz es refugio de elegancia. Su Tinto Fino ribereño equilibra potencia con sutileza.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Elegante y mineral, con aromas de frutos rojos y pimienta. Buen envejecimiento.'
   },
   {
@@ -6411,7 +6411,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'El Andén Muga espera en la estación de la tradición riojana. Su Tempranillo es punto de partida hacia la excelencia.',
-    pairings: ['Presa ibérica', 'Hamburguesa', 'Calamares'],
+    pairings: ['Pluma ibérica', 'Hamburguesa Rossini', 'Calamares a la Andaluza'],
     notes: 'Joven y frutal, con aromas de cerezas y frambuesas. Ideal con carnes y platos asados.'
   },
   {
@@ -6429,7 +6429,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Rincón de los Enebros es santuario de dos variedades nobres. Garnacha y Tempranillo dialogan en este vino emotivo.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Carrillera de Wagyu'],
     notes: 'Equilibrado y aromático, con notas de frutos rojos y especias. Ideal con carnes.',
   },
   {
@@ -6447,7 +6447,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Marqués de Murrieta es nombre de leyenda en Rioja. Su Reserva es expresión completa de tradición y calidad milenaria.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y equilibrado, con aromas de frutos rojos, ciruelas y especias. Excelente envejecimiento.'
   },
   {
@@ -6465,7 +6465,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En formato magnum, el Reserva 2017 de Marqués de Murrieta alcanza nueva dimensión. Vino para grandes ocasiones.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Elegante y sofisticado, con buen potencial de guarda. Aromas evolucionados de frutos rojos y especias.'
   },
   {
@@ -6483,7 +6483,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Formato excepcional para ocasiones extraordinarias. Este Reserva 2016 es monumento a la excelencia riojana.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Vino de colección, ideal para celebraciones memorables. Perfecto para compartir.'
   },
   {
@@ -6501,7 +6501,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Amaren selecciona sus mejores viñedos para esta expresión. El 2021 es promesa de futuro brillante.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Joven y vibrante, con aromas de frutos rojos frescos. Buen potencial de envejecimiento.'
   },
   {
@@ -6519,7 +6519,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Viña Cubillo es cuna de vinos de carácter. Su 2016 es ejemplo de evolución elegante en la copa.',
-    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    pairings: ['Carrillera de Wagyu', 'Tartar de solomillo', 'Pluma ibérica'],
     notes: 'Evolucionado y complejo, con notas de frutos rojos, cuero y especias. Excelente momento de bebida.'
   },
   {
@@ -6537,7 +6537,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Paco García vinifica con pasión familiar. La Villa es expresión de viñedos históricos riojanos.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Equilibrado y elegante, con aromas de frutos rojos y especias. Ideal con carnes a la brasa.'
   },
   {
@@ -6555,7 +6555,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Predicador 2022 es promesa de Rioja. Su Tempranillo joven respira alegría y potencial futuro.',
-    pairings: ['Presa ibérica', 'Hamburguesa', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Hamburguesa Rossini', 'Costillas de cordero'],
     notes: 'Frutal y vibrante, con aromas frescos de cerezas. Ideal para beber con alegría.'
   },
   {
@@ -6573,7 +6573,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Contino es bodega de visión. Su Reserva es síntesis perfecta de tres variedades nobles.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y estructurado, con aromas evolucionados. Buen potencial de guarda.'
   },
   {
@@ -6591,7 +6591,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Remelluri 2017 es continuidad de excelencia. Su Reserva fusiona tradición con modernidad en perfecta sintonía.',
-    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    pairings: ['Carrillera de Wagyu', 'Tartar de solomillo', 'Pluma ibérica'],
     notes: 'Elegante y sofisticado, con aromas evolucionados. Excelente envejecimiento.'
   },
   {
@@ -6609,7 +6609,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sierra Cantabria busca la perfección sin compromiso. Su Reserva Única 2018 es logro de esa búsqueda.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y estructurado, con aromas de frutos rojos maduros. Excelente potencial futuro.'
   },
   {
@@ -6627,7 +6627,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Olarra 2015 es vino en su punto óptimo. Años de evolución han pulido su carácter.',
-    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    pairings: ['Carrillera de Wagyu', 'Tartar de solomillo', 'Pluma ibérica'],
     notes: 'Evolucionado y elegante, con aromas complejos de frutos rojos y cuero. Listo para beber.'
   },
   {
@@ -6645,7 +6645,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sierra Cantabria Gran Reserva 2016 es epítome de calidad riojana. Vino para ocasiones memorables.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Sofisticado y complejo, con aromas evolucionados. Excelente estructura y envejecimiento.'
   },
   {
@@ -6663,7 +6663,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Contador es maestro riojano. Su Alma 2022 promete futuro espectacular.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Concentrado y prometedor, con excelente estructura. Buen potencial de envejecimiento.'
   },
   {
@@ -6681,7 +6681,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Castillo Ygay es castillo de excelencia. Su Gran Reserva Especial 2011 es monumento histórico en copas.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Vino de colección, perfectamente evolucionado. Aromas complejos y estructurados para apreciadores.'
   },
 
@@ -6701,7 +6701,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Montebaco es puerta a Ribera del Duero. Su Tempranillo despierta sensaciones profundas.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Carrillera de Wagyu'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes a la brasa.'
   },
   {
@@ -6719,7 +6719,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Condado d\'Oriza busca la grandeza. Su Gran Reserva es testimonio de ambición realizada.',
-    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    pairings: ['Carrillera de Wagyu', 'Tartar de solomillo', 'Pluma ibérica'],
     notes: 'Complejo y estructurado, con buen envejecimiento. Aromas de frutos negros y especias.'
   },
   {
@@ -6737,7 +6737,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Corimbo es geometría perfecta en la copa. Su Tempranillo equilibra potencia y elegancia.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Elegante y mineral, con aromas de frutos rojos. Excelente envejecimiento.'
   },
   {
@@ -6755,7 +6755,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Preludio es introducción a la magia ribereña. Su Tempranillo promete sinfonia futura.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Hamburguesa'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Hamburguesa Rossini'],
     notes: 'Joven y frutal, con aromas de cerezas. Buen potencial de envejecimiento.'
   },
   {
@@ -6773,7 +6773,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Alion 2020 es elegancia ribereña en su máxima expresión. Vega Sicilia continúa su legado.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y sofisticado, con aromas evolucionados. Excelente potencial de guarda.'
   },
   {
@@ -6791,7 +6791,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'En doble magnum, Alion 2018 es obra de arte líquida. Formato para grandes celebraciones.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Monumento al Tinto Fino, ideal para ocasiones excepcionales. Perfecto para compartir.'
   },
   {
@@ -6809,7 +6809,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Almirez en magnum es generosidad hecha vino. Su Tinta de Toro resuena con poder ancestral.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Potente y concentrado, con aromas de frutos negros. Ideal para celebraciones.'
   },
   {
@@ -6827,7 +6827,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Massuria 2014 en formato 6L es monumento berciano. Vino para memorias imborrables.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Vino de colección, en su punto óptimo. Aromas complejos de Mencía berciana.'
   },
 
@@ -6847,7 +6847,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Iceni-Tesalia rescata la tradición vitivinícola gaditana. Syrah y Tintilla de Rota dialogan en armonía.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Entrecôte'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Carrillera de Wagyu'],
     notes: 'Aromático y elegante, con notas de frutos rojos. Ideal con carnes asadas.'
   },
 
@@ -6867,7 +6867,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Artifice Tinto despierta el espíritu canario. Su Listán Negro es volcán contenido en botella.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes y platos especiados.'
   },
   {
@@ -6885,7 +6885,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Ruku Ruku es ritmo canario en cada sorbo. Su Listán Negro baila entre tradición e innovación.',
-    pairings: ['Presa ibérica', 'Pollo al curry', 'Solomillo de ternera'],
+    pairings: ['Pluma ibérica', 'Costillas de cordero', 'Tartar de solomillo'],
     notes: 'Joven y frutal, con aromas frescos. Ideal para beber con alegría.'
   },
   {
@@ -6903,7 +6903,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Crater es boca de volcán tinerfeño. Su mezcla de Listán Negro y Diego respira fuego contenido.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Carrillera de Wagyu'],
     notes: 'Potente y aromático, con notas de frutos negros. Excelente con carnes a la brasa.'
   },
   {
@@ -6921,7 +6921,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Los Loros Tinto canta la canción del Listán Negro canario. Tropicale en espíritu, volcánico en alma.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Aromático y frutal, con notas de cerezas. Ideal con carnes y platos especiados.'
   },
   {
@@ -6939,7 +6939,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Titerok es expresión única de Lanzarote. Su mezcla de tres variedades autóctonas es testamento de tradición.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y aromático, con notas de frutos rojos. Excelente estructura.'
   },
 
@@ -6959,7 +6959,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lomba dos Ares es orquesta de cinco variedades gallegas. Cada una canta su propia sinfonía.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Carrillera de Wagyu'],
     notes: 'Complejo y aromático, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -6977,7 +6977,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Do Biolo rescata tradiciones ancestrales de Pontevedra. Sus tres variedades bailan el tango gallego.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Frescos y vibrantes, con aromas de frutos rojos. Ideal con platos gallegos.'
   },
   {
@@ -6995,7 +6995,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lalama 2021 es promesa de Ribera Sacra. Sus tres variedades prometen evolución espectacular.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Joven y promisorio, con aromas frescos de frutos rojos. Buen potencial de envejecimiento.'
   },
 
@@ -7015,7 +7015,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Novetat Total 2021 es innovación mallorquina. En formato 1L, perfecto para compartir.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Frutal y vibrante, con aromas de cerezas. Ideal para beber con alegría.'
   },
 
@@ -7035,7 +7035,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Casa Castillo La Tendida 2022 es tradición murciana. Su Monastrell y Garnacha despiertan el palatar.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Joven y frutal, con aromas de frutos negros. Ideal con carnes asadas.'
   },
 
@@ -7055,7 +7055,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Pago Florentino rescata la dignidad de Castilla La Mancha. Su Cencíbel es promesa de tierra árida.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Hamburguesa'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Hamburguesa Rossini'],
     notes: 'Frutal y accesible, con aromas de cerezas. Ideal para beber con alegría.'
   },
   {
@@ -7073,7 +7073,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Vallgarcía es oasis de excelencia en La Mancha. Su Syrah es fruta madura de sol castellano.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes especiadas.'
   },
 
@@ -7093,7 +7093,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'La Campagne es campo francés en botella. Su Cabernet Sauvignon es frescura mediterránea.',
-    pairings: ['Hamburguesa', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Hamburguesa Rossini', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Frutal y accesible, con aromas de cerezas. Ideal para beber sin pretensiones.'
   },
   {
@@ -7111,7 +7111,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Les Argelières es elegancia meridional. Su Pinot Noir respira delicadeza francesa.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Elegante y frutal, con aromas de cerezas rojas. Ideal con carnes ligeras.'
   },
   {
@@ -7129,7 +7129,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: true,
     story: 'Les Lauriers es certificación KOSHER de excelencia bordelesa. Merlot y Cabernet Franc en armonía.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y estructurado, con aromas de frutos rojos. Ideal con carnes.',
   },
   {
@@ -7147,7 +7147,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Côtes du Rhône 2021 es clasicismo rodaniano. Tres variedades crean sinfonía mediterránea.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Complejo y aromático, con notas de frutos rojos y especias. Ideal con carnes asadas.'
   },
   {
@@ -7165,7 +7165,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Albert Bichot Origines Rouge es expresión pura del Pinot Noir borgoñón. Tradición hecha vino.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Elegante y mineral, con aromas de frutos rojos. Buen envejecimiento.'
   },
   {
@@ -7183,7 +7183,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: true,
     story: 'Château By Medoc 2016 es certificación KOSHER de elegancia bordelesa. Cabernet y Merlot dialogan.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Sofisticado y estructurado, con aromas evolucionados. Excelente envejecimiento.'
   },
   {
@@ -7201,7 +7201,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Domaine Charvin 2022 es triada rodaniana perfecta. Grenache, Syrah y Mourvèdre en sinfonía.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Joven y vibrante, con aromas frescos de frutos negros. Buen potencial futuro.'
   },
   {
@@ -7219,7 +7219,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Fanny Sabre Rouge 2022 es voz femenina emergente en Bourgogne. Pinot Noir de carácter.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Carrillera de Wagyu'],
     notes: 'Elegante y complejo, con aromas de frutos rojos. Buen potencial de envejecimiento.'
   },
   {
@@ -7237,7 +7237,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Côte d\'Or Bourgogne es referencia absoluta. Su Pinot Noir es epítome de elegancia borgoñona.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Sofisticado y complejo, con aromas evolucionados. Vino de colección.'
   },
 
@@ -7257,7 +7257,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'David & Nadia 2021 es voz nueva de Swartland. Su Garnacha despierta alma africana.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Potente y aromático, con notas de frutos negros. Excelente estructura.'
   },
 
@@ -7277,7 +7277,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Brazos de los Andes 2023 es promesa mendocina. Su Malbec baila con la altitud andina.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Joven y vibrante, con aromas frescos de frutos rojos. Buen potencial futuro.'
   },
   {
@@ -7295,7 +7295,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Poligonos es mapa de Mendoza. Su Malbec escribe historia con tintas de altura.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente envejecimiento.'
   },
 
@@ -7315,7 +7315,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'La Fita Sumolt Negre rescata el Sumoll autóctono. Variedad olvidada que resurge con esplendor.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Frutal y aromático, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -7333,7 +7333,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Les Cousins L\'Inconscient 2022 es cuatroda prioratana. Cuatro variedades en conversa apasionada.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Carrillera de Wagyu'],
     notes: 'Joven y vibrante, con aromas complejos. Buen potencial de envejecimiento.'
   },
   {
@@ -7351,7 +7351,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Porrera 2019 es testimonio de Priorat. Cariñena y Garnacha en harmony perfecta.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Evolucionado y complejo, con aromas de frutos rojos. En su punto óptimo.'
   },
   {
@@ -7369,7 +7369,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gran Caus es triada bordelesa en Penedés. Cabernet Sauvignon, Franc y Merlot en armonía.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Elegante y estructurado, con aromas de frutos negros. Buen envejecimiento.'
   },
   {
@@ -7387,7 +7387,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Amic Tinto es amistad empordanesa. Tres variedades bailan como hermanas.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Aromático y equilibrado, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -7405,7 +7405,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Finca Malaveina cultiva triada bordelesa en Costa Brava. Vino de clima y carácter.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente estructura.'
   },
   {
@@ -7423,7 +7423,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Les Terrasses es oda a las terrazas priorateñas. Garnacha y Cariñena en pizarra.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Sofisticado y mineral, con aromas complejos. Excelente envejecimiento.'
   },
   {
@@ -7441,7 +7441,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Álvaro Palacios Gratallops 2018 en magnum es obra de arte. Su Garnacha prioratana es leyenda.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Vino de colección, complejo y mineral. Ideal para ocasiones memorables.'
   },
   {
@@ -7459,7 +7459,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Oddero 2022 trae desde Piamonte la elegancia del Dolcetto. Vino italiano auténtico.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Frutal y elegante, con aromas de cerezas. Ideal con carnes ligeras.'
   },
   {
@@ -7477,7 +7477,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Penfolds Koonunga Hill es clasicismo australiano. Shiraz y Cabernet en simbiosis perfecta.',
-    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Tartar de solomillo', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes asadas.'
   },
 
@@ -7497,7 +7497,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Muga Rosado es expresión de tres variedades riojanas. Rosado de carácter y personalidad.',
-    pairings: ['Ensalada César', 'Tartar de remolacha', 'Ceviche de corvina'],
+    pairings: ['Ensalada Niçoise', 'Tartar de remolacha', 'Tataki de atún'],
     notes: 'Fresco y aromático, con aromas de frutos rojos. Ideal como aperitivo o con ensaladas.'
   },
   {
@@ -7515,7 +7515,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Miraval 2021 en formato 6L es monumentala provenzal. Cinco variedades en botella extraordinaria.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Tartar de remolacha'],
     notes: 'Vino de colección, perfecto para celebraciones. Aromático con aromas provenzales.'
   },
 
@@ -7535,7 +7535,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Oremus Late Harvest 2022 es néctar tokaji. Furmint y Hárselevelü en cosecha tardía perfecta.',
-    pairings: ['Cheesecake', 'Coulant de chocolate', 'Tiramisú'],
+    pairings: ['Tarta de queso', 'Brownie de avellanas', 'Mousse de gofio'],
     notes: 'Dulce y aromático, con notas de miel y frutas secas. Ideal para postres.'
   },
   {
@@ -7553,7 +7553,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Tokaji Oremus Aszú 3 Puttonyus 2017 es esencia de Tokaji. Cuatro variedades en armonía dulce.',
-    pairings: ['Cheesecake', 'Crema catalana', 'Coulant de chocolate'],
+    pairings: ['Tarta de queso', 'Flan tradicional', 'Brownie de avellanas'],
     notes: 'Complejo y sofisticado, con notas de miel, frutos secos y especias. Vino de colección.'
   },
 
@@ -7573,7 +7573,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Colet A Priori es cuatroda penedésana en espumoso. Cuatro variedades crean efervescencia mágica.',
-    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Tataki de atún'],
     notes: 'Fresco y aromático, con buen perlage. Ideal como aperitivo.'
   },
   {
@@ -7591,7 +7591,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'André Clouet es expresión pura del Chardonnay champenoise. Elegancia en cada burbuja.',
-    pairings: ['Calamares', 'Ceviche de corvina', 'Fish and chips'],
+    pairings: ['Calamares a la Andaluza', 'Tataki de atún', 'Fish and chips'],
     notes: 'Elegante y complejo, con aromas florales. Ideal como aperitivo o celebración.'
   },
 
@@ -7611,7 +7611,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Foresta es bosque penedésano en botella. Su Macabeo trae frescura y vitalidad.',
-    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Tataki de atún'],
     notes: 'Fresco y frutal, con buen perlage. Ideal como aperitivo.'
   },
   {
@@ -7629,7 +7629,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Colet A Priori en botella es expresión completa. Cuatroda penedésana con carácter.',
-    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Tataki de atún'],
     notes: 'Fresco y aromático, con buen perlage. Ideal para celebraciones.'
   },
   {
@@ -7647,7 +7647,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gramona III Lustros 2017 es triada clásica penedésana. Años de envejecimiento han creado complejidad.',
-    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de atún'],
+    pairings: ['Tataki de atún', 'Calamares a la Andaluza', 'Tartar de lomo de atún'],
     notes: 'Complejo y sofisticado, con aromas evolucionados. Ideal para ocasiones especiales.'
   },
   {
@@ -7665,7 +7665,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gatinois es expresión champenoise clásica. Su Chardonnay es elegancia en botella.',
-    pairings: ['Calamares', 'Ceviche de corvina', 'Fish and chips'],
+    pairings: ['Calamares a la Andaluza', 'Tataki de atún', 'Fish and chips'],
     notes: 'Elegante y complejo, con aromas florales y cítricos. Perfecto para celebraciones.'
   },
   {
@@ -7683,7 +7683,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'André Clouet Chalky es sofisticación champenoise. Chardonnay que respira minerales de creta.',
-    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de atún'],
+    pairings: ['Tataki de atún', 'Calamares a la Andaluza', 'Tartar de lomo de atún'],
     notes: 'Mineral y elegante, con aromas complejos. Ideal para apreciadores.'
   },
   {
@@ -7701,7 +7701,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Calsac Clos du Malandries Grand Cru es pinnáculo champenoise. Chardonnay de viñedo histórico.',
-    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Calamares'],
+    pairings: ['Tataki de atún', 'Tartar de lomo de atún', 'Calamares a la Andaluza'],
     notes: 'Vino de colección, complejo y mineral. Perfecto para ocasiones memorables.'
   },
   {
@@ -7719,7 +7719,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'AT Roca Rosat es rosado espumoso penedésano. Garnacha Negra y Macabeo en armonía.',
-    pairings: ['Ensalada César', 'Tartar de remolacha', 'Calamares'],
+    pairings: ['Ensalada Niçoise', 'Tartar de remolacha', 'Calamares a la Andaluza'],
     notes: 'Fresco y aromático, con notas de frutos rojos. Ideal como aperitivo.'
   },
   {
@@ -7737,7 +7737,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gatinois Brut Rosé es sofisticación champenoise en rosa. Elegancia pura.',
-    pairings: ['Ensalada César', 'Tartar de remolacha', 'Fish and chips'],
+    pairings: ['Ensalada Niçoise', 'Tartar de remolacha', 'Fish and chips'],
     notes: 'Elegante y fresco, con aromas florales. Perfecto para celebraciones con carácter.'
   },
 
@@ -7757,7 +7757,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Valtravieso Nogara es pura Verdejo ruedeña. Fresco, mineral y revitalizante.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Ceviche de corvina'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Tataki de atún'],
     notes: 'Fresco y mineral, con aromas cítricos. Perfecto como aperitivo.'
   },
   {
@@ -7775,7 +7775,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Fenomenal SB es expresión ruedeña del Sauvignon Blanc. Mineral y fresco.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Tartar de remolacha'],
     notes: 'Fresco y herbáceo, con aromas de cítricos. Ideal como aperitivo.'
   },
   {
@@ -7793,7 +7793,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'El Grifo Lías es expresión auténtica del Malvasía lanzaroteño. Aromático y complejo.',
-    pairings: ['Calamares', 'Fish and chips', 'Ensalada César'],
+    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Ensalada Niçoise'],
     notes: 'Aromático y complejo, con notas de miel y flores. Ideal con mariscos.'
   },
 
@@ -7813,7 +7813,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Arienzo Marqués de Riscal 2022 es introducción a Rioja. Joven, frutal y accesible.',
-    pairings: ['Hamburguesa', 'Presa ibérica', 'Croquetas de jamón'],
+    pairings: ['Hamburguesa Rossini', 'Pluma ibérica', 'Croquetas Premium'],
     notes: 'Frutal y fresco, con aromas de cerezas. Ideal para beber sin pretensiones.'
   },
   {
@@ -7831,7 +7831,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Cair Cuvèe es expresión ribereña accesible. Tempranillo de carácter.',
-    pairings: ['Hamburguesa', 'Presa ibérica', 'Pollo al curry'],
+    pairings: ['Hamburguesa Rossini', 'Pluma ibérica', 'Costillas de cordero'],
     notes: 'Equilibrado y frutal, con aromas de frutos rojos. Ideal con carnes.'
   },
   {
@@ -7849,7 +7849,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Artifice Tinto por copa es puerta a Canarias. Listán Negro con carácter volcánico.',
-    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    pairings: ['Pluma ibérica', 'Tartar de solomillo', 'Costillas de cordero'],
     notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -7867,7 +7867,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Marqués de Murrieta Reserva por copa es elegancia riojana accesible. Expresión completa.',
-    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Pluma ibérica'],
     notes: 'Complejo y equilibrado, con aromas de frutos rojos y especias. Excelente opción por copa.'
   },
 
@@ -7887,7 +7887,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Mojito Classic es la leyenda caribeña. Menta, ron y frescura en cada sorbo de Txoko.',
-    pairings: ['Calamares', 'Fish and chips', 'Ensalada César'],
+    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Ensalada Niçoise'],
     notes: 'Refrescante y herbáceo, perfecto para tardes soleadas. Ideal con mariscos y ensaladas.'
   },
   {
@@ -7905,7 +7905,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Mojito Passion es tropicalidad en copa. Fruta de la pasión con la elegancia del mojito clásico.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Calamares a la Andaluza'],
     notes: 'Tropical y refrescante, con notas de maracuyá. Perfecto para celebraciones.'
   },
   {
@@ -7923,7 +7923,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Mojito Eclipse es elegancia moderna. Vodka negro y menta crean oscuridad luminosa.',
-    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Tataki de atún'],
     notes: 'Sofisticado y misterioso, con matices oscuros. Ideal para noches especiales.'
   },
   {
@@ -7941,7 +7941,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Espresso Martini es para quienes buscan energía y elegancia. Café y vodka en perfecta sintonía.',
-    pairings: ['Coulant de chocolate', 'Cheesecake', 'Tiramisú'],
+    pairings: ['Brownie de avellanas', 'Tarta de queso', 'Mousse de gofio'],
     notes: 'Intenso y sofisticado, con notas de café. Perfecto para después de cena.'
   },
   {
@@ -7959,7 +7959,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Dry Martini es el clásico atemporal. Gin y elegancia pura, como debe ser.',
-    pairings: ['Croquetas de jamón', 'Gyozas', 'Calamares'],
+    pairings: ['Croquetas Premium', 'Mejillones a la brasa', 'Calamares a la Andaluza'],
     notes: 'Elegante y seco, con notas de botánicos. Ideal como aperitivo sofisticado.'
   },
   {
@@ -7977,7 +7977,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lychee Martini es sofisticación asiática. Lichis dulces con la estructura del martini clásico.',
-    pairings: ['Calamares', 'Gyozas', 'Fish and chips'],
+    pairings: ['Calamares a la Andaluza', 'Mejillones a la brasa', 'Fish and chips'],
     notes: 'Delicado y floral, con notas de frutas exóticas. Perfecto para paladar refinado.'
   },
   {
@@ -7995,7 +7995,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Negroni es la Italia en copa. Campari, gin y vermut en equilibrio amargodulce.',
-    pairings: ['Croquetas de jamón', 'Calamares', 'Ceviche de corvina'],
+    pairings: ['Croquetas Premium', 'Calamares a la Andaluza', 'Tataki de atún'],
     notes: 'Amargo y equilibrado, con notas herbáceas. Ideal como aperitivo de carácter.'
   },
   {
@@ -8013,7 +8013,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Aperol Spritz es la tarde italiana. Refrescante, ligero y perfecto para cualquier ocasión.',
-    pairings: ['Ensalada César', 'Tartar de remolacha', 'Calamares'],
+    pairings: ['Ensalada Niçoise', 'Tartar de remolacha', 'Calamares a la Andaluza'],
     notes: 'Ligero y refrescante, con notas cítricasalmaradas. Perfecto como aperitivo.'
   },
   {
@@ -8031,7 +8031,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Long Island es potencia americana en botella. Seis licores en armonía explosiva.',
-    pairings: ['Fish and chips', 'Calamares', 'Nuggets de pollo'],
+    pairings: ['Fish and chips', 'Calamares a la Andaluza', 'Milanesa de pollo'],
     notes: 'Potente y complejo, con múltiples notas. Ideal para noche de celebración.'
   },
   {
@@ -8049,7 +8049,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sangria Red es el espíritu español en vaso. Vino tinto con frutas en armonía refrescante.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Calamares'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Calamares a la Andaluza'],
     notes: 'Frutal y refrescante, con aromas de frutas y especias. Perfecto para tardes de verano.'
   },
   {
@@ -8067,7 +8067,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sangria White es legría versión clara. Vino blanco con frutas para noches luminosas.',
-    pairings: ['Ceviche de corvina', 'Ensalada César', 'Fish and chips'],
+    pairings: ['Tataki de atún', 'Ensalada Niçoise', 'Fish and chips'],
     notes: 'Frutal y ligero, con aromas de cítricos. Ideal para tardes festivas.'
   },
   {
@@ -8085,7 +8085,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sangria Sparkling es sangría elevada. Espumoso con frutas para celebraciones efervescentes.',
-    pairings: ['Calamares', 'Fish and chips', 'Tartar de remolacha'],
+    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Tartar de remolacha'],
     notes: 'Elegante y refrescante, con burbujas y frutas. Perfecto para celebraciones.'
   },
   {
@@ -8103,7 +8103,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Tommy Margarita es mexicanidad en copa. Tequila, lima y sal para hacer fiesta.',
-    pairings: ['Fish and chips', 'Calamares', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Calamares a la Andaluza', 'Tartar de lomo de atún'],
     notes: 'Cítrico y refrescante, con toque salado. Perfecto para tardes festivas.'
   },
   {
@@ -8121,7 +8121,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Moscow Mule es fusión fría. Vodka ruso con cerveza de jengibre estadounidense.',
-    pairings: ['Fish and chips', 'Calamares', 'Ceviche de corvina'],
+    pairings: ['Fish and chips', 'Calamares a la Andaluza', 'Tataki de atún'],
     notes: 'Refrescante y especiado, con picante de jengibre. Ideal para noches cálidas.'
   },
   {
@@ -8139,7 +8139,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Txoko\'s Paloma es firma de la casa. Tequila y toronja en serenata caribeña.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Tartar de lomo de atún'],
     notes: 'Cítrico y refrescante, con dulzor de toronja. Perfecto como firma de Txoko.'
   },
   {
@@ -8157,7 +8157,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Ginger Passion Caipiriña es Brasil con giro tropical. Cachaça, jengibre y pasión.',
-    pairings: ['Fish and chips', 'Calamares', 'Tartar de atún'],
+    pairings: ['Fish and chips', 'Calamares a la Andaluza', 'Tartar de lomo de atún'],
     notes: 'Tropical y especiado, con notas de jengibre y maracuyá. Perfecto para aventureros.'
   },
   {
@@ -8175,7 +8175,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lychee Margarita es Oriente conoce Occidente. Tequila con lichis para paladar aventurero.',
-    pairings: ['Gyozas', 'Calamares', 'Fish and chips'],
+    pairings: ['Mejillones a la brasa', 'Calamares a la Andaluza', 'Fish and chips'],
     notes: 'Floral y frutal, con toque cítrico. Ideal para exploradores de sabores.'
   },
 
@@ -8195,7 +8195,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Ipanema es Río sin alcohol. Frutas tropicales y refrescancia pura.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Calamares a la Andaluza'],
     notes: 'Tropical y refrescante, con aromas de frutas exóticas. Perfecto para cualquier hora.'
   },
   {
@@ -8213,7 +8213,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Vitalía es vitalidad en vaso. Frutas, hierbas y energía refrescante de Txoko.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Tartar de remolacha'],
     notes: 'Vibrante y herbáceo, con aromas de frutas y plantas. Perfecto para vitalizarse.'
   },
   {
@@ -8231,7 +8231,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'San Francisco es California en vaso sin alcohol. Frutas y frescura de la costa.',
-    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    pairings: ['Fish and chips', 'Tataki de atún', 'Calamares a la Andaluza'],
     notes: 'Frutal y refrescante, con aromas cítricos. Ideal como aperitivo ligero.'
   },
   {
@@ -8249,7 +8249,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Virgin Mojito es mojito sin ron. Menta y frescura para todos.',
-    pairings: ['Ensalada César', 'Fish and chips', 'Calamares'],
+    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Calamares a la Andaluza'],
     notes: 'Refrescante y herbáceo, con aromas de menta. Perfecto para cualquier hora del día.'
   }
 ];
@@ -8261,30 +8261,76 @@ let _vinoSubTab = 'carta';
 
 // ═══ WINE EDUCATION DATA ═══
 const WINE_CONCEPTS = [
+  // ═══ NIVEL PRINCIPIANTE ═══
   {
-    title: 'Crianza',
+    title: '¿Qué es el vino?',
+    icon: '🍇',
+    level: 'principiante',
+    short: 'El vino es zumo de uva fermentado. La levadura transforma el azúcar en alcohol.',
+    detail: 'El vino nace de un proceso mágico: las uvas se recogen, se prensan y su zumo fermenta gracias a pequeños organismos llamados levaduras que transforman el azúcar natural de la uva en alcohol. Así de simple y así de fascinante. Los griegos y romanos ya lo hacían hace miles de años. Cada botella es el resultado del clima, el suelo, la uva y el trabajo del enólogo.',
+    tip: 'Al huésped: "Nuestros vinos son como un viaje por España — cada copa cuenta la historia de un lugar y una tradición."'
+  },
+  {
+    title: 'Tinto, Blanco y Rosado',
+    icon: '🎨',
+    level: 'principiante',
+    short: 'El color del vino depende del contacto con la piel de la uva.',
+    detail: '¿Por qué un vino es tinto y otro blanco? La clave está en la piel de la uva. Los tintos fermentan CON la piel (que tiene pigmentos), así que absorben color, taninos y cuerpo. Los blancos se hacen SIN piel, por eso son más ligeros y frescos. Y el rosado es un punto medio: la piel toca el zumo solo unas horas, dándole ese bonito color rosa.',
+    tip: 'Al huésped: "¿Prefiere algo más ligero y fresco? Un blanco. ¿Con más cuerpo e intensidad? Un tinto. ¿Un punto medio? Nuestro rosado Muga es perfecto."'
+  },
+  {
+    title: 'Las 4 cosas que notarás al probar',
+    icon: '👅',
+    level: 'principiante',
+    short: 'Dulzor, acidez, taninos y cuerpo: las 4 sensaciones básicas del vino.',
+    detail: 'No necesitas ser experto para disfrutar el vino. Solo presta atención a 4 cosas: 1) DULZOR: ¿es seco o dulce? 2) ACIDEZ: ¿te hace salivar? Como morder un limón. Los blancos suelen tener más. 3) TANINOS: ¿sientes sequedad en la boca? Solo en tintos. Es como morder la piel de una uva. 4) CUERPO: ¿se siente ligero como agua o denso como leche? Así de fácil.',
+    tip: 'Al huésped: "Le invito a notar cómo este vino le hace sentir en la boca — si siente frescura, es la acidez natural de la uva."'
+  },
+  {
+    title: 'Cómo catar en 3 pasos',
+    icon: '👃',
+    level: 'principiante',
+    short: 'Vista, nariz y boca: el ritual para disfrutar cualquier vino.',
+    detail: 'Catar vino es más fácil de lo que parece: PASO 1 — MIRA: inclina la copa sobre algo blanco. ¿Es pálido o intenso? Los tintos jóvenes son morados, los viejos son granate. PASO 2 — HUELE: mete la nariz en la copa. Primero sin agitar (aromas suaves) y luego agita la copa y huele otra vez (aromas más profundos). PASO 3 — PRUEBA: da un sorbo pequeño y muévelo por toda la boca. ¿Qué frutas notas? ¿Es fresco o cálido?',
+    tip: 'Al huésped: "Si desea, le cuento un secreto: agite suavemente la copa antes de oler — así el vino libera todos sus aromas ocultos."'
+  },
+  {
+    title: '¿Por qué importa la uva?',
+    icon: '🌿',
+    level: 'principiante',
+    short: 'Cada variedad de uva da sabores completamente diferentes.',
+    detail: 'Igual que hay manzanas verdes (ácidas) y manzanas rojas (dulces), hay uvas de vino muy distintas. El TEMPRANILLO (la estrella española) da tintos elegantes con notas de fruta roja y cuero. El ALBARIÑO da blancos fresquísimos que huelen a melocotón y flores. La GARNACHA da tintos potentes y especiados. En Txoko tenemos vinos de más de 15 variedades diferentes — es como tener un mapa de sabores.',
+    tip: 'Al huésped: "Este vino está hecho con Tempranillo, la uva más famosa de España — le dará notas de cereza, vainilla y un toque especiado."'
+  },
+  {
+    title: '¿Qué vino pido con mi plato?',
+    icon: '🍽️',
+    level: 'principiante',
+    short: 'La regla más fácil: blanco con pescado, tinto con carne, ¡y el que tú quieras!',
+    detail: 'No te compliques: la regla básica funciona el 80% de las veces. PESCADOS y MARISCOS (tataki, lubina, mero) → blancos frescos o espumosos. CARNES (solomillo, cordero, hamburguesa) → tintos. POSTRES (brownie, mousse) → vinos dulces. Pero la regla más importante es: NO HAY REGLAS. Si te gusta un tinto con pescado, ¡adelante! El mejor maridaje es el que tú disfrutas.',
+    tip: 'Al huésped: "Le recomendaría un blanco fresco para acompañar su pescado, pero si prefiere tinto, tenemos opciones elegantes que también funcionan muy bien."'
+  },
+  {
+    title: '¿Copa o botella?',
+    icon: '🥂',
+    level: 'principiante',
+    short: 'La copa es perfecta para probar y descubrir sin compromiso.',
+    detail: 'En Txoko tenemos más de 10 vinos disponibles por copa — es la forma perfecta de probar vinos sin comprometerte con una botella entera. Una copa es ideal si: comes solo o en pareja, quieres probar algo nuevo, cada persona quiere un vino diferente, o simplemente quieres una copa con tu plato. El precio va de 10€ a 25€ por copa, así que puedes explorar sin gastar mucho.',
+    tip: 'Al huésped: "Si le apetece probar sin compromiso, tenemos una selección de vinos por copa desde 10€. Es perfecto para descubrir nuevos favoritos."'
+  },
+  // ═══ NIVEL INTERMEDIO ═══
+  {
+    title: 'Crianza, Reserva y Gran Reserva',
     icon: '🪵',
-    short: 'Mínimo 2 años de envejecimiento, al menos 6 meses en barrica de roble.',
-    detail: 'Un vino Crianza ha pasado al menos 24 meses de envejecimiento total, de los cuales un mínimo de 6 meses han sido en barrica de roble (12 meses para tintos en Rioja). El resultado es un vino con notas de vainilla, especias y una taninos más suaves.',
-    tip: 'Al huésped: "Es un vino joven con un toque elegante de madera, perfecto para acompañar carnes y arroces."'
-  },
-  {
-    title: 'Reserva',
-    icon: '🏛️',
-    short: 'Mínimo 3 años de envejecimiento, al menos 12 meses en barrica.',
-    detail: 'Los vinos Reserva requieren un mínimo de 36 meses de envejecimiento, con al menos 12 meses en barrica de roble. Son vinos más complejos, con mayor profundidad de sabor y aromas más evolucionados.',
-    tip: 'Al huésped: "Un vino con carácter y personalidad, ideal para platos de sabor intenso como nuestro solomillo o la presa ibérica."'
-  },
-  {
-    title: 'Gran Reserva',
-    icon: '👑',
-    short: 'Mínimo 5 años de envejecimiento, al menos 18 meses en barrica.',
-    detail: 'La categoría más alta. Requiere un mínimo de 60 meses de envejecimiento total, con al menos 18 meses en barrica. Solo se elaboran en las mejores añadas. Son vinos de gran elegancia y complejidad.',
-    tip: 'Al huésped: "Una joya vinícola que solo se produce en años excepcionales. Un vino para disfrutar y recordar."'
+    level: 'intermedio',
+    short: 'Las 3 categorías de envejecimiento del vino español.',
+    detail: 'España clasifica sus vinos por tiempo de envejecimiento. CRIANZA: mínimo 2 años totales, 6 meses en barrica (12 en Rioja). Resultado: notas de vainilla y especias suaves. RESERVA: mínimo 3 años, 12 meses en barrica. Más complejidad y profundidad. GRAN RESERVA: mínimo 5 años, 18 meses en barrica. Solo en las mejores añadas. Son joyas. Resumen fácil: más tiempo = más elegante y complejo.',
+    tip: 'Al huésped: "Este Crianza tiene un toque elegante de madera. Si busca algo más complejo, nuestros Reserva tienen más profundidad, como el Marqués de Murrieta."'
   },
   {
     title: 'Denominación de Origen (DO)',
     icon: '🗺️',
+    level: 'intermedio',
     short: 'Sello que garantiza el origen geográfico y la calidad del vino.',
     detail: 'La DO certifica que un vino procede de una región específica y cumple con estándares de calidad controlados. Cada DO tiene sus propias normas sobre variedades de uva permitidas, métodos de elaboración y tiempo de envejecimiento.',
     tip: 'Al huésped: "Este sello garantiza que el vino viene de donde dice y se ha elaborado siguiendo la tradición de esa región."'
@@ -8292,6 +8338,7 @@ const WINE_CONCEPTS = [
   {
     title: 'DOCa / DOQ (Calificada)',
     icon: '⭐',
+    level: 'intermedio',
     short: 'El nivel más alto de denominación en España. Solo Rioja y Priorat.',
     detail: 'Solo dos regiones en España tienen esta distinción máxima: Rioja (DOCa desde 1991) y Priorat (DOQ desde 2000). Implica controles más estrictos en toda la cadena de producción, desde la viña hasta el embotellado.',
     tip: 'Al huésped: "Es la élite de los vinos españoles. Solo dos regiones en toda España tienen este reconocimiento."'
@@ -8299,6 +8346,7 @@ const WINE_CONCEPTS = [
   {
     title: 'Vinos Canarios',
     icon: '🌋',
+    level: 'intermedio',
     short: 'Viñedos volcánicos únicos en el mundo, con variedades autóctonas prefiloxéricas.',
     detail: 'Las Islas Canarias son un tesoro vinícola mundial. Sus viñas nunca fueron afectadas por la plaga de filoxera que devastó Europa en el siglo XIX, por lo que conservan cepas centenarias sobre pie franco (raíz original). El suelo volcánico y los vientos atlánticos crean vinos minerales y salinos únicos. Variedades como Listán Negro, Listán Blanco, Malvasía, Marmajuelo y Albillo Criollo no se encuentran en ningún otro lugar.',
     tip: 'Al huésped: "Nuestros vinos canarios son únicos en el mundo — nacen de viñedos volcánicos centenarios que sobrevivieron a la plaga que destruyó los viñedos de toda Europa. Son literalmente historia viva en cada copa."'
@@ -8306,6 +8354,7 @@ const WINE_CONCEPTS = [
   {
     title: 'Taninos',
     icon: '🫖',
+    level: 'intermedio',
     short: 'Compuestos que dan estructura y sensación de sequedad en boca.',
     detail: 'Los taninos provienen de la piel, las semillas de la uva y la barrica de roble. Son los responsables de esa sensación de astringencia o "sequedad" en la boca. Con el envejecimiento, los taninos se suavizan y el vino gana en elegancia.',
     tip: 'Al huésped: "Si siente una ligera sequedad en el paladar, son los taninos — es lo que le da cuerpo y estructura al vino."'
@@ -8313,6 +8362,7 @@ const WINE_CONCEPTS = [
   {
     title: 'Maridaje',
     icon: '🤝',
+    level: 'intermedio',
     short: 'El arte de combinar vino y comida para potenciar ambos.',
     detail: 'El maridaje busca que vino y plato se complementen mutuamente. Las reglas básicas: blancos frescos con pescados y mariscos, tintos con carnes y guisos, dulces con postres. Pero la regla más importante es: el maridaje perfecto es el que tú disfrutas.',
     tip: 'Al huésped: "Le recomiendo este vino porque su frescura/cuerpo/acidez complementa perfectamente los sabores de su plato."'
@@ -8320,6 +8370,7 @@ const WINE_CONCEPTS = [
   {
     title: 'Decantación',
     icon: '🫗',
+    level: 'avanzado',
     short: 'Proceso de airear el vino para que desarrolle todos sus aromas.',
     detail: 'Decantar un vino significa trasvasarlo del botella a un decantador para oxigenarlo. Es especialmente útil con tintos jóvenes potentes (para suavizarlos) y con vinos añejos (para separar los sedimentos). El tiempo de decantación varía: 30 minutos para jóvenes, solo unos minutos para vinos muy viejos.',
     tip: 'Al huésped: "Permítame decantar este vino — al oxigenarse revelará todos sus aromas ocultos."'
@@ -8327,6 +8378,7 @@ const WINE_CONCEPTS = [
   {
     title: 'Temperatura de servicio',
     icon: '🌡️',
+    level: 'avanzado',
     short: 'Cada tipo de vino tiene su temperatura ideal para disfrutarlo al máximo.',
     detail: 'Blancos ligeros: 7-9°C. Blancos con cuerpo y rosados: 10-12°C. Tintos jóvenes: 14-16°C. Tintos con crianza: 16-18°C. Espumosos: 6-8°C. Dulces: 6-8°C. Un vino demasiado frío pierde aromas, demasiado caliente pierde frescura.',
     tip: 'Al huésped: "Le sirvo este [tinto/blanco] a su temperatura ideal para que pueda apreciar todos los matices."'
@@ -8334,6 +8386,7 @@ const WINE_CONCEPTS = [
   {
     title: 'Variedades autóctonas españolas',
     icon: '🇪🇸',
+    level: 'avanzado',
     short: 'España tiene más de 600 variedades de uva, muchas únicas en el mundo.',
     detail: 'Tintas estrella: Tempranillo (Rioja, Ribera del Duero), Garnacha (Aragón, Priorat), Monastrell (Jumilla), Mencía (Bierzo), Listán Negro (Canarias). Blancas estrella: Albariño (Rías Baixas), Verdejo (Rueda), Godello (Valdeorras), Viura (Rioja), Malvasía (Canarias, Lanzarote). Cada una expresa su terroir de forma única.',
     tip: 'Al huésped: "España es el país con mayor diversidad de uvas del mundo. Este vino está elaborado con [variedad], que solo alcanza esta expresión en [región]."'
@@ -8341,6 +8394,7 @@ const WINE_CONCEPTS = [
   {
     title: 'Copa adecuada',
     icon: '🥂',
+    level: 'avanzado',
     short: 'La forma de la copa influye directamente en cómo percibimos el vino.',
     detail: 'Copa grande y ancha para tintos con cuerpo (permite oxigenación). Copa más estrecha para blancos (mantiene la frescura). Copa tipo flauta o tulipa para espumosos (preserva las burbujas). Siempre sujetar la copa por el tallo para no calentar el vino.',
     tip: 'Al huésped: "Utilizamos esta copa específica para que pueda apreciar al máximo los aromas y la temperatura ideal del vino."'
@@ -8401,7 +8455,18 @@ const WINE_REGIONS = [
 
 // Wine flashcard questions
 const WINE_FLASHCARDS = [
-  // Concepts
+  // ═══ PRINCIPIANTE — Lo básico del vino ═══
+  {cat:'Principiante', q:'¿De qué está hecho el vino?', a:'De zumo de uva fermentado. La levadura transforma el azúcar de la uva en alcohol.', hint:'Es más simple de lo que parece'},
+  {cat:'Principiante', q:'¿Por qué el vino tinto es rojo?', a:'Porque fermenta CON la piel de la uva, que tiene pigmentos rojos/morados. El blanco se hace SIN piel.', hint:'La clave está en la piel'},
+  {cat:'Principiante', q:'¿Cuáles son los 3 pasos para catar un vino?', a:'1) VISTA: mira el color. 2) NARIZ: huele los aromas. 3) BOCA: prueba y siente las sensaciones.', hint:'Usa tus sentidos en orden'},
+  {cat:'Principiante', q:'¿Qué tipo de vino va mejor con pescado?', a:'Generalmente vinos blancos frescos o espumosos. Por ejemplo, con el Tataki de atún un Cepado o Fenomenal SB.', hint:'Piensa en frescura y ligereza'},
+  {cat:'Principiante', q:'¿Qué tipo de vino va mejor con carne roja?', a:'Generalmente vinos tintos con cuerpo. Con la Carrillera de Wagyu, por ejemplo, un Marqués de Murrieta Reserva.', hint:'Cuerpo con cuerpo'},
+  {cat:'Principiante', q:'¿Cuántos vinos por copa ofrece Txoko?', a:'Más de 10 vinos por copa, desde 10€ (Arienzo, Valtravieso Nogara) hasta 25€ (Andre Clouet Champagne).', hint:'Es una buena opción para probar sin compromiso'},
+  {cat:'Principiante', q:'¿Qué es un vino "seco"?', a:'Un vino sin dulzor. La mayoría de tintos y blancos de nuestra carta son secos. Lo contrario es un vino dulce como el Tokaji Aszú.', hint:'No tiene que ver con la textura'},
+  {cat:'Principiante', q:'¿Qué haces si un huésped dice que no le gusta el vino?', a:'Le ofreces alternativas: cocktails (16.50€), mocktails sin alcohol (12€), o incluso un espumoso suave como Colet A Priori que puede sorprenderle.', hint:'Siempre hay alternativas'},
+  {cat:'Principiante', q:'¿Qué significa que un vino se sirve "por copa"?', a:'Que puedes pedir solo una copa en lugar de la botella entera. Ideal para probar o si cada comensal quiere algo diferente.', hint:'No hace falta comprar toda la botella'},
+  {cat:'Principiante', q:'¿Cuál es la uva tinta más famosa de España?', a:'El Tempranillo. Es la estrella de Rioja y Ribera del Duero. Da vinos elegantes con notas de fruta roja, vainilla y cuero.', hint:'Piensa en La Rioja'},
+  // ═══ INTERMEDIO — Conceptos ═══
   {cat:'Conceptos', q:'¿Cuántos meses mínimo en barrica necesita un vino para ser Crianza?', a:'6 meses (12 meses para tintos en Rioja)', hint:'Piensa en medio año'},
   {cat:'Conceptos', q:'¿Cuántos años de envejecimiento total requiere un Gran Reserva?', a:'Mínimo 5 años (60 meses), con al menos 18 meses en barrica', hint:'Es la categoría más alta'},
   {cat:'Conceptos', q:'¿Cuáles son las únicas dos regiones DOCa/DOQ de España?', a:'Rioja (DOCa desde 1991) y Priorat (DOQ desde 2000)', hint:'Una está en La Rioja, otra en Cataluña'},
@@ -8420,11 +8485,11 @@ const WINE_FLASHCARDS = [
   {cat:'Nuestra Carta', q:'¿De qué uva es el Pazo Barrantes Gran Vino?', a:'Albariño, DO Rías Baixas (Galicia)', hint:'La uva blanca gallega más famosa'},
   {cat:'Nuestra Carta', q:'¿Cuál es la diferencia entre Alion 2020 y Alion 2018 3L?', a:'El 2020 es botella estándar (200€). El 2018 es Doble Magnum (3 litros) por 1210€. Ambos son Tinto Fino de Ribera del Duero.', hint:'El formato y la añada'},
   // Pairings
-  {cat:'Maridaje', q:'¿Qué vino recomendarías con el ceviche de corvina?', a:'Blancos frescos y minerales: Cepado (Godello), Viñatigo Blanco, Fenomenal SB (Sauvignon Blanc) o un espumoso como Colet A Priori', hint:'Acidez y frescura para el pescado crudo'},
-  {cat:'Maridaje', q:'¿Qué vino va mejor con el solomillo de ternera?', a:'Tintos con cuerpo y crianza: Marqués de Murrieta Reserva, Contino Reserva, Alion 2020, Côte d\'Or Bourgogne', hint:'Tintos con estructura para carne roja'},
-  {cat:'Maridaje', q:'¿Qué vino sugerirías con el risotto de boletus?', a:'Blancos con cuerpo: Remelluri Blanco, Amaren, Placet. O tintos elegantes: Viña Cubillo, Predicador', hint:'El umami de las setas pide vino con cuerpo'},
-  {cat:'Maridaje', q:'Un huésped pide postre (coulant de chocolate). ¿Qué vino le ofreces?', a:'Oremus Late Harvest o Tokaji Oremus Aszú 3 Puttonyos — vinos dulces húngaros que equilibran el chocolate', hint:'Vinos dulces de Tokaji'},
-  {cat:'Maridaje', q:'¿Qué vino irían bien con las gyozas?', a:'Blancos aromáticos frescos: El Grifo Lías (Malvasía), Artifice Vidueño, o un rosado como Muga Rosado', hint:'Algo ligero y aromático para la masa y el relleno'},
+  {cat:'Maridaje', q:'¿Qué vino recomendarías con el Tataki de atún?', a:'Blancos frescos y minerales: Cepado (Godello), Viñatigo Blanco, Fenomenal SB (Sauvignon Blanc) o un espumoso como Colet A Priori', hint:'Acidez y frescura para el pescado'},
+  {cat:'Maridaje', q:'¿Qué vino va mejor con el Tartar de solomillo?', a:'Tintos con cuerpo y crianza: Marqués de Murrieta Reserva, Contino Reserva, Alion 2020, Côte d\'Or Bourgogne', hint:'Tintos con estructura para carne roja'},
+  {cat:'Maridaje', q:'¿Qué vino sugerirías con el Arroz negro con txipirones?', a:'Blancos con cuerpo: Remelluri Blanco, Amaren, Placet. O tintos elegantes: Viña Cubillo, Predicador', hint:'El umami del mar pide vino con cuerpo'},
+  {cat:'Maridaje', q:'Un huésped pide Brownie de avellanas de postre. ¿Qué vino le ofreces?', a:'Oremus Late Harvest o Tokaji Oremus Aszú 3 Puttonyos — vinos dulces húngaros que equilibran el chocolate', hint:'Vinos dulces de Tokaji'},
+  {cat:'Maridaje', q:'¿Qué vino iría bien con los Mejillones a la brasa?', a:'Blancos aromáticos frescos: El Grifo Lías (Malvasía), Artifice Vidueño, o un rosado como Muga Rosado', hint:'Algo ligero y aromático para el marisco'},
   // Guest scenarios
   {cat:'Servicio', q:'Un huésped pregunta: "¿Qué tiene de especial el vino canario?" — ¿Qué le dices?', a:'Nuestros vinos canarios nacen de viñedos volcánicos centenarios que nunca fueron afectados por la filoxera. Son cepas con raíces originales, únicas en Europa. El suelo de lava y el viento del Atlántico les dan un carácter mineral y salino inigualable.', hint:'Volcán + filoxera + Atlántico'},
   {cat:'Servicio', q:'Un huésped quiere un tinto español bueno pero no quiere gastar más de 100€. ¿Qué le recomiendas?', a:'Varias opciones excelentes: Viña Cubillo 2016 (95€, Rioja), Amaren Selección (90€, Rioja), Paco Garcia La Villa (100€, Rioja), Montebaco (90€, Ribera del Duero) o Les Cousins L\'Inconscient (80€, Priorat)', hint:'Piensa en Rioja, Ribera y Priorat'},
@@ -8433,6 +8498,66 @@ const WINE_FLASHCARDS = [
 ];
 
 let _sommelierQuery='', _sommelierResults=null;
+
+// Educational "WHY" explanations for wine pairing recommendations
+function _sommelierWhy(wine, query){
+  const q = query.toLowerCase();
+  const t = wine.type;
+  // Build contextual explanation based on wine type and food
+  const reasons = {
+    blanco: {
+      default: 'La frescura y acidez del vino blanco limpia el paladar y realza los sabores delicados.',
+      pescado: 'La acidez del blanco corta la grasa del pescado y resalta su sabor natural sin dominarlo.',
+      marisco: 'Los blancos frescos complementan la salinidad natural del marisco, creando un equilibrio perfecto.',
+      ensalada: 'Un blanco ligero no domina los sabores sutiles de las verduras y vinagretas.',
+      arroz: 'La acidez del blanco complementa el almidón del arroz y equilibra los sabores del mar.',
+      verdura: 'Los blancos aromáticos realzan las notas vegetales sin enmascararlas.'
+    },
+    tinto: {
+      default: 'Los taninos del tinto se suavizan con la proteína de la carne, creando armonía en boca.',
+      carne: 'Los taninos del vino se unen a las proteínas de la carne, suavizándose mutuamente. Es pura química.',
+      queso: 'La grasa del queso suaviza los taninos del tinto y el vino potencia los sabores lácteos.',
+      pasta: 'Los tintos con cuerpo equilibran las salsas intensas y la riqueza de la pasta.',
+      hamburguesa: 'Un tinto con estructura puede con la intensidad de la carne y los condimentos.',
+      cordero: 'Los tintos con crianza complementan los sabores intensos y la jugosidad del cordero.'
+    },
+    rosado: {
+      default: 'El rosado es el vino más versátil: tiene la frescura del blanco y un toque del carácter del tinto.',
+      ensalada: 'La frescura frutal del rosado es perfecta para platos ligeros y ensaladas.',
+      marisco: 'Un rosado fresco combina bien con mariscos por su acidez y su ligereza.'
+    },
+    espumoso: {
+      default: 'Las burbujas limpian el paladar entre bocado y bocado, haciendo cada mordisco como si fuera el primero.',
+      celebrar: 'El espumoso añade un toque festivo y sus burbujas despiertan todos los sentidos.',
+      marisco: 'La efervescencia realza los sabores del mar y la acidez complementa la salinidad.'
+    },
+    dulce: {
+      default: 'El vino dulce equilibra los sabores del postre — necesitas que el vino sea igual o más dulce que el plato.',
+      postre: 'La regla de oro: el vino debe ser más dulce que el postre. Si no, el vino sabe ácido y plano.',
+      chocolate: 'Los vinos dulces con notas de miel y fruta equilibran la intensidad amarga del chocolate.'
+    }
+  };
+  const typeReasons = reasons[t] || reasons.blanco;
+  // Match food keywords
+  const foodKeywords = {
+    pescado: ['pescado','tataki','atun','lubina','mero','salmon','pampano','fish'],
+    marisco: ['marisco','mejillon','calamares','pulpo','langost','gambas','ostras','lobster'],
+    carne: ['carne','solomillo','tartar','carrillera','wagyu','pluma','brisket','cordero','costilla'],
+    ensalada: ['ensalada','tomate','verdura','nicoise','pimiento'],
+    arroz: ['arroz','txipirones','linguini','ravioli','pasta'],
+    queso: ['queso'],
+    postre: ['postre','brownie','mousse','flan','tarta','goxua','pastel','tocinillo','helado'],
+    chocolate: ['chocolate','brownie','cacao'],
+    hamburguesa: ['hamburguesa','burger'],
+    cordero: ['cordero','costilla'],
+    celebrar: ['celebrar','brindis','especial','fiesta'],
+    verdura: ['alcachofa','esparrago','verdura']
+  };
+  for(const [key, words] of Object.entries(foodKeywords)){
+    if(words.some(w => q.includes(w)) && typeReasons[key]) return typeReasons[key];
+  }
+  return typeReasons.default;
+}
 
 function _sommelierSearch(query){
   _sommelierQuery = query;
@@ -8467,13 +8592,30 @@ function _sommelierSearch(query){
     if(story.includes(q)) score += 8;
 
     // Category heuristics for food types
+    // Food map based on REAL MENU dishes at Txoko
     const foodMap = {
-      'pescado':'blanco','fish':'blanco','marisco':'blanco','seafood':'blanco','ceviche':'blanco','atun':'blanco','salmon':'blanco','bacalao':'blanco','lubina':'blanco','calamares':'blanco',
-      'carne':'tinto','meat':'tinto','ternera':'tinto','beef':'tinto','solomillo':'tinto','entrecote':'tinto','presa':'tinto','hamburguesa':'tinto','steak':'tinto',
-      'postre':'dulce','dessert':'dulce','chocolate':'dulce','cheesecake':'dulce','tiramisu':'dulce','crema':'dulce','coulant':'dulce',
-      'ensalada':'rosado','salad':'rosado','verdura':'blanco','gyoza':'blanco','pollo':'tinto','chicken':'tinto','curry':'tinto',
-      'pasta':'blanco','risotto':'blanco','queso':'tinto','cheese':'tinto','celebrar':'espumoso','celebrate':'espumoso','brindis':'espumoso','toast':'espumoso',
-      'lobster':'blanco','langosta':'blanco','bogavante':'blanco','gambas':'blanco','croqueta':'tinto','nugget':'tinto'
+      // Pescados/Mariscos → blanco
+      'tataki':'blanco','atun':'blanco','tartar de lomo':'blanco','lubina':'blanco','mero':'blanco',
+      'fish':'blanco','mejillones':'blanco','calamares':'blanco','pulpo':'blanco','txuleta de atun':'blanco',
+      'ostras':'blanco','langostino':'blanco','pampano':'blanco','lobster':'blanco',
+      // Carnes → tinto
+      'carrillera':'tinto','wagyu':'tinto','solomillo':'tinto','tartar de solomillo':'tinto',
+      'pluma':'tinto','cordero':'tinto','costillas':'tinto','hamburguesa':'tinto','brisket':'tinto',
+      'panceta':'tinto','pincho moruno':'tinto','cecina':'tinto','jamon':'tinto',
+      'milanesa':'tinto','pollo':'tinto','pularda':'tinto',
+      // Postres → dulce
+      'postre':'dulce','brownie':'dulce','chocolate':'dulce','mousse':'dulce','flan':'dulce',
+      'goxua':'dulce','tarta de queso':'dulce','pastel vasco':'dulce','tocinillo':'dulce','helado':'dulce',
+      // Entrantes ligeros → rosado
+      'ensalada':'rosado','tomates':'rosado','pimiento':'blanco',
+      // Arroces/Pasta → blanco
+      'arroz':'blanco','linguini':'blanco','ravioli':'blanco',
+      // Quesos → tinto
+      'queso':'tinto',
+      // Celebración → espumoso
+      'celebrar':'espumoso','brindis':'espumoso','especial':'espumoso',
+      // Vegetal → blanco
+      'verdura':'blanco','alcachofa':'blanco','esparrago':'blanco','croqueta':'blanco'
     };
     for(const [food, type] of Object.entries(foodMap)){
       if(q.includes(food) && w.type === type) score += 20;
@@ -8568,7 +8710,7 @@ function _renderSommelier(c, bar){
       </div>
       <div style="position:relative">
         <input id="sommelierInput" class="sommelier-input" type="text"
-          placeholder="Ej: tartar de atún, solomillo, gyozas..."
+          placeholder="Ej: tataki de atún, solomillo, brownie..."
           value="${escapeHTML(_sommelierQuery)}"
           oninput="_sommelierSearch(this.value)">
         <svg style="position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--gold);opacity:.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -8582,6 +8724,7 @@ function _renderSommelier(c, bar){
               <div style="flex:1;min-width:0">
                 <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);line-height:1.2">${escapeHTML(r.wine.name)}</div>
                 <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(r.wine.grapes||r.wine.type)} · ${r.wine.price}€${r.wine.glass?' · Copa '+r.wine.glass+'€':''}</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;color:var(--sage);margin-top:.3rem;line-height:1.4;font-style:italic;padding:.25rem .4rem;background:rgba(77,138,94,.05);border-radius:6px;border-left:2px solid rgba(77,138,94,.2)">💡 ${_sommelierWhy(r.wine, _sommelierQuery)}</div>
               </div>
               <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);font-weight:600;flex-shrink:0">${r.wine.price}€</div>
             </div>`).join('')}
@@ -8590,6 +8733,15 @@ function _renderSommelier(c, bar){
           <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);font-style:italic">No encontré un maridaje exacto... prueba con otro plato</div>
         </div>` : ''}
     </div>
+
+    <!-- Beginner tips -->
+    ${!_sommelierQuery ? `<div class="wine-concept-card wine-enchanted" style="margin-bottom:1rem;border-left:3px solid var(--sage)">
+      <div style="font-family:'Cinzel',serif;font-size:.8rem;color:var(--sage);margin-bottom:.4rem;position:relative">🌱 ¿No sabes por dónde empezar?</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);line-height:1.5;position:relative">Escribe el nombre de tu plato arriba y te explicaremos qué vino va mejor y <strong style="color:var(--parchment)">por qué</strong>. Prueba con: "tataki", "solomillo", "brownie", "ensalada"...</div>
+      <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.5rem;position:relative">
+        ${['Tataki de atún','Carrillera de Wagyu','Brownie','Ensalada'].map(d=>`<button onclick="document.getElementById('sommelierInput').value='${d}';_sommelierSearch('${d}')" class="wine-pairing-pill" style="cursor:pointer;font-size:.62rem">${d}</button>`).join('')}
+      </div>
+    </div>` : ''}
 
     <!-- Quick discovery cards -->
     <div class="section-eyebrow">✦ Descubre Hoy</div>
@@ -8628,7 +8780,7 @@ function _renderSommelier(c, bar){
       <button onclick="_vinoSubTab='wineQuiz';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
         <div style="font-size:1.5rem">🎯</div>
         <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Quiz</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">3 modos</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">4 modos</div>
       </button>
     </div>
   </div>`;
@@ -8823,25 +8975,70 @@ function _showWineDetail(id){
 
 // ═══ WINE LEARNING TABS ═══
 
+let _wineLearnLevel = 'all';
 function _renderWineLearn(c, bar){
+  const levels = [
+    {id:'all',label:'Todos',icon:'📚',desc:'Todo el contenido'},
+    {id:'principiante',label:'Principiante',icon:'🌱',desc:'Empieza aquí'},
+    {id:'intermedio',label:'Intermedio',icon:'🌿',desc:'Profundiza'},
+    {id:'avanzado',label:'Avanzado',icon:'🌳',desc:'Domina el vino'}
+  ];
+  const filteredConcepts = _wineLearnLevel==='all' ? WINE_CONCEPTS : WINE_CONCEPTS.filter(c=>c.level===_wineLearnLevel);
+  const levelColors = {principiante:'var(--sage)',intermedio:'var(--gold)',avanzado:'var(--candy-purple)'};
+  const levelLabels = {principiante:'Principiante',intermedio:'Intermedio',avanzado:'Avanzado'};
+
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <div class="wine-section-header">
       <div class="wine-section-title">✦ Aprende sobre Vinos ✦</div>
-      <div class="wine-section-sub">Conceptos esenciales y regiones de nuestra carta</div>
+      <div class="wine-section-sub">Tu camino de cero a sommelier</div>
     </div>
 
-    <div class="wine-storybook-intro wine-enchanted">
-      <div class="wine-storybook-text">"El conocimiento del vino es como un mapa del tesoro: cada concepto que aprendes te acerca más a convertirte en un verdadero sommelier."</div>
+    <!-- Welcoming intro for total beginners -->
+    <div class="sommelier-box wine-enchanted" style="margin-bottom:1.2rem;text-align:center">
+      <div style="font-size:1.8rem;margin-bottom:.4rem;position:relative">🌱</div>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.4;margin-bottom:.5rem;position:relative">¿El vino es un mundo desconocido para ti?</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch3);line-height:1.6;margin-bottom:.8rem;position:relative">¡Perfecto! Estás en el lugar ideal. Hemos creado un camino paso a paso para que aprendas desde cero, sin prisa y sin agobios. Empieza por "Principiante" y ve avanzando a tu ritmo.</div>
+      <div style="display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;position:relative">
+        <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(77,138,94,.08);border:1px solid rgba(77,138,94,.15)">
+          <div style="font-size:1rem">🌱</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--sage);letter-spacing:.08em">PRINCIPIANTE</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">Lo básico</div>
+        </div>
+        <div style="color:var(--parch4);display:flex;align-items:center;font-size:.8rem">→</div>
+        <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.12)">
+          <div style="font-size:1rem">🌿</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.08em">INTERMEDIO</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">Profundiza</div>
+        </div>
+        <div style="color:var(--parch4);display:flex;align-items:center;font-size:.8rem">→</div>
+        <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(122,106,170,.06);border:1px solid rgba(122,106,170,.12)">
+          <div style="font-size:1rem">🌳</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--candy-purple);letter-spacing:.08em">AVANZADO</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">Domina</div>
+        </div>
+      </div>
     </div>
 
-    <div class="section-eyebrow">◇ Conceptos Clave</div>
+    <!-- Level filter pills -->
+    <div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:1.2rem;padding-bottom:.3rem;scrollbar-width:none">
+      ${levels.map(l=>`<button onclick="_wineLearnLevel='${l.id}';renderVinos()" class="wine-filter-pill${_wineLearnLevel===l.id?' active':''}">${l.icon} ${l.label}</button>`).join('')}
+    </div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);margin-bottom:.8rem;letter-spacing:.08em">
+      ◇ ${filteredConcepts.length} conceptos${_wineLearnLevel!=='all'?' · Nivel '+levelLabels[_wineLearnLevel]:''}
+    </div>
+
+    <div class="section-eyebrow">◇ Conceptos${_wineLearnLevel!=='all'?' — '+levelLabels[_wineLearnLevel]:''}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem">
-      ${WINE_CONCEPTS.map((c,i)=>`
+      ${filteredConcepts.map((c,i)=>`
         <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
           <div style="display:flex;align-items:center;gap:.6rem;position:relative">
             <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold-a),rgba(196,154,60,.2));width:32px;height:32px;font-size:1rem">${c.icon}</div>
             <div style="flex:1">
-              <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${c.title}</div>
+              <div style="display:flex;align-items:center;gap:.4rem">
+                <span style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${c.title}</span>
+                ${c.level?`<span style="font-family:'DM Mono',monospace;font-size:.45rem;padding:.15rem .4rem;border-radius:4px;background:${c.level==='principiante'?'rgba(77,138,94,.1)':c.level==='intermedio'?'rgba(196,154,60,.08)':'rgba(122,106,170,.08)'};color:${levelColors[c.level]||'var(--parch4)'};letter-spacing:.06em;text-transform:uppercase">${levelLabels[c.level]||c.level}</span>`:''}
+              </div>
               <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${c.short}</div>
             </div>
             <svg style="opacity:.3;transition:transform .2s;color:var(--gold)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -8856,6 +9053,71 @@ function _renderWineLearn(c, bar){
             </div>
           </div>
         </div>`).join('')}
+    </div>
+
+    <!-- Visual learning aids -->
+    <div class="section-eyebrow">🎨 Guías Visuales Rápidas</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem">
+      <!-- Temperature Guide -->
+      <div class="wine-concept-card card-animate" style="animation-delay:.05s">
+        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">🌡️ Temperaturas de Servicio</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;position:relative">
+          ${[
+            ['Espumosos / Champagne','6-8°C','❄️','var(--candy-blue)','Bien fríos'],
+            ['Blancos ligeros','7-9°C','🧊','var(--candy-teal)','Fríos'],
+            ['Blancos con cuerpo / Rosados','10-12°C','🌸','var(--candy-pink)','Frescos'],
+            ['Tintos jóvenes','14-16°C','🍃','var(--sage)','Ligeramente frescos'],
+            ['Tintos con crianza','16-18°C','🍂','var(--candy-red)','Ambiente suave'],
+            ['Dulces','6-8°C','🍯','var(--candy-orange)','Bien fríos']
+          ].map(([tipo,temp,ico,col,desc])=>`
+            <div style="display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid ${col}">
+              <span style="font-size:.85rem;width:20px;text-align:center">${ico}</span>
+              <span style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parchment);flex:1">${tipo}</span>
+              <span style="font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);font-weight:600;min-width:50px;text-align:right">${temp}</span>
+            </div>`).join('')}
+        </div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:.5rem;font-style:italic;position:relative">💡 Truco: si el vino está demasiado frío, pierde aromas. Demasiado caliente, pierde frescura.</div>
+      </div>
+
+      <!-- Color Guide -->
+      <div class="wine-concept-card card-animate" style="animation-delay:.1s">
+        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">🎨 Lo que el Color te Dice</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;position:relative">
+          ${[
+            ['Blanco pálido','Joven y ligero','#f5f0d0','#8a8040'],
+            ['Blanco dorado','Con cuerpo o envejecido','#e8d080','#7a6530'],
+            ['Rosa claro','Rosado suave y fresco','#f5c0d0','#8a5060'],
+            ['Rubí/Púrpura','Tinto joven','#9a2050','#f0c0d0'],
+            ['Granate','Tinto con crianza','#6a1530','#e0b0c0'],
+            ['Teja/Marrón','Tinto muy viejo','#804030','#e0c8b8']
+          ].map(([nombre,signif,bg,textCol])=>`
+            <div style="display:flex;align-items:center;gap:.4rem;padding:.3rem .4rem;border-radius:6px;background:rgba(196,154,60,.02)">
+              <div style="width:18px;height:18px;border-radius:50%;background:${bg};border:1px solid rgba(0,0,0,.1);flex-shrink:0"></div>
+              <div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parchment);font-weight:600">${nombre}</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.55rem;color:var(--parch4)">${signif}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- 3-Step Tasting Visual -->
+      <div class="wine-concept-card card-animate" style="animation-delay:.15s">
+        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">👁️ Los 3 Pasos de la Cata</div>
+        <div style="display:flex;justify-content:center;gap:.5rem;position:relative">
+          ${[
+            ['👁️','VISTA','Inclina la copa.\n¿Color intenso o pálido?','var(--candy-blue)'],
+            ['👃','NARIZ','Huele sin agitar,\nluego agita y huele.','var(--candy-purple)'],
+            ['👅','BOCA','Sorbo pequeño.\n¿Ácido, dulce, tánico?','var(--candy-red)']
+          ].map(([ico,step,desc,col],i)=>`
+            <div style="flex:1;text-align:center;padding:.6rem .3rem;border-radius:10px;background:rgba(196,154,60,.03);border:1px solid rgba(196,154,60,.08)">
+              <div style="font-size:1.4rem;margin-bottom:.3rem">${ico}</div>
+              <div style="font-family:'Cinzel',serif;font-size:.65rem;color:${col};letter-spacing:.08em;margin-bottom:.2rem">${step}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.58rem;color:var(--parch3);line-height:1.4;white-space:pre-line">${desc}</div>
+              ${i<2?'':''}
+            </div>`).join('<div style="display:flex;align-items:center;color:var(--parch4);font-size:.7rem">→</div>')}
+        </div>
+      </div>
     </div>
 
     <div class="section-eyebrow">◇ Nuestras Regiones</div>
@@ -8904,12 +9166,12 @@ function _renderWineFlashcards(c, bar){
     </div>
 
     <div class="wine-storybook-intro wine-enchanted">
-      <div class="wine-storybook-text">"Cada tarjeta es un pequeño secreto esperando ser revelado. Toca para descubrir lo que el vino quiere contarte."</div>
+      <div class="wine-storybook-text">${_wfCat==='all'||_wfCat==='Principiante'?'"Si eres nuevo en el mundo del vino, empieza por las tarjetas de Principiante. Cada acierto es un paso más hacia el conocimiento."':'"Cada tarjeta es un pequeño secreto esperando ser revelado. Toca para descubrir lo que el vino quiere contarte."'}</div>
     </div>
 
     <!-- Category filters -->
     <div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:1.2rem;padding-bottom:.3rem;scrollbar-width:none">
-      ${[['all','Todos']].concat(cats.map(c=>[c,c])).map(([id,label])=>`<button onclick="_wfCat='${id}';_wfIdx=0;_wfFlipped=false;renderVinos()" class="wine-filter-pill${_wfCat===id?' active':''}">${label}</button>`).join('')}
+      ${[['all','📚 Todos'],['Principiante','🌱 Principiante'],['Conceptos','🌿 Conceptos'],['Nuestra Carta','🍷 Carta'],['Maridaje','🤝 Maridaje'],['Servicio','💬 Servicio']].filter(([id])=>id==='all'||cats.includes(id)).map(([id,label])=>`<button onclick="_wfCat='${id}';_wfIdx=0;_wfFlipped=false;renderVinos()" class="wine-filter-pill${_wfCat===id?' active':''}">${label}</button>`).join('')}
     </div>
 
     <!-- Progress -->
@@ -8919,7 +9181,7 @@ function _renderWineFlashcards(c, bar){
 
     <!-- Card -->
     <div onclick="_wfFlipped=!_wfFlipped;renderVinos()" class="wine-flashcard${_wfFlipped?' flipped':''}">
-      <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em;z-index:1">${card.cat}</div>
+      <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${card.cat==='Principiante'?'var(--sage)':_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em;z-index:1">${card.cat==='Principiante'?'🌱 ':card.cat==='Servicio'?'💬 ':''}${card.cat}</div>
       <div style="position:absolute;top:.7rem;right:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.08em;z-index:1">${_wfFlipped?'✦ Respuesta':'◇ Pregunta'}</div>
 
       ${_wfFlipped?`
@@ -8967,21 +9229,28 @@ function _renderWineQuiz(c, bar){
           <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);font-style:italic;margin-top:.4rem;position:relative">"La sabiduría del vino se construye copa a copa"</div>
         </div>`:''}
       <div style="display:flex;flex-direction:column;gap:.5rem">
-        <button onclick="_startWineQuiz('Maridaje',8)" class="wine-quiz-option card-animate" style="animation-delay:.05s">
+        <button onclick="_startWineQuiz('Principiante',8)" class="wine-quiz-option card-animate" style="animation-delay:.03s;border-left:3px solid var(--sage)">
+          <div class="wine-quiz-icon">🌱</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Quiz Principiante</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--sage)">Empieza aquí si el vino es nuevo para ti</div>
+          </div>
+        </button>
+        <button onclick="_startWineQuiz('Maridaje',8)" class="wine-quiz-option card-animate" style="animation-delay:.08s">
           <div class="wine-quiz-icon">🤝</div>
           <div>
             <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Quiz de Maridaje</div>
             <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">¿Qué vino va con cada plato?</div>
           </div>
         </button>
-        <button onclick="_startWineQuiz('all',10)" class="wine-quiz-option card-animate" style="animation-delay:.1s">
+        <button onclick="_startWineQuiz('all',10)" class="wine-quiz-option card-animate" style="animation-delay:.12s">
           <div class="wine-quiz-icon">🍷</div>
           <div>
             <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Quiz Completo</div>
             <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">Conceptos, carta, maridaje y servicio</div>
           </div>
         </button>
-        <button onclick="_startWineQuiz('Servicio',6)" class="wine-quiz-option card-animate" style="animation-delay:.15s">
+        <button onclick="_startWineQuiz('Servicio',6)" class="wine-quiz-option card-animate" style="animation-delay:.16s">
           <div class="wine-quiz-icon">💬</div>
           <div>
             <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Escenarios de Servicio</div>
@@ -9061,13 +9330,13 @@ function _renderWineService(c, bar){
       <div class="section-eyebrow">◇ Guía Rápida de Maridaje</div>
       <div style="display:flex;flex-direction:column;gap:.45rem">
         ${[
-          ['🐟 Pescados y Mariscos','Blancos frescos: Cepado, Fenomenal SB, Viñatigo · Espumosos: Colet A Priori','var(--candy-blue)'],
-          ['🥩 Carnes Rojas','Tintos con cuerpo: Murrieta Reserva, Contino, Alion, Poligonos','var(--candy-red)'],
-          ['🍝 Pastas y Risottos','Blancos con cuerpo: Amaren, Remelluri · Tintos elegantes: Predicador, Viña Cubillo','var(--candy-orange)'],
-          ['🥗 Ensaladas y Entrantes ligeros','Rosado: Muga · Blancos ligeros: Valtravieso Nogara, El Grifo Lías','var(--candy-pink)'],
-          ['🧀 Quesos','Según intensidad: suaves→blanco, curados→tinto con crianza, azules→dulce','var(--candy-yellow)'],
-          ['🍫 Postres','Dulces: Oremus Late Harvest, Tokaji Aszú · Espumosos dulces','var(--candy-purple)'],
-          ['🥟 Gyozas / Platos asiáticos','Blancos aromáticos: El Grifo Lías, Artifice · Rosado: Muga','var(--candy-teal)'],
+          ['🐟 Tataki de atún / Lubina a la brasa','Blancos frescos: Cepado, Fenomenal SB, Viñatigo · Espumosos: Colet A Priori','var(--candy-blue)'],
+          ['🥩 Carrillera de Wagyu / Tartar de solomillo','Tintos con cuerpo: Murrieta Reserva, Contino, Alion, Poligonos','var(--candy-red)'],
+          ['🍚 Arroz negro con txipirones / Linguini','Blancos con cuerpo: Amaren, Remelluri · Tintos elegantes: Predicador, Viña Cubillo','var(--candy-orange)'],
+          ['🥗 Ensalada Niçoise / Tomates aliñados','Rosado: Muga · Blancos ligeros: Valtravieso Nogara, El Grifo Lías','var(--candy-pink)'],
+          ['🧀 Tabla de quesos canarios','Según intensidad: suaves→blanco, curados→tinto con crianza, azules→dulce','var(--candy-yellow)'],
+          ['🍫 Brownie / Mousse de gofio / Flan','Dulces: Oremus Late Harvest, Tokaji Aszú · Espumosos dulces','var(--candy-purple)'],
+          ['🦪 Mejillones / Calamares / Pulpo a la brasa','Blancos aromáticos: El Grifo Lías, Artifice · Rosado: Muga','var(--candy-teal)'],
           ['🦞 Lobster Roll','Blancos con cuerpo: Pazo Barrantes, Remelluri Blanco · Espumoso: Andre Clouet','var(--gold)']
         ].map(([dish,wines,color],i)=>`
           <div class="wine-pairing-strip card-animate" style="animation-delay:${i*0.04}s;border-left:3px solid ${color}">
@@ -10340,7 +10609,7 @@ function renderVideos(){
             ` : videos.map(v => `
               <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);overflow:hidden;margin-bottom:.6rem;box-shadow:0 4px 16px rgba(0,0,0,.1)">
                 <!-- Video embed -->
-                <div style="position:relative;width:100%;padding-bottom:56.25%;background:#000;overflow:hidden">
+                <div style="position:relative;width:100%;padding-bottom:56.25%;background:linear-gradient(155deg,#f0e8d8,#e8dcc8);overflow:hidden">
                   <iframe
                     src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1&playsinline=1&fs=1"
                     style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
@@ -11010,7 +11279,7 @@ function renderProtocolo() {
         <span style="font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:700;color:var(--candy-purple);text-transform:uppercase">${LANG==='en'?'Practical Cases':'Casos Prácticos'}</span>
         <span style="font-size:.65rem;color:var(--parch3);font-weight:500">${LANG==='en'?'Real situations · Traps included':'Situaciones reales · Con trampas'}</span>
       </button>
-      <button onclick="renderCredo()" style="grid-column:span 2;display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#1a3a5c 0%,#2a5080 50%,#1a3a5c 100%);border:1px solid rgba(91,141,184,.4);border-radius:var(--r);cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden">
+      <button onclick="renderCredo()" style="grid-column:span 2;display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:linear-gradient(135deg,#1c2a22 0%,#2a3530 50%,#1c2a22 100%);border:1px solid rgba(196,154,60,.25);border-radius:var(--r);cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden">
         <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none"></div>
         <div style="flex-shrink:0;width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08)">
           <svg viewBox="0 0 40 32" fill="none" width="28" height="24">
@@ -14374,7 +14643,7 @@ function renderLqa(){
   const score=Math.round(totalMet/LQA_STANDARDS.length*100*10)/10;
 
   c.innerHTML=`<div class="sup-wrap">
-    <div class="sup-hero" style="background:linear-gradient(135deg,#1a3a5c 0%,#2d5a8c 50%,#1a3a5c 100%);border:1px solid rgba(91,141,184,.4)">
+    <div class="sup-hero" style="background:linear-gradient(135deg,#1c2a22 0%,#2a3530 50%,#1c2a22 100%);border:1px solid rgba(196,154,60,.25)">
       <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></div>
       <div class="sup-hero-title" style="color:#fff">Leading Quality Assurance</div>
       <div class="sup-hero-sub" style="color:rgba(255,255,255,.7)">${LANG==='en'?'Prepare for the audit':'Prepárate para la auditoría'}</div>
