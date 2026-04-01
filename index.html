@@ -712,6 +712,463 @@ body::before{
 }
 
 /* ─────────────────────────────────────────────────
+   SUB-TAB BAR — TUNIC style
+───────────────────────────────────────────────── */
+.tunic-subtabs{
+  display:flex;gap:.4rem;margin-bottom:1.4rem;overflow-x:auto;padding-bottom:.35rem;
+  scrollbar-width:none;position:relative;
+}
+.tunic-subtabs::-webkit-scrollbar{display:none}
+.tunic-subtabs::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.12),transparent);
+}
+.tunic-stab{
+  display:flex;align-items:center;gap:.35rem;padding:.55rem 1rem;border-radius:0;
+  font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;
+  white-space:nowrap;transition:all .25s cubic-bezier(.22,1,.36,1);
+  background:transparent;color:var(--parch3);border:none;position:relative;
+}
+.tunic-stab::before{
+  content:'';position:absolute;bottom:-1px;left:50%;width:0;height:2.5px;
+  background:linear-gradient(90deg,var(--gold),var(--gold3));
+  transition:all .25s cubic-bezier(.22,1,.36,1);transform:translateX(-50%);
+  border-radius:2px 2px 0 0;
+}
+.tunic-stab:hover{color:var(--parchment)}
+.tunic-stab:hover::before{width:50%}
+.tunic-stab.active{color:var(--gold);font-weight:700}
+.tunic-stab.active::before{width:80%;opacity:.8}
+
+/* ─────────────────────────────────────────────────
+   WINE SECTION — TUNIC parchment cards
+───────────────────────────────────────────────── */
+.wine-section-header{
+  text-align:center;margin-bottom:1.8rem;animation:cardSlideUp .4s ease both;
+}
+.wine-section-title{
+  font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:var(--gold);
+  letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.wine-section-sub{
+  font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);
+  letter-spacing:.15em;text-transform:uppercase;margin-top:.4rem;
+}
+
+.wine-card{
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);
+  padding:.95rem 1.1rem;cursor:pointer;
+  transition:all .25s cubic-bezier(.22,1,.36,1);
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 6px rgba(28,42,34,.04);
+}
+.wine-card::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.03)' stroke-width='0.4'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.wine-card:hover,.wine-card:active{
+  transform:translateY(-2px);border-color:var(--gold2);
+  box-shadow:0 4px 16px rgba(196,154,60,.12);
+}
+.wine-card:hover::after{opacity:1}
+.wine-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3));
+  opacity:0;transition:opacity .22s;
+}
+
+.wine-badge{
+  display:inline-flex;align-items:center;gap:.2rem;
+  padding:.15rem .55rem;border-radius:10px;
+  font-size:.58rem;font-weight:600;font-family:'DM Mono',monospace;
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.wine-type-icon{
+  width:28px;height:28px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;
+  flex-shrink:0;
+}
+
+.wine-detail-overlay{
+  position:fixed;inset:0;z-index:9998;
+  background:rgba(244,237,226,.97);
+  background-image:url("data:image/svg+xml,%3Csvg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,2 58,26 30,50 2,26' fill='none' stroke='rgba(196,154,60,0.04)' stroke-width='0.5'/%3E%3C/svg%3E");
+  overflow-y:auto;animation:fadeIn .25s ease;
+}
+.wine-detail-inner{
+  max-width:480px;margin:0 auto;padding:1.5rem 1.2rem 3rem;
+}
+.wine-detail-back{
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);
+  padding:.45rem .9rem;font-size:.75rem;color:var(--parchment);cursor:pointer;
+  font-family:'Quicksand',sans-serif;margin-bottom:1.2rem;
+  transition:all .2s;
+}
+.wine-detail-back:hover{border-color:var(--gold);transform:translateX(-2px)}
+.wine-detail-title{
+  font-family:'Cinzel',serif;font-size:1.6rem;color:var(--parchment);
+  line-height:1.2;margin-bottom:.3rem;
+}
+.wine-info-box{
+  padding:.7rem .9rem;
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1px solid rgba(196,154,60,.12);border-radius:var(--r2);
+  position:relative;overflow:hidden;
+}
+.wine-info-box::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='30' height='26' viewBox='0 0 30 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='15,1 29,13 15,25 1,13' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.3'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.wine-info-label{
+  font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;
+  position:relative;
+}
+.wine-info-value{
+  font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment);
+  position:relative;
+}
+.wine-price-box{
+  display:flex;align-items:baseline;gap:.8rem;margin:1rem 0;
+  padding:.8rem 1rem;
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border-radius:var(--r);border:1.5px solid rgba(196,154,60,.15);
+  position:relative;overflow:hidden;
+}
+.wine-price-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.3;
+}
+.wine-story-box{
+  padding:1rem 1.1rem;
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);
+  margin-bottom:1.2rem;position:relative;overflow:hidden;
+}
+.wine-story-box::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--gold),var(--gold3));
+}
+.wine-pairing-pill{
+  padding:.35rem .7rem;
+  background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.04));
+  border:1px solid rgba(196,154,60,.18);border-radius:15px;
+  font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parchment);
+  transition:all .2s;
+}
+.wine-pairing-pill:hover{
+  background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.08));
+  transform:translateY(-1px);
+}
+
+.wine-concept-card{
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);
+  padding:.9rem 1rem;cursor:pointer;
+  transition:all .25s cubic-bezier(.22,1,.36,1);
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 6px rgba(28,42,34,.04);
+}
+.wine-concept-card::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.03)' stroke-width='0.4'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.wine-concept-card:hover{border-color:var(--gold2);box-shadow:0 3px 12px rgba(196,154,60,.08)}
+
+.wine-flashcard{
+  min-height:220px;
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:16px;
+  padding:1.5rem 1.3rem;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;transition:all .3s cubic-bezier(.22,1,.36,1);
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 8px rgba(28,42,34,.04);
+}
+.wine-flashcard::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,2 58,26 30,50 2,26' fill='none' stroke='rgba(196,154,60,0.035)' stroke-width='0.5'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.wine-flashcard.flipped{
+  background:linear-gradient(155deg,#f5eedd,#ebe0ca);
+  border-color:rgba(196,154,60,.3);
+  box-shadow:0 4px 16px rgba(196,154,60,.12);
+}
+
+.wine-filter-pill{
+  display:flex;align-items:center;gap:.25rem;padding:.4rem .75rem;
+  border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.72rem;
+  cursor:pointer;white-space:nowrap;transition:all .2s;
+}
+.wine-filter-pill.active{
+  background:linear-gradient(135deg,var(--gold),#b8882e);
+  color:#1a0f05;border:none;font-weight:600;
+}
+.wine-filter-pill:not(.active){
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  color:var(--parch3);border:1.5px solid rgba(196,154,60,.12);font-weight:500;
+}
+.wine-filter-pill:not(.active):hover{border-color:var(--gold2);color:var(--parchment)}
+
+.wine-search{
+  width:100%;padding:.65rem 1rem .65rem 2.2rem;
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);
+  font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment);
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  box-sizing:border-box;transition:border-color .2s;outline:none;
+}
+.wine-search:focus{border-color:var(--gold)}
+.wine-search::placeholder{color:var(--parch4)}
+
+.wine-quiz-option{
+  padding:1rem 1.2rem;
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);
+  cursor:pointer;text-align:left;display:flex;align-items:center;gap:.8rem;
+  transition:all .25s;position:relative;overflow:hidden;
+  box-shadow:0 2px 6px rgba(28,42,34,.04);
+}
+.wine-quiz-option::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.3'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.wine-quiz-option:hover{border-color:var(--gold2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(196,154,60,.1)}
+.wine-quiz-icon{
+  width:36px;height:36px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,var(--gold-a),var(--gold-b));
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+  flex-shrink:0;
+}
+
+.wine-service-card{
+  padding:.8rem 1rem;
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:all .25s;box-shadow:0 2px 6px rgba(28,42,34,.04);
+}
+.wine-service-card::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.3'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.wine-service-card:hover{border-color:var(--gold2);box-shadow:0 3px 12px rgba(196,154,60,.08)}
+
+.wine-script-box{
+  margin-top:.6rem;padding:.7rem .9rem;
+  background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));
+  border-radius:var(--r2);border:1px solid rgba(196,154,60,.15);
+  position:relative;
+}
+.wine-script-box::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--gold),var(--gold3));border-radius:1px;
+}
+
+.wine-byglass-grid{
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);
+  padding:1rem;position:relative;overflow:hidden;
+}
+.wine-byglass-grid::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='30' height='26' viewBox='0 0 30 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='15,1 29,13 15,25 1,13' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.3'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+
+.tunic-btn{
+  padding:.5rem 1.2rem;border-radius:var(--r2);
+  font-family:'Quicksand',sans-serif;font-size:.78rem;cursor:pointer;
+  transition:all .2s;position:relative;
+}
+.tunic-btn-gold{
+  background:linear-gradient(135deg,var(--gold),#b8882e);
+  border:none;color:#1a0f05;font-weight:600;
+}
+.tunic-btn-gold:hover{box-shadow:0 2px 12px rgba(196,154,60,.25);transform:translateY(-1px)}
+.tunic-btn-ghost{
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);color:var(--parchment);
+}
+.tunic-btn-ghost:hover{border-color:var(--gold2)}
+
+.tunic-progress{
+  height:4px;background:rgba(196,154,60,.08);border-radius:2px;
+  overflow:hidden;border:1px solid rgba(196,154,60,.06);
+}
+.tunic-progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--gold),var(--gold3));
+  border-radius:2px;transition:width .4s cubic-bezier(.22,1,.36,1);
+}
+
+.wine-pairing-strip{
+  padding:.7rem .9rem;
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r2);
+  position:relative;overflow:hidden;transition:all .2s;
+}
+.wine-pairing-strip:hover{border-color:var(--gold2)}
+.wc-detail.open,.wr-detail.open,.ss-detail.open{max-height:600px!important}
+
+/* ─────────────────────────────────────────────────
+   WINE FAIRY-TALE ENCHANTMENT
+───────────────────────────────────────────────── */
+@keyframes wineSparkle{
+  0%,100%{opacity:0;transform:scale(0) rotate(0deg)}
+  50%{opacity:1;transform:scale(1) rotate(180deg)}
+}
+@keyframes wineFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  25%{transform:translateY(-8px) rotate(2deg)}
+  75%{transform:translateY(4px) rotate(-1deg)}
+}
+@keyframes wineGlow{
+  0%,100%{box-shadow:0 2px 8px rgba(196,154,60,.08)}
+  50%{box-shadow:0 4px 20px rgba(196,154,60,.18),0 0 40px rgba(228,190,104,.06)}
+}
+@keyframes storyReveal{
+  from{opacity:0;transform:translateY(20px) scale(.96);filter:blur(4px)}
+  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+@keyframes vineGrow{
+  from{width:0;opacity:0}
+  to{width:100%;opacity:1}
+}
+@keyframes sommelierPulse{
+  0%,100%{transform:scale(1);box-shadow:0 4px 16px rgba(196,154,60,.1)}
+  50%{transform:scale(1.02);box-shadow:0 6px 24px rgba(196,154,60,.2),0 0 48px rgba(228,190,104,.08)}
+}
+@keyframes flipCard{
+  0%{transform:perspective(600px) rotateY(0)}
+  50%{transform:perspective(600px) rotateY(90deg)}
+  100%{transform:perspective(600px) rotateY(0)}
+}
+
+.wine-enchanted{animation:storyReveal .6s cubic-bezier(.22,1,.36,1) both}
+.wine-enchanted:nth-child(1){animation-delay:.05s}
+.wine-enchanted:nth-child(2){animation-delay:.12s}
+.wine-enchanted:nth-child(3){animation-delay:.19s}
+.wine-enchanted:nth-child(4){animation-delay:.26s}
+.wine-enchanted:nth-child(5){animation-delay:.33s}
+
+.wine-sparkle{
+  position:absolute;width:6px;height:6px;pointer-events:none;z-index:2;
+  background:radial-gradient(circle,rgba(228,190,104,.9),transparent 70%);
+  border-radius:50%;animation:wineSparkle 2s ease-in-out infinite;
+}
+
+.wine-hub-hero{
+  text-align:center;padding:1.5rem 1rem 1rem;
+  position:relative;overflow:hidden;
+  animation:storyReveal .7s cubic-bezier(.22,1,.36,1) both;
+}
+.wine-hub-hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(196,154,60,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 20% 80%, rgba(77,138,94,.04) 0%, transparent 50%),
+    radial-gradient(ellipse 35% 25% at 80% 60%, rgba(122,106,170,.03) 0%, transparent 50%);
+  pointer-events:none;
+}
+.wine-hub-title{
+  font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;
+  color:var(--gold);letter-spacing:.06em;line-height:1.1;
+  text-shadow:0 2px 20px rgba(196,154,60,.15);
+  position:relative;
+}
+.wine-hub-verse{
+  font-family:'Quicksand',sans-serif;font-size:.78rem;font-style:italic;
+  color:var(--parch3);line-height:1.6;margin-top:.6rem;
+  max-width:320px;margin-left:auto;margin-right:auto;
+  position:relative;
+}
+.wine-hub-vine{
+  width:0;height:1.5px;margin:.8rem auto;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold3),var(--gold),transparent);
+  animation:vineGrow 1.2s .4s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.sommelier-box{
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);
+  padding:1.1rem 1.2rem;position:relative;overflow:hidden;
+  box-shadow:0 4px 16px rgba(28,42,34,.04);
+  animation:sommelierPulse 4s ease-in-out infinite;
+}
+.sommelier-box::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.4'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.sommelier-box::after{
+  content:'';position:absolute;top:-1px;left:10%;right:10%;height:2.5px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold3),var(--gold),transparent);
+  border-radius:0 0 2px 2px;
+}
+.sommelier-input{
+  width:100%;padding:.7rem 1rem .7rem 2.4rem;
+  border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);
+  font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);
+  background:linear-gradient(155deg,#fff,#faf6ee);
+  box-sizing:border-box;transition:all .3s;outline:none;
+}
+.sommelier-input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(196,154,60,.08),0 2px 12px rgba(196,154,60,.1);
+}
+.sommelier-input::placeholder{color:var(--parch4);font-style:italic}
+.sommelier-results{
+  margin-top:.8rem;display:flex;flex-direction:column;gap:.4rem;
+  animation:storyReveal .4s ease both;
+}
+.sommelier-match{
+  background:linear-gradient(155deg,#fff,#faf6ee);
+  border:1px solid rgba(196,154,60,.12);border-radius:var(--r2);
+  padding:.7rem .9rem;cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;gap:.6rem;position:relative;overflow:hidden;
+}
+.sommelier-match::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--gold),var(--gold3));
+  opacity:0;transition:opacity .2s;
+}
+.sommelier-match:hover{
+  border-color:var(--gold2);transform:translateX(3px);
+}
+.sommelier-match:hover::before{opacity:1}
+.sommelier-match-score{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(196,154,60,.12),rgba(196,154,60,.04));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);font-weight:700;
+  flex-shrink:0;border:1px solid rgba(196,154,60,.15);
+}
+
+.wine-card{animation:wineGlow 4s ease-in-out infinite}
+.wine-card:nth-child(odd){animation-delay:.5s}
+.wine-card:nth-child(even){animation-delay:1.5s}
+
+.wine-flashcard{animation:wineFloat 6s ease-in-out infinite}
+
+.wine-storybook-intro{
+  padding:.8rem 1rem;margin-bottom:1rem;text-align:center;
+  position:relative;
+}
+.wine-storybook-text{
+  font-family:'Quicksand',sans-serif;font-size:.78rem;font-style:italic;
+  color:var(--parch3);line-height:1.6;max-width:340px;margin:0 auto;
+}
+
+/* ─────────────────────────────────────────────────
    DASHBOARD
 ───────────────────────────────────────────────── */
 .dash-hero{margin-bottom:2.5rem;animation:slideUp .4s ease both}
@@ -5298,13 +5755,8 @@ function showTab(tab){
 
 // ═══ SUB-TAB HELPERS ═══
 function _subTabBar(tabs, activeTab, parentTab){
-  return `<div style="display:flex;gap:.35rem;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:.3rem">${
-    tabs.map(([id,label,icon])=>`<button onclick="_subTab.${parentTab}='${id}';showTab('${id}')" style="
-      display:flex;align-items:center;gap:.3rem;padding:.5rem .9rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:${activeTab===id?'600':'500'};cursor:pointer;white-space:nowrap;transition:all .2s;
-      background:${activeTab===id?'linear-gradient(135deg,var(--gold),#b8882e)':'rgba(255,255,255,.05)'};
-      color:${activeTab===id?'#1a0f05':'var(--parch3)'};
-      border:${activeTab===id?'none':'1px solid var(--line)'};
-    ">${icon} ${label}</button>`).join('')
+  return `<div class="tunic-subtabs">${
+    tabs.map(([id,label,icon])=>`<button onclick="_subTab.${parentTab}='${id}';showTab('${id}')" class="tunic-stab${activeTab===id?' active':''}">${icon} ${label}</button>`).join('')
   }</div>`;
 }
 
@@ -7980,30 +8432,210 @@ const WINE_FLASHCARDS = [
   {cat:'Servicio', q:'Un huésped dice que no le gusta el vino. ¿Qué alternativa le ofreces?', a:'Nuestra carta de cocktails (16.50€ cada uno) o mocktails sin alcohol (12€). Destacar el Aperol Spritz, Espresso Martini, o los mocktails Ipanema y Vitalía para opciones refrescantes.', hint:'Cocktails y mocktails'}
 ];
 
+let _sommelierQuery='', _sommelierResults=null;
+
+function _sommelierSearch(query){
+  _sommelierQuery = query;
+  if(!query || query.length < 2){ _sommelierResults = null; renderVinos(); return; }
+  const q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+  // Build dish→wine scoring
+  const scored = WINES.map(w => {
+    let score = 0;
+    const pairings = (w.pairings||[]).map(p => p.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+
+    // Direct pairing match (strongest signal)
+    for(const p of pairings){
+      if(p.includes(q) || q.includes(p)) score += 100;
+      // Partial word matches
+      const words = q.split(/\s+/);
+      for(const word of words){
+        if(word.length >= 3 && p.includes(word)) score += 40;
+      }
+    }
+
+    // Wine name match (also useful for searching by wine name)
+    const wName = w.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const wGrapes = (w.grapes||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if(wName.includes(q)) score += 80;
+    if(wGrapes.includes(q)) score += 30;
+
+    // Notes/story keywords match
+    const notes = (w.notes||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const story = (w.story||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if(notes.includes(q)) score += 15;
+    if(story.includes(q)) score += 8;
+
+    // Category heuristics for food types
+    const foodMap = {
+      'pescado':'blanco','fish':'blanco','marisco':'blanco','seafood':'blanco','ceviche':'blanco','atun':'blanco','salmon':'blanco','bacalao':'blanco','lubina':'blanco','calamares':'blanco',
+      'carne':'tinto','meat':'tinto','ternera':'tinto','beef':'tinto','solomillo':'tinto','entrecote':'tinto','presa':'tinto','hamburguesa':'tinto','steak':'tinto',
+      'postre':'dulce','dessert':'dulce','chocolate':'dulce','cheesecake':'dulce','tiramisu':'dulce','crema':'dulce','coulant':'dulce',
+      'ensalada':'rosado','salad':'rosado','verdura':'blanco','gyoza':'blanco','pollo':'tinto','chicken':'tinto','curry':'tinto',
+      'pasta':'blanco','risotto':'blanco','queso':'tinto','cheese':'tinto','celebrar':'espumoso','celebrate':'espumoso','brindis':'espumoso','toast':'espumoso',
+      'lobster':'blanco','langosta':'blanco','bogavante':'blanco','gambas':'blanco','croqueta':'tinto','nugget':'tinto'
+    };
+    for(const [food, type] of Object.entries(foodMap)){
+      if(q.includes(food) && w.type === type) score += 20;
+    }
+
+    // Boost recommended wines
+    if(score > 0 && w.recommended) score += 12;
+    // Boost by-the-glass availability
+    if(score > 0 && w.glass) score += 5;
+
+    return { wine: w, score };
+  }).filter(x => x.score > 0).sort((a,b) => b.score - a.score).slice(0, 6);
+
+  _sommelierResults = scored;
+  renderVinos();
+}
+
 function renderVinos(){
   const c = document.getElementById('appContent');
-  const sub = _vinoSubTab || 'carta';
+  const sub = _vinoSubTab || 'sommelier';
   const tabs = [
+    ['sommelier','Sommelier','✨'],
     ['carta','Carta','🍷'],
     ['aprende','Aprende','📖'],
     ['wineFlash','Flashcards','🃏'],
     ['wineQuiz','Quiz','🎯'],
     ['servicio','Servicio','💬']
   ];
-  const bar = `<div style="display:flex;gap:.35rem;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:.3rem">${
-    tabs.map(([id,label,icon])=>`<button onclick="_vinoSubTab='${id}';renderVinos()" style="
-      display:flex;align-items:center;gap:.3rem;padding:.5rem .9rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:${sub===id?'600':'500'};cursor:pointer;white-space:nowrap;transition:all .2s;
-      background:${sub===id?'linear-gradient(135deg,var(--gold),#b8882e)':'rgba(255,255,255,.05)'};
-      color:${sub===id?'#1a0f05':'var(--parch3)'};
-      border:${sub===id?'none':'1px solid var(--line)'};
-    ">${icon} ${label}</button>`).join('')
+  const bar = `<div class="tunic-subtabs">${
+    tabs.map(([id,label,icon])=>`<button onclick="_vinoSubTab='${id}';renderVinos()" class="tunic-stab${sub===id?' active':''}">${icon} ${label}</button>`).join('')
   }</div>`;
 
-  if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
+  if(sub === 'sommelier'){ _renderSommelier(c, bar); }
+  else if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
   else if(sub === 'aprende'){ _renderWineLearn(c, bar); }
   else if(sub === 'wineFlash'){ _renderWineFlashcards(c, bar); }
   else if(sub === 'wineQuiz'){ _renderWineQuiz(c, bar); }
   else if(sub === 'servicio'){ _renderWineService(c, bar); }
+}
+
+function _renderSommelier(c, bar){
+  const greetings = [
+    'Cada vino cuenta una historia... déjame ayudarte a encontrar la tuya.',
+    'El vino perfecto ya te espera entre estas páginas.',
+    'Donde un buen plato se encuentra con el vino ideal, nace la magia.',
+    'Bienvenido al mundo donde cada copa es una aventura.',
+    'El maridaje perfecto es como un cuento de hadas: todo encaja.'
+  ];
+  const greeting = greetings[Math.floor(Date.now()/86400000) % greetings.length];
+
+  // Featured wines — rotate daily
+  const today = new Date().getDay();
+  const featured = WINES.filter(w => w.recommended).slice(today % 3, (today % 3) + 3);
+
+  // Wine stats
+  const byGlass = WINES.filter(w => w.glass).length;
+  const regions = [...new Set(WINES.filter(w=>w.origin).map(w=>w.origin))].length;
+
+  c.innerHTML = bar + `<div style="padding:0 0 2rem">
+    <!-- Fairy-tale hero -->
+    <div class="wine-hub-hero">
+      <div class="wine-hub-title">El Encanto<br>del Vino</div>
+      <div class="wine-hub-vine"></div>
+      <div class="wine-hub-verse">"${greeting}"</div>
+
+      <div style="display:flex;justify-content:center;gap:1.2rem;margin-top:1.2rem">
+        <div style="text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);font-weight:700">${WINES.length}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">Vinos</div>
+        </div>
+        <div style="width:1px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.2),transparent)"></div>
+        <div style="text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--sage);font-weight:700">${byGlass}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">Por Copa</div>
+        </div>
+        <div style="width:1px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.2),transparent)"></div>
+        <div style="text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--azure);font-weight:700">${regions}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">Orígenes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sommelier AI -->
+    <div class="sommelier-box wine-enchanted" style="margin-bottom:1.5rem">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;position:relative">
+        <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:32px;height:32px;font-size:.85rem">🧙</div>
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Tu Sommelier Personal</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3)">Escribe un plato y te recomiendo el vino perfecto</div>
+        </div>
+      </div>
+      <div style="position:relative">
+        <input id="sommelierInput" class="sommelier-input" type="text"
+          placeholder="Ej: tartar de atún, solomillo, gyozas..."
+          value="${escapeHTML(_sommelierQuery)}"
+          oninput="_sommelierSearch(this.value)">
+        <svg style="position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--gold);opacity:.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </div>
+      ${_sommelierResults && _sommelierResults.length > 0 ? `
+        <div class="sommelier-results">
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;position:relative">✦ Mis recomendaciones para ti</div>
+          ${_sommelierResults.map((r,i) => `
+            <div onclick="_showWineDetail(${r.wine.id})" class="sommelier-match" style="animation-delay:${i*0.08}s">
+              <div class="sommelier-match-score">${Math.min(99,r.score)}%</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);line-height:1.2">${escapeHTML(r.wine.name)}</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(r.wine.grapes||r.wine.type)} · ${r.wine.price}€${r.wine.glass?' · Copa '+r.wine.glass+'€':''}</div>
+              </div>
+              <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);font-weight:600;flex-shrink:0">${r.wine.price}€</div>
+            </div>`).join('')}
+        </div>` : _sommelierQuery && _sommelierQuery.length >= 2 ? `
+        <div style="text-align:center;padding:1rem;position:relative">
+          <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);font-style:italic">No encontré un maridaje exacto... prueba con otro plato</div>
+        </div>` : ''}
+    </div>
+
+    <!-- Quick discovery cards -->
+    <div class="section-eyebrow">✦ Descubre Hoy</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
+      ${featured.map((w,i) => `
+        <div onclick="_showWineDetail(${w.id})" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
+          <div style="display:flex;align-items:center;gap:.5rem;position:relative">
+            <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3))">${{blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'}[w.type]||'🍷'}</div>
+            <div style="flex:1">
+              <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment);line-height:1.2">${escapeHTML(w.name)}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(w.grapes||'')} · ${escapeHTML(w.region)}</div>
+            </div>
+            <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);font-weight:600">${w.price}€</div>
+          </div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.5rem;font-style:italic;line-height:1.4;position:relative;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">"${escapeHTML(w.story)}"</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Quick access grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+      <button onclick="_vinoSubTab='carta';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
+        <div style="font-size:1.5rem">🍷</div>
+        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Carta Completa</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINES.length} vinos</div>
+      </button>
+      <button onclick="_vinoSubTab='aprende';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
+        <div style="font-size:1.5rem">📖</div>
+        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Aprende</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_CONCEPTS.length} conceptos</div>
+      </button>
+      <button onclick="_vinoSubTab='wineFlash';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
+        <div style="font-size:1.5rem">🃏</div>
+        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Flashcards</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_FLASHCARDS.length} tarjetas</div>
+      </button>
+      <button onclick="_vinoSubTab='wineQuiz';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
+        <div style="font-size:1.5rem">🎯</div>
+        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Quiz</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">3 modos</div>
+      </button>
+    </div>
+  </div>`;
+
+  // Focus sommelier input
+  const si = document.getElementById('sommelierInput');
+  if(si && _sommelierQuery){ si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
 }
 
 function renderVinosCarta(){
@@ -8045,38 +8677,36 @@ function renderVinosCarta(){
 
   c.innerHTML = `
     <div style="padding:.5rem 0 1rem">
-      <div style="text-align:center;margin-bottom:1.2rem">
-        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);margin-bottom:.3rem">🍷 Carta de Vinos</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);letter-spacing:.15em;text-transform:uppercase">TXOKO by Martín Berasategui</div>
+      <div class="wine-section-header">
+        <div class="wine-section-title">◇ Carta de Vinos ◇</div>
+        <div class="wine-section-sub">TXOKO by Martín Berasategui</div>
+      </div>
+
+      <div class="wine-storybook-intro wine-enchanted">
+        <div class="wine-storybook-text">"Cada botella guarda un viaje, cada copa abre un capítulo. Explora nuestra colección y descubre la historia que hay detrás de cada vino."</div>
       </div>
 
       <!-- Search -->
       <div style="position:relative;margin-bottom:.8rem">
-        <input id="wineSearch" type="text" placeholder="${LANG==='en'?'Search wines, grapes, regions...':'Buscar vinos, uvas, regiones...'}" 
+        <input id="wineSearch" type="text" class="wine-search" placeholder="${LANG==='en'?'Search wines, grapes, regions...':'Buscar vinos, uvas, regiones...'}"
           value="${escapeHTML(_wineSearch)}"
-          oninput="_wineSearch=this.value;renderVinos()"
-          style="width:100%;padding:.65rem 1rem .65rem 2.2rem;border:1px solid var(--line);border-radius:var(--r);font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment);background:rgba(255,255,255,.03);box-sizing:border-box">
-        <svg style="position:absolute;left:.7rem;top:50%;transform:translateY(-50%);opacity:.4" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          oninput="_wineSearch=this.value;renderVinos()">
+        <svg style="position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--gold);opacity:.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       </div>
 
       <!-- Type filters -->
-      <div style="display:flex;gap:.3rem;overflow-x:auto;padding-bottom:.5rem;margin-bottom:1rem">
-        ${types.map(([id,label,icon])=>`<button onclick="_wineFilter='${id}';renderVinos()" style="
-          display:flex;align-items:center;gap:.25rem;padding:.4rem .7rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:${_wineFilter===id?'600':'500'};cursor:pointer;white-space:nowrap;transition:all .2s;
-          background:${_wineFilter===id?'linear-gradient(135deg,var(--gold),#b8882e)':'rgba(255,255,255,.05)'};
-          color:${_wineFilter===id?'#1a0f05':'var(--parch3)'};
-          border:${_wineFilter===id?'none':'1px solid var(--line)'};
-        ">${icon} ${label} <span style="font-size:.6rem;opacity:.7">(${id==='all'?WINES.length:WINES.filter(w=>w.type===id).length})</span></button>`).join('')}
+      <div style="display:flex;gap:.3rem;overflow-x:auto;padding-bottom:.5rem;margin-bottom:1rem;scrollbar-width:none">
+        ${types.map(([id,label,icon])=>`<button onclick="_wineFilter='${id}';renderVinos()" class="wine-filter-pill${_wineFilter===id?' active':''}">${icon} ${label} <span style="font-size:.6rem;opacity:.7">(${id==='all'?WINES.length:WINES.filter(w=>w.type===id).length})</span></button>`).join('')}
       </div>
 
       <!-- Results count -->
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-bottom:.8rem;letter-spacing:.08em">
-        ${filtered.length} ${LANG==='en'?'results':'resultados'}${_wineSearch?' · "'+escapeHTML(_wineSearch)+'"':''}
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);margin-bottom:.8rem;letter-spacing:.08em">
+        ◇ ${filtered.length} ${LANG==='en'?'results':'resultados'}${_wineSearch?' · "'+escapeHTML(_wineSearch)+'"':''}
       </div>
 
       <!-- Wine cards -->
       <div style="display:flex;flex-direction:column;gap:.6rem">
-        ${filtered.map(w => _renderWineCard(w)).join('')}
+        ${filtered.map((w,i) => _renderWineCard(w,i)).join('')}
       </div>
     </div>`;
   
@@ -8085,40 +8715,37 @@ function renderVinosCarta(){
   if(si && _wineSearch){ si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
 }
 
-function _renderWineCard(w){
+function _renderWineCard(w, idx){
   const typeLabels = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce',cocktail:'Cocktail',mocktail:'Mocktail'};
-  const typeColors = {blanco:'#f5e6b8',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520',cocktail:'#4ecdc4',mocktail:'#95e1d3'};
-  const bgColor = typeColors[w.type] || '#c9a84c';
+  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',cocktail:'🍸',mocktail:'🍹'};
+  const typeColors = {blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)',cocktail:'var(--candy-teal)',mocktail:'var(--candy-green)'};
+  const bgColor = typeColors[w.type] || 'var(--gold)';
   const isWine = !['cocktail','mocktail'].includes(w.type);
-  
-  return `<div onclick="_showWineDetail(${w.id})" style="
-    background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));
-    border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
-  ">
-    <!-- Type badge + recommended -->
-    <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem">
-      <span style="display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.58rem;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.08em;
-        background:${bgColor}20;color:${bgColor};border:1px solid ${bgColor}40;text-transform:uppercase">${typeLabels[w.type]||w.type}</span>
-      ${w.recommended?'<span style="font-size:.58rem;color:var(--gold);font-family:\'DM Mono\',monospace">★ RECOMENDADO</span>':''}
-      ${w.vegaSicilia?'<span style="font-size:.58rem;color:#8b6914;font-family:\'DM Mono\',monospace">◆ VEGA SICILIA</span>':''}
-      ${w.glass?'<span style="font-size:.58rem;color:var(--sage);font-family:\'DM Mono\',monospace">◎ COPA</span>':''}
-      ${w.kosher?'<span style="font-size:.58rem;color:var(--parch3);font-family:\'DM Mono\',monospace">✡ KOSHER</span>':''}
+  const delay = Math.min((idx||0)*0.04, 0.3);
+
+  return `<div onclick="_showWineDetail(${w.id})" class="wine-card card-animate" style="animation-delay:${delay}s">
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;position:relative">
+      <div class="wine-type-icon" style="background:linear-gradient(135deg,${bgColor},rgba(196,154,60,.3))">${typeIcons[w.type]||'🍷'}</div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;flex:1">
+        <span class="wine-badge" style="background:rgba(196,154,60,.08);color:var(--gold);border:1px solid rgba(196,154,60,.15)">${typeLabels[w.type]||w.type}</span>
+        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ Recomendado</span>':''}
+        ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.08);color:#8b6914;border:1px solid rgba(139,105,20,.15)">◆ Vega Sicilia</span>':''}
+        ${w.glass?'<span class="wine-badge" style="background:var(--sage-a);color:var(--sage);border:1px solid rgba(77,138,94,.2)">◎ Copa</span>':''}
+      </div>
     </div>
-    <!-- Name + Price -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;position:relative">
       <div style="flex:1">
         <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);line-height:1.2">${escapeHTML(w.name)}</div>
         ${isWine?`<div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.2rem">${escapeHTML(w.grapes||'')}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.15rem">${escapeHTML((w.origin?w.origin+' · ':'')+w.region)}</div>`:''}
       </div>
-      <div style="text-align:right;flex-shrink:0">
+      <div style="text-align:right;flex-shrink:0;position:relative">
         <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);font-weight:600">${w.price}€</div>
         ${w.glass?`<div style="font-size:.6rem;color:var(--sage);font-family:'DM Mono',monospace">Copa ${w.glass}€</div>`:''}
         ${w.format&&w.format!=='75cl'?`<div style="font-size:.58rem;color:var(--parch4);font-family:'DM Mono',monospace">${escapeHTML(w.format)}</div>`:''}
       </div>
     </div>
-    <!-- Story preview -->
-    <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);margin-top:.5rem;font-style:italic;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">"${escapeHTML(w.story)}"</div>
+    <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);margin-top:.5rem;font-style:italic;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;position:relative">"${escapeHTML(w.story)}"</div>
   </div>`;
 }
 
@@ -8126,78 +8753,70 @@ function _showWineDetail(id){
   const w = WINES.find(x=>x.id===id);
   if(!w) return;
   const typeLabels = {blanco:'Vino Blanco',tinto:'Vino Tinto',rosado:'Vino Rosado',espumoso:'Espumoso',dulce:'Vino Dulce',cocktail:'Cocktail',mocktail:'Mocktail'};
-  const typeColors = {blanco:'#f5e6b8',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520',cocktail:'#4ecdc4',mocktail:'#95e1d3'};
-  const bgColor = typeColors[w.type]||'#c9a84c';
+  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',cocktail:'🍸',mocktail:'🍹'};
   const isWine = !['cocktail','mocktail'].includes(w.type);
 
   const overlay = document.createElement('div');
   overlay.id = 'wineDetailOverlay';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:rgba(10,6,2,.92);overflow-y:auto;animation:fadeIn .25s ease';
-  overlay.innerHTML = `<div style="max-width:480px;margin:0 auto;padding:1.5rem 1.2rem 3rem">
-    <button onclick="document.getElementById('wineDetailOverlay').remove()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer;margin-bottom:1.2rem">← Volver</button>
-    
-    <!-- Type badge -->
-    <div style="margin-bottom:.8rem">
-      <span style="padding:.2rem .7rem;border-radius:12px;font-size:.65rem;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.1em;background:${bgColor}25;color:${bgColor};border:1px solid ${bgColor}50;text-transform:uppercase">${typeLabels[w.type]||w.type}</span>
-      ${w.recommended?'<span style="margin-left:.4rem;font-size:.65rem;color:var(--gold);font-family:\'DM Mono\',monospace">★ Recomendado</span>':''}
-      ${w.vegaSicilia?'<span style="margin-left:.4rem;font-size:.65rem;color:#8b6914;font-family:\'DM Mono\',monospace">◆ Tempos Vega Sicilia</span>':''}
+  overlay.className = 'wine-detail-overlay';
+  overlay.innerHTML = `<div class="wine-detail-inner">
+    <button onclick="document.getElementById('wineDetailOverlay').remove()" class="wine-detail-back">◇ Volver</button>
+
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem">
+      <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:36px;height:36px;font-size:.9rem">${typeIcons[w.type]||'🍷'}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">
+        <span class="wine-badge" style="background:rgba(196,154,60,.08);color:var(--gold);border:1px solid rgba(196,154,60,.15)">${typeLabels[w.type]||w.type}</span>
+        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ Recomendado</span>':''}
+        ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.08);color:#8b6914;border:1px solid rgba(139,105,20,.15)">◆ Tempos Vega Sicilia</span>':''}
+        ${w.kosher?'<span class="wine-badge" style="background:rgba(196,154,60,.06);color:var(--parch3);border:1px solid rgba(196,154,60,.1)">✡ Kosher</span>':''}
+      </div>
     </div>
 
-    <!-- Name -->
-    <div style="font-family:'Cinzel',serif;font-size:1.6rem;color:var(--parchment);line-height:1.2;margin-bottom:.3rem">${escapeHTML(w.name)}</div>
-    ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch4)">Añada ${w.year}</div>`:''}
+    <div class="wine-detail-title">${escapeHTML(w.name)}</div>
+    ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3)">Añada ${w.year}</div>`:''}
 
-    <!-- Price -->
-    <div style="display:flex;align-items:baseline;gap:.8rem;margin:1rem 0;padding:.8rem 1rem;background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03));border-radius:var(--r);border:1px solid rgba(196,154,60,.15)">
+    <div class="wine-price-box">
       <div>
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.1em">${w.format||'Botella'}</div>
+        <div class="wine-info-label">${w.format||'Botella'}</div>
         <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:700">${w.price}€</div>
       </div>
-      ${w.glass?`<div style="border-left:1px solid var(--line);padding-left:.8rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.1em">Copa</div>
+      ${w.glass?`<div style="border-left:1.5px solid rgba(196,154,60,.15);padding-left:.8rem">
+        <div class="wine-info-label">Copa</div>
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--sage);font-weight:600">${w.glass}€</div>
       </div>`:''}
     </div>
 
     ${isWine?`
-    <!-- Grapes & Region -->
-    <div style="margin-bottom:1.2rem">
-      <div style="display:flex;flex-wrap:wrap;gap:.6rem">
-        <div style="flex:1;min-width:140px;padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r2)">
-          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Uvas</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment)">${escapeHTML(w.grapes||'-')}</div>
-        </div>
-        <div style="flex:1;min-width:140px;padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r2)">
-          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Región</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment)">${escapeHTML(w.region||'-')}</div>
-          ${w.origin?`<div style="font-size:.68rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(w.origin)}</div>`:''}
-        </div>
+    <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem">
+      <div class="wine-info-box" style="flex:1;min-width:140px">
+        <div class="wine-info-label">◇ Uvas</div>
+        <div class="wine-info-value">${escapeHTML(w.grapes||'-')}</div>
+      </div>
+      <div class="wine-info-box" style="flex:1;min-width:140px">
+        <div class="wine-info-label">◇ Región</div>
+        <div class="wine-info-value">${escapeHTML(w.region||'-')}</div>
+        ${w.origin?`<div style="font-size:.68rem;color:var(--parch3);margin-top:.15rem;position:relative">${escapeHTML(w.origin)}</div>`:''}
       </div>
     </div>`:''}
 
-    <!-- Story -->
-    <div style="padding:1rem 1.1rem;background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-left:3px solid ${bgColor};border-radius:var(--r);margin-bottom:1.2rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Historia</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic">"${escapeHTML(w.story)}"</div>
+    <div class="wine-story-box">
+      <div class="wine-info-label" style="margin-left:.6rem">✦ Historia</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(w.story)}"</div>
     </div>
 
     ${isWine&&w.notes?`
-    <!-- Tasting notes -->
-    <div style="padding:1rem 1.1rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r);margin-bottom:1.2rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Notas de cata</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parch2);line-height:1.5">${escapeHTML(w.notes)}</div>
+    <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
+      <div class="wine-info-label">✦ Notas de cata</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parch2);line-height:1.5;position:relative">${escapeHTML(w.notes)}</div>
     </div>`:''}
 
     ${w.pairings&&w.pairings.length?`
-    <!-- Pairings -->
-    <div style="padding:1rem 1.1rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r);margin-bottom:1.2rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem">Maridaje recomendado</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">
-        ${w.pairings.map(p=>`<span style="padding:.3rem .65rem;background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.05));border:1px solid rgba(196,154,60,.2);border-radius:15px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parchment)">${escapeHTML(p)}</span>`).join('')}
+    <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
+      <div class="wine-info-label">✦ Maridaje recomendado</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;position:relative">
+        ${w.pairings.map(p=>`<span class="wine-pairing-pill">${escapeHTML(p)}</span>`).join('')}
       </div>
     </div>`:''}
-
-    ${w.kosher?`<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);text-align:center;padding:.5rem;border:1px solid var(--line);border-radius:var(--r2)">✡ Certificación Kosher</div>`:''}
   </div>`;
   document.body.appendChild(overlay);
 }
@@ -8206,71 +8825,68 @@ function _showWineDetail(id){
 
 function _renderWineLearn(c, bar){
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold)">📖 Aprende sobre Vinos</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);margin-top:.3rem">Conceptos esenciales y regiones de nuestra carta</div>
+    <div class="wine-section-header">
+      <div class="wine-section-title">✦ Aprende sobre Vinos ✦</div>
+      <div class="wine-section-sub">Conceptos esenciales y regiones de nuestra carta</div>
     </div>
 
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Conceptos Clave</div>
-    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
+    <div class="wine-storybook-intro wine-enchanted">
+      <div class="wine-storybook-text">"El conocimiento del vino es como un mapa del tesoro: cada concepto que aprendes te acerca más a convertirte en un verdadero sommelier."</div>
+    </div>
+
+    <div class="section-eyebrow">◇ Conceptos Clave</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem">
       ${WINE_CONCEPTS.map((c,i)=>`
-        <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" style="background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem;cursor:pointer;transition:all .2s">
-          <div style="display:flex;align-items:center;gap:.6rem">
-            <span style="font-size:1.3rem">${c.icon}</span>
+        <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
+          <div style="display:flex;align-items:center;gap:.6rem;position:relative">
+            <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold-a),rgba(196,154,60,.2));width:32px;height:32px;font-size:1rem">${c.icon}</div>
             <div style="flex:1">
               <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${c.title}</div>
               <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${c.short}</div>
             </div>
-            <svg style="opacity:.3;transition:transform .2s" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            <svg style="opacity:.3;transition:transform .2s;color:var(--gold)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
           <div class="wc-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
-            <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--line)">
-              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.5;margin-bottom:.6rem">${c.detail}</div>
-              <div style="background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.05));border:1px solid rgba(196,154,60,.2);border-radius:var(--r2);padding:.6rem .8rem">
-                <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">💬 Cómo explicarlo</div>
-                <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;color:var(--parchment);font-style:italic;line-height:1.4">${c.tip}</div>
+            <div style="margin-top:.8rem;padding-top:.8rem;border-top:1.5px solid rgba(196,154,60,.1)">
+              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.6;margin-bottom:.6rem">${c.detail}</div>
+              <div class="wine-script-box" style="margin-top:.5rem">
+                <div class="wine-info-label" style="margin-left:.5rem">💬 Cómo explicarlo al huésped</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;color:var(--parchment);font-style:italic;line-height:1.4;margin-left:.5rem">${c.tip}</div>
               </div>
             </div>
           </div>
         </div>`).join('')}
     </div>
 
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Nuestras Regiones</div>
+    <div class="section-eyebrow">◇ Nuestras Regiones</div>
     <div style="display:flex;flex-direction:column;gap:.5rem">
-      ${WINE_REGIONS.map(r=>`
-        <div onclick="this.querySelector('.wr-detail').classList.toggle('open')" style="background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem;cursor:pointer">
-          <div style="display:flex;align-items:center;gap:.6rem">
-            <span style="font-size:1.3rem">${r.icon}</span>
+      ${WINE_REGIONS.map((r,i)=>`
+        <div onclick="this.querySelector('.wr-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
+          <div style="display:flex;align-items:center;gap:.6rem;position:relative">
+            <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--sage-a),rgba(77,138,94,.2));width:32px;height:32px;font-size:1rem">${r.icon}</div>
             <div style="flex:1">
               <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${r.region}</div>
               <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${r.summary}</div>
             </div>
-            <svg style="opacity:.3" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            <svg style="opacity:.3;color:var(--gold)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
           <div class="wr-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
-            <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--line)">
-              <div style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r2);padding:.7rem .9rem;margin-bottom:.5rem">
-                <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">💬 Script para el huésped</div>
-                <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);font-style:italic;line-height:1.5">"${r.script}"</div>
+            <div style="margin-top:.8rem;padding-top:.8rem;border-top:1.5px solid rgba(196,154,60,.1)">
+              <div class="wine-script-box" style="margin-bottom:.6rem">
+                <div class="wine-info-label" style="margin-left:.5rem">💬 Script para el huésped</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);font-style:italic;line-height:1.5;margin-left:.5rem">"${r.script}"</div>
               </div>
-              <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.4rem">
-                <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);width:100%">UVAS PRINCIPALES</div>
-                ${r.keyGrapes.split(', ').map(g=>`<span style="padding:.2rem .5rem;background:rgba(139,34,82,.15);border:1px solid rgba(139,34,82,.3);border-radius:12px;font-size:.65rem;color:#d4a0bf;font-family:'Quicksand',sans-serif">${g}</span>`).join('')}
+              <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem">
+                <div class="wine-info-label" style="width:100%">◇ Uvas principales</div>
+                ${r.keyGrapes.split(', ').map(g=>`<span class="wine-pairing-pill" style="font-size:.65rem">${g}</span>`).join('')}
               </div>
-              <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);margin-top:.5rem">NUESTROS VINOS</div>
+              <div class="wine-info-label" style="margin-top:.5rem">◇ Nuestros vinos</div>
               <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch2);margin-top:.2rem">${r.ourWines}</div>
             </div>
           </div>
         </div>`).join('')}
     </div>
   </div>`;
-  // Add CSS for expanding panels
-  if(!document.getElementById('wineLearnCSS')){
-    const style = document.createElement('style');
-    style.id = 'wineLearnCSS';
-    style.textContent = '.wc-detail.open,.wr-detail.open{max-height:600px!important}';
-    document.head.appendChild(style);
-  }
 }
 
 let _wfIdx=0, _wfFlipped=false, _wfCat='all';
@@ -8282,47 +8898,46 @@ function _renderWineFlashcards(c, bar){
   if(!card){ c.innerHTML = bar + '<div style="text-align:center;color:var(--parch3);padding:3rem">No hay flashcards</div>'; return; }
 
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
-    <div style="text-align:center;margin-bottom:1rem">
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)">🃏 Wine Flashcards</div>
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.3rem">${_wfIdx+1} / ${filtered.length}</div>
+    <div class="wine-section-header">
+      <div class="wine-section-title">◇ Pergaminos del Vino ◇</div>
+      <div class="wine-section-sub">${_wfIdx+1} / ${filtered.length} tarjetas</div>
+    </div>
+
+    <div class="wine-storybook-intro wine-enchanted">
+      <div class="wine-storybook-text">"Cada tarjeta es un pequeño secreto esperando ser revelado. Toca para descubrir lo que el vino quiere contarte."</div>
     </div>
 
     <!-- Category filters -->
-    <div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:1rem;padding-bottom:.3rem">
-      ${[['all','Todos']].concat(cats.map(c=>[c,c])).map(([id,label])=>`<button onclick="_wfCat='${id}';_wfIdx=0;_wfFlipped=false;renderVinos()" style="
-        padding:.35rem .65rem;border-radius:15px;font-family:'Quicksand',sans-serif;font-size:.68rem;cursor:pointer;white-space:nowrap;
-        background:${_wfCat===id?'var(--gold)':'transparent'};
-        color:${_wfCat===id?'#1a0f05':'var(--parch3)'};
-        border:${_wfCat===id?'none':'1px solid var(--line)'};
-        font-weight:${_wfCat===id?'600':'500'}
-      ">${label}</button>`).join('')}
+    <div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:1.2rem;padding-bottom:.3rem;scrollbar-width:none">
+      ${[['all','Todos']].concat(cats.map(c=>[c,c])).map(([id,label])=>`<button onclick="_wfCat='${id}';_wfIdx=0;_wfFlipped=false;renderVinos()" class="wine-filter-pill${_wfCat===id?' active':''}">${label}</button>`).join('')}
+    </div>
+
+    <!-- Progress -->
+    <div class="tunic-progress" style="margin-bottom:1.2rem">
+      <div class="tunic-progress-fill" style="width:${((_wfIdx+1)/filtered.length)*100}%"></div>
     </div>
 
     <!-- Card -->
-    <div onclick="_wfFlipped=!_wfFlipped;renderVinos()" style="
-      min-height:220px;background:linear-gradient(155deg,${_wfFlipped?'rgba(196,154,60,.08)':'rgba(250,246,238,.06)'},rgba(240,232,216,.02));
-      border:1.5px solid ${_wfFlipped?'rgba(196,154,60,.3)':'var(--line)'};border-radius:16px;padding:1.5rem 1.3rem;cursor:pointer;
-      display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;transition:all .2s;position:relative;
-    ">
-      <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em">${card.cat}</div>
-      <div style="position:absolute;top:.7rem;right:.9rem;font-size:.6rem;color:var(--parch4)">${_wfFlipped?'RESPUESTA':'PREGUNTA'}</div>
+    <div onclick="_wfFlipped=!_wfFlipped;renderVinos()" class="wine-flashcard${_wfFlipped?' flipped':''}">
+      <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em;z-index:1">${card.cat}</div>
+      <div style="position:absolute;top:.7rem;right:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.08em;z-index:1">${_wfFlipped?'✦ Respuesta':'◇ Pregunta'}</div>
 
       ${_wfFlipped?`
-        <div style="font-family:'Quicksand',sans-serif;font-size:.92rem;color:var(--parchment);line-height:1.6">${card.a}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.92rem;color:var(--parchment);line-height:1.6;position:relative">${card.a}</div>
       `:`
-        <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.5;margin-bottom:.8rem">${card.q}</div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch4);font-style:italic">💡 Pista: ${card.hint}</div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:1rem">Toca para ver la respuesta</div>
+        <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.5;margin-bottom:.8rem;position:relative">${card.q}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);font-style:italic;position:relative">💡 Pista: ${card.hint}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:1rem;position:relative">◇ Toca para descubrir ◇</div>
       `}
     </div>
 
     <!-- Navigation -->
     <div style="display:flex;justify-content:center;gap:.8rem;margin-top:1rem">
-      <button onclick="_wfIdx=Math.max(0,_wfIdx-1);_wfFlipped=false;renderVinos()" style="padding:.5rem 1.2rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.78rem;cursor:pointer;background:transparent;border:1px solid var(--line);color:var(--parch3)">← Anterior</button>
-      <button onclick="_wfIdx=(_wfIdx+1)%${filtered.length};_wfFlipped=false;renderVinos()" style="padding:.5rem 1.2rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.78rem;cursor:pointer;background:var(--gold);border:none;color:#1a0f05;font-weight:600">Siguiente →</button>
+      <button onclick="_wfIdx=Math.max(0,_wfIdx-1);_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-ghost">◇ Anterior</button>
+      <button onclick="_wfIdx=(_wfIdx+1)%${filtered.length};_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-gold">Siguiente ◇</button>
     </div>
     <div style="text-align:center;margin-top:.6rem">
-      <button onclick="_wfIdx=Math.floor(Math.random()*${filtered.length});_wfFlipped=false;renderVinos()" style="padding:.35rem .8rem;border-radius:var(--r2);font-family:'DM Mono',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--line);color:var(--parch4)">🎲 Aleatorio</button>
+      <button onclick="_wfIdx=Math.floor(Math.random()*${filtered.length});_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-ghost" style="font-family:'DM Mono',monospace;font-size:.65rem">🎲 Aleatorio</button>
     </div>
   </div>`;
 }
@@ -8330,34 +8945,44 @@ function _renderWineFlashcards(c, bar){
 let _wqState=null;
 function _renderWineQuiz(c, bar){
   if(!_wqState || _wqState.finished){
-    // Show quiz menu
     c.innerHTML = bar + `<div style="padding:0 0 2rem">
-      <div style="text-align:center;margin-bottom:1.5rem">
-        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)">🎯 Wine Quiz</div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);margin-top:.3rem">Pon a prueba tus conocimientos</div>
+      <div class="wine-section-header">
+        <div class="wine-section-title">✦ La Prueba del Sommelier ✦</div>
+        <div class="wine-section-sub">Pon a prueba tus conocimientos</div>
       </div>
+
+      <div class="wine-storybook-intro wine-enchanted">
+        <div class="wine-storybook-text">"Solo quienes dominan el arte del vino pueden superar estos desafíos. ¿Estás preparado para demostrar tu sabiduría?"</div>
+      </div>
+
       ${_wqState&&_wqState.finished?`
-        <div style="text-align:center;margin-bottom:1.5rem;padding:1.2rem;background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.04));border:1px solid rgba(196,154,60,.2);border-radius:var(--r)">
-          <div style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold)">${_wqState.score}/${_wqState.total}</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);margin-top:.3rem">${_wqState.score===_wqState.total?'¡Perfecto! Eres un sommelier':'Buen intento, ¡sigue practicando!'}</div>
+        <div class="sommelier-box" style="text-align:center;margin-bottom:1.5rem;padding:1.5rem;animation:none">
+          <div style="font-size:2rem;margin-bottom:.3rem;position:relative">${_wqState.score===_wqState.total?'🏆':_wqState.score>=_wqState.total*0.7?'🌟':'📖'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:2.2rem;color:var(--gold);position:relative;text-shadow:0 2px 12px rgba(196,154,60,.2)">${_wqState.score}/${_wqState.total}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment);margin-top:.5rem;position:relative;line-height:1.5">${
+            _wqState.score===_wqState.total?'✦ ¡Magistral! El vino no tiene secretos para ti ✦':
+            _wqState.score>=_wqState.total*0.7?'◇ ¡Excelente! Estás en el camino del sommelier ◇':
+            '◇ Cada intento te acerca más al dominio del vino ◇'
+          }</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);font-style:italic;margin-top:.4rem;position:relative">"La sabiduría del vino se construye copa a copa"</div>
         </div>`:''}
       <div style="display:flex;flex-direction:column;gap:.5rem">
-        <button onclick="_startWineQuiz('Maridaje',8)" style="padding:1rem 1.2rem;background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));border:1px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;display:flex;align-items:center;gap:.8rem">
-          <span style="font-size:1.5rem">🤝</span>
+        <button onclick="_startWineQuiz('Maridaje',8)" class="wine-quiz-option card-animate" style="animation-delay:.05s">
+          <div class="wine-quiz-icon">🤝</div>
           <div>
             <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Quiz de Maridaje</div>
             <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">¿Qué vino va con cada plato?</div>
           </div>
         </button>
-        <button onclick="_startWineQuiz('all',10)" style="padding:1rem 1.2rem;background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));border:1px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;display:flex;align-items:center;gap:.8rem">
-          <span style="font-size:1.5rem">🍷</span>
+        <button onclick="_startWineQuiz('all',10)" class="wine-quiz-option card-animate" style="animation-delay:.1s">
+          <div class="wine-quiz-icon">🍷</div>
           <div>
             <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Quiz Completo</div>
             <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">Conceptos, carta, maridaje y servicio</div>
           </div>
         </button>
-        <button onclick="_startWineQuiz('Servicio',6)" style="padding:1rem 1.2rem;background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));border:1px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;display:flex;align-items:center;gap:.8rem">
-          <span style="font-size:1.5rem">💬</span>
+        <button onclick="_startWineQuiz('Servicio',6)" class="wine-quiz-option card-animate" style="animation-delay:.15s">
+          <div class="wine-quiz-icon">💬</div>
           <div>
             <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Escenarios de Servicio</div>
             <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">¿Cómo responderías al huésped?</div>
@@ -8368,36 +8993,36 @@ function _renderWineQuiz(c, bar){
     return;
   }
 
-  // Show current question
   const q = _wqState.questions[_wqState.idx];
   const answered = _wqState.answered !== null;
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4)">${_wqState.idx+1}/${_wqState.total} · ${q.cat}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);letter-spacing:.08em">${_wqState.idx+1}/${_wqState.total} · ${q.cat}</div>
       <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold)">${_wqState.score} pts</div>
     </div>
-    <!-- Progress bar -->
-    <div style="height:4px;background:var(--line);border-radius:2px;margin-bottom:1.2rem;overflow:hidden">
-      <div style="height:100%;width:${(_wqState.idx/_wqState.total)*100}%;background:var(--gold);border-radius:2px;transition:width .3s"></div>
+
+    <div class="tunic-progress" style="margin-bottom:1.2rem">
+      <div class="tunic-progress-fill" style="width:${(_wqState.idx/_wqState.total)*100}%"></div>
     </div>
-    <!-- Question -->
-    <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.5;margin-bottom:1.2rem;padding:.8rem;background:rgba(255,255,255,.03);border-radius:var(--r);border-left:3px solid var(--gold)">${q.q}</div>
+
+    <div class="wine-story-box" style="margin-bottom:1.2rem">
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.5;margin-left:.6rem;position:relative">${q.q}</div>
+    </div>
+
     ${answered?`
-      <div style="padding:1rem;background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem">Respuesta correcta</div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.5">${q.a}</div>
+      <div class="wine-info-box" style="margin-bottom:1rem;padding:1rem">
+        <div class="wine-info-label">✦ Respuesta correcta</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.5;position:relative">${q.a}</div>
       </div>
-      <div style="display:flex;gap:.4rem;margin-bottom:.8rem">
-        <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3)">¿Lo sabías?</div>
-      </div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);margin-bottom:.8rem;text-align:center">¿Lo sabías?</div>
       <div style="display:flex;gap:.5rem;justify-content:center">
-        <button onclick="_wqAnswer(true)" style="padding:.6rem 1.5rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.82rem;cursor:pointer;background:rgba(107,142,35,.2);border:1px solid rgba(107,142,35,.4);color:#9dcc65;font-weight:600">✓ Sí, lo sabía</button>
-        <button onclick="_wqAnswer(false)" style="padding:.6rem 1.5rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.82rem;cursor:pointer;background:rgba(205,92,92,.15);border:1px solid rgba(205,92,92,.3);color:#e88;font-weight:600">✗ No lo sabía</button>
+        <button onclick="_wqAnswer(true)" class="tunic-btn" style="background:linear-gradient(155deg,#f0f5ea,#e5edd8);border:1.5px solid rgba(77,138,94,.25);color:var(--sage);font-weight:600">✓ Sí, lo sabía</button>
+        <button onclick="_wqAnswer(false)" class="tunic-btn" style="background:linear-gradient(155deg,#f5eaea,#edd8d8);border:1.5px solid rgba(196,112,104,.25);color:var(--rose);font-weight:600">✗ No lo sabía</button>
       </div>
     `:`
       <div style="text-align:center">
-        <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch4);font-style:italic;margin-bottom:.8rem">💡 Pista: ${q.hint}</div>
-        <button onclick="_wqState.answered=true;renderVinos()" style="padding:.7rem 2rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.85rem;cursor:pointer;background:var(--gold);border:none;color:#1a0f05;font-weight:600">Mostrar respuesta</button>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);font-style:italic;margin-bottom:.8rem">💡 Pista: ${q.hint}</div>
+        <button onclick="_wqState.answered=true;renderVinos()" class="tunic-btn tunic-btn-gold" style="padding:.7rem 2rem;font-size:.85rem">◇ Mostrar respuesta ◇</button>
       </div>
     `}
   </div>`;
@@ -8422,37 +9047,39 @@ function _wqAnswer(correct){
 
 function _renderWineService(c, bar){
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)">💬 Guía de Servicio</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);margin-top:.3rem">Scripts listos para usar con el huésped</div>
+    <div class="wine-section-header">
+      <div class="wine-section-title">◇ El Arte del Servicio ◇</div>
+      <div class="wine-section-sub">Scripts listos para usar con el huésped</div>
+    </div>
+
+    <div class="wine-storybook-intro wine-enchanted">
+      <div class="wine-storybook-text">"Las palabras adecuadas transforman una simple recomendación en una experiencia mágica. Aquí tienes los encantamientos del sommelier."</div>
     </div>
 
     <!-- Quick pairing guide -->
-    <div style="margin-bottom:1.5rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Guía Rápida de Maridaje</div>
-      <div style="display:flex;flex-direction:column;gap:.4rem">
+    <div style="margin-bottom:1.8rem">
+      <div class="section-eyebrow">◇ Guía Rápida de Maridaje</div>
+      <div style="display:flex;flex-direction:column;gap:.45rem">
         ${[
-          ['🐟 Pescados y Mariscos','Blancos frescos: Cepado, Fenomenal SB, Viñatigo · Espumosos: Colet A Priori','blanco'],
-          ['🥩 Carnes Rojas','Tintos con cuerpo: Murrieta Reserva, Contino, Alion, Poligonos','tinto'],
-          ['🍝 Pastas y Risottos','Blancos con cuerpo: Amaren, Remelluri · Tintos elegantes: Predicador, Viña Cubillo','blanco'],
-          ['🥗 Ensaladas y Entrantes ligeros','Rosado: Muga · Blancos ligeros: Valtravieso Nogara, El Grifo Lías','rosado'],
-          ['🧀 Quesos','Según intensidad: suaves→blanco, curados→tinto con crianza, azules→dulce','dulce'],
-          ['🍫 Postres','Dulces: Oremus Late Harvest, Tokaji Aszú · Espumosos dulces','dulce'],
-          ['🥟 Gyozas / Platos asiáticos','Blancos aromáticos: El Grifo Lías, Artifice · Rosado: Muga','blanco'],
-          ['🦞 Lobster Roll','Blancos con cuerpo: Pazo Barrantes, Remelluri Blanco · Espumoso: Andre Clouet','espumoso']
-        ].map(([dish,wines,type])=>{
-          const colors = {blanco:'#f5e6b8',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
-          return `<div style="padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-left:3px solid ${colors[type]||'var(--gold)'};border-radius:var(--r2)">
-            <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);margin-bottom:.25rem">${dish}</div>
-            <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);line-height:1.4">${wines}</div>
-          </div>`;
-        }).join('')}
+          ['🐟 Pescados y Mariscos','Blancos frescos: Cepado, Fenomenal SB, Viñatigo · Espumosos: Colet A Priori','var(--candy-blue)'],
+          ['🥩 Carnes Rojas','Tintos con cuerpo: Murrieta Reserva, Contino, Alion, Poligonos','var(--candy-red)'],
+          ['🍝 Pastas y Risottos','Blancos con cuerpo: Amaren, Remelluri · Tintos elegantes: Predicador, Viña Cubillo','var(--candy-orange)'],
+          ['🥗 Ensaladas y Entrantes ligeros','Rosado: Muga · Blancos ligeros: Valtravieso Nogara, El Grifo Lías','var(--candy-pink)'],
+          ['🧀 Quesos','Según intensidad: suaves→blanco, curados→tinto con crianza, azules→dulce','var(--candy-yellow)'],
+          ['🍫 Postres','Dulces: Oremus Late Harvest, Tokaji Aszú · Espumosos dulces','var(--candy-purple)'],
+          ['🥟 Gyozas / Platos asiáticos','Blancos aromáticos: El Grifo Lías, Artifice · Rosado: Muga','var(--candy-teal)'],
+          ['🦞 Lobster Roll','Blancos con cuerpo: Pazo Barrantes, Remelluri Blanco · Espumoso: Andre Clouet','var(--gold)']
+        ].map(([dish,wines,color],i)=>`
+          <div class="wine-pairing-strip card-animate" style="animation-delay:${i*0.04}s;border-left:3px solid ${color}">
+            <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);margin-bottom:.25rem;position:relative">${dish}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);line-height:1.4;position:relative">${wines}</div>
+          </div>`).join('')}
       </div>
     </div>
 
     <!-- Selling scripts -->
-    <div style="margin-bottom:1.5rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Frases de Venta</div>
+    <div style="margin-bottom:1.8rem">
+      <div class="section-eyebrow">✦ Frases de Venta</div>
       <div style="display:flex;flex-direction:column;gap:.5rem">
         ${[
           {situation:'El huésped no sabe qué pedir',script:'\"Le puedo recomendar algo según lo que va a comer. ¿Prefiere blanco o tinto? Si le gusta probar, tenemos una excelente selección por copa desde 10€.\"'},
@@ -8461,15 +9088,15 @@ function _renderWineService(c, bar){
           {situation:'Pide el vino más barato',script:'\"Nuestro La Campagne es una excelente opción a 45€, un Cabernet Sauvignon francés muy agradable. Por copa, el Arienzo de Marqués de Riscal a 10€ es estupendo.\"'},
           {situation:'Quiere impresionar a sus invitados',script:'\"El Castillo Ygay Gran Reserva 2011 es una pieza icónica de Marqués de Murrieta — solo se produce en las mejores añadas. También tenemos el Álvaro Palacios Gratallops en Magnum, perfecto para compartir.\"'},
           {situation:'Es alérgico/intolerante',script:'\"Todos nuestros vinos contienen sulfitos de forma natural. Si busca opciones con menos sulfitos, los vinos ecológicos y naturales como Fanny Sabre suelen tener niveles más bajos. También tenemos mocktails sin alcohol.\"'}
-        ].map(s=>`<div onclick="this.querySelector('.ss-detail').classList.toggle('open')" style="padding:.8rem 1rem;background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-radius:var(--r);cursor:pointer">
-          <div style="display:flex;align-items:center;gap:.5rem">
-            <span style="font-size:1rem">💬</span>
+        ].map((s,i)=>`<div onclick="this.querySelector('.ss-detail').classList.toggle('open')" class="wine-service-card card-animate" style="animation-delay:${i*0.04}s">
+          <div style="display:flex;align-items:center;gap:.5rem;position:relative">
+            <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold-a),rgba(196,154,60,.15));width:28px;height:28px;font-size:.75rem">💬</div>
             <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);flex:1">${s.situation}</div>
-            <svg style="opacity:.3" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            <svg style="opacity:.3;color:var(--gold)" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
           <div class="ss-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
-            <div style="margin-top:.6rem;padding:.6rem .8rem;background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03));border-radius:var(--r2);border:1px solid rgba(196,154,60,.15)">
-              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);font-style:italic;line-height:1.5">${s.script}</div>
+            <div class="wine-script-box">
+              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);font-style:italic;line-height:1.5;margin-left:.5rem">${s.script}</div>
             </div>
           </div>
         </div>`).join('')}
@@ -8478,9 +9105,9 @@ function _renderWineService(c, bar){
 
     <!-- By the glass highlight -->
     <div>
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Vinos por Copa — Referencia Rápida</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r);padding:1rem">
-        <div style="display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;font-family:'Quicksand',sans-serif;font-size:.78rem">
+      <div class="section-eyebrow">◇ Vinos por Copa</div>
+      <div class="wine-byglass-grid">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;font-family:'Quicksand',sans-serif;font-size:.78rem;position:relative">
           ${WINES.filter(w=>w.glass).sort((a,b)=>a.glass-b.glass).map(w=>`
             <div style="color:var(--parchment)">${escapeHTML(w.name)} <span style="font-size:.6rem;color:var(--parch4)">${escapeHTML(w.type)}</span></div>
             <div style="color:var(--gold);font-weight:600;text-align:right">${w.glass}€</div>
@@ -8489,13 +9116,6 @@ function _renderWineService(c, bar){
       </div>
     </div>
   </div>`;
-  // CSS for expanding
-  if(!document.getElementById('wineLearnCSS')){
-    const style = document.createElement('style');
-    style.id = 'wineLearnCSS';
-    style.textContent = '.wc-detail.open,.wr-detail.open,.ss-detail.open{max-height:600px!important}';
-    document.head.appendChild(style);
-  }
 }
 
 // ═══════ DASHBOARD ═══════
