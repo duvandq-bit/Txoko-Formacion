@@ -2657,14 +2657,10 @@ body::before{
 .lqa-ei-scale-5 .lqa-ei-dot:nth-child(-n+5){background:var(--azure,#4888a0);border-color:rgba(72,136,160,.3);}
 
 
-/* ═══ SPLASH SCREEN ═══ */
-@keyframes splashLogoIn{
+/* ═══ LOGIN FADE IN ═══ */
+@keyframes loginFadeIn{
   from{opacity:0;transform:scale(.9) translateY(10px)}
   to{opacity:1;transform:scale(1) translateY(0)}
-}
-@keyframes splashLineExpand{
-  from{width:0;opacity:0}
-  to{width:120px;opacity:1}
 }
 
 /* ═══ ANIMATED GRADIENT BACKGROUNDS — "ALIVE" FEEL ═══ */
@@ -2859,7 +2855,7 @@ body::before{
   font-family:'Cinzel',serif;font-size:2.8rem;font-weight:700;
   letter-spacing:.14em;color:#c49a3c;text-transform:uppercase;
   text-shadow:0 2px 30px rgba(196,154,60,.3);
-  animation:splashLogoIn .5s ease both;
+  animation:loginFadeIn .5s ease both;
 }
 .login-loading-overlay .loading-bar-track{
   width:160px;height:3px;background:rgba(196,154,60,.12);
@@ -2889,18 +2885,7 @@ body::before{
 </head>
 <body>
 
-<!-- ═══════ SPLASH LOADING SCREEN ═══════ -->
-<div id="splashScreen" style="position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1c2a22;background-image:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(196,154,60,.08),transparent),radial-gradient(ellipse 60% 50% at 80% 80%,rgba(77,138,94,.06),transparent);transition:opacity .6s ease,visibility .6s ease">
-  <div style="text-align:center;animation:splashLogoIn .8s ease both">
-    <div style="font-family:'Cinzel',serif;font-size:3.5rem;font-weight:700;letter-spacing:.14em;color:#c49a3c;text-transform:uppercase;text-shadow:0 2px 30px rgba(196,154,60,.3);line-height:1">TXOKO</div>
-    <div style="width:0;height:2px;margin:.6rem auto .5rem;background:linear-gradient(90deg,transparent,#c49a3c,#9a7340,transparent);animation:splashLineExpand .8s .3s cubic-bezier(.4,0,.2,1) forwards"></div>
-    <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;letter-spacing:.2em;color:rgba(244,237,226,.4);text-transform:uppercase;font-weight:500">by Martín Berasategui</div>
-  </div>
-  <div style="width:180px;height:3px;background:rgba(196,154,60,.12);border-radius:3px;margin-top:2rem;overflow:hidden">
-    <div id="splashProgress" style="width:0%;height:100%;background:linear-gradient(90deg,#c49a3c,#d4aa4c);border-radius:3px;transition:width .3s ease"></div>
-  </div>
-  <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.12em;color:rgba(244,237,226,.25);text-transform:uppercase;margin-top:.8rem">Cargando formación...</div>
-</div>
+<!-- Splash removed -->
 
 
 
@@ -5775,11 +5760,6 @@ function renderLogin(){
   const pillEn = document.getElementById('langPillEn');
   if(pillEs) pillEs.classList.toggle('active', LANG==='es');
   if(pillEn) pillEn.classList.toggle('active', LANG==='en');
-  document.getElementById('loginSubtitle').textContent = t('subtitle');
-  document.getElementById('loginProfileLabel').textContent = t('profileLabel');
-  document.getElementById('loginNewLabel').textContent = t('newLabel');
-  document.getElementById('loginEnterBtn').textContent = t('enterBtn');
-  document.getElementById('newEmpInput').placeholder = t('inputPlaceholder');
   // New login form — update labels only
   const userLabel = document.getElementById('loginUserLabel');
   const passLabel = document.getElementById('loginPassLabel');
