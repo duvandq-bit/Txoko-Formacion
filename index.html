@@ -88,19 +88,32 @@ body{
     radial-gradient(ellipse at 20% 10%, rgba(196,154,60,.04) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 90%, rgba(77,138,94,.03) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 50%, rgba(72,136,160,.02) 0%, transparent 60%);
-  color:var(--parchment);
+  color:var(--ink);
   font-weight:400;
   overflow-x:hidden;
   line-height:1.6;
 }
 
-/* Static subtle gradient — no animation for perf */
+/* TUNIC living background — animated ambient glow */
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(ellipse 60% 40% at 15% 10%, rgba(196,154,60,.04) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 35% at 85% 20%, rgba(72,136,160,.04) 0%, transparent 55%),
-    radial-gradient(ellipse 45% 30% at 50% 85%, rgba(122,106,170,.03) 0%, transparent 50%);
+    radial-gradient(ellipse 60% 40% at 15% 10%, rgba(196,154,60,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 20%, rgba(72,136,160,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 30% at 50% 85%, rgba(122,106,170,.05) 0%, transparent 50%),
+    radial-gradient(ellipse 35% 25% at 60% 40%, rgba(77,138,94,.04) 0%, transparent 45%);
+  animation:ambientBreath 12s ease-in-out infinite;
+}
+@keyframes ambientBreath{
+  0%,100%{opacity:.7}
+  50%{opacity:1}
+}
+/* TUNIC hex pattern overlay — very subtle */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='80' height='70' viewBox='0 0 80 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='40,2 76,19 76,51 40,68 4,51 4,19' fill='none' stroke='rgba(196,154,60,0.03)' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size:80px 70px;
+  opacity:.6;
 }
 
 /* ─────────────────────────────────────────────────
@@ -150,7 +163,7 @@ body::before{
 @keyframes lineExpand{from{width:0;opacity:0}to{width:100%;opacity:1}}
 .login-logo em{
   display:block;font-family:'Quicksand',sans-serif;font-style:normal;
-  font-size:.72rem;letter-spacing:.28em;color:var(--parch3);
+  font-size:.72rem;letter-spacing:.28em;color:rgba(196,154,60,.45);
   text-transform:uppercase;margin-top:.6rem;font-weight:300;
 }
 
@@ -208,10 +221,11 @@ body::before{
   letter-spacing:.2em;text-transform:uppercase;
 }
 .login-card{
-  background:linear-gradient(155deg,rgba(244,237,226,.95),rgba(235,227,213,.92));
-  border:1.5px solid rgba(196,154,60,.2);border-radius:16px;
+  background:linear-gradient(155deg,rgba(28,42,34,.7),rgba(20,32,26,.8));
+  border:1.5px solid rgba(196,154,60,.15);border-radius:16px;
   padding:1.5rem;width:100%;max-width:380px;position:relative;z-index:1;
-  box-shadow:0 8px 32px rgba(0,0,0,.2),0 0 60px rgba(196,154,60,.05);
+  box-shadow:0 8px 32px rgba(0,0,0,.3),0 0 60px rgba(196,154,60,.05);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
 }
 .login-card::before{
   content:'';position:absolute;top:-1px;left:15%;right:15%;height:3px;
@@ -316,24 +330,24 @@ body::before{
 }
 .login-logo em{
   display:block;font-family:'Quicksand',sans-serif;font-style:normal;
-  font-size:.68rem;letter-spacing:.2em;color:var(--parch3);
+  font-size:.68rem;letter-spacing:.2em;color:rgba(196,154,60,.45);
   text-transform:uppercase;margin-top:.4rem;font-weight:500;
 }
 
 .login-card{
-  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:2px solid var(--ink3);
+  background:linear-gradient(155deg,rgba(28,42,34,.65),rgba(20,32,26,.75));
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1.5px solid rgba(196,154,60,.18);
   border-radius:20px;
   padding:1.75rem 1.75rem 1.5rem;
   width:100%;max-width:380px;
-  box-shadow:0 8px 30px rgba(28,42,34,.1), 0 4px 0 var(--ink4);
+  box-shadow:0 12px 40px rgba(0,0,0,.35), 0 0 80px rgba(196,154,60,.04);
   position:relative;overflow:hidden;
   animation:loginFadeIn .7s .25s ease both;
 }
 .login-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:4px;
-  background:linear-gradient(90deg,var(--gold),var(--candy-blue),var(--candy-purple),var(--candy-pink));
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.6),rgba(196,154,60,.3),transparent);
 }
 
 .login-section-label{
@@ -471,7 +485,11 @@ body::before{
 /* ─────────────────────────────────────────────────
    APP SHELL
 ───────────────────────────────────────────────── */
-#screenApp{flex-direction:column}
+#screenApp{
+  flex-direction:column;
+  background:#f4ede2;
+  color:#1c2a22;
+}
 
 /* Header */
 .app-header{
@@ -1952,7 +1970,7 @@ body::before{
    LEGAL NOTICE
 ───────────────────────────────────────────────── */
 .legal-notice{max-width:400px;margin-top:1.5rem;text-align:center}
-.legal-notice p{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);line-height:1.7;margin-bottom:.4rem}
+.legal-notice p{font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.35);line-height:1.7;margin-bottom:.4rem}
 .legal-notice p + p{
   margin-top:.4rem;
   padding-top:.4rem;
@@ -2664,6 +2682,43 @@ body::before{
 }
 
 /* ═══ ANIMATED GRADIENT BACKGROUNDS — "ALIVE" FEEL ═══ */
+
+/* ═══ TUNIC GOLDEN PARTICLES (CSS-only fireflies) ═══ */
+@keyframes firefly1{
+  0%,100%{transform:translate3d(0,0,0);opacity:0}
+  10%{opacity:.8}
+  50%{transform:translate3d(40px,-60px,0);opacity:.6}
+  90%{opacity:0}
+}
+@keyframes firefly2{
+  0%,100%{transform:translate3d(0,0,0);opacity:0}
+  15%{opacity:.7}
+  55%{transform:translate3d(-50px,-40px,0);opacity:.5}
+  85%{opacity:0}
+}
+@keyframes firefly3{
+  0%,100%{transform:translate3d(0,0,0);opacity:0}
+  20%{opacity:.6}
+  60%{transform:translate3d(30px,50px,0);opacity:.4}
+  80%{opacity:0}
+}
+.login-particles{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;
+}
+.login-particle{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,154,60,.9),rgba(196,154,60,0));
+  will-change:transform,opacity;backface-visibility:hidden;
+}
+.login-particle:nth-child(1){top:20%;left:15%;animation:firefly1 6s 0s ease-in-out infinite}
+.login-particle:nth-child(2){top:60%;left:75%;animation:firefly2 8s 1s ease-in-out infinite}
+.login-particle:nth-child(3){top:40%;left:40%;animation:firefly3 7s 2s ease-in-out infinite}
+.login-particle:nth-child(4){top:75%;left:25%;animation:firefly1 9s 3s ease-in-out infinite}
+.login-particle:nth-child(5){top:30%;left:65%;animation:firefly2 6.5s 0.5s ease-in-out infinite}
+.login-particle:nth-child(6){top:80%;left:55%;animation:firefly3 8.5s 1.5s ease-in-out infinite}
+.login-particle:nth-child(7){top:15%;left:85%;animation:firefly1 7.5s 2.5s ease-in-out infinite}
+.login-particle:nth-child(8){top:55%;left:10%;animation:firefly2 9.5s 4s ease-in-out infinite}
+
 /* ═══ GPU-ONLY ANIMATIONS (transform + opacity ONLY) ═══ */
 @keyframes orbFloat1{
   0%,100%{transform:translate3d(0,0,0)}
@@ -2680,17 +2735,19 @@ body::before{
   50%{transform:translate3d(20px,15px,0)}
 }
 @keyframes orbPulse{
-  0%,100%{opacity:.04}
-  50%{opacity:.09}
+  0%,100%{opacity:.06}
+  50%{opacity:.15}
 }
 
 /* Animated ambient layer for login — fixed */
 #screenLogin::after{
   content:'';position:absolute;inset:0;
   background:
-    radial-gradient(ellipse 40% 30% at 30% 20%, rgba(196,154,60,.06) 0%, transparent 50%),
-    radial-gradient(ellipse 35% 25% at 70% 80%, rgba(77,138,94,.04) 0%, transparent 50%);
+    radial-gradient(ellipse 50% 35% at 30% 20%, rgba(196,154,60,.10) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 70% 80%, rgba(77,138,94,.08) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, rgba(72,136,160,.05) 0%, transparent 40%);
   pointer-events:none;z-index:0;
+  animation:ambientBreath 15s ease-in-out infinite;
 }
 
 /* Ambient layer removed — using lightweight CSS-only gradient on #screenApp */
@@ -2740,25 +2797,25 @@ body::before{
   background:radial-gradient(circle,var(--orb-color) 0%,transparent 70%);
 }
 .parallax-layer:nth-child(1){
-  --orb-color:rgba(196,154,60,.15);
-  width:250px;height:250px;top:10%;left:15%;
+  --orb-color:rgba(196,154,60,.22);
+  width:320px;height:320px;top:5%;left:10%;
   animation:orbFloat1 20s ease-in-out infinite, orbPulse 8s ease-in-out infinite;
 }
 .parallax-layer:nth-child(2){
-  --orb-color:rgba(77,138,94,.12);
-  width:200px;height:200px;top:60%;right:10%;
+  --orb-color:rgba(77,138,94,.18);
+  width:280px;height:280px;top:55%;right:5%;
   animation:orbFloat2 24s ease-in-out infinite, orbPulse 10s ease-in-out infinite;
   animation-delay:-5s,-3s;
 }
 .parallax-layer:nth-child(3){
-  --orb-color:rgba(72,136,160,.10);
-  width:180px;height:180px;top:35%;left:60%;
+  --orb-color:rgba(72,136,160,.15);
+  width:240px;height:240px;top:30%;left:55%;
   animation:orbFloat3 18s ease-in-out infinite, orbPulse 12s ease-in-out infinite;
   animation-delay:-10s,-6s;
 }
 .parallax-layer:nth-child(4){
-  --orb-color:rgba(122,106,170,.10);
-  width:150px;height:150px;bottom:15%;left:30%;
+  --orb-color:rgba(122,106,170,.16);
+  width:220px;height:220px;bottom:10%;left:25%;
   animation:orbFloat1 22s ease-in-out infinite reverse, orbPulse 9s ease-in-out infinite;
   animation-delay:-15s,-4s;
 }
@@ -2899,6 +2956,7 @@ body::before{
 
 <!-- ═══════ LOGIN ═══════ -->
 <div id="screenLogin" class="screen active">
+  <div class="login-particles"><div class="login-particle"></div><div class="login-particle"></div><div class="login-particle"></div><div class="login-particle"></div><div class="login-particle"></div><div class="login-particle"></div><div class="login-particle"></div><div class="login-particle"></div></div>
   <div class="login-eyebrow"><span>Ritz-Carlton Abama · Tenerife</span></div>
   <div class="login-logo">
     <h1>TXOKO</h1>
@@ -2982,7 +3040,7 @@ body::before{
   <div class="nav-fade" id="navFade"></div>
 
   <div class="app-content" id="appContent"></div>
-  <div class="app-credit">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
+  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido">◉</button>
 </div>
 
