@@ -792,27 +792,12 @@ body::before{
   flex-shrink:0;
 }
 
-.wine-detail-overlay{
-  position:fixed;inset:0;z-index:9998;
-  background:rgba(244,237,226,.97);
-  background-image:url("data:image/svg+xml,%3Csvg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,2 58,26 30,50 2,26' fill='none' stroke='rgba(196,154,60,0.04)' stroke-width='0.5'/%3E%3C/svg%3E");
-  overflow-y:auto;animation:fadeIn .25s ease;
-}
+/* wine-detail-overlay moved to redesign block */
 .wine-detail-inner{
   max-width:480px;margin:0 auto;padding:1.5rem 1.2rem 3rem;
 }
-.wine-detail-back{
-  background:linear-gradient(180deg,#faf6ee,#f4ede2);
-  border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);
-  padding:.45rem .9rem;font-size:.75rem;color:var(--parchment);cursor:pointer;
-  font-family:'Quicksand',sans-serif;margin-bottom:1.2rem;
-  transition:all .2s;
-}
-.wine-detail-back:hover{border-color:var(--gold);transform:translateX(-2px)}
-.wine-detail-title{
-  font-family:'Cinzel',serif;font-size:1.6rem;color:var(--parchment);
-  line-height:1.2;margin-bottom:.3rem;
-}
+/* wine-detail-back moved to redesign block */
+/* wine-detail-title moved to redesign block */
 .wine-info-box{
   padding:.7rem .9rem;
   background:linear-gradient(180deg,#faf6ee,#f4ede2);
@@ -2668,6 +2653,256 @@ body::before{
 .lqa-ei-scale-3 .lqa-ei-dot:nth-child(-n+3){background:var(--gold,#c49a3c);border-color:rgba(196,154,60,.3);}
 .lqa-ei-scale-4 .lqa-ei-dot:nth-child(-n+4){background:var(--sage,#4d8a5e);border-color:rgba(77,138,94,.3);}
 .lqa-ei-scale-5 .lqa-ei-dot:nth-child(-n+5){background:var(--azure,#4888a0);border-color:rgba(72,136,160,.3);}
+
+
+/* ═══ WINE DETAIL REDESIGN: Tunic × Royal Caribbean ═══ */
+
+/* --- Glassmorphism Wine Detail Overlay --- */
+.wine-detail-overlay{
+  position:fixed;inset:0;z-index:9998;
+  background:linear-gradient(180deg,
+    rgba(28,42,34,.92) 0%,
+    rgba(44,62,50,.95) 30%,
+    rgba(28,42,34,.97) 100%);
+  overflow-y:auto;overflow-x:hidden;
+  animation:wineOverlayIn .4s cubic-bezier(.22,1,.36,1);
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+}
+@keyframes wineOverlayIn{
+  from{opacity:0;backdrop-filter:blur(0)}
+  to{opacity:1;backdrop-filter:blur(12px)}
+}
+
+/* --- Parallax hero header --- */
+.wine-hero{
+  position:relative;
+  min-height:220px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:2rem 1.5rem 1.5rem;
+  overflow:hidden;
+  background:linear-gradient(170deg,
+    rgba(196,154,60,.15) 0%,
+    rgba(28,42,34,.6) 40%,
+    rgba(28,42,34,.9) 100%);
+}
+.wine-hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='80' height='70' viewBox='0 0 80 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='40,4 76,35 40,66 4,35' fill='none' stroke='rgba(196,154,60,0.06)' stroke-width='0.6'/%3E%3C/svg%3E");
+  animation:parallaxFloat 20s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes parallaxFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(-5px,-8px) scale(1.02)}
+  50%{transform:translate(3px,-12px) scale(1.01)}
+  75%{transform:translate(-3px,-4px) scale(1.03)}
+}
+.wine-hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:60px;
+  background:linear-gradient(to top,rgba(28,42,34,.95),transparent);
+  pointer-events:none;
+}
+
+/* --- Glass cards --- */
+.wine-glass-card{
+  background:rgba(244,237,226,.06);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(196,154,60,.15);
+  border-radius:16px;
+  padding:1.2rem;
+  position:relative;overflow:hidden;
+  transition:all .3s cubic-bezier(.22,1,.36,1);
+  animation:glassCardIn .5s cubic-bezier(.22,1,.36,1) both;
+}
+.wine-glass-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent);
+}
+@keyframes glassCardIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* --- Labels on dark bg --- */
+.wine-detail-overlay .wine-info-label{
+  font-family:'DM Mono',monospace;font-size:.55rem;
+  color:var(--gold);text-transform:uppercase;
+  letter-spacing:.12em;margin-bottom:.4rem;position:relative;
+}
+
+/* --- Swipe navigation --- */
+.wine-swipe-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.6rem 0;margin-top:.5rem;gap:.5rem;
+}
+.wine-swipe-btn{
+  background:rgba(196,154,60,.1);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(196,154,60,.2);
+  border-radius:12px;padding:.5rem 1rem;
+  font-family:'Quicksand',sans-serif;font-size:.72rem;
+  color:rgba(244,237,226,.8);cursor:pointer;
+  transition:all .25s cubic-bezier(.22,1,.36,1);
+  display:flex;align-items:center;gap:.3rem;
+  min-width:0;max-width:45%;
+}
+.wine-swipe-btn:hover,.wine-swipe-btn:active{
+  background:rgba(196,154,60,.2);
+  border-color:var(--gold);color:#f4ede2;
+  transform:scale(1.02);
+}
+.wine-swipe-btn span{
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.wine-swipe-indicator{
+  font-family:'DM Mono',monospace;font-size:.6rem;
+  color:rgba(196,154,60,.5);letter-spacing:.05em;
+  flex-shrink:0;
+}
+
+/* --- Swipe transition --- */
+.wine-detail-inner.swipe-out-left{
+  animation:swipeOutLeft .25s cubic-bezier(.55,.06,.68,.19) forwards;
+}
+.wine-detail-inner.swipe-out-right{
+  animation:swipeOutRight .25s cubic-bezier(.55,.06,.68,.19) forwards;
+}
+.wine-detail-inner.swipe-in-left{
+  animation:swipeInLeft .3s cubic-bezier(.22,1,.36,1) forwards;
+}
+.wine-detail-inner.swipe-in-right{
+  animation:swipeInRight .3s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes swipeOutLeft{
+  to{transform:translateX(-100%);opacity:0}
+}
+@keyframes swipeOutRight{
+  to{transform:translateX(100%);opacity:0}
+}
+@keyframes swipeInLeft{
+  from{transform:translateX(100%);opacity:0}
+  to{transform:translateX(0);opacity:1}
+}
+@keyframes swipeInRight{
+  from{transform:translateX(-100%);opacity:0}
+  to{transform:translateX(0);opacity:1}
+}
+
+/* --- Pairing cards stagger --- */
+.wine-pairing-item{
+  padding:.65rem .9rem;
+  border-radius:12px;
+  background:rgba(244,237,226,.04);
+  border:1px solid rgba(196,154,60,.1);
+  border-left:3px solid rgba(196,154,60,.3);
+  transition:all .25s ease;
+  animation:pairingSlideIn .4s cubic-bezier(.22,1,.36,1) both;
+}
+.wine-pairing-item:hover{
+  background:rgba(244,237,226,.08);
+  border-left-color:var(--gold);
+  transform:translateX(4px);
+}
+@keyframes pairingSlideIn{
+  from{opacity:0;transform:translateX(-8px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* --- Floating particles --- */
+.wine-particles{
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;
+}
+.wine-particle{
+  position:absolute;width:3px;height:3px;
+  background:rgba(196,154,60,.25);border-radius:50%;
+  animation:particleFloat linear infinite;
+}
+@keyframes particleFloat{
+  0%{transform:translateY(0) rotate(0);opacity:0}
+  10%{opacity:.6}
+  90%{opacity:.3}
+  100%{transform:translateY(-220px) rotate(720deg);opacity:0}
+}
+
+/* --- Back button redesign --- */
+.wine-detail-back{
+  background:rgba(244,237,226,.08);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(196,154,60,.2);border-radius:12px;
+  padding:.5rem 1rem;font-size:.75rem;color:rgba(244,237,226,.85);
+  cursor:pointer;font-family:'Quicksand',sans-serif;
+  transition:all .25s;display:inline-flex;align-items:center;gap:.4rem;
+  position:relative;z-index:2;
+}
+.wine-detail-back:hover{
+  border-color:var(--gold);background:rgba(196,154,60,.12);
+  transform:translateX(-3px);
+}
+
+/* --- Title on dark --- */
+.wine-detail-overlay .wine-detail-title{
+  font-family:'Cinzel',serif;font-size:1.8rem;
+  color:#f4ede2;line-height:1.15;
+  margin-bottom:.3rem;position:relative;z-index:2;
+  text-shadow:0 2px 12px rgba(0,0,0,.3);
+}
+
+/* --- Price box glass --- */
+.wine-price-glass{
+  display:flex;align-items:baseline;gap:1rem;
+  padding:.9rem 1.2rem;
+  background:rgba(196,154,60,.08);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(196,154,60,.2);
+  border-radius:14px;position:relative;overflow:hidden;
+}
+.wine-price-glass::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.4),transparent);
+}
+
+/* --- Organic breathing glow --- */
+.wine-hero-glow{
+  position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(ellipse at center,
+    rgba(196,154,60,.08) 0%,
+    transparent 60%);
+  animation:heroGlow 6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes heroGlow{
+  0%,100%{transform:scale(1);opacity:.5}
+  50%{transform:scale(1.15);opacity:.8}
+}
+
+/* --- Section divider --- */
+.wine-section-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.2),transparent);
+  margin:1.2rem 0;
+}
+
+/* --- Pairings collapsible --- */
+.wine-pairings-toggle{
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;padding:.3rem 0;
+}
+.wine-pairings-toggle .toggle-arrow{
+  transition:transform .3s ease;
+  color:var(--gold);font-size:.7rem;
+}
+.wine-pairings-toggle.open .toggle-arrow{
+  transform:rotate(180deg);
+}
+.wine-pairings-list{
+  display:flex;flex-direction:column;gap:.5rem;
+  max-height:0;overflow:hidden;
+  transition:max-height .4s cubic-bezier(.22,1,.36,1);
+}
+.wine-pairings-list.expanded{
+  max-height:3000px;
+}
 
 </style>
 </head>
@@ -5855,7 +6090,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En las laderas volcánicas de Tenerife, donde el terroir es moldeado por suelos volcánicos negros y brisas del Atlántico, la Listán Blanco alcanza expresión mineral. Viñatigo respeta la tradición canaria mediante fermentación en acero inoxidable que preserva salinidad y frescura atlántica.',
-    pairings: ['Flan tradicional con chantilly', 'Goxua', 'Tocinillo de cielo'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Fresco y mineral, con aromas de cítricos y flor blanca. Perfecto como aperitivo o con mariscos frescos.'
   },
   {
@@ -5873,7 +6108,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Artifice, en Tenerife, cultiva Listán Blanco en antiguos viñedos sobre suelo volcánico del Atlántico con intervención mínima. El vino emerge fresco y mineral, preservando la identidad única del terroir sin compromiso enológico.',
-    pairings: ['Calamares a la Andaluza', 'Tartar de lomo de atún', 'Tomates aliñados'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Mineral y salado, con notas de hierba fresca y cítricos. Ideal para maridar con cefalópodos y pescados.'
   },
   {
@@ -5891,7 +6126,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Blend armónico de variedades autóctonas canarias (Listán, Albillo, Gual, Marmajuelo) en suelos volcánicos de Tenerife. Fermentación natural honra tradición secular con estilo minimalista que revela complejidad mineral del terroir volcánico.',
-    pairings: ['Ensalada de Mero del Hierro', 'Fish and chips', 'Tartar de remolacha'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Complejo y equilibrado, con notas florales y herbáceas. Recomendado con platos de verduras y pescados blancos.'
   },
   {
@@ -5909,7 +6144,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En Lanzarote, Akaet rescata viñedos pre-filoxera en suelo volcánico con influencia atlántica. Variedades autóctonas fermentan suavemente revelando mineralidad volcánica y salinidad marina que define este terroir único.',
-    pairings: ['Tataki de atún', 'Selección de ostras', 'Pimientos del padrón'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Aromático y fresco, con notas de miel y flores blancas. Excelente con mariscos y pescados.'
   },
   {
@@ -5927,7 +6162,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Vegas el Pinalete, en Tenerife, cultiva Albillo Criollo en terreno volcánico a microclima especial entre volcanes. Producción limitada, fermentación suave y envejecimiento natural resaltan elegancia cítrica y mineralidad del terroir singular.',
-    pairings: ['Lubina a la brasa con ensalada de papaya', 'Tartar de lomo de atún', 'Espárragos a la brasa'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Elegante y minerál, con toques cítricos delicados. Ideal como vino de aperitivo o con ensaladas frescas.'
   },
   {
@@ -5945,7 +6180,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Valle de Guimar en Tenerife, donde volcanes ancestrales modelan terroir único. Variedades como Listán Blanco florecen en suelos minerales. Cosechas en laderas volcánicas, fermentación en acero a baja temperatura, intervención mínima. Los Loros busca expresar la pureza pura del terroir guimarero sin compromisos enológicos.',
-    pairings: ['Calamares a la Andaluza', 'Rejo de pulpo con papa y mojo verde', 'Ensalada Niçoise'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Fresco y expresivo, con aromas cítricos y minerales. Perfecto con mariscos y pescados a la parrilla.'
   },
   {
@@ -5963,7 +6198,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gran Canaria, donde la Malvasía ancestral define la región. Variedad histórica que conquis nobles europeos en siglos pasados. Suelos ricos en lava volcánica, vendimia manual cuidadosa, fermentación que preserva aromas florales únicos. Tamerán honra la herencia vitivinícola canaria con cada botella.',
-    pairings: ['Tataki de atún', 'Lubina crujiente con mayonesa de leche de tigre', 'Peras escalivadas con cremoso de queso de cabra'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Aromático y delicado, con notas de frutas tropicales y flores. Excelente como aperitivo o postre.'
   },
 
@@ -5983,7 +6218,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En empinadas terrazas de granito de Valdeorras, Godello prospera con clima atlántico. Fermentación controlada en acero inoxidable preserva mineralidad pura y acidez vibrante que define este terroir ancestral gallego.',
-    pairings: ['Tataki de atún', 'Fish and chips', 'Tabla de quesos canarios'],
+    pairings: ['Calamares a la Andaluza', 'Coca de calabacín', 'Coca de tomate', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos'],
     notes: 'Fresco y mineral, con notas cítricas y de fruta blanca. Ideal como aperitivo o con mariscos.'
   },
   {
@@ -6001,7 +6236,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Viura y Garnacha Blanca en Rioja Alavesa fusionan en armonía compleja a 600+ metros. Fermentación en barrica francesa añade complejidad a este blanco de guarda que evoluciona años, reflejando filosofía riojana de tradición sin compromiso.',
-    pairings: ['Lubina a la brasa con ensalada de papaya', 'Tartar de lomo de atún', 'Selección de ostras'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Complejo y elegante, con aromas de frutas blancas y minerales. Buen potencial de guarda.'
   },
   {
@@ -6019,7 +6254,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Predicador blanco es el testimonio de una filosofía riojana que abraza la tradición sin miedo a la experimentación. Tres variedades convergen en perfecta sinfonía.',
-    pairings: ['Mejillones a la brasa', 'Calamares a la Andaluza', 'Coca de calabacín'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Aromático y equilibrado, con toques florales. Ideal con platos ligeros y mariscos.'
   },
   {
@@ -6037,7 +6272,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Rioja Alta con suelos calcareo-arcillosos ancestrales. Viura, variedad reina que define la región. Fermentación en barrica de roble francés por 10 meses, bodegas Ollauri del XVI cuna de tradición riojana. Elegancia sin renunciar a mineralidad característica.',
-    pairings: ['Lubina crujiente con mayonesa de leche de tigre', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Elegante y fresco, con notas de citrus y almendra. Buena acidez y potencial de envejecimiento.'
   },
   {
@@ -6055,7 +6290,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Palacios Remondo elabora Viura en Rioja con biodinámica, buscando perfección en cada detalle del viñedo. Fermentación biológica y crianza prolongada revellan mineralidad y complejidad que convierten este blanco en expresión pura del terroir riojano.',
-    pairings: ['Selección de ostras', 'Tataki de atún', 'Rejo de pulpo con papa y mojo verde'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Mineral y complejo, con buen envejecimiento. Aromas de frutas blancas y flores.'
   },
   {
@@ -6073,7 +6308,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Remelluri cultiva a 900+ metros en Rioja Alavesa viñedos ancestrales con Chardonnay y Garnacha blanca. Fermentación lenta y envejecimiento en barrica (60% roble francés) crean sofisticación mineral que refleja tradición milenaria sin concesiones.',
-    pairings: ['Lubina a la brasa con ensalada de papaya', 'Ensalada de Mero del Hierro', 'Langostinos con salsa ligera de calabaza avainillada'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Sofisticado y complejo, con buena estructura. Aromas de frutas blancas, minerales y un toque especiado.'
   },
 
@@ -6093,7 +6328,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Alella DO, costa mediterránea catalana cercana a Barcelona. Pansa Blanca (Xarel-lo local), suelos graníticos ancestrales. Brisa marina influye viticultura boutique. Fermentación fría en acero, producción limitada, bodega pequeña dedicada a expresar terroir costero único.',
-    pairings: ['Selección de ostras', 'Lubina a la brasa con ensalada de papaya', 'Tartar de lomo de atún'],
+    pairings: ['Calamares a la Andaluza', 'Coca de calabacín', 'Coca de tomate', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos'],
     notes: 'Fresco y mineral, con notas de manzana y cítricos. Ideal como aperitivo o con pescados blancos.'
   },
   {
@@ -6111,7 +6346,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Penedés catalán, suelos calcáreos ancestrales. Xarel-lo viñas de 40+ años, tradición autóctona preservada. Fermentación con levaduras silvestres, 6 meses sobre lías. Bodega enfocada en variedades indígenas, enología tradicional sin intervención moderna.',
-    pairings: ['Arroz negro con txipirones asados', 'Ensalada Niçoise', 'Ravioli de pularda'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Fresco y ligero, con aromas florales. Perfecto con mariscos y platos vegetales.'
   },
 
@@ -6131,7 +6366,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Valdeorras Galicia, suelos granito-pizarrosos ancestrales. Viñedos ribereños en laderas empinadas. Godello, variedad característica, fermentación a temperatura controlada. Pioneros renacimiento Godello años 80s, bodega busca elegancia y mineralidad pura.',
-    pairings: ['Calamares a la Andaluza', 'Tartar de remolacha', 'Pimiento relleno de ternera'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Mineral y complejo, con aromas cítricos y florales. Vino de guarda con buena estructura.'
   },
   {
@@ -6149,7 +6384,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Entre laderas de pizarra de Valdeorras, viñedos ancianos de Godello en clima atlántico gallego. Viticultura natural sin intervención química, fermentación nativa preservan salinidad mineral y expresión pura del terroir montañoso.',
-    pairings: ['Linguini con tartar de langostino', 'Ensalada Niçoise', 'Tomates aliñados'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Fresco y mineral, con notas de cítricos. Ideal con mariscos y pescados a la parrilla.'
   },
   {
@@ -6167,7 +6402,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Rafael Palacios cultiva Godello con biodinámica en terrazas ancestrales de granito de Valdeorras. Fermentación nativa en depósito de cerámica y sur-lie preservan mineralidad vibrante que define este blanco de carácter atlántico gallego.',
-    pairings: ['Arroz negro con txipirones asados', 'Lubina a la brasa con ensalada de papaya', 'Langostinos con salsa ligera de calabaza avainillada'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Mineral y elegante, con aromas cítricos y florales. Buen potencial de envejecimiento.'
   },
   {
@@ -6185,7 +6420,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En Rías Baixas, Cíes cultiva Albariño en microclima marítimo templado influenciado por islas homónimas. Fermentación en acero inoxidable a baja temperatura preserva aromaticidad floral y salinidad marina que define este blanco atlántico.',
-    pairings: ['Ensalada de Mero del Hierro', 'Ravioli de pularda', 'Arroz negro con txipirones asados'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Fresco y salado, con aromas de frutas blancas y flores. Perfecto con mariscos.'
   },
   {
@@ -6203,7 +6438,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Marqués de Murrieta cultiva Albariño generacional en Rías Baixas con viñedos históricos junto océano Atlántico. Gran Vino 2021 fermentado en barrica francesa y envejecido 18 meses alcanza complejidad y elegancia que honra décadas de excelencia.',
-    pairings: ['Fish and chips', 'Tataki de atún', 'Coca de tomate'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Complejo y elegante, con buen envejecimiento. Aromas de cítricos, flores blancas y minerales.'
   },
   {
@@ -6221,7 +6456,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Rías Baixas Galicia, suelos granito ancestrales, clima atlántico. Albariño variedad suprema. Vendimia manual, 5 meses sobre lías, fermentación tradicional. Formato magnum potencia envejecimiento, revela capas aromáticas, filosofía Marqués Murrieta.',
-    pairings: ['Calamares a la Andaluza', 'Ensalada Niçoise', 'Tartar de remolacha'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Elegante y sofisticado, con notas de frutas blancas, flores y minerales. Ideal para celebraciones.'
   },
 
@@ -6241,7 +6476,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Bourgogne maison histórica 1831, Côte d\'Or parcelas calcareo-arcillosas. Chardonnay fermentación roble francés, crianza envejecimiento lento. Familia 6ª generación preserva tradición burgundy pura, buscando equilibrio entre fruta y mineralidad.',
-    pairings: ['Ravioli de pularda', 'Lubina a la brasa con ensalada de papaya', 'Arroz negro con txipirones asados'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Elegante y mineral, con aromas de frutas blancas y flores. Buen envejecimiento.'
   },
   {
@@ -6259,7 +6494,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sancerre Loire Valle, suelos Kimmeridgianos calizo-sílex ancestrales. Sauvignon Blanc, clima continental frío. Fermentación acero inoxidable preserva mineralidad pura. Expresión clásica Loire, sílex confiere carácter piedra, acidez cortante característica.',
-    pairings: ['Ensalada Niçoise', 'Selección de ostras', 'Tartar de lomo de atún'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Mineral y cítrico, con aromas de hierba fresca y pedernal. Ideal con mariscos y ensaladas.'
   },
   {
@@ -6277,7 +6512,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Fanny Sabre, bodega natural borgoñona, cultiva Chardonnay en suelos calcáreos de Bourgogne. Fermentación salvaje mínimos sulfitos y crianza en roble francés crean complejo vino de carácter que refleja visión innovadora dentro tradición milenaria.',
-    pairings: ['Lubina a la brasa con ensalada de papaya', 'Langostinos con salsa ligera de calabaza avainillada', 'Ensalada de Mero del Hierro'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Complejo y elegante, con notas de frutas blancas, almendra y minerales. Buen potencial de guarda.'
   },
 
@@ -6297,7 +6532,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Kamptal Austria, suelos pérdida y roca primaria ancestrales. Influencia río Danubio. Schloss Gobelsburg monasterio 1000 años, fermentación acero inoxidable. Bodega reconocida por pureza y expresión terroir, Grüner Veltliner mineral brillante.',
-    pairings: ['Fish and chips', 'Mejillones a la brasa', 'Tomates aliñados'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Fresco y mineral, con aromas de cítricos y frutas blancas. Ideal como aperitivo o con platos ligeros.'
   },
 
@@ -6317,7 +6552,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Oremus cultiva Furmint en suelos volcánicos de Tokaji preservando tradición ancestral húngara. Fermentación lenta y crianza prolongada en barrica revelan complejidad mineral y notas de miel que caracterizan este blanco noble de guarda.',
-    pairings: ['Arroz negro con txipirones asados', 'Tataki de atún', 'Ensalada Niçoise'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Complejo y mineral, con notas cítricas y florales. Vino de gran envejecimiento.'
   },
   {
@@ -6335,7 +6570,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Mandolás 2022 de Oremus destila milenios de tradición tokaji. Furmint en suelos volcánicos fermenta naturalmente y envejece en roble, alcanzando complejidad aromática y mineralidad que encapsula esencia de esta región histórica húngara.',
-    pairings: ['Linguini con tartar de langostino', 'Tartar de remolacha', 'Fish and chips'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Elegante y sofisticado, con aromas de cítricos, flores y minerales. Excelente envejecimiento.'
   },
 
@@ -6355,7 +6590,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Mosel laderas pizarra 60 grados sobre río. Riesling ancestral. Bodega 400+ años, clima frío viticultura obligada. Cosechas manual imprescindible. Azúcar residual equilibrado acidez cortante, frescura característica clima continental alemán.',
-    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Lubina crujiente con mayonesa de leche de tigre'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Fresco y aromático, con notas de frutas blancas y flores. Ideal como aperitivo.'
   },
 
@@ -6375,7 +6610,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Australia multiregión mezcla Barossa/Adelaide Hills. Chardonnay blends roble francés acero parciales. Filosofía Penfolds multiviñedo 1844, búsqueda armonía frutal tropical elegancia. Bodega icónica mundo vino nuevo mundo.',
-    pairings: ['Ensalada de Mero del Hierro', 'Arroz negro con txipirones asados', 'Selección de ostras'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Espárragos a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Ravioli de pularda', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tataki de atún', 'Txuleta de atún con tomate en texturas', 'Vitello tonnato'],
     notes: 'Frutal y equilibrado, con aromas de manzana y melocotón. Ideal con pescados y platos ligeros.'
   },
 
@@ -6395,7 +6630,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Salta Argentina altitud 2000m+, UV intensidad extrema. Torrontés variedad nativa aromáticos exóticos. Fermentación acero inoxidable preserva flores intensas frutas tropicales. Viñedos altura crean carácter único, acidez natural refrescante.',
-    pairings: ['Tataki de atún', 'Tartar de lomo de atún', 'Mejillones a la brasa'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Aromático y fresco, con notas de flores y frutas blancas. Perfecto con mariscos.'
   },
 
@@ -6415,7 +6650,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Castilla meseta central viñedos continente extremo (días calientes noches frías). Tempranillo joven sin barrica, maceración carbónica estilo. Fresco alegre carácter, bodega busca juventud movimiento sin envejecimiento convencional.',
-    pairings: ['Hamburguesa Rossini', 'Pluma de cerdo Ibérico', 'Croquetas Premium'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Fresco y vibrante, con aromas de frutos rojos. Ideal con carnes a la brasa.'
   },
   {
@@ -6433,7 +6668,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Ribera Duero altitud 850m, suelos calizos-arcillosos. Tinto Fino 14 meses roble francés. Bodega familiar prácticas biodinámicas, búsqueda elegancia sobre potencia. Carácter mineral refinado estructura firme equilibrada.',
-    pairings: ['Tartar de solomillo', 'Pincho Moruno con cous cous', 'Panceta de cochino negro'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Elegante y mineral, con aromas de frutos rojos y pimienta. Buen envejecimiento.'
   },
   {
@@ -6451,7 +6686,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Rioja Alta suelos aluviales ancestrales. Tempranillo tradicional fermentación cubas madera. 12 meses roble americano francés. Bodegas Muga filosofía artesanal propia tonelería. Envejecimiento controlado carácter frutal suavidad equilibrada.',
-    pairings: ['Milanesa de pollo al mojo rojo', 'Pluma de cerdo Ibérico', 'Bao de brisket'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Joven y frutal, con aromas de cerezas y frambuesas. Ideal con carnes y platos asados.'
   },
   {
@@ -6469,7 +6704,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En las colinas riojanas, Rincón de los Enebros cultiva Garnacha y Tempranillo en suelos arcillosos. La Garnacha aporta acidez y el Tempranillo estructura, envejecidos 12 meses en roble francés. Una filosofía centenaria de armonía varietales.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Tartar de solomillo', 'Hamburguesa Rossini'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Equilibrado y aromático, con notas de frutos rojos y especias. Ideal con carnes.',
   },
   {
@@ -6487,7 +6722,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'La Finca Ygay de Marqués de Murrieta en Rioja Alavesa produce esta joya desde 1862, blendando Tempranillo, Garnacha, Graciano y Mazuelo en terroir singular. Crianza en barriles de roble americano 24 meses otorga complejidad y elegancia clásica.',
-    pairings: ['Carrillera de Wagyu', 'Entrecot de Angus 300g', 'Costillas melosas de cordero sobre salsa de curry verde'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Complejo y equilibrado, con aromas de frutos rojos, ciruelas y especias. Excelente envejecimiento.'
   },
   {
@@ -6505,7 +6740,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En magnum 1.5L, este Reserva 2017 recibe evolución óptima. Marqués de Murrieta combina sus cuatro variedades riojanas en perfecta sinfonía; crianza extendida en barriles permite una guarda extraordinaria y carácter evolucionado.',
-    pairings: ['Tartar de solomillo', 'Entrecot de Wagyu 300g', 'Cowboy de Black Angus 700g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Elegante y sofisticado, con buen potencial de guarda. Aromas evolucionados de frutos rojos y especias.'
   },
   {
@@ -6523,7 +6758,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Formato excepcional de 12L para celebraciones memorables. Este Reserva 2016 de Marqués de Murrieta es monumento de excelencia, producto de terroir histórico y envejecimiento paciente en barriles de roble seleccionado.',
-    pairings: ['T-bone de Wagyu 1.1kg', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Vino de colección, ideal para celebraciones memorables. Perfecto para compartir.'
   },
   {
@@ -6541,7 +6776,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Amaren selecciona sus mejores parcelas riojanas de Tempranillo para esta expresión 2021. El envejecimiento en roble francés 14 meses crea equilibrio entre fruta fresca y estructura mineral, reflejando la tradición riojana.',
-    pairings: ['Pluma de cerdo Ibérico', 'Costillas melosas de cordero sobre salsa de curry verde', 'Entrecot de Angus 300g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Joven y vibrante, con aromas de frutos rojos frescos. Buen potencial de envejecimiento.'
   },
   {
@@ -6559,7 +6794,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Viña Cubillo, bodega tradicional riojana, elabora este 2016 con la tríada clásica: Tempranillo predomina, complementado por Garnacha, Mazuelo y Graciano. Crianza en barril americano durante 24 meses desarrolla notas de cuero y especias.',
-    pairings: ['Carrillera de Wagyu', 'Pincho Moruno con cous cous', 'Tartar de solomillo'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Evolucionado y complejo, con notas de frutos rojos, cuero y especias. Excelente momento de bebida.'
   },
   {
@@ -6577,7 +6812,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Paco García cultiva viñedos centenarios en Rioja donde Tempranillo y Mazuelo encuentran expresión completa. Envejecimiento tradicional en roble francés 18 meses crea equilibrio entre potencia y elegancia, filosofía de bodega familiar.',
-    pairings: ['Tartar de solomillo', 'Panceta de cochino negro', 'Cowboy de Black Angus 700g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Equilibrado y elegante, con aromas de frutos rojos y especias. Ideal con carnes a la brasa.'
   },
   {
@@ -6595,7 +6830,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Predicador 2022, de Bodega Contador bajo dirección de Benjamín Romeo, es Tempranillo joven de Rioja con gran carácter. Fermentación en depósitos de hormigón y crianza en barril 12 meses desarrollan aromas frutales frescos con cuerpo importante.',
-    pairings: ['Pluma de cerdo Ibérico', 'Hamburguesa Rossini', 'Costillas melosas de cordero sobre salsa de curry verde'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Frutal y vibrante, con aromas frescos de cerezas. Ideal para beber con alegría.'
   },
   {
@@ -6613,7 +6848,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Contino, bodega única en Rioja Alavesa con viñedos propios integrados, cultiva Tempranillo, Graciano y Garnacha en suelos únicos. Su Reserva recibe 24 meses en roble francés, creando armonía compleja y estructura excepcional.',
-    pairings: ['Carrillera de Wagyu', 'Chateaubriand de vaca Holstein 500g', 'Entrecot de Wagyu 300g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Complejo y estructurado, con aromas evolucionados. Buen potencial de guarda.'
   },
   {
@@ -6631,7 +6866,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Remelluri, bodega orgánica y biodinámica, produce este Reserva 2017 con Tempranillo y Mazuelo de sus terrazas milenarias. Crianza en roble 24 meses respeta la esencia terroir, generando complejidad mineral y elegancia sostenible.',
-    pairings: ['Lomo bajo de Simmental 900g', 'Tartar de solomillo', 'Carrillera de Wagyu'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Elegante y sofisticado, con aromas evolucionados. Excelente envejecimiento.'
   },
   {
@@ -6649,7 +6884,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sierra Cantabria busca perfección en sus viñedos de viejas cepas de Tempranillo y Graciano a gran altitud. Este Reserva Única 2018 recibe crianza en barril 30 meses, desarrollando complejidad aromática y estructura magnífica.',
-    pairings: ['Chateaubriand de vaca Holstein 500g', 'Entrecot de Wagyu 300g', 'Carrillera de Wagyu'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Complejo y estructurado, con aromas de frutos rojos maduros. Excelente potencial futuro.'
   },
   {
@@ -6667,7 +6902,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Olarra 2015 está en punto óptimo de evolución. Su blend riojano de Tempranillo y Mazuelo, tras años en bodega, desarrolla aromas evolucionados de frutos secos y cuero, mostrando la nobleza de la crianza tradicional en roble.',
-    pairings: ['Tartar de solomillo', 'Pluma de cerdo Ibérico', 'Lomo bajo de Simmental 900g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Evolucionado y elegante, con aromas complejos de frutos rojos y cuero. Listo para beber.'
   },
   {
@@ -6685,7 +6920,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sierra Cantabria Gran Reserva 2016, de viñedos viejos en altitud, es epítome de ambición riojana. Tempranillo y Graciano fermentan en depósitos de hormigón y crían 36 meses en roble francés, creando sofisticación y potencial extraordinario.',
-    pairings: ['T-bone de Wagyu 1.1kg', 'Entrecot de Wagyu 300g', 'Carrillera de Wagyu'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Sofisticado y complejo, con aromas evolucionados. Excelente estructura y envejecimiento.'
   },
   {
@@ -6703,7 +6938,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Bodega Contador, dirigida por Benjamín Romeo, produce este Alma 2022 con Tempranillo y Garnacha de San Vicente de la Sonsierra. Fermentación controlada y crianza en barril nuevo francés crea promesa concentrada con estructura excepcional.',
-    pairings: ['Txuleta de Rubia Gallega 1.2kg', 'T-bone de Wagyu 1.1kg', 'Chateaubriand de vaca Holstein 500g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Concentrado y prometedor, con excelente estructura. Buen potencial de envejecimiento.'
   },
   {
@@ -6721,7 +6956,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Castillo Ygay Gran Reserva Especial 2011 es monumento histórico. Marqués de Murrieta combina Tempranillo y Mazuelo de Finca Ygay, fermentados tradicionalmente y criados 48 meses en barriles roble americano, alcanzando evolución magnífica.',
-    pairings: ['T-bone de Wagyu 1.1kg', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Vino de colección, perfectamente evolucionado. Aromas complejos y estructurados para apreciadores.'
   },
 
@@ -6741,7 +6976,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Montebaco es puerta a Ribera del Duero con Tempranillo de terroir singular. Crianza en barril 12 meses en roble francés desarrolla estructura potente; la altitud de viñedos otorga mineralidad característica de la región más prestigiosa de Castilla.',
-    pairings: ['Tartar de solomillo', 'Entrecot de Angus 300g', 'Panceta de cochino negro'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes a la brasa.'
   },
   {
@@ -6759,7 +6994,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Condado d\'Oriza busca grandeza con su Tempranillo en Ribera del Duero. Gran Reserva recibe envejecimiento paciente 36 meses en barriles roble francés, desarrollando complejidad aromática y estructura robusta característica de la región.',
-    pairings: ['Carrillera de Wagyu', 'Cowboy de Black Angus 700g', 'Pluma de cerdo Ibérico'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Complejo y estructurado, con buen envejecimiento. Aromas de frutos negros y especias.'
   },
   {
@@ -6777,7 +7012,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Corimbo es geometría perfecta: Tempranillo de Ribera del Duero en terroir de La Horra, altitud y suelos antiguos. Crianza tradicional en roble 24 meses equilibra potencia con elegancia mineral, creando vino estructurado y profundo.',
-    pairings: ['Lomo bajo de Simmental 900g', 'Tartar de solomillo', 'Entrecot de Angus 300g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Elegante y mineral, con aromas de frutos rojos. Excelente envejecimiento.'
   },
   {
@@ -6795,7 +7030,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Preludio introduce Ribera del Duero con Tempranillo joven de viñedos históricos. Fermentación controlada y crianza en roble francés 12 meses crean fruta pura con estructura emergente, promesa de evolución espectacular futura.',
-    pairings: ['Hamburguesa Rossini', 'Pluma de cerdo Ibérico', 'Costillas melosas de cordero sobre salsa de curry verde'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Joven y frutal, con aromas de cerezas. Buen potencial de envejecimiento.'
   },
   {
@@ -6813,7 +7048,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Alion 2020, de la casa Vega Sicilia en Ribera del Duero, es Tinto Fino de elegancia excepcional. Terroir singular de viñedos viejos, fermentación controlada y crianza 12 meses en barril francés nuevo crean complejidad y potencial extraordinario.',
-    pairings: ['Tomahawk de Hereford 1.2-1.4kg', 'Chateaubriand de vaca Holstein 500g', 'Carrillera de Wagyu'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Complejo y sofisticado, con aromas evolucionados. Excelente potencial de guarda.'
   },
   {
@@ -6831,7 +7066,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Doble magnum de 3L: Alion 2018 alcanza dimensión monumental. Tinto Fino de Ribera del Duero, producto de viñedos históricos y crianza en roble francés, desarrolla aromas evolucionados; formato perfecto para celebraciones memorables compartidas.',
-    pairings: ['T-bone de Wagyu 1.1kg', 'Txuleta de Rubia Gallega 1.2kg', 'Lomo bajo de Simmental 900g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Monumento al Tinto Fino, ideal para ocasiones excepcionales. Perfecto para compartir.'
   },
   {
@@ -6849,7 +7084,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Almirez en magnum 1.5L es generosidad hecha vino. Tinta de Toro de terroir singular de Castilla, con altitud y suelos profundos, criada en barril roble francés 14 meses desarrolla potencia y complejidad aromática ancestral.',
-    pairings: ['Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg', 'Cowboy de Black Angus 700g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Potente y concentrado, con aromas de frutos negros. Ideal para celebraciones.'
   },
   {
@@ -6867,7 +7102,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Massuria 2014 en formato 6L es monumentalidad de Ribera del Duero. Tinto Fino de viñedos antiguos, fermentación en depósitos hormigón y crianza 24 meses en barril francés crean vino para colección con estructura magnífica.',
-    pairings: ['Entrecot de Wagyu 300g', 'Tartar de solomillo', 'Chateaubriand de vaca Holstein 500g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Vino de colección, en su punto óptimo. Aromas complejos de Mencía berciana.'
   },
 
@@ -6887,7 +7122,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Iceni-Tesalia cultiva uvas de terroir singular donde tradición y modernidad convergen. Fermentación controlada y crianza en barril equilibran estructura y elegancia, creando vino de carácter y profundidad aromática excepcional.',
-    pairings: ['Pluma de cerdo Ibérico', 'Bao de brisket', 'Tartar de solomillo'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Aromático y elegante, con notas de frutos rojos. Ideal con carnes asadas.'
   },
 
@@ -6907,7 +7142,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Artifice Tinto de Canarias expresa terroir volcánico único. Listán Negro cultiva en suelos de lava donde mineralidad y carácter frutal crean sincronía; fermentación natural y crianza breve destacan pureza y carácter insular refrescante.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Pluma de cerdo Ibérico', 'Pulpo a la brasa sobre trinxat de papa canaria'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes y platos especiados.'
   },
   {
@@ -6925,7 +7160,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Ruku Ruku es ritmo de volcanes canarios. Listán Negro de La Orotava cultiva en suelos volcánicos únicos; fermentación natural y crianza breve en roble destacan mineralidad volcánica y carácter frutal refrescante con alma insular.',
-    pairings: ['Pincho Moruno con cous cous', 'Tartar de solomillo', 'Hamburguesa Rossini'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Joven y frutal, con aromas frescos. Ideal para beber con alegría.'
   },
   {
@@ -6943,7 +7178,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Crater brota de volcán tinerfeño en Tacoronte-Acentejo. Listán Negro y Diego fermentan en depósitos hormigón sobre suelos volcánicos que otorgan carácter mineral; crianza controlada desarrolla complejidad aromática y estructura contenida.',
-    pairings: ['Carrillera de Wagyu', 'Panceta de cochino negro', 'Entrecot de Angus 300g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Potente y aromático, con notas de frutos negros. Excelente con carnes a la brasa.'
   },
   {
@@ -6961,7 +7196,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Los Loros Tinto canta Listán Negro de Valle de Guimar donde tradición canaria persevera. Terrazas antiguas de suelo volcánico crían variedades autóctonas; fermentación natural y crianza breve preservan fruta tropical y mineralidad característica.',
-    pairings: ['Pluma de cerdo Ibérico', 'Costillas melosas de cordero sobre salsa de curry verde', 'Bao de brisket'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Aromático y frutal, con notas de cerezas. Ideal con carnes y platos especiados.'
   },
   {
@@ -6979,7 +7214,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Titerok es expresión única de Lanzarote. Blend de tres variedades autóctonas (Listán Negro, Listán Blanco, Diego) en suelos volcánicos únicos crea complejidad; crianza controlada 8 meses en roble destaca mineralidad salvaje y carácter volcánico.',
-    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Entrecot de Angus 300g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Complejo y aromático, con notas de frutos rojos. Excelente estructura.'
   },
 
@@ -6999,7 +7234,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lomba dos Ares es orquesta de cinco variedades gallegas: Mencía, Merenzao, Caiño, Mouratoni y Garnacha Tintorera en terroir de Ourense. Crianza 12 meses en roble francés crea complejidad aromática y estructura característica de tradición gallega.',
-    pairings: ['Pulpo a la brasa sobre trinxat de papa canaria', 'Tartar de solomillo', 'Pluma de cerdo Ibérico'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Complejo y aromático, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -7017,7 +7252,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Do Biolo rescata tradiciones de Pontevedra con Espadeiro, Caiño y Mencía. Fermentación controlada en depósitos y crianza 10 meses en roble francés desarrollan acidez refrescante y complejidad mineral, expresión auténtica de Galicia.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Carpaccio con espuma de parmesano', 'Pincho Moruno con cous cous'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Frescos y vibrantes, con aromas de frutos rojos. Ideal con platos gallegos.'
   },
   {
@@ -7035,7 +7270,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lalama 2021 es promesa de Ribera Sacra donde Mencía, Brancellao y Mouratón cultivan en terrazas ancestrales. Fermentación natural y crianza 12 meses en roble francés crean estructura y minerales complejos con potencial envejecimiento excepcional.',
-    pairings: ['Tartar de solomillo', 'Carrillera de Wagyu', 'Costillas melosas de cordero sobre salsa de curry verde'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Joven y promisorio, con aromas frescos de frutos rojos. Buen potencial de envejecimiento.'
   },
 
@@ -7055,7 +7290,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Novetat Total 2021 en formato 1L es innovación mallorquina. Callet y Mantonegro de Mallorca fermentan en depósitos hormigón y crían 8 meses en roble francés, creando fruta vibrante y acidez refrescante característica de tradición balear.',
-    pairings: ['Pluma de cerdo Ibérico', 'Hamburguesa Rossini', 'Croquetas Premium'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Frutal y vibrante, con aromas de cerezas. Ideal para beber con alegría.'
   },
 
@@ -7075,7 +7310,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Casa Castillo La Tendida 2022 rescata dignidad murciana con Monastrell y Garnacha. Altitud en Jumilla otorga mineralidad; fermentación controlada y crianza 10 meses en roble desarrollan complejidad aromática y estructura equilibrada.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Bao de brisket', 'Pincho Moruno con cous cous'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Joven y frutal, con aromas de frutos negros. Ideal con carnes asadas.'
   },
 
@@ -7095,7 +7330,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Pago Florentino recobra expresión de La Mancha con Cencíbel. Viñedos de altitud en terroir singular, fermentación lenta en depósitos y crianza 12 meses en roble francés crean aromas evolucionados y estructura mineral de tradición castellana.',
-    pairings: ['Hamburguesa Rossini', 'Tartar de solomillo', 'Milanesa de pollo al mojo rojo'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Frutal y accesible, con aromas de cerezas. Ideal para beber con alegría.'
   },
   {
@@ -7113,7 +7348,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Vallgarcía es oasis de excelencia manchego. Syrah en clima continental extremo crían 12 meses en roble francés; soles abrasadores otorgan concentración exceptual mientras altitud preserva acidez, creando equilibrio y potencial futuro.',
-    pairings: ['Pluma de cerdo Ibérico', 'Panceta de cochino negro', 'Costillas melosas de cordero sobre salsa de curry verde'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes especiadas.'
   },
 
@@ -7133,7 +7368,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'La Campagne es campo provenzal francés. Cabernet Sauvignon de suelos calcáreos crían 8 meses en roble francés; brisas mediterráneas otorgan frescura característica; filosofía bodeguera busca accesibilidad sin comprometer carácter.',
-    pairings: ['Hamburguesa Rossini', 'Costillas melosas de cordero sobre salsa de curry verde', 'Milanesa de pollo al mojo rojo'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Frutal y accesible, con aromas de cerezas. Ideal para beber sin pretensiones.'
   },
   {
@@ -7151,7 +7386,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Les Argelières Rouge expresa elegancia meridional con Pinot Noir. Terroir calcáreo de Pays d\'Oc crían 10 meses en roble francés; filosofía respeta delicadeza varietales creando vino fresco con estructura mineral refrescante.',
-    pairings: ['Tartar de solomillo', 'Pluma de cerdo Ibérico', 'Carpaccio con espuma de parmesano'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Elegante y frutal, con aromas de cerezas rojas. Ideal con carnes ligeras.'
   },
   {
@@ -7169,7 +7404,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: true,
     story: 'Les Lauriers es certificación kosher de excelencia bordelesa. Merlot y Cabernet Franc de Montagne Saint Émilion crían 18 meses en roble francés; control especial de producción mantiene integridad religiosa sin sacrificar complejidad.',
-    pairings: ['Carrillera de Wagyu', 'Entrecot de Angus 300g', 'Hamburguesa Rossini'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Complejo y estructurado, con aromas de frutos rojos. Ideal con carnes.',
   },
   {
@@ -7187,7 +7422,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Côtes du Rhône 2021 es clasicismo rodaniano: Syrah, Garnacha y Monastrell convergen en sinfonía mediterránea. Suelos variados, fermentación controlada y crianza 12 meses en roble crean complejidad aromática y estructura característica de Rhône.',
-    pairings: ['Pluma de cerdo Ibérico', 'Costillas melosas de cordero sobre salsa de curry verde', 'Pincho Moruno con cous cous'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Complejo y aromático, con notas de frutos rojos y especias. Ideal con carnes asadas.'
   },
   {
@@ -7205,7 +7440,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Albert Bichot Origines Rouge es expresión pura borgoñona. Pinot Noir de suelos calcareos fermentan naturalmente; crianza 12 meses en roble preserva delicadeza varietales con mineralidad característica, tradición burgundy hecha vino elegante.',
-    pairings: ['Tartar de solomillo', 'Ravioli de pularda', 'Pluma de cerdo Ibérico'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Elegante y mineral, con aromas de frutos rojos. Buen envejecimiento.'
   },
   {
@@ -7223,7 +7458,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: true,
     story: 'Château By Medoc 2016 es elegancia bordelesa kosher. Cabernet Sauvignon y Merlot de Médoc crían 18 meses en roble francés; grava del terroir otorga mineralidad; certificación kosher mantiene integridad sin comprometer complejidad.',
-    pairings: ['Chateaubriand de vaca Holstein 500g', 'Entrecot de Wagyu 300g', 'Carrillera de Wagyu'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Sofisticado y estructurado, con aromas evolucionados. Excelente envejecimiento.'
   },
   {
@@ -7241,7 +7476,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Domaine Charvin 2022 es triada rodaniana perfecta. Grenache, Syrah y Mourvèdre de terroir calcáreo crían 12 meses en roble francés; expresión joven y vibrante con aromas frescos de frutos negros y especias.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Tartar de solomillo', 'Pluma de cerdo Ibérico'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Joven y vibrante, con aromas frescos de frutos negros. Buen potencial futuro.'
   },
   {
@@ -7259,7 +7494,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Fanny Sabre Rouge 2022 es voz femenina emergente borgoña. Pinot Noir de viñedos seleccionados crían 10 meses en roble francés; enología cautela destaca delicadeza frutal con mineralidad característica burgundy, buen potencial futuro.',
-    pairings: ['Tartar de solomillo', 'Ravioli de pularda', 'Entrecot de Wagyu 300g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Elegante y complejo, con aromas de frutos rojos. Buen potencial de envejecimiento.'
   },
   {
@@ -7277,7 +7512,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Côte d\'Or Bourgogne es referencia absoluta. Pinot Noir de Côte d\'Or cultiva en suelos calcáreos únicos; fermentación controlada y crianza 14 meses en roble francés crean sofisticación y complejidad aromática de vino colección.',
-    pairings: ['Carrillera de Wagyu', 'Tartar de solomillo', 'Chateaubriand de vaca Holstein 500g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Sofisticado y complejo, con aromas evolucionados. Vino de colección.'
   },
 
@@ -7297,7 +7532,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'David & Nadia 2021 es voz nueva sudafricana. Garnacha de Swartland en suelos granulares fermentan naturalmente; crianza 12 meses en roble francés respeta carácter; filosofía bodeguera busca expresión terroir africana auténtica.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Entrecot de Angus 300g', 'Pluma de cerdo Ibérico'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Potente y aromático, con notas de frutos negros. Excelente estructura.'
   },
 
@@ -7317,7 +7552,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Brazos de los Andes 2023 es promesa argentina de Mendoza. Malbec de Valle de Uco en altitud fermentan en depósitos hormigón; crianza 10 meses en roble francés desarrolla fruta concentrada con estructura y potencial futuro excepcional.',
-    pairings: ['Pluma de cerdo Ibérico', 'Hamburguesa Rossini', 'Bao de brisket'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Joven y vibrante, con aromas frescos de frutos rojos. Buen potencial futuro.'
   },
   {
@@ -7335,7 +7570,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Brazos de los Andes 2023 es promesa argentina de Mendoza. Malbec de Valle de Uco en altitud fermentan en depósitos hormigón; crianza 10 meses en roble francés desarrolla fruta concentrada con estructura y potencial futuro excepcional.',
-    pairings: ['Tomahawk de Hereford 1.2-1.4kg', 'Lomo bajo de Simmental 900g', 'Cowboy de Black Angus 700g'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente envejecimiento.'
   },
 
@@ -7355,7 +7590,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En el Penedés catalán, La Fita preserva el Sumoll, variedad autóctona relegada al olvido durante décadas. Con suelos calizos que aportan mineralidad distintiva, la bodega cultiva este tinto con técnicas tradicionales que respetan el carácter frutal del Sumoll. El envejecimiento en madera permite que aromas de frutos rojos y especias se desarrollen en perfecta armonía.',
-    pairings: ['Pluma de cerdo Ibérico', 'Costillas melosas de cordero sobre salsa de curry verde', 'Pincho Moruno con cous cous'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Frutal y aromático, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -7373,7 +7608,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En el corazón de Priorat, Les Cousins elabora esta tetrada explosiva de Cariñena, Merlot, Garnacha y Cabernet Sauvignon en pizarras históricas. Viñas jóvenes con enorme vitalidad producen un tinto vibrante donde cada variedad aporta su propia expresión. El resultado es un vino contemporáneo con aromas complejos, taninos frescos y considerable potencial de guarda.',
-    pairings: ['Carrillera de Wagyu', 'Tartar de solomillo', 'Entrecot de Angus 300g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Joven y vibrante, con aromas complejos. Buen potencial de envejecimiento.'
   },
   {
@@ -7391,7 +7626,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Desde las pizarras escarpadas de Priorat, Porrera cultiva Cariñena y Garnacha en terrazas milenarias que erosionan el perfil mineral del terroir. La vendimia manual preserva la integridad de cada baya en este vintage 2019 que ha evolucionado magistralmente. Hoy, tras años de crianza, exhibe aromas concentrados de frutos rojos y una estructura equilibrada que lo mantiene en su punto óptimo.',
-    pairings: ['Tartar de solomillo', 'Panceta de cochino negro', 'Cowboy de Black Angus 700g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Evolucionado y complejo, con aromas de frutos rojos. En su punto óptimo.'
   },
   {
@@ -7409,7 +7644,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'En el Penedés, Gran Caus importa la filosofía bordelesa mediante su triada clásica de Cabernet Sauvignon, Cabernet Franc y Merlot en suelos calizos de vocación vinífera. Cada variedad se vinifica por separado para mantener su identidad antes de la perfecta conjunción. La crianza en roble francés pulimenta la estructura, creando un tinto elegante con aromas de frutos negros maduros y potencial de envejecimiento.',
-    pairings: ['Carrillera de Wagyu', 'Pluma de cerdo Ibérico', 'Entrecot de Angus 300g'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Elegante y estructurado, con aromas de frutos negros. Buen envejecimiento.'
   },
   {
@@ -7427,7 +7662,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Desde el Empordá catalán, Amic Tinto expresa la amistad entre tres variedades hermanas: Garnacha, Cariñena y Syrah en suelos mediterráneos batidos por la Tramontana. La vendimia manual y la fermentación controlada permiten que cada uva desarrolle su máxima expresión aromática. El resultado es un tinto equilibrado y aromático que juega entre los frutos rojos y especias, perfecto para carnes asadas.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Pincho Moruno con cous cous', 'Hamburguesa Rossini'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Aromático y equilibrado, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -7445,7 +7680,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Finca Malaveina, ubicada en el Empordá de la Costa Brava, cultiva la triada bordelesa de Merlot, Syrah y Cabernet Sauvignon en suelos mediterráneos con influencia marina. El clima continental con noches frías concentra intensidad aromática en las uvas. La crianza en roble francés desarrolla complejidad y estructura, creando un tinto potente que refleja la naturaleza salvaje de la Costa Brava.',
-    pairings: ['Carrillera de Wagyu', 'Entrecot de Wagyu 300g', 'Tartar de solomillo'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente estructura.'
   },
   {
@@ -7463,7 +7698,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Las icónicas terrazas de pizarra de Priorat dan nombre a este tinto de Garnacha y Cariñena cultivados en laderas escarpadas. La bodega respeta las antiguas técnicas de viticultura en terrazas, preservando la biodiversidad y concentrando la madurez. La pizarra aporta mineralidad distintiva que envuelve los aromas complejos de esta pareja de variedades. Un vino sofisticado con largo envejecimiento por delante.',
-    pairings: ['Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg', 'Carrillera de Wagyu'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Angus 300g', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Pimiento relleno de ternera', 'Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Tartar de Wagyu dry'],
     notes: 'Sofisticado y mineral, con aromas complejos. Excelente envejecimiento.'
   },
   {
@@ -7481,7 +7716,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Álvaro Palacios, maestro visionario de Priorat, cultiva Garnacha en Gratallops, paraje históricamente consagrado de pizarras milenarias. El vintage 2018 en formato magnum ha evolucionado magistralmente, desarrollando complejidad soberbia. Aromas minerales entrelazados con frutos negros maduros y especias delicadas crean un vino de colección memorable con evolución futura garantizada.',
-    pairings: ['T-bone de Wagyu 1.1kg', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg'],
+    pairings: ['Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Chateaubriand de vaca Holstein 500g', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Entrecot de Wagyu 300g', 'Jamón ibérico de bellota Gran Reserva', 'Lomo bajo de Simmental 900g', 'Paletilla Ibérica de bellota', 'T-bone de Wagyu 1.1kg', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Tomahawk de Hereford 1.2-1.4kg', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Vino de colección, complejo y mineral. Ideal para ocasiones memorables.'
   },
   {
@@ -7499,7 +7734,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Oddero, productor histórico piamontés, elabora este Dolcetto desde Alba, cuna de la variedad que comparte su nombre. En suelos arcillo-calcáreos, la bodega cosecha Dolcetto de aromas intensos que fermentan con respeto a la tradición. El vino joven mantiene vitalidad frutal y elegancia característica, demostrando por qué Dolcetto merece consideración de noble en Italia.',
-    pairings: ['Pluma de cerdo Ibérico', 'Tartar de solomillo', 'Carpaccio con espuma de parmesano'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Frutal y elegante, con aromas de cerezas. Ideal con carnes ligeras.'
   },
   {
@@ -7517,7 +7752,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Penfolds, icónica bodega australiana con siglos de experiencia, mezcla Shiraz y Cabernet Sauvignon en su emblemática línea Koonunga Hill. Los suelos australianos concentran intensidad en ambas variedades que fermentan juntas en búsqueda de equilibrio. El resultado es un tinto potente con aromas de frutos negros maduros, estructura firme y la generosidad característica del nuevo mundo.',
-    pairings: ['Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Bao de brisket'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carrillera de Wagyu', 'Cecina de Wagyu Premium', 'Costillas melosas de cordero sobre salsa de curry verde', 'Cowboy de Black Angus 700g', 'Croquetas Premium', 'Entrecot de Angus 300g', 'Hamburguesa Rossini', 'Huevo frito con chistorra', 'Jamón ibérico de bellota Gran Reserva', 'Milanesa de pollo al mojo rojo', 'Paletilla Ibérica de bellota', 'Panceta con caldo concentrado de manitas de cerdo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de solomillo', 'Tartar de Wagyu dry', 'Trifasi club'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes asadas.'
   },
 
@@ -7537,7 +7772,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Muga, bodega histórica riojana, elabora este rosado como testamento a su filosofía de máxima calidad. La triada de Garnacha, Viura y Tempranillo se cultiva en suelos calcáreos de Rioja Alavesa. El contacto controlado con hollejos aporta ese color coral distintivo mientras se preserva la frescura. El resultado es un rosado de personalidad clara, aromático y versátil para cualquier ocasión.',
-    pairings: ['Ensalada Niçoise', 'Tataki de atún', 'Tartar de remolacha'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina crujiente con mayonesa de leche de tigre', 'Milanesa de pollo al mojo rojo', 'Pámpano marinado al mojo rojo', 'Papas bravas al estilo Txoko', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pollo brasa con huevo a baja temperatura', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Trifasi club', 'Vitello tonnato'],
     notes: 'Fresco y aromático, con aromas de frutos rojos. Ideal como aperitivo o con ensaladas.'
   },
   {
@@ -7555,7 +7790,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Miraval, legendario rosado provenzal de Côtes de Provence, congrega cinco variedades en armonía magistral: Cinsault, Grenache, Syrah, Rolle y Tibouren en suelos calcáreos battus por el mistral. Este vintage 2021 en majestuoso formato 6L permite celebraciones memorables con un rosado de profundidad aromática excepcional. Aromas provenzales de frutas rojas y hierbas aromáticas caracterizan este vino de colección.',
-    pairings: ['Ensalada Niçoise', 'Mejillones a la brasa', 'Peras escalivadas con cremoso de queso de cabra'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina crujiente con mayonesa de leche de tigre', 'Milanesa de pollo al mojo rojo', 'Pámpano marinado al mojo rojo', 'Papas bravas al estilo Txoko', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pollo brasa con huevo a baja temperatura', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Trifasi club', 'Vitello tonnato'],
     notes: 'Vino de colección, perfecto para celebraciones. Aromático con aromas provenzales.'
   },
 
@@ -7575,7 +7810,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'Oremus, bodega venerada de Tokaji, cultiva Furmint y Hárselevelü en laderas volcánicas húngaras donde se hacen néctar. La cosecha tardía 2022 concentra azúcares sin sacrificar acidez elegante que equilibra dulzura. Cada baya se selecciona respetando tradición tokaji de máxima calidad. Aromas de frutas secas, miel y flores delicadas crean un vino perfecto para finales memorables.',
-    pairings: ['Tartar de remolacha', 'Calamares a la Andaluza', 'Tomates aliñados'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tabla de quesos canarios', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Dulce y aromático, con notas de miel y frutas secas. Ideal para postres.'
   },
   {
@@ -7593,7 +7828,7 @@ const WINES = [
     vegaSicilia: true,
     kosher: false,
     story: 'La legendaria clasificación Aszú de Tokaji define este vino monumental de Oremus vintage 2017. Cuatro variedades nobles (Furmint, Hárselevelü, Sargamuskotaly y Zéta) afectadas por botrytis (podredumbre noble) concentran esencias extraordinarias. Los 3 puttonyos indican máxima intensidad sin exceso. El resultado es un vino complejo, sofisticado, con minerales volcánicos y honguitos de pastelería que declaran su estatus de vino de colección inmortal.',
-    pairings: ['Ensalada Niçoise', 'Selección de ostras', 'Tataki de atún'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tabla de quesos canarios', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Complejo y sofisticado, con notas de miel, frutos secos y especias. Vino de colección.'
   },
 
@@ -7613,7 +7848,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Colet, bodega penedésana de referencia, elabora este espumoso clásico mediante método tradicional con una tetrada de Macabeu, Chardonnay, Riesling y Muscat en suelos calcáreos. La fermentación lenta y el reposo en botella desarrollan complejidad aromática distintiva. Burbujas finas y persistentes acompañan aromas florales y frutales que hacen de este vino un aperitivo versátil y elegante.',
-    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Tarta de queso', 'Mousse de gofio con helado de plátano canario'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Fresco y aromático, con buen perlage. Ideal como aperitivo.'
   },
   {
@@ -7631,7 +7866,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'André Clouet, visionario champenoise, cultiva Chardonnay en Grand Cru Bouzy donde calizas blancas aportan mineralidad legendaría. Método tradicional con larga crianza desarrolla complejidad insospechada en este vino de pureza absoluta. La burbuja es fina y persistente, envolviendo aromas florales y tostados que declaran elegancia en estado puro. Champagne de celebración inequívoca.',
-    pairings: ['Flan tradicional con chantilly', 'Tarta de queso', 'Pastel Vasco invertido con tartar de manzana'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Elegante y complejo, con aromas florales. Ideal como aperitivo o celebración.'
   },
 
@@ -7651,7 +7886,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Foresta captura la esencia selvática del Penedès mediante Macabeo cultivado en suelos boscosos de vocación espumantista. La variedad muestra su máxima frescura en este ecosistema singular donde influencias oceánicas templan la maduración. Método clásico de largo reposo desarrolla burbujas finas que liberan aromas de frutas blancas y notas forestales. Un espumoso distintivo que canta a la naturaleza catalana.',
-    pairings: ['Croquetas Premium', 'Calamares a la Andaluza', 'Selección de ostras'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Fresco y frutal, con buen perlage. Ideal como aperitivo.'
   },
   {
@@ -7669,7 +7904,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Colet A Priori en formato botella despliega toda la complejidad de su tetrada penedésana en volumen amplificado. Macabeu, Chardonnay, Riesling y Muscat se complementan en método tradicional con crianza prolongada en rimas. Burbujas de carácter franco acompañan aromas multidimensionales donde frutales y florales coexisten en danza perpetua. Espumoso de celebración por excelencia, con cuerpo y presencia notorios.',
-    pairings: ['Tataki de atún', 'Selección de ostras', 'Tartar de lomo de atún'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Fresco y aromático, con buen perlage. Ideal para celebraciones.'
   },
   {
@@ -7687,7 +7922,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gramona, bodega histórica penedésana, elabora III Lustros como homenaje a siete años de crianza que transforman la triada clásica de Xarel-lo, Macabeo y Parellada. El método tradicional prolongado desarrolla tostados y miel que envuelven los aromas originales. El vintage 2017 hoy manifiesta complejidad evolucionada, sofisticación insospechada y frescura persistent. Espumoso monumental para ocasiones verdaderamente especiales.',
-    pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Croquetas Premium'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Complejo y sofisticado, con aromas evolucionados. Ideal para ocasiones especiales.'
   },
   {
@@ -7705,7 +7940,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gatinois, bodega histórica del Grand Cru Aÿ, cultiva Chardonnay en suelos calizos que otorgan mineralidad señorial. El Pinot Noir circundante influye la maduración creando vinos de Chardonnay con cuerpo insospechado. Método tradicional con crianza prolongada desarrolla burbujas finas y aromas florales complejos. Un champagne de elegancia clásica que celebra la pureza del Chardonnay en máxima expresión.',
-    pairings: ['Croquetas Premium', 'Calamares a la Andaluza', 'Selección de ostras'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Elegante y complejo, con aromas florales y cítricos. Perfecto para celebraciones.'
   },
   {
@@ -7723,7 +7958,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'André Clouet elabora Chalky como expresión del terroir cretáceo de Bouzy, donde calizas blancas dominan cada aspecto. El Chardonnay respira estos minerales que se transmutan en complejidad insospechada mediante crianza tradicional prolongada. Cada burbuja carga mineralidad pura, salinidad delicada y aromas tostados evolucionados. Un champagne para apreciadores que entienden profundidad geológica en copas.',
-    pairings: ['Selección de ostras', 'Tataki de atún', 'Tartar de lomo de atún'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Mineral y elegante, con aromas complejos. Ideal para apreciadores.'
   },
   {
@@ -7741,7 +7976,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Calsac, pequeña bodega de Grand Cru, cultiva Chardonnay en Clos du Malandries, viñedo histórico consagrado en las mejores laderas calcáreas. Cada cepa trae siglos de selección viticultora que concentran esencias excepcionales. Método tradicional con crianza prolongada desarrolla complejidad monumental. Este champagne de colección manifiesta la nobleza absoluta del Chardonnay en su apogeo máximo.',
-    pairings: ['Tataki de atún', 'Selección de ostras', 'Croquetas Premium'],
+    pairings: ['Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Langostinos con salsa ligera de calabaza avainillada', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Txuleta de atún con tomate en texturas'],
     notes: 'Vino de colección, complejo y mineral. Perfecto para ocasiones memorables.'
   },
   {
@@ -7759,7 +7994,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'AT Roca Rosat, bodega penedésana innovadora, crea este rosado espumoso mediante método clásico con Garnacha Negra y Macabeo cultivados en suelos calizos. La fermentación controlada preserva los aromas frescos de frutas rojas características de Garnacha mientras Macabeo aporta estructura. Burbujas finas y delicadas declaran un vino rosado espumante versátil, perfecto para apertivos memorables.',
-    pairings: ['Selección de ostras', 'Tartar de lomo de atún', 'Lubina a la brasa con ensalada de papaya'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina crujiente con mayonesa de leche de tigre', 'Milanesa de pollo al mojo rojo', 'Pámpano marinado al mojo rojo', 'Papas bravas al estilo Txoko', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pollo brasa con huevo a baja temperatura', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Trifasi club', 'Vitello tonnato'],
     notes: 'Fresco y aromático, con notas de frutos rojos. Ideal como aperitivo.'
   },
   {
@@ -7777,7 +8012,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Gatinois, bodega histórica de Aÿ, elabora su Brut Rosé como testamento a la sofisticación en tono rosado. Chardonnay del Grand Cru Aÿ trae notas del Pinot Noir local creando ese tinte coral distintivo. Método tradicional con crianza prolongada desarrolla aromas florales finos que abrazan la frescura equilibrada. Un champagne rosado de celebración elegante que comparte nobleza con sus pares tintos.',
-    pairings: ['Selección de ostras', 'Tataki de atún', 'Langostinos con salsa ligera de calabaza avainillada'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina crujiente con mayonesa de leche de tigre', 'Milanesa de pollo al mojo rojo', 'Pámpano marinado al mojo rojo', 'Papas bravas al estilo Txoko', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pollo brasa con huevo a baja temperatura', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Trifasi club', 'Vitello tonnato'],
     notes: 'Elegante y fresco, con aromas florales. Perfecto para celebraciones con carácter.'
   },
 
@@ -7797,7 +8032,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Verdejo puro de Rueda en suelos calcáreos con clima continental. Fermentación en acero inoxidable a temperatura controlada preserva aromaticidad cítrica y salinidad que define frescura característica de este blanco castellano.',
-    pairings: ['Ensalada Niçoise', 'Fish and chips', 'Calamares a la Andaluza'],
+    pairings: ['Calamares a la Andaluza', 'Coca de calabacín', 'Coca de tomate', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos'],
     notes: 'Fresco y mineral, con aromas cítricos. Perfecto como aperitivo.'
   },
   {
@@ -7815,7 +8050,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Sauvignon Blanc en suelos calcáreos de Rueda, Castilla y León, con clima atlántico. Fermentación en acero inoxidable a baja temperatura captura aromaticidad herbácea y salinidad mineral que define este blanco ruedeño fresco y expresivo.',
-    pairings: ['Tataki de atún', 'Ensalada Niçoise', 'Tomates aliñados'],
+    pairings: ['Calamares a la Andaluza', 'Coca de calabacín', 'Coca de tomate', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos'],
     notes: 'Fresco y herbáceo, con aromas de cítricos. Ideal como aperitivo.'
   },
   {
@@ -7833,7 +8068,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Malvasía de Lanzarote en suelos volcánicos y hoyos de lava con influencia atlántica. Envejecimiento prolongado sur lie en barrica revela aromaticidad compleja con notas mieladas y salinidad volcánica que caracteriza este blanco canario singular.',
-    pairings: ['Mejillones a la brasa', 'Fish and chips', 'Selección de ostras'],
+    pairings: ['Arroz negro con txipirones asados', 'Calamares a la Andaluza', 'Carpaccio con espuma de parmesano', 'Coca de calabacín', 'Coca de tomate', 'Croquetas Premium', 'Ensalada de Mero del Hierro', 'Ensalada Niçoise', 'Espárragos a la brasa', 'Fish and chips', 'Focaccia con vegetales asados', 'Hamburguesa vegana', 'Linguini con tartar de langostino', 'Lobster Roll', 'Lubina a la brasa con ensalada de papaya', 'Lubina crujiente con mayonesa de leche de tigre', 'Mejillones a la brasa', 'Pámpano marinado al mojo rojo', 'Peras escalivadas con cremoso de queso de cabra', 'Pimientos del padrón', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Rejo de pulpo con papa y mojo verde', 'Selección de ostras', 'Tabla de quesos canarios', 'Tartar de lomo de atún', 'Tartar de remolacha', 'Tartar de tomate y queso', 'Tataki de atún', 'Tomates aliñados', 'Tomates ecológicos', 'Vitello tonnato'],
     notes: 'Aromático y complejo, con notas de miel y flores. Ideal con mariscos.'
   },
 
@@ -7853,7 +8088,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Rioja Alavesa suelos calcareo-arcillosos. Tempranillo joven 6 meses roble. Bodega Marqués Riscal arquitectura Gehry diseño icónico. Introducción accesible casa prestigiosa 160+ años, frutal elegancia asequible.',
-    pairings: ['Hamburguesa Rossini', 'Croquetas Premium', 'Pluma de cerdo Ibérico'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Frutal y fresco, con aromas de cerezas. Ideal para beber sin pretensiones.'
   },
   {
@@ -7871,7 +8106,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Ribera Duero DO, Tinta País viñas jóvenes. 6 meses roble francés. Estilo moderno Ribera, busca valor acceso entrada región. Excelente relación calidad-precio, frutal carácter mineral.',
-    pairings: ['Pluma de cerdo Ibérico', 'Costillas melosas de cordero sobre salsa de curry verde', 'Hamburguesa Rossini'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Equilibrado y frutal, con aromas de frutos rojos. Ideal con carnes.'
   },
   {
@@ -7889,7 +8124,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Tenerife terroir volcánico ancestral. Listán Negro viñas pre-filoxera. Intervención mínima Borja Pérez, fermentación natural espontánea. Puerta vino canario mundo, expresión carácter volcánico mineral refrescante único.',
-    pairings: ['Tartar de solomillo', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Pincho Moruno con cous cous'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes asadas.'
   },
   {
@@ -7907,7 +8142,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Rioja Alta Finca Ygay bodega 160+ años historia. Tempranillo dominante blend complejo. 18 meses roble americano francés equilibrado. Uno España Reservas más galardonados. Filosofía tradicional elegancia refinada carácter.',
-    pairings: ['Carrillera de Wagyu', 'Entrecot de Angus 300g', 'Tartar de solomillo'],
+    pairings: ['Alitas melosas glaseadas', 'Bao de brisket', 'Carpaccio con espuma de parmesano', 'Croquetas Premium', 'Hamburguesa Rossini', 'Hamburguesa vegana', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Panceta de cochino negro', 'Papas bravas al estilo Txoko', 'Pimiento relleno de ternera', 'Pimientos del padrón', 'Pincho Moruno con cous cous', 'Pluma de cerdo Ibérico', 'Pollo brasa con huevo a baja temperatura', 'Ravioli de pularda', 'Tabla de embutidos', 'Tabla de quesos canarios', 'Trifasi club'],
     notes: 'Complejo y equilibrado, con aromas de frutos rojos y especias. Excelente opción por copa.'
   },
 
@@ -7927,7 +8162,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'El Mojito Classic es la leyenda caribeña reimaginada en Txoko con ron de calidad superior y menta fresca cortada en el momento. Esta bebida nacida en La Habana combina la filosofía del rum y la hierbabuena tropical con precisión. Cada sorbo trae refrescancia pura, equilibrio perfecto entre dulzor y hierbas aromáticas que transportan al Caribe sin abandonar Donostia.',
-    pairings: ['Mousse de gofio con helado de plátano canario', 'Flan tradicional con chantilly', 'Tarta de queso'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Refrescante y herbáceo, perfecto para tardes soleadas. Ideal con mariscos y ensaladas.'
   },
   {
@@ -7945,7 +8180,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Mojito Passion es la interpretación tropical de la fórmula clásica caribeña llevada a territorio de maracuyá. En Txoko seleccionan el mejor ron del mercado que se mezcla con pulpa fresca de fruta de la pasión y menta cortada a mano. El resultado es un cóctel que abraza la vitalidad frutal tropical sin perder la elegancia estructural del mojito original.',
-    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Mousse de gofio con helado de plátano canario', 'Flan marmolado de chocolate y plátano'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Tropical y refrescante, con notas de maracuyá. Perfecto para celebraciones.'
   },
   {
@@ -7963,7 +8198,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Mojito Eclipse representa la evolución moderna del mojito clásico mediante sustitución audaz de vodka negro premium por el ron tradicional. En Txoko equilibran la oscuridad mineral del vodka negro con menta fresca aromática y cítricos. El resultado es un cóctel sofisticado con matices misteriosos que juega entre la luz herbácea y la sombra elegante del vodka premium.',
-    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Tarta de queso', 'Goxua'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Sofisticado y misterioso, con matices oscuros. Ideal para noches especiales.'
   },
   {
@@ -7981,7 +8216,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Espresso Martini nace en Londres como respuesta moderna a la demanda de energía y sofisticación. En Txoko preparan espresso fresco de calidad enológica que se mezcla con vodka premium y licor de café. La técnica de preparación crea una espuma exquisita que corona cada copa. Un cóctel para aquellos que buscan potencia cerebral envuelta en elegancia visual y gustativa.',
-    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Tarta de queso', 'Flan marmolado de chocolate y plátano'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Intenso y sofisticado, con notas de café. Perfecto para después de cena.'
   },
   {
@@ -7999,7 +8234,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Dry Martini, el cóctel atemporal que define elegancia en copas. En Txoko utilizan ginebra premium seleccionada por su perfil botánico complejo y vermut seco de calidad superior. La técnica de preparación respeta la tradición: agitado o revuelto según preferencia del cliente. Cada sorbo trae la pureza combinada de enebro y botánicos que han definido cockteles durante siglos en bares legendarios.',
-    pairings: ['Flan tradicional con chantilly', 'Goxua', 'Tocinillo de cielo'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Elegante y seco, con notas de botánicos. Ideal como aperitivo sofisticado.'
   },
   {
@@ -8017,7 +8252,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lychee Martini emerge como sofisticación asiática dentro del canon occidental del martini. En Txoko preparan este cóctel con licor de lichi premium que aporta dulzor floral exótico equilibrado por gin botánico. La estructura martini clásica proporciona el armazón seco que contrasta con la fruta tropical. Un cóctel que cruza puentes entre Oriente y Occidente en cada sorbo delicado.',
-    pairings: ['Mousse de gofio con helado de plátano canario', 'Tarta de queso', 'Pastel Vasco invertido con tartar de manzana'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Delicado y floral, con notas de frutas exóticas. Perfecto para paladar refinado.'
   },
   {
@@ -8035,7 +8270,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Negroni es la Italia destilada en copas, nacido en Florencia como expresión del amargodulce equilibrio italiano. En Txoko preparan este clásico con Campari auténtico, ginebra premium y vermut rojo seleccionado. Las proporciones exactas 1:1:1 crean un balance perfecto donde amargura herbácea y dulzor se entrelazan. Un aperitivo de carácter que define sofisticación amarga en el mundo de los cócteles.',
-    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan tradicional con chantilly', 'Tocinillo de cielo'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Amargo y equilibrado, con notas herbáceas. Ideal como aperitivo de carácter.'
   },
   {
@@ -8053,7 +8288,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Aperol Spritz define la tarde italiana en términos de refrescancia y estilo. En Txoko preparan este aperitivo icónico con Aperol auténtico, prosecco de calidad y un toque de soda. La proporción 3:2:1 crea ligereza característica que permite conversación prolongada. Aromas cítricos y amargos suaves hacen de este cóctel el compañero perfecto para tardes donostiarras que evocan la dolce vita.',
-    pairings: ['Tarta de queso', 'Mousse de gofio con helado de plátano canario', 'Goxua'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Ligero y refrescante, con notas cítricasalmaradas. Perfecto como aperitivo.'
   },
   {
@@ -8071,7 +8306,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Long Island Tea es la potencia americana destilada en una copa audaz que mezcla seis licores en equilibrio explosivo. En Txoko elaboran este monumento con rhum blanco, vodka, ginebra, tequila, licor de naranja y bíter, completado con jugo fresco de limón. El resultado es un cóctel complejo que requiere respeto y admiración. Ideal para quienes buscan intensidad total en formato de bebida.',
-    pairings: ['Flan marmolado de chocolate y plátano', 'Brownie de avellanas con crema de cacao y mandarina', 'Mousse de gofio con helado de plátano canario'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Potente y complejo, con múltiples notas. Ideal para noche de celebración.'
   },
   {
@@ -8143,7 +8378,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Tommy Margarita encarna la mexicanidad en copas mediante tequila premium, lime juice fresco y sal marina. En Txoko preparan este clásico con precisión de ceremonias ancestrales donde cada componente juega función vital. La proporción exacta crea equilibrio entre acidez cítrica, salinidad y potencia del tequila. Un cóctel para hacer fiesta con autenticidad mexicana preservada en tradición.',
-    pairings: ['Mousse de gofio con helado de plátano canario', 'Flan tradicional con chantilly', 'Tarta de queso'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Cítrico y refrescante, con toque salado. Perfecto para tardes festivas.'
   },
   {
@@ -8161,7 +8396,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Moscow Mule representa fusión geopolítica destilada en copas de cobre, donde vodka ruso premium conoce cerveza de jengibre estadounidense. En Txoko preparan este clásico con vodka de calidad superior y ginger beer de fabricación artesanal. El jengibre picante equilibra la suavidad del vodka creando refrescancia especiada. Un cóctel que celebra intercambios internacionales en formato festivo y helado.',
-    pairings: ['Goxua', 'Flan marmolado de chocolate y plátano', 'Tocinillo de cielo'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Refrescante y especiado, con picante de jengibre. Ideal para noches cálidas.'
   },
   {
@@ -8179,7 +8414,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Txoko\'s Paloma es la firma de la casa, cóctel que mezcla tequila premium con toronja fresca en serenata caribeña adaptada a suelo donostiarr. En Txoko preparan este cóctel como expresión de identidad donde tequila destaca su botánica mientras toronja aporta acidez refrescante. Cada sorbo declara pertenencia a Txoko, personalidad única que distingue este espacio. Un cóctel de casa que se lleva en el corazón.',
-    pairings: ['Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Flan tradicional con chantilly'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Cítrico y refrescante, con dulzor de toronja. Perfecto como firma de Txoko.'
   },
   {
@@ -8197,7 +8432,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Ginger Passion Caipiriña trae Brasil a Donostia con giro tropical donde cachaça tradicional brasileña conoce jengibre y fruta de la pasión. En Txoko elaboran este cóctel con cachaça auténtica y frutas frescas machacadas en el vaso. La combinación crea explosión de sabores tropicales donde jengibre picante abraza maracuyá dulce. Un cóctel para aventureros que buscan sabor authentic brasileño con twist tropical.',
-    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Mousse de gofio con helado de plátano canario', 'Tarta de queso'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Tropical y especiado, con notas de jengibre y maracuyá. Perfecto para aventureros.'
   },
   {
@@ -8215,7 +8450,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Lychee Margarita es punto de encuentro donde Oriente conoce Occidente en copas de salida refrescante. En Txoko preparan este cóctel con tequila premium mexicano infusionado con exotismo asiático mediante licor de lichi. La combinación crea fusion donde botánica tequilera danza con floral lichi creando puente gustativo transcontinental. Un cóctel para exploradores de sabores que desafían geografía.',
-    pairings: ['Tarta de queso', 'Goxua', 'Flan tradicional con chantilly'],
+    pairings: ['Brownie de avellanas con crema de cacao y mandarina', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Goxua', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Tarta de queso', 'Tocinillo de cielo'],
     notes: 'Floral y frutal, con toque cítrico. Ideal para exploradores de sabores.'
   },
 
@@ -9422,7 +9657,7 @@ function _renderTastingChart(w){
 
   // Data dots
   const dots = dataPoints.map(([x,y]) =>
-    `<circle cx="${x}" cy="${y}" r="3" fill="var(--gold)" stroke="#faf6ee" stroke-width="1.2"/>`
+    `<circle cx="${x}" cy="${y}" r="3" fill="var(--gold)" stroke="rgba(28,42,34,.8)" stroke-width="1.2"/>`
   ).join('');
 
   // Labels with values
@@ -9430,7 +9665,7 @@ function _renderTastingChart(w){
     const [x,y] = pt(i, R+22);
     const anchor = x < cx-5 ? 'end' : x > cx+5 ? 'start' : 'middle';
     const dy = y < cy-20 ? -4 : y > cy+20 ? 10 : 3;
-    return `<text x="${x}" y="${y+dy}" text-anchor="${anchor}" font-family="'Quicksand',sans-serif" font-size="8" fill="var(--parch2)" font-weight="600">${l.label}</text>
+    return `<text x="${x}" y="${y+dy}" text-anchor="${anchor}" font-family="'Quicksand',sans-serif" font-size="8" fill="rgba(244,237,226,.7)" font-weight="600">${l.label}</text>
     <text x="${x}" y="${y+dy+10}" text-anchor="${anchor}" font-family="'DM Mono',monospace" font-size="7" fill="var(--gold)">${p[l.key]}%</text>`;
   }).join('');
 
@@ -9449,7 +9684,7 @@ function _renderTastingChart(w){
     <svg viewBox="0 0 240 230" width="240" height="230" style="display:block;margin:0 auto">
       ${gridPaths}${axes}${dataPath}${dots}${labelEls}
     </svg>
-    <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);line-height:1.4;font-style:italic;margin-top:.3rem;max-width:260px;margin-left:auto;margin-right:auto">${desc}</div>
+    <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:rgba(244,237,226,.5);line-height:1.4;font-style:italic;margin-top:.3rem;max-width:260px;margin-left:auto;margin-right:auto">${desc}</div>
   </div>`;
 }
 
@@ -9476,89 +9711,204 @@ function _describeProfile(p, type){
   return parts.join(' · ');
 }
 
-function _showWineDetail(id){
+// ═══ Current filtered wine list for swipe navigation ═══
+let _wineDetailList = [];
+let _wineDetailIdx = 0;
+
+function _showWineDetail(id, direction){
   const w = WINES.find(x=>x.id===id);
   if(!w) return;
+
+  // Build navigation list from currently filtered wines
+  if(!_wineDetailList.length || !_wineDetailList.find(x=>x.id===id)){
+    const filt = _wineFilter;
+    const search = (_wineSearch||'').toLowerCase();
+    _wineDetailList = WINES.filter(v=>{
+      if(filt!=='all' && v.type!==filt) return false;
+      if(search && !v.name.toLowerCase().includes(search)) return false;
+      return true;
+    });
+    _wineDetailList.sort((a,b)=>{
+      if(a.recommended&&!b.recommended) return -1;
+      if(!a.recommended&&b.recommended) return 1;
+      return a.price-b.price;
+    });
+  }
+  _wineDetailIdx = _wineDetailList.findIndex(x=>x.id===id);
+
   const typeLabels = {blanco:'Vino Blanco',tinto:'Vino Tinto',rosado:'Vino Rosado',espumoso:'Espumoso',dulce:'Vino Dulce',cocktail:'Cocktail'};
-  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',cocktail:'🍸'};
+  const typeIcons = {blanco:'\u{1F942}',tinto:'\u{1F377}',rosado:'\u{1F338}',espumoso:'\u{2728}',dulce:'\u{1F36F}',cocktail:'\u{1F378}'};
+  const typeBg = {blanco:'rgba(245,230,184,.12)',tinto:'rgba(139,34,82,.15)',rosado:'rgba(232,160,191,.12)',espumoso:'rgba(212,175,55,.12)',dulce:'rgba(218,165,32,.12)',cocktail:'rgba(78,205,196,.12)'};
   const isWine = w.type !== 'cocktail';
+
+  // Remove old overlay if exists
+  const old = document.getElementById('wineDetailOverlay');
+  if(old) old.remove();
+
+  // Particles HTML
+  const particles = Array.from({length:8},(_,i)=>{
+    const left=Math.random()*100;
+    const delay=Math.random()*6;
+    const dur=4+Math.random()*4;
+    const size=2+Math.random()*2;
+    return `<div class="wine-particle" style="left:${left}%;bottom:-10px;width:${size}px;height:${size}px;animation-delay:${delay}s;animation-duration:${dur}s"></div>`;
+  }).join('');
+
+  // Navigation buttons
+  const prevWine = _wineDetailIdx > 0 ? _wineDetailList[_wineDetailIdx-1] : null;
+  const nextWine = _wineDetailIdx < _wineDetailList.length-1 ? _wineDetailList[_wineDetailIdx+1] : null;
+  const navHTML = (_wineDetailList.length > 1) ? `
+    <div class="wine-swipe-nav">
+      ${prevWine ? `<button class="wine-swipe-btn" onclick="_navigateWine(-1)">◁ <span>${escapeHTML(prevWine.name)}</span></button>` : '<div></div>'}
+      <div class="wine-swipe-indicator">${_wineDetailIdx+1}/${_wineDetailList.length}</div>
+      ${nextWine ? `<button class="wine-swipe-btn" onclick="_navigateWine(1)"><span>${escapeHTML(nextWine.name)}</span> ▷</button>` : '<div></div>'}
+    </div>` : '';
+
+  // Pairings with collapsible if > 5
+  const uniquePairings = [...new Set(w.pairings||[])];
+  const showCollapsible = uniquePairings.length > 5;
+  const visiblePairings = showCollapsible ? uniquePairings.slice(0,5) : uniquePairings;
+  const hiddenPairings = showCollapsible ? uniquePairings.slice(5) : [];
+
+  const pairingsHTML = uniquePairings.length ? `
+    <div class="wine-glass-card" style="animation-delay:.45s">
+      <div class="wine-info-label">\u2726 Maridaje recomendado · ${uniquePairings.length} platos</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem">
+        ${visiblePairings.map((p,i)=>`
+          <div class="wine-pairing-item" style="animation-delay:${.5+i*.06}s">
+            <div style="font-family:'Cinzel',serif;font-size:.76rem;color:#f4ede2;margin-bottom:.15rem">${escapeHTML(p)}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.66rem;color:rgba(196,154,60,.7);line-height:1.4;font-style:italic">${_pairingWhy(w, p)}</div>
+          </div>
+        `).join('')}
+      </div>
+      ${showCollapsible ? `
+        <div id="hiddenPairings" class="wine-pairings-list">
+          ${hiddenPairings.map((p,i)=>`
+            <div class="wine-pairing-item" style="animation-delay:${.1+i*.04}s">
+              <div style="font-family:'Cinzel',serif;font-size:.76rem;color:#f4ede2;margin-bottom:.15rem">${escapeHTML(p)}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.66rem;color:rgba(196,154,60,.7);line-height:1.4;font-style:italic">${_pairingWhy(w, p)}</div>
+            </div>
+          `).join('')}
+        </div>
+        <button onclick="const l=document.getElementById('hiddenPairings');l.classList.toggle('expanded');this.innerHTML=l.classList.contains('expanded')?'▲ Ver menos':'▼ Ver ${hiddenPairings.length} platos más'" style="margin-top:.6rem;background:rgba(196,154,60,.1);border:1px solid rgba(196,154,60,.2);border-radius:10px;padding:.4rem .8rem;font-family:'Quicksand',sans-serif;font-size:.7rem;color:rgba(244,237,226,.7);cursor:pointer;width:100%;transition:all .2s">\u25BC Ver ${hiddenPairings.length} platos más</button>
+      ` : ''}
+    </div>` : '';
 
   const overlay = document.createElement('div');
   overlay.id = 'wineDetailOverlay';
   overlay.className = 'wine-detail-overlay';
-  overlay.innerHTML = `<div class="wine-detail-inner">
-    <button onclick="document.getElementById('wineDetailOverlay').remove()" class="wine-detail-back">◇ Volver</button>
-
-    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem">
-      <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:36px;height:36px;font-size:.9rem">${typeIcons[w.type]||'🍷'}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">
-        <span class="wine-badge" style="background:rgba(196,154,60,.08);color:var(--gold);border:1px solid rgba(196,154,60,.15)">${typeLabels[w.type]||w.type}</span>
-        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ Recomendado</span>':''}
-        ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.08);color:#8b6914;border:1px solid rgba(139,105,20,.15)">◆ Tempos Vega Sicilia</span>':''}
-        ${w.kosher?'<span class="wine-badge" style="background:rgba(196,154,60,.06);color:var(--parch3);border:1px solid rgba(196,154,60,.1)">✡ Kosher</span>':''}
-      </div>
-    </div>
-
-    <div class="wine-detail-title">${escapeHTML(w.name)}</div>
-    ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3)">Añada ${w.year}</div>`:''}
-
-    <div class="wine-price-box">
-      <div>
-        <div class="wine-info-label">${w.format||'Botella'}</div>
-        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:700">${w.price}€</div>
-      </div>
-      ${w.glass?`<div style="border-left:1.5px solid rgba(196,154,60,.15);padding-left:.8rem">
-        <div class="wine-info-label">Copa</div>
-        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--sage);font-weight:600">${w.glass}€</div>
-      </div>`:''}
-    </div>
-
-    ${isWine?`
-    <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem">
-      <div class="wine-info-box" style="flex:1;min-width:140px">
-        <div class="wine-info-label">◇ Uvas</div>
-        <div class="wine-info-value">${escapeHTML(w.grapes||'-')}</div>
-      </div>
-      <div class="wine-info-box" style="flex:1;min-width:140px">
-        <div class="wine-info-label">◇ Región</div>
-        <div class="wine-info-value">${escapeHTML(w.region||'-')}</div>
-        ${w.origin?`<div style="font-size:.68rem;color:var(--parch3);margin-top:.15rem;position:relative">${escapeHTML(w.origin)}</div>`:''}
-      </div>
-    </div>`:''}
-
-    <div class="wine-story-box">
-      <div class="wine-info-label" style="margin-left:.6rem">✦ Historia</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(w.story)}"</div>
-    </div>
-
-    ${isWine&&w.notes?`
-    <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
-      <div class="wine-info-label">✦ Notas de cata</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parch2);line-height:1.5;position:relative;margin-bottom:.8rem">${escapeHTML(w.notes)}</div>
-      <div class="wine-info-label" style="margin-bottom:.3rem">◇ Perfil de cata</div>
-      ${_renderTastingChart(w)}
-    </div>`:''}
-
-    ${!w.notes&&isWine?`
-    <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
-      <div class="wine-info-label">◇ Perfil de cata</div>
-      ${_renderTastingChart(w)}
-    </div>`:''}
-
-    ${w.pairings&&w.pairings.length?`
-    <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
-      <div class="wine-info-label">✦ Maridaje recomendado</div>
-      <div style="display:flex;flex-direction:column;gap:.5rem;position:relative">
-        ${[...new Set(w.pairings)].map(p=>`
-          <div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(77,138,94,.25)">
-            <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment);margin-bottom:.2rem">${escapeHTML(p)}</div>
-            <div style="font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--sage);line-height:1.4;font-style:italic">${_pairingWhy(w, p)}</div>
+  overlay.innerHTML = `
+    <div class="wine-detail-inner${direction==='left'?' swipe-in-left':direction==='right'?' swipe-in-right':''}">
+      <!-- Hero Section -->
+      <div class="wine-hero" style="background:${typeBg[w.type]||typeBg.tinto}">
+        <div class="wine-hero-glow"></div>
+        <div class="wine-particles">${particles}</div>
+        <button onclick="document.getElementById('wineDetailOverlay').remove();_wineDetailList=[]" class="wine-detail-back" style="position:absolute;top:1rem;left:1rem;z-index:5">\u25C7 Volver</button>
+        <div style="position:relative;z-index:2">
+          <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.6rem">
+            <span class="wine-badge" style="background:rgba(244,237,226,.1);color:rgba(244,237,226,.85);border:1px solid rgba(244,237,226,.15);backdrop-filter:blur(8px)">${typeIcons[w.type]||'\u{1F377}'} ${typeLabels[w.type]||w.type}</span>
+            ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.15);color:var(--gold);border:1px solid rgba(196,154,60,.25);backdrop-filter:blur(8px)">\u2605 Recomendado</span>':''}
+            ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.12);color:#d4aa4c;border:1px solid rgba(196,154,60,.2);backdrop-filter:blur(8px)">\u25C6 Tempos Vega Sicilia</span>':''}
+            ${w.kosher?'<span class="wine-badge" style="background:rgba(244,237,226,.08);color:rgba(244,237,226,.7);border:1px solid rgba(244,237,226,.12);backdrop-filter:blur(8px)">\u2721 Kosher</span>':''}
           </div>
-        `).join('')}
+          <div class="wine-detail-title">${escapeHTML(w.name)}</div>
+          ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(244,237,226,.5);margin-top:.15rem">Añada ${w.year}</div>`:''}
+        </div>
       </div>
-    </div>`:''}
-  </div>`;
+
+      <div style="padding:1rem 1rem 3rem">
+        <!-- Swipe Nav Top -->
+        ${navHTML}
+
+        <!-- Price -->
+        <div class="wine-price-glass" style="margin:1rem 0">
+          <div>
+            <div class="wine-info-label">${w.format||'Botella'}</div>
+            <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:700">${w.price}\u20AC</div>
+          </div>
+          ${w.glass?`<div style="border-left:1px solid rgba(196,154,60,.2);padding-left:1rem">
+            <div class="wine-info-label">Copa</div>
+            <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:rgba(244,237,226,.7);font-weight:600">${w.glass}\u20AC</div>
+          </div>`:''}
+        </div>
+
+        ${isWine?`
+        <!-- Grapes & Region -->
+        <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem">
+          <div class="wine-glass-card" style="flex:1;min-width:130px;animation-delay:.1s">
+            <div class="wine-info-label">\u25C7 Uvas</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:#f4ede2">${escapeHTML(w.grapes||'-')}</div>
+          </div>
+          <div class="wine-glass-card" style="flex:1;min-width:130px;animation-delay:.15s">
+            <div class="wine-info-label">\u25C7 Región</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:#f4ede2">${escapeHTML(w.region||'-')}</div>
+            ${w.origin?`<div style="font-size:.66rem;color:rgba(244,237,226,.45);margin-top:.15rem">${escapeHTML(w.origin)}</div>`:''}
+          </div>
+        </div>`:''}
+
+        <!-- Story -->
+        <div class="wine-glass-card" style="animation-delay:.2s;border-left:3px solid rgba(196,154,60,.3);margin-bottom:1rem">
+          <div class="wine-info-label">\u2726 Historia</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.84rem;color:rgba(244,237,226,.85);line-height:1.65;font-style:italic">"\u200B${escapeHTML(w.story)}"</div>
+        </div>
+
+        ${isWine&&w.notes?`
+        <!-- Tasting Notes -->
+        <div class="wine-glass-card" style="animation-delay:.3s;margin-bottom:1rem">
+          <div class="wine-info-label">\u2726 Notas de cata</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:rgba(244,237,226,.75);line-height:1.5;margin-bottom:.8rem">${escapeHTML(w.notes)}</div>
+          <div class="wine-section-divider"></div>
+          <div class="wine-info-label" style="margin-top:.6rem">\u25C7 Perfil de cata</div>
+          ${_renderTastingChart(w)}
+        </div>`:''}
+
+        ${!w.notes&&isWine?`
+        <div class="wine-glass-card" style="animation-delay:.3s;margin-bottom:1rem">
+          <div class="wine-info-label">\u25C7 Perfil de cata</div>
+          ${_renderTastingChart(w)}
+        </div>`:''}
+
+        <!-- Pairings -->
+        ${pairingsHTML}
+
+        <!-- Swipe Nav Bottom -->
+        ${navHTML ? '<div style="margin-top:1rem">' + navHTML + '</div>' : ''}
+      </div>
+    </div>`;
+
   document.body.appendChild(overlay);
+
+  // Touch swipe handler
+  let touchStartX = 0, touchStartY = 0, swiping = false;
+  overlay.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    swiping = true;
+  }, {passive:true});
+
+  overlay.addEventListener('touchend', e => {
+    if(!swiping) return;
+    swiping = false;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if(Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)*0.7) return; // too short or too vertical
+    if(dx > 0 && _wineDetailIdx > 0) _navigateWine(-1);
+    else if(dx < 0 && _wineDetailIdx < _wineDetailList.length-1) _navigateWine(1);
+  }, {passive:true});
+}
+
+function _navigateWine(dir){
+  const newIdx = _wineDetailIdx + dir;
+  if(newIdx < 0 || newIdx >= _wineDetailList.length) return;
+  const inner = document.querySelector('.wine-detail-inner');
+  if(inner){
+    inner.classList.add(dir > 0 ? 'swipe-out-left' : 'swipe-out-right');
+    setTimeout(()=>{
+      _showWineDetail(_wineDetailList[newIdx].id, dir > 0 ? 'left' : 'right');
+    }, 220);
+  } else {
+    _showWineDetail(_wineDetailList[newIdx].id);
+  }
 }
 
 // ═══ WINE LEARNING TABS ═══
