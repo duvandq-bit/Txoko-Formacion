@@ -2274,15 +2274,11 @@ body::before{
 
   <nav class="app-nav" id="appNav">
     <button class="nav-btn active" id="navDashboard" onclick="showTab('dashboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</button>
-    <button class="nav-btn" id="navFlashcards" onclick="showTab('flashcards')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Flashcards</button>
+    <button class="nav-btn" id="navAprender" onclick="showTab('aprender')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Aprender</button>
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
-    <button class="nav-btn" id="navRepaso" onclick="showTab('repaso')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Explorar</button>
     <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Protocolo</button>
-    <button class="nav-btn" id="navLqa" onclick="showTab('lqa')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg> LQA</button>
-    <button class="nav-btn" id="navVideos" onclick="showTab('videos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Videos</button>
+    <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
-    <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="16" cy="11" r="1" fill="currentColor"/><circle cx="18" cy="13" r="1" fill="currentColor"/></svg> Juegos</button>
-    <button class="nav-btn" id="navStats" onclick="showTab('stats')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg> Estadísticas</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
   <div class="nav-fade" id="navFade"></div>
@@ -5266,6 +5262,9 @@ try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
 // ═══ DISH ANIMATION ═══
 
 // ═══════ TABS ═══════
+// Sub-tab state
+let _subTab = { aprender:'flashcards', protocolo:'protocolo', ranking:'ranking' };
+
 function showTab(tab){
   currentTab=tab;
   // Track night study for achievement
@@ -5274,12 +5273,14 @@ function showTab(tab){
     const _emp = getEmp(currentUser);
     if(_emp){ _emp.nightStudy = true; saveDB(); }
   }
+  // Map sub-tabs to their parent for nav highlighting
+  const parentMap = { flashcards:'aprender', repaso:'aprender', videos:'aprender', lqa:'protocolo', stats:'ranking', txoko:'ranking' };
+  const navTab = parentMap[tab] || tab;
   document.querySelectorAll('.nav-btn').forEach(b=>{
-    const btnTab = b.id.replace('nav','').replace('Protocolo','protocolo').replace('Flashcards','flashcards').replace('Dashboard','dashboard').replace('Exam','exam').replace('Repaso','repaso').replace('Stats','stats').replace('Txoko','txoko').replace('Ranking','ranking').replace('Supervisor','supervisor').replace('Lqa','lqa');
-    b.classList.toggle('active', btnTab === tab);
+    const btnTab = b.id.replace('nav','').toLowerCase();
+    b.classList.toggle('active', btnTab === navTab);
   });
   const c=document.getElementById('appContent');
-  // Fade out current content then render new tab
   c.style.opacity='0';
   c.style.transform='translateY(-5px)';
   c.style.transition='opacity .12s ease, transform .12s ease';
@@ -5288,12 +5289,3213 @@ function showTab(tab){
     c.style.transition='none';
     c.style.opacity='1';
     c.style.transform='translateY(0)';
-    ({dashboard:renderDashboard,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRanking,supervisor:renderSupervisor,protocolo:renderProtocolo,videos:renderVideos,lqa:renderLqa})[tab]();
-    // Animate in
+    ({dashboard:renderDashboard,aprender:renderAprender,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderVideos,lqa:renderLqa,vinos:renderVinos})[tab]();
     c.classList.remove('tab-entering');
-    void c.offsetWidth; // force reflow
+    void c.offsetWidth;
     c.classList.add('tab-entering');
   }, 120);
+}
+
+// ═══ SUB-TAB HELPERS ═══
+function _subTabBar(tabs, activeTab, parentTab){
+  return `<div style="display:flex;gap:.35rem;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:.3rem">${
+    tabs.map(([id,label,icon])=>`<button onclick="_subTab.${parentTab}='${id}';showTab('${id}')" style="
+      display:flex;align-items:center;gap:.3rem;padding:.5rem .9rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:${activeTab===id?'600':'500'};cursor:pointer;white-space:nowrap;transition:all .2s;
+      background:${activeTab===id?'linear-gradient(135deg,var(--gold),#b8882e)':'rgba(255,255,255,.05)'};
+      color:${activeTab===id?'#1a0f05':'var(--parch3)'};
+      border:${activeTab===id?'none':'1px solid var(--line)'};
+    ">${icon} ${label}</button>`).join('')
+  }</div>`;
+}
+
+function renderAprender(){
+  const c=document.getElementById('appContent');
+  const sub = _subTab.aprender || 'flashcards';
+  const bar = _subTabBar([
+    ['flashcards','Flashcards','🃏'],
+    ['repaso','Explorar','🔍'],
+    ['videos','Videos','🎬']
+  ], sub, 'aprender');
+  ({flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos})[sub]();
+  c.insertAdjacentHTML('afterbegin', bar);
+}
+
+function renderProtocoloHub(){
+  const c=document.getElementById('appContent');
+  const sub = _subTab.protocolo || 'protocolo';
+  const bar = _subTabBar([
+    ['protocolo','Protocolo','📋'],
+    ['lqa','LQA','✓']
+  ], sub, 'protocolo');
+  // We need to render the sub-tab content below the bar
+  // Strategy: render sub first to get HTML, then prepend bar
+  ({protocolo:renderProtocolo, lqa:renderLqa})[sub]();
+  c.insertAdjacentHTML('afterbegin', bar);
+}
+
+function renderRankingHub(){
+  const c=document.getElementById('appContent');
+  const sub = _subTab.ranking || 'ranking';
+  const bar = _subTabBar([
+    ['ranking','Ranking','⭐'],
+    ['txoko','Juegos','🎮'],
+    ['stats','Estadísticas','📊']
+  ], sub, 'ranking');
+  ({ranking:renderRanking, txoko:renderTxoko, stats:renderStats})[sub]();
+  c.insertAdjacentHTML('afterbegin', bar);
+}
+
+// ═══════ VINOS ═══════
+const WINES = [
+  // BLANCOS - Canarias
+  {
+    id: 1,
+    name: 'Viñatigo Blanco',
+    type: 'blanco',
+    grapes: 'Listán Blanco',
+    region: 'DOP Islas Canarias-Tenerife',
+    origin: 'Canarias',
+    price: 80,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Desde las faldas volcánicas de Tenerife emerge un vino que captura la esencia salada del Atlántico. Viñatigo revive la tradición vinícola canaria con la nobleza del Listán Blanco.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    notes: 'Fresco y mineral, con aromas de cítricos y flor blanca. Perfecto como aperitivo o con mariscos frescos.'
+  },
+  {
+    id: 2,
+    name: 'Artifice Blanco',
+    type: 'blanco',
+    grapes: 'Listán Blanco',
+    region: 'DO Ycoden Daute Isora',
+    origin: 'Canarias',
+    price: 80,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'En la cuna de la viticultura canaria, Artifice elabora vinos que son reflejo de la identidad volcánica de la isla. Pureza en cada sorbo, terroir desenfrenado.',
+    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Calamares'],
+    notes: 'Mineral y salado, con notas de hierba fresca y cítricos. Ideal para maridar con cefalópodos y pescados.'
+  },
+  {
+    id: 3,
+    name: 'Artifice Vidueño Blanco 2021',
+    type: 'blanco',
+    grapes: 'Listán Blanco/Albillo/Gual/Marmajuelo',
+    region: 'DO Ycoden-Daute-Isora',
+    origin: 'Canarias',
+    price: 95,
+    glass: null,
+    year: 2021,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Una expresión compleja que mezcla las variedades autóctonas canarias en perfecta armonía. El Vidueño de Artifice es un homenaje a la biodiversidad volcánica.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    notes: 'Complejo y equilibrado, con notas florales y herbáceas. Recomendado con platos de verduras y pescados blancos.'
+  },
+  {
+    id: 4,
+    name: 'Akaet Parajes',
+    type: 'blanco',
+    grapes: 'Malvasía/Listán Blanco/Diego',
+    region: 'DO Lanzarote',
+    origin: 'Canarias',
+    price: 95,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Lanzarote, isla de contrastes donde el vino brota del suelo volcánico más árido. Akaet descubre los parajes secretos donde la Malvasía reinaba hace siglos.',
+    pairings: ['Ceviche de corvina', 'Calamares', 'Fish and chips'],
+    notes: 'Aromático y fresco, con notas de miel y flores blancas. Excelente con mariscos y pescados.'
+  },
+  {
+    id: 5,
+    name: 'Finca Vegas el Pinalete',
+    type: 'blanco',
+    grapes: 'Albillo Criollo',
+    region: 'DO Abona',
+    origin: 'Canarias',
+    price: 100,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Entre volcanes y brisas oceánicas, Vegas el Pinalete cultiva el Albillo Criollo con la precisión de quienes entienden el terroir canario profundamente.',
+    pairings: ['Tartar de atún', 'Fish and chips', 'Ensalada César'],
+    notes: 'Elegante y minerál, con toques cítricos delicados. Ideal como vino de aperitivo o con ensaladas frescas.'
+  },
+  {
+    id: 6,
+    name: 'Los Loros Siete Lomas',
+    type: 'blanco',
+    grapes: 'Marmajuelo/Listán blanco/Gual',
+    region: 'DO Valle de Guimar',
+    origin: 'Canarias',
+    price: 100,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'En el corazón del Valle de Guimar, donde siete colinas custodian la tradición, Los Loros revive la magia de las variedades autóctonas tinerfeñas.',
+    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de remolacha'],
+    notes: 'Fresco y expresivo, con aromas cítricos y minerales. Perfecto con mariscos y pescados a la parrilla.'
+  },
+  {
+    id: 7,
+    name: 'Tamerán Malvasía',
+    type: 'blanco',
+    grapes: 'Malvasía',
+    region: 'DO Gran Canaria',
+    origin: 'Canarias',
+    price: 120,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Tamerán atesora la historia de la Malvasía en Gran Canaria, variedad que cautivó a la nobleza europea. Cada botella es un viaje al pasado dorado.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    notes: 'Aromático y delicado, con notas de frutas tropicales y flores. Excelente como aperitivo o postre.'
+  },
+
+  // BLANCOS - La Rioja-Álava
+  {
+    id: 8,
+    name: 'Cepado',
+    type: 'blanco',
+    grapes: 'Godello',
+    region: 'DO Valdeorras',
+    origin: 'Galicia',
+    price: 50,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Desde las empinadas laderas del valle del Sil en Valdeorras, la Godello resurge como joya atlántica. Cepado captura la esencia mineral de sus ancestrales terrazas.',
+    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Fish and chips'],
+    notes: 'Fresco y mineral, con notas cítricas y de fruta blanca. Ideal como aperitivo o con mariscos.'
+  },
+  {
+    id: 9,
+    name: 'Amaren',
+    type: 'blanco',
+    grapes: 'Viura/Garnacha',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 110,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Amaren representa la sofisticación riojan, donde la Viura y la Garnacha blanca danzan en equilibrio perfecto. Un blanco de guarda con alma de reserva.',
+    pairings: ['Ensalada César', 'Risotto de boletus', 'Fish and chips'],
+    notes: 'Complejo y elegante, con aromas de frutas blancas y minerales. Buen potencial de guarda.'
+  },
+  {
+    id: 10,
+    name: 'Predicador Blanco',
+    type: 'blanco',
+    grapes: 'Malvasía/Viura/Garnacha',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 110,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Predicador blanco es el testimonio de una filosofía riojana que abraza la tradición sin miedo a la experimentación. Tres variedades convergen en perfecta sinfonía.',
+    pairings: ['Calamares', 'Tartar de remolacha', 'Ensalada César'],
+    notes: 'Aromático y equilibrado, con toques florales. Ideal con platos ligeros y mariscos.'
+  },
+  {
+    id: 11,
+    name: 'Conde de los Andes 2019',
+    type: 'blanco',
+    grapes: 'Viura',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 120,
+    year: 2019,
+    format: '75cl',
+    glass: null,
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Conde de los Andes elabora vinos que respiran la historia de La Rioja. Su Viura es elegancia pura, fruto de viñedos centenarios.',
+    pairings: ['Fish and chips', 'Ensalada César', 'Tartar de atún'],
+    notes: 'Elegante y fresco, con notas de citrus y almendra. Buena acidez y potencial de envejecimiento.'
+  },
+  {
+    id: 12,
+    name: 'Placet',
+    type: 'blanco',
+    grapes: 'Viura',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 130,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Placet es la búsqueda de la perfección en la Viura, donde la expresión del terroir se transforma en poesía enológica.',
+    pairings: ['Tartar de atún', 'Fish and chips', 'Risotto de boletus'],
+    notes: 'Mineral y complejo, con buen envejecimiento. Aromas de frutas blancas y flores.'
+  },
+  {
+    id: 13,
+    name: 'Remelluri Blanco',
+    type: 'blanco',
+    grapes: 'Chardonnay/Garnacha',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 240,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Remelluri es sinónimo de identidad riojana y tradición sin compromiso. Su blanco de Chardonnay y Garnacha es expresión de un terroir único y milenario.',
+    pairings: ['Salmón', 'Lomo de bacalao', 'Risotto de boletus'],
+    notes: 'Sofisticado y complejo, con buena estructura. Aromas de frutas blancas, minerales y un toque especiado.'
+  },
+
+  // BLANCOS - Cataluña
+  {
+    id: 14,
+    name: 'Parvus',
+    type: 'blanco',
+    grapes: 'Chardonnay',
+    region: 'DO Alella',
+    origin: 'Cataluña',
+    price: 60,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Alella, viñedo centenario que abraza Barcelona. Parvus cultiva Chardonnay en este terroir privilegiado donde la mar inspira cada vendimia.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    notes: 'Fresco y mineral, con notas de manzana y cítricos. Ideal como aperitivo o con pescados blancos.'
+  },
+  {
+    id: 15,
+    name: 'La Fita Els Alpriots',
+    type: 'blanco',
+    grapes: 'Xarel-lo/Macabeo',
+    region: 'DO Penedés',
+    origin: 'Cataluña',
+    price: 75,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'La Fita es custodio de la tradición penedésana. Sus Xarel-lo y Macabeo honran siglos de sabiduría vitivinícola catalana.',
+    pairings: ['Calamares', 'Ensalada César', 'Tartar de remolacha'],
+    notes: 'Fresco y ligero, con aromas florales. Perfecto con mariscos y platos vegetales.'
+  },
+
+  // BLANCOS - Galicia
+  {
+    id: 16,
+    name: 'Godeval',
+    type: 'blanco',
+    grapes: 'Godello',
+    region: 'DO Valdeorras',
+    origin: 'Galicia',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Godeval es la excelencia valdeorrana, donde la Godello alcanza su máxima expresión gracias al trabajo apasionado de sus viticultores.',
+    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Lomo de bacalao'],
+    notes: 'Mineral y complejo, con aromas cítricos y florales. Vino de guarda con buena estructura.'
+  },
+  {
+    id: 17,
+    name: 'As 2 Ladeiras',
+    type: 'blanco',
+    grapes: 'Godello',
+    region: 'DO Valdeorras',
+    origin: 'Galicia',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Entre dos laderas de pizarra, As 2 Ladeiras cultiva Godello con respeto absoluto al terroir. Cada botella cuenta una historia de tradición gallega.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    notes: 'Fresco y mineral, con notas de cítricos. Ideal con mariscos y pescados a la parrilla.'
+  },
+  {
+    id: 18,
+    name: 'Louro',
+    type: 'blanco',
+    grapes: 'Godello',
+    region: 'DO Valdeorras',
+    origin: 'Galicia',
+    price: 95,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Louro es la brújula que guía hacia el corazón de Valdeorras. Su Godello resuena con la mineralidad de sus terrazas ancestrales.',
+    pairings: ['Tartar de atún', 'Lomo de bacalao', 'Fish and chips'],
+    notes: 'Mineral y elegante, con aromas cítricos y florales. Buen potencial de envejecimiento.'
+  },
+  {
+    id: 19,
+    name: 'Cíes',
+    type: 'blanco',
+    grapes: 'Albariño',
+    region: 'DO Rías Baixas',
+    origin: 'Galicia',
+    price: 95,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Cíes es el espíritu atlántico encapsulado. Su Albariño captura la esencia marina de las Rías Baixas en cada sorbo.',
+    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de atún'],
+    notes: 'Fresco y salado, con aromas de frutas blancas y flores. Perfecto con mariscos.'
+  },
+  {
+    id: 20,
+    name: 'Pazo Barrantes Gran Vino 2021',
+    type: 'blanco',
+    grapes: 'Albariño',
+    region: 'DO Rías Baixas',
+    origin: 'Galicia',
+    price: 150,
+    glass: null,
+    year: 2021,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Pazo Barrantes es templo del Albariño gallego. Su Gran Vino 2021 es la culminación de generaciones de dedicación a la excelencia.',
+    pairings: ['Salmón', 'Lomo de bacalao', 'Ceviche de corvina'],
+    notes: 'Complejo y elegante, con buen envejecimiento. Aromas de cítricos, flores blancas y minerales.'
+  },
+  {
+    id: 21,
+    name: 'Pazo Barrantes Magnum Gran Vino 2021',
+    type: 'blanco',
+    grapes: 'Albariño',
+    region: 'DO Rías Baixas',
+    origin: 'Galicia',
+    price: 280,
+    glass: null,
+    year: 2021,
+    format: '1.5L Magnum',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'En formato magnum, el Gran Vino 2021 de Pazo Barrantes revela toda su complejidad. Un monumento al Albariño gallego.',
+    pairings: ['Salmón', 'Lomo de bacalao', 'Lubina'],
+    notes: 'Elegante y sofisticado, con notas de frutas blancas, flores y minerales. Ideal para celebraciones.'
+  },
+
+  // BLANCOS - Francia
+  {
+    id: 22,
+    name: 'Albert Bichot Origines',
+    type: 'blanco',
+    grapes: 'Chardonnay',
+    region: 'AOC Bourgogne',
+    origin: 'Francia',
+    price: 95,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Albert Bichot trae desde Bourgogne la elegancia clásica del Chardonnay francés. Cada botella es expresión de terroir milenario.',
+    pairings: ['Fish and chips', 'Risotto de boletus', 'Lomo de bacalao'],
+    notes: 'Elegante y mineral, con aromas de frutas blancas y flores. Buen envejecimiento.'
+  },
+  {
+    id: 23,
+    name: 'Berthier Terre de Silex',
+    type: 'blanco',
+    grapes: 'Sauvignon Blanc',
+    region: 'AOC Sancerre',
+    origin: 'Francia',
+    price: 110,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Sancerre es cuna del Sauvignon Blanc. Berthier expresa la pureza mineral de sus terrenos de sílex con precisión quirúrgica.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    notes: 'Mineral y cítrico, con aromas de hierba fresca y pedernal. Ideal con mariscos y ensaladas.'
+  },
+  {
+    id: 24,
+    name: 'Fanny Sabre Blanc 2023',
+    type: 'blanco',
+    grapes: 'Chardonnay',
+    region: 'AOC Bourgogne',
+    origin: 'Francia',
+    price: 155,
+    glass: null,
+    year: 2023,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Fanny Sabre es voz femenina emergente en Bourgogne. Su Chardonnay 2023 une tradición con innovación en perfecta armonía.',
+    pairings: ['Risotto de boletus', 'Salmón', 'Lomo de bacalao'],
+    notes: 'Complejo y elegante, con notas de frutas blancas, almendra y minerales. Buen potencial de guarda.'
+  },
+
+  // BLANCOS - Austria
+  {
+    id: 25,
+    name: 'Gobelsburg 2022',
+    type: 'blanco',
+    grapes: 'Gruner Veltiner',
+    region: 'Kamptal DAC',
+    origin: 'Austria',
+    price: 110,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Gobelsburg cultiva Grüner Veltliner en el corazón de Kamptal. Su vino refleja la pureza alpina y la sabiduría vinícola austriaca.',
+    pairings: ['Fish and chips', 'Calamares', 'Ensalada César'],
+    notes: 'Fresco y mineral, con aromas de cítricos y frutas blancas. Ideal como aperitivo o con platos ligeros.'
+  },
+
+  // BLANCOS - Hungría
+  {
+    id: 26,
+    name: 'Oremus Mandolás 2019',
+    type: 'blanco',
+    grapes: 'Furmint',
+    region: 'Tokaji-Hungría',
+    origin: 'Hungría',
+    price: 120,
+    glass: null,
+    year: 2019,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: true,
+    kosher: false,
+    story: 'Oremus es guardián de la tradición tokaji. Su Mandolás 2019 despierta la nobleza del Furmint en tierra húngara legendaria.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    notes: 'Complejo y mineral, con notas cítricas y florales. Vino de gran envejecimiento.'
+  },
+  {
+    id: 27,
+    name: 'Oremus Mandolás 2022',
+    type: 'blanco',
+    grapes: 'Furmint',
+    region: 'Tokaji-Hungría',
+    origin: 'Hungría',
+    price: 150,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: true,
+    kosher: false,
+    story: 'El Mandolás 2022 de Oremus es la quintaesencia del Furmint tokaji. Botella que encapsula la historia de siglos en la región.',
+    pairings: ['Ensalada César', 'Risotto de boletus', 'Tartar de remolacha'],
+    notes: 'Elegante y sofisticado, con aromas de cítricos, flores y minerales. Excelente envejecimiento.'
+  },
+
+  // BLANCOS - Alemania
+  {
+    id: 28,
+    name: 'Carl Loewen Quant 2023',
+    type: 'blanco',
+    grapes: 'Riesling',
+    region: 'Mosel',
+    origin: 'Alemania',
+    price: 80,
+    glass: null,
+    year: 2023,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Carl Loewen captura la esencia del Riesling mosela. Su Quant 2023 es frescura pura, expresión del clima continental alemán.',
+    pairings: ['Fish and chips', 'Calamares', 'Ceviche de corvina'],
+    notes: 'Fresco y aromático, con notas de frutas blancas y flores. Ideal como aperitivo.'
+  },
+
+  // BLANCOS - Australia
+  {
+    id: 29,
+    name: 'Penfolds Koonunga Hill Chardonnay',
+    type: 'blanco',
+    grapes: 'Chardonnay',
+    region: 'Australia',
+    origin: 'Australia',
+    price: 120,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Penfolds representa la excelencia australiana. Su Koonunga Hill Chardonnay es equilibrio entre fruta tropical y elegancia.',
+    pairings: ['Salmón', 'Risotto de boletus', 'Fish and chips'],
+    notes: 'Frutal y equilibrado, con aromas de manzana y melocotón. Ideal con pescados y platos ligeros.'
+  },
+
+  // BLANCOS - Argentina
+  {
+    id: 30,
+    name: 'The Apple Doesn\'t Fall Far From The Tree 2021',
+    type: 'blanco',
+    grapes: 'Torrontés',
+    region: 'Mendoza',
+    origin: 'Argentina',
+    price: 80,
+    glass: null,
+    year: 2021,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Argentina brinda su joyas en Torrontés. Este vino de nombre poético es la esencia del Mendoza moderno.',
+    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Fish and chips'],
+    notes: 'Aromático y fresco, con notas de flores y frutas blancas. Perfecto con mariscos.'
+  },
+
+  // TINTOS - La Rioja-Álava
+  {
+    id: 31,
+    name: 'La Bicicleta Voladora',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 50,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'La Bicicleta Voladora es poesía en movimiento. Su Tempranillo riojano vuela libre, sin ataduras convencionales.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Entrecôte'],
+    notes: 'Fresco y vibrante, con aromas de frutos rojos. Ideal con carnes a la brasa.'
+  },
+  {
+    id: 32,
+    name: 'Sitio de Valderíz',
+    type: 'tinto',
+    grapes: 'Tinto Fino',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 50,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Sitio de Valderíz es refugio de elegancia. Su Tinto Fino ribereño equilibra potencia con sutileza.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Elegante y mineral, con aromas de frutos rojos y pimienta. Buen envejecimiento.'
+  },
+  {
+    id: 33,
+    name: 'El Anden Muga',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 50,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'El Andén Muga espera en la estación de la tradición riojana. Su Tempranillo es punto de partida hacia la excelencia.',
+    pairings: ['Presa ibérica', 'Hamburguesa', 'Calamares'],
+    notes: 'Joven y frutal, con aromas de cerezas y frambuesas. Ideal con carnes y platos asados.'
+  },
+  {
+    id: 34,
+    name: 'El Rincon de los Enebros',
+    type: 'tinto',
+    grapes: 'Garnacha/Tempranillo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 75,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Rincón de los Enebros es santuario de dos variedades nobres. Garnacha y Tempranillo dialogan en este vino emotivo.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    notes: 'Equilibrado y aromático, con notas de frutos rojos y especias. Ideal con carnes.',
+  },
+  {
+    id: 35,
+    name: 'Marques de Murrieta Reserva',
+    type: 'tinto',
+    grapes: 'Tempranillo/Garnacha/Graciano/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 80,
+    glass: 17,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Marqués de Murrieta es nombre de leyenda en Rioja. Su Reserva es expresión completa de tradición y calidad milenaria.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y equilibrado, con aromas de frutos rojos, ciruelas y especias. Excelente envejecimiento.'
+  },
+  {
+    id: 36,
+    name: 'Marques de Murrieta Reserva 2017 1.5L',
+    type: 'tinto',
+    grapes: 'Tempranillo/Garnacha/Graciano/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 200,
+    glass: null,
+    year: 2017,
+    format: '1.5L Magnum',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'En formato magnum, el Reserva 2017 de Marqués de Murrieta alcanza nueva dimensión. Vino para grandes ocasiones.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Elegante y sofisticado, con buen potencial de guarda. Aromas evolucionados de frutos rojos y especias.'
+  },
+  {
+    id: 37,
+    name: 'Marqués de Murrieta Reserva 2016 12L',
+    type: 'tinto',
+    grapes: 'Tempranillo/Garnacha/Graciano/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 1500,
+    glass: null,
+    year: 2016,
+    format: '12L',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Formato excepcional para ocasiones extraordinarias. Este Reserva 2016 es monumento a la excelencia riojana.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Vino de colección, ideal para celebraciones memorables. Perfecto para compartir.'
+  },
+  {
+    id: 38,
+    name: 'Amaren Selección de Viñedos 2021',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 90,
+    glass: null,
+    year: 2021,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Amaren selecciona sus mejores viñedos para esta expresión. El 2021 es promesa de futuro brillante.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Joven y vibrante, con aromas de frutos rojos frescos. Buen potencial de envejecimiento.'
+  },
+  {
+    id: 39,
+    name: 'Viña Cubillo 2016',
+    type: 'tinto',
+    grapes: 'Tempranillo/Garnacha/Mazuelo/Graciano',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 95,
+    glass: null,
+    year: 2016,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Viña Cubillo es cuna de vinos de carácter. Su 2016 es ejemplo de evolución elegante en la copa.',
+    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    notes: 'Evolucionado y complejo, con notas de frutos rojos, cuero y especias. Excelente momento de bebida.'
+  },
+  {
+    id: 40,
+    name: 'Paco Garcia La Villa',
+    type: 'tinto',
+    grapes: 'Tempranillo/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 100,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Paco García vinifica con pasión familiar. La Villa es expresión de viñedos históricos riojanos.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Equilibrado y elegante, con aromas de frutos rojos y especias. Ideal con carnes a la brasa.'
+  },
+  {
+    id: 41,
+    name: 'Predicador 2022',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 110,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Predicador 2022 es promesa de Rioja. Su Tempranillo joven respira alegría y potencial futuro.',
+    pairings: ['Presa ibérica', 'Hamburguesa', 'Pollo al curry'],
+    notes: 'Frutal y vibrante, con aromas frescos de cerezas. Ideal para beber con alegría.'
+  },
+  {
+    id: 42,
+    name: 'Contino Reserva',
+    type: 'tinto',
+    grapes: 'Tempranillo/Graciano/Garnacha',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 110,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Contino es bodega de visión. Su Reserva es síntesis perfecta de tres variedades nobles.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y estructurado, con aromas evolucionados. Buen potencial de guarda.'
+  },
+  {
+    id: 43,
+    name: 'Remelluri Reserva 2017',
+    type: 'tinto',
+    grapes: 'Tempranillo/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 120,
+    glass: null,
+    year: 2017,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Remelluri 2017 es continuidad de excelencia. Su Reserva fusiona tradición con modernidad en perfecta sintonía.',
+    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    notes: 'Elegante y sofisticado, con aromas evolucionados. Excelente envejecimiento.'
+  },
+  {
+    id: 44,
+    name: 'Sierra Cantabria Reserva Unica 2018',
+    type: 'tinto',
+    grapes: 'Tempranillo/Graciano',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 130,
+    glass: null,
+    year: 2018,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Sierra Cantabria busca la perfección sin compromiso. Su Reserva Única 2018 es logro de esa búsqueda.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y estructurado, con aromas de frutos rojos maduros. Excelente potencial futuro.'
+  },
+  {
+    id: 45,
+    name: 'Olarra 2015',
+    type: 'tinto',
+    grapes: 'Tempranillo/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 135,
+    glass: null,
+    year: 2015,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Olarra 2015 es vino en su punto óptimo. Años de evolución han pulido su carácter.',
+    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    notes: 'Evolucionado y elegante, con aromas complejos de frutos rojos y cuero. Listo para beber.'
+  },
+  {
+    id: 46,
+    name: 'Sierra Cantabria Gran Reserva 2016',
+    type: 'tinto',
+    grapes: 'Tempranillo/Graciano',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 160,
+    glass: null,
+    year: 2016,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Sierra Cantabria Gran Reserva 2016 es epítome de calidad riojana. Vino para ocasiones memorables.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Sofisticado y complejo, con aromas evolucionados. Excelente estructura y envejecimiento.'
+  },
+  {
+    id: 47,
+    name: 'Contador Alma San Vicente de la Sonsierra 2022',
+    type: 'tinto',
+    grapes: 'Tempranillo/Garnacha',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 220,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Contador es maestro riojano. Su Alma 2022 promete futuro espectacular.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Concentrado y prometedor, con excelente estructura. Buen potencial de envejecimiento.'
+  },
+  {
+    id: 48,
+    name: 'Castillo Ygay Gran Reserva Especial 2011',
+    type: 'tinto',
+    grapes: 'Tempranillo/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 590,
+    glass: null,
+    year: 2011,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Castillo Ygay es castillo de excelencia. Su Gran Reserva Especial 2011 es monumento histórico en copas.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Vino de colección, perfectamente evolucionado. Aromas complejos y estructurados para apreciadores.'
+  },
+
+  // TINTOS - Castilla y León
+  {
+    id: 49,
+    name: 'Montebaco',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Montebaco es puerta a Ribera del Duero. Su Tempranillo despierta sensaciones profundas.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes a la brasa.'
+  },
+  {
+    id: 50,
+    name: 'Condado d\'Oriza Gran Reserva',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 100,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Condado d\'Oriza busca la grandeza. Su Gran Reserva es testimonio de ambición realizada.',
+    pairings: ['Entrecôte', 'Solomillo de ternera', 'Presa ibérica'],
+    notes: 'Complejo y estructurado, con buen envejecimiento. Aromas de frutos negros y especias.'
+  },
+  {
+    id: 51,
+    name: 'Corimbo',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 100,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Corimbo es geometría perfecta en la copa. Su Tempranillo equilibra potencia y elegancia.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Elegante y mineral, con aromas de frutos rojos. Excelente envejecimiento.'
+  },
+  {
+    id: 52,
+    name: 'Preludio',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 110,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Preludio es introducción a la magia ribereña. Su Tempranillo promete sinfonia futura.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Hamburguesa'],
+    notes: 'Joven y frutal, con aromas de cerezas. Buen potencial de envejecimiento.'
+  },
+  {
+    id: 53,
+    name: 'Alion 2020',
+    type: 'tinto',
+    grapes: 'Tinto Fino',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 200,
+    glass: null,
+    year: 2020,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: true,
+    kosher: false,
+    story: 'Alion 2020 es elegancia ribereña en su máxima expresión. Vega Sicilia continúa su legado.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y sofisticado, con aromas evolucionados. Excelente potencial de guarda.'
+  },
+  {
+    id: 54,
+    name: 'Alion 2018 3L Doble Magnum',
+    type: 'tinto',
+    grapes: 'Tinto Fino',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 1210,
+    glass: null,
+    year: 2018,
+    format: '3L',
+    recommended: false,
+    vegaSicilia: true,
+    kosher: false,
+    story: 'En doble magnum, Alion 2018 es obra de arte líquida. Formato para grandes celebraciones.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Monumento al Tinto Fino, ideal para ocasiones excepcionales. Perfecto para compartir.'
+  },
+  {
+    id: 55,
+    name: 'Almirez Magnum',
+    type: 'tinto',
+    grapes: 'Tinta de Toro',
+    region: 'DO Toro',
+    origin: 'Castilla y León',
+    price: 300,
+    glass: null,
+    year: null,
+    format: '1.5L Magnum',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Almirez en magnum es generosidad hecha vino. Su Tinta de Toro resuena con poder ancestral.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Potente y concentrado, con aromas de frutos negros. Ideal para celebraciones.'
+  },
+  {
+    id: 56,
+    name: 'Massuria 2014 6L',
+    type: 'tinto',
+    grapes: 'Mencía',
+    region: 'DO Bierzo',
+    origin: 'Castilla y León',
+    price: 800,
+    glass: null,
+    year: 2014,
+    format: '6L',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Massuria 2014 en formato 6L es monumento berciano. Vino para memorias imborrables.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Vino de colección, en su punto óptimo. Aromas complejos de Mencía berciana.'
+  },
+
+  // TINTOS - Andalucía
+  {
+    id: 57,
+    name: 'Iceni-Tesalia',
+    type: 'tinto',
+    grapes: 'Syrah/Tintilla de Rota',
+    region: 'VT Cádiz',
+    origin: 'Andalucía',
+    price: 75,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Iceni-Tesalia rescata la tradición vitivinícola gaditana. Syrah y Tintilla de Rota dialogan en armonía.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Entrecôte'],
+    notes: 'Aromático y elegante, con notas de frutos rojos. Ideal con carnes asadas.'
+  },
+
+  // TINTOS - Canarias
+  {
+    id: 58,
+    name: 'Artifice Tinto',
+    type: 'tinto',
+    grapes: 'Listán Negro',
+    region: 'DO Ycoden Daute Isora',
+    origin: 'Canarias',
+    price: 80,
+    glass: 16,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Artifice Tinto despierta el espíritu canario. Su Listán Negro es volcán contenido en botella.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes y platos especiados.'
+  },
+  {
+    id: 59,
+    name: 'Ruku Ruku',
+    type: 'tinto',
+    grapes: 'Listán Negro',
+    region: 'DO La Orotava',
+    origin: 'Canarias',
+    price: 85,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Ruku Ruku es ritmo canario en cada sorbo. Su Listán Negro baila entre tradición e innovación.',
+    pairings: ['Presa ibérica', 'Pollo al curry', 'Solomillo de ternera'],
+    notes: 'Joven y frutal, con aromas frescos. Ideal para beber con alegría.'
+  },
+  {
+    id: 60,
+    name: 'Crater',
+    type: 'tinto',
+    grapes: 'Listán Negro/Diego',
+    region: 'DO Tacoronte-Acentejo',
+    origin: 'Canarias',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Crater es boca de volcán tinerfeño. Su mezcla de Listán Negro y Diego respira fuego contenido.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    notes: 'Potente y aromático, con notas de frutos negros. Excelente con carnes a la brasa.'
+  },
+  {
+    id: 61,
+    name: 'Los Loros Tinto',
+    type: 'tinto',
+    grapes: 'Listán Negro',
+    region: 'DO Valle de Guimar',
+    origin: 'Canarias',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Los Loros Tinto canta la canción del Listán Negro canario. Tropicale en espíritu, volcánico en alma.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Aromático y frutal, con notas de cerezas. Ideal con carnes y platos especiados.'
+  },
+  {
+    id: 62,
+    name: 'Titerok',
+    type: 'tinto',
+    grapes: 'Listán Negro/Listán Blanco/Diego',
+    region: 'DO Lanzarote',
+    origin: 'Canarias',
+    price: 110,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Titerok es expresión única de Lanzarote. Su mezcla de tres variedades autóctonas es testamento de tradición.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y aromático, con notas de frutos rojos. Excelente estructura.'
+  },
+
+  // TINTOS - Galicia
+  {
+    id: 63,
+    name: 'Lomba dos Ares',
+    type: 'tinto',
+    grapes: 'Mencía/Merenzao/Caiño/Mouratoni/Garnacha Tintorera',
+    region: 'DO Ourense',
+    origin: 'Galicia',
+    price: 95,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Lomba dos Ares es orquesta de cinco variedades gallegas. Cada una canta su propia sinfonía.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    notes: 'Complejo y aromático, con notas de frutos rojos. Ideal con carnes asadas.'
+  },
+  {
+    id: 64,
+    name: 'Do Biolo',
+    type: 'tinto',
+    grapes: 'Espadeiro/Caiño/Mencía',
+    region: 'DO Pontevedra',
+    origin: 'Galicia',
+    price: 100,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Do Biolo rescata tradiciones ancestrales de Pontevedra. Sus tres variedades bailan el tango gallego.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Frescos y vibrantes, con aromas de frutos rojos. Ideal con platos gallegos.'
+  },
+  {
+    id: 65,
+    name: 'Lalama 2021',
+    type: 'tinto',
+    grapes: 'Mencía/Brancellao/Mouratón',
+    region: 'DO Ribera Sacra',
+    origin: 'Galicia',
+    price: 110,
+    glass: null,
+    year: 2021,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Lalama 2021 es promesa de Ribera Sacra. Sus tres variedades prometen evolución espectacular.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Joven y promisorio, con aromas frescos de frutos rojos. Buen potencial de envejecimiento.'
+  },
+
+  // TINTOS - Islas Baleares
+  {
+    id: 66,
+    name: 'Novetat Total 2021 1L',
+    type: 'tinto',
+    grapes: 'Callet/Mantonegro',
+    region: 'Mallorca',
+    origin: 'Islas Baleares',
+    price: 80,
+    glass: null,
+    year: 2021,
+    format: '1L',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Novetat Total 2021 es innovación mallorquina. En formato 1L, perfecto para compartir.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Frutal y vibrante, con aromas de cerezas. Ideal para beber con alegría.'
+  },
+
+  // TINTOS - Murcia
+  {
+    id: 67,
+    name: 'Casa Castillo La Tendida 2022',
+    type: 'tinto',
+    grapes: 'Monastrell/Garnacha',
+    region: 'DO Jumilla',
+    origin: 'Murcia',
+    price: 75,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Casa Castillo La Tendida 2022 es tradición murciana. Su Monastrell y Garnacha despiertan el palatar.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Joven y frutal, con aromas de frutos negros. Ideal con carnes asadas.'
+  },
+
+  // TINTOS - Castilla La Mancha
+  {
+    id: 68,
+    name: 'Pago Florentino',
+    type: 'tinto',
+    grapes: 'Cencíbel',
+    region: 'VP Pago Florentino',
+    origin: 'Castilla La Mancha',
+    price: 65,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Pago Florentino rescata la dignidad de Castilla La Mancha. Su Cencíbel es promesa de tierra árida.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Hamburguesa'],
+    notes: 'Frutal y accesible, con aromas de cerezas. Ideal para beber con alegría.'
+  },
+  {
+    id: 69,
+    name: 'Vallgarcía',
+    type: 'tinto',
+    grapes: 'Syrah',
+    region: 'DO Pago ValleGarcía',
+    origin: 'Castilla La Mancha',
+    price: 70,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Vallgarcía es oasis de excelencia en La Mancha. Su Syrah es fruta madura de sol castellano.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes especiadas.'
+  },
+
+  // TINTOS - Francia
+  {
+    id: 70,
+    name: 'La Campagne',
+    type: 'tinto',
+    grapes: 'Cabernet Sauvignon',
+    region: 'Pays d\'Oc IGP',
+    origin: 'Francia',
+    price: 45,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'La Campagne es campo francés en botella. Su Cabernet Sauvignon es frescura mediterránea.',
+    pairings: ['Hamburguesa', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Frutal y accesible, con aromas de cerezas. Ideal para beber sin pretensiones.'
+  },
+  {
+    id: 71,
+    name: 'Les Argelières Rouge',
+    type: 'tinto',
+    grapes: 'Pinot Noir',
+    region: 'Pays d\'Oc IGP',
+    origin: 'Francia',
+    price: 50,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Les Argelières es elegancia meridional. Su Pinot Noir respira delicadeza francesa.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Elegante y frutal, con aromas de cerezas rojas. Ideal con carnes ligeras.'
+  },
+  {
+    id: 72,
+    name: 'Les Lauriers',
+    type: 'tinto',
+    grapes: 'Merlot/Cabernet Franc',
+    region: 'AOC Montagne Saint Émilion',
+    origin: 'Francia',
+    price: 70,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: true,
+    story: 'Les Lauriers es certificación KOSHER de excelencia bordelesa. Merlot y Cabernet Franc en armonía.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y estructurado, con aromas de frutos rojos. Ideal con carnes.',
+  },
+  {
+    id: 73,
+    name: 'Cotes du Rhone 2021',
+    type: 'tinto',
+    grapes: 'Syrah/Garnacha/Monastrell',
+    region: 'AOC Cotes du Rhone',
+    origin: 'Francia',
+    price: 95,
+    glass: null,
+    year: 2021,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Côtes du Rhône 2021 es clasicismo rodaniano. Tres variedades crean sinfonía mediterránea.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Complejo y aromático, con notas de frutos rojos y especias. Ideal con carnes asadas.'
+  },
+  {
+    id: 74,
+    name: 'Albert Bichot Origines Rouge',
+    type: 'tinto',
+    grapes: 'Pinot Noir',
+    region: 'AOC Bourgogne',
+    origin: 'Francia',
+    price: 95,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Albert Bichot Origines Rouge es expresión pura del Pinot Noir borgoñón. Tradición hecha vino.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Elegante y mineral, con aromas de frutos rojos. Buen envejecimiento.'
+  },
+  {
+    id: 75,
+    name: 'Château By Medoc 2016',
+    type: 'tinto',
+    grapes: 'Cabernet Sauvignon/Merlot',
+    region: 'AOC Médoc',
+    origin: 'Francia',
+    price: 130,
+    glass: null,
+    year: 2016,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: true,
+    story: 'Château By Medoc 2016 es certificación KOSHER de elegancia bordelesa. Cabernet y Merlot dialogan.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Sofisticado y estructurado, con aromas evolucionados. Excelente envejecimiento.'
+  },
+  {
+    id: 76,
+    name: 'Domaine Charvin 2022',
+    type: 'tinto',
+    grapes: 'Grenache/Syrah/Mourvèdre',
+    region: 'AOC Côtes du Rhône',
+    origin: 'Francia',
+    price: 135,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Domaine Charvin 2022 es triada rodaniana perfecta. Grenache, Syrah y Mourvèdre en sinfonía.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Joven y vibrante, con aromas frescos de frutos negros. Buen potencial futuro.'
+  },
+  {
+    id: 77,
+    name: 'Fanny Sabre Rouge 2022',
+    type: 'tinto',
+    grapes: 'Pinot Noir',
+    region: 'AOC Bourgogne',
+    origin: 'Francia',
+    price: 155,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Fanny Sabre Rouge 2022 es voz femenina emergente en Bourgogne. Pinot Noir de carácter.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    notes: 'Elegante y complejo, con aromas de frutos rojos. Buen potencial de envejecimiento.'
+  },
+  {
+    id: 78,
+    name: 'Côte d\'Or Bourgogne',
+    type: 'tinto',
+    grapes: 'Pinot Noir',
+    region: 'AOC Bourgogne Côte d\'Or',
+    origin: 'Francia',
+    price: 170,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Côte d\'Or Bourgogne es referencia absoluta. Su Pinot Noir es epítome de elegancia borgoñona.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Sofisticado y complejo, con aromas evolucionados. Vino de colección.'
+  },
+
+  // TINTOS - Sur Africa
+  {
+    id: 79,
+    name: 'David & Nadia 2021',
+    type: 'tinto',
+    grapes: 'Garnacha',
+    region: 'Swartland',
+    origin: 'Sur Africa',
+    price: 150,
+    glass: null,
+    year: 2021,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'David & Nadia 2021 es voz nueva de Swartland. Su Garnacha despierta alma africana.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Potente y aromático, con notas de frutos negros. Excelente estructura.'
+  },
+
+  // TINTOS - Argentina
+  {
+    id: 80,
+    name: 'Brazos de los Andes 2023',
+    type: 'tinto',
+    grapes: 'Malbec',
+    region: 'Valle de Uco-Mendoza',
+    origin: 'Argentina',
+    price: 80,
+    glass: null,
+    year: 2023,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Brazos de los Andes 2023 es promesa mendocina. Su Malbec baila con la altitud andina.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Joven y vibrante, con aromas frescos de frutos rojos. Buen potencial futuro.'
+  },
+  {
+    id: 81,
+    name: 'Poligonos',
+    type: 'tinto',
+    grapes: 'Malbec',
+    region: 'Valle de Uco-Mendoza',
+    origin: 'Argentina',
+    price: 160,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: true,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Poligonos es mapa de Mendoza. Su Malbec escribe historia con tintas de altura.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente envejecimiento.'
+  },
+
+  // TINTOS - Cataluña/Otras regiones españolas
+  {
+    id: 82,
+    name: 'La Fita Sumolt Negre',
+    type: 'tinto',
+    grapes: 'Sumoll',
+    region: 'DO Penedés',
+    origin: 'Cataluña',
+    price: 75,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'La Fita Sumolt Negre rescata el Sumoll autóctono. Variedad olvidada que resurge con esplendor.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Frutal y aromático, con notas de frutos rojos. Ideal con carnes asadas.'
+  },
+  {
+    id: 83,
+    name: 'Les Cousins L\'Inconscient 2022',
+    type: 'tinto',
+    grapes: 'Cariñena/Merlot/Garnacha/Cabernet Sauvignon',
+    region: 'DO Ca Priorat',
+    origin: 'Cataluña',
+    price: 80,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Les Cousins L\'Inconscient 2022 es cuatroda prioratana. Cuatro variedades en conversa apasionada.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Entrecôte'],
+    notes: 'Joven y vibrante, con aromas complejos. Buen potencial de envejecimiento.'
+  },
+  {
+    id: 84,
+    name: 'Porrera 2019',
+    type: 'tinto',
+    grapes: 'Cariñena/Garnacha',
+    region: 'DO Ca Priorat',
+    origin: 'Cataluña',
+    price: 80,
+    glass: null,
+    year: 2019,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Porrera 2019 es testimonio de Priorat. Cariñena y Garnacha en harmony perfecta.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Evolucionado y complejo, con aromas de frutos rojos. En su punto óptimo.'
+  },
+  {
+    id: 85,
+    name: 'Gran Caus',
+    type: 'tinto',
+    grapes: 'Cabernet Sauvignon/Cabernet Franc/Merlot',
+    region: 'DO Penedés',
+    origin: 'Cataluña',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Gran Caus es triada bordelesa en Penedés. Cabernet Sauvignon, Franc y Merlot en armonía.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Elegante y estructurado, con aromas de frutos negros. Buen envejecimiento.'
+  },
+  {
+    id: 86,
+    name: 'Amic Tinto',
+    type: 'tinto',
+    grapes: 'Garnacha/Cariñena/Syrah',
+    region: 'DO Empordá',
+    origin: 'Cataluña',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Amic Tinto es amistad empordanesa. Tres variedades bailan como hermanas.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Aromático y equilibrado, con notas de frutos rojos. Ideal con carnes asadas.'
+  },
+  {
+    id: 87,
+    name: 'Finca Malaveina',
+    type: 'tinto',
+    grapes: 'Merlot/Syrah/Cabernet Sauvignon',
+    region: 'DO Empordá',
+    origin: 'Cataluña',
+    price: 135,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Finca Malaveina cultiva triada bordelesa en Costa Brava. Vino de clima y carácter.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente estructura.'
+  },
+  {
+    id: 88,
+    name: 'Les Terrasses',
+    type: 'tinto',
+    grapes: 'Garnacha/Cariñena',
+    region: 'DO Ca Priorat',
+    origin: 'Cataluña',
+    price: 160,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Les Terrasses es oda a las terrazas priorateñas. Garnacha y Cariñena en pizarra.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Sofisticado y mineral, con aromas complejos. Excelente envejecimiento.'
+  },
+  {
+    id: 89,
+    name: 'Alvaro Palacios Gratallops 2018 Magnum',
+    type: 'tinto',
+    grapes: 'Garnacha',
+    region: 'DO Ca Priorat',
+    origin: 'Cataluña',
+    price: 330,
+    glass: null,
+    year: 2018,
+    format: '1.5L Magnum',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Álvaro Palacios Gratallops 2018 en magnum es obra de arte. Su Garnacha prioratana es leyenda.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Vino de colección, complejo y mineral. Ideal para ocasiones memorables.'
+  },
+  {
+    id: 90,
+    name: 'Oddero 2022',
+    type: 'tinto',
+    grapes: 'Dolcetto',
+    region: 'DOCG Dolcetto d\'Alba',
+    origin: 'Italia',
+    price: 80,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Oddero 2022 trae desde Piamonte la elegancia del Dolcetto. Vino italiano auténtico.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Frutal y elegante, con aromas de cerezas. Ideal con carnes ligeras.'
+  },
+  {
+    id: 91,
+    name: 'Penfolds Koonunga Hill',
+    type: 'tinto',
+    grapes: 'Shiraz/Cabernet Sauvignon',
+    region: 'Australia',
+    origin: 'Australia',
+    price: 90,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Penfolds Koonunga Hill es clasicismo australiano. Shiraz y Cabernet en simbiosis perfecta.',
+    pairings: ['Solomillo de ternera', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes asadas.'
+  },
+
+  // ROSADOS
+  {
+    id: 92,
+    name: 'Muga Rosado',
+    type: 'rosado',
+    grapes: 'Garnacha/Viura/Tempranillo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 55,
+    glass: 12,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Muga Rosado es expresión de tres variedades riojanas. Rosado de carácter y personalidad.',
+    pairings: ['Ensalada César', 'Tartar de remolacha', 'Ceviche de corvina'],
+    notes: 'Fresco y aromático, con aromas de frutos rojos. Ideal como aperitivo o con ensaladas.'
+  },
+  {
+    id: 93,
+    name: 'Miraval 2021 6L',
+    type: 'rosado',
+    grapes: 'Cinsault/Grenache/Syrah/Rolle/Tibou',
+    region: 'AOC Côtes du Provence',
+    origin: 'Francia',
+    price: 1120,
+    glass: null,
+    year: 2021,
+    format: '6L',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Miraval 2021 en formato 6L es monumentala provenzal. Cinco variedades en botella extraordinaria.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    notes: 'Vino de colección, perfecto para celebraciones. Aromático con aromas provenzales.'
+  },
+
+  // DULCES
+  {
+    id: 94,
+    name: 'Oremus Late Harvest 2022',
+    type: 'dulce',
+    grapes: 'Furmint/Hárselevelü',
+    region: 'Tokaji-Hungría',
+    origin: 'Hungría',
+    price: 70,
+    glass: null,
+    year: 2022,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: true,
+    kosher: false,
+    story: 'Oremus Late Harvest 2022 es néctar tokaji. Furmint y Hárselevelü en cosecha tardía perfecta.',
+    pairings: ['Cheesecake', 'Coulant de chocolate', 'Tiramisú'],
+    notes: 'Dulce y aromático, con notas de miel y frutas secas. Ideal para postres.'
+  },
+  {
+    id: 95,
+    name: 'Tokaji Oremus Aszú 3 Puttonyus 2017',
+    type: 'dulce',
+    grapes: 'Furmint/Hárselevelü/Sargamuskotaly/Zéta',
+    region: 'Tokaji-Hungría',
+    origin: 'Hungría',
+    price: 170,
+    glass: null,
+    year: 2017,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: true,
+    kosher: false,
+    story: 'Tokaji Oremus Aszú 3 Puttonyus 2017 es esencia de Tokaji. Cuatro variedades en armonía dulce.',
+    pairings: ['Cheesecake', 'Crema catalana', 'Coulant de chocolate'],
+    notes: 'Complejo y sofisticado, con notas de miel, frutos secos y especias. Vino de colección.'
+  },
+
+  // ESPUMOSOS - COPA
+  {
+    id: 96,
+    name: 'Colet A Priori',
+    type: 'espumoso',
+    grapes: 'Macabeu/Chardonnay/Riesling/Muscat',
+    region: 'DO Clàssic Penedès',
+    origin: 'Cataluña',
+    price: 75,
+    glass: 15,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Colet A Priori es cuatroda penedésana en espumoso. Cuatro variedades crean efervescencia mágica.',
+    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    notes: 'Fresco y aromático, con buen perlage. Ideal como aperitivo.'
+  },
+  {
+    id: 97,
+    name: 'Andre Clouet',
+    type: 'espumoso',
+    grapes: 'Chardonnay',
+    region: 'AOC Champagne',
+    origin: 'Francia',
+    price: 185,
+    glass: 25,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'André Clouet es expresión pura del Chardonnay champenoise. Elegancia en cada burbuja.',
+    pairings: ['Calamares', 'Ceviche de corvina', 'Fish and chips'],
+    notes: 'Elegante y complejo, con aromas florales. Ideal como aperitivo o celebración.'
+  },
+
+  // ESPUMOSOS - BOTELLA
+  {
+    id: 98,
+    name: 'Foresta',
+    type: 'espumoso',
+    grapes: 'Macabeo',
+    region: 'DO Penedès',
+    origin: 'Cataluña',
+    price: 60,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Foresta es bosque penedésano en botella. Su Macabeo trae frescura y vitalidad.',
+    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    notes: 'Fresco y frutal, con buen perlage. Ideal como aperitivo.'
+  },
+  {
+    id: 99,
+    name: 'Colet A Priori Botella',
+    type: 'espumoso',
+    grapes: 'Macabeu/Chardonnay/Riesling/Muscat',
+    region: 'DO Clàssic Penedès',
+    origin: 'Cataluña',
+    price: 75,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Colet A Priori en botella es expresión completa. Cuatroda penedésana con carácter.',
+    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    notes: 'Fresco y aromático, con buen perlage. Ideal para celebraciones.'
+  },
+  {
+    id: 100,
+    name: 'Gramona III Lustros 2017',
+    type: 'espumoso',
+    grapes: 'Xarel-lo/Macabeo/Parellada',
+    region: 'DO Penedès',
+    origin: 'Cataluña',
+    price: 150,
+    glass: null,
+    year: 2017,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Gramona III Lustros 2017 es triada clásica penedésana. Años de envejecimiento han creado complejidad.',
+    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de atún'],
+    notes: 'Complejo y sofisticado, con aromas evolucionados. Ideal para ocasiones especiales.'
+  },
+  {
+    id: 101,
+    name: 'Gatinois',
+    type: 'espumoso',
+    grapes: 'Chardonnay',
+    region: 'AOC Champagne',
+    origin: 'Francia',
+    price: 170,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Gatinois es expresión champenoise clásica. Su Chardonnay es elegancia en botella.',
+    pairings: ['Calamares', 'Ceviche de corvina', 'Fish and chips'],
+    notes: 'Elegante y complejo, con aromas florales y cítricos. Perfecto para celebraciones.'
+  },
+  {
+    id: 102,
+    name: 'Andre Clouet Chalky',
+    type: 'espumoso',
+    grapes: 'Chardonnay',
+    region: 'AOC Champagne',
+    origin: 'Francia',
+    price: 185,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'André Clouet Chalky es sofisticación champenoise. Chardonnay que respira minerales de creta.',
+    pairings: ['Ceviche de corvina', 'Calamares', 'Tartar de atún'],
+    notes: 'Mineral y elegante, con aromas complejos. Ideal para apreciadores.'
+  },
+  {
+    id: 103,
+    name: 'Calsac Clos du Malandries Grand Cru',
+    type: 'espumoso',
+    grapes: 'Chardonnay',
+    region: 'AOC Champagne',
+    origin: 'Francia',
+    price: 310,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Calsac Clos du Malandries Grand Cru es pinnáculo champenoise. Chardonnay de viñedo histórico.',
+    pairings: ['Ceviche de corvina', 'Tartar de atún', 'Calamares'],
+    notes: 'Vino de colección, complejo y mineral. Perfecto para ocasiones memorables.'
+  },
+  {
+    id: 104,
+    name: 'AT Roca Rosat',
+    type: 'rosado',
+    grapes: 'Garnacha Negra/Macabeo',
+    region: 'DO Clàssic Penedès',
+    origin: 'Cataluña',
+    price: 60,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'AT Roca Rosat es rosado espumoso penedésano. Garnacha Negra y Macabeo en armonía.',
+    pairings: ['Ensalada César', 'Tartar de remolacha', 'Calamares'],
+    notes: 'Fresco y aromático, con notas de frutos rojos. Ideal como aperitivo.'
+  },
+  {
+    id: 105,
+    name: 'Gatinois Brut Rosé',
+    type: 'rosado',
+    grapes: 'Chardonnay',
+    region: 'AOC Champagne',
+    origin: 'Francia',
+    price: 220,
+    glass: null,
+    year: null,
+    format: '75cl',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Gatinois Brut Rosé es sofisticación champenoise en rosa. Elegancia pura.',
+    pairings: ['Ensalada César', 'Tartar de remolacha', 'Fish and chips'],
+    notes: 'Elegante y fresco, con aromas florales. Perfecto para celebraciones con carácter.'
+  },
+
+  // BEBIDAS POR COPA - BLANCO
+  {
+    id: 106,
+    name: 'Valtravieso Nogara',
+    type: 'blanco',
+    grapes: 'Verdejo',
+    region: 'DO Rueda',
+    origin: 'Castilla y León',
+    price: 30,
+    glass: 10,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Valtravieso Nogara es pura Verdejo ruedeña. Fresco, mineral y revitalizante.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Ceviche de corvina'],
+    notes: 'Fresco y mineral, con aromas cítricos. Perfecto como aperitivo.'
+  },
+  {
+    id: 107,
+    name: 'Fenomenal SB',
+    type: 'blanco',
+    grapes: 'Sauvignon Blanc',
+    region: 'DO Rueda',
+    origin: 'Castilla y León',
+    price: 50,
+    glass: 15,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Fenomenal SB es expresión ruedeña del Sauvignon Blanc. Mineral y fresco.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    notes: 'Fresco y herbáceo, con aromas de cítricos. Ideal como aperitivo.'
+  },
+  {
+    id: 108,
+    name: 'El Grifo Lías',
+    type: 'blanco',
+    grapes: 'Malvasía',
+    region: 'DO Lanzarote',
+    origin: 'Canarias',
+    price: 70,
+    glass: 20,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'El Grifo Lías es expresión auténtica del Malvasía lanzaroteño. Aromático y complejo.',
+    pairings: ['Calamares', 'Fish and chips', 'Ensalada César'],
+    notes: 'Aromático y complejo, con notas de miel y flores. Ideal con mariscos.'
+  },
+
+  // BEBIDAS POR COPA - TINTO
+  {
+    id: 109,
+    name: 'Arienzo Marques de Riscal 2022',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 35,
+    glass: 10,
+    year: 2022,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Arienzo Marqués de Riscal 2022 es introducción a Rioja. Joven, frutal y accesible.',
+    pairings: ['Hamburguesa', 'Presa ibérica', 'Croquetas de jamón'],
+    notes: 'Frutal y fresco, con aromas de cerezas. Ideal para beber sin pretensiones.'
+  },
+  {
+    id: 110,
+    name: 'Cair Cuvèe',
+    type: 'tinto',
+    grapes: 'Tempranillo',
+    region: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    price: 40,
+    glass: 12,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Cair Cuvèe es expresión ribereña accesible. Tempranillo de carácter.',
+    pairings: ['Hamburguesa', 'Presa ibérica', 'Pollo al curry'],
+    notes: 'Equilibrado y frutal, con aromas de frutos rojos. Ideal con carnes.'
+  },
+  {
+    id: 111,
+    name: 'Artifice Tinto Copa',
+    type: 'tinto',
+    grapes: 'Listán Negro',
+    region: 'DO Ycoden Daute Isora',
+    origin: 'Canarias',
+    price: 55,
+    glass: 16,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Artifice Tinto por copa es puerta a Canarias. Listán Negro con carácter volcánico.',
+    pairings: ['Presa ibérica', 'Solomillo de ternera', 'Pollo al curry'],
+    notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes asadas.'
+  },
+  {
+    id: 112,
+    name: 'Marques de Murrieta Reserva Copa',
+    type: 'tinto',
+    grapes: 'Tempranillo/Garnacha/Graciano/Mazuelo',
+    region: 'DO Ca Rioja',
+    origin: 'La Rioja-Álava',
+    price: 60,
+    glass: 17,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Marqués de Murrieta Reserva por copa es elegancia riojana accesible. Expresión completa.',
+    pairings: ['Solomillo de ternera', 'Entrecôte', 'Presa ibérica'],
+    notes: 'Complejo y equilibrado, con aromas de frutos rojos y especias. Excelente opción por copa.'
+  },
+
+  // COCKTAILS
+  {
+    id: 113,
+    name: 'Mojito Classic',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Caribeño',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Mojito Classic es la leyenda caribeña. Menta, ron y frescura en cada sorbo de Txoko.',
+    pairings: ['Calamares', 'Fish and chips', 'Ensalada César'],
+    notes: 'Refrescante y herbáceo, perfecto para tardes soleadas. Ideal con mariscos y ensaladas.'
+  },
+  {
+    id: 114,
+    name: 'Mojito Passion',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Caribeño',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Mojito Passion es tropicalidad en copa. Fruta de la pasión con la elegancia del mojito clásico.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    notes: 'Tropical y refrescante, con notas de maracuyá. Perfecto para celebraciones.'
+  },
+  {
+    id: 115,
+    name: 'Mojito Eclipse con vodka negro',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Moderno',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Mojito Eclipse es elegancia moderna. Vodka negro y menta crean oscuridad luminosa.',
+    pairings: ['Calamares', 'Fish and chips', 'Ceviche de corvina'],
+    notes: 'Sofisticado y misterioso, con matices oscuros. Ideal para noches especiales.'
+  },
+  {
+    id: 116,
+    name: 'Espresso Martini',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Moderno',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Espresso Martini es para quienes buscan energía y elegancia. Café y vodka en perfecta sintonía.',
+    pairings: ['Coulant de chocolate', 'Cheesecake', 'Tiramisú'],
+    notes: 'Intenso y sofisticado, con notas de café. Perfecto para después de cena.'
+  },
+  {
+    id: 117,
+    name: 'Dry Martini',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Clásico',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Dry Martini es el clásico atemporal. Gin y elegancia pura, como debe ser.',
+    pairings: ['Croquetas de jamón', 'Gyozas', 'Calamares'],
+    notes: 'Elegante y seco, con notas de botánicos. Ideal como aperitivo sofisticado.'
+  },
+  {
+    id: 118,
+    name: 'Lychee Martini',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Moderno',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Lychee Martini es sofisticación asiática. Lichis dulces con la estructura del martini clásico.',
+    pairings: ['Calamares', 'Gyozas', 'Fish and chips'],
+    notes: 'Delicado y floral, con notas de frutas exóticas. Perfecto para paladar refinado.'
+  },
+  {
+    id: 119,
+    name: 'Negroni',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Italiano',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Negroni es la Italia en copa. Campari, gin y vermut en equilibrio amargodulce.',
+    pairings: ['Croquetas de jamón', 'Calamares', 'Ceviche de corvina'],
+    notes: 'Amargo y equilibrado, con notas herbáceas. Ideal como aperitivo de carácter.'
+  },
+  {
+    id: 120,
+    name: 'Aperol Spritz',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Italiano',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Aperol Spritz es la tarde italiana. Refrescante, ligero y perfecto para cualquier ocasión.',
+    pairings: ['Ensalada César', 'Tartar de remolacha', 'Calamares'],
+    notes: 'Ligero y refrescante, con notas cítricasalmaradas. Perfecto como aperitivo.'
+  },
+  {
+    id: 121,
+    name: 'Long Island',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Americano',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Long Island es potencia americana en botella. Seis licores en armonía explosiva.',
+    pairings: ['Fish and chips', 'Calamares', 'Nuggets de pollo'],
+    notes: 'Potente y complejo, con múltiples notas. Ideal para noche de celebración.'
+  },
+  {
+    id: 122,
+    name: 'Sangria Red',
+    type: 'cocktail',
+    grapes: 'Mezcla de variedades',
+    region: 'España',
+    origin: 'Español',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Sangria Red es el espíritu español en vaso. Vino tinto con frutas en armonía refrescante.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Calamares'],
+    notes: 'Frutal y refrescante, con aromas de frutas y especias. Perfecto para tardes de verano.'
+  },
+  {
+    id: 123,
+    name: 'Sangria White',
+    type: 'cocktail',
+    grapes: 'Mezcla de variedades',
+    region: 'España',
+    origin: 'Español',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Sangria White es legría versión clara. Vino blanco con frutas para noches luminosas.',
+    pairings: ['Ceviche de corvina', 'Ensalada César', 'Fish and chips'],
+    notes: 'Frutal y ligero, con aromas de cítricos. Ideal para tardes festivas.'
+  },
+  {
+    id: 124,
+    name: 'Sangria Sparkling',
+    type: 'cocktail',
+    grapes: 'Mezcla de variedades',
+    region: 'España',
+    origin: 'Español',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Sangria Sparkling es sangría elevada. Espumoso con frutas para celebraciones efervescentes.',
+    pairings: ['Calamares', 'Fish and chips', 'Tartar de remolacha'],
+    notes: 'Elegante y refrescante, con burbujas y frutas. Perfecto para celebraciones.'
+  },
+  {
+    id: 125,
+    name: 'Tommy Margarita',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Mexicano',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Tommy Margarita es mexicanidad en copa. Tequila, lima y sal para hacer fiesta.',
+    pairings: ['Fish and chips', 'Calamares', 'Tartar de atún'],
+    notes: 'Cítrico y refrescante, con toque salado. Perfecto para tardes festivas.'
+  },
+  {
+    id: 126,
+    name: 'Moscow Mule',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Ruso-Americano',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Moscow Mule es fusión fría. Vodka ruso con cerveza de jengibre estadounidense.',
+    pairings: ['Fish and chips', 'Calamares', 'Ceviche de corvina'],
+    notes: 'Refrescante y especiado, con picante de jengibre. Ideal para noches cálidas.'
+  },
+  {
+    id: 127,
+    name: 'Txoko\'s Paloma',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Txoko',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Txoko\'s Paloma es firma de la casa. Tequila y toronja en serenata caribeña.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Tartar de atún'],
+    notes: 'Cítrico y refrescante, con dulzor de toronja. Perfecto como firma de Txoko.'
+  },
+  {
+    id: 128,
+    name: 'Ginger Passion Caipirihna',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Brasileño',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Ginger Passion Caipiriña es Brasil con giro tropical. Cachaça, jengibre y pasión.',
+    pairings: ['Fish and chips', 'Calamares', 'Tartar de atún'],
+    notes: 'Tropical y especiado, con notas de jengibre y maracuyá. Perfecto para aventureros.'
+  },
+  {
+    id: 129,
+    name: 'Lychee Margarita',
+    type: 'cocktail',
+    grapes: null,
+    region: null,
+    origin: 'Fusión',
+    price: 16.5,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Lychee Margarita es Oriente conoce Occidente. Tequila con lichis para paladar aventurero.',
+    pairings: ['Gyozas', 'Calamares', 'Fish and chips'],
+    notes: 'Floral y frutal, con toque cítrico. Ideal para exploradores de sabores.'
+  },
+
+  // MOCKTAILS
+  {
+    id: 130,
+    name: 'Ipanema',
+    type: 'mocktail',
+    grapes: null,
+    region: null,
+    origin: 'Brasileño',
+    price: 12,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Ipanema es Río sin alcohol. Frutas tropicales y refrescancia pura.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    notes: 'Tropical y refrescante, con aromas de frutas exóticas. Perfecto para cualquier hora.'
+  },
+  {
+    id: 131,
+    name: 'Vitalía',
+    type: 'mocktail',
+    grapes: null,
+    region: null,
+    origin: 'Txoko',
+    price: 12,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Vitalía es vitalidad en vaso. Frutas, hierbas y energía refrescante de Txoko.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Tartar de remolacha'],
+    notes: 'Vibrante y herbáceo, con aromas de frutas y plantas. Perfecto para vitalizarse.'
+  },
+  {
+    id: 132,
+    name: 'San Francisco',
+    type: 'mocktail',
+    grapes: null,
+    region: null,
+    origin: 'Americano',
+    price: 12,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'San Francisco es California en vaso sin alcohol. Frutas y frescura de la costa.',
+    pairings: ['Fish and chips', 'Ceviche de corvina', 'Calamares'],
+    notes: 'Frutal y refrescante, con aromas cítricos. Ideal como aperitivo ligero.'
+  },
+  {
+    id: 133,
+    name: 'Virgin Mojito',
+    type: 'mocktail',
+    grapes: null,
+    region: null,
+    origin: 'Caribeño',
+    price: 12,
+    glass: null,
+    year: null,
+    format: 'copa',
+    recommended: false,
+    vegaSicilia: false,
+    kosher: false,
+    story: 'Virgin Mojito es mojito sin ron. Menta y frescura para todos.',
+    pairings: ['Ensalada César', 'Fish and chips', 'Calamares'],
+    notes: 'Refrescante y herbáceo, con aromas de menta. Perfecto para cualquier hora del día.'
+  }
+];
+
+let _wineFilter = 'all';
+let _wineSearch = '';
+let _wineView = 'grid';
+let _vinoSubTab = 'carta';
+
+// ═══ WINE EDUCATION DATA ═══
+const WINE_CONCEPTS = [
+  {
+    title: 'Crianza',
+    icon: '🪵',
+    short: 'Mínimo 2 años de envejecimiento, al menos 6 meses en barrica de roble.',
+    detail: 'Un vino Crianza ha pasado al menos 24 meses de envejecimiento total, de los cuales un mínimo de 6 meses han sido en barrica de roble (12 meses para tintos en Rioja). El resultado es un vino con notas de vainilla, especias y una taninos más suaves.',
+    tip: 'Al huésped: "Es un vino joven con un toque elegante de madera, perfecto para acompañar carnes y arroces."'
+  },
+  {
+    title: 'Reserva',
+    icon: '🏛️',
+    short: 'Mínimo 3 años de envejecimiento, al menos 12 meses en barrica.',
+    detail: 'Los vinos Reserva requieren un mínimo de 36 meses de envejecimiento, con al menos 12 meses en barrica de roble. Son vinos más complejos, con mayor profundidad de sabor y aromas más evolucionados.',
+    tip: 'Al huésped: "Un vino con carácter y personalidad, ideal para platos de sabor intenso como nuestro solomillo o la presa ibérica."'
+  },
+  {
+    title: 'Gran Reserva',
+    icon: '👑',
+    short: 'Mínimo 5 años de envejecimiento, al menos 18 meses en barrica.',
+    detail: 'La categoría más alta. Requiere un mínimo de 60 meses de envejecimiento total, con al menos 18 meses en barrica. Solo se elaboran en las mejores añadas. Son vinos de gran elegancia y complejidad.',
+    tip: 'Al huésped: "Una joya vinícola que solo se produce en años excepcionales. Un vino para disfrutar y recordar."'
+  },
+  {
+    title: 'Denominación de Origen (DO)',
+    icon: '🗺️',
+    short: 'Sello que garantiza el origen geográfico y la calidad del vino.',
+    detail: 'La DO certifica que un vino procede de una región específica y cumple con estándares de calidad controlados. Cada DO tiene sus propias normas sobre variedades de uva permitidas, métodos de elaboración y tiempo de envejecimiento.',
+    tip: 'Al huésped: "Este sello garantiza que el vino viene de donde dice y se ha elaborado siguiendo la tradición de esa región."'
+  },
+  {
+    title: 'DOCa / DOQ (Calificada)',
+    icon: '⭐',
+    short: 'El nivel más alto de denominación en España. Solo Rioja y Priorat.',
+    detail: 'Solo dos regiones en España tienen esta distinción máxima: Rioja (DOCa desde 1991) y Priorat (DOQ desde 2000). Implica controles más estrictos en toda la cadena de producción, desde la viña hasta el embotellado.',
+    tip: 'Al huésped: "Es la élite de los vinos españoles. Solo dos regiones en toda España tienen este reconocimiento."'
+  },
+  {
+    title: 'Vinos Canarios',
+    icon: '🌋',
+    short: 'Viñedos volcánicos únicos en el mundo, con variedades autóctonas prefiloxéricas.',
+    detail: 'Las Islas Canarias son un tesoro vinícola mundial. Sus viñas nunca fueron afectadas por la plaga de filoxera que devastó Europa en el siglo XIX, por lo que conservan cepas centenarias sobre pie franco (raíz original). El suelo volcánico y los vientos atlánticos crean vinos minerales y salinos únicos. Variedades como Listán Negro, Listán Blanco, Malvasía, Marmajuelo y Albillo Criollo no se encuentran en ningún otro lugar.',
+    tip: 'Al huésped: "Nuestros vinos canarios son únicos en el mundo — nacen de viñedos volcánicos centenarios que sobrevivieron a la plaga que destruyó los viñedos de toda Europa. Son literalmente historia viva en cada copa."'
+  },
+  {
+    title: 'Taninos',
+    icon: '🫖',
+    short: 'Compuestos que dan estructura y sensación de sequedad en boca.',
+    detail: 'Los taninos provienen de la piel, las semillas de la uva y la barrica de roble. Son los responsables de esa sensación de astringencia o "sequedad" en la boca. Con el envejecimiento, los taninos se suavizan y el vino gana en elegancia.',
+    tip: 'Al huésped: "Si siente una ligera sequedad en el paladar, son los taninos — es lo que le da cuerpo y estructura al vino."'
+  },
+  {
+    title: 'Maridaje',
+    icon: '🤝',
+    short: 'El arte de combinar vino y comida para potenciar ambos.',
+    detail: 'El maridaje busca que vino y plato se complementen mutuamente. Las reglas básicas: blancos frescos con pescados y mariscos, tintos con carnes y guisos, dulces con postres. Pero la regla más importante es: el maridaje perfecto es el que tú disfrutas.',
+    tip: 'Al huésped: "Le recomiendo este vino porque su frescura/cuerpo/acidez complementa perfectamente los sabores de su plato."'
+  },
+  {
+    title: 'Decantación',
+    icon: '🫗',
+    short: 'Proceso de airear el vino para que desarrolle todos sus aromas.',
+    detail: 'Decantar un vino significa trasvasarlo del botella a un decantador para oxigenarlo. Es especialmente útil con tintos jóvenes potentes (para suavizarlos) y con vinos añejos (para separar los sedimentos). El tiempo de decantación varía: 30 minutos para jóvenes, solo unos minutos para vinos muy viejos.',
+    tip: 'Al huésped: "Permítame decantar este vino — al oxigenarse revelará todos sus aromas ocultos."'
+  },
+  {
+    title: 'Temperatura de servicio',
+    icon: '🌡️',
+    short: 'Cada tipo de vino tiene su temperatura ideal para disfrutarlo al máximo.',
+    detail: 'Blancos ligeros: 7-9°C. Blancos con cuerpo y rosados: 10-12°C. Tintos jóvenes: 14-16°C. Tintos con crianza: 16-18°C. Espumosos: 6-8°C. Dulces: 6-8°C. Un vino demasiado frío pierde aromas, demasiado caliente pierde frescura.',
+    tip: 'Al huésped: "Le sirvo este [tinto/blanco] a su temperatura ideal para que pueda apreciar todos los matices."'
+  },
+  {
+    title: 'Variedades autóctonas españolas',
+    icon: '🇪🇸',
+    short: 'España tiene más de 600 variedades de uva, muchas únicas en el mundo.',
+    detail: 'Tintas estrella: Tempranillo (Rioja, Ribera del Duero), Garnacha (Aragón, Priorat), Monastrell (Jumilla), Mencía (Bierzo), Listán Negro (Canarias). Blancas estrella: Albariño (Rías Baixas), Verdejo (Rueda), Godello (Valdeorras), Viura (Rioja), Malvasía (Canarias, Lanzarote). Cada una expresa su terroir de forma única.',
+    tip: 'Al huésped: "España es el país con mayor diversidad de uvas del mundo. Este vino está elaborado con [variedad], que solo alcanza esta expresión en [región]."'
+  },
+  {
+    title: 'Copa adecuada',
+    icon: '🥂',
+    short: 'La forma de la copa influye directamente en cómo percibimos el vino.',
+    detail: 'Copa grande y ancha para tintos con cuerpo (permite oxigenación). Copa más estrecha para blancos (mantiene la frescura). Copa tipo flauta o tulipa para espumosos (preserva las burbujas). Siempre sujetar la copa por el tallo para no calentar el vino.',
+    tip: 'Al huésped: "Utilizamos esta copa específica para que pueda apreciar al máximo los aromas y la temperatura ideal del vino."'
+  }
+];
+
+// Guest explanation scripts for key wine regions
+const WINE_REGIONS = [
+  {
+    region: 'Islas Canarias',
+    icon: '🌋',
+    summary: 'Viñedos volcánicos prefiloxéricos, variedades únicas en el mundo',
+    script: 'Nuestros vinos canarios son un auténtico tesoro vinícola. Las viñas crecen en suelo volcánico, a veces en pequeños hoyos excavados en la lava para protegerlas del viento — es un paisaje que la UNESCO ha reconocido como Patrimonio. Lo más especial es que estas cepas nunca fueron afectadas por la filoxera, así que son viñas centenarias con raíces originales. El resultado son vinos minerales, salinos, que saben a Atlántico y a volcán.',
+    ourWines: 'Viñatigo Blanco, Artifice, Akaet Parajes, Tamerán Malvasía, Ruku Ruku, Crater, Titerok',
+    keyGrapes: 'Listán Blanco, Listán Negro, Malvasía, Marmajuelo, Albillo Criollo'
+  },
+  {
+    region: 'La Rioja',
+    icon: '🏰',
+    summary: 'Cuna del vino español, tradición centenaria de excelencia',
+    script: 'La Rioja es la región vinícola más prestigiosa de España, con denominación DOCa (Calificada) — la más alta distinción. Sus bodegas centenarias como Marqués de Murrieta (fundada en 1852) combinan tradición con innovación. El clima continental moderado por la Sierra de Cantabria crea condiciones perfectas para el Tempranillo, que aquí alcanza su máxima expresión con elegancia y longevidad.',
+    ourWines: 'Marqués de Murrieta Reserva, Remelluri, Contino, Sierra Cantabria, Castillo Ygay, Viña Cubillo, Muga',
+    keyGrapes: 'Tempranillo, Garnacha, Graciano, Mazuelo, Viura'
+  },
+  {
+    region: 'Ribera del Duero',
+    icon: '🏔️',
+    summary: 'Tintos potentes y elegantes a gran altitud',
+    script: 'Ribera del Duero produce algunos de los tintos más potentes de España. Sus viñedos están entre los más altos de Europa (700-1000m), lo que crea una amplitud térmica extrema entre día y noche. El Tempranillo (aquí llamado Tinto Fino o Tinta del País) desarrolla una concentración y una intensidad únicas. Los vinos de Vega Sicilia, cuyo grupo Tempos distribuye Alion, son iconos mundiales.',
+    ourWines: 'Sitio de Valderíz, Montebaco, Corimbo, Alion 2020, Cair Cuvèe',
+    keyGrapes: 'Tinto Fino (Tempranillo)'
+  },
+  {
+    region: 'Galicia',
+    icon: '🌊',
+    summary: 'Blancos atlánticos de frescura incomparable',
+    script: 'Galicia es la tierra del Albariño y el Godello, dos de las uvas blancas más emocionantes de España. El clima atlántico, húmedo y fresco, da vinos de una acidez vibrante y una mineralidad que recuerda al mar. Rías Baixas (Albariño) produce vinos que maridan a la perfección con mariscos, mientras que Valdeorras (Godello) sorprende con blancos de gran estructura y elegancia.',
+    ourWines: 'Cepado, Pazo Barrantes, Godeval, As 2 Ladeiras, Louro, Cíes',
+    keyGrapes: 'Albariño, Godello, Mencía'
+  },
+  {
+    region: 'Priorat',
+    icon: '⛰️',
+    summary: 'Tintos minerales de viñedos en terrazas de pizarra',
+    script: 'El Priorat es una de las dos únicas DOCa de España. Sus viñedos crecen en terrazas empinadas de licorella (pizarra), a veces con pendientes del 60%. Las viñas viejas de Garnacha y Cariñena producen rendimientos mínimos pero una concentración extraordinaria. Son vinos de gran intensidad pero también de una elegancia mineral única.',
+    ourWines: 'Les Cousins L\'Inconscient, Porrera, Les Terrasses, Álvaro Palacios Gratallops',
+    keyGrapes: 'Garnacha, Cariñena'
+  },
+  {
+    region: 'Francia',
+    icon: '🇫🇷',
+    summary: 'Referentes mundiales de Borgoña, Burdeos y Ródano',
+    script: 'Nuestra selección francesa abarca tres regiones icónicas. De Borgoña tenemos Pinot Noir y Chardonnay de elegancia suprema. Del Ródano, vinos de Garnacha y Syrah con cuerpo y especias. Y de Burdeos, blends clásicos de Cabernet y Merlot. También ofrecemos Champagne, la referencia mundial del espumoso.',
+    ourWines: 'Côte d\'Or Bourgogne, Domaine Charvin, Fanny Sabre, Cotes du Rhone, Andre Clouet, Gatinois',
+    keyGrapes: 'Pinot Noir, Chardonnay, Syrah, Garnacha, Merlot, Cabernet Sauvignon'
+  }
+];
+
+// Wine flashcard questions
+const WINE_FLASHCARDS = [
+  // Concepts
+  {cat:'Conceptos', q:'¿Cuántos meses mínimo en barrica necesita un vino para ser Crianza?', a:'6 meses (12 meses para tintos en Rioja)', hint:'Piensa en medio año'},
+  {cat:'Conceptos', q:'¿Cuántos años de envejecimiento total requiere un Gran Reserva?', a:'Mínimo 5 años (60 meses), con al menos 18 meses en barrica', hint:'Es la categoría más alta'},
+  {cat:'Conceptos', q:'¿Cuáles son las únicas dos regiones DOCa/DOQ de España?', a:'Rioja (DOCa desde 1991) y Priorat (DOQ desde 2000)', hint:'Una está en La Rioja, otra en Cataluña'},
+  {cat:'Conceptos', q:'¿Qué hace únicos a los viñedos canarios respecto al resto de Europa?', a:'Nunca fueron afectados por la filoxera — conservan cepas centenarias sobre pie franco (raíz original)', hint:'Una plaga del siglo XIX'},
+  {cat:'Conceptos', q:'¿A qué temperatura se sirve un tinto con crianza?', a:'16-18°C', hint:'Ni frío ni caliente, por debajo de la temperatura ambiente'},
+  {cat:'Conceptos', q:'¿A qué temperatura se sirve un espumoso o champagne?', a:'6-8°C', hint:'Bien frío'},
+  {cat:'Conceptos', q:'¿Qué son los taninos?', a:'Compuestos de la piel, semillas y barrica que dan estructura y sensación de sequedad en boca', hint:'Esa sensación áspera en la lengua'},
+  {cat:'Conceptos', q:'¿Por qué se sujeta la copa por el tallo?', a:'Para no calentar el vino con la mano y mantener la temperatura ideal', hint:'Tiene que ver con la temperatura'},
+  {cat:'Conceptos', q:'¿Cuándo es necesario decantar un vino?', a:'Tintos jóvenes potentes (para suavizarlos) y vinos añejos (para separar sedimentos)', hint:'Dos situaciones opuestas'},
+  // Our wines
+  {cat:'Nuestra Carta', q:'¿De qué uva está hecho el Cepado?', a:'Godello, de la DO Valdeorras (Galicia)', hint:'Una uva gallega blanca'},
+  {cat:'Nuestra Carta', q:'¿Qué hace especial al Castillo Ygay Gran Reserva Especial 2011?', a:'Es un Gran Reserva icónico de Marqués de Murrieta, Rioja. Tempranillo y Mazuelo. 590€', hint:'El tinto más caro de nuestra carta (sin contar magnums)'},
+  {cat:'Nuestra Carta', q:'¿Qué vinos de Tempos Vega Sicilia tenemos?', a:'Oremus Mandolás (blanco, Hungría), Alion (tinto, Ribera del Duero), Oremus Late Harvest y Aszú (dulces, Hungría)', hint:'Un grupo con bodegas en España y Hungría'},
+  {cat:'Nuestra Carta', q:'¿Cuál es nuestro vino kosher tinto? ¿Y el blanco?', a:'Tinto: Les Lauriers (Burdeos) y Château By Medoc. No tenemos blanco kosher.', hint:'Son vinos franceses'},
+  {cat:'Nuestra Carta', q:'¿Qué vinos tenemos disponibles por copa? Nombra al menos 5.', a:'Valtravieso Nogara, Fenomenal SB, El Grifo Lías, Muga Rosado, Arienzo, Cair Cuvèe, Artifice tinto, Marqués de Murrieta Reserva, Colet A Priori, Andre Clouet', hint:'Tenemos blancos, rosado, tintos y espumosos por copa'},
+  {cat:'Nuestra Carta', q:'¿De qué uva es el Pazo Barrantes Gran Vino?', a:'Albariño, DO Rías Baixas (Galicia)', hint:'La uva blanca gallega más famosa'},
+  {cat:'Nuestra Carta', q:'¿Cuál es la diferencia entre Alion 2020 y Alion 2018 3L?', a:'El 2020 es botella estándar (200€). El 2018 es Doble Magnum (3 litros) por 1210€. Ambos son Tinto Fino de Ribera del Duero.', hint:'El formato y la añada'},
+  // Pairings
+  {cat:'Maridaje', q:'¿Qué vino recomendarías con el ceviche de corvina?', a:'Blancos frescos y minerales: Cepado (Godello), Viñatigo Blanco, Fenomenal SB (Sauvignon Blanc) o un espumoso como Colet A Priori', hint:'Acidez y frescura para el pescado crudo'},
+  {cat:'Maridaje', q:'¿Qué vino va mejor con el solomillo de ternera?', a:'Tintos con cuerpo y crianza: Marqués de Murrieta Reserva, Contino Reserva, Alion 2020, Côte d\'Or Bourgogne', hint:'Tintos con estructura para carne roja'},
+  {cat:'Maridaje', q:'¿Qué vino sugerirías con el risotto de boletus?', a:'Blancos con cuerpo: Remelluri Blanco, Amaren, Placet. O tintos elegantes: Viña Cubillo, Predicador', hint:'El umami de las setas pide vino con cuerpo'},
+  {cat:'Maridaje', q:'Un huésped pide postre (coulant de chocolate). ¿Qué vino le ofreces?', a:'Oremus Late Harvest o Tokaji Oremus Aszú 3 Puttonyos — vinos dulces húngaros que equilibran el chocolate', hint:'Vinos dulces de Tokaji'},
+  {cat:'Maridaje', q:'¿Qué vino irían bien con las gyozas?', a:'Blancos aromáticos frescos: El Grifo Lías (Malvasía), Artifice Vidueño, o un rosado como Muga Rosado', hint:'Algo ligero y aromático para la masa y el relleno'},
+  // Guest scenarios
+  {cat:'Servicio', q:'Un huésped pregunta: "¿Qué tiene de especial el vino canario?" — ¿Qué le dices?', a:'Nuestros vinos canarios nacen de viñedos volcánicos centenarios que nunca fueron afectados por la filoxera. Son cepas con raíces originales, únicas en Europa. El suelo de lava y el viento del Atlántico les dan un carácter mineral y salino inigualable.', hint:'Volcán + filoxera + Atlántico'},
+  {cat:'Servicio', q:'Un huésped quiere un tinto español bueno pero no quiere gastar más de 100€. ¿Qué le recomiendas?', a:'Varias opciones excelentes: Viña Cubillo 2016 (95€, Rioja), Amaren Selección (90€, Rioja), Paco Garcia La Villa (100€, Rioja), Montebaco (90€, Ribera del Duero) o Les Cousins L\'Inconscient (80€, Priorat)', hint:'Piensa en Rioja, Ribera y Priorat'},
+  {cat:'Servicio', q:'Una mesa quiere probar varios vinos sin pedir botellas completas. ¿Qué les ofreces?', a:'Nuestra selección de vinos por copa: espumosos (Colet A Priori 15€, Andre Clouet 25€), blancos (Valtravieso 10€, Fenomenal SB 15€, El Grifo 20€), rosado (Muga 12€) y tintos (desde Arienzo 10€ hasta Murrieta 17€)', hint:'Tenemos 10 vinos por copa de todos los tipos'},
+  {cat:'Servicio', q:'Un huésped dice que no le gusta el vino. ¿Qué alternativa le ofreces?', a:'Nuestra carta de cocktails (16.50€ cada uno) o mocktails sin alcohol (12€). Destacar el Aperol Spritz, Espresso Martini, o los mocktails Ipanema y Vitalía para opciones refrescantes.', hint:'Cocktails y mocktails'}
+];
+
+function renderVinos(){
+  const c = document.getElementById('appContent');
+  const sub = _vinoSubTab || 'carta';
+  const tabs = [
+    ['carta','Carta','🍷'],
+    ['aprende','Aprende','📖'],
+    ['wineFlash','Flashcards','🃏'],
+    ['wineQuiz','Quiz','🎯'],
+    ['servicio','Servicio','💬']
+  ];
+  const bar = `<div style="display:flex;gap:.35rem;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:.3rem">${
+    tabs.map(([id,label,icon])=>`<button onclick="_vinoSubTab='${id}';renderVinos()" style="
+      display:flex;align-items:center;gap:.3rem;padding:.5rem .9rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:${sub===id?'600':'500'};cursor:pointer;white-space:nowrap;transition:all .2s;
+      background:${sub===id?'linear-gradient(135deg,var(--gold),#b8882e)':'rgba(255,255,255,.05)'};
+      color:${sub===id?'#1a0f05':'var(--parch3)'};
+      border:${sub===id?'none':'1px solid var(--line)'};
+    ">${icon} ${label}</button>`).join('')
+  }</div>`;
+
+  if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
+  else if(sub === 'aprende'){ _renderWineLearn(c, bar); }
+  else if(sub === 'wineFlash'){ _renderWineFlashcards(c, bar); }
+  else if(sub === 'wineQuiz'){ _renderWineQuiz(c, bar); }
+  else if(sub === 'servicio'){ _renderWineService(c, bar); }
+}
+
+function renderVinosCarta(){
+  const c = document.getElementById('appContent');
+  const types = [
+    ['all','Todos','🍷'],
+    ['blanco','Blancos','🥂'],
+    ['tinto','Tintos','🍷'],
+    ['rosado','Rosados','🌸'],
+    ['espumoso','Espumosos','✨'],
+    ['dulce','Dulces','🍯'],
+    ['cocktail','Cocktails','🍸'],
+    ['mocktail','Mocktails','🍹']
+  ];
+  
+  let filtered = WINES.filter(w => {
+    if(_wineFilter !== 'all' && w.type !== _wineFilter) return false;
+    if(_wineSearch){
+      const q = _wineSearch.toLowerCase();
+      return w.name.toLowerCase().includes(q) || 
+             (w.grapes||'').toLowerCase().includes(q) || 
+             (w.region||'').toLowerCase().includes(q) ||
+             (w.origin||'').toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  // Sort: recommended first, then by price
+  filtered.sort((a,b) => {
+    if(a.recommended && !b.recommended) return -1;
+    if(!a.recommended && b.recommended) return 1;
+    return a.price - b.price;
+  });
+
+  const typeColors = {
+    blanco:'#f5e6b8', tinto:'#8b2252', rosado:'#e8a0bf', espumoso:'#d4af37',
+    dulce:'#daa520', cocktail:'#4ecdc4', mocktail:'#95e1d3'
+  };
+
+  c.innerHTML = `
+    <div style="padding:.5rem 0 1rem">
+      <div style="text-align:center;margin-bottom:1.2rem">
+        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);margin-bottom:.3rem">🍷 Carta de Vinos</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);letter-spacing:.15em;text-transform:uppercase">TXOKO by Martín Berasategui</div>
+      </div>
+
+      <!-- Search -->
+      <div style="position:relative;margin-bottom:.8rem">
+        <input id="wineSearch" type="text" placeholder="${LANG==='en'?'Search wines, grapes, regions...':'Buscar vinos, uvas, regiones...'}" 
+          value="${escapeHTML(_wineSearch)}"
+          oninput="_wineSearch=this.value;renderVinos()"
+          style="width:100%;padding:.65rem 1rem .65rem 2.2rem;border:1px solid var(--line);border-radius:var(--r);font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment);background:rgba(255,255,255,.03);box-sizing:border-box">
+        <svg style="position:absolute;left:.7rem;top:50%;transform:translateY(-50%);opacity:.4" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </div>
+
+      <!-- Type filters -->
+      <div style="display:flex;gap:.3rem;overflow-x:auto;padding-bottom:.5rem;margin-bottom:1rem">
+        ${types.map(([id,label,icon])=>`<button onclick="_wineFilter='${id}';renderVinos()" style="
+          display:flex;align-items:center;gap:.25rem;padding:.4rem .7rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:${_wineFilter===id?'600':'500'};cursor:pointer;white-space:nowrap;transition:all .2s;
+          background:${_wineFilter===id?'linear-gradient(135deg,var(--gold),#b8882e)':'rgba(255,255,255,.05)'};
+          color:${_wineFilter===id?'#1a0f05':'var(--parch3)'};
+          border:${_wineFilter===id?'none':'1px solid var(--line)'};
+        ">${icon} ${label} <span style="font-size:.6rem;opacity:.7">(${id==='all'?WINES.length:WINES.filter(w=>w.type===id).length})</span></button>`).join('')}
+      </div>
+
+      <!-- Results count -->
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-bottom:.8rem;letter-spacing:.08em">
+        ${filtered.length} ${LANG==='en'?'results':'resultados'}${_wineSearch?' · "'+escapeHTML(_wineSearch)+'"':''}
+      </div>
+
+      <!-- Wine cards -->
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        ${filtered.map(w => _renderWineCard(w)).join('')}
+      </div>
+    </div>`;
+  
+  // Restore search focus
+  const si = document.getElementById('wineSearch');
+  if(si && _wineSearch){ si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
+}
+
+function _renderWineCard(w){
+  const typeLabels = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce',cocktail:'Cocktail',mocktail:'Mocktail'};
+  const typeColors = {blanco:'#f5e6b8',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520',cocktail:'#4ecdc4',mocktail:'#95e1d3'};
+  const bgColor = typeColors[w.type] || '#c9a84c';
+  const isWine = !['cocktail','mocktail'].includes(w.type);
+  
+  return `<div onclick="_showWineDetail(${w.id})" style="
+    background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));
+    border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+  ">
+    <!-- Type badge + recommended -->
+    <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem">
+      <span style="display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.58rem;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.08em;
+        background:${bgColor}20;color:${bgColor};border:1px solid ${bgColor}40;text-transform:uppercase">${typeLabels[w.type]||w.type}</span>
+      ${w.recommended?'<span style="font-size:.58rem;color:var(--gold);font-family:\'DM Mono\',monospace">★ RECOMENDADO</span>':''}
+      ${w.vegaSicilia?'<span style="font-size:.58rem;color:#8b6914;font-family:\'DM Mono\',monospace">◆ VEGA SICILIA</span>':''}
+      ${w.glass?'<span style="font-size:.58rem;color:var(--sage);font-family:\'DM Mono\',monospace">◎ COPA</span>':''}
+      ${w.kosher?'<span style="font-size:.58rem;color:var(--parch3);font-family:\'DM Mono\',monospace">✡ KOSHER</span>':''}
+    </div>
+    <!-- Name + Price -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem">
+      <div style="flex:1">
+        <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);line-height:1.2">${escapeHTML(w.name)}</div>
+        ${isWine?`<div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.2rem">${escapeHTML(w.grapes||'')}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.15rem">${escapeHTML((w.origin?w.origin+' · ':'')+w.region)}</div>`:''}
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);font-weight:600">${w.price}€</div>
+        ${w.glass?`<div style="font-size:.6rem;color:var(--sage);font-family:'DM Mono',monospace">Copa ${w.glass}€</div>`:''}
+        ${w.format&&w.format!=='75cl'?`<div style="font-size:.58rem;color:var(--parch4);font-family:'DM Mono',monospace">${escapeHTML(w.format)}</div>`:''}
+      </div>
+    </div>
+    <!-- Story preview -->
+    <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);margin-top:.5rem;font-style:italic;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">"${escapeHTML(w.story)}"</div>
+  </div>`;
+}
+
+function _showWineDetail(id){
+  const w = WINES.find(x=>x.id===id);
+  if(!w) return;
+  const typeLabels = {blanco:'Vino Blanco',tinto:'Vino Tinto',rosado:'Vino Rosado',espumoso:'Espumoso',dulce:'Vino Dulce',cocktail:'Cocktail',mocktail:'Mocktail'};
+  const typeColors = {blanco:'#f5e6b8',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520',cocktail:'#4ecdc4',mocktail:'#95e1d3'};
+  const bgColor = typeColors[w.type]||'#c9a84c';
+  const isWine = !['cocktail','mocktail'].includes(w.type);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'wineDetailOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;background:rgba(10,6,2,.92);overflow-y:auto;animation:fadeIn .25s ease';
+  overlay.innerHTML = `<div style="max-width:480px;margin:0 auto;padding:1.5rem 1.2rem 3rem">
+    <button onclick="document.getElementById('wineDetailOverlay').remove()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer;margin-bottom:1.2rem">← Volver</button>
+    
+    <!-- Type badge -->
+    <div style="margin-bottom:.8rem">
+      <span style="padding:.2rem .7rem;border-radius:12px;font-size:.65rem;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:.1em;background:${bgColor}25;color:${bgColor};border:1px solid ${bgColor}50;text-transform:uppercase">${typeLabels[w.type]||w.type}</span>
+      ${w.recommended?'<span style="margin-left:.4rem;font-size:.65rem;color:var(--gold);font-family:\'DM Mono\',monospace">★ Recomendado</span>':''}
+      ${w.vegaSicilia?'<span style="margin-left:.4rem;font-size:.65rem;color:#8b6914;font-family:\'DM Mono\',monospace">◆ Tempos Vega Sicilia</span>':''}
+    </div>
+
+    <!-- Name -->
+    <div style="font-family:'Cinzel',serif;font-size:1.6rem;color:var(--parchment);line-height:1.2;margin-bottom:.3rem">${escapeHTML(w.name)}</div>
+    ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch4)">Añada ${w.year}</div>`:''}
+
+    <!-- Price -->
+    <div style="display:flex;align-items:baseline;gap:.8rem;margin:1rem 0;padding:.8rem 1rem;background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03));border-radius:var(--r);border:1px solid rgba(196,154,60,.15)">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.1em">${w.format||'Botella'}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:700">${w.price}€</div>
+      </div>
+      ${w.glass?`<div style="border-left:1px solid var(--line);padding-left:.8rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.1em">Copa</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--sage);font-weight:600">${w.glass}€</div>
+      </div>`:''}
+    </div>
+
+    ${isWine?`
+    <!-- Grapes & Region -->
+    <div style="margin-bottom:1.2rem">
+      <div style="display:flex;flex-wrap:wrap;gap:.6rem">
+        <div style="flex:1;min-width:140px;padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r2)">
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Uvas</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment)">${escapeHTML(w.grapes||'-')}</div>
+        </div>
+        <div style="flex:1;min-width:140px;padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r2)">
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Región</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment)">${escapeHTML(w.region||'-')}</div>
+          ${w.origin?`<div style="font-size:.68rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(w.origin)}</div>`:''}
+        </div>
+      </div>
+    </div>`:''}
+
+    <!-- Story -->
+    <div style="padding:1rem 1.1rem;background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-left:3px solid ${bgColor};border-radius:var(--r);margin-bottom:1.2rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Historia</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic">"${escapeHTML(w.story)}"</div>
+    </div>
+
+    ${isWine&&w.notes?`
+    <!-- Tasting notes -->
+    <div style="padding:1rem 1.1rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r);margin-bottom:1.2rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Notas de cata</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parch2);line-height:1.5">${escapeHTML(w.notes)}</div>
+    </div>`:''}
+
+    ${w.pairings&&w.pairings.length?`
+    <!-- Pairings -->
+    <div style="padding:1rem 1.1rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r);margin-bottom:1.2rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem">Maridaje recomendado</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">
+        ${w.pairings.map(p=>`<span style="padding:.3rem .65rem;background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.05));border:1px solid rgba(196,154,60,.2);border-radius:15px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parchment)">${escapeHTML(p)}</span>`).join('')}
+      </div>
+    </div>`:''}
+
+    ${w.kosher?`<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);text-align:center;padding:.5rem;border:1px solid var(--line);border-radius:var(--r2)">✡ Certificación Kosher</div>`:''}
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+// ═══ WINE LEARNING TABS ═══
+
+function _renderWineLearn(c, bar){
+  c.innerHTML = bar + `<div style="padding:0 0 2rem">
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold)">📖 Aprende sobre Vinos</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);margin-top:.3rem">Conceptos esenciales y regiones de nuestra carta</div>
+    </div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Conceptos Clave</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
+      ${WINE_CONCEPTS.map((c,i)=>`
+        <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" style="background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem;cursor:pointer;transition:all .2s">
+          <div style="display:flex;align-items:center;gap:.6rem">
+            <span style="font-size:1.3rem">${c.icon}</span>
+            <div style="flex:1">
+              <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${c.title}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${c.short}</div>
+            </div>
+            <svg style="opacity:.3;transition:transform .2s" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="wc-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
+            <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--line)">
+              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.5;margin-bottom:.6rem">${c.detail}</div>
+              <div style="background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.05));border:1px solid rgba(196,154,60,.2);border-radius:var(--r2);padding:.6rem .8rem">
+                <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">💬 Cómo explicarlo</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;color:var(--parchment);font-style:italic;line-height:1.4">${c.tip}</div>
+              </div>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Nuestras Regiones</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem">
+      ${WINE_REGIONS.map(r=>`
+        <div onclick="this.querySelector('.wr-detail').classList.toggle('open')" style="background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:.6rem">
+            <span style="font-size:1.3rem">${r.icon}</span>
+            <div style="flex:1">
+              <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${r.region}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${r.summary}</div>
+            </div>
+            <svg style="opacity:.3" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="wr-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
+            <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--line)">
+              <div style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r2);padding:.7rem .9rem;margin-bottom:.5rem">
+                <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">💬 Script para el huésped</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);font-style:italic;line-height:1.5">"${r.script}"</div>
+              </div>
+              <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.4rem">
+                <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);width:100%">UVAS PRINCIPALES</div>
+                ${r.keyGrapes.split(', ').map(g=>`<span style="padding:.2rem .5rem;background:rgba(139,34,82,.15);border:1px solid rgba(139,34,82,.3);border-radius:12px;font-size:.65rem;color:#d4a0bf;font-family:'Quicksand',sans-serif">${g}</span>`).join('')}
+              </div>
+              <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);margin-top:.5rem">NUESTROS VINOS</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch2);margin-top:.2rem">${r.ourWines}</div>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+  // Add CSS for expanding panels
+  if(!document.getElementById('wineLearnCSS')){
+    const style = document.createElement('style');
+    style.id = 'wineLearnCSS';
+    style.textContent = '.wc-detail.open,.wr-detail.open{max-height:600px!important}';
+    document.head.appendChild(style);
+  }
+}
+
+let _wfIdx=0, _wfFlipped=false, _wfCat='all';
+function _renderWineFlashcards(c, bar){
+  const cats = [...new Set(WINE_FLASHCARDS.map(f=>f.cat))];
+  const filtered = _wfCat==='all' ? WINE_FLASHCARDS : WINE_FLASHCARDS.filter(f=>f.cat===_wfCat);
+  if(_wfIdx >= filtered.length) _wfIdx = 0;
+  const card = filtered[_wfIdx];
+  if(!card){ c.innerHTML = bar + '<div style="text-align:center;color:var(--parch3);padding:3rem">No hay flashcards</div>'; return; }
+
+  c.innerHTML = bar + `<div style="padding:0 0 2rem">
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)">🃏 Wine Flashcards</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.3rem">${_wfIdx+1} / ${filtered.length}</div>
+    </div>
+
+    <!-- Category filters -->
+    <div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:1rem;padding-bottom:.3rem">
+      ${[['all','Todos']].concat(cats.map(c=>[c,c])).map(([id,label])=>`<button onclick="_wfCat='${id}';_wfIdx=0;_wfFlipped=false;renderVinos()" style="
+        padding:.35rem .65rem;border-radius:15px;font-family:'Quicksand',sans-serif;font-size:.68rem;cursor:pointer;white-space:nowrap;
+        background:${_wfCat===id?'var(--gold)':'transparent'};
+        color:${_wfCat===id?'#1a0f05':'var(--parch3)'};
+        border:${_wfCat===id?'none':'1px solid var(--line)'};
+        font-weight:${_wfCat===id?'600':'500'}
+      ">${label}</button>`).join('')}
+    </div>
+
+    <!-- Card -->
+    <div onclick="_wfFlipped=!_wfFlipped;renderVinos()" style="
+      min-height:220px;background:linear-gradient(155deg,${_wfFlipped?'rgba(196,154,60,.08)':'rgba(250,246,238,.06)'},rgba(240,232,216,.02));
+      border:1.5px solid ${_wfFlipped?'rgba(196,154,60,.3)':'var(--line)'};border-radius:16px;padding:1.5rem 1.3rem;cursor:pointer;
+      display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;transition:all .2s;position:relative;
+    ">
+      <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em">${card.cat}</div>
+      <div style="position:absolute;top:.7rem;right:.9rem;font-size:.6rem;color:var(--parch4)">${_wfFlipped?'RESPUESTA':'PREGUNTA'}</div>
+
+      ${_wfFlipped?`
+        <div style="font-family:'Quicksand',sans-serif;font-size:.92rem;color:var(--parchment);line-height:1.6">${card.a}</div>
+      `:`
+        <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.5;margin-bottom:.8rem">${card.q}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch4);font-style:italic">💡 Pista: ${card.hint}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:1rem">Toca para ver la respuesta</div>
+      `}
+    </div>
+
+    <!-- Navigation -->
+    <div style="display:flex;justify-content:center;gap:.8rem;margin-top:1rem">
+      <button onclick="_wfIdx=Math.max(0,_wfIdx-1);_wfFlipped=false;renderVinos()" style="padding:.5rem 1.2rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.78rem;cursor:pointer;background:transparent;border:1px solid var(--line);color:var(--parch3)">← Anterior</button>
+      <button onclick="_wfIdx=(_wfIdx+1)%${filtered.length};_wfFlipped=false;renderVinos()" style="padding:.5rem 1.2rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.78rem;cursor:pointer;background:var(--gold);border:none;color:#1a0f05;font-weight:600">Siguiente →</button>
+    </div>
+    <div style="text-align:center;margin-top:.6rem">
+      <button onclick="_wfIdx=Math.floor(Math.random()*${filtered.length});_wfFlipped=false;renderVinos()" style="padding:.35rem .8rem;border-radius:var(--r2);font-family:'DM Mono',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--line);color:var(--parch4)">🎲 Aleatorio</button>
+    </div>
+  </div>`;
+}
+
+let _wqState=null;
+function _renderWineQuiz(c, bar){
+  if(!_wqState || _wqState.finished){
+    // Show quiz menu
+    c.innerHTML = bar + `<div style="padding:0 0 2rem">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)">🎯 Wine Quiz</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);margin-top:.3rem">Pon a prueba tus conocimientos</div>
+      </div>
+      ${_wqState&&_wqState.finished?`
+        <div style="text-align:center;margin-bottom:1.5rem;padding:1.2rem;background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.04));border:1px solid rgba(196,154,60,.2);border-radius:var(--r)">
+          <div style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold)">${_wqState.score}/${_wqState.total}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);margin-top:.3rem">${_wqState.score===_wqState.total?'¡Perfecto! Eres un sommelier':'Buen intento, ¡sigue practicando!'}</div>
+        </div>`:''}
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <button onclick="_startWineQuiz('Maridaje',8)" style="padding:1rem 1.2rem;background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));border:1px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;display:flex;align-items:center;gap:.8rem">
+          <span style="font-size:1.5rem">🤝</span>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Quiz de Maridaje</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">¿Qué vino va con cada plato?</div>
+          </div>
+        </button>
+        <button onclick="_startWineQuiz('all',10)" style="padding:1rem 1.2rem;background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));border:1px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;display:flex;align-items:center;gap:.8rem">
+          <span style="font-size:1.5rem">🍷</span>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Quiz Completo</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">Conceptos, carta, maridaje y servicio</div>
+          </div>
+        </button>
+        <button onclick="_startWineQuiz('Servicio',6)" style="padding:1rem 1.2rem;background:linear-gradient(155deg,rgba(250,246,238,.06),rgba(240,232,216,.03));border:1px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;display:flex;align-items:center;gap:.8rem">
+          <span style="font-size:1.5rem">💬</span>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Escenarios de Servicio</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3)">¿Cómo responderías al huésped?</div>
+          </div>
+        </button>
+      </div>
+    </div>`;
+    return;
+  }
+
+  // Show current question
+  const q = _wqState.questions[_wqState.idx];
+  const answered = _wqState.answered !== null;
+  c.innerHTML = bar + `<div style="padding:0 0 2rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4)">${_wqState.idx+1}/${_wqState.total} · ${q.cat}</div>
+      <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold)">${_wqState.score} pts</div>
+    </div>
+    <!-- Progress bar -->
+    <div style="height:4px;background:var(--line);border-radius:2px;margin-bottom:1.2rem;overflow:hidden">
+      <div style="height:100%;width:${(_wqState.idx/_wqState.total)*100}%;background:var(--gold);border-radius:2px;transition:width .3s"></div>
+    </div>
+    <!-- Question -->
+    <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.5;margin-bottom:1.2rem;padding:.8rem;background:rgba(255,255,255,.03);border-radius:var(--r);border-left:3px solid var(--gold)">${q.q}</div>
+    ${answered?`
+      <div style="padding:1rem;background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);margin-bottom:1rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem">Respuesta correcta</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.5">${q.a}</div>
+      </div>
+      <div style="display:flex;gap:.4rem;margin-bottom:.8rem">
+        <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3)">¿Lo sabías?</div>
+      </div>
+      <div style="display:flex;gap:.5rem;justify-content:center">
+        <button onclick="_wqAnswer(true)" style="padding:.6rem 1.5rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.82rem;cursor:pointer;background:rgba(107,142,35,.2);border:1px solid rgba(107,142,35,.4);color:#9dcc65;font-weight:600">✓ Sí, lo sabía</button>
+        <button onclick="_wqAnswer(false)" style="padding:.6rem 1.5rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.82rem;cursor:pointer;background:rgba(205,92,92,.15);border:1px solid rgba(205,92,92,.3);color:#e88;font-weight:600">✗ No lo sabía</button>
+      </div>
+    `:`
+      <div style="text-align:center">
+        <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch4);font-style:italic;margin-bottom:.8rem">💡 Pista: ${q.hint}</div>
+        <button onclick="_wqState.answered=true;renderVinos()" style="padding:.7rem 2rem;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.85rem;cursor:pointer;background:var(--gold);border:none;color:#1a0f05;font-weight:600">Mostrar respuesta</button>
+      </div>
+    `}
+  </div>`;
+}
+
+function _startWineQuiz(cat, count){
+  let pool = cat === 'all' ? [...WINE_FLASHCARDS] : WINE_FLASHCARDS.filter(f=>f.cat===cat);
+  // Shuffle
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]; }
+  pool = pool.slice(0, count);
+  _wqState = { questions:pool, idx:0, score:0, total:pool.length, answered:null, finished:false };
+  renderVinos();
+}
+
+function _wqAnswer(correct){
+  if(correct) _wqState.score++;
+  _wqState.idx++;
+  _wqState.answered = null;
+  if(_wqState.idx >= _wqState.total){ _wqState.finished = true; }
+  renderVinos();
+}
+
+function _renderWineService(c, bar){
+  c.innerHTML = bar + `<div style="padding:0 0 2rem">
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)">💬 Guía de Servicio</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);margin-top:.3rem">Scripts listos para usar con el huésped</div>
+    </div>
+
+    <!-- Quick pairing guide -->
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Guía Rápida de Maridaje</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        ${[
+          ['🐟 Pescados y Mariscos','Blancos frescos: Cepado, Fenomenal SB, Viñatigo · Espumosos: Colet A Priori','blanco'],
+          ['🥩 Carnes Rojas','Tintos con cuerpo: Murrieta Reserva, Contino, Alion, Poligonos','tinto'],
+          ['🍝 Pastas y Risottos','Blancos con cuerpo: Amaren, Remelluri · Tintos elegantes: Predicador, Viña Cubillo','blanco'],
+          ['🥗 Ensaladas y Entrantes ligeros','Rosado: Muga · Blancos ligeros: Valtravieso Nogara, El Grifo Lías','rosado'],
+          ['🧀 Quesos','Según intensidad: suaves→blanco, curados→tinto con crianza, azules→dulce','dulce'],
+          ['🍫 Postres','Dulces: Oremus Late Harvest, Tokaji Aszú · Espumosos dulces','dulce'],
+          ['🥟 Gyozas / Platos asiáticos','Blancos aromáticos: El Grifo Lías, Artifice · Rosado: Muga','blanco'],
+          ['🦞 Lobster Roll','Blancos con cuerpo: Pazo Barrantes, Remelluri Blanco · Espumoso: Andre Clouet','espumoso']
+        ].map(([dish,wines,type])=>{
+          const colors = {blanco:'#f5e6b8',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
+          return `<div style="padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--line);border-left:3px solid ${colors[type]||'var(--gold)'};border-radius:var(--r2)">
+            <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);margin-bottom:.25rem">${dish}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);line-height:1.4">${wines}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- Selling scripts -->
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Frases de Venta</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        ${[
+          {situation:'El huésped no sabe qué pedir',script:'\"Le puedo recomendar algo según lo que va a comer. ¿Prefiere blanco o tinto? Si le gusta probar, tenemos una excelente selección por copa desde 10€.\"'},
+          {situation:'Quiere algo especial para celebrar',script:'\"Para una ocasión especial le sugiero nuestro Andre Clouet Champagne, o si prefiere algo español, el Gramona III Lustros es un espumoso excepcional con más de 7 años de crianza.\"'},
+          {situation:'Pregunta por los vinos canarios',script:'\"Los vinos canarios son únicos en el mundo — nacen de viñedos volcánicos centenarios que nunca fueron afectados por la filoxera. Le recomiendo el Viñatigo Blanco o el Ruku Ruku para descubrir este terroir tan especial.\"'},
+          {situation:'Pide el vino más barato',script:'\"Nuestro La Campagne es una excelente opción a 45€, un Cabernet Sauvignon francés muy agradable. Por copa, el Arienzo de Marqués de Riscal a 10€ es estupendo.\"'},
+          {situation:'Quiere impresionar a sus invitados',script:'\"El Castillo Ygay Gran Reserva 2011 es una pieza icónica de Marqués de Murrieta — solo se produce en las mejores añadas. También tenemos el Álvaro Palacios Gratallops en Magnum, perfecto para compartir.\"'},
+          {situation:'Es alérgico/intolerante',script:'\"Todos nuestros vinos contienen sulfitos de forma natural. Si busca opciones con menos sulfitos, los vinos ecológicos y naturales como Fanny Sabre suelen tener niveles más bajos. También tenemos mocktails sin alcohol.\"'}
+        ].map(s=>`<div onclick="this.querySelector('.ss-detail').classList.toggle('open')" style="padding:.8rem 1rem;background:linear-gradient(155deg,rgba(250,246,238,.05),rgba(240,232,216,.02));border:1px solid var(--line);border-radius:var(--r);cursor:pointer">
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span style="font-size:1rem">💬</span>
+            <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);flex:1">${s.situation}</div>
+            <svg style="opacity:.3" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="ss-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
+            <div style="margin-top:.6rem;padding:.6rem .8rem;background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03));border-radius:var(--r2);border:1px solid rgba(196,154,60,.15)">
+              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);font-style:italic;line-height:1.5">${s.script}</div>
+            </div>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- By the glass highlight -->
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">Vinos por Copa — Referencia Rápida</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--r);padding:1rem">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;font-family:'Quicksand',sans-serif;font-size:.78rem">
+          ${WINES.filter(w=>w.glass).sort((a,b)=>a.glass-b.glass).map(w=>`
+            <div style="color:var(--parchment)">${escapeHTML(w.name)} <span style="font-size:.6rem;color:var(--parch4)">${escapeHTML(w.type)}</span></div>
+            <div style="color:var(--gold);font-weight:600;text-align:right">${w.glass}€</div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+  // CSS for expanding
+  if(!document.getElementById('wineLearnCSS')){
+    const style = document.createElement('style');
+    style.id = 'wineLearnCSS';
+    style.textContent = '.wc-detail.open,.wr-detail.open,.ss-detail.open{max-height:600px!important}';
+    document.head.appendChild(style);
+  }
 }
 
 // ═══════ DASHBOARD ═══════
