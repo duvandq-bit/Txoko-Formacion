@@ -49,9 +49,9 @@
   --ink4:      #cfc5b3;
   --ink5:      #bfb5a3;
   --parchment: #1c2a22;
-  --parch2:    rgba(28,42,34,.75);
-  --parch3:    rgba(28,42,34,.48);
-  --parch4:    rgba(28,42,34,.22);
+  --parch2:    rgba(28,42,34,.82);
+  --parch3:    rgba(28,42,34,.65);
+  --parch4:    rgba(28,42,34,.42);
   --gold:      #c49a3c;
   --gold2:     #d4aa4c;
   --gold3:     #e4be68;
@@ -401,7 +401,7 @@ body::after{
   transition:border-color .2s;
 }
 .new-emp-input:focus{border-color:var(--gold-a)}
-.new-emp-input::placeholder{color:var(--parch4)}
+.new-emp-input::placeholder{color:var(--parch3)}
 
 .btn-primary{
   background:linear-gradient(145deg,#c49a3c 0%,#9a7340 45%,#7d5c2f 100%);
@@ -555,7 +555,7 @@ body::after{
 .nav-btn.active svg{opacity:1}
 .nav-btn{
   background:none;border:none;
-  color:var(--parch3);
+  color:var(--parch2);
   font-family:'Quicksand',sans-serif;font-size:.7rem;font-weight:600;
   letter-spacing:.06em;text-transform:uppercase;
   padding:.9rem 1.15rem;cursor:pointer;
@@ -743,7 +743,7 @@ body::after{
   display:flex;align-items:center;gap:.35rem;padding:.55rem 1rem;border-radius:0;
   font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;
   white-space:nowrap;transition:all .25s cubic-bezier(.22,1,.36,1);
-  background:transparent;color:var(--parch3);border:none;position:relative;
+  background:transparent;color:var(--parch2);border:none;position:relative;
 }
 .tunic-stab::before{
   content:'';position:absolute;bottom:-1px;left:50%;width:0;height:2.5px;
@@ -941,7 +941,7 @@ body::after{
   box-sizing:border-box;transition:border-color .2s;outline:none;
 }
 .wine-search:focus{border-color:var(--gold)}
-.wine-search::placeholder{color:var(--parch4)}
+.wine-search::placeholder{color:var(--parch3)}
 
 .wine-quiz-option{
   padding:1rem 1.2rem;
@@ -1141,7 +1141,7 @@ body::after{
   border-color:var(--gold);
   box-shadow:0 0 0 3px rgba(196,154,60,.08),0 2px 12px rgba(196,154,60,.1);
 }
-.sommelier-input::placeholder{color:var(--parch4);font-style:italic}
+.sommelier-input::placeholder{color:var(--parch3);font-style:italic}
 .sommelier-results{
   margin-top:.8rem;display:flex;flex-direction:column;gap:.4rem;
   animation:storyReveal .4s ease both;
@@ -3021,8 +3021,8 @@ body::after{
       </button>
       <!-- Language toggle in header -->
       <div style="display:flex;gap:.25rem;margin-right:.25rem">
-        <button id="appLangEs" onclick="setLangApp('es')" style="background:transparent;border:none;cursor:pointer;padding:2px 4px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.05em;opacity:.6">ES</button>
-        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:2px 4px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.05em;opacity:.6">EN</button>
+        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.9);letter-spacing:.05em">ES</button>
+        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.7);letter-spacing:.05em">EN</button>
       </div>
       <button class="btn-logout" id="logoutBtn" onclick="logout()">Salir</button>
     </div>
