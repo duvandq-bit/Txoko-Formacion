@@ -9642,6 +9642,145 @@ function _renderRadarChart(w) {
     '</div>';
 }
 
+// ═══ WINE DETAIL ENRICHMENT HELPERS ═══
+
+function _wineStoryTags(w) {
+  const tags = [];
+  const story = (w.story||'').toLowerCase();
+  const notes = (w.notes||'').toLowerCase();
+  const grapes = (w.grapes||'').toLowerCase();
+  if(story.includes('barrica') || story.includes('roble') || story.includes('barrel')) tags.push('Crianza en barrica');
+  else if(story.includes('acero') || story.includes('inox')) tags.push('Acero inoxidable');
+  if(story.includes('ecológic') || story.includes('orgánic') || story.includes('biodinám')) tags.push('Ecológico');
+  if(story.includes('fermentación natural') || story.includes('natural') || story.includes('levaduras nativas') || story.includes('levaduras indígenas')) tags.push('Levaduras nativas');
+  if(story.includes('maceración')) tags.push('Maceración');
+  if(story.includes('volcánic') || notes.includes('volcánic')) tags.push('Suelo volcánico');
+  if(story.includes('caliza') || story.includes('arcilla')) tags.push('Suelo calizo');
+  if(story.includes('pizarra') || story.includes('granito')) tags.push('Suelo mineral');
+  if(story.includes('viñedo viejo') || story.includes('cepa vieja') || story.includes('pie franc')) tags.push('Viñedo viejo');
+  if(story.includes('vendimia manual') || story.includes('manual')) tags.push('Vendimia manual');
+  if(story.includes('coupage') || story.includes('blend') || grapes.includes('/')) tags.push('Blend');
+  if(story.includes('monovariet') || (!grapes.includes('/') && !grapes.includes(',') && grapes.length > 0)) tags.push('Monovarietal');
+  return tags.slice(0, 4);
+}
+
+function _wineServingTemp(w) {
+  const type = w.type;
+  const notes = (w.notes||'').toLowerCase();
+  const story = (w.story||'').toLowerCase();
+  const hasBarrica = story.includes('barrica') || story.includes('roble');
+  if(type === 'espumoso') return '4–6°C';
+  if(type === 'blanco' || type === 'mocktail') return hasBarrica ? '10–12°C' : '6–8°C';
+  if(type === 'rosado') return '8–10°C';
+  if(type === 'dulce') return '6–8°C';
+  if(type === 'tinto') {
+    if(notes.includes('ligero') || notes.includes('fresco') || notes.includes('joven')) return '14–16°C';
+    if(notes.includes('complejo') || notes.includes('potente') || notes.includes('estructura') || hasBarrica) return '17–18°C';
+    return '15–17°C';
+  }
+  return '10–14°C';
+}
+
+function _wineGlassType(w) {
+  const type = w.type;
+  const notes = (w.notes||'').toLowerCase();
+  const grapes = (w.grapes||'').toLowerCase();
+  if(type === 'espumoso') return 'Flauta / Tulipa';
+  if(type === 'blanco') {
+    if(grapes.includes('chardonnay') || notes.includes('complej') || notes.includes('barrica')) return 'Borgoña blanca';
+    return 'Copa blanco estándar';
+  }
+  if(type === 'rosado') return 'Copa tulipa';
+  if(type === 'dulce') return 'Copa pequeña / Catavinos';
+  if(type === 'tinto') {
+    if(grapes.includes('pinot') || notes.includes('elegante') || notes.includes('delicad')) return 'Borgoña';
+    if(notes.includes('potente') || notes.includes('complej') || notes.includes('estructura')) return 'Burdeos gran reserva';
+    return 'Burdeos estándar';
+  }
+  return 'Copa universal';
+}
+
+function _wineDecantAdvice(w) {
+  const type = w.type;
+  const notes = (w.notes||'').toLowerCase();
+  const story = (w.story||'').toLowerCase();
+  const price = w.price || 0;
+  if(type !== 'tinto') return 'No necesario';
+  if(notes.includes('potente') || notes.includes('complej') || notes.includes('estructura') || notes.includes('robusto') || price > 150) return '30–60 min';
+  if(story.includes('barrica') || story.includes('crianza') || price > 80) return '15–30 min';
+  return 'Opcional';
+}
+
+function _wineCellarAdvice(w) {
+  const type = w.type;
+  const notes = (w.notes||'').toLowerCase();
+  const story = (w.story||'').toLowerCase();
+  const price = w.price || 0;
+  const year = w.year;
+  if(type === 'espumoso') return 'Beber ya';
+  if(type === 'rosado') return 'Beber joven';
+  if(type === 'blanco') {
+    if(story.includes('barrica') || notes.includes('complej') || price > 120) return '2–5 años';
+    return '1–3 años';
+  }
+  if(type === 'tinto') {
+    if(notes.includes('potente') || notes.includes('estructura') || story.includes('gran reserva') || price > 200) return '5–15+ años';
+    if(story.includes('barrica') || story.includes('crianza') || price > 100) return '3–8 años';
+    return '2–5 años';
+  }
+  return '1–3 años';
+}
+
+function _wineNotesExpanded(w) {
+  const notes = w.notes || '';
+  const grapes = (w.grapes||'').toLowerCase();
+  const type = w.type;
+  // Parse tasting dimensions from notes text
+  const dims = [];
+  // VISTA (visual)
+  let vista = '';
+  if(type === 'blanco') vista = notes.match(/dorad|pajiz|verdos|amarill|limpid/i) ? notes.match(/((?:color\s)?(?:dorad|pajiz|verdos|amarill|limpid)[^,.;]*)(?:[,.;]|$)/i)?.[1] || '' : '';
+  if(type === 'tinto') vista = notes.match(/rub[ií]|granat|cereza|violet|oscur|profund/i) ? notes.match(/((?:color\s)?(?:rub[ií]|granat|cereza|violet|oscur|profund)[^,.;]*)(?:[,.;]|$)/i)?.[1] || '' : '';
+  if(type === 'rosado') vista = notes.match(/salmón|rosa|fresa|coral/i) ? notes.match(/((?:color\s)?(?:salmón|rosa|fresa|coral)[^,.;]*)(?:[,.;]|$)/i)?.[1] || '' : '';
+  // Generate default visual note if none extracted
+  if(!vista) {
+    if(type === 'blanco') vista = 'Amarillo pálido con reflejos dorados';
+    else if(type === 'tinto') vista = 'Rojo rubí con matices granate';
+    else if(type === 'rosado') vista = 'Rosa salmón brillante';
+    else if(type === 'espumoso') vista = 'Burbuja fina y persistente';
+    else if(type === 'dulce') vista = 'Dorado intenso con lágrima densa';
+  }
+  // NARIZ (aromatic profile from notes)
+  const aromaKw = notes.match(/aroma[s]? (?:de |a )?([^.]+)/i);
+  const narizKw = notes.match(/notas? (?:de |a )?([^.]+)/i) || notes.match(/con ([^.]*(?:frut|flor|especi|mineral|herba|cítric|tostado|vaini)[^.]*)/i);
+  let nariz = aromaKw ? aromaKw[1].trim() : (narizKw ? narizKw[1].trim() : '');
+  if(!nariz) {
+    // Extract from existing notes
+    if(type === 'blanco') nariz = 'Cítricos, flor blanca, notas minerales';
+    else if(type === 'tinto') nariz = 'Frutos rojos maduros, especias, toque balsámico';
+    else if(type === 'rosado') nariz = 'Fresas, pétalos de rosa, cítricos frescos';
+    else if(type === 'espumoso') nariz = 'Manzana verde, pan tostado, notas cítricas';
+    else nariz = 'Complejo y aromático';
+  }
+  // BOCA (palate)
+  let boca = notes;
+  // Build the expanded HTML
+  let html = '';
+  html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(196,154,60,.2)">';
+  html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.08em;margin-bottom:.25rem">◇ VISTA</div>';
+  html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4">' + escapeHTML(vista) + '</div>';
+  html += '</div>';
+  html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(77,138,94,.25)">';
+  html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--sage);letter-spacing:.08em;margin-bottom:.25rem">◇ NARIZ</div>';
+  html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4">' + escapeHTML(nariz.charAt(0).toUpperCase() + nariz.slice(1)) + '</div>';
+  html += '</div>';
+  html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(122,106,170,.25)">';
+  html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--candy-purple);letter-spacing:.08em;margin-bottom:.25rem">◇ BOCA</div>';
+  html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4">' + escapeHTML(boca) + '</div>';
+  html += '</div>';
+  return html;
+}
+
 function _showWineDetail(id, list, direction){
   const w = WINES.find(x=>x.id===id);
   if(!w) return;
@@ -9706,16 +9845,42 @@ function _showWineDetail(id, list, direction){
     </div>`:''}
 
     <div class="wine-story-box">
-      <div class="wine-info-label" style="margin-left:.6rem">✦ Historia</div>
+      <div class="wine-info-label" style="margin-left:.6rem">✦ Historia y Elaboración</div>
       <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(w.story)}"</div>
+      ${isWine ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;margin-left:.6rem">${_wineStoryTags(w).map(t=>'<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;border-radius:6px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.1);color:var(--parch3)">◇ '+t+'</span>').join('')}</div>` : ''}
     </div>
+
+    ${isWine ? `
+    <div class="wine-info-box" style="margin-bottom:1.2rem;padding:.9rem 1rem">
+      <div class="wine-info-label" style="margin-bottom:.6rem">◇ Ficha de Servicio</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+        <div style="padding:.45rem .6rem;border-radius:8px;background:rgba(196,154,60,.03)">
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.06em;margin-bottom:.2rem">◇ TEMPERATURA</div>
+          <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment)">${_wineServingTemp(w)}</div>
+        </div>
+        <div style="padding:.45rem .6rem;border-radius:8px;background:rgba(196,154,60,.03)">
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.06em;margin-bottom:.2rem">◇ COPA</div>
+          <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment)">${_wineGlassType(w)}</div>
+        </div>
+        <div style="padding:.45rem .6rem;border-radius:8px;background:rgba(196,154,60,.03)">
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.06em;margin-bottom:.2rem">◇ DECANTAR</div>
+          <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment)">${_wineDecantAdvice(w)}</div>
+        </div>
+        <div style="padding:.45rem .6rem;border-radius:8px;background:rgba(196,154,60,.03)">
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.06em;margin-bottom:.2rem">◇ GUARDA</div>
+          <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment)">${_wineCellarAdvice(w)}</div>
+        </div>
+      </div>
+    </div>` : ''}
 
     ${isWine ? _renderRadarChart(w) : ''}
 
     ${isWine&&w.notes?`
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
-      <div class="wine-info-label">✦ Notas de cata</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parch2);line-height:1.5;position:relative">${escapeHTML(w.notes)}</div>
+      <div class="wine-info-label">✦ Notas de Cata</div>
+      <div style="display:flex;flex-direction:column;gap:.6rem;position:relative">
+        ${_wineNotesExpanded(w)}
+      </div>
     </div>`:''}
 
     ${w.pairings&&w.pairings.length?`
