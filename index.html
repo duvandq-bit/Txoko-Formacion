@@ -559,7 +559,7 @@ body::after{
   font-family:'Quicksand',sans-serif;font-size:.7rem;font-weight:600;
   letter-spacing:.06em;text-transform:uppercase;
   padding:.9rem 1.15rem;cursor:pointer;
-  white-space:nowrap;
+  white-space:nowrap;flex-shrink:0;
   border-bottom:3px solid transparent;
   transition:color .2s, border-color .2s, text-shadow .2s;
   position:relative;top:0;
@@ -3142,6 +3142,7 @@ body::after{
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
     <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Protocolo</button>
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
+    <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
@@ -6263,7 +6264,7 @@ function showTab(tab){
     if(_emp){ _emp.nightStudy = true; saveDB(); }
   }
   // Map sub-tabs to their parent for nav highlighting
-  const parentMap = { flashcards:'aprender', repaso:'aprender', videos:'aprender', lqa:'protocolo', stats:'ranking', txoko:'ranking' };
+  const parentMap = { flashcards:'aprender', repaso:'aprender', videos:'aprender', lqa:'protocolo', stats:'ranking' };
   const navTab = parentMap[tab] || tab;
   document.querySelectorAll('.nav-btn').forEach(b=>{
     const btnTab = b.id.replace('nav','').toLowerCase();
@@ -6322,10 +6323,9 @@ function renderRankingHub(){
   const sub = _subTab.ranking || 'ranking';
   const bar = _subTabBar([
     ['ranking','Ranking','⭐'],
-    ['txoko','Juegos','🎮'],
     ['stats','Estadísticas','📊']
   ], sub, 'ranking');
-  ({ranking:renderRanking, txoko:renderTxoko, stats:renderStats})[sub]();
+  ({ranking:renderRanking, stats:renderStats})[sub]();
   c.insertAdjacentHTML('afterbegin', bar);
 }
 
@@ -9037,7 +9037,7 @@ function _renderSommelier(c, bar){
     <div class="section-eyebrow">✦ Descubre Hoy</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
       ${featured.map((w,i) => `
-        <div onclick="_showWineDetail(${w.id}, [${filtered.map(f=>f.id).join(',')}])" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
+        <div onclick="_showWineDetail(${w.id}, [${featured.map(f=>f.id).join(',')}])" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
           <div style="display:flex;align-items:center;gap:.5rem;position:relative">
             <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3))">${{blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'}[w.type]||'🍷'}</div>
             <div style="flex:1">
