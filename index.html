@@ -4958,17 +4958,33 @@ async function supaUpsertEmployee(name, retries=2) {
 
 async function supaRestoreEmployee(name) {
   try {
-    const res = await fetch(
+    // First try exact match, then case-insensitive
+    let res = await fetch(
       `${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}&select=*`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
-    if(!res.ok) return;
-    const rows = await res.json();
-    if(!Array.isArray(rows) || !rows.length) return;
+    if(!res.ok) { console.warn('[Txoko] Supabase restore failed:', res.status); return false; }
+    let rows = await res.json();
+
+    // If no exact match, try case-insensitive search
+    if(!Array.isArray(rows) || !rows.length) {
+      res = await fetch(
+        `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+      );
+      if(!res.ok) return false;
+      rows = await res.json();
+    }
+
+    if(!Array.isArray(rows) || !rows.length) return false;
     const r = rows[0];
     // If remote has no XP and no pin, nothing to restore
-    if((!r.xp || r.xp === 0) && !r.pin) return;
-    const emp = getEmp(name);
+    if((!r.xp || r.xp === 0) && !r.pin) return false;
+
+    // Use the name exactly as stored in Supabase (correct casing)
+    const cloudName = r.name;
+    const emp = getEmp(cloudName);
+
     // Restore PIN from cloud if local doesn't have it
     if(r.pin && !emp.pin) emp.pin = r.pin;
     // Always take the highest XP between local and remote
@@ -4984,8 +5000,9 @@ async function supaRestoreEmployee(name) {
     try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){}
     saveDB();
     // Sync back immediately so Supabase always has the latest
-    supaUpsertEmployee(name);
-  } catch(e) {}
+    supaUpsertEmployee(cloudName);
+    return cloudName; // Return the correct name from cloud
+  } catch(e) { console.warn('[Txoko] Supabase restore error:', e.message); return false; }
 }
 
 async function supaFetchAllEmployees() {
@@ -5915,18 +5932,33 @@ async function loginWithPassword(){
 
   // Disable button during auth
   submitBtn.disabled = true;
-  submitBtn.textContent = '...';
+  submitBtn.textContent = LANG==='en' ? 'Searching...' : 'Buscando...';
+  errEl.textContent = '';
 
-  let emp = getEmp(name);
+  // Try to find user locally first
+  let localExists = !!DB.employees[name] && !!DB.employees[name].pin;
+  let resolvedName = name;
 
-  // If employee doesn't exist locally, try to restore from Supabase
-  if(!DB.employees[name] || !emp.pin) {
-    await supaRestoreEmployee(name);
-    emp = DB.employees[name]; // Re-fetch in case it was restored
+  // If not found locally (or no pin), try Supabase
+  if(!localExists) {
+    try {
+      const cloudResult = await supaRestoreEmployee(name);
+      if(cloudResult) {
+        resolvedName = cloudResult; // Use cloud name (correct casing)
+        localExists = true;
+      }
+    } catch(e) {
+      console.warn('[Txoko] Cloud restore failed:', e);
+    }
   }
 
+  // Get the employee (may have been restored from cloud)
+  let emp = localExists ? DB.employees[resolvedName] : null;
+
+  submitBtn.textContent = '...';
+
   hashPin(pass).then(hashed => {
-    if(emp.pin){
+    if(emp && emp.pin){
       // Existing user (local or restored from cloud) — verify password
       let match = false;
       if(emp.pin.length === 64 && /^[0-9a-f]+$/.test(emp.pin)){
@@ -5939,18 +5971,18 @@ async function loginWithPassword(){
 
       if(match){
         if(typeof recordPinSuccess === 'function') recordPinSuccess();
-        localStorage.setItem('txoko_last_user', name);
+        localStorage.setItem('txoko_last_user', resolvedName);
         // Remember session if checkbox checked
         const rememberCb = document.getElementById('loginRemember');
         if(rememberCb && rememberCb.checked){
-          localStorage.setItem('txoko_session', JSON.stringify({user:name, hash:hashed, ts:Date.now()}));
+          localStorage.setItem('txoko_session', JSON.stringify({user:resolvedName, hash:hashed, ts:Date.now()}));
         } else {
           localStorage.removeItem('txoko_session');
         }
         emp.lang = LANG;
-        saveDB(); // Save any updates from cloud restore
-        supaUpsertEmployee(name); // Sync back to cloud after successful login
-        pinTarget = name;
+        saveDB();
+        supaUpsertEmployee(resolvedName);
+        pinTarget = resolvedName;
         closePinAndEnter();
       } else {
         if(typeof recordPinFail === 'function') recordPinFail();
@@ -5961,15 +5993,17 @@ async function loginWithPassword(){
       }
     } else {
       // New user — register with this password
+      emp = getEmp(resolvedName);
       emp.pin = hashed;
       emp.lang = LANG;
       saveDB();
-      localStorage.setItem('txoko_last_user', name);
+      supaUpsertEmployee(resolvedName);
+      localStorage.setItem('txoko_last_user', resolvedName);
       const rememberCb = document.getElementById('loginRemember');
       if(rememberCb && rememberCb.checked){
-        localStorage.setItem('txoko_session', JSON.stringify({user:name, hash:hashed, ts:Date.now()}));
+        localStorage.setItem('txoko_session', JSON.stringify({user:resolvedName, hash:hashed, ts:Date.now()}));
       }
-      pinTarget = name;
+      pinTarget = resolvedName;
       closePinAndEnter();
     }
 
@@ -9416,6 +9450,7 @@ function _buildSpainSVG(regionDots, byOrigin) {
     {name:'Navarra',path:'M380.0,120.5 L395.8,115.2 L405.2,120.8 L409.5,127.5 L400.8,132.2 L390.5,130.8 L380.0,120.5Z',color:'#7B3A3A'},
     {name:'Pa\u00eds Vasco',path:'M368.5,98.5 L375.2,95.8 L382.5,100.2 L386.5,108.5 L382.2,112.8 L375.8,110.5 L368.5,98.5Z',color:'#3A5B4A'},
     {name:'Valencia',path:'M515.5,268.5 L525.8,265.2 L535.2,270.8 L536.8,278.5 L532.5,282.2 L524.2,281.5 L515.5,276.8 L515.5,268.5Z',color:'#8B6B2A'},
+    {name:'Castilla La Mancha',path:'M350.0,260.0 L360.0,255.0 L375.0,258.0 L390.0,262.0 L410.0,265.0 L430.0,270.0 L445.0,275.0 L460.0,285.0 L465.0,300.0 L468.0,320.0 L465.0,340.0 L460.0,355.0 L450.0,370.0 L440.0,378.0 L425.0,382.0 L410.0,383.0 L395.0,381.0 L380.0,377.0 L365.0,375.0 L350.0,370.0 L335.0,365.0 L320.0,355.0 L310.0,345.0 L305.0,330.0 L303.0,315.0 L305.0,300.0 L310.0,285.0 L320.0,272.0 L335.0,264.0 L350.0,260.0Z',color:'#8B7D3A'},
   ];
 
   let svg = '';
@@ -9429,17 +9464,21 @@ function _buildSpainSVG(regionDots, byOrigin) {
   // Enhanced golden glow for active regions
   svg += '<filter id="goldenGlow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feFlood flood-color="#c49a3c" flood-opacity="0.6" result="gold"/><feComposite in="gold" in2="blur" operator="in" result="goldGlow"/><feMerge><feMergeNode in="goldGlow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
 
+  // Combined innerShadow + goldenGlow for active wine regions
+  svg += '<filter id="activeRegion"><feGaussianBlur in="SourceAlpha" stdDeviation="3" result="shadowBlur"/><feOffset dx="2" dy="3" in="shadowBlur" result="offsetblur"/><feFlood flood-color="#000000" flood-opacity="0.35" result="shadowColor"/><feComposite in="shadowColor" in2="offsetblur" operator="in" result="shadow"/><feComposite in="shadow" in2="SourceAlpha" operator="in" result="innerShadow"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="innerShadow"/></feMerge></filter>';
+
   // Emboss filter for topographic feel
   svg += '<filter id="emboss"><feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/><feSpecularLighting in="blur" surfaceScale="4" specularConstant="0.7" specularExponent="15" result="spec"><fePointLight x="200" y="100" z="200"/></feSpecularLighting><feComposite in="SourceGraphic" in2="spec" operator="arithmetic" k1="0" k2="1" k3="0.8" k4="0" result="composited"/><feMerge><feMergeNode in="composited"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
 
   // Terrain texture - parchment with noise
   svg += '<filter id="terrainTexture"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="5" result="noise" seed="2"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G"/><feColorMatrix type="saturate" values="0.9"/></filter>';
 
-  // Rich parchment gradient
+  // Rich parchment gradient — warm aged paper
   svg += '<linearGradient id="parchmentGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
-  svg += '<stop offset="0%" style="stop-color:#d4b87a;stop-opacity:1" />';
-  svg += '<stop offset="50%" style="stop-color:#c4a85a;stop-opacity:1" />';
-  svg += '<stop offset="100%" style="stop-color:#a08050;stop-opacity:1" />';
+  svg += '<stop offset="0%" style="stop-color:#c9a862;stop-opacity:1" />';
+  svg += '<stop offset="30%" style="stop-color:#b89848;stop-opacity:1" />';
+  svg += '<stop offset="70%" style="stop-color:#a88838;stop-opacity:1" />';
+  svg += '<stop offset="100%" style="stop-color:#8a7030;stop-opacity:1" />';
   svg += '</linearGradient>';
 
   // Subtle vignette for depth
@@ -9454,40 +9493,72 @@ function _buildSpainSVG(regionDots, byOrigin) {
   svg += '<rect width="800" height="700" fill="url(#parchmentGrad)" filter="url(#terrainTexture)"/>';
   svg += '<rect width="800" height="700" fill="url(#vignette)"/>';
 
-  // Ornate border - double frame
-  svg += '<rect x="5" y="5" width="790" height="690" fill="none" stroke="#5a4a2a" stroke-width="2" rx="3"/>';
-  svg += '<rect x="10" y="10" width="780" height="680" fill="none" stroke="rgba(196,154,60,0.3)" stroke-width="0.8" rx="2"/>';
+  // Ornate triple border frame with corner flourishes
+  svg += '<rect x="3" y="3" width="794" height="694" fill="none" stroke="#3a2a10" stroke-width="2.5" rx="4"/>';
+  svg += '<rect x="8" y="8" width="784" height="684" fill="none" stroke="#c49a3c" stroke-width="1" rx="3"/>';
+  svg += '<rect x="12" y="12" width="776" height="676" fill="none" stroke="rgba(196,154,60,0.2)" stroke-width="0.5" rx="2"/>';
+  // Corner flourishes (fleur-de-lis inspired)
+  var corners = [[18,18],[782,18],[18,682],[782,682]];
+  corners.forEach(function(c) {
+    svg += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="4" fill="none" stroke="#c49a3c" stroke-width="0.8"/>';
+    svg += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="1.5" fill="#c49a3c"/>';
+  });
 
-  // Enhanced water/sea areas
-  svg += '<g opacity="0.3">';
-  svg += '<path d="M0,0 L800,0 L800,150 L0,150 Z" fill="#6B8BA4"/>';
-  svg += '<path d="M0,500 L800,500 L800,700 L0,700 Z" fill="#6B8BA4"/>';
-  svg += '<path d="M700,100 L800,100 L800,400 L700,400 Z" fill="#6B8BA4"/>';
+  // Water/sea areas — deeper blue-green for strong land/sea contrast
+  svg += '<path d="M0,0 L800,0 L800,60 Q400,75 0,60 Z" fill="#4A6E82" opacity="0.35"/>';
+  svg += '<path d="M620,100 L800,100 L800,450 Q700,400 620,350 Z" fill="#4A6E82" opacity="0.25"/>';
+  svg += '<path d="M0,560 Q400,540 800,560 L800,700 L0,700 Z" fill="#4A6E82" opacity="0.3"/>';
+  svg += '<path d="M0,60 L0,200 Q60,150 120,140 L117,78 Z" fill="#4A6E82" opacity="0.2"/>';
+
+  // Wave texture on water (subtle horizontal lines)
+  svg += '<g opacity="0.06" stroke="#2a4a5a" stroke-width="0.4">';
+  for(var wl = 0; wl < 60; wl += 4) {
+    svg += '<path d="M0,' + wl + ' Q200,' + (wl+2) + ' 400,' + wl + ' T800,' + wl + '" fill="none"/>';
+  }
+  for(var wl2 = 570; wl2 < 700; wl2 += 5) {
+    svg += '<path d="M0,' + wl2 + ' Q200,' + (wl2+3) + ' 400,' + wl2 + ' T800,' + wl2 + '" fill="none"/>';
+  }
   svg += '</g>';
 
-  // Stylized sea labels - more prominent
-  svg += '<text style="font-family:Cinzel,serif;font-size:9px;fill:rgba(42,31,10,0.15);text-anchor:middle;letter-spacing:3px;font-weight:bold" x="150" y="55">MAR CANTABRICO</text>';
-  svg += '<text style="font-family:Cinzel,serif;font-size:9px;fill:rgba(42,31,10,0.15);text-anchor:middle;letter-spacing:3px;font-weight:bold" x="750" y="250">MAR MEDITERRANEO</text>';
-  svg += '<text style="font-family:Cinzel,serif;font-size:9px;fill:rgba(42,31,10,0.15);text-anchor:middle;letter-spacing:3px;font-weight:bold" x="400" y="680">OCEANO ATLANTICO</text>';
+  // Sea labels — italic medieval cartographic style
+  svg += '<text style="font-family:Cinzel,serif;font-size:10px;fill:rgba(30,50,65,0.25);text-anchor:middle;letter-spacing:4px;font-weight:700;font-style:italic" x="250" y="42">MAR CANTABRICO</text>';
+  svg += '<text style="font-family:Cinzel,serif;font-size:9px;fill:rgba(30,50,65,0.2);text-anchor:middle;letter-spacing:3px;font-weight:700;font-style:italic" transform="rotate(80,740,270)" x="740" y="270">MAR MEDITERRANEO</text>';
+  svg += '<text style="font-family:Cinzel,serif;font-size:10px;fill:rgba(30,50,65,0.22);text-anchor:middle;letter-spacing:4px;font-weight:700;font-style:italic" x="400" y="670">OCEANO ATLANTICO</text>';
 
-  // Mountain range indicators (thin dark strokes)
-  svg += '<path d="M380,115 Q420,85 460,100 T540,85" fill="none" stroke="rgba(42,31,10,0.08)" stroke-width="0.6"/>';
+  // Mountain range indicators — Pyrenees, Cantabrian, Sistema Central, Sierra Nevada
+  svg += '<g opacity="0.12" stroke="#3a2a10" fill="none">';
+  // Pyrenees (along north border near Cataluña/Aragón)
+  svg += '<path d="M420,92 Q450,78 480,85 Q510,75 540,82 Q560,72 580,80" stroke-width="1.2" stroke-dasharray="3,2"/>';
+  svg += '<path d="M430,98 Q460,84 490,90 Q520,80 550,87 Q570,78 590,84" stroke-width="0.6"/>';
+  // Cantabrian mountains
+  svg += '<path d="M190,72 Q220,62 260,68 Q300,58 340,65 Q370,60 395,68" stroke-width="1" stroke-dasharray="3,2"/>';
+  // Sistema Central
+  svg += '<path d="M300,210 Q330,200 360,207 Q390,197 420,205" stroke-width="0.7" stroke-dasharray="2,2"/>';
+  // Sierra Nevada
+  svg += '<path d="M330,480 Q360,470 390,478 Q410,468 440,475" stroke-width="0.7" stroke-dasharray="2,2"/>';
+  svg += '</g>';
 
-  // Community regions with CK3 medieval styling
+  // Mountain peak symbols (small triangles)
+  svg += '<g fill="rgba(42,31,10,0.08)" stroke="none">';
+  var peaks = [[460,80],[500,76],[540,78],[230,64],[280,60],[350,200],[380,472]];
+  peaks.forEach(function(p) {
+    svg += '<path d="M' + p[0] + ',' + p[1] + ' L' + (p[0]-3) + ',' + (p[1]+5) + ' L' + (p[0]+3) + ',' + (p[1]+5) + ' Z"/>';
+  });
+  svg += '</g>';
+
+  // Community regions with CK3 medieval styling — ALL visible with rich colors
   communities.forEach(function(r) {
     var hasWines = byOrigin[r.name] && byOrigin[r.name].length > 0;
     var isActive = _mapSelectedOrigin === r.name;
-    var fillColor = hasWines ? r.color : '#9a8a6a';
-    var opacity = hasWines ? (isActive ? '0.85' : '0.75') : '0.4';
-    var strokeColor = '#2a1f0a';
-    var strokeWidth = isActive ? '2.5' : '1.8';
-    var filters = hasWines ? 'filter="url(#innerShadow)"' : '';
-    var activeFilter = isActive ? ' filter="url(#goldenGlow)"' : '';
-    var glowStroke = isActive ? ' stroke="#c49a3c"' : '';
+    var fillColor = r.color;
+    var opacity = hasWines ? (isActive ? '0.92' : '0.78') : '0.55';
+    var strokeColor = isActive ? '#c49a3c' : '#2a1f0a';
+    var strokeWidth = isActive ? '2.5' : '1.5';
+    var filterStr = isActive ? 'filter:url(#goldenGlow);' : 'filter:url(#innerShadow);';
 
     svg += '<path d="' + r.path + '" class="wine-map-region' + (hasWines ? ' has-wines' : '') + (isActive ? ' active' : '') + '" ' +
       (hasWines ? 'onclick="_selectMapOrigin(\x27' + r.name.replace(/'/g, "\\'") + '\x27)" ' : '') +
-      'style="fill:' + fillColor + ';fill-opacity:' + opacity + ';stroke:' + strokeColor + ';stroke-width:' + strokeWidth + ';stroke-linejoin:round;' + (hasWines ? 'cursor:pointer;' : '') + (isActive ? 'filter:url(#goldenGlow);stroke:#c49a3c;' : '') + '"/>';
+      'style="fill:' + fillColor + ';fill-opacity:' + opacity + ';stroke:' + strokeColor + ';stroke-width:' + strokeWidth + ';stroke-linejoin:round;' + filterStr + (hasWines ? 'cursor:pointer;' : '') + '"/>';
   });
 
   // Enhanced wine origin dots with ornate styling
