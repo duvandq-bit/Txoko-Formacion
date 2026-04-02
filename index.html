@@ -3077,7 +3077,70 @@ body::after{
 .wine-map-wine-item{padding:.5rem .7rem;background:rgba(196,154,60,.04);border-radius:8px;border-left:3px solid var(--gold);cursor:pointer;transition:background .2s}
 .wine-map-wine-item:hover{background:rgba(196,154,60,.1)}
 
+/* ═══ LEAFLET MAP STYLES ═══ */
+.wine-leaflet-map {
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+  border: 2px solid rgba(196,154,60,.25);
+  box-shadow: 0 4px 20px rgba(28,42,34,.15);
+}
+.wine-leaflet-map .leaflet-tile-pane {
+  filter: sepia(0.4) saturate(0.7) brightness(0.95) hue-rotate(-10deg);
+}
+.leaflet-container {
+  background: #c9a862 !important;
+  font-family: 'Quicksand', sans-serif;
+}
+.wine-region-label {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #2a1f0a;
+  text-shadow: 0 1px 3px rgba(255,245,220,.9), 0 0 6px rgba(196,154,60,.4);
+  white-space: nowrap;
+  text-align: center;
+}
+.wine-dot-marker {
+  background: radial-gradient(circle at 35% 35%, #f4d575, #c49a3c, #8b7030);
+  border: 2px solid #c49a3c;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3), inset 0 -2px 4px rgba(0,0,0,.2);
+  color: #fff;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.wine-dot-marker:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 12px rgba(196,154,60,.6), 0 2px 8px rgba(0,0,0,.3);
+}
+.wine-dot-marker.active {
+  border-color: #ffd700;
+  box-shadow: 0 0 16px rgba(255,215,0,.5), 0 0 30px rgba(196,154,60,.3);
+  transform: scale(1.25);
+}
+.wine-region-popup .leaflet-popup-content-wrapper {
+  background: linear-gradient(155deg, #faf6ee, #f0e8d8);
+  border: 1px solid rgba(196,154,60,.25);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(28,42,34,.15);
+}
+.wine-region-popup .leaflet-popup-tip {
+  background: #f0e8d8;
+}
+
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 
@@ -5936,7 +5999,8 @@ async function loginWithPassword(){
   errEl.textContent = '';
 
   // Try to find user locally first
-  let localExists = !!DB.employees[name] && !!DB.employees[name].pin;
+  let localExistedBefore = !!DB.employees[name] && !!DB.employees[name].pin;
+  let localExists = localExistedBefore;
   let resolvedName = name;
 
   // If not found locally (or no pin), try Supabase
@@ -5946,6 +6010,7 @@ async function loginWithPassword(){
       if(cloudResult) {
         resolvedName = cloudResult; // Use cloud name (correct casing)
         localExists = true;
+        if(DB.employees[resolvedName]) DB.employees[resolvedName]._fromCloud = true;
       }
     } catch(e) {
       console.warn('[Txoko] Cloud restore failed:', e);
@@ -5972,7 +6037,6 @@ async function loginWithPassword(){
       if(match){
         if(typeof recordPinSuccess === 'function') recordPinSuccess();
         localStorage.setItem('txoko_last_user', resolvedName);
-        // Remember session if checkbox checked
         const rememberCb = document.getElementById('loginRemember');
         if(rememberCb && rememberCb.checked){
           localStorage.setItem('txoko_session', JSON.stringify({user:resolvedName, hash:hashed, ts:Date.now()}));
@@ -5986,10 +6050,15 @@ async function loginWithPassword(){
         closePinAndEnter();
       } else {
         if(typeof recordPinFail === 'function') recordPinFail();
-        errEl.textContent = LANG==='en' ? 'Incorrect password' : 'Contraseña incorrecta';
-        passInput.value = '';
-        passInput.style.borderColor = '#e85d5d';
-        setTimeout(() => { passInput.style.borderColor = ''; errEl.textContent = ''; }, 2500);
+        // Show PIN keypad if account was set up with 4-digit PIN
+        if(emp._fromCloud || !localExistedBefore) {
+          _showCloudPinLogin(resolvedName, emp);
+        } else {
+          errEl.textContent = LANG==='en' ? 'Incorrect password' : 'Contraseña incorrecta';
+          passInput.value = '';
+          passInput.style.borderColor = '#e85d5d';
+          setTimeout(() => { passInput.style.borderColor = ''; errEl.textContent = ''; }, 2500);
+        }
       }
     } else {
       // New user — register with this password
@@ -6265,6 +6334,82 @@ async function pinSubmit(){
       }, 900);
     }
   }
+}
+
+// Show PIN keypad for cloud-restored accounts that were set up with PIN
+function _showCloudPinLogin(name, emp) {
+  const _en = LANG==='en';
+  // Remove any existing overlay
+  const ex = document.getElementById('cloudPinOverlay');
+  if(ex) ex.remove();
+
+  let buffer = '';
+  const overlay = document.createElement('div');
+  overlay.id = 'cloudPinOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(28,42,34,.82);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)';
+
+  function draw() {
+    overlay.innerHTML = '<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.2);border-radius:16px;padding:2rem 1.8rem;width:300px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.3)">' +
+      '<div style="font-family:Cinzel,serif;font-size:1.1rem;color:#1c2a22;margin-bottom:.3rem">' + escapeHTML(name) + '</div>' +
+      '<div style="font-family:DM Mono,monospace;font-size:.65rem;color:#c49a3c;margin-bottom:.2rem;letter-spacing:.08em">' +
+      (_en ? 'Account found in cloud' : 'Cuenta encontrada en la nube') + ' ☁️</div>' +
+      '<div style="font-family:Quicksand,sans-serif;font-size:.72rem;color:rgba(28,42,34,.6);margin-bottom:1.2rem;line-height:1.4">' +
+      (_en ? 'This account uses a 4-digit PIN.<br>Enter your PIN to sign in.' : 'Esta cuenta usa un PIN de 4 d\u00edgitos.<br>Introduce tu PIN para entrar.') + '</div>' +
+      '<div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">' +
+      [0,1,2,3].map(function(i){ return '<div style="width:14px;height:14px;border-radius:50%;border:2px solid #c49a3c;background:' + (i < buffer.length ? '#c49a3c' : 'transparent') + ';transition:background .15s"></div>'; }).join('') +
+      '</div>' +
+      '<div id="cloudPinErr" style="font-size:.7rem;color:#e85d5d;min-height:1.2rem;margin-bottom:.4rem"></div>' +
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:200px;margin:0 auto .9rem">' +
+      [1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(function(k) {
+        return '<button id="cpk_' + k + '" style="background:rgba(28,42,34,.04);border:1px solid rgba(196,154,60,.15);border-radius:10px;padding:.65rem;font-size:1rem;font-weight:500;color:#1c2a22;cursor:pointer;' + (k === '' ? 'visibility:hidden;' : '') + '">' + k + '</button>';
+      }).join('') +
+      '</div>' +
+      '<button id="cpkCancel" style="background:transparent;border:1px solid rgba(196,154,60,.15);border-radius:10px;padding:.4rem 1.2rem;font-family:Quicksand,sans-serif;font-size:.75rem;color:rgba(28,42,34,.5);cursor:pointer">' + (_en ? 'Cancel' : 'Cancelar') + '</button>' +
+      '</div>';
+
+    // Attach keypad handlers
+    [0,1,2,3,4,5,6,7,8,9].forEach(function(k) {
+      var btn = overlay.querySelector('#cpk_' + k);
+      if(btn) btn.onclick = function() {
+        if(buffer.length < 4) {
+          buffer += k;
+          draw();
+          if(buffer.length === 4) {
+            setTimeout(function() {
+              hashPin(buffer).then(function(h) {
+                if(h === emp.pin) {
+                  // Success!
+                  overlay.remove();
+                  delete emp._fromCloud;
+                  localStorage.setItem('txoko_last_user', name);
+                  var remCb = document.getElementById('loginRemember');
+                  if(remCb && remCb.checked) {
+                    localStorage.setItem('txoko_session', JSON.stringify({user:name, hash:h, ts:Date.now()}));
+                  }
+                  emp.lang = LANG;
+                  saveDB();
+                  supaUpsertEmployee(name);
+                  pinTarget = name;
+                  closePinAndEnter();
+                } else {
+                  var err = document.getElementById('cloudPinErr');
+                  if(err) err.textContent = _en ? 'Incorrect PIN' : 'PIN incorrecto';
+                  buffer = '';
+                  setTimeout(function(){ draw(); }, 600);
+                }
+              });
+            }, 150);
+          }
+        }
+      };
+    });
+    var del = overlay.querySelector('#cpk_⌫');
+    if(del) del.onclick = function() { buffer = buffer.slice(0, -1); draw(); };
+    var cancel = overlay.querySelector('#cpkCancel');
+    if(cancel) cancel.onclick = function() { overlay.remove(); };
+  }
+  draw();
+  document.body.appendChild(overlay);
 }
 
 function closePinAndEnter(){
@@ -9431,6 +9576,7 @@ function _renderWineCard(w, idx, filteredList){
 
 // ═══ INTERACTIVE WINE MAP ═══
 let _mapSelectedOrigin = null;
+let _wineLeafletMap = null;
 
 function _buildSpainSVG(regionDots, byOrigin) {
   const communities = [
@@ -9601,6 +9747,7 @@ function _buildSpainSVG(regionDots, byOrigin) {
 
 function _renderWineMap(c, bar) {
   const _en = LANG==='en';
+
   // Group wines by origin
   const byOrigin = {};
   WINES.forEach(w => {
@@ -9609,31 +9756,28 @@ function _renderWineMap(c, bar) {
     byOrigin[o].push(w);
   });
 
-  // Geographically accurate dot positions (viewBox 0 0 400 375)
+  // Region dots for Spanish wine regions with geographic coordinates (lat, lng)
   const regionDots = [
-    { name: 'Canarias', x: 117, y: 644, wines: byOrigin['Canarias'] || [] },
-    { name: 'Galicia', x: 133, y: 110, wines: byOrigin['Galicia'] || [] },
-    { name: 'La Rioja-Álava', x: 414, y: 140, wines: byOrigin['La Rioja-Álava'] || [] },
-    { name: 'Cataluña', x: 612, y: 170, wines: byOrigin['Cataluña'] || [] },
-    { name: 'Castilla y León', x: 316, y: 165, wines: byOrigin['Castilla y León'] || [] },
-    { name: 'Castilla La Mancha', x: 385, y: 307, wines: byOrigin['Castilla La Mancha'] || [] },
-    { name: 'Andalucía', x: 303, y: 450, wines: byOrigin['Andalucía'] || [] },
-    { name: 'Murcia', x: 469, y: 420, wines: byOrigin['Murcia'] || [] },
-    { name: 'Islas Baleares', x: 677, y: 322, wines: byOrigin['Islas Baleares'] || [] },
-    { name: 'Francia', x: 580, y: 50, wines: byOrigin['Francia'] || [] },
-    { name: 'Italia', x: 760, y: 60, wines: byOrigin['Italia'] || [] },
-    { name: 'Argentina', x: 760, y: 580, wines: byOrigin['Argentina'] || [] },
-    { name: 'Alemania', x: 680, y: 30, wines: byOrigin['Alemania'] || [] },
-    { name: 'Austria', x: 730, y: 30, wines: byOrigin['Austria'] || [] },
-    { name: 'Hungría', x: 780, y: 40, wines: byOrigin['Hungría'] || [] },
-    { name: 'Australia', x: 770, y: 630, wines: byOrigin['Australia'] || [] },
-    { name: 'Sur Africa', x: 760, y: 600, wines: byOrigin['Sur Africa'] || [] },
+    { name: 'Canarias', lat: 28.3, lng: -16.2, wines: byOrigin['Canarias'] || [] },
+    { name: 'Galicia', lat: 42.6, lng: -8.4, wines: byOrigin['Galicia'] || [] },
+    { name: 'La Rioja-Álava', lat: 42.35, lng: -2.4, wines: byOrigin['La Rioja-Álava'] || [] },
+    { name: 'Cataluña', lat: 41.6, lng: 1.8, wines: byOrigin['Cataluña'] || [] },
+    { name: 'Castilla y León', lat: 41.6, lng: -4.4, wines: byOrigin['Castilla y León'] || [] },
+    { name: 'Castilla La Mancha', lat: 39.3, lng: -3.3, wines: byOrigin['Castilla La Mancha'] || [] },
+    { name: 'Andalucía', lat: 37.3, lng: -4.5, wines: byOrigin['Andalucía'] || [] },
+    { name: 'Murcia', lat: 38.0, lng: -1.5, wines: byOrigin['Murcia'] || [] },
+    { name: 'Islas Baleares', lat: 39.3, lng: 2.7, wines: byOrigin['Islas Baleares'] || [] },
+    { name: 'Francia', lat: 46.5, lng: 2.5, wines: byOrigin['Francia'] || [] },
+    { name: 'Italia', lat: 42.5, lng: 12.5, wines: byOrigin['Italia'] || [] },
+    { name: 'Argentina', lat: -34, lng: -64, wines: byOrigin['Argentina'] || [] },
+    { name: 'Alemania', lat: 51, lng: 10, wines: byOrigin['Alemania'] || [] },
+    { name: 'Austria', lat: 47.5, lng: 14.5, wines: byOrigin['Austria'] || [] },
+    { name: 'Hungría', lat: 47, lng: 19, wines: byOrigin['Hungría'] || [] },
+    { name: 'Australia', lat: -25, lng: 135, wines: byOrigin['Australia'] || [] },
+    { name: 'Sur Africa', lat: -30, lng: 25, wines: byOrigin['Sur Africa'] || [] },
   ].filter(r => r.wines.length > 0);
 
-  // Build the SVG with realistic Spain boundaries
-  const mapSVG = _buildSpainSVG(regionDots, byOrigin);
-
-  // Selected origin info panel
+  // Selected origin info panel (same as before)
   let infoPanel = '';
   if (_mapSelectedOrigin && byOrigin[_mapSelectedOrigin]) {
     const wines = byOrigin[_mapSelectedOrigin];
@@ -9664,14 +9808,14 @@ function _renderWineMap(c, bar) {
       '</div></div>';
   }
 
+  // Render the container with Leaflet map and buttons
   c.innerHTML = bar + '<div class="wine-map-container">' +
     '<div class="wine-section-header">' +
     '<div class="wine-section-title">◇ ' + (_en ? 'Origins Map' : 'Mapa de Orígenes') + ' ◇</div>' +
     '<div class="wine-section-sub">' + (_en ? 'Designations of Origin in our wine list' : 'Denominaciones de Origen de nuestra carta') + '</div>' +
     '</div>' +
     '<div style="position:relative;background:rgba(244,237,226,.5);border:1px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem .5rem;margin-bottom:.5rem;overflow:hidden">' +
-    '' +
-    mapSVG +
+    '<div id="wineLeafletMap" class="wine-leaflet-map"></div>' +
     '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.4rem;letter-spacing:.05em">' + (_en ? 'Click a region or marker to explore its wines' : 'Toca una región o punto para explorar sus vinos') + '</div>' +
     '</div>' +
     infoPanel +
@@ -9681,6 +9825,142 @@ function _renderWineMap(c, bar) {
       r.name + ' <span style="opacity:.6">(' + r.wines.length + ')</span></button>'
     ).join('') +
     '</div></div>';
+
+  // Initialize Leaflet map
+  _initWineLeafletMap(regionDots, byOrigin);
+}
+
+function _initWineLeafletMap(regionDots, byOrigin) {
+  // Clean up old map if it exists
+  if (_wineLeafletMap) {
+    _wineLeafletMap.remove();
+    _wineLeafletMap = null;
+  }
+
+  const mapContainer = document.getElementById('wineLeafletMap');
+  if (!mapContainer) return;
+
+  // Create the map centered on Spain
+  _wineLeafletMap = L.map('wineLeafletMap').setView([40, -3.5], 6);
+
+  // Add OpenStreetMap tiles with sepia filter via CSS
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Txoko MB',
+    maxZoom: 10,
+    minZoom: 4
+  }).addTo(_wineLeafletMap);
+
+  // Define GeoJSON polygons for Spanish wine regions
+  const SPAIN_REGIONS_GEOJSON = {
+    'Galicia': [[[-8.9,43.8],[-8.9,42.0],[-6.8,42.0],[-6.8,43.8],[-8.9,43.8]]],
+    'Asturias': [[[-7.0,43.7],[-7.0,43.0],[-4.5,43.0],[-4.5,43.7],[-7.0,43.7]]],
+    'Cantabria': [[[-4.5,43.5],[-4.5,43.0],[-3.2,43.0],[-3.2,43.5],[-4.5,43.5]]],
+    'País Vasco': [[[-3.2,43.5],[-3.2,42.8],[-1.7,42.8],[-1.7,43.5],[-3.2,43.5]]],
+    'Navarra': [[[-2.2,43.0],[-2.2,42.0],[-0.7,42.0],[-0.7,43.0],[-2.2,43.0]]],
+    'La Rioja-Álava': [[[-3.1,42.7],[-3.1,42.0],[-1.7,42.0],[-1.7,42.7],[-3.1,42.7]]],
+    'Aragón': [[[-1.8,42.9],[-1.8,39.8],[0.8,39.8],[0.8,42.9],[-1.8,42.9]]],
+    'Cataluña': [[[0.2,42.9],[0.2,40.5],[3.3,40.5],[3.3,42.9],[0.2,42.9]]],
+    'Castilla y León': [[[-7.0,43.0],[-7.0,40.4],[-1.8,40.4],[-1.8,43.0],[-7.0,43.0]]],
+    'Madrid': [[[-4.3,40.9],[-4.3,40.0],[-3.1,40.0],[-3.1,40.9],[-4.3,40.9]]],
+    'Castilla La Mancha': [[[-5.4,40.2],[-5.4,38.4],[-1.2,38.4],[-1.2,40.2],[-5.4,40.2]]],
+    'Valencia': [[[-1.5,40.5],[-1.5,37.8],[0.5,37.8],[0.5,40.5],[-1.5,40.5]]],
+    'Extremadura': [[[-7.5,40.5],[-7.5,38.0],[-4.8,38.0],[-4.8,40.5],[-7.5,40.5]]],
+    'Andalucía': [[[-7.5,38.7],[-7.5,36.0],[-1.6,36.0],[-1.6,38.7],[-7.5,38.7]]],
+    'Murcia': [[[-2.3,38.7],[-2.3,37.4],[-0.7,37.4],[-0.7,38.7],[-2.3,38.7]]],
+    'Canarias': [[[-18.2,29.3],[-18.2,27.6],[-13.3,27.6],[-13.3,29.3],[-18.2,29.3]]],
+    'Islas Baleares': [[[1.1,40.1],[1.1,38.6],[4.4,38.6],[4.4,40.1],[1.1,40.1]]]
+  };
+
+  // Region colors
+  const regionColors = {
+    'Galicia': '#8b4513',
+    'Asturias': '#a0522d',
+    'Cantabria': '#a0522d',
+    'País Vasco': '#8b4513',
+    'Navarra': '#a0522d',
+    'La Rioja-Álava': '#8b4513',
+    'Aragón': '#a0522d',
+    'Cataluña': '#8b4513',
+    'Castilla y León': '#a0522d',
+    'Madrid': '#8b4513',
+    'Castilla La Mancha': '#a0522d',
+    'Valencia': '#8b4513',
+    'Extremadura': '#a0522d',
+    'Andalucía': '#8b4513',
+    'Murcia': '#a0522d',
+    'Canarias': '#8b4513',
+    'Islas Baleares': '#a0522d'
+  };
+
+  // Add GeoJSON region polygons
+  Object.entries(SPAIN_REGIONS_GEOJSON).forEach(([regionName, coordinates]) => {
+    if (byOrigin[regionName] && byOrigin[regionName].length > 0) {
+      const geoJsonFeature = {
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: coordinates
+        },
+        properties: { name: regionName }
+      };
+
+      const layer = L.geoJSON(geoJsonFeature, {
+        style: {
+          color: '#2a1f0a',
+          weight: 1.5,
+          opacity: 1,
+          fillColor: regionColors[regionName] || '#8b4513',
+          fillOpacity: _mapSelectedOrigin === regionName ? 0.85 : 0.65
+        },
+        onEachFeature: (feature, layer) => {
+          layer.on('click', () => _selectMapOrigin(regionName));
+          layer.on('mouseover', () => {
+            layer.setStyle({ fillOpacity: 0.85, weight: 2.5 });
+          });
+          layer.on('mouseout', () => {
+            layer.setStyle({
+              fillOpacity: _mapSelectedOrigin === regionName ? 0.85 : 0.65,
+              weight: _mapSelectedOrigin === regionName ? 2.5 : 1.5
+            });
+          });
+        }
+      }).addTo(_wineLeafletMap);
+
+      // Update style if active
+      if (_mapSelectedOrigin === regionName) {
+        layer.setStyle({ fillOpacity: 0.85, weight: 2.5, color: '#c49a3c' });
+      }
+    }
+  });
+
+  // Add markers for wine origins
+  regionDots.forEach(origin => {
+    const markerSize = Math.min(40, Math.max(20, 20 + (origin.wines.length * 2)));
+    const divIcon = L.divIcon({
+      html: '<div class="wine-dot-marker ' + (_mapSelectedOrigin === origin.name ? 'active' : '') + '" style="width:' + markerSize + 'px;height:' + markerSize + 'px;line-height:' + markerSize + 'px">' + origin.wines.length + '</div>',
+      iconSize: [markerSize, markerSize],
+      className: 'wine-marker-icon'
+    });
+
+    const marker = L.marker([origin.lat, origin.lng], { icon: divIcon })
+      .addTo(_wineLeafletMap)
+      .on('click', () => _selectMapOrigin(origin.name));
+
+    // Add tooltip with region name
+    marker.bindTooltip(origin.name, {
+      permanent: true,
+      direction: 'top',
+      className: 'wine-region-label',
+      offset: [0, -20]
+    });
+  });
+
+  // Ensure proper sizing
+  setTimeout(() => {
+    if (_wineLeafletMap) {
+      _wineLeafletMap.invalidateSize();
+    }
+  }, 100);
 }
 
 function _selectMapOrigin(name) {
