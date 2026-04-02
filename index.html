@@ -9147,7 +9147,7 @@ function renderVinosCarta(){
 
       <!-- Wine cards -->
       <div style="display:flex;flex-direction:column;gap:.6rem">
-        ${filtered.map((w,i) => _renderWineCard(w,i)).join('')}
+        ${filtered.map((w,i) => _renderWineCard(w,i,filtered)).join('')}
       </div>
     </div>`;
   
@@ -9156,15 +9156,16 @@ function renderVinosCarta(){
   if(si && _wineSearch){ si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
 }
 
-function _renderWineCard(w, idx){
+function _renderWineCard(w, idx, filteredList){
   const typeLabels = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce',mocktail:'Mocktail'};
   const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',mocktail:'🍹'};
   const typeColors = {blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)',mocktail:'var(--candy-green)'};
   const bgColor = typeColors[w.type] || 'var(--gold)';
   const isWine = !['cocktail','mocktail'].includes(w.type);
   const delay = Math.min((idx||0)*0.04, 0.3);
+  const idList = (filteredList||[]).map(f=>f.id).join(',');
 
-  return `<div onclick="_showWineDetail(${w.id}, [${filtered.map(f=>f.id).join(',')}])" class="wine-card card-animate" style="animation-delay:${delay}s">
+  return `<div onclick="_showWineDetail(${w.id}, [${idList}])" class="wine-card card-animate" style="animation-delay:${delay}s">
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;position:relative">
       <div class="wine-type-icon" style="background:linear-gradient(135deg,${bgColor},rgba(196,154,60,.3))">${typeIcons[w.type]||'🍷'}</div>
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;flex:1">
