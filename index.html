@@ -2928,6 +2928,16 @@ body::after{
   font-family:'DM Mono',monospace;font-size:.65rem;color:#e85d5d;
   min-height:1.2rem;margin-top:.5rem;text-align:center;
 }
+.login-remember{
+  display:flex;align-items:center;gap:.4rem;cursor:pointer;
+  font-family:'Quicksand',sans-serif;font-size:.7rem;color:rgba(244,237,226,.5);
+  margin:.6rem 0 .2rem;justify-content:center;
+}
+.login-remember input[type="checkbox"]{
+  width:15px;height:15px;accent-color:var(--gold);cursor:pointer;
+  border-radius:3px;margin:0;
+}
+.login-remember span{user-select:none}
 .login-submit-btn{
   width:100%;margin-top:.6rem;padding:.75rem;font-size:.85rem;
   letter-spacing:.12em;
@@ -3102,6 +3112,9 @@ body::after{
       <input type="password" id="loginPass" class="login-input" placeholder="PIN o contraseña" maxlength="30" autocomplete="current-password">
     </div>
     <div class="login-error" id="loginError"></div>
+    <label class="login-remember" id="loginRememberLabel">
+      <input type="checkbox" id="loginRemember"> <span>Mantener sesión iniciada</span>
+    </label>
     <button class="btn-primary login-submit-btn" id="loginSubmitBtn" onclick="loginWithPassword()">Entrar</button>
   </div>
 
@@ -5885,6 +5898,13 @@ function loginWithPassword(){
       if(match){
         if(typeof recordPinSuccess === 'function') recordPinSuccess();
         localStorage.setItem('txoko_last_user', name);
+        // Remember session if checkbox checked
+        const rememberCb = document.getElementById('loginRemember');
+        if(rememberCb && rememberCb.checked){
+          localStorage.setItem('txoko_session', JSON.stringify({user:name, hash:hashed, ts:Date.now()}));
+        } else {
+          localStorage.removeItem('txoko_session');
+        }
         emp.lang = LANG;
         pinTarget = name;
         closePinAndEnter();
@@ -5901,6 +5921,10 @@ function loginWithPassword(){
       emp.lang = LANG;
       saveDB();
       localStorage.setItem('txoko_last_user', name);
+      const rememberCb = document.getElementById('loginRemember');
+      if(rememberCb && rememberCb.checked){
+        localStorage.setItem('txoko_session', JSON.stringify({user:name, hash:hashed, ts:Date.now()}));
+      }
       pinTarget = name;
       closePinAndEnter();
     }
@@ -5933,6 +5957,11 @@ function renderLogin(){
   if(passLabel) passLabel.textContent = LANG==='en' ? 'Password' : 'Contraseña';
   if(submitBtn && !submitBtn.disabled) submitBtn.textContent = LANG==='en' ? 'Enter' : 'Entrar';
   if(legalLink) legalLink.textContent = LANG==='en' ? 'Legal notice' : 'Aviso legal';
+  const remLabel = document.getElementById('loginRememberLabel');
+  if(remLabel) remLabel.querySelector('span').textContent = LANG==='en' ? 'Keep me signed in' : 'Mantener sesión iniciada';
+  // Restore checkbox state
+  const remCb = document.getElementById('loginRemember');
+  if(remCb) remCb.checked = !!localStorage.getItem('txoko_session');
 
   // Auto-fill last user
   const lastUser = localStorage.getItem('txoko_last_user');
@@ -6233,6 +6262,7 @@ function logout(){
   stopLiveQuizPolling();
   clearTimeout(_sessionTimer);
   currentUser=null;
+  localStorage.removeItem('txoko_session');
   document.getElementById('screenLogin').classList.add('active');
   document.getElementById('screenApp').classList.remove('active');
 }
@@ -9229,6 +9259,75 @@ function _renderWineCard(w, idx, filteredList){
 // ═══ INTERACTIVE WINE MAP ═══
 let _mapSelectedOrigin = null;
 
+function _buildSpainSVG(regionDots, byOrigin) {
+  // Realistic Spain community boundaries (simplified but geographically accurate)
+  const communities = [
+    { name:'Galicia', path:'M32,78 L48,68 L68,72 L82,85 L78,102 L65,115 L48,118 L32,108 L28,92Z', fill:'rgba(77,138,94,.12)' },
+    { name:'Asturias', path:'M82,85 L68,72 L95,62 L128,58 L138,68 L130,82 L108,88Z', fill:'rgba(196,154,60,.06)' },
+    { name:'Cantabria', path:'M138,68 L128,58 L162,55 L175,62 L168,75 L152,78Z', fill:'rgba(196,154,60,.06)' },
+    { name:'País Vasco', path:'M175,62 L162,55 L185,50 L198,58 L192,72 L180,75Z', fill:'rgba(196,154,60,.06)' },
+    { name:'Navarra', path:'M198,58 L185,50 L210,48 L228,55 L225,72 L210,78 L195,75Z', fill:'rgba(196,154,60,.06)' },
+    { name:'La Rioja-Álava', path:'M152,78 L168,75 L192,72 L195,75 L210,78 L205,92 L182,95 L160,92 L148,88Z', fill:'rgba(196,154,60,.18)' },
+    { name:'Aragón', path:'M225,72 L228,55 L258,50 L278,58 L285,78 L280,108 L265,128 L245,125 L228,115 L220,98Z', fill:'rgba(196,154,60,.06)' },
+    { name:'Cataluña', path:'M278,58 L258,50 L282,42 L308,48 L325,62 L328,85 L318,108 L298,118 L285,110 L285,78Z', fill:'rgba(196,154,60,.15)' },
+    { name:'Castilla y León', path:'M48,118 L65,115 L78,102 L108,88 L148,88 L160,92 L182,95 L205,92 L220,98 L228,115 L218,138 L205,155 L178,162 L148,160 L118,158 L88,148 L62,138 L48,128Z', fill:'rgba(196,154,60,.15)' },
+    { name:'Madrid', path:'M178,162 L205,155 L215,168 L210,182 L192,188 L178,178Z', fill:'rgba(196,154,60,.06)' },
+    { name:'Castilla La Mancha', path:'M192,188 L210,182 L215,168 L218,138 L228,115 L245,125 L265,128 L280,142 L285,168 L278,195 L262,218 L238,228 L210,225 L188,215 L178,200Z', fill:'rgba(196,154,60,.1)' },
+    { name:'Comunidad Valenciana', path:'M280,142 L298,118 L318,108 L325,128 L322,158 L310,188 L295,208 L278,195 L285,168Z', fill:'rgba(196,154,60,.06)' },
+    { name:'Extremadura', path:'M48,128 L62,138 L88,148 L118,158 L148,160 L178,162 L178,178 L192,188 L178,200 L160,215 L132,225 L105,218 L78,205 L55,188 L42,168 L38,148Z', fill:'rgba(196,154,60,.06)' },
+    { name:'Murcia', path:'M262,218 L278,195 L295,208 L298,228 L285,242 L268,238Z', fill:'rgba(196,154,60,.12)' },
+    { name:'Andalucía', path:'M42,168 L55,188 L78,205 L105,218 L132,225 L160,215 L188,215 L210,225 L238,228 L262,218 L268,238 L258,255 L232,268 L198,275 L162,272 L128,262 L95,252 L65,238 L42,218 L35,195Z', fill:'rgba(196,154,60,.1)' },
+    { name:'Islas Baleares', path:'M345,172 L362,168 L378,172 L382,182 L375,192 L358,195 L348,188 L342,180Z M365,158 L375,155 L382,160 L378,168 L368,168Z', fill:'rgba(196,154,60,.12)' },
+  ];
+
+  // Canarias box (offset below)
+  const canariasPath = 'M45,325 L62,322 L78,325 L95,322 L112,325 L128,328 L135,338 L130,348 L112,352 L95,355 L78,352 L62,348 L48,345 L42,338Z';
+
+  // Community paths
+  let svgRegions = communities.map(r => {
+    const hasWines = byOrigin[r.name] && byOrigin[r.name].length > 0;
+    const isActive = _mapSelectedOrigin === r.name;
+    return '<path d="' + r.path + '" class="wine-map-region' + (hasWines ? ' has-wines' : '') + (isActive ? ' active' : '') + '" ' +
+      (hasWines ? 'onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" ' : '') +
+      'style="fill:' + (isActive ? 'rgba(196,154,60,.3)' : r.fill) + '"/>';
+  }).join('');
+
+  // Canarias
+  const canHasWines = byOrigin['Canarias'] && byOrigin['Canarias'].length > 0;
+  const canActive = _mapSelectedOrigin === 'Canarias';
+  svgRegions += '<rect x="35" y="310" width="110" height="55" rx="4" fill="none" stroke="rgba(28,42,34,.1)" stroke-width=".5" stroke-dasharray="3,2"/>';
+  svgRegions += '<text style="font-family:\'DM Mono\',monospace;font-size:5px;fill:var(--parch4);text-anchor:middle" x="90" y="318">CANARIAS</text>';
+  svgRegions += '<path d="' + canariasPath + '" class="wine-map-region' + (canHasWines ? ' has-wines' : '') + (canActive ? ' active' : '') + '" ' +
+    (canHasWines ? 'onclick="_selectMapOrigin(\'Canarias\')" ' : '') + '/>';
+
+  // Wine origin dots with counts
+  const dots = regionDots.map(r => {
+    const isActive = _mapSelectedOrigin === r.name;
+    const sz = Math.min(4 + r.wines.length * 0.6, 11);
+    return '<g onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="cursor:pointer">' +
+      '<circle class="wine-map-dot' + (isActive ? ' active' : '') + '" cx="' + r.x + '" cy="' + r.y + '" r="' + (isActive ? 10 : sz) + '"/>' +
+      '<text class="wine-map-label" x="' + r.x + '" y="' + (r.y - (isActive ? 14 : 10)) + '" style="font-size:' + (isActive ? '6px' : '5px') + ';font-weight:' + (isActive ? '700' : '400') + '">' + r.name + '</text>' +
+      '<text style="font-family:\'DM Mono\',monospace;font-size:4px;fill:#fff;text-anchor:middle;dominant-baseline:middle;pointer-events:none;font-weight:700" x="' + r.x + '" y="' + (r.y + 1) + '">' + r.wines.length + '</text>' +
+      '</g>';
+  }).join('');
+
+  // Portugal (neighbor for context)
+  const portugal = '<path d="M28,92 L32,78 L28,68 L22,82 L18,108 L15,135 L18,165 L22,188 L28,205 L35,195 L42,168 L38,148 L48,128 L48,118 L32,108Z" fill="rgba(28,42,34,.03)" stroke="rgba(28,42,34,.08)" stroke-width=".5"/>';
+  const portLabel = '<text style="font-family:\'DM Mono\',monospace;font-size:5px;fill:var(--parch4);text-anchor:middle;letter-spacing:.1em" x="28" y="148" transform="rotate(-90,28,148)">PORTUGAL</text>';
+
+  // France hint
+  const france = '<path d="M210,48 L228,55 L258,50 L282,42 L308,48 L325,38 L315,25 L285,18 L255,15 L225,18 L200,28 L195,42Z" fill="rgba(28,42,34,.025)" stroke="rgba(28,42,34,.06)" stroke-width=".5"/>';
+  const frLabel = '<text style="font-family:\'DM Mono\',monospace;font-size:5px;fill:var(--parch4);text-anchor:middle;letter-spacing:.1em" x="265" y="30">FRANCIA</text>';
+
+  // Mediterranean
+  const med = '<text style="font-family:\'DM Mono\',monospace;font-size:4.5px;fill:rgba(28,42,34,.08);text-anchor:middle;letter-spacing:.15em;font-style:italic" x="348" y="228" transform="rotate(-20,348,228)">MAR MEDITERRÁNEO</text>';
+  const atl = '<text style="font-family:\'DM Mono\',monospace;font-size:4.5px;fill:rgba(28,42,34,.08);text-anchor:middle;letter-spacing:.15em;font-style:italic" x="15" y="225" transform="rotate(-90,15,225)">ATLÁNTICO</text>';
+
+  return '<svg class="wine-map-svg" viewBox="0 0 400 375" style="max-width:500px">' +
+    portugal + france + svgRegions + frLabel + portLabel + med + atl + dots +
+    '</svg>';
+}
+
 function _renderWineMap(c, bar) {
   // Group wines by origin
   const byOrigin = {};
@@ -9238,40 +9337,29 @@ function _renderWineMap(c, bar) {
     byOrigin[o].push(w);
   });
 
-  // Spain map regions with approximate coordinates (SVG viewBox 0 0 600 500)
+  // Geographically accurate dot positions (viewBox 0 0 400 375)
   const regionDots = [
-    { name: 'Canarias', x: 95, y: 460, wines: byOrigin['Canarias'] || [] },
-    { name: 'Galicia', x: 72, y: 120, wines: byOrigin['Galicia'] || [] },
-    { name: 'La Rioja-Álava', x: 280, y: 125, wines: byOrigin['La Rioja-Álava'] || [] },
-    { name: 'Cataluña', x: 450, y: 170, wines: byOrigin['Cataluña'] || [] },
-    { name: 'Castilla y León', x: 230, y: 185, wines: byOrigin['Castilla y León'] || [] },
-    { name: 'Castilla La Mancha', x: 290, y: 265, wines: byOrigin['Castilla La Mancha'] || [] },
-    { name: 'Andalucía', x: 240, y: 370, wines: byOrigin['Andalucía'] || [] },
-    { name: 'Murcia', x: 395, y: 320, wines: byOrigin['Murcia'] || [] },
-    { name: 'Islas Baleares', x: 510, y: 260, wines: byOrigin['Islas Baleares'] || [] },
-    { name: 'Francia', x: 395, y: 55, wines: byOrigin['Francia'] || [] },
-    { name: 'Italia', x: 520, y: 95, wines: byOrigin['Italia'] || [] },
-    { name: 'Argentina', x: 560, y: 420, wines: byOrigin['Argentina'] || [] },
-    { name: 'Alemania', x: 445, y: 30, wines: byOrigin['Alemania'] || [] },
-    { name: 'Austria', x: 490, y: 45, wines: byOrigin['Austria'] || [] },
-    { name: 'Hungría', x: 535, y: 55, wines: byOrigin['Hungría'] || [] },
-    { name: 'Australia', x: 560, y: 455, wines: byOrigin['Australia'] || [] },
-    { name: 'Sur Africa', x: 520, y: 440, wines: byOrigin['Sur Africa'] || [] },
+    { name: 'Canarias', x: 90, y: 338, wines: byOrigin['Canarias'] || [] },
+    { name: 'Galicia', x: 55, y: 98, wines: byOrigin['Galicia'] || [] },
+    { name: 'La Rioja-Álava', x: 180, y: 88, wines: byOrigin['La Rioja-Álava'] || [] },
+    { name: 'Cataluña', x: 305, y: 82, wines: byOrigin['Cataluña'] || [] },
+    { name: 'Castilla y León', x: 145, y: 135, wines: byOrigin['Castilla y León'] || [] },
+    { name: 'Castilla La Mancha', x: 230, y: 195, wines: byOrigin['Castilla La Mancha'] || [] },
+    { name: 'Andalucía', x: 175, y: 258, wines: byOrigin['Andalucía'] || [] },
+    { name: 'Murcia', x: 280, y: 230, wines: byOrigin['Murcia'] || [] },
+    { name: 'Islas Baleares', x: 362, y: 182, wines: byOrigin['Islas Baleares'] || [] },
+    { name: 'Francia', x: 265, y: 25, wines: byOrigin['Francia'] || [] },
+    { name: 'Italia', x: 340, y: 35, wines: byOrigin['Italia'] || [] },
+    { name: 'Argentina', x: 370, y: 340, wines: byOrigin['Argentina'] || [] },
+    { name: 'Alemania', x: 305, y: 15, wines: byOrigin['Alemania'] || [] },
+    { name: 'Austria', x: 340, y: 15, wines: byOrigin['Austria'] || [] },
+    { name: 'Hungría', x: 375, y: 25, wines: byOrigin['Hungría'] || [] },
+    { name: 'Australia', x: 375, y: 360, wines: byOrigin['Australia'] || [] },
+    { name: 'Sur Africa', x: 370, y: 320, wines: byOrigin['Sur Africa'] || [] },
   ].filter(r => r.wines.length > 0);
 
-  // Spain outline (simplified)
-  const spainPath = 'M60,95 L95,75 L155,72 L200,80 L260,75 L310,82 L355,70 L400,85 L440,100 L475,135 L490,165 L480,200 L470,230 L460,260 L440,290 L420,310 L395,335 L360,355 L320,370 L280,380 L240,385 L200,370 L170,350 L140,320 L115,290 L95,260 L80,230 L68,200 L58,170 L52,140 L55,110 Z';
-
-  const dots = regionDots.map(r => {
-    const isActive = _mapSelectedOrigin === r.name;
-    const typeBreakdown = {};
-    r.wines.forEach(w => { typeBreakdown[w.type] = (typeBreakdown[w.type]||0)+1; });
-    return '<g onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="cursor:pointer">' +
-      '<circle class="wine-map-dot' + (isActive ? ' active' : '') + '" cx="' + r.x + '" cy="' + r.y + '" r="' + (isActive ? 9 : Math.min(4 + r.wines.length * 0.5, 10)) + '"/>' +
-      '<text class="wine-map-label" x="' + r.x + '" y="' + (r.y - 12) + '">' + r.name + '</text>' +
-      '<text style="font-family:\'DM Mono\',monospace;font-size:.35rem;fill:var(--gold);text-anchor:middle" x="' + r.x + '" y="' + (r.y + 3.5) + '">' + r.wines.length + '</text>' +
-      '</g>';
-  }).join('');
+  // Build the SVG with realistic Spain boundaries
+  const mapSVG = _buildSpainSVG(regionDots, byOrigin);
 
   // Selected origin info panel
   let infoPanel = '';
@@ -9309,28 +9397,16 @@ function _renderWineMap(c, bar) {
     '<div class="wine-section-title">◇ Mapa de Orígenes ◇</div>' +
     '<div class="wine-section-sub">Denominaciones de Origen de nuestra carta</div>' +
     '</div>' +
-    '<div style="position:relative;background:rgba(196,154,60,.03);border:1px solid rgba(196,154,60,.1);border-radius:var(--r2);padding:.8rem;margin-bottom:.5rem">' +
-    '<svg class="wine-map-svg" viewBox="0 0 600 500">' +
-    '<!-- Spain outline -->' +
-    '<path d="' + spainPath + '" fill="rgba(196,154,60,.04)" stroke="rgba(28,42,34,.12)" stroke-width="1"/>' +
-    '<!-- Canarias box -->' +
-    '<rect x="55" y="425" width="85" height="55" rx="4" fill="none" stroke="rgba(28,42,34,.08)" stroke-width=".5" stroke-dasharray="3,2"/>' +
-    '<text style="font-family:\'DM Mono\',monospace;font-size:.3rem;fill:var(--parch4);text-anchor:middle" x="97" y="438">CANARIAS</text>' +
-    '<!-- International area -->' +
-    '<rect x="380" y="20" width="200" height="80" rx="4" fill="none" stroke="rgba(28,42,34,.06)" stroke-width=".5" stroke-dasharray="3,2"/>' +
-    '<text style="font-family:\'DM Mono\',monospace;font-size:.3rem;fill:var(--parch4);text-anchor:middle" x="480" y="18">INTERNACIONAL</text>' +
-    '<!-- Southern Hemisphere -->' +
-    '<rect x="500" y="410" width="85" height="80" rx="4" fill="none" stroke="rgba(28,42,34,.06)" stroke-width=".5" stroke-dasharray="3,2"/>' +
-    '<text style="font-family:\'DM Mono\',monospace;font-size:.3rem;fill:var(--parch4);text-anchor:middle" x="542" y="408">HEMISFERIO SUR</text>' +
-    dots +
-    '</svg>' +
-    '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.3rem">Toca un origen para ver sus vinos</div>' +
+    '<div style="position:relative;background:rgba(244,237,226,.5);border:1px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem .5rem;margin-bottom:.5rem;overflow:hidden">' +
+    '' +
+    mapSVG +
+    '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.4rem;letter-spacing:.05em">Toca una región o punto para explorar sus vinos</div>' +
     '</div>' +
     infoPanel +
     '<div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center">' +
     regionDots.map(r =>
-      '<button onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.3rem .5rem;border-radius:8px;border:1px solid ' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'rgba(196,154,60,.15)') + ';background:' + (_mapSelectedOrigin===r.name ? 'rgba(196,154,60,.15)' : 'rgba(196,154,60,.04)') + ';color:' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'var(--parch2)') + ';cursor:pointer">' +
-      r.name + ' (' + r.wines.length + ')</button>'
+      '<button onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.3rem .6rem;border-radius:8px;border:1px solid ' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'rgba(196,154,60,.15)') + ';background:' + (_mapSelectedOrigin===r.name ? 'rgba(196,154,60,.15)' : 'rgba(196,154,60,.04)') + ';color:' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'var(--parch2)') + ';cursor:pointer;transition:all .2s">' +
+      r.name + ' <span style="opacity:.6">(' + r.wines.length + ')</span></button>'
     ).join('') +
     '</div></div>';
 }
@@ -17248,8 +17324,29 @@ window.txokoDiag = txokoDiag;
 
 
 
-// Init
-renderLogin();
+// Init — check for remembered session
+(function autoLogin(){
+  try {
+    const sess = localStorage.getItem('txoko_session');
+    if(sess){
+      const {user, hash, ts} = JSON.parse(sess);
+      // Session valid for 30 days
+      if(user && hash && ts && (Date.now() - ts) < 30*24*60*60*1000){
+        const emp = getEmp(user);
+        if(emp && emp.pin && emp.pin === hash){
+          // Auto-login success
+          localStorage.setItem('txoko_last_user', user);
+          pinTarget = user;
+          closePinAndEnter();
+          return;
+        }
+      }
+      // Invalid session — clear it
+      localStorage.removeItem('txoko_session');
+    }
+  } catch(e){ localStorage.removeItem('txoko_session'); }
+  renderLogin();
+})();
 
 </script>
 
