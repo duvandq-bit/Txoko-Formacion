@@ -6279,7 +6279,12 @@ function showTab(tab){
     c.style.transition='none';
     c.style.opacity='1';
     c.style.transform='translateY(0)';
-    ({dashboard:renderDashboard,aprender:renderAprender,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderVideos,lqa:renderLqa,vinos:renderVinos})[tab]();
+    try {
+      ({dashboard:renderDashboard,aprender:renderAprender,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderVideos,lqa:renderLqa,vinos:renderVinos})[tab]();
+    } catch(e) {
+      c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+tab+':</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
+      console.error('showTab error:', e);
+    }
     c.classList.remove('tab-entering');
     void c.offsetWidth;
     c.classList.add('tab-entering');
@@ -8938,12 +8943,17 @@ function renderVinos(){
     tabs.map(([id,label,icon])=>`<button onclick="_vinoSubTab='${id}';renderVinos()" class="tunic-stab${sub===id?' active':''}">${icon} ${label}</button>`).join('')
   }</div>`;
 
-  if(sub === 'sommelier'){ _renderSommelier(c, bar); }
-  else if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
-  else if(sub === 'aprende'){ _renderWineLearn(c, bar); }
-  else if(sub === 'wineFlash'){ _renderWineFlashcards(c, bar); }
-  else if(sub === 'wineQuiz'){ _renderWineQuiz(c, bar); }
-  else if(sub === 'servicio'){ _renderWineService(c, bar); }
+  try {
+    if(sub === 'sommelier'){ _renderSommelier(c, bar); }
+    else if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
+    else if(sub === 'aprende'){ _renderWineLearn(c, bar); }
+    else if(sub === 'wineFlash'){ _renderWineFlashcards(c, bar); }
+    else if(sub === 'wineQuiz'){ _renderWineQuiz(c, bar); }
+    else if(sub === 'servicio'){ _renderWineService(c, bar); }
+  } catch(e) {
+    c.innerHTML = bar + '<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en vinos ('+sub+'):</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
+    console.error('renderVinos error:', e);
+  }
 }
 
 function _renderSommelier(c, bar){
