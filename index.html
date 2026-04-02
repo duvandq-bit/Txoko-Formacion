@@ -3046,6 +3046,26 @@ body::after{
 .wine-nav-counter{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);letter-spacing:.06em}
 .wine-swipe-hint{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.3rem;letter-spacing:.05em;opacity:.6}
 
+
+/* ═══ WINE MAP ═══ */
+.wine-map-container{position:relative;padding:0 0 1.5rem}
+.wine-map-svg{width:100%;max-width:600px;margin:0 auto;display:block}
+.wine-map-region{fill:rgba(196,154,60,.06);stroke:rgba(28,42,34,.15);stroke-width:.5;cursor:pointer;transition:fill .2s,stroke .2s}
+.wine-map-region:hover,.wine-map-region.active{fill:rgba(196,154,60,.2);stroke:var(--gold);stroke-width:1.5}
+.wine-map-region.has-wines{fill:rgba(196,154,60,.12)}
+.wine-map-dot{fill:var(--gold);r:5;cursor:pointer;transition:r .2s,fill .2s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.2))}
+.wine-map-dot:hover{r:8;fill:#e8b84a}
+.wine-map-dot.active{r:9;fill:#e8b84a;animation:mapPulse 1.5s ease infinite}
+@keyframes mapPulse{0%,100%{r:8;opacity:1}50%{r:11;opacity:.7}}
+.wine-map-label{font-family:'DM Mono',monospace;font-size:.4rem;fill:var(--parch2);text-anchor:middle;pointer-events:none;letter-spacing:.03em}
+.wine-map-tooltip{position:absolute;background:rgba(28,42,34,.92);color:#f4ede2;border-radius:8px;padding:.6rem .8rem;font-family:'Quicksand',sans-serif;font-size:.72rem;pointer-events:none;z-index:100;max-width:220px;backdrop-filter:blur(8px);border:1px solid rgba(196,154,60,.2);box-shadow:0 4px 12px rgba(0,0,0,.3);opacity:0;transition:opacity .2s;line-height:1.4}
+.wine-map-tooltip.show{opacity:1}
+.wine-map-info{background:rgba(196,154,60,.04);border:1px solid rgba(196,154,60,.12);border-radius:var(--r2);padding:1rem;margin-top:.8rem}
+.wine-map-info-title{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);margin-bottom:.5rem}
+.wine-map-info-wines{display:flex;flex-direction:column;gap:.4rem}
+.wine-map-wine-item{padding:.5rem .7rem;background:rgba(196,154,60,.04);border-radius:8px;border-left:3px solid var(--gold);cursor:pointer;transition:background .2s}
+.wine-map-wine-item:hover{background:rgba(196,154,60,.1)}
+
 </style>
 </head>
 <body>
@@ -8934,6 +8954,7 @@ function renderVinos(){
   const tabs = [
     ['sommelier','Sommelier','✨'],
     ['carta','Carta','🍷'],
+    ['mapa','Mapa DO','🗺️'],
     ['aprende','Aprende','📖'],
     ['wineFlash','Flashcards','🃏'],
     ['wineQuiz','Quiz','🎯'],
@@ -8946,6 +8967,7 @@ function renderVinos(){
   try {
     if(sub === 'sommelier'){ _renderSommelier(c, bar); }
     else if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
+    else if(sub === 'mapa'){ _renderWineMap(c, bar); }
     else if(sub === 'aprende'){ _renderWineLearn(c, bar); }
     else if(sub === 'wineFlash'){ _renderWineFlashcards(c, bar); }
     else if(sub === 'wineQuiz'){ _renderWineQuiz(c, bar); }
@@ -9202,6 +9224,121 @@ function _renderWineCard(w, idx, filteredList){
 }
 
 
+
+
+// ═══ INTERACTIVE WINE MAP ═══
+let _mapSelectedOrigin = null;
+
+function _renderWineMap(c, bar) {
+  // Group wines by origin
+  const byOrigin = {};
+  WINES.forEach(w => {
+    const o = w.origin || 'Otros';
+    if (!byOrigin[o]) byOrigin[o] = [];
+    byOrigin[o].push(w);
+  });
+
+  // Spain map regions with approximate coordinates (SVG viewBox 0 0 600 500)
+  const regionDots = [
+    { name: 'Canarias', x: 95, y: 460, wines: byOrigin['Canarias'] || [] },
+    { name: 'Galicia', x: 72, y: 120, wines: byOrigin['Galicia'] || [] },
+    { name: 'La Rioja-Álava', x: 280, y: 125, wines: byOrigin['La Rioja-Álava'] || [] },
+    { name: 'Cataluña', x: 450, y: 170, wines: byOrigin['Cataluña'] || [] },
+    { name: 'Castilla y León', x: 230, y: 185, wines: byOrigin['Castilla y León'] || [] },
+    { name: 'Castilla La Mancha', x: 290, y: 265, wines: byOrigin['Castilla La Mancha'] || [] },
+    { name: 'Andalucía', x: 240, y: 370, wines: byOrigin['Andalucía'] || [] },
+    { name: 'Murcia', x: 395, y: 320, wines: byOrigin['Murcia'] || [] },
+    { name: 'Islas Baleares', x: 510, y: 260, wines: byOrigin['Islas Baleares'] || [] },
+    { name: 'Francia', x: 395, y: 55, wines: byOrigin['Francia'] || [] },
+    { name: 'Italia', x: 520, y: 95, wines: byOrigin['Italia'] || [] },
+    { name: 'Argentina', x: 560, y: 420, wines: byOrigin['Argentina'] || [] },
+    { name: 'Alemania', x: 445, y: 30, wines: byOrigin['Alemania'] || [] },
+    { name: 'Austria', x: 490, y: 45, wines: byOrigin['Austria'] || [] },
+    { name: 'Hungría', x: 535, y: 55, wines: byOrigin['Hungría'] || [] },
+    { name: 'Australia', x: 560, y: 455, wines: byOrigin['Australia'] || [] },
+    { name: 'Sur Africa', x: 520, y: 440, wines: byOrigin['Sur Africa'] || [] },
+  ].filter(r => r.wines.length > 0);
+
+  // Spain outline (simplified)
+  const spainPath = 'M60,95 L95,75 L155,72 L200,80 L260,75 L310,82 L355,70 L400,85 L440,100 L475,135 L490,165 L480,200 L470,230 L460,260 L440,290 L420,310 L395,335 L360,355 L320,370 L280,380 L240,385 L200,370 L170,350 L140,320 L115,290 L95,260 L80,230 L68,200 L58,170 L52,140 L55,110 Z';
+
+  const dots = regionDots.map(r => {
+    const isActive = _mapSelectedOrigin === r.name;
+    const typeBreakdown = {};
+    r.wines.forEach(w => { typeBreakdown[w.type] = (typeBreakdown[w.type]||0)+1; });
+    return '<g onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="cursor:pointer">' +
+      '<circle class="wine-map-dot' + (isActive ? ' active' : '') + '" cx="' + r.x + '" cy="' + r.y + '" r="' + (isActive ? 9 : Math.min(4 + r.wines.length * 0.5, 10)) + '"/>' +
+      '<text class="wine-map-label" x="' + r.x + '" y="' + (r.y - 12) + '">' + r.name + '</text>' +
+      '<text style="font-family:\'DM Mono\',monospace;font-size:.35rem;fill:var(--gold);text-anchor:middle" x="' + r.x + '" y="' + (r.y + 3.5) + '">' + r.wines.length + '</text>' +
+      '</g>';
+  }).join('');
+
+  // Selected origin info panel
+  let infoPanel = '';
+  if (_mapSelectedOrigin && byOrigin[_mapSelectedOrigin]) {
+    const wines = byOrigin[_mapSelectedOrigin];
+    const regions = [...new Set(wines.map(w => w.region))];
+    const types = {};
+    wines.forEach(w => { types[w.type] = (types[w.type]||0)+1; });
+    const typeEmojis = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'};
+
+    infoPanel = '<div class="wine-map-info">' +
+      '<div class="wine-map-info-title">◇ ' + escapeHTML(_mapSelectedOrigin) + '</div>' +
+      '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:var(--parch3);margin-bottom:.5rem">' +
+      wines.length + ' vinos · ' + regions.length + ' DO · ' +
+      Object.entries(types).map(([t,n]) => (typeEmojis[t]||'') + n).join(' ') +
+      '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.8rem">' +
+      regions.map(r => '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.12);border-radius:6px;color:var(--parch2)">' + escapeHTML(r) + '</span>').join('') +
+      '</div>' +
+      '<div class="wine-map-info-wines">' +
+      wines.sort((a,b) => a.price - b.price).map(w =>
+        '<div class="wine-map-wine-item" onclick="_showWineDetail(' + w.id + ', [' + wines.map(ww=>ww.id).join(',') + '])">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        '<div style="font-family:\'Cinzel\',serif;font-size:.8rem;color:var(--parchment)">' + (typeEmojis[w.type]||'🍷') + ' ' + escapeHTML(w.name) + '</div>' +
+        '<div style="font-family:\'Cinzel\',serif;font-size:.85rem;color:var(--gold);font-weight:600">' + w.price + '€</div>' +
+        '</div>' +
+        '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch3);margin-top:.15rem">' + escapeHTML(w.grapes||'') + ' · ' + escapeHTML(w.region) + '</div>' +
+        '</div>'
+      ).join('') +
+      '</div></div>';
+  }
+
+  c.innerHTML = bar + '<div class="wine-map-container">' +
+    '<div class="wine-section-header">' +
+    '<div class="wine-section-title">◇ Mapa de Orígenes ◇</div>' +
+    '<div class="wine-section-sub">Denominaciones de Origen de nuestra carta</div>' +
+    '</div>' +
+    '<div style="position:relative;background:rgba(196,154,60,.03);border:1px solid rgba(196,154,60,.1);border-radius:var(--r2);padding:.8rem;margin-bottom:.5rem">' +
+    '<svg class="wine-map-svg" viewBox="0 0 600 500">' +
+    '<!-- Spain outline -->' +
+    '<path d="' + spainPath + '" fill="rgba(196,154,60,.04)" stroke="rgba(28,42,34,.12)" stroke-width="1"/>' +
+    '<!-- Canarias box -->' +
+    '<rect x="55" y="425" width="85" height="55" rx="4" fill="none" stroke="rgba(28,42,34,.08)" stroke-width=".5" stroke-dasharray="3,2"/>' +
+    '<text style="font-family:\'DM Mono\',monospace;font-size:.3rem;fill:var(--parch4);text-anchor:middle" x="97" y="438">CANARIAS</text>' +
+    '<!-- International area -->' +
+    '<rect x="380" y="20" width="200" height="80" rx="4" fill="none" stroke="rgba(28,42,34,.06)" stroke-width=".5" stroke-dasharray="3,2"/>' +
+    '<text style="font-family:\'DM Mono\',monospace;font-size:.3rem;fill:var(--parch4);text-anchor:middle" x="480" y="18">INTERNACIONAL</text>' +
+    '<!-- Southern Hemisphere -->' +
+    '<rect x="500" y="410" width="85" height="80" rx="4" fill="none" stroke="rgba(28,42,34,.06)" stroke-width=".5" stroke-dasharray="3,2"/>' +
+    '<text style="font-family:\'DM Mono\',monospace;font-size:.3rem;fill:var(--parch4);text-anchor:middle" x="542" y="408">HEMISFERIO SUR</text>' +
+    dots +
+    '</svg>' +
+    '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.3rem">Toca un origen para ver sus vinos</div>' +
+    '</div>' +
+    infoPanel +
+    '<div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center">' +
+    regionDots.map(r =>
+      '<button onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.3rem .5rem;border-radius:8px;border:1px solid ' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'rgba(196,154,60,.15)') + ';background:' + (_mapSelectedOrigin===r.name ? 'rgba(196,154,60,.15)' : 'rgba(196,154,60,.04)') + ';color:' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'var(--parch2)') + ';cursor:pointer">' +
+      r.name + ' (' + r.wines.length + ')</button>'
+    ).join('') +
+    '</div></div>';
+}
+
+function _selectMapOrigin(name) {
+  _mapSelectedOrigin = _mapSelectedOrigin === name ? null : name;
+  renderVinos();
+}
 
 // ═══ WINE SWIPE NAVIGATION ═══
 let _wineDetailIdx = 0;
@@ -9788,12 +9925,23 @@ function _renderWineQuiz(c, bar){
                 pct >= 50 ? (LANG==='en'?'Good start! Keep studying!':'¡Buen comienzo! ¡Sigue estudiando!') :
                 (LANG==='en'?'Time to hit the books!':'¡Hora de repasar!');
 
+    // Award XP based on performance (only once per quiz run)
+    if(!_wqState.xpAwarded){
+      _wqState.xpAwarded = true;
+      const baseXP = _wqState.score * 10;
+      const bonusXP = pct >= 90 ? 30 : pct >= 70 ? 15 : pct >= 50 ? 5 : 0;
+      const totalXP = baseXP + bonusXP;
+      if(totalXP > 0) awardXP(totalXP, 'Quiz Vinos ' + pct + '%');
+    }
+    const xpEarned = (_wqState.score * 10) + (pct >= 90 ? 30 : pct >= 70 ? 15 : pct >= 50 ? 5 : 0);
+
     c.innerHTML = bar + `<div class="wq-container" style="text-align:center">
       <div style="font-size:3rem;margin-bottom:.5rem">${emoji}</div>
       <div style="font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);font-weight:700">${pct}%</div>
       <div style="font-size:1rem;color:var(--parchment);margin:.5rem 0">${msg}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch2);margin-bottom:1.5rem">${_wqState.score} / ${_wqState.total} ${LANG==='en'?'correct':'correctas'}</div>
-      <button class="btn-primary" onclick="_wqState=null;renderVinos()" style="margin:0 auto">${LANG==='en'?'Play Again':'Jugar de Nuevo'}</button>
+      <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch2);margin-bottom:.5rem">${_wqState.score} / ${_wqState.total} ${LANG==='en'?'correct':'correctas'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.8rem;color:var(--gold);margin-bottom:1.5rem;padding:.4rem .8rem;background:rgba(196,154,60,.08);border-radius:8px;display:inline-block">✦ +${xpEarned} XP</div>
+      <div><button class="btn-primary" onclick="_wqState=null;renderVinos()" style="margin:0 auto">${LANG==='en'?'Play Again':'Jugar de Nuevo'}</button></div>
     </div>`;
     return;
   }
@@ -9828,94 +9976,170 @@ function _generateWineChoices(q){
   const correctAnswer = q.a;
   const category = q.cat;
   const choices = [{text: correctAnswer, correct: true}];
+  const qLower = q.q.toLowerCase();
+  const aLower = correctAnswer.toLowerCase();
 
-  // Build smart distractor pool based on question content
+  // ═══ CONTEXTUAL DISTRACTOR STRATEGIES ═══
+  // Each strategy generates plausible wrong answers that relate to the question
+
   const distractorPool = [];
 
-  // Strategy: find related answers from same category first, then other categories
-  const sameCat = WINE_FLASHCARDS.filter(f => f.cat === category && f.a !== correctAnswer);
-  const otherCat = WINE_FLASHCARDS.filter(f => f.cat !== category && f.a !== correctAnswer);
-
-  // Prioritize same category for harder distractors
-  sameCat.forEach(f => distractorPool.push(f.a));
-  otherCat.forEach(f => distractorPool.push(f.a));
-
-  // Also add wine-specific distractors based on question type
-  const qLower = q.q.toLowerCase();
-
-  if(qLower.includes('uva') || qLower.includes('grape') || qLower.includes('variedad')){
-    // Grape questions — add real grape varieties as distractors
-    const allGrapes = [...new Set(WINES.map(w=>w.grapes).filter(g=>g && g !== correctAnswer))];
+  // 1. GRAPE QUESTIONS → other grapes of similar type or common confusion pairs
+  if(qLower.includes('uva') || qLower.includes('grape') || qLower.includes('variedad') || qLower.includes('cepa')){
+    const confusionPairs = {
+      'tempranillo': ['Garnacha','Monastrell','Mencía','Bobal'],
+      'garnacha': ['Tempranillo','Monastrell','Cariñena','Syrah'],
+      'albariño': ['Godello','Verdejo','Txakoli','Treixadura'],
+      'verdejo': ['Albariño','Viura','Sauvignon Blanc','Godello'],
+      'godello': ['Albariño','Verdejo','Treixadura','Dona Branca'],
+      'mencía': ['Tempranillo','Garnacha','Prieto Picudo','Brancellao'],
+      'monastrell': ['Garnacha','Tempranillo','Syrah','Bobal'],
+      'chardonnay': ['Sauvignon Blanc','Viognier','Riesling','Gewürztraminer'],
+      'cabernet sauvignon': ['Merlot','Syrah','Tempranillo','Cabernet Franc'],
+      'merlot': ['Cabernet Sauvignon','Syrah','Tempranillo','Pinot Noir'],
+      'pinot noir': ['Merlot','Gamay','Mencía','Nebbiolo'],
+      'syrah': ['Garnacha','Monastrell','Merlot','Malbec'],
+      'listán blanco': ['Malvasía Volcánica','Vijariego','Albariño','Verdejo'],
+      'listán negro': ['Negramoll','Tintilla','Mencía','Baboso Negro'],
+      'malvasía volcánica': ['Listán Blanco','Vijariego','Albariño','Moscatel'],
+    };
+    // Find confusion pairs for the correct answer
+    for (const [key, pairs] of Object.entries(confusionPairs)) {
+      if (aLower.includes(key)) {
+        pairs.forEach(p => distractorPool.unshift(p));
+        break;
+      }
+    }
+    // Also add grapes from same wine type
+    const allGrapes = [...new Set(WINES.map(w=>w.grapes).filter(g=>g && g.toLowerCase()!==aLower))];
     allGrapes.sort(() => Math.random() - .5);
-    allGrapes.slice(0, 8).forEach(g => distractorPool.unshift(g));
+    allGrapes.slice(0, 6).forEach(g => distractorPool.push(g));
   }
 
-  if(qLower.includes('región') || qLower.includes('region') || qLower.includes('origen') || qLower.includes('dónde') || qLower.includes('do ')){
-    // Region questions — add real regions
-    const allRegions = [...new Set(WINES.map(w=>w.region||w.origin).filter(r=>r && r !== correctAnswer))];
+  // 2. REGION/DO QUESTIONS → nearby or same-country DOs
+  else if(qLower.includes('región') || qLower.includes('region') || qLower.includes('origen') || qLower.includes('dónde') || qLower.includes('do ') || qLower.includes('denominación')){
+    const regionGroups = {
+      'españa': ['DO Ca Rioja','DO Ribera del Duero','DO Ca Priorat','DO Rías Baixas','DO Rueda','DO Bierzo','DO Jumilla','DO Toro','DO Penedès'],
+      'canarias': ['DO Ycoden Daute Isora','DO Tacoronte-Acentejo','DO Abona','DO La Orotava','DOP Islas Canarias-Tenerife','DO Gran Canaria','DO Lanzarote','DO Valle de Guimar'],
+      'galicia': ['DO Rías Baixas','DO Ribera Sacra','DO Valdeorras','DO Ourense','DO Pontevedra'],
+      'francia': ['AOC Champagne','AOC Bourgogne','AOC Médoc','AOC Sancerre','AOC Côtes du Rhône','AOC Côtes du Provence'],
+      'castilla': ['DO Ribera del Duero','DO Rueda','DO Toro','DO Bierzo','DO Ca Rioja'],
+    };
+    // Find relevant group
+    for (const [key, regions] of Object.entries(regionGroups)) {
+      const matchesGroup = regions.some(r => aLower.includes(r.toLowerCase().substring(3)));
+      if (matchesGroup || qLower.includes(key)) {
+        regions.filter(r => r.toLowerCase() !== aLower).forEach(r => distractorPool.unshift(r));
+        break;
+      }
+    }
+    const allRegions = [...new Set(WINES.map(w=>w.region).filter(r=>r && r.toLowerCase()!==aLower))];
     allRegions.sort(() => Math.random() - .5);
-    allRegions.slice(0, 8).forEach(r => distractorPool.unshift(r));
+    allRegions.slice(0, 6).forEach(r => distractorPool.push(r));
   }
 
-  if(qLower.includes('tipo') || qLower.includes('type')){
-    // Type questions — add wine types
-    ['Tinto joven', 'Blanco seco', 'Rosado', 'Espumoso brut', 'Dulce', 'Crianza', 'Reserva', 'Gran Reserva']
-      .filter(t => t !== correctAnswer)
-      .forEach(t => distractorPool.unshift(t));
+  // 3. TEMPERATURE QUESTIONS → adjacent temperatures (close but wrong)
+  else if(qLower.includes('temperatura') || qLower.includes('grados') || qLower.includes('servir')){
+    const temps = ['4-6°C','6-8°C','8-10°C','10-12°C','12-14°C','14-16°C','16-18°C','18-20°C'];
+    const correctIdx = temps.findIndex(t => aLower.includes(t.toLowerCase()));
+    if (correctIdx !== -1) {
+      // Add adjacent temperatures (most confusing)
+      [correctIdx-1, correctIdx+1, correctIdx-2, correctIdx+2].forEach(i => {
+        if(i >= 0 && i < temps.length && i !== correctIdx) distractorPool.unshift(temps[i]);
+      });
+    } else {
+      temps.filter(t => t.toLowerCase() !== aLower).forEach(t => distractorPool.push(t));
+    }
   }
 
-  if(qLower.includes('temperatura') || qLower.includes('grados')){
-    // Temperature questions — add plausible temperatures
-    ['6-8°C', '8-10°C', '10-12°C', '12-14°C', '14-16°C', '16-18°C', '18-20°C']
-      .filter(t => t !== correctAnswer)
-      .forEach(t => distractorPool.unshift(t));
-  }
-
-  if(qLower.includes('maridaje') || qLower.includes('acompañar') || qLower.includes('marida') || qLower.includes('plato')){
-    // Pairing questions — add real pairings from other wines
-    const allPairings = [...new Set(WINES.flatMap(w=>w.pairings||[]).filter(p => p !== correctAnswer))];
+  // 4. PAIRING QUESTIONS → pairings from same wine type or opposite type
+  else if(qLower.includes('maridaje') || qLower.includes('acompañar') || qLower.includes('marida') || qLower.includes('plato') || qLower.includes('comer')){
+    // Get pairings from other wines of same type (plausible but wrong)
+    const wineType = WINES.find(w => qLower.includes(w.name.toLowerCase()));
+    if (wineType) {
+      const sameType = WINES.filter(w => w.type === wineType.type && w.id !== wineType.id);
+      sameType.flatMap(w => w.pairings || []).filter(p => p.toLowerCase() !== aLower).forEach(p => distractorPool.unshift(p));
+    }
+    const allPairings = [...new Set(WINES.flatMap(w=>w.pairings||[]).filter(p => p.toLowerCase() !== aLower))];
     allPairings.sort(() => Math.random() - .5);
-    allPairings.slice(0, 8).forEach(p => distractorPool.unshift(p));
+    allPairings.slice(0, 8).forEach(p => distractorPool.push(p));
   }
 
-  // Remove duplicates and the correct answer from pool
+  // 5. WINE TYPE/STYLE QUESTIONS → related types
+  else if(qLower.includes('tipo') || qLower.includes('type') || qLower.includes('estilo')){
+    ['Tinto joven','Tinto crianza','Tinto reserva','Blanco seco','Blanco afrutado','Rosado','Espumoso brut','Espumoso brut nature','Vino dulce','Vino generoso','Vino naranja','Cava']
+      .filter(t => t.toLowerCase() !== aLower)
+      .forEach(t => distractorPool.unshift(t));
+  }
+
+  // 6. PRICE QUESTIONS → nearby prices
+  else if(qLower.includes('precio') || qLower.includes('cuesta') || qLower.includes('€')){
+    const correctPrice = parseFloat(correctAnswer);
+    if (!isNaN(correctPrice)) {
+      [correctPrice * 0.6, correctPrice * 0.8, correctPrice * 1.3, correctPrice * 1.6, correctPrice * 2]
+        .map(p => Math.round(p) + '€')
+        .filter(p => p !== correctAnswer)
+        .forEach(p => distractorPool.unshift(p));
+    }
+  }
+
+  // 7. GENERAL/CONCEPT QUESTIONS → same category flashcards (most confusing)
+  else {
+    // Prioritize answers from same category (most plausible distractors)
+    const sameCat = WINE_FLASHCARDS.filter(f => f.cat === category && f.a !== correctAnswer);
+    sameCat.forEach(f => distractorPool.push(f.a));
+
+    // Then other categories
+    const otherCat = WINE_FLASHCARDS.filter(f => f.cat !== category && f.a !== correctAnswer);
+    otherCat.sort(() => Math.random() - .5);
+    otherCat.slice(0, 10).forEach(f => distractorPool.push(f.a));
+  }
+
+  // ═══ DEDUPLICATION AND SELECTION ═══
   const normalize = s => s.toLowerCase().trim().replace(/[.,;:!?]/g, '');
   const correctNorm = normalize(correctAnswer);
   const seen = new Set([correctNorm]);
 
-  // Shuffle pool for variety
-  for(let i = distractorPool.length - 1; i > 0; i--){
+  // Shuffle pool but keep priority order (unshift items stay first)
+  // Only shuffle the second half (non-priority items)
+  const priorityCount = Math.min(distractorPool.length, 8);
+  const priority = distractorPool.slice(0, priorityCount);
+  const rest = distractorPool.slice(priorityCount);
+  for(let i = rest.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
-    [distractorPool[i], distractorPool[j]] = [distractorPool[j], distractorPool[i]];
+    [rest[i], rest[j]] = [rest[j], rest[i]];
   }
+  // Shuffle within priority too for variety
+  for(let i = priority.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [priority[i], priority[j]] = [priority[j], priority[i]];
+  }
+  const finalPool = [...priority, ...rest];
 
-  for(const d of distractorPool){
+  for(const d of finalPool){
     if(choices.length >= 4) break;
     const dNorm = normalize(d);
-    // Skip if too similar to correct answer or already chosen
     if(seen.has(dNorm)) continue;
     if(dNorm.length < 2) continue;
-    // Skip if >60% word overlap with correct
+    // Skip if >50% word overlap (stricter than before)
     const cWords = new Set(correctNorm.split(/\s+/));
     const dWords = new Set(dNorm.split(/\s+/));
     const overlap = [...cWords].filter(w => dWords.has(w)).length;
-    if(cWords.size > 0 && overlap / Math.max(cWords.size, dWords.size) > 0.6) continue;
-    // Skip if substring of correct or vice versa
+    if(cWords.size > 1 && overlap / Math.max(cWords.size, dWords.size) > 0.5) continue;
     if(correctNorm.includes(dNorm) || dNorm.includes(correctNorm)) continue;
-
     seen.add(dNorm);
     choices.push({text: d, correct: false});
   }
 
-  // If still not enough, generate generic plausible distractors
+  // Fallback if still not enough
+  const fallbacks = ['Tempranillo','DO Ca Rioja','Ribera del Duero','Chardonnay','DO Ca Priorat','Albariño','Garnacha','Merlot','Godello','Verdejo','Monastrell','DO Rías Baixas','14-16°C','Crianza','Reserva'];
   while(choices.length < 4){
-    const fallbacks = ['Tempranillo', 'Rioja', 'Ribera del Duero', 'Chardonnay', 'Priorat', 'Albariño', 'Garnacha', 'Merlot', 'Godello', 'Verdejo', 'Monastrell', 'Rías Baixas'];
     const fb = fallbacks.find(f => !seen.has(normalize(f)));
     if(fb){ seen.add(normalize(fb)); choices.push({text: fb, correct: false}); }
     else break;
   }
 
-  // Shuffle choices
+  // Shuffle final choices
   for(let i = choices.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
     [choices[i], choices[j]] = [choices[j], choices[i]];
@@ -9927,7 +10151,9 @@ function _generateWineChoices(q){
 function _wqSelectAnswer(idx){
   if(!_wqState || _wqState.selectedAnswer !== null) return;
   _wqState.selectedAnswer = idx;
-  if(_wqState.currentChoices[idx].correct) _wqState.score++;
+  if(_wqState.currentChoices[idx].correct){
+    _wqState.score++;
+  }
   renderVinos();
 }
 
