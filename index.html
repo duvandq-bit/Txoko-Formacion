@@ -8453,42 +8453,6 @@ const WINES = [
     story: 'Ribera Duero DO, Tinta País viñas jóvenes. 6 meses roble francés. Estilo moderno Ribera, busca valor acceso entrada región. Excelente relación calidad-precio, frutal carácter mineral.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Entrecot de Angus 300g', 'Bao de brisket'],
     notes: 'Equilibrado y frutal, con aromas de frutos rojos. Ideal con carnes.'
-  },
-  {
-    id: 111,
-    name: 'Artifice Tinto Copa',
-    type: 'tinto',
-    grapes: 'Listán Negro',
-    region: 'DO Ycoden Daute Isora',
-    origin: 'Canarias',
-    price: 55,
-    glass: 16,
-    year: null,
-    format: 'copa',
-    recommended: false,
-    vegaSicilia: false,
-    kosher: false,
-    story: 'Tenerife terroir volcánico ancestral. Listán Negro viñas pre-filoxera. Intervención mínima Borja Pérez, fermentación natural espontánea. Puerta vino canario mundo, expresión carácter volcánico mineral refrescante único.',
-    pairings: ['Carpaccio con espuma de parmesano', 'Vitello tonnato', 'Milanesa de pollo al mojo rojo', 'Tabla de quesos canarios', 'Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Croquetas Premium'],
-    notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes asadas.'
-  },
-  {
-    id: 112,
-    name: 'Marques de Murrieta Reserva Copa',
-    type: 'tinto',
-    grapes: 'Tempranillo/Garnacha/Graciano/Mazuelo',
-    region: 'DO Ca Rioja',
-    origin: 'La Rioja-Álava',
-    price: 60,
-    glass: 17,
-    year: null,
-    format: 'copa',
-    recommended: false,
-    vegaSicilia: false,
-    kosher: false,
-    story: 'Rioja Alta Finca Ygay bodega 160+ años historia. Tempranillo dominante blend complejo. 18 meses roble americano francés equilibrado. Uno España Reservas más galardonados. Filosofía tradicional elegancia refinada carácter.',
-    pairings: ['Pincho Moruno con cous cous', 'Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Pollo brasa con huevo a baja temperatura', 'Milanesa de pollo al mojo rojo', 'Pimiento relleno de ternera', 'Tartar de solomillo'],
-    notes: 'Complejo y equilibrado, con aromas de frutos rojos y especias. Excelente opción por copa.'
   }
 ];
 
@@ -8931,7 +8895,7 @@ function _pairingWhy(wine, dishName){
     rosado: 'El rosado es versátil y fresco, complementando una amplia variedad de sabores.',
     espumoso: 'Las burbujas limpian el paladar entre bocados, refrescando cada momento.',
     dulce: 'El vino dulce equilibra los sabores y crea una conclusión armoniosa.',
-    mocktail: 'Este mocktail crea una experiencia refrescante sin alcohol.'
+    mocktail: 'Experiencia refrescante sin alcohol.'
   };
 
   return genericFallbacks[type] || 'Este vino complementa perfectamente este plato con elegancia y equilibrio.';
@@ -9298,8 +9262,7 @@ function renderVinosCarta(){
     ['tinto',_en?'Reds':'Tintos','🍷'],
     ['rosado',_en?'Rosés':'Rosados','🌸'],
     ['espumoso',_en?'Sparkling':'Espumosos','✨'],
-    ['dulce',_en?'Desserts':'Dulces','🍯'],
-    ['',_en?'Mocktails':'Mocktails','🍹']
+    ['dulce',_en?'Desserts':'Dulces','🍯']
   ];
   
   let filtered = WINES.filter(w => {
@@ -9323,8 +9286,7 @@ function renderVinosCarta(){
 
   const typeColors = {
     blanco:'#f5e6b8', tinto:'#8b2252', rosado:'#e8a0bf', espumoso:'#d4af37',
-    dulce:'#daa520', mocktail:'#95e1d3'
-  };
+    dulce:'#daa520'  };
 
   c.innerHTML = `
     <div style="padding:.5rem 0 1rem">
@@ -9367,11 +9329,11 @@ function renderVinosCarta(){
 }
 
 function _renderWineCard(w, idx, filteredList){
-  const typeLabels = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce',mocktail:'Mocktail'};
-  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',mocktail:'🍹'};
-  const typeColors = {blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)',mocktail:'var(--candy-green)'};
+  const typeLabels = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
+  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'};
+  const typeColors = {blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'};
   const bgColor = typeColors[w.type] || 'var(--gold)';
-  const isWine = !['cocktail','mocktail'].includes(w.type);
+  const isWine = w.type !== 'cocktail';
   const delay = Math.min((idx||0)*0.04, 0.3);
   const idList = (filteredList||[]).map(f=>f.id).join(',');
 
@@ -9904,7 +9866,7 @@ function _wineServingTemp(w) {
   const story = (w.story||'').toLowerCase();
   const hasBarrica = story.includes('barrica') || story.includes('roble');
   if(type === 'espumoso') return '4–6°C';
-  if(type === 'blanco' || type === 'mocktail') return hasBarrica ? '10–12°C' : '6–8°C';
+  if(type === 'blanco') return hasBarrica ? '10–12°C' : '6–8°C';
   if(type === 'rosado') return '8–10°C';
   if(type === 'dulce') return '6–8°C';
   if(type === 'tinto') {
@@ -10073,9 +10035,9 @@ function _showWineDetail(id, list, direction){
   const hasPrev = _wineDetailIdx > 0;
   const hasNext = _wineDetailIdx < _wineDetailList.length - 1;
   const navCounter = _wineDetailList.length > 1 ? (_wineDetailIdx + 1) + ' / ' + _wineDetailList.length : '';
-  const typeLabels = {blanco:_en?'White Wine':'Vino Blanco',tinto:_en?'Red Wine':'Vino Tinto',rosado:_en?'Rosé Wine':'Vino Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Dessert Wine':'Vino Dulce',mocktail:'Mocktail'};
-  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',mocktail:'🍹'};
-  const isWine = !['cocktail','mocktail'].includes(w.type);
+  const typeLabels = {blanco:_en?'White Wine':'Vino Blanco',tinto:_en?'Red Wine':'Vino Tinto',rosado:_en?'Rosé Wine':'Vino Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Dessert Wine':'Vino Dulce'};
+  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'};
+  const isWine = w.type !== 'cocktail';
 
   const overlay = document.createElement('div');
   overlay.id = 'wineDetailOverlay';
