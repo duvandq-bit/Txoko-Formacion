@@ -6364,7 +6364,11 @@ function _showCloudPinLogin(name, emp) {
           if(buffer.length === 4) {
             setTimeout(function() {
               hashPin(buffer).then(function(h) {
-                if(h === emp.pin) {
+                // Check hash match OR legacy plaintext match
+                var pinMatch = (h === emp.pin) || (buffer === emp.pin);
+                if(pinMatch) {
+                  // Migrate plaintext PIN to hash if needed
+                  if(buffer === emp.pin && emp.pin.length < 64) { emp.pin = h; }
                   // Success!
                   overlay.remove();
                   delete emp._fromCloud;
