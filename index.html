@@ -1118,19 +1118,19 @@ body::after{
 .sommelier-box{
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);
   border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);
-  padding:1.1rem 1.2rem;position:relative;overflow:hidden;
+  padding:1.1rem 1.2rem;position:relative;overflow:visible;
   box-shadow:0 4px 16px rgba(28,42,34,.04);
   animation:sommelierPulse 4s ease-in-out infinite;
 }
 .sommelier-box::before{
-  content:'';position:absolute;inset:0;
+  content:'';position:absolute;inset:0;border-radius:var(--r);
   background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.4'/%3E%3C/svg%3E");
-  pointer-events:none;
+  pointer-events:none;overflow:hidden;
 }
 .sommelier-box::after{
   content:'';position:absolute;top:-1px;left:10%;right:10%;height:2.5px;
   background:linear-gradient(90deg,transparent,var(--gold),var(--gold3),var(--gold),transparent);
-  border-radius:0 0 2px 2px;
+  border-radius:0 0 2px 2px;z-index:1;
 }
 .sommelier-input{
   width:100%;padding:.7rem 1rem .7rem 2.4rem;
@@ -3463,30 +3463,28 @@ function setLangApp(lang) {
   setLang(lang);
   // Save lang preference for current user
   if(currentUser){ const _e=getEmp(currentUser); if(_e) { _e.lang=lang; saveDB(); } }
-  // Update header buttons
+  // Update header buttons visual state
   const es = document.getElementById('appLangEs');
   const en = document.getElementById('appLangEn');
-  if(es) es.style.cssText = es.style.cssText.replace(/opacity:[^;]+/, 'opacity:' + (lang==='es'?'1':'0.4'));
-  if(en) en.style.cssText = en.style.cssText.replace(/opacity:[^;]+/, 'opacity:' + (lang==='en'?'1':'0.4'));
-  if(en) en.style.color = lang==='en' ? 'var(--gold)' : 'var(--parch3)';
-  if(es) es.style.color = lang==='es' ? 'var(--gold)' : 'var(--parch3)';
+  if(es){ es.style.background = lang==='es' ? 'rgba(255,255,255,.15)' : 'transparent'; es.style.color = lang==='es' ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.4)'; }
+  if(en){ en.style.background = lang==='en' ? 'rgba(255,255,255,.15)' : 'transparent'; en.style.color = lang==='en' ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.4)'; }
+  // Update nav labels and header text
+  applyLangToApp();
   // Refresh current tab
   if(currentUser && currentTab) showTab(currentTab);
 }
 function setLang(lang) {
   LANG = lang;
   localStorage.setItem('txoko_lang', lang);
-  document.getElementById('langBtnEs').classList.toggle('active', lang === 'es');
-  document.getElementById('langBtnEn').classList.toggle('active', lang === 'en');
-  document.getElementById('htmlRoot').lang = lang;
-  // Update login UI
-    // loginSubtitle — no longer exists in new login
-  // document.getElementById('loginSubtitle').textContent = t('subtitle');
-  // document.getElementById('loginProfileLabel').textContent = t('profileLabel');
-  // document.getElementById('loginNewLabel').textContent = t('newLabel');
-  // document.getElementById('loginEnterBtn').textContent = t('enterBtn');
-  // document.getElementById('newEmpInput').placeholder = t('inputPlaceholder');
-  if(typeof DB !== 'undefined') renderLogin();
+  const root = document.getElementById('htmlRoot');
+  if(root) root.lang = lang;
+  // Update login lang buttons if they exist
+  const lEs = document.getElementById('langBtnEs');
+  const lEn = document.getElementById('langBtnEn');
+  if(lEs) lEs.classList.toggle('active', lang === 'es');
+  if(lEn) lEn.classList.toggle('active', lang === 'en');
+  // Refresh login UI if visible
+  if(typeof DB !== 'undefined' && !currentUser) renderLogin();
 }
 
 // ═══ CERTIFICACIONES POR CATEGORÍA ═══
@@ -4507,24 +4505,23 @@ const CAT_EMOJIS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24" f
 function applyLangToApp() {
   const lb = document.getElementById('logoutBtn');
   if (lb) lb.textContent = LANG==='en'?'Log out':'Salir';
-  // Nav labels
+  // Nav labels — must match actual button IDs in the nav
   const navLabels = {
     navDashboard: LANG==='en'?'Home':'Inicio',
-    navFlashcards: 'Flashcards',
+    navAprender: LANG==='en'?'Learn':'Aprender',
     navExam: LANG==='en'?'Exam':'Examen',
-    navRepaso: LANG==='en'?'Explore':'Explorar',
-    navStats: LANG==='en'?'Stats':'Estadísticas',
+    navProtocolo: LANG==='en'?'Protocol':'Protocolo',
+    navVinos: LANG==='en'?'Wines':'Vinos',
     navTxoko: LANG==='en'?'Games':'Juegos',
     navRanking: 'Ranking',
-    navProtocolo: LANG==='en'?'Protocol':'Protocolo',
-    navVideos: 'Videos',
+    navSupervisor: 'Sup.',
   };
   Object.entries(navLabels).forEach(([id, label]) => {
     const el = document.getElementById(id);
     if(el) {
       // Preserve SVG icon, just update text node
       const svg = el.querySelector('svg');
-      el.textContent = label;
+      el.textContent = ' ' + label;
       if(svg) el.insertBefore(svg, el.firstChild);
     }
   });
@@ -6386,10 +6383,11 @@ function _subTabBar(tabs, activeTab, parentTab){
 function renderAprender(){
   const c=document.getElementById('appContent');
   const sub = _subTab.aprender || 'flashcards';
+  const _en = LANG==='en';
   const bar = _subTabBar([
     ['flashcards','Flashcards','🃏'],
-    ['repaso','Explorar','🔍'],
-    ['videos','Videos','🎬']
+    ['repaso',_en?'Explore':'Explorar','🔍'],
+    ['videos',_en?'Videos':'Videos','🎬']
   ], sub, 'aprender');
   ({flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos})[sub]();
   c.insertAdjacentHTML('afterbegin', bar);
@@ -9108,14 +9106,15 @@ function _sommelierSearch(query){
 function renderVinos(){
   const c = document.getElementById('appContent');
   const sub = _vinoSubTab || 'sommelier';
+  const _en = LANG==='en';
   const tabs = [
     ['sommelier','Sommelier','✨'],
-    ['carta','Carta','🍷'],
-    ['mapa','Mapa DO','🗺️'],
-    ['aprende','Aprende','📖'],
+    ['carta',_en?'Menu':'Carta','🍷'],
+    ['mapa',_en?'DO Map':'Mapa DO','🗺️'],
+    ['aprende',_en?'Learn':'Aprende','📖'],
     ['wineFlash','Flashcards','🃏'],
     ['wineQuiz','Quiz','🎯'],
-    ['servicio','Servicio','💬']
+    ['servicio',_en?'Service':'Servicio','💬']
   ];
   const bar = `<div class="tunic-subtabs">${
     tabs.map(([id,label,icon])=>`<button onclick="_vinoSubTab='${id}';renderVinos()" class="tunic-stab${sub===id?' active':''}">${icon} ${label}</button>`).join('')
@@ -9141,12 +9140,18 @@ function renderVinos(){
 }
 
 function _renderSommelier(c, bar){
+  const _en = LANG==='en';
   const greetings = [
-    'Cada vino cuenta una historia... déjame ayudarte a encontrar la tuya.',
-    'El vino perfecto ya te espera entre estas páginas.',
-    'Donde un buen plato se encuentra con el vino ideal, nace la magia.',
-    'Bienvenido al mundo donde cada copa es una aventura.',
-    'El maridaje perfecto es como un cuento de hadas: todo encaja.'
+    LANG==='en'?'Every wine tells a story... let me help you find yours.'
+      :'Cada vino cuenta una historia... déjame ayudarte a encontrar la tuya.',
+    LANG==='en'?'The perfect wine is already waiting for you in these pages.'
+      :'El vino perfecto ya te espera entre estas páginas.',
+    LANG==='en'?'Where a great dish meets the ideal wine, magic is born.'
+      :'Donde un buen plato se encuentra con el vino ideal, nace la magia.',
+    LANG==='en'?'Welcome to a world where every glass is an adventure.'
+      :'Bienvenido al mundo donde cada copa es una aventura.',
+    LANG==='en'?'The perfect pairing is like a fairy tale: everything fits.'
+      :'El maridaje perfecto es como un cuento de hadas: todo encaja.'
   ];
   const greeting = greetings[Math.floor(Date.now()/86400000) % greetings.length];
 
@@ -9161,24 +9166,24 @@ function _renderSommelier(c, bar){
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <!-- Fairy-tale hero -->
     <div class="wine-hub-hero">
-      <div class="wine-hub-title">El Encanto<br>del Vino</div>
+      <div class="wine-hub-title">${_en?'The Enchantment<br>of Wine':'El Encanto<br>del Vino'}</div>
       <div class="wine-hub-vine"></div>
       <div class="wine-hub-verse">"${greeting}"</div>
 
       <div style="display:flex;justify-content:center;gap:1.2rem;margin-top:1.2rem">
         <div style="text-align:center">
           <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);font-weight:700">${WINES.length}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">Vinos</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">${_en?'Wines':'Vinos'}</div>
         </div>
         <div style="width:1px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.2),transparent)"></div>
         <div style="text-align:center">
           <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--sage);font-weight:700">${byGlass}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">Por Copa</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">${_en?'By Glass':'Por Copa'}</div>
         </div>
         <div style="width:1px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.2),transparent)"></div>
         <div style="text-align:center">
           <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--azure);font-weight:700">${regions}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">Orígenes</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">${_en?'Origins':'Orígenes'}</div>
         </div>
       </div>
     </div>
@@ -9188,50 +9193,50 @@ function _renderSommelier(c, bar){
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;position:relative">
         <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:32px;height:32px;font-size:.85rem">🧙</div>
         <div>
-          <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">Tu Sommelier Personal</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3)">Escribe un plato y te recomiendo el vino perfecto</div>
+          <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--parchment)">${_en?'Your Personal Sommelier':'Tu Sommelier Personal'}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3)">${_en?'Type a dish and I\'ll recommend the perfect wine':'Escribe un plato y te recomiendo el vino perfecto'}</div>
         </div>
       </div>
-      <div style="position:relative" id="sommelierWrap">
+      <div style="position:relative;z-index:10" id="sommelierWrap">
         <input id="sommelierInput" class="sommelier-input" type="text"
-          placeholder="Ej: tataki de atún, solomillo, brownie..."
+          placeholder="${_en?'E.g.: tuna tataki, sirloin, brownie...':'Ej: tataki de atún, solomillo, brownie...'}"
           value="${escapeHTML(_sommelierQuery)}"
           oninput="_sommelierAutocomplete(this.value)"
           onfocus="_sommelierAutocomplete(this.value)"
           autocomplete="off">
         <svg style="position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--gold);opacity:.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <div id="sommelierSuggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:50;max-height:200px;overflow-y:auto;background:var(--ink);border:1.5px solid var(--line2);border-top:none;border-radius:0 0 var(--r3) var(--r3);box-shadow:0 8px 20px rgba(28,42,34,.15);-webkit-overflow-scrolling:touch;scrollbar-width:thin"></div>
+        <div id="sommelierSuggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;max-height:220px;overflow-y:auto;background:#faf6ee;border:1.5px solid rgba(196,154,60,.25);border-top:none;border-radius:0 0 12px 12px;box-shadow:0 10px 30px rgba(28,42,34,.2),0 2px 8px rgba(0,0,0,.08);-webkit-overflow-scrolling:touch;scrollbar-width:thin"></div>
       </div>
       ${_sommelierResults && _sommelierResults.length > 0 ? `
         <div class="sommelier-results">
-          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;position:relative">✦ Mis recomendaciones para ti</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;position:relative">${_en?'✦ My recommendations for you':'✦ Mis recomendaciones para ti'}</div>
           ${_sommelierResults.map((r,i) => `
             <div onclick="_showWineDetail(${r.wine.id})" class="sommelier-match" style="animation-delay:${i*0.08}s">
               <div class="sommelier-match-score">${Math.min(99,r.score)}%</div>
               <div style="flex:1;min-width:0">
                 <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);line-height:1.2">${escapeHTML(r.wine.name)}</div>
-                <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(r.wine.grapes||r.wine.type)} · ${r.wine.price}€${r.wine.glass?' · Copa '+r.wine.glass+'€':''}</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(r.wine.grapes||r.wine.type)} · ${r.wine.price}€${r.wine.glass?(_en?' · Glass ':' · Copa ')+r.wine.glass+'€':''}</div>
                 <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;color:var(--sage);margin-top:.3rem;line-height:1.4;font-style:italic;padding:.25rem .4rem;background:rgba(77,138,94,.05);border-radius:6px;border-left:2px solid rgba(77,138,94,.2)">💡 ${_sommelierWhy(r.wine, _sommelierQuery)}</div>
               </div>
               <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);font-weight:600;flex-shrink:0">${r.wine.price}€</div>
             </div>`).join('')}
         </div>` : _sommelierQuery && _sommelierQuery.length >= 2 ? `
         <div style="text-align:center;padding:1rem;position:relative">
-          <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);font-style:italic">No encontré un maridaje exacto... prueba con otro plato</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);font-style:italic">${_en?'No exact pairing found... try another dish':'No encontré un maridaje exacto... prueba con otro plato'}</div>
         </div>` : ''}
     </div>
 
     <!-- Beginner tips -->
     ${!_sommelierQuery ? `<div class="wine-concept-card wine-enchanted" style="margin-bottom:1rem;border-left:3px solid var(--sage)">
-      <div style="font-family:'Cinzel',serif;font-size:.8rem;color:var(--sage);margin-bottom:.4rem;position:relative">🌱 ¿No sabes por dónde empezar?</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);line-height:1.5;position:relative">Escribe el nombre de tu plato arriba y te explicaremos qué vino va mejor y <strong style="color:var(--parchment)">por qué</strong>. Prueba con: "tataki", "solomillo", "brownie", "ensalada"...</div>
+      <div style="font-family:'Cinzel',serif;font-size:.8rem;color:var(--sage);margin-bottom:.4rem;position:relative">${_en?'🌱 Don\'t know where to start?':'🌱 ¿No sabes por dónde empezar?'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);line-height:1.5;position:relative">${_en?'Type a dish name above and we\'ll tell you which wine goes best and <strong style="color:var(--parchment)">why</strong>. Try: "tataki", "sirloin", "brownie", "salad"...':'Escribe el nombre de tu plato arriba y te explicaremos qué vino va mejor y <strong style="color:var(--parchment)">por qué</strong>. Prueba con: "tataki", "solomillo", "brownie", "ensalada"...'}</div>
       <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.5rem;position:relative">
         ${['Tataki de atún','Carrillera de Wagyu','Lobster Roll','Brownie','Ostras','Calamares','Pulpo','Quesos'].map(d=>`<button onclick="document.getElementById('sommelierInput').value='${d}';document.getElementById('sommelierSuggestions')&&(document.getElementById('sommelierSuggestions').style.display='none');_sommelierSearch('${d}')" class="wine-pairing-pill" style="cursor:pointer;font-size:.62rem">${d}</button>`).join('')}
       </div>
     </div>` : ''}
 
     <!-- Quick discovery cards -->
-    <div class="section-eyebrow">✦ Descubre Hoy</div>
+    <div class="section-eyebrow">${_en?'✦ Discover Today':'✦ Descubre Hoy'}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
       ${featured.map((w,i) => `
         <div onclick="_showWineDetail(${w.id}, [${featured.map(f=>f.id).join(',')}])" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
@@ -9251,23 +9256,23 @@ function _renderSommelier(c, bar){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
       <button onclick="_vinoSubTab='carta';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
         <div style="font-size:1.5rem">🍷</div>
-        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Carta Completa</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINES.length} vinos</div>
+        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">${_en?'Full Menu':'Carta Completa'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINES.length} ${_en?'wines':'vinos'}</div>
       </button>
       <button onclick="_vinoSubTab='aprende';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
         <div style="font-size:1.5rem">📖</div>
-        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Aprende</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_CONCEPTS.length} conceptos</div>
+        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">${_en?'Learn':'Aprende'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_CONCEPTS.length} ${_en?'concepts':'conceptos'}</div>
       </button>
       <button onclick="_vinoSubTab='wineFlash';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
         <div style="font-size:1.5rem">🃏</div>
         <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Flashcards</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_FLASHCARDS.length} tarjetas</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_FLASHCARDS.length} ${_en?'cards':'tarjetas'}</div>
       </button>
       <button onclick="_vinoSubTab='wineQuiz';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
         <div style="font-size:1.5rem">🎯</div>
         <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Quiz</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">4 modos</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${_en?'4 modes':'4 modos'}</div>
       </button>
     </div>
   </div>`;
@@ -9286,14 +9291,15 @@ function _renderSommelier(c, bar){
 
 function renderVinosCarta(){
   const c = document.getElementById('appContent');
+  const _en = LANG==='en';
   const types = [
-    ['all','Todos','🍷'],
-    ['blanco','Blancos','🥂'],
-    ['tinto','Tintos','🍷'],
-    ['rosado','Rosados','🌸'],
-    ['espumoso','Espumosos','✨'],
-    ['dulce','Dulces','🍯'],
-    ['','Mocktails','🍹']
+    ['all',_en?'All':'Todos','🍷'],
+    ['blanco',_en?'Whites':'Blancos','🥂'],
+    ['tinto',_en?'Reds':'Tintos','🍷'],
+    ['rosado',_en?'Rosés':'Rosados','🌸'],
+    ['espumoso',_en?'Sparkling':'Espumosos','✨'],
+    ['dulce',_en?'Desserts':'Dulces','🍯'],
+    ['',_en?'Mocktails':'Mocktails','🍹']
   ];
   
   let filtered = WINES.filter(w => {
@@ -9598,6 +9604,7 @@ function _buildSpainSVG(regionDots, byOrigin) {
 
 
 function _renderWineMap(c, bar) {
+  const _en = LANG==='en';
   // Group wines by origin
   const byOrigin = {};
   WINES.forEach(w => {
@@ -9804,6 +9811,7 @@ function _parseWineScores(w) {
 }
 
 function _renderRadarChart(w) {
+  const _en = LANG==='en';
   const scores = _parseWineScores(w);
   const n = scores.length;
   const cx = 140, cy = 130, maxR = 95;
@@ -9856,7 +9864,7 @@ function _renderRadarChart(w) {
   }
 
   return '<div class="radar-container">' +
-    '<div class="wine-info-label" style="margin-bottom:.5rem">✦ Perfil de Cata</div>' +
+    '<div class="wine-info-label" style="margin-bottom:.5rem">✦ '+(_en?'Tasting Profile':'Perfil de Cata')+'</div>' +
     '<svg class="radar-svg" viewBox="0 0 280 260">' +
     gridPaths + axes +
     '<polygon class="radar-area" points="' + dataPts.join(' ') + '"/>' +
@@ -10058,13 +10066,14 @@ function _wineNotesExpanded(w) {
 function _showWineDetail(id, list, direction){
   const w = WINES.find(x=>x.id===id);
   if(!w) return;
+  const _en = LANG==='en';
   // Track wine list for swipe navigation
   if(list && list.length) { _wineDetailList = list; _wineDetailIdx = list.indexOf(id); }
   else if(!_wineDetailList.length) { _wineDetailList = [id]; _wineDetailIdx = 0; }
   const hasPrev = _wineDetailIdx > 0;
   const hasNext = _wineDetailIdx < _wineDetailList.length - 1;
   const navCounter = _wineDetailList.length > 1 ? (_wineDetailIdx + 1) + ' / ' + _wineDetailList.length : '';
-  const typeLabels = {blanco:'Vino Blanco',tinto:'Vino Tinto',rosado:'Vino Rosado',espumoso:'Espumoso',dulce:'Vino Dulce',mocktail:'Mocktail'};
+  const typeLabels = {blanco:_en?'White Wine':'Vino Blanco',tinto:_en?'Red Wine':'Vino Tinto',rosado:_en?'Rosé Wine':'Vino Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Dessert Wine':'Vino Dulce',mocktail:'Mocktail'};
   const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',mocktail:'🍹'};
   const isWine = !['cocktail','mocktail'].includes(w.type);
 
@@ -10072,20 +10081,20 @@ function _showWineDetail(id, list, direction){
   overlay.id = 'wineDetailOverlay';
   overlay.className = 'wine-detail-overlay';
   overlay.innerHTML = `<div class="wine-detail-inner">
-    <button onclick="document.getElementById('wineDetailOverlay').remove()" class="wine-detail-back">◇ Volver</button>
+    <button onclick="document.getElementById('wineDetailOverlay').remove()" class="wine-detail-back">◇ ${_en?'Back':'Volver'}</button>
 
     ${_wineDetailList.length > 1 ? `<div class="wine-nav-arrows">
       <button onclick="_navigateWine(-1)" class="wine-nav-arrow${hasPrev?'':' disabled'}">◁</button>
       <span class="wine-nav-counter">${navCounter}</span>
       <button onclick="_navigateWine(1)" class="wine-nav-arrow${hasNext?'':' disabled'}">▷</button>
     </div>
-    <div class="wine-swipe-hint">← desliza para cambiar →</div>` : ''}
+    <div class="wine-swipe-hint">${_en?'← swipe to change →':'← desliza para cambiar →'}</div>` : ''}
 
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem">
       <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:36px;height:36px;font-size:.9rem">${typeIcons[w.type]||'🍷'}</div>
       <div style="display:flex;flex-wrap:wrap;gap:.3rem">
         <span class="wine-badge" style="background:rgba(196,154,60,.08);color:var(--gold);border:1px solid rgba(196,154,60,.15)">${typeLabels[w.type]||w.type}</span>
-        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ Recomendado</span>':''}
+        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ '+(_en?'Recommended':'Recomendado')+'</span>':''}
         ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.08);color:#8b6914;border:1px solid rgba(139,105,20,.15)">◆ Tempos Vega Sicilia</span>':''}
         ${w.kosher?'<span class="wine-badge" style="background:rgba(196,154,60,.06);color:var(--parch3);border:1px solid rgba(196,154,60,.1)">✡ Kosher</span>':''}
       </div>
@@ -10096,11 +10105,11 @@ function _showWineDetail(id, list, direction){
 
     <div class="wine-price-box">
       <div>
-        <div class="wine-info-label">${w.format||'Botella'}</div>
+        <div class="wine-info-label">${w.format||(_en?'Bottle':'Botella')}</div>
         <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:700">${w.price}€</div>
       </div>
       ${w.glass?`<div style="border-left:1.5px solid rgba(196,154,60,.15);padding-left:.8rem">
-        <div class="wine-info-label">Copa</div>
+        <div class="wine-info-label">${_en?'Glass':'Copa'}</div>
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--sage);font-weight:600">${w.glass}€</div>
       </div>`:''}
     </div>
@@ -10108,25 +10117,25 @@ function _showWineDetail(id, list, direction){
     ${isWine?`
     <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem">
       <div class="wine-info-box" style="flex:1;min-width:140px">
-        <div class="wine-info-label">◇ Uvas</div>
+        <div class="wine-info-label">◇ ${_en?'Grapes':'Uvas'}</div>
         <div class="wine-info-value">${escapeHTML(w.grapes||'-')}</div>
       </div>
       <div class="wine-info-box" style="flex:1;min-width:140px">
-        <div class="wine-info-label">◇ Región</div>
+        <div class="wine-info-label">◇ ${_en?'Region':'Región'}</div>
         <div class="wine-info-value">${escapeHTML(w.region||'-')}</div>
         ${w.origin?`<div style="font-size:.68rem;color:var(--parch3);margin-top:.15rem;position:relative">${escapeHTML(w.origin)}</div>`:''}
       </div>
     </div>`:''}
 
     <div class="wine-story-box">
-      <div class="wine-info-label" style="margin-left:.6rem">✦ Historia y Elaboración</div>
+      <div class="wine-info-label" style="margin-left:.6rem">✦ ${_en?'Story & Production':'Historia y Elaboración'}</div>
       <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(w.story)}"</div>
       ${isWine ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;margin-left:.6rem">${_wineStoryTags(w).map(t=>'<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;border-radius:6px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.1);color:var(--parch3)">◇ '+t+'</span>').join('')}</div>` : ''}
     </div>
 
     ${isWine ? `
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:.9rem 1rem">
-      <div class="wine-info-label" style="margin-bottom:.6rem">◇ Ficha de Servicio</div>
+      <div class="wine-info-label" style="margin-bottom:.6rem">◇ ${_en?'Serving Card':'Ficha de Servicio'}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
         <div style="padding:.45rem .6rem;border-radius:8px;background:rgba(196,154,60,.03)">
           <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.06em;margin-bottom:.2rem">◇ TEMPERATURA</div>
@@ -10151,7 +10160,7 @@ function _showWineDetail(id, list, direction){
 
     ${isWine&&w.notes?`
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
-      <div class="wine-info-label">✦ Notas de Cata</div>
+      <div class="wine-info-label">✦ ${_en?'Tasting Notes':'Notas de Cata'}</div>
       <div style="display:flex;flex-direction:column;gap:.6rem;position:relative">
         ${_wineNotesExpanded(w)}
       </div>
@@ -10159,7 +10168,7 @@ function _showWineDetail(id, list, direction){
 
     ${w.pairings&&w.pairings.length?`
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
-      <div class="wine-info-label">✦ Maridaje recomendado</div>
+      <div class="wine-info-label">✦ ${_en?'Recommended Pairings':'Maridaje recomendado'}</div>
       <div style="display:flex;flex-direction:column;gap:.5rem;position:relative">
         ${w.pairings.map(p=>`
           <div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(77,138,94,.25)">
@@ -10208,44 +10217,45 @@ function _showWineDetail(id, list, direction){
 
 let _wineLearnLevel = 'all';
 function _renderWineLearn(c, bar){
+  const _en = LANG==='en';
   const levels = [
-    {id:'all',label:'Todos',icon:'📚',desc:'Todo el contenido'},
-    {id:'principiante',label:'Principiante',icon:'🌱',desc:'Empieza aquí'},
-    {id:'intermedio',label:'Intermedio',icon:'🌿',desc:'Profundiza'},
-    {id:'avanzado',label:'Avanzado',icon:'🌳',desc:'Domina el vino'}
+    {id:'all',label:_en?'All':'Todos',icon:'📚',desc:_en?'All content':'Todo el contenido'},
+    {id:'principiante',label:_en?'Beginner':'Principiante',icon:'🌱',desc:_en?'Start here':'Empieza aquí'},
+    {id:'intermedio',label:_en?'Intermediate':'Intermedio',icon:'🌿',desc:_en?'Go deeper':'Profundiza'},
+    {id:'avanzado',label:_en?'Advanced':'Avanzado',icon:'🌳',desc:_en?'Master wine':'Domina el vino'}
   ];
   const filteredConcepts = _wineLearnLevel==='all' ? WINE_CONCEPTS : WINE_CONCEPTS.filter(c=>c.level===_wineLearnLevel);
   const levelColors = {principiante:'var(--sage)',intermedio:'var(--gold)',avanzado:'var(--candy-purple)'};
-  const levelLabels = {principiante:'Principiante',intermedio:'Intermedio',avanzado:'Avanzado'};
+  const levelLabels = {principiante:_en?'Beginner':'Principiante',intermedio:_en?'Intermediate':'Intermedio',avanzado:_en?'Advanced':'Avanzado'};
 
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <div class="wine-section-header">
-      <div class="wine-section-title">✦ Aprende sobre Vinos ✦</div>
-      <div class="wine-section-sub">Tu camino de cero a sommelier</div>
+      <div class="wine-section-title">✦ ${_en?'Learn about Wine':'Aprende sobre Vinos'} ✦</div>
+      <div class="wine-section-sub">${_en?'Your path from zero to sommelier':'Tu camino de cero a sommelier'}</div>
     </div>
 
     <!-- Welcoming intro for total beginners -->
     <div class="sommelier-box wine-enchanted" style="margin-bottom:1.2rem;text-align:center">
       <div style="font-size:1.8rem;margin-bottom:.4rem;position:relative">🌱</div>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.4;margin-bottom:.5rem;position:relative">¿El vino es un mundo desconocido para ti?</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch3);line-height:1.6;margin-bottom:.8rem;position:relative">¡Perfecto! Estás en el lugar ideal. Hemos creado un camino paso a paso para que aprendas desde cero, sin prisa y sin agobios. Empieza por "Principiante" y ve avanzando a tu ritmo.</div>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.4;margin-bottom:.5rem;position:relative">${_en?'Is wine an unknown world to you?':'¿El vino es un mundo desconocido para ti?'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch3);line-height:1.6;margin-bottom:.8rem;position:relative">${_en?'Perfect! You\'re in the right place. We\'ve created a step-by-step path for you to learn from scratch, without pressure. Start with "Beginner" and progress at your own pace.':'¡Perfecto! Estás en el lugar ideal. Hemos creado un camino paso a paso para que aprendas desde cero, sin prisa y sin agobios. Empieza por "Principiante" y ve avanzando a tu ritmo.'}</div>
       <div style="display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;position:relative">
         <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(77,138,94,.08);border:1px solid rgba(77,138,94,.15)">
           <div style="font-size:1rem">🌱</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--sage);letter-spacing:.08em">PRINCIPIANTE</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">Lo básico</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--sage);letter-spacing:.08em">${_en?'BEGINNER':'PRINCIPIANTE'}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">${_en?'The basics':'Lo básico'}</div>
         </div>
         <div style="color:var(--parch4);display:flex;align-items:center;font-size:.8rem">→</div>
         <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.12)">
           <div style="font-size:1rem">🌿</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.08em">INTERMEDIO</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">Profundiza</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.08em">${_en?'INTERMEDIATE':'INTERMEDIO'}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">${_en?'Go deeper':'Profundiza'}</div>
         </div>
         <div style="color:var(--parch4);display:flex;align-items:center;font-size:.8rem">→</div>
         <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(122,106,170,.06);border:1px solid rgba(122,106,170,.12)">
           <div style="font-size:1rem">🌳</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--candy-purple);letter-spacing:.08em">AVANZADO</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">Domina</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--candy-purple);letter-spacing:.08em">${_en?'ADVANCED':'AVANZADO'}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">${_en?'Master':'Domina'}</div>
         </div>
       </div>
     </div>
@@ -10256,10 +10266,10 @@ function _renderWineLearn(c, bar){
     </div>
 
     <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);margin-bottom:.8rem;letter-spacing:.08em">
-      ◇ ${filteredConcepts.length} conceptos${_wineLearnLevel!=='all'?' · Nivel '+levelLabels[_wineLearnLevel]:''}
+      ◇ ${filteredConcepts.length} ${_en?'concepts':'conceptos'}${_wineLearnLevel!=='all'?' · '+(_en?'Level':'Nivel')+' '+levelLabels[_wineLearnLevel]:''}
     </div>
 
-    <div class="section-eyebrow">◇ Conceptos${_wineLearnLevel!=='all'?' — '+levelLabels[_wineLearnLevel]:''}</div>
+    <div class="section-eyebrow">◇ ${_en?'Concepts':'Conceptos'}${_wineLearnLevel!=='all'?' — '+levelLabels[_wineLearnLevel]:''}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem">
       ${filteredConcepts.map((c,i)=>`
         <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
@@ -10278,7 +10288,7 @@ function _renderWineLearn(c, bar){
             <div style="margin-top:.8rem;padding-top:.8rem;border-top:1.5px solid rgba(196,154,60,.1)">
               <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.6;margin-bottom:.6rem">${c.detail}</div>
               <div class="wine-script-box" style="margin-top:.5rem">
-                <div class="wine-info-label" style="margin-left:.5rem">💬 Cómo explicarlo al huésped</div>
+                <div class="wine-info-label" style="margin-left:.5rem">💬 ${_en?'How to explain to the guest':'Cómo explicarlo al huésped'}</div>
                 <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;color:var(--parchment);font-style:italic;line-height:1.4;margin-left:.5rem">${c.tip}</div>
               </div>
             </div>
@@ -10287,19 +10297,19 @@ function _renderWineLearn(c, bar){
     </div>
 
     <!-- Visual learning aids -->
-    <div class="section-eyebrow">🎨 Guías Visuales Rápidas</div>
+    <div class="section-eyebrow">🎨 ${_en?'Visual Guides':'Guías Visuales Rápidas'}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem">
       <!-- Temperature Guide -->
       <div class="wine-concept-card card-animate" style="animation-delay:.05s">
-        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">🌡️ Temperaturas de Servicio</div>
+        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">🌡️ ${_en?'Serving Temperatures':'Temperaturas de Servicio'}</div>
         <div style="display:flex;flex-direction:column;gap:.35rem;position:relative">
           ${[
-            ['Espumosos / Champagne','6-8°C','❄️','var(--candy-blue)','Bien fríos'],
-            ['Blancos ligeros','7-9°C','🧊','var(--candy-teal)','Fríos'],
-            ['Blancos con cuerpo / Rosados','10-12°C','🌸','var(--candy-pink)','Frescos'],
-            ['Tintos jóvenes','14-16°C','🍃','var(--sage)','Ligeramente frescos'],
-            ['Tintos con crianza','16-18°C','🍂','var(--candy-red)','Ambiente suave'],
-            ['Dulces','6-8°C','🍯','var(--candy-orange)','Bien fríos']
+            [_en?'Sparkling / Champagne':'Espumosos / Champagne','6-8°C','❄️','var(--candy-blue)',_en?'Very cold':'Bien fríos'],
+            [_en?'Light whites':'Blancos ligeros','7-9°C','🧊','var(--candy-teal)',_en?'Cold':'Fríos'],
+            [_en?'Full-bodied whites / Rosés':'Blancos con cuerpo / Rosados','10-12°C','🌸','var(--candy-pink)',_en?'Cool':'Frescos'],
+            [_en?'Young reds':'Tintos jóvenes','14-16°C','🍃','var(--sage)',_en?'Slightly cool':'Ligeramente frescos'],
+            [_en?'Oak-aged reds':'Tintos con crianza','16-18°C','🍂','var(--candy-red)',_en?'Room temp':'Ambiente suave'],
+            [_en?'Desserts':'Dulces','6-8°C','🍯','var(--candy-orange)',_en?'Very cold':'Bien fríos']
           ].map(([tipo,temp,ico,col,desc])=>`
             <div style="display:flex;align-items:center;gap:.5rem;padding:.35rem .5rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid ${col}">
               <span style="font-size:.85rem;width:20px;text-align:center">${ico}</span>
@@ -10307,12 +10317,12 @@ function _renderWineLearn(c, bar){
               <span style="font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);font-weight:600;min-width:50px;text-align:right">${temp}</span>
             </div>`).join('')}
         </div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:.5rem;font-style:italic;position:relative">💡 Truco: si el vino está demasiado frío, pierde aromas. Demasiado caliente, pierde frescura.</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:.5rem;font-style:italic;position:relative">💡 ${_en?'Tip: too cold and you lose aromas. Too warm and you lose freshness.':'Truco: si el vino está demasiado frío, pierde aromas. Demasiado caliente, pierde frescura.'}</div>
       </div>
 
       <!-- Color Guide -->
       <div class="wine-concept-card card-animate" style="animation-delay:.1s">
-        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">🎨 Lo que el Color te Dice</div>
+        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">🎨 ${_en?'What Color Tells You':'Lo que el Color te Dice'}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;position:relative">
           ${[
             ['Blanco pálido','Joven y ligero','#f5f0d0','#8a8040'],
@@ -10366,14 +10376,14 @@ function _renderWineLearn(c, bar){
           <div class="wr-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
             <div style="margin-top:.8rem;padding-top:.8rem;border-top:1.5px solid rgba(196,154,60,.1)">
               <div class="wine-script-box" style="margin-bottom:.6rem">
-                <div class="wine-info-label" style="margin-left:.5rem">💬 Script para el huésped</div>
+                <div class="wine-info-label" style="margin-left:.5rem">💬 ${_en?'Script for guest':'Script para el huésped'}</div>
                 <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);font-style:italic;line-height:1.5;margin-left:.5rem">"${r.script}"</div>
               </div>
               <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem">
-                <div class="wine-info-label" style="width:100%">◇ Uvas principales</div>
+                <div class="wine-info-label" style="width:100%">◇ ${_en?'Key grapes':'Uvas principales'}</div>
                 ${r.keyGrapes.split(', ').map(g=>`<span class="wine-pairing-pill" style="font-size:.65rem">${g}</span>`).join('')}
               </div>
-              <div class="wine-info-label" style="margin-top:.5rem">◇ Nuestros vinos</div>
+              <div class="wine-info-label" style="margin-top:.5rem">◇ ${_en?'Our wines':'Nuestros vinos'}</div>
               <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch2);margin-top:.2rem">${r.ourWines}</div>
             </div>
           </div>
@@ -10859,21 +10869,22 @@ function _showMaridajeDish(dishName) {
 }
 
 function _renderWineService(c, bar){
+  const _en = LANG==='en';
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <div class="wine-section-header">
-      <div class="wine-section-title">◇ El Arte del Servicio ◇</div>
-      <div class="wine-section-sub">Scripts listos para usar con el huésped</div>
+      <div class="wine-section-title">${_en?'◇ The Art of Service ◇':'◇ El Arte del Servicio ◇'}</div>
+      <div class="wine-section-sub">${_en?'Ready-to-use scripts for the guest':'Scripts listos para usar con el huésped'}</div>
     </div>
 
     <div class="wine-storybook-intro wine-enchanted">
-      <div class="wine-storybook-text">"Las palabras adecuadas transforman una simple recomendación en una experiencia mágica. Aquí tienes los encantamientos del sommelier."</div>
+      <div class="wine-storybook-text">"${_en?'The right words transform a simple recommendation into a magical experience. Here are the sommelier\'s spells.':'Las palabras adecuadas transforman una simple recomendación en una experiencia mágica. Aquí tienes los encantamientos del sommelier.'}"</div>
     </div>
 
     <!-- Dynamic pairing guide — all dishes -->
     <div style="margin-bottom:1.8rem">
-      <div class="section-eyebrow">◇ Guía Rápida de Maridaje</div>
+      <div class="section-eyebrow">${_en?'◇ Quick Pairing Guide':'◇ Guía Rápida de Maridaje'}</div>
       <div style="margin-bottom:.6rem;position:relative">
-        <input type="text" id="maridajeSearch" placeholder="Buscar plato..." oninput="_filterMaridaje(this.value)" style="width:100%;box-sizing:border-box;padding:.55rem .8rem .55rem 2rem;border:1.5px solid var(--line);border-radius:var(--r3);background:var(--ink);font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--line)'"/>
+        <input type="text" id="maridajeSearch" placeholder="${_en?'Search dish...':'Buscar plato...'}" oninput="_filterMaridaje(this.value)" style="width:100%;box-sizing:border-box;padding:.55rem .8rem .55rem 2rem;border:1.5px solid var(--line);border-radius:var(--r3);background:var(--ink);font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--line)'"/>
         <svg style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);opacity:.3" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--parchment)" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
       </div>
       <div id="maridajeResults" style="display:flex;flex-direction:column;gap:.35rem;max-height:400px;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin">
@@ -10918,20 +10929,20 @@ function _renderWineService(c, bar){
           }).join('');
         })()}
       </div>
-      <div style="margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-align:center" id="maridajeCount">${Object.keys((function(){var m={};WINES.forEach(function(w){(w.pairings||[]).forEach(function(p){m[p]=1;});});return m;})()).length} platos con maridaje</div>
+      <div style="margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-align:center" id="maridajeCount">${Object.keys((function(){var m={};WINES.forEach(function(w){(w.pairings||[]).forEach(function(p){m[p]=1;});});return m;})()).length} ${_en?'dishes with pairings':'platos con maridaje'}</div>
     </div>
 
     <!-- Selling scripts -->
     <div style="margin-bottom:1.8rem">
-      <div class="section-eyebrow">✦ Frases de Venta</div>
+      <div class="section-eyebrow">${_en?'✦ Selling Scripts':'✦ Frases de Venta'}</div>
       <div style="display:flex;flex-direction:column;gap:.5rem">
         ${[
-          {situation:'El huésped no sabe qué pedir',script:'\"Le puedo recomendar algo según lo que va a comer. ¿Prefiere blanco o tinto? Si le gusta probar, tenemos una excelente selección por copa desde 10€.\"'},
-          {situation:'Quiere algo especial para celebrar',script:'\"Para una ocasión especial le sugiero nuestro Andre Clouet Champagne, o si prefiere algo español, el Gramona III Lustros es un espumoso excepcional con más de 7 años de crianza.\"'},
-          {situation:'Pregunta por los vinos canarios',script:'\"Los vinos canarios son únicos en el mundo — nacen de viñedos volcánicos centenarios que nunca fueron afectados por la filoxera. Le recomiendo el Viñatigo Blanco o el Ruku Ruku para descubrir este terroir tan especial.\"'},
-          {situation:'Pide el vino más barato',script:'\"Nuestro La Campagne es una excelente opción a 45€, un Cabernet Sauvignon francés muy agradable. Por copa, el Arienzo de Marqués de Riscal a 10€ es estupendo.\"'},
-          {situation:'Quiere impresionar a sus invitados',script:'\"El Castillo Ygay Gran Reserva 2011 es una pieza icónica de Marqués de Murrieta — solo se produce en las mejores añadas. También tenemos el Álvaro Palacios Gratallops en Magnum, perfecto para compartir.\"'},
-          {situation:'Es alérgico/intolerante',script:'\"Todos nuestros vinos contienen sulfitos de forma natural. Si busca opciones con menos sulfitos, los vinos ecológicos y naturales como Fanny Sabre suelen tener niveles más bajos. También tenemos mocktails sin alcohol.\"'}
+          {situation:_en?'Guest doesn\'t know what to order':'El huésped no sabe qué pedir',script:_en?'"I can recommend something based on what you\'re having. Do you prefer white or red? If you like to try, we have an excellent by-the-glass selection from 10€."':'\"Le puedo recomendar algo según lo que va a comer. ¿Prefiere blanco o tinto? Si le gusta probar, tenemos una excelente selección por copa desde 10€.\"'},
+          {situation:_en?'Wants something special to celebrate':'Quiere algo especial para celebrar',script:_en?'"For a special occasion I suggest our Andre Clouet Champagne, or if you prefer something Spanish, the Gramona III Lustros is an exceptional sparkling with over 7 years of ageing."':'\"Para una ocasión especial le sugiero nuestro Andre Clouet Champagne, o si prefiere algo español, el Gramona III Lustros es un espumoso excepcional con más de 7 años de crianza.\"'},
+          {situation:_en?'Asks about Canarian wines':'Pregunta por los vinos canarios',script:_en?'"Canarian wines are unique in the world — born from centuries-old volcanic vineyards that were never affected by phylloxera. I recommend the Viñatigo Blanco or Ruku Ruku to discover this very special terroir."':'\"Los vinos canarios son únicos en el mundo — nacen de viñedos volcánicos centenarios que nunca fueron afectados por la filoxera. Le recomiendo el Viñatigo Blanco o el Ruku Ruku para descubrir este terroir tan especial.\"'},
+          {situation:_en?'Asks for the cheapest wine':'Pide el vino más barato',script:_en?'"Our La Campagne is an excellent choice at 45€, a very pleasant French Cabernet Sauvignon. By the glass, the Arienzo de Marqués de Riscal at 10€ is wonderful."':'\"Nuestro La Campagne es una excelente opción a 45€, un Cabernet Sauvignon francés muy agradable. Por copa, el Arienzo de Marqués de Riscal a 10€ es estupendo.\"'},
+          {situation:_en?'Wants to impress their guests':'Quiere impresionar a sus invitados',script:_en?'"The Castillo Ygay Gran Reserva 2011 is an iconic piece from Marqués de Murrieta — only produced in the best vintages. We also have Álvaro Palacios Gratallops in Magnum, perfect for sharing."':'\"El Castillo Ygay Gran Reserva 2011 es una pieza icónica de Marqués de Murrieta — solo se produce en las mejores añadas. También tenemos el Álvaro Palacios Gratallops en Magnum, perfecto para compartir.\"'},
+          {situation:_en?'Has allergies/intolerance':'Es alérgico/intolerante',script:_en?'"All our wines naturally contain sulphites. If you\'re looking for lower-sulphite options, organic and natural wines like Fanny Sabre tend to have lower levels. We also have alcohol-free mocktails."':'\"Todos nuestros vinos contienen sulfitos de forma natural. Si busca opciones con menos sulfitos, los vinos ecológicos y naturales como Fanny Sabre suelen tener niveles más bajos. También tenemos mocktails sin alcohol.\"'}
         ].map((s,i)=>`<div onclick="this.querySelector('.ss-detail').classList.toggle('open')" class="wine-service-card card-animate" style="animation-delay:${i*0.04}s">
           <div style="display:flex;align-items:center;gap:.5rem;position:relative">
             <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold-a),rgba(196,154,60,.15));width:28px;height:28px;font-size:.75rem">💬</div>
@@ -10949,7 +10960,7 @@ function _renderWineService(c, bar){
 
     <!-- By the glass highlight -->
     <div>
-      <div class="section-eyebrow">◇ Vinos por Copa</div>
+      <div class="section-eyebrow">${_en?'◇ Wines by Glass':'◇ Vinos por Copa'}</div>
       <div class="wine-byglass-grid">
         <div style="display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;font-family:'Quicksand',sans-serif;font-size:.78rem;position:relative">
           ${WINES.filter(w=>w.glass).sort((a,b)=>a.glass-b.glass).map(w=>`
@@ -11133,7 +11144,7 @@ function renderDashboard(){
         <div style="text-align:right;flex-shrink:0">
           <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:${lvl.color};letter-spacing:.08em;display:flex;align-items:center;gap:.2rem;justify-content:flex-end">${tunicLevelIcon(lvl.level,lvl.color,16)} Lv.${lvl.level}</div>
           <div style="font-family:'Cinzel',serif;font-size:.65rem;color:${lvl.color};font-weight:600">${lvl.title}</div>
-          ${streak>1?`<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.6);margin-top:.1rem">${streak}d seguidos</div>`:''}
+          ${streak>1?`<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.6);margin-top:.1rem">${streak}d ${LANG==='en'?'days in a row':'seguidos'}</div>`:''}
         </div>
       </div>
       <!-- XP bar -->
@@ -12318,7 +12329,7 @@ function renderRanking(){
     <div class="sup-hero">
       <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4"/><path d="M7 4H4a2 2 0 000 4c0 2.5 2 4 2 4h12s2-1.5 2-4a2 2 0 000-4h-3"/><path d="M7 4h10v8a5 5 0 01-10 0V4z"/></svg></div>
       <div class="sup-hero-title">${LANG==='en'?'Team Ranking':'Ranking del Equipo'}</div>
-      <div class="sup-hero-sub">${LANG==='en'?'All activity · Exams · Tests · Duels':'Toda la actividad · Exámenes · Tests · Duelos'}</div>
+      <div class="sup-hero-sub">${LANG==='en'?'All activity · Exams · Tests · Duels':'Toda la actividad · Exámenes · Alérgenos · Duelos'}</div>
     </div>
     <div id="rankingContent" style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">—</div>
   </div>`;
@@ -12384,17 +12395,17 @@ function renderRanking(){
 
       // Activity summary tags
       const tags = [];
-      if(sessions > 0) tags.push(`${sessions} exámen${sessions!==1?'es':''}`);
-      if(act.allergen > 0) tags.push(`${act.allergen} alérgeno${act.allergen!==1?'s':''}`);
-      if(act.protocol > 0) tags.push(`${act.protocol} protocolo`);
-      if(duelWins > 0) tags.push(`${duelWins} duelo${duelWins!==1?'s':''}`);
+      if(sessions > 0) tags.push(`${sessions} ${LANG==='en'?'exam':'exámen'}${sessions!==1?(LANG==='en'?'s':'es'):''}`);
+      if(act.allergen > 0) tags.push(`${act.allergen} ${LANG==='en'?'allergen':'alérgeno'}${act.allergen!==1?(LANG==='en'?'s':'s'):''}`);
+      if(act.protocol > 0) tags.push(`${act.protocol} ${LANG==='en'?'protocol':'protocolo'}`);
+      if(duelWins > 0) tags.push(`${duelWins} ${LANG==='en'?'duel':'duelo'}${duelWins!==1?(LANG==='en'?'s':'s'):''}`);
 
       return `<div style="display:flex;align-items:center;gap:.9rem;padding:.9rem 1rem;background:${isMe?'linear-gradient(155deg,rgba(196,154,60,.06),rgba(196,154,60,.02))':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1.5px solid ${isMe?'rgba(196,154,60,.25)':'rgba(196,154,60,.12)'};border-radius:12px;margin-bottom:.55rem;box-shadow:${isMe?'0 0 12px rgba(196,154,60,.08)':'0 2px 8px rgba(28,42,34,.04)'};transition:all .2s">
         <div style="width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
         <div style="width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:${isMe?'linear-gradient(135deg,#c49a3c,#9a7340)':i===0?'linear-gradient(135deg,#c49a3c,#9a7340)':i===1?'linear-gradient(135deg,#e8e8e8,#d0d0d0)':i===2?'linear-gradient(135deg,#d4a574,#b8865c)':'rgba(196,154,60,.15)'};border:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:${i<3||isMe?'#1c2a22':'var(--parch2)'};font-weight:700;flex-shrink:0">${getEmpAvatar(emp.name)}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${emp.name}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'← you':'← tú'}</span>`:''}</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;font-weight:500;color:var(--parch3);margin-top:.1rem">${lvl.title} · Nv.${lvl.level}${streak>1?` · 🔥${streak}d`:''}</div>
+          <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${emp.name}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;font-weight:500;color:var(--parch3);margin-top:.1rem">${lvl.title} · ${LANG==='en'?'Lvl':'Nv'}.${lvl.level}${streak>1?` · 🔥${streak}${LANG==='en'?'d':'d'}`:''}</div>
           ${tags.length ? `<div style="font-family:'Quicksand',sans-serif;font-size:.58rem;font-weight:500;color:var(--parch4);margin-top:.15rem">${tags.join(' · ')}</div>` : ''}
         </div>
         <div style="text-align:right;flex-shrink:0">
@@ -14219,7 +14230,7 @@ function renderLiveQuizPlayerEnd(code, questions, answers){
         <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);margin-top:.2rem">${mine||'Sin respuesta'} ${!ok?'→ '+q.correct:''}</div>
       </div>`;
     }).join('')}
-    <button onclick="showTab('dashboard')" class="btn-primary" style="width:100%;margin-top:1rem">Volver al inicio</button>
+    <button onclick="showTab('dashboard')" class="btn-primary" style="width:100%;margin-top:1rem">${LANG==='en'?'Back to start':'Volver al inicio'}</button>
   </div>`;
 }
 
@@ -16842,17 +16853,18 @@ function txLevel(score){
 
 // ── Render: home screen ─────────────────────────────
 function renderTxoko(){
+  const _en=LANG==='en';
   const emp=getEmp(currentUser);
   const record=emp.txokoRecord||0;
   const failedCount=getFailedDishes().length;
   const failedLabel=failedCount===0
-    ?(LANG==='en'?'No errors yet':'Sin fallos aún')
-    :(LANG==='en'?failedCount+' dishes to review':failedCount+' platos a repasar');
+    ?(_en?'No errors yet':'Sin fallos aún')
+    :(_en?failedCount+' dishes to review':failedCount+' platos a repasar');
   document.getElementById('appContent').innerHTML=`
     <div class="txoko-wrap">
       <div class="games-header">
-        <div class="games-header-title">${LANG==='en'?'Games':'Juegos'}</div>
-        <div class="games-header-sub">${LANG==='en'?'Train while competing':'Entrena mientras compites'}</div>
+        <div class="games-header-title">${_en?'Games':'Juegos'}</div>
+        <div class="games-header-sub">${_en?'Train while competing':'Entrena mientras compites'}</div>
       </div>
 
       <!-- TXOKO: Survive the service -->
@@ -16884,12 +16896,12 @@ function renderTxoko(){
           </svg>
         </div>
         <div class="game-card-body">
-          <div class="game-card-label">${LANG==='en'?'SURVIVAL':'SUPERVIVENCIA'}</div>
+          <div class="game-card-label">${_en?'SURVIVAL':'SUPERVIVENCIA'}</div>
           <div class="game-card-title">Mr. Shoesmith</div>
-          <div class="game-card-desc">${LANG==='en'?'Mr. Shoesmith is waiting at table 501. Answer his questions before he loses patience.':'Mr. Shoesmith te espera en la mesa 501. Responde sus preguntas antes de que pierda la paciencia.'}</div>
+          <div class="game-card-desc">${_en?'Mr. Shoesmith is waiting at table 501. Answer his questions before he loses patience.':'Mr. Shoesmith te espera en la mesa 501. Responde sus preguntas antes de que pierda la paciencia.'}</div>
           <div class="game-card-meta">
-            <span class="game-card-badge"><svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle"><polygon points="5,0 10,5 5,10 0,5" fill="#c49a3c"/></svg> ${record} ${LANG==='en'?(record===1?'order':'orders'):(record===1?'comanda':'comandas')}</span>
-            <span class="game-card-badge"><svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle"><path d="M5,2 C3,0 0,0 0,3 C0,6 5,9 5,9 C5,9 10,6 10,3 C10,0 7,0 5,2Z" fill="#c47068"/></svg> 5 ${LANG==='en'?'chances':'oportunidades'}</span>
+            <span class="game-card-badge"><svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle"><polygon points="5,0 10,5 5,10 0,5" fill="#c49a3c"/></svg> ${record} ${_en?(record===1?'order':'orders'):(record===1?'comanda':'comandas')}</span>
+            <span class="game-card-badge"><svg width="10" height="10" viewBox="0 0 10 10" style="vertical-align:middle"><path d="M5,2 C3,0 0,0 0,3 C0,6 5,9 5,9 C5,9 10,6 10,3 C10,0 7,0 5,2Z" fill="#c47068"/></svg> 5 ${_en?'chances':'oportunidades'}</span>
           </div>
         </div>
         <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c" opacity=".8"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><polyline points="9 12 14 12 11 8 14 12 11 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -16899,9 +16911,9 @@ function renderTxoko(){
       <div class="game-card ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}" style="--gc-accent:#d4944c;--gc-accent2:#b47430;--gc-glow:rgba(212,148,76,.08)">
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(212,148,76,.08),rgba(212,148,76,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(212,148,76,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(212,148,76,.06)"/><circle cx="20" cy="20" r="10" fill="none" stroke="#d4944c" stroke-width="1"/><circle cx="20" cy="20" r="6" fill="none" stroke="#d4944c" stroke-width=".8" stroke-dasharray="3 2"/><circle cx="20" cy="20" r="2" fill="#d4944c"/></svg></div>
         <div class="game-card-body">
-          <div class="game-card-label">${LANG==='en'?'TRAINING':'ENTRENAMIENTO'}</div>
-          <div class="game-card-title">${LANG==='en'?'Weak Spots':'Puntos Débiles'}</div>
-          <div class="game-card-desc">${LANG==='en'?'Only the dishes you keep getting wrong. Face your mistakes.':'Solo los platos que más fallas. Enfrenta tus errores.'}</div>
+          <div class="game-card-label">${_en?'TRAINING':'ENTRENAMIENTO'}</div>
+          <div class="game-card-title">${_en?'Weak Spots':'Puntos Débiles'}</div>
+          <div class="game-card-desc">${_en?'Only the dishes you keep getting wrong. Face your mistakes.':'Solo los platos que más fallas. Enfrenta tus errores.'}</div>
           <div class="game-card-meta">
             <span class="game-card-badge">${failedLabel}</span>
           </div>
@@ -16913,12 +16925,12 @@ function renderTxoko(){
       <div class="game-card" onclick="renderDuel()" style="--gc-accent:#5a9ab8;--gc-accent2:#3a7a98;--gc-glow:rgba(90,154,184,.08)">
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(90,154,184,.08),rgba(90,154,184,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(90,154,184,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(90,154,184,.06)"/><path d="M12 12l8 8-8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 12l-8 8 8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="game-card-body">
-          <div class="game-card-label">${LANG==='en'?'REMOTE DUEL':'DUELO REMOTO'}</div>
-          <div class="game-card-title">${LANG==='en'?'Duel':'Duelo'}</div>
-          <div class="game-card-desc">${LANG==='en'?'Challenge a colleague from any device. 5 questions. Trophy for the season winner.':'Reta a un compañero desde cualquier dispositivo. 5 preguntas. Trofeo para el ganador de temporada.'}</div>
+          <div class="game-card-label">${_en?'REMOTE DUEL':'DUELO REMOTO'}</div>
+          <div class="game-card-title">${_en?'Duel':'Duelo'}</div>
+          <div class="game-card-desc">${_en?'Challenge a colleague from any device. 5 questions. Trophy for the season winner.':'Reta a un compañero desde cualquier dispositivo. 5 preguntas. Trofeo para el ganador de temporada.'}</div>
           <div class="game-card-meta">
-            <span class="game-card-badge">⚡ 5 ${LANG==='en'?'questions':'preguntas'}</span>
-            <span class="game-card-badge">🏆 ${LANG==='en'?'Season trophy':'Trofeo temporada'}</span>
+            <span class="game-card-badge">⚡ 5 ${_en?'questions':'preguntas'}</span>
+            <span class="game-card-badge">🏆 ${_en?'Season trophy':'Trofeo temporada'}</span>
           </div>
         </div>
         <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
