@@ -2564,6 +2564,7 @@ body::after{
 }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeOut{from{opacity:1}to{opacity:0}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 .achievement-modal{
   background:linear-gradient(135deg,#1c2a22 0%,#253530 50%,#1f2d28 100%);
@@ -8950,49 +8951,84 @@ function _getSommelierDishes() {
   return _sommelierDishList;
 }
 
-let _sommelierACTimeout = null;
+// Sommelier autocomplete — shows dish suggestions as user types
+let _sommelierShowSuggestions = false;
 function _sommelierAutocomplete(val) {
-  // Debounce the search
-  clearTimeout(_sommelierACTimeout);
-  _sommelierACTimeout = setTimeout(function() {
-    _sommelierSearch(val);
-  }, 200);
-  // Show suggestions immediately
+  _sommelierQuery = val;
+  const q = val.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   const box = document.getElementById('sommelierSuggestions');
   if(!box) return;
-  const q = val.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-  if(q.length < 1) { box.style.display = 'none'; return; }
+  if(q.length < 1) {
+    box.style.display = 'none';
+    _sommelierShowSuggestions = false;
+    clearTimeout(_sommelierACTimeout);
+    if(_sommelierResults) { _sommelierResults = null; renderVinos(); }
+    return;
+  }
+  // Show autocomplete suggestions
   const dishes = _getSommelierDishes();
   const matches = dishes.filter(function(d) {
     return d.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q);
   }).slice(0, 8);
-  if(matches.length === 0 || (matches.length === 1 && matches[0].toLowerCase() === val.toLowerCase())) {
-    box.style.display = 'none'; return;
+  if(matches.length === 0) {
+    box.style.display = 'none';
+    _sommelierShowSuggestions = false;
+  } else {
+    _sommelierShowSuggestions = true;
+    box.innerHTML = matches.map(function(d, i) {
+      const dNorm = d.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      const idx = dNorm.indexOf(q);
+      let hl;
+      if(idx >= 0) {
+        hl = escapeHTML(d.substring(0, idx)) + '<b style="color:var(--gold)">' + escapeHTML(d.substring(idx, idx + val.trim().length)) + '</b>' + escapeHTML(d.substring(idx + val.trim().length));
+      } else {
+        hl = escapeHTML(d);
+      }
+      const wCount = WINES.filter(function(w){ return w.pairings && w.pairings.indexOf(d) >= 0; }).length;
+      return '<div data-dish-idx="' + i + '" style="padding:.45rem .7rem;cursor:pointer;font-family:\'Quicksand\',sans-serif;font-size:.75rem;color:var(--parchment);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;transition:background .15s" onmouseover="this.style.background=\'var(--gold-a)\'" onmouseout="this.style.background=\'transparent\'">' +
+        '<span>' + hl + '</span>' +
+        '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch4)">' + wCount + ' vinos</span>' +
+        '</div>';
+    }).join('');
+    // Add click handlers via event delegation
+    box.onclick = function(e) {
+      const item = e.target.closest('[data-dish-idx]');
+      if(!item) return;
+      const idx = parseInt(item.getAttribute('data-dish-idx'));
+      if(idx >= 0 && idx < matches.length) {
+        _sommelierSelectDish(matches[idx]);
+      }
+    };
+    box.style.display = 'block';
   }
-  box.innerHTML = matches.map(function(d) {
-    // Highlight matching part
-    const dNorm = d.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    const idx = dNorm.indexOf(q);
-    let html;
-    if(idx >= 0) {
-      html = escapeHTML(d.substring(0, idx)) + '<b style="color:var(--gold)">' + escapeHTML(d.substring(idx, idx + val.trim().length)) + '</b>' + escapeHTML(d.substring(idx + val.trim().length));
-    } else {
-      html = escapeHTML(d);
-    }
-    // Count wines for this dish
-    const wCount = WINES.filter(function(w){ return w.pairings && w.pairings.indexOf(d) >= 0; }).length;
-    return '<div onclick="document.getElementById(\'sommelierInput\').value=\'' + d.replace(/'/g,"\\'") + '\';_sommelierSearch(\'' + d.replace(/'/g,"\\'") + '\');document.getElementById(\'sommelierSuggestions\').style.display=\'none\'" style="padding:.45rem .7rem;cursor:pointer;font-family:\'Quicksand\',sans-serif;font-size:.75rem;color:var(--parchment);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;transition:background .15s" onmouseover="this.style.background=\'var(--gold-a)\'" onmouseout="this.style.background=\'transparent\'">' +
-      '<span>' + html + '</span>' +
-      '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch4)">' + wCount + ' vinos</span>' +
-      '</div>';
-  }).join('');
-  box.style.display = 'block';
+  // Debounced search for wine results
+  clearTimeout(_sommelierACTimeout);
+  _sommelierACTimeout = setTimeout(function() {
+    _sommelierRunSearch(val);
+  }, 300);
 }
+
+var _sommelierACTimeout = null;
+function _sommelierSelectDish(dish) {
+  _sommelierShowSuggestions = false;
+  const box = document.getElementById('sommelierSuggestions');
+  if(box) box.style.display = 'none';
+  const input = document.getElementById('sommelierInput');
+  if(input) input.value = dish;
+  _sommelierSearch(dish);
+}
+
+// Run search without re-render — update results inline
+function _sommelierRunSearch(query) {
+  if(!query || query.length < 2) return;
+  _sommelierSearch(query);
+}
+
 // Hide suggestions on outside click
 document.addEventListener('click', function(e) {
-  const wrap = document.getElementById('sommelierWrap');
-  const box = document.getElementById('sommelierSuggestions');
-  if(box && wrap && !wrap.contains(e.target)) box.style.display = 'none';
+  var wrap = document.getElementById('sommelierWrap');
+  var box = document.getElementById('sommelierSuggestions');
+  if(box && wrap && !wrap.contains(e.target)) { box.style.display = 'none'; _sommelierShowSuggestions = false; }
 });
 
 function _sommelierSearch(query){
@@ -9236,9 +9272,16 @@ function _renderSommelier(c, bar){
     </div>
   </div>`;
 
-  // Focus sommelier input
+  // Focus sommelier input and restore autocomplete state
   const si = document.getElementById('sommelierInput');
-  if(si && _sommelierQuery){ si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
+  if(si && _sommelierQuery){
+    si.focus();
+    si.setSelectionRange(si.value.length, si.value.length);
+    // If suggestions were showing, re-show them
+    if(_sommelierShowSuggestions) {
+      requestAnimationFrame(function(){ _sommelierAutocomplete(si.value); });
+    }
+  }
 }
 
 function renderVinosCarta(){
@@ -10713,6 +10756,108 @@ function _filterMaridaje(query) {
   if(counter) counter.textContent = shown + ' plato' + (shown!==1?'s':'') + (q ? ' encontrado'+(shown!==1?'s':'') : ' con maridaje');
 }
 
+function _showMaridajeDish(dishName) {
+  // Find all wines that pair with this dish
+  var matched = [];
+  WINES.forEach(function(w) {
+    if (!w.pairings) return;
+    var found = w.pairings.some(function(p) {
+      return p.toLowerCase() === dishName.toLowerCase();
+    });
+    if (found) matched.push(w);
+  });
+
+  if (!matched.length) return;
+
+  // Group by type
+  var groups = {};
+  var typeOrder = ['blanco','rosado','espumoso','tinto','dulce'];
+  var typeLabels = {blanco:'Blancos',tinto:'Tintos',rosado:'Rosados',espumoso:'Espumosos',dulce:'Dulces'};
+  var typeColors = {blanco:'#5a9ab8',tinto:'#b86050',rosado:'#d08888',espumoso:'#e8c44c',dulce:'#7a6aaa'};
+  matched.forEach(function(w) {
+    var t = w.type || 'tinto';
+    if (!groups[t]) groups[t] = [];
+    groups[t].push(w);
+  });
+
+  // Sort wines within each group: recommended first, then by price
+  Object.keys(groups).forEach(function(t) {
+    groups[t].sort(function(a, b) {
+      return (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0) || a.price - b.price;
+    });
+  });
+
+  // Build overlay HTML
+  var html = '<div id="maridajeDishOverlay" onclick="if(event.target===this)this.remove()" style="position:fixed;inset:0;z-index:9999;background:rgba(10,18,14,.85);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease">';
+  html += '<div style="width:100%;max-width:480px;max-height:85vh;background:linear-gradient(165deg,#1c2a22,#243428,#1c2a22);border-radius:20px 20px 0 0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1.2rem 1rem 2rem;box-shadow:0 -8px 40px rgba(0,0,0,.5);animation:slideUp .3s ease">';
+
+  // Header
+  html += '<div style="text-align:center;margin-bottom:1rem">';
+  html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(196,154,60,.5);margin-bottom:.3rem">◇ Maridaje para ◇</div>';
+  html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:1.05rem;font-weight:700;color:#f4ede2;line-height:1.3">' + escapeHTML(dishName) + '</div>';
+  html += '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:rgba(196,154,60,.4);margin-top:.3rem">' + matched.length + ' vino' + (matched.length !== 1 ? 's' : '') + ' recomendado' + (matched.length !== 1 ? 's' : '') + '</div>';
+  html += '</div>';
+
+  // Close button
+  html += '<div onclick="document.getElementById(\'maridajeDishOverlay\').remove()" style="position:absolute;top:.8rem;right:.8rem;width:28px;height:28px;border-radius:50%;background:rgba(244,237,226,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s" onmouseenter="this.style.background=\'rgba(244,237,226,.15)\'" onmouseleave="this.style.background=\'rgba(244,237,226,.08)\'">';
+  html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f4ede2" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+  html += '</div>';
+
+  // Separator
+  html += '<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.2),transparent);margin-bottom:1rem"></div>';
+
+  // Wine groups
+  typeOrder.forEach(function(t) {
+    if (!groups[t]) return;
+    var color = typeColors[t] || '#c49a3c';
+    var label = typeLabels[t] || t;
+
+    html += '<div style="margin-bottom:1rem">';
+    html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:' + color + ';margin-bottom:.45rem;padding-left:.2rem">◇ ' + label + ' (' + groups[t].length + ')</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:.3rem">';
+
+    groups[t].forEach(function(w, idx) {
+      var recBadge = w.recommended ? '<span style="display:inline-block;background:rgba(196,154,60,.15);color:#c49a3c;font-family:\'DM Mono\',monospace;font-size:.45rem;padding:.1rem .3rem;border-radius:4px;letter-spacing:.05em;margin-left:.3rem">★ RECOMENDADO</span>' : '';
+      var glassBadge = w.glass ? '<span style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:rgba(244,237,226,.4)">Copa ' + w.glass + '€</span>' : '';
+
+      html += '<div onclick="_showWineDetail(' + w.id + ');document.getElementById(\'maridajeDishOverlay\').remove()" style="padding:.55rem .7rem;background:linear-gradient(155deg,rgba(244,237,226,.06),rgba(244,237,226,.02));border:1px solid rgba(244,237,226,.06);border-left:3px solid ' + color + ';border-radius:10px;cursor:pointer;transition:all .2s;animation:fadeInUp .25s ' + (idx * 0.04) + 's both" onmouseenter="this.style.background=\'linear-gradient(155deg,rgba(244,237,226,.1),rgba(244,237,226,.05))\'" onmouseleave="this.style.background=\'linear-gradient(155deg,rgba(244,237,226,.06),rgba(244,237,226,.02))\'">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:.4rem">';
+      html += '<div style="flex:1;min-width:0">';
+      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:#f4ede2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(w.name) + recBadge + '</div>';
+      html += '<div style="display:flex;align-items:center;gap:.4rem;margin-top:.15rem">';
+      if (w.region) html += '<span style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:rgba(244,237,226,.35)">' + escapeHTML(w.region) + '</span>';
+      if (glassBadge) html += glassBadge;
+      html += '</div>';
+      html += '</div>';
+      html += '<div style="text-align:right;flex-shrink:0">';
+      html += '<div style="font-family:\'DM Mono\',monospace;font-size:.75rem;font-weight:700;color:#c49a3c">' + w.price + '€</div>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    html += '</div></div>';
+  });
+
+  // Tip at bottom
+  html += '<div style="text-align:center;font-family:\'DM Mono\',monospace;font-size:.45rem;color:rgba(244,237,226,.2);margin-top:.5rem">Toca un vino para ver su ficha completa</div>';
+
+  html += '</div></div>';
+
+  // Add slideUp animation if not already present
+  if (!document.getElementById('maridajeOverlayStyles')) {
+    var styleEl = document.createElement('style');
+    styleEl.id = 'maridajeOverlayStyles';
+    styleEl.textContent = '@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}';
+    document.head.appendChild(styleEl);
+  }
+
+  // Insert into DOM
+  var div = document.createElement('div');
+  div.innerHTML = html;
+  document.body.appendChild(div.firstChild);
+}
+
 function _renderWineService(c, bar){
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <div class="wine-section-header">
@@ -10731,40 +10876,49 @@ function _renderWineService(c, bar){
         <input type="text" id="maridajeSearch" placeholder="Buscar plato..." oninput="_filterMaridaje(this.value)" style="width:100%;box-sizing:border-box;padding:.55rem .8rem .55rem 2rem;border:1.5px solid var(--line);border-radius:var(--r3);background:var(--ink);font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--line)'"/>
         <svg style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);opacity:.3" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--parchment)" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
       </div>
-      <div id="maridajeResults" style="display:flex;flex-direction:column;gap:.4rem;max-height:380px;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin">
+      <div id="maridajeResults" style="display:flex;flex-direction:column;gap:.35rem;max-height:400px;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin">
         ${(function(){
-          // Build reverse index: dish → wines
-          const dishWineMap = {};
-          const typeColors = {blanco:'var(--candy-blue)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--candy-yellow)',dulce:'var(--candy-purple)',mocktail:'var(--candy-teal)'};
+          var dishWineMap = {};
           WINES.forEach(function(w){
             if(!w.pairings) return;
             w.pairings.forEach(function(p){
               if(!dishWineMap[p]) dishWineMap[p] = [];
-              dishWineMap[p].push({name:w.name,type:w.type,glass:w.glass,price:w.price,recommended:w.recommended});
+              dishWineMap[p].push({id:w.id,name:w.name,type:w.type,glass:w.glass,price:w.price,recommended:w.recommended});
             });
           });
-          // Sort dishes alphabetically
-          const dishes = Object.keys(dishWineMap).sort(function(a,b){ return a.localeCompare(b,'es'); });
+          var dishes = Object.keys(dishWineMap).sort(function(a,b){ return a.localeCompare(b,'es'); });
           return dishes.map(function(dish, i){
-            const wines = dishWineMap[dish];
-            // Group by type
-            const byType = {};
-            wines.forEach(function(w){
-              if(!byType[w.type]) byType[w.type] = [];
-              byType[w.type].push(w);
-            });
-            const typeOrder = ['blanco','rosado','espumoso','tinto','dulce','mocktail'];
-            const recs = typeOrder.filter(function(t){return byType[t];}).map(function(t){
-              const wList = byType[t].sort(function(a,b){ return (b.recommended?1:0)-(a.recommended?1:0) || a.price-b.price; });
-              const names = wList.slice(0,3).map(function(w){ return (w.recommended ? '<b>'+escapeHTML(w.name)+'</b>' : escapeHTML(w.name)) + (w.glass ? ' <span style="opacity:.5;font-size:.6rem">(copa)</span>' : ''); }).join(', ');
-              const tLabel = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce',mocktail:'Mocktail'}[t]||t;
-              return '<span style="color:'+typeColors[t]+';font-weight:600;font-size:.62rem;text-transform:uppercase;letter-spacing:.04em">'+tLabel+':</span> '+names;
-            }).join(' <span style="opacity:.25">|</span> ');
-            return '<div class="wine-pairing-strip card-animate maridaje-item" data-dish="'+escapeHTML(dish.toLowerCase())+'" style="animation-delay:'+i*0.02+'s;border-left:3px solid '+(wines.some(function(w){return w.type==='tinto';})?'var(--candy-red)':wines.some(function(w){return w.type==='blanco';})?'var(--candy-blue)':'var(--gold)')+'"><div style="font-family:\'Cinzel\',serif;font-size:.78rem;color:var(--parchment);margin-bottom:.2rem;position:relative">'+escapeHTML(dish)+'</div><div style="font-family:\'Quicksand\',sans-serif;font-size:.7rem;color:var(--parch3);line-height:1.5;position:relative">'+recs+'</div></div>';
+            var wines = dishWineMap[dish];
+            var wCount = wines.length;
+            var types = {};
+            wines.forEach(function(w){ types[w.type] = (types[w.type]||0)+1; });
+            var typeIcons = [];
+            if(types.blanco) typeIcons.push('<span style="color:#5a9ab8">B</span>');
+            if(types.tinto) typeIcons.push('<span style="color:#b86050">T</span>');
+            if(types.rosado) typeIcons.push('<span style="color:#d08888">R</span>');
+            if(types.espumoso) typeIcons.push('<span style="color:#e8c44c">E</span>');
+            if(types.dulce) typeIcons.push('<span style="color:#7a6aaa">D</span>');
+            var borderColor = types.tinto ? '#b86050' : types.blanco ? '#5a9ab8' : '#c49a3c';
+            var topWines = wines.sort(function(a,b){ return (b.recommended?1:0)-(a.recommended?1:0) || a.price-b.price; }).slice(0,2);
+            var preview = topWines.map(function(w){ return escapeHTML(w.name); }).join(', ');
+            if(wCount > 2) preview += ' +' + (wCount-2);
+            return '<div class="maridaje-item" data-dish="' + escapeHTML(dish.toLowerCase()) + '" onclick="_showMaridajeDish(\'' + dish.replace(/'/g,"\\'") + '\')" style="padding:.55rem .75rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.1);border-left:3px solid ' + borderColor + ';border-radius:10px;cursor:pointer;transition:all .2s;animation:fadeInUp .3s ' + (i*0.015) + 's both">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;gap:.4rem">' +
+                '<div style="flex:1;min-width:0">' +
+                  '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:#1c2a22;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(dish) + '</div>' +
+                  '<div style="font-family:\'Quicksand\',sans-serif;font-size:.62rem;color:rgba(28,42,34,.5);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + preview + '</div>' +
+                '</div>' +
+                '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0">' +
+                  '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;font-weight:700;letter-spacing:.03em">' + typeIcons.join('') + '</span>' +
+                  '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:rgba(28,42,34,.35)">' + wCount + '</span>' +
+                  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(28,42,34,.2)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
           }).join('');
         })()}
       </div>
-      <div style="margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-align:center" id="maridajeCount">${Object.keys((function(){const m={};WINES.forEach(function(w){(w.pairings||[]).forEach(function(p){m[p]=1;});});return m;})()).length} platos con maridaje</div>
+      <div style="margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-align:center" id="maridajeCount">${Object.keys((function(){var m={};WINES.forEach(function(w){(w.pairings||[]).forEach(function(p){m[p]=1;});});return m;})()).length} platos con maridaje</div>
     </div>
 
     <!-- Selling scripts -->
