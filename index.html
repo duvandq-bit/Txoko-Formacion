@@ -3022,6 +3022,30 @@ body::after{
   text-transform:uppercase;margin-top:.8rem;
 }
 
+
+/* ═══ RADAR CHART ═══ */
+.radar-container{position:relative;display:flex;flex-direction:column;align-items:center;margin:1rem 0 1.2rem;padding:1rem;background:rgba(196,154,60,.03);border:1px solid rgba(196,154,60,.1);border-radius:var(--r2)}
+.radar-svg{width:100%;max-width:280px;height:auto}
+.radar-grid{fill:none;stroke:rgba(28,42,34,.08);stroke-width:.5}
+.radar-axis{stroke:rgba(28,42,34,.06);stroke-width:.5}
+.radar-area{fill:rgba(196,154,60,.15);stroke:var(--gold);stroke-width:1.5;stroke-linejoin:round;transition:all .4s ease}
+.radar-dot{fill:var(--gold);r:3;transition:all .3s ease}
+.radar-label{font-family:'DM Mono',monospace;font-size:.55rem;fill:var(--parch2);text-anchor:middle;dominant-baseline:middle;letter-spacing:.04em}
+.radar-value{font-family:'DM Mono',monospace;font-size:.5rem;fill:var(--gold);text-anchor:middle;dominant-baseline:middle;opacity:0;transition:opacity .3s}
+.radar-container:hover .radar-value{opacity:1}
+.radar-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem .8rem;margin-top:.6rem}
+.radar-legend-item{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);display:flex;align-items:center;gap:.25rem}
+.radar-legend-dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+/* ═══ SWIPE NAVIGATION ═══ */
+.wine-detail-overlay{touch-action:pan-y}
+.wine-nav-arrows{display:flex;justify-content:space-between;align-items:center;margin:-.2rem 0 .8rem}
+.wine-nav-arrow{background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.15);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:.9rem;transition:background .2s,transform .15s;-webkit-tap-highlight-color:transparent}
+.wine-nav-arrow:active{transform:scale(.9);background:rgba(196,154,60,.15)}
+.wine-nav-arrow.disabled{opacity:.2;pointer-events:none}
+.wine-nav-counter{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);letter-spacing:.06em}
+.wine-swipe-hint{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.3rem;letter-spacing:.05em;opacity:.6}
+
 </style>
 </head>
 <body>
@@ -5175,30 +5199,7 @@ async function renderNotifPanel() {
           </div>`).join('')
       }
     </div>`;
-  if(direction && document.getElementById('wineDetailOverlay')){
-    const existing = document.getElementById('wineDetailOverlay');
-    existing.innerHTML = overlay.innerHTML;
-    // Re-attach touch handlers
-    existing.ontouchstart = null;
-    existing.ontouchend = null;
-    let touchStartX2 = 0, touchStartY2 = 0, swiping2 = false;
-    existing.addEventListener('touchstart', e => {
-      touchStartX2 = e.touches[0].clientX;
-      touchStartY2 = e.touches[0].clientY;
-      swiping2 = true;
-    }, {passive:true});
-    existing.addEventListener('touchend', e => {
-      if(!swiping2) return;
-      swiping2 = false;
-      const dx = e.changedTouches[0].clientX - touchStartX2;
-      const dy = e.changedTouches[0].clientY - touchStartY2;
-      if(Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)*0.7) return;
-      if(dx > 0 && _wineDetailIdx > 0) _navigateWine(-1);
-      else if(dx < 0 && _wineDetailIdx < _wineDetailList.length-1) _navigateWine(1);
-    }, {passive:true});
-  } else {
-    document.body.appendChild(overlay);
-  }
+  document.body.appendChild(overlay);
   overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
 }
 
@@ -9036,7 +9037,7 @@ function _renderSommelier(c, bar){
     <div class="section-eyebrow">✦ Descubre Hoy</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
       ${featured.map((w,i) => `
-        <div onclick="_showWineDetail(${w.id})" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
+        <div onclick="_showWineDetail(${w.id}, [${filtered.map(f=>f.id).join(',')}])" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
           <div style="display:flex;align-items:center;gap:.5rem;position:relative">
             <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3))">${{blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'}[w.type]||'🍷'}</div>
             <div style="flex:1">
@@ -9163,7 +9164,7 @@ function _renderWineCard(w, idx){
   const isWine = !['cocktail','mocktail'].includes(w.type);
   const delay = Math.min((idx||0)*0.04, 0.3);
 
-  return `<div onclick="_showWineDetail(${w.id})" class="wine-card card-animate" style="animation-delay:${delay}s">
+  return `<div onclick="_showWineDetail(${w.id}, [${filtered.map(f=>f.id).join(',')}])" class="wine-card card-animate" style="animation-delay:${delay}s">
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;position:relative">
       <div class="wine-type-icon" style="background:linear-gradient(135deg,${bgColor},rgba(196,154,60,.3))">${typeIcons[w.type]||'🍷'}</div>
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;flex:1">
@@ -9189,9 +9190,200 @@ function _renderWineCard(w, idx){
   </div>`;
 }
 
-function _showWineDetail(id){
+
+
+// ═══ WINE SWIPE NAVIGATION ═══
+let _wineDetailIdx = 0;
+let _wineDetailList = [];
+
+function _navigateWine(direction) {
+  const newIdx = _wineDetailIdx + direction;
+  if (newIdx < 0 || newIdx >= _wineDetailList.length) return;
+  _wineDetailIdx = newIdx;
+  const w = WINES.find(x => x.id === _wineDetailList[newIdx]);
+  if (!w) return;
+
+  const overlay = document.getElementById('wineDetailOverlay');
+  if (!overlay) return;
+
+  // Slide animation
+  const inner = overlay.querySelector('.wine-detail-inner');
+  if (inner) {
+    inner.style.transition = 'transform .25s ease, opacity .2s ease';
+    inner.style.transform = 'translateX(' + (direction > 0 ? '-30' : '30') + 'px)';
+    inner.style.opacity = '0';
+    setTimeout(() => {
+      _showWineDetail(w.id, _wineDetailList, direction);
+    }, 150);
+  } else {
+    _showWineDetail(w.id, _wineDetailList, direction);
+  }
+}
+
+// ═══ RADAR CHART FOR WINE TASTING NOTES ═══
+function _parseWineScores(w) {
+  const notes = (w.notes || '').toLowerCase();
+  const type = w.type;
+  const grapes = (w.grapes || '').toLowerCase();
+
+  // Scoring dimensions with keyword matching
+  const dims = {
+    'Cuerpo': { score: 5, kw: {
+      high: ['complejo','estructura','potente','robusto','corpulento','intenso','profundo','concentrado','musculoso','denso','carnoso','untuoso','opulento','pleno','gran cuerpo'],
+      mid: ['equilibrado','elegante','sofisticado','redondo','sedoso','aterciopelado','maduro','envolvente'],
+      low: ['ligero','fresco','suave','delicado','sutil','fino','etéreo','fluido','liviano']
+    }},
+    'Acidez': { score: 5, kw: {
+      high: ['ácido','acidez','cítrico','citrus','limón','lima','pomelo','vibrante','nervioso','vivo','eléctrico','punzante','crujiente'],
+      mid: ['fresco','mineral','salino','salado','vivaz','refrescante'],
+      low: ['suave','redondo','maduro','untuoso','mantecoso','cremoso','lácteo']
+    }},
+    'Fruta': { score: 5, kw: {
+      high: ['frutas rojas','fruta negra','frutas negras','cereza','mora','frambuesa','grosella','ciruela','arándano','melocotón','manzana','pera','tropical','tropicales','fruta madura','mermelada','compota','confitado'],
+      mid: ['frutal','fruta','frutas blancas','fruta blanca','afrutado','baya','bayas'],
+      low: ['mineral','terroso','austero','herbal','herbáceo','especiado','ahumado']
+    }},
+    'Floral': { score: 5, kw: {
+      high: ['floral','florales','flores blancas','flores','rosa','jazmín','violeta','azahar','flor de azahar','lavanda','acacia','flores silvestres'],
+      mid: ['aromático','perfumado','fragante','miel'],
+      low: ['terroso','ahumado','tostado','mineral','rústico']
+    }},
+    'Mineral': { score: 5, kw: {
+      high: ['mineral','minerales','mineralidad','pizarra','calcáreo','salino','salado','pedernal','yodo','sílex','grafito','piedra','caliza'],
+      mid: ['fresco','crianza','terroir','terruño','elegante'],
+      low: ['afrutado','dulce','goloso','especiado','cremoso']
+    }},
+    'Especias': { score: 5, kw: {
+      high: ['especiado','especias','pimienta','canela','clavo','vainilla','regaliz','nuez moscada','anís','tabaco','cuero','cacao','café','tostado','ahumado','torrefacto'],
+      mid: ['roble','barrica','crianza','madera','balsámico'],
+      low: ['fresco','floral','frutal','cítrico','ligero','mineral']
+    }}
+  };
+
+  // Type-based baseline adjustments
+  const typeBase = {
+    tinto:    { 'Cuerpo': 6, 'Acidez': 5, 'Fruta': 6, 'Floral': 3, 'Mineral': 4, 'Especias': 5 },
+    blanco:   { 'Cuerpo': 3, 'Acidez': 7, 'Fruta': 5, 'Floral': 6, 'Mineral': 6, 'Especias': 2 },
+    rosado:   { 'Cuerpo': 3, 'Acidez': 6, 'Fruta': 7, 'Floral': 6, 'Mineral': 4, 'Especias': 2 },
+    espumoso: { 'Cuerpo': 2, 'Acidez': 8, 'Fruta': 4, 'Floral': 5, 'Mineral': 6, 'Especias': 2 },
+    dulce:    { 'Cuerpo': 5, 'Acidez': 4, 'Fruta': 8, 'Floral': 6, 'Mineral': 2, 'Especias': 4 }
+  };
+
+  const base = typeBase[type] || typeBase.tinto;
+
+  // Grape-based adjustments
+  const grapeAdj = {};
+  if (grapes.includes('tempranillo') || grapes.includes('cabernet') || grapes.includes('syrah') || grapes.includes('malbec')) {
+    grapeAdj['Cuerpo'] = 1; grapeAdj['Especias'] = 1;
+  }
+  if (grapes.includes('pinot noir') || grapes.includes('mencía')) {
+    grapeAdj['Floral'] = 1; grapeAdj['Acidez'] = 1; grapeAdj['Cuerpo'] = -1;
+  }
+  if (grapes.includes('albariño') || grapes.includes('riesling') || grapes.includes('verdejo')) {
+    grapeAdj['Acidez'] = 1; grapeAdj['Mineral'] = 1;
+  }
+  if (grapes.includes('garnacha') || grapes.includes('grenache')) {
+    grapeAdj['Fruta'] = 1; grapeAdj['Especias'] = 1;
+  }
+
+  const result = [];
+  for (const [name, dim] of Object.entries(dims)) {
+    let score = base[name] || 5;
+
+    // Keyword matching
+    let highCount = 0, midCount = 0, lowCount = 0;
+    for (const kw of dim.kw.high) { if (notes.includes(kw)) highCount++; }
+    for (const kw of dim.kw.mid) { if (notes.includes(kw)) midCount++; }
+    for (const kw of dim.kw.low) { if (notes.includes(kw)) lowCount++; }
+
+    if (highCount > 0) score += Math.min(highCount, 2) * 1.5;
+    if (midCount > 0) score += Math.min(midCount, 2) * 0.5;
+    if (lowCount > 0) score -= Math.min(lowCount, 2) * 1;
+
+    // Apply grape adjustments
+    score += (grapeAdj[name] || 0);
+
+    // Clamp 1-10
+    score = Math.max(1, Math.min(10, Math.round(score)));
+    result.push({ name, score });
+  }
+  return result;
+}
+
+function _renderRadarChart(w) {
+  const scores = _parseWineScores(w);
+  const n = scores.length;
+  const cx = 140, cy = 130, maxR = 95;
+  const angleStep = (2 * Math.PI) / n;
+  const startAngle = -Math.PI / 2; // Top
+
+  // Grid levels
+  const levels = [2, 4, 6, 8, 10];
+  let gridPaths = '';
+  for (const lvl of levels) {
+    const r = (lvl / 10) * maxR;
+    let pts = [];
+    for (let i = 0; i < n; i++) {
+      const angle = startAngle + i * angleStep;
+      pts.push((cx + r * Math.cos(angle)).toFixed(1) + ',' + (cy + r * Math.sin(angle)).toFixed(1));
+    }
+    gridPaths += '<polygon class="radar-grid" points="' + pts.join(' ') + '"/>';
+  }
+
+  // Axis lines
+  let axes = '';
+  for (let i = 0; i < n; i++) {
+    const angle = startAngle + i * angleStep;
+    const x2 = cx + maxR * Math.cos(angle);
+    const y2 = cy + maxR * Math.sin(angle);
+    axes += '<line class="radar-axis" x1="' + cx + '" y1="' + cy + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/>';
+  }
+
+  // Data area
+  let dataPts = [], dots = '', labels = '', values = '';
+  for (let i = 0; i < n; i++) {
+    const angle = startAngle + i * angleStep;
+    const r = (scores[i].score / 10) * maxR;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    dataPts.push(x.toFixed(1) + ',' + y.toFixed(1));
+    dots += '<circle class="radar-dot" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '"/>';
+
+    // Labels at outer edge
+    const lR = maxR + 18;
+    const lx = cx + lR * Math.cos(angle);
+    const ly = cy + lR * Math.sin(angle);
+    labels += '<text class="radar-label" x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '">' + scores[i].name + '</text>';
+
+    // Value labels near dots
+    const vR = r + 10;
+    const vx = cx + vR * Math.cos(angle);
+    const vy = cy + vR * Math.sin(angle);
+    values += '<text class="radar-value" x="' + vx.toFixed(1) + '" y="' + vy.toFixed(1) + '">' + scores[i].score + '</text>';
+  }
+
+  return '<div class="radar-container">' +
+    '<div class="wine-info-label" style="margin-bottom:.5rem">✦ Perfil de Cata</div>' +
+    '<svg class="radar-svg" viewBox="0 0 280 260">' +
+    gridPaths + axes +
+    '<polygon class="radar-area" points="' + dataPts.join(' ') + '"/>' +
+    dots + labels + values +
+    '</svg>' +
+    '<div class="radar-legend">' +
+    scores.map(s => '<span class="radar-legend-item"><span class="radar-legend-dot"></span>' + s.name + ' ' + s.score + '/10</span>').join('') +
+    '</div>' +
+    '</div>';
+}
+
+function _showWineDetail(id, list, direction){
   const w = WINES.find(x=>x.id===id);
   if(!w) return;
+  // Track wine list for swipe navigation
+  if(list && list.length) { _wineDetailList = list; _wineDetailIdx = list.indexOf(id); }
+  else if(!_wineDetailList.length) { _wineDetailList = [id]; _wineDetailIdx = 0; }
+  const hasPrev = _wineDetailIdx > 0;
+  const hasNext = _wineDetailIdx < _wineDetailList.length - 1;
+  const navCounter = _wineDetailList.length > 1 ? (_wineDetailIdx + 1) + ' / ' + _wineDetailList.length : '';
   const typeLabels = {blanco:'Vino Blanco',tinto:'Vino Tinto',rosado:'Vino Rosado',espumoso:'Espumoso',dulce:'Vino Dulce',mocktail:'Mocktail'};
   const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯',mocktail:'🍹'};
   const isWine = !['cocktail','mocktail'].includes(w.type);
@@ -9201,6 +9393,13 @@ function _showWineDetail(id){
   overlay.className = 'wine-detail-overlay';
   overlay.innerHTML = `<div class="wine-detail-inner">
     <button onclick="document.getElementById('wineDetailOverlay').remove()" class="wine-detail-back">◇ Volver</button>
+
+    ${_wineDetailList.length > 1 ? `<div class="wine-nav-arrows">
+      <button onclick="_navigateWine(-1)" class="wine-nav-arrow${hasPrev?'':' disabled'}">◁</button>
+      <span class="wine-nav-counter">${navCounter}</span>
+      <button onclick="_navigateWine(1)" class="wine-nav-arrow${hasNext?'':' disabled'}">▷</button>
+    </div>
+    <div class="wine-swipe-hint">← desliza para cambiar →</div>` : ''}
 
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem">
       <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:36px;height:36px;font-size:.9rem">${typeIcons[w.type]||'🍷'}</div>
@@ -9244,6 +9443,8 @@ function _showWineDetail(id){
       <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(w.story)}"</div>
     </div>
 
+    ${isWine ? _renderRadarChart(w) : ''}
+
     ${isWine&&w.notes?`
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
       <div class="wine-info-label">✦ Notas de cata</div>
@@ -9263,7 +9464,38 @@ function _showWineDetail(id){
       </div>
     </div>`:''}
   </div>`;
-  document.body.appendChild(overlay);
+  // Handle direction-based update or fresh append
+  if(direction && document.getElementById('wineDetailOverlay')){
+    const existing = document.getElementById('wineDetailOverlay');
+    existing.querySelector('.wine-detail-inner').outerHTML = overlay.querySelector('.wine-detail-inner').outerHTML;
+    const newInner = existing.querySelector('.wine-detail-inner');
+    newInner.style.transform = 'translateX(' + (direction > 0 ? '30' : '-30') + 'px)';
+    newInner.style.opacity = '0';
+    requestAnimationFrame(() => {
+      newInner.style.transition = 'transform .25s ease, opacity .2s ease';
+      newInner.style.transform = 'translateX(0)';
+      newInner.style.opacity = '1';
+    });
+  } else {
+    document.body.appendChild(overlay);
+    // Swipe touch handlers
+    let _swStartX = 0, _swStartY = 0, _swiping = false;
+    overlay.addEventListener('touchstart', e => {
+      _swStartX = e.touches[0].clientX;
+      _swStartY = e.touches[0].clientY;
+      _swiping = true;
+    }, {passive:true});
+    overlay.addEventListener('touchend', e => {
+      if(!_swiping) return;
+      _swiping = false;
+      const dx = e.changedTouches[0].clientX - _swStartX;
+      const dy = e.changedTouches[0].clientY - _swStartY;
+      if(Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.7) return;
+      if(dx > 0 && _wineDetailIdx > 0) _navigateWine(-1);
+      else if(dx < 0 && _wineDetailIdx < _wineDetailList.length - 1) _navigateWine(1);
+    }, {passive:true});
+    overlay.addEventListener('click', e => { if(e.target === overlay) overlay.remove(); });
+  }
 }
 
 // ═══ WINE LEARNING TABS ═══
