@@ -9579,6 +9579,231 @@ let _wineProvinceLayers = {};
 let _wineCountryLayers = {};
 let _wineProvinceGeoLayer = null;
 let _wineCountryGeoLayer = null;
+let _wineDOGeoLayer = null;
+
+// Wine DO (Denomination of Origin) boundaries
+var _wineDOPolygons = [
+  {
+    name: 'DOCa Rioja',
+    origin: 'La Rioja-Álava',
+    coords: [[42.65, -2.85], [42.65, -2.4], [42.5, -2.0], [42.45, -1.75], [42.25, -1.8], [42.25, -2.3], [42.35, -2.6], [42.5, -2.75], [42.65, -2.85]]
+  },
+  {
+    name: 'DO Ribera del Duero',
+    origin: 'Castilla y León',
+    coords: [[41.8, -2.4], [41.8, -3.0], [41.75, -3.5], [41.7, -4.1], [41.65, -4.5], [41.6, -4.3], [41.55, -3.7], [41.5, -3.2], [41.5, -2.5], [41.6, -2.3], [41.8, -2.4]]
+  },
+  {
+    name: 'DO Ca Priorat',
+    origin: 'Cataluña',
+    coords: [[41.35, 0.65], [41.35, 0.95], [41.1, 0.95], [41.1, 0.65], [41.35, 0.65]]
+  },
+  {
+    name: 'DO Rías Baixas',
+    origin: 'Galicia',
+    coords: [[42.55, -8.9], [42.55, -8.3], [42.05, -8.3], [42.05, -8.9], [42.55, -8.9]]
+  },
+  {
+    name: 'DO Valdeorras',
+    origin: 'Galicia',
+    coords: [[42.5, -7.4], [42.5, -6.8], [42.2, -6.8], [42.2, -7.4], [42.5, -7.4]]
+  },
+  {
+    name: 'DO Penedès',
+    origin: 'Cataluña',
+    coords: [[41.5, 1.4], [41.5, 2.0], [41.2, 2.0], [41.2, 1.4], [41.5, 1.4]]
+  },
+  {
+    name: 'DO Clàssic Penedès',
+    origin: 'Cataluña',
+    coords: [[41.5, 1.4], [41.5, 2.0], [41.2, 2.0], [41.2, 1.4], [41.5, 1.4]]
+  },
+  {
+    name: 'DO Empordá',
+    origin: 'Cataluña',
+    coords: [[42.4, 2.7], [42.4, 3.15], [42.1, 3.15], [42.1, 2.7], [42.4, 2.7]]
+  },
+  {
+    name: 'DO Alella',
+    origin: 'Cataluña',
+    coords: [[41.55, 2.2], [41.55, 2.4], [41.45, 2.4], [41.45, 2.2], [41.55, 2.2]]
+  },
+  {
+    name: 'DO Rueda',
+    origin: 'Castilla y León',
+    coords: [[41.6, -5.2], [41.6, -4.6], [41.2, -4.6], [41.2, -5.2], [41.6, -5.2]]
+  },
+  {
+    name: 'DO Toro',
+    origin: 'Castilla y León',
+    coords: [[41.65, -5.6], [41.65, -5.15], [41.35, -5.15], [41.35, -5.6], [41.65, -5.6]]
+  },
+  {
+    name: 'DO Bierzo',
+    origin: 'Castilla y León',
+    coords: [[42.75, -6.9], [42.75, -6.3], [42.45, -6.3], [42.45, -6.9], [42.75, -6.9]]
+  },
+  {
+    name: 'DO Ribera Sacra',
+    origin: 'Galicia',
+    coords: [[42.55, -7.7], [42.55, -7.3], [42.25, -7.3], [42.25, -7.7], [42.55, -7.7]]
+  },
+  {
+    name: 'DO Lanzarote',
+    origin: 'Canarias',
+    coords: [[29.25, -13.4], [29.25, -13.85], [28.85, -13.85], [28.85, -13.4], [29.25, -13.4]]
+  },
+  {
+    name: 'DO Ycoden Daute Isora',
+    origin: 'Canarias',
+    coords: [[28.4, -16.9], [28.4, -16.7], [28.3, -16.7], [28.3, -16.9], [28.4, -16.9]]
+  },
+  {
+    name: 'DO Ycoden-Daute-Isora',
+    origin: 'Canarias',
+    coords: [[28.4, -16.9], [28.4, -16.7], [28.3, -16.7], [28.3, -16.9], [28.4, -16.9]]
+  },
+  {
+    name: 'DO Valle de Guimar',
+    origin: 'Canarias',
+    coords: [[28.4, -16.45], [28.4, -16.3], [28.25, -16.3], [28.25, -16.45], [28.4, -16.45]]
+  },
+  {
+    name: 'DO Tacoronte-Acentejo',
+    origin: 'Canarias',
+    coords: [[28.5, -16.55], [28.5, -16.35], [28.4, -16.35], [28.4, -16.55], [28.5, -16.55]]
+  },
+  {
+    name: 'DO La Orotava',
+    origin: 'Canarias',
+    coords: [[28.45, -16.55], [28.45, -16.45], [28.35, -16.45], [28.35, -16.55], [28.45, -16.55]]
+  },
+  {
+    name: 'DO Abona',
+    origin: 'Canarias',
+    coords: [[28.2, -16.55], [28.2, -16.35], [28.0, -16.35], [28.0, -16.55], [28.2, -16.55]]
+  },
+  {
+    name: 'DO Gran Canaria',
+    origin: 'Canarias',
+    coords: [[28.15, -15.35], [28.15, -15.65], [27.85, -15.65], [27.85, -15.35], [28.15, -15.35]]
+  },
+  {
+    name: 'DOP Islas Canarias-Tenerife',
+    origin: 'Canarias',
+    coords: [[28.6, -16.3], [28.6, -16.8], [27.95, -16.8], [27.95, -16.3], [28.6, -16.3]]
+  },
+  {
+    name: 'DO Jumilla',
+    origin: 'Murcia',
+    coords: [[38.65, -1.55], [38.65, -1.1], [38.3, -1.1], [38.3, -1.55], [38.65, -1.55]]
+  },
+  {
+    name: 'VT Cádiz',
+    origin: 'Andalucía',
+    coords: [[36.9, -6.4], [36.9, -5.8], [36.4, -5.8], [36.4, -6.4], [36.9, -6.4]]
+  },
+  {
+    name: 'VP Pago Florentino',
+    origin: 'Castilla La Mancha',
+    coords: [[38.82, -3.85], [38.82, -3.78], [38.75, -3.78], [38.75, -3.85], [38.82, -3.85]]
+  },
+  {
+    name: 'VP Pago ValleGarcía',
+    origin: 'Castilla La Mancha',
+    coords: [[39.52, -4.45], [39.52, -4.38], [39.45, -4.38], [39.45, -4.45], [39.52, -4.45]]
+  },
+  {
+    name: 'Mallorca',
+    origin: 'Islas Baleares',
+    coords: [[39.75, 2.75], [39.75, 3.15], [39.45, 3.15], [39.45, 2.75], [39.75, 2.75]]
+  },
+  {
+    name: 'AOC Champagne',
+    origin: 'Francia',
+    coords: [[49.5, 3.0], [49.5, 4.4], [48.5, 4.4], [48.5, 3.0], [49.5, 3.0]]
+  },
+  {
+    name: 'AOC Bourgogne',
+    origin: 'Francia',
+    coords: [[47.8, 3.8], [47.8, 5.0], [46.2, 5.0], [46.2, 3.8], [47.8, 3.8]]
+  },
+  {
+    name: 'AOC Bourgogne Côte d\'Auxerre',
+    origin: 'Francia',
+    coords: [[47.8, 3.8], [47.8, 5.0], [46.2, 5.0], [46.2, 3.8], [47.8, 3.8]]
+  },
+  {
+    name: 'AOC Sancerre',
+    origin: 'Francia',
+    coords: [[47.45, 2.7], [47.45, 3.0], [47.2, 3.0], [47.2, 2.7], [47.45, 2.7]]
+  },
+  {
+    name: 'AOC Médoc',
+    origin: 'Francia',
+    coords: [[45.5, -1.15], [45.5, -0.65], [45.0, -0.65], [45.0, -1.15], [45.5, -1.15]]
+  },
+  {
+    name: 'AOC Montagne Saint Émilion',
+    origin: 'Francia',
+    coords: [[45.05, -0.25], [45.05, 0.05], [44.85, 0.05], [44.85, -0.25], [45.05, -0.25]]
+  },
+  {
+    name: 'AOC Côtes du Rhône',
+    origin: 'Francia',
+    coords: [[45.0, 4.3], [45.0, 5.1], [43.5, 5.1], [43.5, 4.3], [45.0, 4.3]]
+  },
+  {
+    name: 'AOC Cotes du Rhone',
+    origin: 'Francia',
+    coords: [[45.0, 4.3], [45.0, 5.1], [43.5, 5.1], [43.5, 4.3], [45.0, 4.3]]
+  },
+  {
+    name: 'AOC Côtes du Provence',
+    origin: 'Francia',
+    coords: [[43.7, 5.5], [43.7, 6.8], [43.2, 6.8], [43.2, 5.5], [43.7, 5.5]]
+  },
+  {
+    name: 'Tokaji-Hungría',
+    origin: 'Hungría',
+    coords: [[48.25, 21.1], [48.25, 21.6], [48.0, 21.6], [48.0, 21.1], [48.25, 21.1]]
+  },
+  {
+    name: 'Valle de Uco-Mendoza',
+    origin: 'Argentina',
+    coords: [[-33.0, -69.6], [-33.0, -68.8], [-34.0, -68.8], [-34.0, -69.6], [-33.0, -69.6]]
+  },
+  {
+    name: 'Mendoza',
+    origin: 'Argentina',
+    coords: [[-33.0, -69.6], [-33.0, -68.8], [-34.0, -68.8], [-34.0, -69.6], [-33.0, -69.6]]
+  },
+  {
+    name: 'Kamptal DAC',
+    origin: 'Austria',
+    coords: [[48.6, 15.5], [48.6, 15.85], [48.35, 15.85], [48.35, 15.5], [48.6, 15.5]]
+  },
+  {
+    name: 'DOCG Dolcetto d\'Alba',
+    origin: 'Italia',
+    coords: [[44.85, 7.8], [44.85, 8.2], [44.55, 8.2], [44.55, 7.8], [44.85, 7.8]]
+  },
+  {
+    name: 'Mosel',
+    origin: 'Alemania',
+    coords: [[50.4, 6.4], [50.4, 7.1], [49.4, 7.1], [49.4, 6.4], [50.4, 6.4]]
+  },
+  {
+    name: 'Swartland',
+    origin: 'Sur Africa',
+    coords: [[-33.1, 18.2], [-33.1, 19.0], [-33.8, 19.0], [-33.8, 18.2], [-33.1, 18.2]]
+  },
+  {
+    name: 'Australia',
+    origin: 'Australia',
+    coords: [[-35.3, 138.2], [-35.3, 138.8], [-34.7, 138.8], [-34.7, 138.2], [-35.3, 138.2]]
+  }
+];
 
 function _buildSpainSVG(regionDots, byOrigin) {
   const communities = [
@@ -9950,10 +10175,10 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
           var color = _wineRegionColors[wineOrigin] || '#9a8a6a';
           return {
             fillColor: color,
-            fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+            fillOpacity: isActive ? 0.5 : (hasWines ? 0.3 : 0.15),
             color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
-            weight: isActive ? 4 : (hasWines ? 2 : 1),
-            opacity: isActive ? 1 : 0.7,
+            weight: isActive ? 3 : (hasWines ? 1.5 : 0.8),
+            opacity: isActive ? 1 : 0.5,
             className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
           };
         },
@@ -10031,10 +10256,10 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
           var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
           return {
             fillColor: color,
-            fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+            fillOpacity: isActive ? 0.5 : (hasWines ? 0.3 : 0.15),
             color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
-            weight: isActive ? 4 : (hasWines ? 2 : 1),
-            opacity: isActive ? 1 : 0.7,
+            weight: isActive ? 3 : (hasWines ? 1.5 : 0.8),
+            opacity: isActive ? 1 : 0.5,
             className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
           };
         },
@@ -10068,6 +10293,56 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   } catch(e) {
     console.warn('[Txoko] Failed to load TopoJSON:', e);
   }
+
+  // Add DO (Denomination of Origin) boundary layer
+  var doFeatures = _wineDOPolygons.map(function(do_) {
+    return {
+      type: 'Feature',
+      properties: { name: do_.name, origin: do_.origin },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [do_.coords.map(function(c) { return [c[1], c[0]]; })]
+      }
+    };
+  });
+
+  var doGeojson = { type: 'FeatureCollection', features: doFeatures };
+
+  _wineDOGeoLayer = L.geoJSON(doGeojson, {
+    style: function(feature) {
+      var origin = feature.properties.origin;
+      var isActive = _mapSelectedOrigin === origin;
+      var color = _wineRegionColors[origin] || '#c49a3c';
+      var hasWines = byOrigin[origin] && byOrigin[origin].length > 0;
+
+      return {
+        fillColor: isActive ? color : 'transparent',
+        fillOpacity: isActive ? 0.35 : 0,
+        color: isActive ? '#ffd700' : (hasWines ? color : '#5a4a2a'),
+        weight: isActive ? 3.5 : 1.5,
+        opacity: isActive ? 1 : 0.6,
+        dashArray: isActive ? '' : '4 3',
+        className: isActive ? 'ck3-region-active' : 'ck3-do-boundary'
+      };
+    },
+    onEachFeature: function(feature, layer) {
+      var origin = feature.properties.origin;
+      var doName = feature.properties.name;
+
+      layer.on('click', function() { _selectMapOrigin(origin); });
+      layer.on('mouseover', function(e) {
+        if(_mapSelectedOrigin !== origin) {
+          var color = _wineRegionColors[origin] || '#c49a3c';
+          e.target.setStyle({ fillOpacity: 0.25, fillColor: color, weight: 2.5, color: '#ffd700', opacity: 0.8 });
+        }
+      });
+      layer.on('mouseout', function(e) {
+        if(_mapSelectedOrigin !== origin) {
+          e.target.setStyle({ fillOpacity: 0, fillColor: 'transparent', weight: 1.5, color: _wineRegionColors[origin] || '#5a4a2a', opacity: 0.6 });
+        }
+      });
+    }
+  }).addTo(_wineLeafletMap);
 
   // Add wine dot markers — SMALL sizes (supplementary)
   regionDots.forEach(function(r) {
@@ -10128,7 +10403,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   if(!document.getElementById('ck3MapStyle')) {
     var style = document.createElement('style');
     style.id = 'ck3MapStyle';
-    style.textContent = '.ck3-region-active { filter:drop-shadow(0 0 6px rgba(255,215,0,.8)) drop-shadow(0 0 12px rgba(196,154,60,.5)); } .ck3-region-wine { cursor:pointer; transition:all .3s; } .ck3-region-wine:hover { filter:drop-shadow(0 0 4px rgba(196,154,60,.4)); }';
+    style.textContent = '.ck3-region-active { filter:drop-shadow(0 0 6px rgba(255,215,0,.8)) drop-shadow(0 0 12px rgba(196,154,60,.5)); } .ck3-region-wine { cursor:pointer; transition:all .3s; } .ck3-region-wine:hover { filter:drop-shadow(0 0 4px rgba(196,154,60,.4)); } .ck3-do-boundary { transition:all .3s; cursor:pointer; }';
     document.head.appendChild(style);
   }
 
@@ -10228,7 +10503,7 @@ function _selectMapOrigin(name) {
       'South Africa': 'Sur Africa'
     };
 
-    // Update province layer styles
+    // Update province layer styles (softer, DO layer is on top)
     if(_wineProvinceGeoLayer) {
       _wineProvinceGeoLayer.eachLayer(function(layer) {
         var feat = layer.feature;
@@ -10244,16 +10519,16 @@ function _selectMapOrigin(name) {
 
         layer.setStyle({
           fillColor: color,
-          fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+          fillOpacity: isActive ? 0.5 : (hasWines ? 0.3 : 0.15),
           color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
-          weight: isActive ? 4 : (hasWines ? 2 : 1),
-          opacity: isActive ? 1 : 0.7,
+          weight: isActive ? 3 : (hasWines ? 1.5 : 0.8),
+          opacity: isActive ? 1 : 0.5,
           className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
         });
       });
     }
 
-    // Update country layer styles
+    // Update country layer styles (softer, DO layer is on top)
     if(_wineCountryGeoLayer) {
       _wineCountryGeoLayer.eachLayer(function(layer) {
         var feat = layer.feature;
@@ -10269,11 +10544,33 @@ function _selectMapOrigin(name) {
 
         layer.setStyle({
           fillColor: color,
-          fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+          fillOpacity: isActive ? 0.5 : (hasWines ? 0.3 : 0.15),
           color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
-          weight: isActive ? 4 : (hasWines ? 2 : 1),
-          opacity: isActive ? 1 : 0.7,
+          weight: isActive ? 3 : (hasWines ? 1.5 : 0.8),
+          opacity: isActive ? 1 : 0.5,
           className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
+        });
+      });
+    }
+
+    // Update DO boundary layer
+    if(_wineDOGeoLayer) {
+      _wineDOGeoLayer.eachLayer(function(layer) {
+        var feat = layer.feature;
+        if(!feat) return;
+        var origin = feat.properties.origin;
+        var isActive = _mapSelectedOrigin === origin;
+        var color = _wineRegionColors[origin] || '#c49a3c';
+        var hasWines = _wineByOrigin[origin] && _wineByOrigin[origin].length > 0;
+
+        layer.setStyle({
+          fillColor: isActive ? color : 'transparent',
+          fillOpacity: isActive ? 0.35 : 0,
+          color: isActive ? '#ffd700' : (hasWines ? color : '#5a4a2a'),
+          weight: isActive ? 3.5 : 1.5,
+          opacity: isActive ? 1 : 0.6,
+          dashArray: isActive ? '' : '4 3',
+          className: isActive ? 'ck3-region-active' : 'ck3-do-boundary'
         });
       });
     }
@@ -10292,36 +10589,45 @@ function _selectMapOrigin(name) {
       });
     }
 
-    // Fly to selected region or back to overview
+    // Fly to selected region — prefer DO bounds (precise) over province/country bounds
     if(_mapSelectedOrigin) {
+      var doBounds = null;
       var targetBounds = null;
 
-      // Collect bounds from all matching provinces
-      Object.keys(_wineProvinceLayers).forEach(function(prov) {
-        if(provinceToOrigin[prov] === _mapSelectedOrigin) {
-          var b = _wineProvinceLayers[prov].getBounds();
-          if(targetBounds) {
-            targetBounds.extend(b);
-          } else {
-            targetBounds = b;
+      // First: collect DO bounds (most precise)
+      if(_wineDOGeoLayer) {
+        _wineDOGeoLayer.eachLayer(function(layer) {
+          if(layer.feature && layer.feature.properties.origin === _mapSelectedOrigin) {
+            var b = layer.getBounds();
+            if(doBounds) { doBounds.extend(b); }
+            else { doBounds = L.latLngBounds(b.getSouthWest(), b.getNorthEast()); }
           }
-        }
-      });
+        });
+      }
 
-      // Also collect bounds from matching countries
-      Object.keys(_wineCountryLayers).forEach(function(country) {
-        if(countryToOrigin[country] === _mapSelectedOrigin) {
-          var b = _wineCountryLayers[country].getBounds();
-          if(targetBounds) {
-            targetBounds.extend(b);
-          } else {
-            targetBounds = b;
+      if(doBounds) {
+        targetBounds = doBounds;
+      } else {
+        // Fallback: collect bounds from provinces
+        Object.keys(_wineProvinceLayers).forEach(function(prov) {
+          if(provinceToOrigin[prov] === _mapSelectedOrigin) {
+            var b = _wineProvinceLayers[prov].getBounds();
+            if(targetBounds) { targetBounds.extend(b); }
+            else { targetBounds = b; }
           }
-        }
-      });
+        });
+        // Also collect bounds from countries
+        Object.keys(_wineCountryLayers).forEach(function(country) {
+          if(countryToOrigin[country] === _mapSelectedOrigin) {
+            var b = _wineCountryLayers[country].getBounds();
+            if(targetBounds) { targetBounds.extend(b); }
+            else { targetBounds = b; }
+          }
+        });
+      }
 
       if(targetBounds) {
-        _wineLeafletMap.flyToBounds(targetBounds, { padding: [40, 40], duration: 0.8, maxZoom: 9 });
+        _wineLeafletMap.flyToBounds(targetBounds, { padding: [40, 40], duration: 0.8, maxZoom: 10 });
       }
     } else {
       // Deselected — zoom back to show Spain + Europe
