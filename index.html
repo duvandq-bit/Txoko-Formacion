@@ -2045,13 +2045,13 @@ body::after{
   background:linear-gradient(155deg,rgba(196,154,60,.04),transparent);
   border:1px solid rgba(196,154,60,.1);
   border-radius:0 12px 12px 12px;
-  padding:.65rem .9rem;font-size:.82rem;color:var(--parchment);line-height:1.5;flex:1;
+  padding:.75rem 1rem;font-size:1rem;color:var(--parchment);line-height:1.6;flex:1;
 }
 .txoko-waiter-bubble strong{color:var(--parchment);font-weight:600;}
 .txoko-dish-badge{
   display:inline-block;background:var(--gold-b);border:1px solid var(--gold-a);
-  border-radius:20px;padding:.15rem .6rem;font-size:.72rem;
-  color:var(--gold);font-weight:500;margin-top:.3rem;
+  border-radius:20px;padding:.2rem .7rem;font-size:.82rem;
+  color:var(--gold);font-weight:500;margin-top:.4rem;
 }
 
 /* patience bar */
@@ -2075,8 +2075,8 @@ body::after{
 .txoko-choice{
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);
   border:1.5px solid rgba(196,154,60,.1);border-radius:12px;
-  padding:.85rem 1rem;cursor:pointer;text-align:left;
-  transition:all .18s ease;font-size:.9rem;color:var(--parchment);line-height:1.5;
+  padding:.9rem 1.1rem;cursor:pointer;text-align:left;
+  transition:all .18s ease;font-size:1rem;color:var(--parchment);line-height:1.55;
   position:relative;overflow:hidden;
 }
 .txoko-choice::before{
@@ -2099,8 +2099,8 @@ body::after{
 }
 .txoko-choice:disabled{cursor:default;}
 .txoko-choice-letter{
-  font-family:'DM Mono',monospace;font-size:.65rem;
-  color:var(--gold);margin-right:.5rem;font-weight:500;
+  font-family:'DM Mono',monospace;font-size:.8rem;
+  color:var(--gold);margin-right:.5rem;font-weight:600;
 }
 
 /* feedback bar */
@@ -9575,6 +9575,10 @@ let _wineNameMap = {};
 let _wineRegionColors = {};
 let _wineByOrigin = {};
 let _wineRegionDots = [];
+let _wineProvinceLayers = {};
+let _wineCountryLayers = {};
+let _wineProvinceGeoLayer = null;
+let _wineCountryGeoLayer = null;
 
 function _buildSpainSVG(regionDots, byOrigin) {
   const communities = [
@@ -9824,140 +9828,253 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     attribution: 'Txoko MB'
   }).addTo(_wineLeafletMap);
 
+  // Define province-to-origin mapping (multiple variants for robustness)
+  var provinceToOrigin = {
+    'La Rioja': 'La Rioja-Álava',
+    'Araba/Álava': 'La Rioja-Álava',
+    'Álava': 'La Rioja-Álava',
+    'Barcelona': 'Cataluña',
+    'Tarragona': 'Cataluña',
+    'Girona': 'Cataluña',
+    'Lleida': 'Cataluña',
+    'Santa Cruz de Tenerife': 'Canarias',
+    'Las Palmas': 'Canarias',
+    'Valladolid': 'Castilla y León',
+    'Burgos': 'Castilla y León',
+    'Soria': 'Castilla y León',
+    'Segovia': 'Castilla y León',
+    'Zamora': 'Castilla y León',
+    'León': 'Castilla y León',
+    'Palencia': 'Castilla y León',
+    'Salamanca': 'Castilla y León',
+    'Ávila': 'Castilla y León',
+    'Pontevedra': 'Galicia',
+    'Ourense': 'Galicia',
+    'A Coruña': 'Galicia',
+    'Lugo': 'Galicia',
+    'Ciudad Real': 'Castilla La Mancha',
+    'Toledo': 'Castilla La Mancha',
+    'Cuenca': 'Castilla La Mancha',
+    'Albacete': 'Castilla La Mancha',
+    'Guadalajara': 'Castilla La Mancha',
+    'Murcia': 'Murcia',
+    'Balears, Illes': 'Islas Baleares',
+    'Illes Balears': 'Islas Baleares',
+    'Cádiz': 'Andalucía',
+    'Sevilla': 'Andalucía',
+    'Córdoba': 'Andalucía',
+    'Málaga': 'Andalucía',
+    'Huelva': 'Andalucía',
+    'Jaén': 'Andalucía',
+    'Granada': 'Andalucía',
+    'Almería': 'Andalucía'
+  };
+
+  // Define country-to-origin mapping
+  var countryToOrigin = {
+    'France': 'Francia',
+    'Hungary': 'Hungría',
+    'Argentina': 'Argentina',
+    'Australia': 'Australia',
+    'Austria': 'Austria',
+    'Italy': 'Italia',
+    'Germany': 'Alemania',
+    'South Africa': 'Sur Africa'
+  };
+
   // Region colors — store globally for in-place updates
   _wineRegionColors = {
-    'Andalucía': '#8B4513',
-    'Aragón': '#7B6B3A',
-    'Principado de Asturias': '#3A6B5A',
-    'Islas Baleares': '#3A5B7B',
-    'Illes Balears': '#3A5B7B',
-    'Canarias': '#4B0082',
-    'Cantabria': '#4A7B6A',
-    'Castilla-La Mancha': '#8B7D3A',
-    'Castilla y León': '#B8860B',
+    'La Rioja-Álava': '#6B1530',
     'Cataluña': '#1B3A5C',
-    'Catalunya': '#1B3A5C',
-    'Comunitat Valenciana': '#8B6B2A',
-    'Comunidad Valenciana': '#8B6B2A',
-    'Valencia': '#8B6B2A',
-    'Extremadura': '#6B5B3A',
+    'Canarias': '#4B0082',
+    'Castilla y León': '#B8860B',
     'Galicia': '#1B5E3B',
-    'Comunidad de Madrid': '#5B3A5B',
-    'Madrid': '#5B3A5B',
-    'Región de Murcia': '#8B4726',
+    'Castilla La Mancha': '#8B7D3A',
     'Murcia': '#8B4726',
-    'Comunidad Foral de Navarra': '#7B3A3A',
-    'Navarra': '#7B3A3A',
-    'País Vasco': '#3A5B4A',
-    'Euskadi': '#3A5B4A',
-    'La Rioja': '#6B1530',
-    'La Rioja-Álava': '#6B1530'
+    'Islas Baleares': '#3A5B7B',
+    'Andalucía': '#8B4513',
+    'Francia': '#1B3A6C',
+    'Hungría': '#8B3A4A',
+    'Argentina': '#5B8AC0',
+    'Italia': '#2B6B3A',
+    'Australia': '#C07830',
+    'Austria': '#7B3A5B',
+    'Alemania': '#4A6B3A',
+    'Sur Africa': '#6B4B2A'
   };
 
-  // Name mapping — store globally
-  _wineNameMap = {
-    'Andalucía': 'Andalucía',
-    'Aragón': 'Aragón',
-    'Principado de Asturias': 'Asturias',
-    'Asturias': 'Asturias',
-    'Islas Baleares': 'Islas Baleares',
-    'Illes Balears': 'Islas Baleares',
-    'Canarias': 'Canarias',
-    'Cantabria': 'Cantabria',
-    'Castilla-La Mancha': 'Castilla La Mancha',
-    'Castilla y León': 'Castilla y León',
-    'Cataluña': 'Cataluña',
-    'Catalunya': 'Cataluña',
-    'Comunitat Valenciana': 'Valencia',
-    'Comunidad Valenciana': 'Valencia',
-    'Extremadura': 'Extremadura',
-    'Galicia': 'Galicia',
-    'Comunidad de Madrid': 'Madrid',
-    'Región de Murcia': 'Murcia',
-    'Comunidad Foral de Navarra': 'Navarra',
-    'Navarra': 'Navarra',
-    'País Vasco': 'País Vasco',
-    'Euskadi': 'País Vasco',
-    'La Rioja': 'La Rioja-Álava'
-  };
-
-  _wineGeoLayers = {};
+  // Clear previous layers
+  _wineProvinceLayers = {};
+  _wineCountryLayers = {};
+  _wineProvinceGeoLayer = null;
+  _wineCountryGeoLayer = null;
   _wineDotMarkers = [];
-  _wineGeoLayer = null;
 
-  // Try to load real TopoJSON boundaries
+  // Load both TopoJSON files in parallel
   try {
-    var topoRes = await fetch('https://unpkg.com/es-atlas@0.5.0/es/autonomous_regions.json');
-    if(topoRes.ok) {
-      var topoData = await topoRes.json();
-      var objKey = Object.keys(topoData.objects)[0];
-      var geojson = topojson.feature(topoData, topoData.objects[objKey]);
-      console.log('[Txoko Map] TopoJSON loaded, object key:', objKey, 'features:', geojson.features.length);
-      if(geojson.features.length > 0) console.log('[Txoko Map] Sample properties:', JSON.stringify(geojson.features[0].properties));
+    console.log('[Txoko Map] Loading province and country TopoJSON...');
+    var results = await Promise.all([
+      fetch('https://unpkg.com/es-atlas@0.5.0/es/provinces.json'),
+      fetch('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
+    ]);
 
-      _wineGeoLayer = L.geoJSON(geojson, {
+    var provRes = results[0];
+    var countryRes = results[1];
+
+    // Load provinces
+    if(provRes.ok) {
+      var provData = await provRes.json();
+      var provObjKey = Object.keys(provData.objects)[0];
+      var provGeojson = topojson.feature(provData, provData.objects[provObjKey]);
+      console.log('[Txoko Map] Provinces loaded: ' + provGeojson.features.length + ' features');
+
+      _wineProvinceGeoLayer = L.geoJSON(provGeojson, {
         style: function(feature) {
-          var rawName = feature.properties.name || feature.properties.NAME || feature.properties.nombre || feature.properties.NAMEUNIT || feature.id || '';
-          var wineOrigin = _wineNameMap[rawName] || rawName;
-          var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
+          var provinceName = feature.properties.name || feature.id || '';
+          var wineOrigin = provinceToOrigin[provinceName];
+          var hasWines = wineOrigin && byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
           var isActive = _mapSelectedOrigin === wineOrigin;
-          var color = _wineRegionColors[rawName] || _wineRegionColors[wineOrigin] || '#9a8a6a';
 
+          if(!wineOrigin) {
+            // Province without wine
+            return {
+              fillColor: '#9a8a6a',
+              fillOpacity: 0.15,
+              color: '#5a4a2a',
+              weight: 1,
+              opacity: 0.5,
+              interactive: false
+            };
+          }
+
+          var color = _wineRegionColors[wineOrigin] || '#9a8a6a';
           return {
             fillColor: color,
             fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
             color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
             weight: isActive ? 4 : (hasWines ? 2 : 1),
             opacity: isActive ? 1 : 0.7,
-            dashArray: isActive ? '' : (hasWines ? '' : '3'),
             className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
           };
         },
         onEachFeature: function(feature, layer) {
-          var rawName = feature.properties.name || feature.properties.NAME || feature.properties.nombre || feature.properties.NAMEUNIT || feature.id || '';
-          var wineOrigin = _wineNameMap[rawName] || rawName;
-          var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
+          var provinceName = feature.properties.name || feature.id || '';
+          var wineOrigin = provinceToOrigin[provinceName];
 
-          _wineGeoLayers[wineOrigin] = layer;
+          if(wineOrigin) {
+            _wineProvinceLayers[provinceName] = layer;
+            var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
 
-          if(hasWines) {
-            layer.on('click', function() { _selectMapOrigin(wineOrigin); });
-            layer.on('mouseover', function(e) {
-              if(_mapSelectedOrigin !== wineOrigin) {
-                e.target.setStyle({ fillOpacity: 0.6, weight: 3, color: '#c49a3c' });
-              }
-            });
-            layer.on('mouseout', function(e) {
-              if(_mapSelectedOrigin !== wineOrigin) {
-                e.target.setStyle({ fillOpacity: 0.5, weight: 2, color: '#2a1f0a' });
-              }
-            });
-            // Region name label
-            var center = layer.getBounds().getCenter();
-            var count = byOrigin[wineOrigin] ? byOrigin[wineOrigin].length : 0;
-            L.marker(center, {
-              icon: L.divIcon({
-                className: 'wine-region-label',
-                html: wineOrigin + (count ? ' (' + count + ')' : ''),
-                iconSize: [100, 20],
-                iconAnchor: [50, 10]
-              }),
-              interactive: false
-            }).addTo(_wineLeafletMap);
+            if(hasWines) {
+              layer.on('click', function() { _selectMapOrigin(wineOrigin); });
+              layer.on('mouseover', function(e) {
+                if(_mapSelectedOrigin !== wineOrigin) {
+                  e.target.setStyle({ fillOpacity: 0.6, weight: 3, color: '#c49a3c' });
+                }
+              });
+              layer.on('mouseout', function(e) {
+                if(_mapSelectedOrigin !== wineOrigin) {
+                  var color = _wineRegionColors[wineOrigin] || '#9a8a6a';
+                  e.target.setStyle({ fillOpacity: 0.5, weight: 2, color: '#2a1f0a', fillColor: color });
+                }
+              });
+            }
           }
         }
       }).addTo(_wineLeafletMap);
     }
+
+    // Load countries
+    if(countryRes.ok) {
+      var countryData = await countryRes.json();
+      var countryObjKey = Object.keys(countryData.objects)[0];
+      var countryGeojson = topojson.feature(countryData, countryData.objects[countryObjKey]);
+      console.log('[Txoko Map] Countries loaded: ' + countryGeojson.features.length + ' features');
+
+      // Filter to wine countries + Spain's neighbors for context
+      var wineCountries = Object.keys(countryToOrigin);
+      var neighborCountries = ['France', 'Portugal', 'Andorra', 'Morocco', 'Algeria'];
+      var relevantCountries = new Set(wineCountries.concat(neighborCountries));
+
+      var filteredGeojson = {
+        type: 'FeatureCollection',
+        features: countryGeojson.features.filter(function(f) {
+          var countryName = f.properties.name || '';
+          return relevantCountries.has(countryName);
+        })
+      };
+
+      _wineCountryGeoLayer = L.geoJSON(filteredGeojson, {
+        style: function(feature) {
+          var countryName = feature.properties.name || '';
+          var wineOrigin = countryToOrigin[countryName];
+          var isActive = _mapSelectedOrigin === wineOrigin;
+
+          // Skip Spain (shown as provinces instead)
+          if(countryName === 'Spain') {
+            return { fill: false, stroke: false };
+          }
+
+          if(!wineOrigin) {
+            // Non-wine country (neighbor for context)
+            return {
+              fillColor: '#3a3a2a',
+              fillOpacity: 0.08,
+              color: '#5a4a2a',
+              weight: 0.8,
+              opacity: 0.3,
+              interactive: false
+            };
+          }
+
+          var color = _wineRegionColors[wineOrigin] || '#9a8a6a';
+          var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
+          return {
+            fillColor: color,
+            fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+            color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
+            weight: isActive ? 4 : (hasWines ? 2 : 1),
+            opacity: isActive ? 1 : 0.7,
+            className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
+          };
+        },
+        onEachFeature: function(feature, layer) {
+          var countryName = feature.properties.name || '';
+          var wineOrigin = countryToOrigin[countryName];
+
+          if(wineOrigin) {
+            _wineCountryLayers[countryName] = layer;
+            var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
+
+            if(hasWines) {
+              layer.on('click', function() { _selectMapOrigin(wineOrigin); });
+              layer.on('mouseover', function(e) {
+                if(_mapSelectedOrigin !== wineOrigin) {
+                  e.target.setStyle({ fillOpacity: 0.6, weight: 3, color: '#c49a3c' });
+                }
+              });
+              layer.on('mouseout', function(e) {
+                if(_mapSelectedOrigin !== wineOrigin) {
+                  var color = _wineRegionColors[wineOrigin] || '#9a8a6a';
+                  e.target.setStyle({ fillOpacity: 0.5, weight: 2, color: '#2a1f0a', fillColor: color });
+                }
+              });
+            }
+          }
+        }
+      }).addTo(_wineLeafletMap);
+    }
+
   } catch(e) {
-    console.warn('[Txoko] Failed to load Spain TopoJSON:', e);
+    console.warn('[Txoko] Failed to load TopoJSON:', e);
   }
 
-  // Add wine dot markers — SMALLER sizes
+  // Add wine dot markers — SMALL sizes (supplementary)
   regionDots.forEach(function(r) {
     if(!r.lat || !r.lng) return;
     var isActive = _mapSelectedOrigin === r.name;
-    var baseSize = Math.max(12, Math.min(10 + r.wines.length * 1.2, 26));
-    var sz = isActive ? baseSize + 4 : baseSize;
+    var baseSize = Math.max(10, Math.min(10 + r.wines.length * 1.0, 20));
+    var sz = isActive ? baseSize + 3 : baseSize;
 
     var marker = L.marker([r.lat, r.lng], {
       icon: L.divIcon({
@@ -9980,6 +10097,33 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     _wineDotMarkers.push({ name: r.name, marker: marker, baseSize: baseSize, count: r.wines.length });
   });
 
+  // Add region name labels
+  var addedLabels = {};
+  Object.keys(_wineProvinceLayers).forEach(function(provinceName) {
+    var layer = _wineProvinceLayers[provinceName];
+    var wineOrigin = provinceToOrigin[provinceName];
+    if(!wineOrigin || addedLabels[wineOrigin]) return;
+
+    var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
+    if(hasWines) {
+      var bounds = layer.getBounds();
+      var center = bounds.getCenter();
+      var count = byOrigin[wineOrigin] ? byOrigin[wineOrigin].length : 0;
+
+      L.marker(center, {
+        icon: L.divIcon({
+          className: 'wine-region-label',
+          html: wineOrigin + (count ? ' (' + count + ')' : ''),
+          iconSize: [120, 20],
+          iconAnchor: [60, 10]
+        }),
+        interactive: false
+      }).addTo(_wineLeafletMap);
+
+      addedLabels[wineOrigin] = true;
+    }
+  });
+
   // CK3-style CSS
   if(!document.getElementById('ck3MapStyle')) {
     var style = document.createElement('style');
@@ -9993,8 +10137,31 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     _wineLeafletMap.invalidateSize();
     // If a region is already selected, zoom to it
     if(_mapSelectedOrigin) {
-      if(_wineGeoLayers[_mapSelectedOrigin]) {
-        _wineLeafletMap.flyToBounds(_wineGeoLayers[_mapSelectedOrigin].getBounds(), { padding: [40, 40], duration: 0.5, maxZoom: 9 });
+      var targetBounds = null;
+      // Find all provinces for this wine origin
+      Object.keys(_wineProvinceLayers).forEach(function(prov) {
+        if(provinceToOrigin[prov] === _mapSelectedOrigin) {
+          var b = _wineProvinceLayers[prov].getBounds();
+          if(targetBounds) {
+            targetBounds.extend(b);
+          } else {
+            targetBounds = b;
+          }
+        }
+      });
+      // Also check countries
+      Object.keys(_wineCountryLayers).forEach(function(country) {
+        if(countryToOrigin[country] === _mapSelectedOrigin) {
+          var b = _wineCountryLayers[country].getBounds();
+          if(targetBounds) {
+            targetBounds.extend(b);
+          } else {
+            targetBounds = b;
+          }
+        }
+      });
+      if(targetBounds) {
+        _wineLeafletMap.flyToBounds(targetBounds, { padding: [40, 40], duration: 0.5, maxZoom: 9 });
       }
     }
     // Render initial info panel
@@ -10007,33 +10174,115 @@ function _selectMapOrigin(name) {
   _mapSelectedOrigin = _mapSelectedOrigin === name ? null : name;
 
   // If map exists, update in-place without rebuilding
-  if(_wineLeafletMap && _wineGeoLayer) {
-    // Update GeoJSON layer styles
-    _wineGeoLayer.eachLayer(function(layer) {
-      var feat = layer.feature;
-      if(!feat) return;
-      var rawName = feat.properties.name || feat.properties.NAME || feat.properties.nombre || feat.properties.NAMEUNIT || feat.id || '';
-      var wineOrigin = _wineNameMap[rawName] || rawName;
-      var hasWines = _wineByOrigin[wineOrigin] && _wineByOrigin[wineOrigin].length > 0;
-      var isActive = _mapSelectedOrigin === wineOrigin;
-      var color = _wineRegionColors[rawName] || _wineRegionColors[wineOrigin] || '#9a8a6a';
+  if(_wineLeafletMap && (_wineProvinceGeoLayer || _wineCountryGeoLayer)) {
+    // Province-to-origin mapping
+    var provinceToOrigin = {
+      'La Rioja': 'La Rioja-Álava',
+      'Araba/Álava': 'La Rioja-Álava',
+      'Álava': 'La Rioja-Álava',
+      'Barcelona': 'Cataluña',
+      'Tarragona': 'Cataluña',
+      'Girona': 'Cataluña',
+      'Lleida': 'Cataluña',
+      'Santa Cruz de Tenerife': 'Canarias',
+      'Las Palmas': 'Canarias',
+      'Valladolid': 'Castilla y León',
+      'Burgos': 'Castilla y León',
+      'Soria': 'Castilla y León',
+      'Segovia': 'Castilla y León',
+      'Zamora': 'Castilla y León',
+      'León': 'Castilla y León',
+      'Palencia': 'Castilla y León',
+      'Salamanca': 'Castilla y León',
+      'Ávila': 'Castilla y León',
+      'Pontevedra': 'Galicia',
+      'Ourense': 'Galicia',
+      'A Coruña': 'Galicia',
+      'Lugo': 'Galicia',
+      'Ciudad Real': 'Castilla La Mancha',
+      'Toledo': 'Castilla La Mancha',
+      'Cuenca': 'Castilla La Mancha',
+      'Albacete': 'Castilla La Mancha',
+      'Guadalajara': 'Castilla La Mancha',
+      'Murcia': 'Murcia',
+      'Balears, Illes': 'Islas Baleares',
+      'Illes Balears': 'Islas Baleares',
+      'Cádiz': 'Andalucía',
+      'Sevilla': 'Andalucía',
+      'Córdoba': 'Andalucía',
+      'Málaga': 'Andalucía',
+      'Huelva': 'Andalucía',
+      'Jaén': 'Andalucía',
+      'Granada': 'Andalucía',
+      'Almería': 'Andalucía'
+    };
 
-      layer.setStyle({
-        fillColor: color,
-        fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
-        color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
-        weight: isActive ? 4 : (hasWines ? 2 : 1),
-        opacity: isActive ? 1 : 0.7,
-        dashArray: isActive ? '' : (hasWines ? '' : '3'),
-        className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
+    var countryToOrigin = {
+      'France': 'Francia',
+      'Hungary': 'Hungría',
+      'Argentina': 'Argentina',
+      'Australia': 'Australia',
+      'Austria': 'Austria',
+      'Italy': 'Italia',
+      'Germany': 'Alemania',
+      'South Africa': 'Sur Africa'
+    };
+
+    // Update province layer styles
+    if(_wineProvinceGeoLayer) {
+      _wineProvinceGeoLayer.eachLayer(function(layer) {
+        var feat = layer.feature;
+        if(!feat) return;
+        var provinceName = feat.properties.name || feat.id || '';
+        var wineOrigin = provinceToOrigin[provinceName];
+
+        if(!wineOrigin) return;
+
+        var hasWines = _wineByOrigin[wineOrigin] && _wineByOrigin[wineOrigin].length > 0;
+        var isActive = _mapSelectedOrigin === wineOrigin;
+        var color = _wineRegionColors[wineOrigin] || '#9a8a6a';
+
+        layer.setStyle({
+          fillColor: color,
+          fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+          color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
+          weight: isActive ? 4 : (hasWines ? 2 : 1),
+          opacity: isActive ? 1 : 0.7,
+          className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
+        });
       });
-    });
+    }
+
+    // Update country layer styles
+    if(_wineCountryGeoLayer) {
+      _wineCountryGeoLayer.eachLayer(function(layer) {
+        var feat = layer.feature;
+        if(!feat) return;
+        var countryName = feat.properties.name || '';
+        var wineOrigin = countryToOrigin[countryName];
+
+        if(!wineOrigin) return;
+
+        var hasWines = _wineByOrigin[wineOrigin] && _wineByOrigin[wineOrigin].length > 0;
+        var isActive = _mapSelectedOrigin === wineOrigin;
+        var color = _wineRegionColors[wineOrigin] || '#9a8a6a';
+
+        layer.setStyle({
+          fillColor: color,
+          fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+          color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
+          weight: isActive ? 4 : (hasWines ? 2 : 1),
+          opacity: isActive ? 1 : 0.7,
+          className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
+        });
+      });
+    }
 
     // Update dot markers
     if(_wineDotMarkers) {
       _wineDotMarkers.forEach(function(item) {
         var isActive = _mapSelectedOrigin === item.name;
-        var sz = isActive ? Math.max(16, item.baseSize + 4) : item.baseSize;
+        var sz = isActive ? Math.max(16, item.baseSize + 3) : item.baseSize;
         item.marker.setIcon(L.divIcon({
           className: 'wine-dot-marker' + (isActive ? ' active' : ''),
           html: '<span>' + item.count + '</span>',
@@ -10045,22 +10294,32 @@ function _selectMapOrigin(name) {
 
     // Fly to selected region or back to overview
     if(_mapSelectedOrigin) {
-      // Find the region bounds from GeoJSON layer or dot position
       var targetBounds = null;
-      if(_wineGeoLayers[_mapSelectedOrigin]) {
-        targetBounds = _wineGeoLayers[_mapSelectedOrigin].getBounds();
-      }
-      // Also check dot markers for international regions
-      if(!targetBounds && _wineDotMarkers) {
-        var dot = _wineDotMarkers.find(function(d) { return d.name === _mapSelectedOrigin; });
-        if(dot) {
-          var ll = dot.marker.getLatLng();
-          targetBounds = L.latLngBounds(
-            [ll.lat - 2, ll.lng - 3],
-            [ll.lat + 2, ll.lng + 3]
-          );
+
+      // Collect bounds from all matching provinces
+      Object.keys(_wineProvinceLayers).forEach(function(prov) {
+        if(provinceToOrigin[prov] === _mapSelectedOrigin) {
+          var b = _wineProvinceLayers[prov].getBounds();
+          if(targetBounds) {
+            targetBounds.extend(b);
+          } else {
+            targetBounds = b;
+          }
         }
-      }
+      });
+
+      // Also collect bounds from matching countries
+      Object.keys(_wineCountryLayers).forEach(function(country) {
+        if(countryToOrigin[country] === _mapSelectedOrigin) {
+          var b = _wineCountryLayers[country].getBounds();
+          if(targetBounds) {
+            targetBounds.extend(b);
+          } else {
+            targetBounds = b;
+          }
+        }
+      });
+
       if(targetBounds) {
         _wineLeafletMap.flyToBounds(targetBounds, { padding: [40, 40], duration: 0.8, maxZoom: 9 });
       }
@@ -11838,7 +12097,7 @@ function flipCard(){
 
   const emp=getEmp(currentUser);
   emp.fcHistory=emp.fcHistory||[];
-  emp.fcHistory.push({topic:fcTopic,dishId:fcDishes[fcIndex].id,ts:Date.now()});
+  emp.fcHistory.push({topic:fcTopic,dishId:fcDishes[fcIndex].id,ts:Date.now(),date:todayStr()});
   saveDB();
 }
 
@@ -16051,12 +16310,19 @@ function animateCounters(){
 }
 
 // ═══════ DAILY MISSIONS ═══════
+// Helper: count today's fcHistory entries (handles both old ts-only and new date entries)
+function _fcTodayCount(emp){
+  const today=todayStr();
+  const todayStart=new Date(today+'T00:00:00').getTime();
+  const todayEnd=todayStart+86400000;
+  return (emp.fcHistory||[]).filter(f=>f.date===today||(f.ts>=todayStart&&f.ts<todayEnd)).length;
+}
 const DAILY_MISSIONS = [
-  {id:'m_fc5', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".35"/><rect x="8" y="8" width="8" height="7" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="8" y1="11" x2="16" y2="11" stroke="#fff" stroke-width=".8" opacity=".5"/></svg>', title:'Repasa 5 flashcards', title_en:'Review 5 flashcards', check:emp=>(emp.fcHistory||[]).filter(f=>f.date===todayStr()).length>=5, target:5, getCurrent:emp=>(emp.fcHistory||[]).filter(f=>f.date===todayStr()).length, xp:15},
+  {id:'m_fc5', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".35"/><rect x="8" y="8" width="8" height="7" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="8" y1="11" x2="16" y2="11" stroke="#fff" stroke-width=".8" opacity=".5"/></svg>', title:'Repasa 5 flashcards', title_en:'Review 5 flashcards', check:emp=>_fcTodayCount(emp)>=5, target:5, getCurrent:emp=>_fcTodayCount(emp), xp:15},
   {id:'m_exam1', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#36687a" opacity=".35"/><rect x="8" y="7" width="8" height="10" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="10" y1="10" x2="14" y2="10" stroke="#fff" stroke-width=".8"/><line x1="10" y1="12.5" x2="14" y2="12.5" stroke="#fff" stroke-width=".8"/><polyline points="10 15 11 16 14 13" fill="none" stroke="#fff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>', title:'Completa 1 examen', title_en:'Complete 1 exam', check:emp=>(emp.sessions||[]).filter(s=>s.date===todayStr()).length>=1, target:1, getCurrent:emp=>(emp.sessions||[]).filter(s=>s.date===todayStr()).length, xp:20},
   {id:'m_exam80', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".35"/><polygon points="12,6 14,10.5 19,11 15.5,14 16.5,18 12,15.5 7.5,18 8.5,14 5,11 10,10.5" fill="#fff" opacity=".85"/></svg>', title:'Saca 80%+ en un examen', title_en:'Score 80%+ on an exam', check:emp=>(emp.sessions||[]).some(s=>s.date===todayStr()&&(s.score/s.total*100)>=80), target:1, getCurrent:emp=>(emp.sessions||[]).some(s=>s.date===todayStr()&&(s.score/s.total*100)>=80)?1:0, xp:30},
-  {id:'m_know3', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".35"/><polyline points="8 12 11 15 16 9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>', title:'Domina 3 platos nuevos', title_en:'Master 3 new dishes', check:emp=>{const t=emp.knownToday||0;return t>=3;}, target:3, getCurrent:emp=>emp.knownToday||0, xp:25},
-  {id:'m_proto', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".35"/><rect x="8" y="7" width="8" height="10" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="10" y1="9.5" x2="14" y2="9.5" stroke="#fff" stroke-width=".7"/><line x1="10" y1="11.5" x2="14" y2="11.5" stroke="#fff" stroke-width=".7"/><line x1="10" y1="13.5" x2="13" y2="13.5" stroke="#fff" stroke-width=".7"/></svg>', title:'Practica protocolo', title_en:'Practice protocol', check:emp=>(emp.protoToday||0)>=1, target:1, getCurrent:emp=>emp.protoToday||0, xp:15},
+  {id:'m_know3', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".35"/><polyline points="8 12 11 15 16 9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>', title:'Domina 3 platos nuevos', title_en:'Master 3 new dishes', check:emp=>(emp._lastKnownDate===todayStr())&&(emp.knownToday||0)>=3, target:3, getCurrent:emp=>(emp._lastKnownDate===todayStr())?(emp.knownToday||0):0, xp:25},
+  {id:'m_proto', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".35"/><rect x="8" y="7" width="8" height="10" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="10" y1="9.5" x2="14" y2="9.5" stroke="#fff" stroke-width=".7"/><line x1="10" y1="11.5" x2="14" y2="11.5" stroke="#fff" stroke-width=".7"/><line x1="10" y1="13.5" x2="13" y2="13.5" stroke="#fff" stroke-width=".7"/></svg>', title:'Practica protocolo', title_en:'Practice protocol', check:emp=>(emp._lastProtoDate===todayStr())&&(emp.protoToday||0)>=1, target:1, getCurrent:emp=>(emp._lastProtoDate===todayStr())?(emp.protoToday||0):0, xp:15},
   {id:'m_streak3', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4944c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#b47430" opacity=".35"/><path d="M10,17 Q10,10 12,7 Q14,10 14,17 Q13,15 12,15 Q11,15 10,17Z" fill="#fff" opacity=".85"/><path d="M11,17 Q11,14 12,12 Q13,14 13,17 Q12.5,16 12,16 Q11.5,16 11,17Z" fill="#f8d040" opacity=".6"/></svg>', title:'Racha de 3 días', title_en:'3-day streak', check:emp=>(emp.streak||0)>=3, target:3, getCurrent:emp=>Math.min(emp.streak||0,3), xp:40},
 ];
 
