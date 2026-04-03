@@ -3107,6 +3107,15 @@ body::after{
   box-shadow:0 0 12px rgba(255,215,0,.45),0 0 24px rgba(196,154,60,.2);
   transform:scale(1.3);
 }
+.do-label-tooltip {
+  background:rgba(42,31,10,.85) !important;
+  border:1px solid rgba(196,154,60,.4) !important;border-radius:6px !important;
+  color:#f4e8c8 !important;font-family:'DM Mono',monospace !important;font-size:9px !important;
+  padding:3px 8px !important;letter-spacing:.3px;
+  box-shadow:0 2px 8px rgba(0,0,0,.3) !important;
+  white-space:nowrap;
+}
+.do-label-tooltip::before { border-bottom-color:rgba(42,31,10,.85) !important; }
 .wine-region-popup .leaflet-popup-content-wrapper {
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);
   border:1px solid rgba(196,154,60,.25);border-radius:12px;
@@ -9059,12 +9068,380 @@ function _pairingWhy(wine, dishName){
       blanco: 'Un blanco fresco con acidez complementa la riqueza del queso sin ser empalagoso.',
       rosado: 'El rosado fresco puede cortar la riqueza, aunque dulce es más aconsejable.',
       default: 'Combina con vinos dulces o blancos frescos que equilibren la riqueza.'
+    },
+    // SEAFOOD ADDITIONS
+    'selección de ostras': {
+      blanco: 'La salinidad natural de la ostra encuentra su espejo mineral en el blanco. La acidez viva del vino actúa como limón líquido que potencia el yodo marino sin enmascarar la cremosidad del molusco. El frescor limpia completamente entre ostras.',
+      espumoso: 'Las burbujas realzan la delicadeza de la ostra cruda, la acidez fina amplifica la salinidad y el efervescencia crea ligereza en boca. La tradicional boda champagne-ostra es química pura.',
+      rosado: 'Un rosado salino dialoga con la mineralidad de la ostra. Si es seco, su acidez limpia el paladar; si es mineral, amplifica la salinidad marina.',
+      default: 'Las ostras exigen blancos o espumosos frescos que realcen su salinidad y carne delicada.'
+    },
+    'lubina crujiente con mayonesa de leche de tigre': {
+      blanco: 'La acidez agresiva del citrus en la leche de tigre necesita un blanco con mineral cortante. La crujencia de la piel se mantiene con los taninos finos del blanco. La mayonesa grasa se limpia con la acidez viva.',
+      rosado: 'Un rosado seco equilibra el contraste salado-ácido de la leche de tigre con su propia acidez frutal. La grasa de la mayonesa se corta elegantemente.',
+      default: 'Requiere un blanco fresco con buena acidez que corte la grasa de la mayonesa y complemente los cítricos.'
+    },
+    'txuleta de atún con tomate en texturas': {
+      blanco: 'El atún rosado al fuego demanda un blanco con cuerpo suficiente. La acidez del tomate en diferentes texturas encuentra consonancia en la acidez del vino. El umami del atún cocinado se suaviza con los minerales del blanco.',
+      rosado: 'Un rosado con estructura aguanta el atún cocinado. Su frescura corta el umami intenso mientras el cuerpo medio complementa la carne firme del atún.',
+      tinto: 'Un tinto ligero y mineral funciona con atún cocinado si el tomate domina. Los taninos suaves no compiten con el pescado.',
+      default: 'Combina con blancos frescos o rosados estructurados que aguanten el atún cocinado.'
+    },
+    'lobster roll': {
+      blanco: 'La mayonesa cremosa del lobster roll demanda acidez para cortarla. El sabor dulce y marino del bogavante necesita un blanco con mineralidad que lo realce sin competir. La textura mantecosa se limpia entre bocados.',
+      rosado: 'Un rosado seco con cuerpo equilibra la riqueza de la mayonesa con su acidez refrescante y estructura suficiente.',
+      espumoso: 'Las burbujas rompen la untuosidad de la mayonesa magistralmente. La acidez del espumoso realza el dulce marino del bogavante con elegancia.',
+      default: 'Necesita un vino fresco con acidez para cortar la mayonesa y realzar el bogavante.'
+    },
+    'rejo de pulpo con papa y mojo verde': {
+      blanco: 'El pulpo texturizado y el mojo verde (cilantro, ajo, cítricos) exigen un blanco con acidez viva. Los cítricos del mojo dialogan con la mineralidad del blanco. La grasa del pulpo se limpia con la acidez agresiva.',
+      rosado: 'Un rosado seco con estructura aguanta el mojo picante y realza la textura carnosa del pulpo con su acidez refrescante.',
+      default: 'Requiere un blanco o rosado con buena acidez que complemente el mojo verde y el pulpo suave.'
+    },
+    'pulpo a la brasa sobre trinxat de papa canaria': {
+      blanco: 'El pulpo ahumado en brasa necesita un blanco con cuerpo y cierta mineralidad. El trinxat frito (papa desmenuzada) es graso: la acidez del blanco lo limpia. El ahumado encuentra compañero en la complejidad del blanco.',
+      rosado: 'Un rosado más robusto aguanta el ahumado del pulpo. Su acidez media corta la grasa del trinxat sin ser escuálida.',
+      default: 'Combina con blancos frescos que aguanten el ahumado y la grasa del trinxat.'
+    },
+    'langostinos con salsa ligera de calabaza avainillada': {
+      blanco: 'La calabaza dulce con notas de vainilla encuentra compañero ideal en un blanco aromático. El langostino marino se realza con la mineralidad del vino. La salsa cremosa se corta elegantemente con la acidez.',
+      rosado: 'Un rosado con cuerpo medio equilibra el dulzor sutil de la calabaza. Su frescura no domina los aromas delicados del langostino.',
+      default: 'Necesita un blanco aromático fresco que realce langostino dulce sin dominar la calabaza avainillada.'
+    },
+    'linguini con tartar de langostino': {
+      blanco: 'El langostino crudo en tartar exige un blanco fresco con acidez incisiva. La pasta (almidón) demanda cuerpo: un blanco estructurado aguanta ambos. El tartar se mantiene delicado con los minerales del vino.',
+      espumoso: 'Las burbujas crean diálogo perfecto con la textura cremosa del tartar crudo. La acidez fina realza la frescura del langostino sin dominarlo.',
+      rosado: 'Un rosado seco con estructura intermedia equilibra pasta y langostino crudo con elegancia refrescante.',
+      default: 'Combina con blancos frescos o espumosos que realcen el langostino crudo y aguanten la pasta.'
+    },
+    'pámpano marinado al mojo rojo': {
+      blanco: 'El pámpano marinado (cocido en ácido cítrico) necesita un blanco fresco mineral. El mojo rojo (cítricos, pimienta) dialoga con la acidez del vino. La marinada suave hace que el pescado permanezca delicado.',
+      rosado: 'Un rosado seco con acidez viva completa la marinada del pámpano. Su frescura amplifica los sabores marinados sin enmascarar el pescado.',
+      default: 'Requiere un blanco o rosado con buena acidez que complemente la marinada cítrica.'
+    },
+    // MEAT ADDITIONS
+    'entrecot de angus': {
+      tinto: 'El Angus de 300g es carne de grano fino con grasa infiltrada moderada. Los taninos medios del tinto se fusionan con las proteínas sin abrumar. La acidez del vino limpia la grasa entre bocados. El cuerpo equilibrado no domina.',
+      rosado: 'Un rosado robusto puede acompañar un entrecot ligero. Su acidez fresca corta la grasa con elegancia aunque tinto es superior.',
+      default: 'Necesita un tinto mediano con taninos que se fusionen con la grasa y estructura que aguante la carne.'
+    },
+    'entrecot de wagyu': {
+      tinto: 'El Wagyu 300g es extremadamente marmóreo: los taninos firmes se unen a esa grasa generosa suavizándose mutuamente. La acidez del tinto limpia el paladar entre bocados. El cuerpo potente aguanta sin problema la grasa sublime.',
+      default: 'Requiere un tinto con taninos firmes que aguanten la grasa extrema del Wagyu sin sucumbir.'
+    },
+    'cowboy de black angus': {
+      tinto: 'Un corte masivo de 700g (T-bone gigante) con costilla expuesta. Los taninos potentes del tinto se acoplan con esa cantidad de carne y grasa. La acidez agresiva limpia continuamente. El cuerpo denso aguanta la potencia bruta de este corte.',
+      default: 'Necesita un tinto potente y estructurado que aguante la dimensión y grasa de este corte espectacular.'
+    },
+    'txuleta de rubia gallega': {
+      tinto: 'Una txuleta de 1.2kg pide un tinto con taninos firmes: estos se unen a las proteínas de la carne durante la masticación, suavizando ambos. La grasa infiltrada de la Rubia Gallega necesita la astringencia para limpiar el paladar entre bocados. El cuerpo denso y la estructura aguantan esta joya de la gastronomía.',
+      default: 'Requiere un tinto de estructura potente con taninos que aguanten este gigante de carne noble.'
+    },
+    'tomahawk de hereford': {
+      tinto: 'Un tomahawk de 1.2-1.4kg es pura masa muscular con hueso central espectacular. Los taninos potentes del tinto enlazan con esa cantidad de proteína. La acidez del vino es imprescindible para limpiar bocado a bocado. El cuerpo monolítico del tinto necesario para esta bestia carnívora.',
+      default: 'Necesita un tinto monolítico con taninos densos que aguanten este corte colosal.'
+    },
+    't-bone de wagyu': {
+      tinto: 'T-bone de 1.1kg con Wagyu: combina solomillo (fino) y costilla (grasa infinita). Los taninos del tinto navegan entre ambas texturas suavizando la grasa extrema mientras realza la delicadeza del solomillo. Un tinto con estructura dual que funcione en ambas secciones del corte.',
+      default: 'Requiere un tinto con suficiente estructura para aguantar la grasa Wagyu y realzar el solomillo fino.'
+    },
+    'lomo bajo de simmental': {
+      tinto: 'El Simmental es carne de sabor intenso con grasa moderada. Un tinto mediano aguanta sin problema. Los taninos medios no abruman la finura de este lomo bajo. La acidez limpia la grasa delicadamente entre bocados.',
+      rosado: 'Un rosado estructurado puede funcionar con este lomo si es ligero. Aunque tinto es la opción natural.',
+      default: 'Combina con tintos medios que realcen el sabor intenso de este lomo noble.'
+    },
+    'chateaubriand de vaca holstein': {
+      tinto: 'Un Chateaubriand de 500g es el corazón del solomillo: máxima ternura, grasa moderada. El tinto debe ser elegante, no bruto: taninos finos que respeten esta delicadeza. La acidez media realza sin agredir. Un clásico que pide un clásico.',
+      default: 'Necesita un tinto elegante con taninos finos que respete la ternura de este corte noble.'
+    },
+    'tartar de wagyu dry': {
+      blanco: 'Un Wagyu dry-aged desarrolla umami intenso y sabor casi caramelo. Un blanco mineral complementa estos sabores profundos sin competir. La acidez corta la grasa del tartar crudo elegantemente.',
+      tinto: 'Un tinto ligero y mineral puede funcionar con tartar Wagyu. Sus taninos suaves realzan el umami intenso sin dominar la delicadeza de lo crudo.',
+      rosado: 'Un rosado estructurado equilibra el umami denso del Wagyu con su acidez refrescante.',
+      default: 'Combina con blancos minerales, tintos ligeros o rosados que realcen el umami intenso.'
+    },
+    'cecina de wagyu premium': {
+      blanco: 'La cecina (carne curada al aire) es umami concentrado. Un blanco mineral realza estos sabores profundos. La grasa endurecida de la cecina se suaviza en boca con la acidez del vino.',
+      tinto: 'Un tinto ligero dialoga con el umami concentrado de la cecina. Los taninos no deben ser agresivos.',
+      rosado: 'Un rosado seco equilibra la intensidad salada de la cecina con su acidez refrescante.',
+      default: 'Requiere un vino que realce el umami concentrado de la cecina sin ser muy tánico.'
+    },
+    'carpaccio con espuma de parmesano': {
+      blanco: 'La carne cruda delicada exige un blanco fresco mineral. La espuma de parmesano (umami puro) encuentra compañero en la mineralidad del blanco. El contraste texturas carne cruda-espuma aérea pide un vino ligero y elegante.',
+      rosado: 'Un rosado seco y mineral equilibra la delicadeza de la carne con la intensidad umami de la espuma.',
+      default: 'Combina con blancos frescos o rosados secos que realcen ambos elementos sin dominar.'
+    },
+    'vitello tonnato': {
+      blanco: 'Ternera fría con mayonesa de atún: dos proteínas delicadas que necesitan un blanco fresco sin ser escuálido. La mayonesa se corta con la acidez. El contraste ternera (suave) + atún (marino) dialoga con la complejidad del blanco mineral.',
+      rosado: 'Un rosado seco equilibra las dos proteínas con su estructura media y acidez refrescante.',
+      default: 'Necesita un blanco fresco mineral que realce las dos proteínas sin dominarlas.'
+    },
+    'paletilla ibérica de bellota': {
+      tinto: 'La paletilla ibérica es carne roja intensa con grasa marmórea. Los taninos del tinto se fusionan con esta grasa sublime. El sabor cárnico profundo se realza con la complejidad del tinto. La acidez limpia continuamente.',
+      rosado: 'Un rosado robusto puede acompañar. Su acidez corta la grasa aunque tinto es superior.',
+      default: 'Requiere un tinto con taninos y estructura que aguanten la grasa noble de la paletilla.'
+    },
+    'jamón ibérico de bellota gran reserva': {
+      blanco: 'El jamón ibérico Gran Reserva es umami puro, salado intenso. Un blanco mineral fresco realza estos sabores sin competir. La sal encuentra balance en los minerales del vino. La acidez limpia entre bocados.',
+      tinto: 'Un tinto ligero y mineral puede funcionar si el jamón es muy salado. La acidez del tinto corta la sal.',
+      rosado: 'Un rosado seco mineral equilibra la salinidad intensa del jamón con su frescura.',
+      default: 'Combina mejor con blancos minerales frescos que realcen el umami intenso.'
+    },
+    'pollo brasa con huevo a baja temperatura': {
+      blanco: 'Pollo ahumado en brasa con huevo a 65°C (yema líquida, clara cuajada). El ahumado necesita un blanco con cierto cuerpo. La yema líquida es rica en grasas: la acidez del blanco la corta. El contraste texturas pide un vino con presencia.',
+      rosado: 'Un rosado fresco aguanta el ahumado con su frescura. Su cuerpo medio complementa sin dominar.',
+      default: 'Necesita un blanco o rosado fresco que corte la grasa del huevo y complemente el ahumado.'
+    },
+    'panceta con caldo concentrado de manitas de cerdo': {
+      blanco: 'La panceta es grasa pura; el caldo de manitas es colágeno = umami + colina (dulce). Un blanco fresco mineral corta la grasa y realza el umami. La acidez limpia entre bocados. El cuerpo debe ser suficiente para aguantar el caldo concentrado.',
+      rosado: 'Un rosado seco y mineral equilibra la grasa panceta con la dulzura delicada del caldo de manitas.',
+      default: 'Requiere un blanco fresco que corte la grasa y realce el umami del caldo concentrado.'
+    },
+    'panceta de cochino negro': {
+      blanco: 'La panceta de cochino negro es jamón ibérico en formato lomo: umami concentrado, grasa marmórea. Un blanco mineral realza el umami sin competir. La acidez corta la grasa elegantemente.',
+      rosado: 'Un rosado seco mineral equilibra la intensidad del cochino negro con su frescura.',
+      default: 'Combina con blancos o rosados minerales frescos que realcen el umami de la panceta.'
+    },
+    'pincho moruno con cous cous': {
+      tinto: 'El pincho moruno (carne marinada en especias: comino, paprika, cilantro) exige un tinto que dialogue con estas aromaticidades. El cous cous es almidón neutra. Los taninos medios del tinto no abruwan las especias; su acidez limpia.',
+      rosado: 'Un rosado con cuerpo puede funcionar si es más aromático. Su frescura no domina las especias.',
+      default: 'Necesita un tinto mediano que respete las especias del marinado sin abrumar.'
+    },
+    'bao de brisket': {
+      tinto: 'El brisket es carne roja desmenuzada, ahumada, cocida lentamente. El pan vapor (almidón suave) + carne + salsa. Un tinto ligero aguanta sin problema. Los taninos no deben ser agresivos. La acidez limpia entre bocados.',
+      rosado: 'Un rosado fresco puede acompañar brisket ligero. Aunque tinto ligero es más natural.',
+      default: 'Requiere un tinto ligero que no abrume la carne desmenuzada del bao.'
+    },
+    'alitas melosas glaseadas': {
+      tinto: 'Las alitas glaseadas tienen una salsa dulce-agria pegajosa. Un tinto con acidez agresiva corta la dulzura del glaseado. Los taninos medios aguantan la carne de pollo grasa. La acidez es imprescindible para limpiar entre alitas.',
+      rosado: 'Un rosado seco con acidez viva corta el glaseado dulce elegantemente.',
+      default: 'Combina con tintos medios o rosados secos con buena acidez que corten el glaseado.'
+    },
+    'huevo frito con chistorra': {
+      blanco: 'Huevo frito (yema líquida = grasa pura) + chistorra (embutido ahumado especiado). Un blanco fresco mineral realza la chistorra ahumada. La acidez corta la grasa del huevo magistralmente. El cuerpo debe ser suficiente.',
+      rosado: 'Un rosado seco fresco aguanta ambos elementos con su acidez y cuerpo medio.',
+      default: 'Necesita un blanco o rosado fresco con acidez que corte la grasa del huevo.'
+    },
+    'pimiento relleno de ternera': {
+      tinto: 'El pimiento relleno de ternera es un plato casero andaluz. La ternera guisada (proteína) + pimiento dulce (vegetales) + salsa de tomate (acidez). Un tinto mediano aguanta sin abrumar. Los taninos se fusionan con la ternera.',
+      rosado: 'Un rosado con cuerpo puede funcionar. Su acidez equilibra tomate + pimiento dulce.',
+      default: 'Requiere un tinto mediano que aguante la ternera y dialogue con el pimiento dulce.'
+    },
+    'ravioli de pularda': {
+      blanco: 'Pularda (gallina de grano fino) en ravioli: pasta + relleno delicado. Un blanco fresco con cuerpo aguanta ambos. La salsa (probable) de mantequilla o crema se corta con la acidez del blanco. Los minerales realzan la delicadeza de la pularda.',
+      rosado: 'Un rosado seco con estructura media complementa ravioli pularda elegantemente.',
+      default: 'Combina con blancos frescos que aguanten pasta y realcen la delicadeza de pularda.'
+    },
+    // VEGETABLES/SIDES
+    'alcachofas a la brasa': {
+      blanco: 'Las alcachofas ahumadas en brasa son amargas-tostadas. Un blanco fresco con cierto cuerpo complementa sin enmascararlas. La acidez realza la amargura natural sin ser desagradable. El mineral del vino dialoga con los sabores tostados.',
+      rosado: 'Un rosado seco fresquito puede funcionar. Su acidez complementa sin abrumar.',
+      default: 'Requiere un blanco fresco que respete la amargura natural de las alcachofas asadas.'
+    },
+    'espárragos a la brasa': {
+      blanco: 'Los espárragos ahumados en brasa: dulzor natural + ahumado. Un blanco fresco mineral complementa sin dominar. La acidez realza el dulzor sutil. El ahumado encuentra compañero en la complejidad del blanco.',
+      rosado: 'Un rosado fresco equilibra el ahumado con su frescura. Buen compañero aunque blanco es superior.',
+      default: 'Combina con blancos frescos que realcen el dulzor y ahumado de los espárragos.'
+    },
+    'espárragos blancos': {
+      blanco: 'Los espárragos blancos son dulces delicados, carne tierna. Un blanco fresco ligero no domina la delicadeza. La acidez la realza subtilmente. Los minerales crean diálogo con los vegetales delicados.',
+      rosado: 'Un rosado muy fresco y ligero complementa sin abrumar la delicadeza.',
+      default: 'Necesita un blanco fresco ligero que realce la delicadeza de estos espárragos.'
+    },
+    'pimiento a la brasa relleno de pisto manchego': {
+      blanco: 'El pimiento asado (dulce ahumado) relleno de pisto (tomate, berenjena, calabacín = aceitoso umami). Un blanco fresco aguanta ambos sin abrumar. La acidez del vino dialoga con la acidez del tomate en el pisto. El cuerpo necesario.',
+      rosado: 'Un rosado seco fresco equilibra dulzor pimiento + umami pisto elegantemente.',
+      default: 'Requiere un blanco o rosado fresco que equilibre pimiento dulce y pisto umami.'
+    },
+    'pimientos del padrón': {
+      blanco: 'Pimientos del padrón: algunos dulces, algunos pica. Un blanco fresco muy ligero es ideal: no domina, realza el contraste. La acidez limpia entre bocados. El frescor del vino es clave.',
+      rosado: 'Un rosado muy fresco puede funcionar. Aunque blanco ligero es la opción natural.',
+      default: 'Combina con blancos frescos muy ligeros que realcen el contraste dulce-picante.'
+    },
+    'coliflor frita': {
+      blanco: 'La coliflor frita es crocante grasa. Un blanco fresco con acidez viva corta la fritura magistralmente. La coliflor tiene dulzor sutil: los minerales del vino lo realzan. Acidez es imprescindible.',
+      rosado: 'Un rosado fresco con acidez buena aguanta la fritura elegantemente.',
+      espumoso: 'Las burbujas limpian la grasa de la fritura con gran maestría.',
+      default: 'Necesita un blanco o rosado fresco con acidez que corte la grasa de la fritura.'
+    },
+    'verduras al vapor': {
+      blanco: 'Las verduras al vapor son delicadas, sabores sutiles. Un blanco fresco muy ligero realza sin dominar. Los minerales crean diálogo con los vegetales. La acidez es discreta pero necesaria.',
+      rosado: 'Un rosado muy ligero y fresco complementa las verduras delicadas.',
+      default: 'Requiere un blanco o rosado ligero que realce la delicadeza de las verduras.'
+    },
+    'tomates aliñados': {
+      blanco: 'Los tomates aliñados (crudos + aceite + vinagre) tienen acidez propia. Un blanco fresco mineral dialoga con esa acidez. No debe competir con los tomates: debe amplificar. Los minerales crean armonía.',
+      rosado: 'Un rosado seco mineral equilibra la acidez del tomate con su propia frescura.',
+      default: 'Combina con blancos o rosados frescos minerales que realcen los tomates sin competir.'
+    },
+    'tartar de tomate y queso': {
+      blanco: 'Tomate crudo (acidez, umami leve) + queso (umami intensa, grasa). Un blanco fresco mineral realza ambos sin dominar. La acidez del vino dialoga con la del tomate. El mineral complementa la grasa del queso.',
+      rosado: 'Un rosado seco fresco equilibra umami queso con acidez tomate elegantemente.',
+      default: 'Requiere un blanco o rosado fresco mineral que equilibre tomate y queso.'
+    },
+    'tartar de remolacha aguacate y manzana ácida': {
+      blanco: 'Remolacha (terrosa dulce) + aguacate (graso) + manzana ácida = contraste multidimensional. Un blanco fresco mineral realza cada sabor sin competir. La acidez del vino dialoga con la manzana ácida. El cuerpo aguanta el aguacate graso.',
+      rosado: 'Un rosado seco mineral equilibra dulzor remolacha + grasa aguacate + acidez manzana.',
+      default: 'Combina con blancos o rosados frescos minerales que realcen todos los elementos.'
+    },
+    'focaccia con vegetales asados': {
+      blanco: 'Focaccia (pan suave aceitoso) + vegetales ahumados (tostados, umami leve). Un blanco fresco aguanta ambos. La acidez corta la grasa del pan. El ahumado encuentra compañero en la complejidad del blanco.',
+      rosado: 'Un rosado fresco equilibra aceite focaccia con su acidez refrescante.',
+      default: 'Necesita un blanco o rosado fresco que corte el aceite y complemente el ahumado.'
+    },
+    'coca de calabacín': {
+      blanco: 'Coca (pan plano de masa suave) cubierta de calabacín. El calabacín es delicado acuoso. Un blanco fresco muy ligero realza sin abrumar. Los minerales crean diálogo con vegetales sutiles.',
+      rosado: 'Un rosado muy ligero y fresco complementa perfectamente.',
+      default: 'Requiere un blanco o rosado muy ligero que realce la delicadeza del calabacín.'
+    },
+    'coca de tomate': {
+      blanco: 'Coca cubierta de tomate: este tiene acidez propia. Un blanco fresco mineral dialoga con esa acidez sin competir. El pan suave se complementa con la frescura del vino.',
+      rosado: 'Un rosado seco mineral equilibra la acidez del tomate con su propia frescura.',
+      default: 'Combina con blancos o rosados frescos minerales que realcen el tomate.'
+    },
+    'papas bravas al estilo txoko': {
+      blanco: 'Las papas bravas Txoko: papas crujientes + salsa "brava" picante. Un blanco fresco con acidez viva corta la fritura y la picante. El cuerpo debe aguantar ambas intensidades. Acidez imprescindible.',
+      rosado: 'Un rosado seco con acidez buena aguanta fritura + picante elegantemente.',
+      espumoso: 'Las burbujas limpian la grasa + picante magistralmente.',
+      default: 'Necesita un blanco o rosado fresco con buena acidez que corte fritura y picante.'
+    },
+    'patatas cerilla fritas': {
+      blanco: 'Papas cerilla (juliana crujiente) son puro carbohidrato frito + sal. Un blanco fresco con acidez viva corta la grasa de la fritura. El cuerpo debe ser suficiente para aguantar. Acidez es imprescindible.',
+      rosado: 'Un rosado fresco con acidez buena complementa la fritura elegantemente.',
+      espumoso: 'Las burbujas limpian la grasa de la fritura con maestría.',
+      default: 'Requiere un blanco o rosado fresco con buena acidez que corte la fritura.'
+    },
+    'puré cremoso de patatas': {
+      blanco: 'El puré cremoso (papa + mantequilla + crema = pura grasa) es rico untuoso. Un blanco fresco con acidez realza sin dominar. El cuerpo debe aguantar la cremosidad. La acidez corta entre bocados.',
+      rosado: 'Un rosado seco fresco corta la grasa del puré elegantemente.',
+      default: 'Combina con blancos frescos que corten la cremosidad del puré sin abrumar.'
+    },
+    'ensalada verde': {
+      blanco: 'Ensalada verde simple: lechugas tiernas, vinagreta. Un blanco fresco muy ligero no domina. La acidez del vino dialoga con la del vinagre. Los minerales realzan los vegetales sutiles.',
+      rosado: 'Un rosado muy ligero y fresco complementa la ensalada sin abrumar.',
+      default: 'Necesita un blanco o rosado muy ligero que realce la ensalada sin competir.'
+    },
+    'peras escalivadas con cremoso de queso de cabra': {
+      blanco: 'Peras asadas (dulzor tostado) + queso cabra cremoso (ácido leve, umami intensa). Un blanco fresco mineral realza el dulzor pera sin competir. Los minerales dialogan con la acidez natural del queso. El contraste texturas arenosa-cremosa pide un vino finamente balanceado.',
+      rosado: 'Un rosado seco mineral equilibra dulzor pera con acidez queso elegantemente.',
+      default: 'Requiere un blanco o rosado fresco mineral que equilibre pera dulce y queso ácido.'
+    },
+    'parmentier de papa canaria': {
+      blanco: 'Parmentier: papa canaria (dulce) en capas con carne/verdura. Un blanco fresco aguanta sin abrumar. Los minerales realzan el dulzor sutil de papa canaria. El cuerpo necesario para aguantar el plato estructurado.',
+      rosado: 'Un rosado seco fresco complementa papa dulce elegantemente.',
+      default: 'Combina con blancos frescos que realcen el dulzor de la papa canaria.'
+    },
+    'tabla de quesos canarios': {
+      blanco: 'Los quesos canarios varían (frescos ácidos a maduros intensos umami). Un blanco fresco mineral aguanta la variedad. La acidez corta la grasa de quesos envejecidos. El mineral realza cada queso sin competir.',
+      rosado: 'Un rosado seco mineral equilibra gama de quesos con frescura y estructura.',
+      default: 'Necesita un blanco o rosado fresco mineral que equilibre la variedad de quesos.'
+    },
+    'tabla de embutidos': {
+      blanco: 'Tabla de embutidos: jamón, lomo, chorizo, morcilla = proteína salada grasa compleja. Un blanco fresco mineral realza cada embutido sin dominar. La acidez corta la grasa continuamente. El mineral dialoga con umami intenso.',
+      rosado: 'Un rosado seco mineral equilibra salinidad + grasa embutidos elegantemente.',
+      tinto: 'Un tinto ligero mineral puede funcionar si embutidos son intensos.',
+      default: 'Requiere un blanco o rosado fresco mineral que realce los embutidos sin competir.'
+    },
+    'arroz cremoso de verduras': {
+      blanco: 'Arroz cremoso (almidón + mantequilla + caldo = acaramelado sabroso) + verduras. Un blanco fresco aguanta el almidón cremoso. La acidez realza sin abrumar. El cuerpo necesario para diálogo con cremosidad.',
+      rosado: 'Un rosado seco fresco complementa cremosidad arroz elegantemente.',
+      default: 'Combina con blancos frescos que realcen la cremosidad del arroz sin dominar.'
+    },
+    'raviolis de espinaca y queso parmesano': {
+      blanco: 'Ravioli: pasta + espinaca (terrosa) + parmesano (umami intensa). Un blanco fresco mineral realza cada componente. Los minerales dialogan con umami parmesano. La acidez corta la grasa de la pasta.',
+      rosado: 'Un rosado seco mineral equilibra terroso espinaca + umami parmesano elegantemente.',
+      default: 'Requiere un blanco o rosado fresco mineral que equilibre espinaca y umami parmesano.'
+    },
+    'hamburguesa vegana': {
+      blanco: 'Hamburguesa vegana: patés vegetales (proteína texturizada, grasa vegetal, umami leve). Un blanco fresco con acidez corta la grasa vegetal. El cuerpo aguanta la textura. Los minerales realzan los sabores vegetales sutiles.',
+      rosado: 'Un rosado seco fresco complementa perfecto una vegana.',
+      default: 'Combina con blancos o rosados frescos que corten la grasa vegetal.'
+    },
+    'croquetas de boletus': {
+      blanco: 'Croquetas de boletus (setas umami intensa en crema frita). Un blanco fresco con acidez viva corta la fritura y realza umami seta. El cuerpo necesario. Acidez imprescindible para limpiar entre croquetas.',
+      rosado: 'Un rosado fresco con acidez buena aguanta fritura y umami elegantemente.',
+      espumoso: 'Las burbujas limpian la fritura y realzan umami seta con elegancia.',
+      default: 'Necesita un blanco o rosado fresco con acidez que corte la fritura y realce umami.'
+    },
+    'ensalada niçoise vegetariana': {
+      blanco: 'Ensalada niçoise sin atún: huevo, patatas cocidas, tomate, aceitunas, anchoa. Un blanco fresco aguanta la variedad. Los minerales realzan todos los elementos. Acidez media realza sin abrumar.',
+      rosado: 'Un rosado muy fresco complementa la ensalada vegetariana elegantemente.',
+      default: 'Requiere un blanco o rosado fresco que equilibre la variedad de elementos.'
+    },
+    // SAUCES (pairings as accompaniments)
+    'chimichurri': {
+      tinto: 'Chimichurri (cilantro, ajo, vinagre, pimienta, picante) es ácido intenso picante umami. Acompaña carnes principalmente. Un tinto con acidez agresiva dialoga con la del chimichurri. Los taninos no abruwan porque el chimichurri "agresivo" del vino se anula.',
+      blanco: 'Un blanco muy fresco con acidez viva realza chimichurri sin competir.',
+      rosado: 'Un rosado seco con acidez potente equilibra chimichurri elegantemente.',
+      default: 'Necesita un vino ácido (tinto, blanco o rosado) que dialogue con chimichurri intenso.'
+    },
+    'salsa de hongos': {
+      tinto: 'Salsa de hongos (umami concentrado setas, caldo, mantequilla, vino tinto reducido). Un tinto con taninos medios se fusiona con umami seta. Los taninos dialogan con la grasa mantequilla. La acidez limpia continuamente.',
+      blanco: 'Un blanco con cuerpo puede funcionar si hongos no dominan. Aunque tinto es superior.',
+      default: 'Requiere un tinto mediano que se fusione con umami seta de la salsa.'
+    },
+    'salsa de pimienta verde': {
+      tinto: 'Salsa pimienta verde (pimienta fresca + crema + caldo/cognac reducido): cremosa picante umami. Un tinto con taninos medios aguanta la grasa + picante. La acidez del vino corta la cremosidad. Picante crea diálogo con taninos ligeramente astringentes.',
+      rosado: 'Un rosado seco con estructura media puede funcionar si no hay exceso creativo.',
+      default: 'Combina con tintos medios que aguanten grasa + picante de la salsa.'
+    },
+    // DESSERTS
+    'flan marmolado de chocolate y plátano': {
+      dulce: 'Flan (cremoso caramelo) marmolado chocolate (amargo) + plátano (dulce frutal). El vino dulce equilibra amargo chocolate + caramelo + dulzor plátano. Sin competir, amplifica cada sabor. Clásica armonía dulce.',
+      tinto: 'Un tinto joven y frutal puede acompañar si chocolate domina. Aunque dulce es superior.',
+      default: 'Necesita un vino dulce que equilibre chocolate amargo + caramelo + plátano dulce.'
+    },
+    'goxua': {
+      dulce: 'Goxua (vasco): capas crema pastelera + merengue + naranja confitada). Dulce extremo, espumoso aerial. Un dulce con cuerpo equilibra sin abrumar. La naranjaconfitada aporta acidez leve: dialoga con acidez residual del vino dulce.',
+      default: 'Requiere un vino dulce que equilibre la extrema dulzura y la textura aérea.'
+    },
+    'pastel vasco invertido con tartar de manzana': {
+      dulce: 'Pastel Vasco (crema pastelera) invertido + tartar manzana ácida. El dulce del pastel + acidez manzana = contraste. Un vino dulce con acidez viva equilibra: los dulces se potencian, la acidez de manzana dialoga con la del vino.',
+      default: 'Combina con dulce que equilibre pastel dulce + tartar manzana ácida.'
+    },
+    'tocinillo de cielo': {
+      dulce: 'Tocinillo de cielo: yema de huevo + almíbar = cremoso caramelo intensísimo. Un dulce potente equilibra sin abrumar. La densidad del vino necesaria. El caramelo encuentra espejo en caramelo residual del vino dulce.',
+      default: 'Necesita un vino dulce potente que equilibre la intensidad del tocinillo.'
+    },
+    'helados ben and jerrys': {
+      dulce: 'Helados marca (múltiples sabores posibles). Un vino dulce con cuerpo complementa cualquier sabor. El frío del helado contrasta con la calidez del alcohol dulce. La dulzura se equilibra sin competir.',
+      default: 'Requiere un vino dulce que equilibre el helado sin ser abrumador.'
+    },
+    'trifasi club': {
+      dulce: 'Trifasi: capas esponja + crema + fruta confitada o fresca = múltiples texturas dulces. Un vino dulce aguanta la variedad textural. La dulzura se equilibra. Las frutas confitadas dialogan con dulce del vino.',
+      default: 'Combina con dulce que equilibre las múltiples capas y texturas del trifasi.'
+    },
+    'costillas melosas': {
+      tinto: 'Las costillas melosas, cocinadas a baja temperatura hasta deshacerse, liberan colágeno y gelatina que atrapan los taninos del tinto. La salsa de curry verde aporta especias que encuentran eco en las notas especiadas del vino.',
+      rosado: 'Un rosado con estructura aguanta la untuosidad de la carne melosa mientras su frescura corta la grasa del colágeno disuelto.',
+      default: 'Necesita un tinto con taninos maduros que se fundan con el colágeno de las costillas cocinadas lentamente.'
+    },
+    'pluma de cerdo': {
+      tinto: 'La pluma ibérica tiene una infiltración grasa única del cerdo de bellota. Los taninos del tinto se unen a las proteínas mientras la acidez del vino corta la grasa intramuscular, limpiando el paladar.',
+      rosado: 'El rosado con cuerpo equilibra la grasa marmórea de la pluma sin perder su frescura frutal.',
+      default: 'Combina con tintos de tanino medio que equilibren la grasa infiltrada del cerdo ibérico.'
+    },
+    'tomate cherry': {
+      blanco: 'La acidez natural del tomate cherry al ajillo se espeja en la acidez del blanco. El ajo confitado suaviza su pungencia y crea puentes aromáticos con las notas herbáceas del vino.',
+      rosado: 'El rosado complementa la acidez del tomate y la suavidad del ajo con su frescura frutal.',
+      default: 'Requiere un vino fresco que acompañe la acidez del tomate sin competir con el ajo.'
+    },
+    'tomates ecológicos': {
+      blanco: 'Los tomates ecológicos de calidad tienen una acidez más compleja y dulzor natural concentrado. Un blanco mineral potencia esa dualidad ácido-dulce del tomate en estado puro.',
+      rosado: 'El rosado fresco es el aliado del tomate crudo: su acidez se alinea y su frutosidad realza el dulzor natural.',
+      default: 'Combina con blancos o rosados frescos que respeten y potencien la calidad del tomate.'
+    },
+    'helados ben': {
+      dulce: 'El contraste térmico entre el helado frío y el vino dulce a temperatura de servicio crea una experiencia sensorial única. La dulzura del vino se equilibra con la del helado sin competir.',
+      default: 'Requiere un vino dulce que equilibre la cremosidad y el frío del helado.'
     }
   };
 
-  // Look for dish explanation
+  // Look for dish explanation — normalize both sides for accent/apostrophe matching
+  var dishNorm = dish.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/['']/g,'');
   for(const [dishKey, explanations] of Object.entries(pairingExplanations)){
-    if(dish.includes(dishKey) || dish === dishKey){
+    var keyNorm = dishKey.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/['']/g,'');
+    if(dishNorm.includes(keyNorm) || keyNorm.includes(dishNorm)){
       return explanations[type] || explanations.default ||
         'Este vino complementa perfectamente este plato con elegancia y equilibrio.';
     }
@@ -9580,6 +9957,7 @@ let _wineCountryLayers = {};
 let _wineProvinceGeoLayer = null;
 let _wineCountryGeoLayer = null;
 let _wineDOGeoLayer = null;
+let _wineDOLabels = [];
 
 // Wine DO (Denomination of Origin) boundaries
 var _wineDOPolygons = [
@@ -10217,23 +10595,25 @@ function _renderWineMap(c, bar) {
   _wineByOrigin = byOrigin;
   _wineRegionDots = regionDots;
 
-  // Render the container with Leaflet map and buttons
+  // Render the container with buttons ABOVE map, DOs below
   c.innerHTML = bar + '<div class="wine-map-container">' +
     '<div class="wine-section-header">' +
     '<div class="wine-section-title">◇ ' + (_en ? 'Origins Map' : 'Mapa de Orígenes') + ' ◇</div>' +
     '<div class="wine-section-sub">' + (_en ? 'Designations of Origin in our wine list' : 'Denominaciones de Origen de nuestra carta') + '</div>' +
     '</div>' +
-    '<div style="position:relative;background:rgba(244,237,226,.5);border:1px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem .5rem;margin-bottom:.5rem;overflow:hidden">' +
-    '<div id="wineLeafletMap" class="wine-leaflet-map"></div>' +
-    '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.4rem;letter-spacing:.05em">' + (_en ? 'Click a region or marker to explore its wines' : 'Toca una región o punto para explorar sus vinos') + '</div>' +
-    '</div>' +
-    '<div id="wineInfoPanel"></div>' +
-    '<div id="wineOriginButtons" style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center">' +
+    '<div id="wineOriginButtons" style="display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin-bottom:.6rem">' +
     regionDots.map(r =>
       '<button data-origin="' + r.name.replace(/"/g,'&quot;') + '" onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.3rem .6rem;border-radius:8px;border:1px solid ' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'rgba(196,154,60,.15)') + ';background:' + (_mapSelectedOrigin===r.name ? 'rgba(196,154,60,.15)' : 'rgba(196,154,60,.04)') + ';color:' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'var(--parch2)') + ';cursor:pointer;transition:all .2s">' +
       r.name + ' <span style="opacity:.6">(' + r.wines.length + ')</span></button>'
     ).join('') +
-    '</div></div>';
+    '</div>' +
+    '<div style="position:relative;background:rgba(244,237,226,.5);border:1px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem .5rem;margin-bottom:.5rem;overflow:hidden">' +
+    '<div id="wineLeafletMap" class="wine-leaflet-map"></div>' +
+    '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.4rem;letter-spacing:.05em">' + (_en ? 'Click a region or marker to explore its wines' : 'Toca una región o punto para explorar sus vinos') + '</div>' +
+    '</div>' +
+    '<div id="wineDOList"></div>' +
+    '<div id="wineInfoPanel"></div>' +
+    '</div>';
 
   // Initialize Leaflet map
   setTimeout(function(){ _initWineLeafletMap(regionDots, byOrigin); }, 50);
@@ -10525,12 +10905,12 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
       var hasWines = byOrigin[origin] && byOrigin[origin].length > 0;
 
       return {
-        fillColor: isActive ? color : 'transparent',
-        fillOpacity: isActive ? 0.35 : 0,
+        fillColor: isActive ? color : (hasWines ? color : 'transparent'),
+        fillOpacity: isActive ? 0.40 : (hasWines ? 0.12 : 0),
         color: isActive ? '#ffd700' : (hasWines ? color : '#5a4a2a'),
-        weight: isActive ? 3.5 : 1.5,
-        opacity: isActive ? 1 : 0.6,
-        dashArray: isActive ? '' : '4 3',
+        weight: isActive ? 4 : (hasWines ? 2 : 1),
+        opacity: isActive ? 1 : (hasWines ? 0.7 : 0.4),
+        dashArray: isActive ? '' : '',
         className: isActive ? 'ck3-region-active' : 'ck3-do-boundary'
       };
     },
@@ -10538,16 +10918,27 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
       var origin = feature.properties.origin;
       var doName = feature.properties.name;
 
+      // Add DO name tooltip
+      layer.bindTooltip(doName, {
+        permanent: false,
+        direction: 'center',
+        className: 'do-label-tooltip',
+        opacity: 0.9
+      });
+
       layer.on('click', function() { _selectMapOrigin(origin); });
       layer.on('mouseover', function(e) {
         if(_mapSelectedOrigin !== origin) {
           var color = _wineRegionColors[origin] || '#c49a3c';
-          e.target.setStyle({ fillOpacity: 0.25, fillColor: color, weight: 2.5, color: '#ffd700', opacity: 0.8 });
+          e.target.setStyle({ fillOpacity: 0.30, fillColor: color, weight: 3, color: '#ffd700', opacity: 0.9 });
+          e.target.bringToFront();
         }
       });
       layer.on('mouseout', function(e) {
         if(_mapSelectedOrigin !== origin) {
-          e.target.setStyle({ fillOpacity: 0, fillColor: 'transparent', weight: 1.5, color: _wineRegionColors[origin] || '#5a4a2a', opacity: 0.6 });
+          var color = _wineRegionColors[origin] || '#c49a3c';
+          var hasWines = byOrigin[origin] && byOrigin[origin].length > 0;
+          e.target.setStyle({ fillOpacity: hasWines ? 0.12 : 0, fillColor: hasWines ? color : 'transparent', weight: hasWines ? 2 : 1, color: hasWines ? color : '#5a4a2a', opacity: hasWines ? 0.7 : 0.4 });
         }
       });
     }
@@ -10648,8 +11039,34 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         _wineLeafletMap.flyToBounds(targetBounds, { padding: [40, 40], duration: 0.5, maxZoom: 9 });
       }
     }
-    // Render initial info panel
+    // Render initial panels and DO labels
+    _updateWineDOList();
     _updateWineInfoPanel();
+    // Add initial DO labels if region pre-selected
+    if(_mapSelectedOrigin && _wineDOGeoLayer) {
+      var _doColorPalette = ['#c49a3c','#7b4e8a','#2e7d5b','#c0392b','#2874a6','#d4851f','#8e6b3e','#1abc9c','#e74c8f','#5d6d7e','#d5a021','#6b3fa0'];
+      var _doColorIdx = 0;
+      _wineDOGeoLayer.eachLayer(function(layer) {
+        var feat = layer.feature;
+        if(!feat || feat.properties.origin !== _mapSelectedOrigin) return;
+        var doName = feat.properties.name;
+        var doColor = _doColorPalette[_doColorIdx % _doColorPalette.length];
+        _doColorIdx++;
+        layer.setStyle({ fillColor: doColor, fillOpacity: 0.35, color: doColor, weight: 3.5, opacity: 1 });
+        layer.bringToFront();
+        var center = layer.getBounds().getCenter();
+        var shortName = doName.replace(/^(DOCa |DO Ca |DOP |DO |AOC |DOCG |VT |VP |DAC )/,'');
+        var lbl = L.marker(center, {
+          icon: L.divIcon({
+            className: 'do-map-label',
+            html: '<div style="background:' + doColor + ';color:#fff;font-family:\'DM Mono\',monospace;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.5);box-shadow:0 1px 4px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.3);text-align:center;line-height:1.2">' + shortName + '</div>',
+            iconSize: [0, 0], iconAnchor: [0, 0]
+          }),
+          interactive: false, zIndexOffset: 1000
+        }).addTo(_wineLeafletMap);
+        _wineDOLabels.push(lbl);
+      });
+    }
   }, 200);
 }
 
@@ -10762,25 +11179,62 @@ function _selectMapOrigin(name) {
       });
     }
 
+    // Remove old DO labels
+    _wineDOLabels.forEach(function(lbl) { _wineLeafletMap.removeLayer(lbl); });
+    _wineDOLabels = [];
+
+    // Per-DO color palette for active region
+    var _doColorPalette = ['#c49a3c','#7b4e8a','#2e7d5b','#c0392b','#2874a6','#d4851f','#8e6b3e','#1abc9c','#e74c8f','#5d6d7e','#d5a021','#6b3fa0'];
+    var _doColorIdx = 0;
+    var _doColorMap = {};
+
     // Update DO boundary layer
     if(_wineDOGeoLayer) {
       _wineDOGeoLayer.eachLayer(function(layer) {
         var feat = layer.feature;
         if(!feat) return;
         var origin = feat.properties.origin;
+        var doName = feat.properties.name;
         var isActive = _mapSelectedOrigin === origin;
-        var color = _wineRegionColors[origin] || '#c49a3c';
+        var regionColor = _wineRegionColors[origin] || '#c49a3c';
         var hasWines = _wineByOrigin[origin] && _wineByOrigin[origin].length > 0;
 
+        // Assign unique color per DO within active region
+        var doColor = regionColor;
+        if(isActive) {
+          if(!_doColorMap[doName]) {
+            _doColorMap[doName] = _doColorPalette[_doColorIdx % _doColorPalette.length];
+            _doColorIdx++;
+          }
+          doColor = _doColorMap[doName];
+        }
+
         layer.setStyle({
-          fillColor: isActive ? color : 'transparent',
-          fillOpacity: isActive ? 0.35 : 0,
-          color: isActive ? '#ffd700' : (hasWines ? color : '#5a4a2a'),
-          weight: isActive ? 3.5 : 1.5,
-          opacity: isActive ? 1 : 0.6,
-          dashArray: isActive ? '' : '4 3',
+          fillColor: isActive ? doColor : (hasWines ? regionColor : 'transparent'),
+          fillOpacity: isActive ? 0.35 : (hasWines ? 0.10 : 0),
+          color: isActive ? doColor : (hasWines ? regionColor : '#5a4a2a'),
+          weight: isActive ? 3.5 : (hasWines ? 1.5 : 0.8),
+          opacity: isActive ? 1 : (hasWines ? 0.6 : 0.3),
+          dashArray: '',
           className: isActive ? 'ck3-region-active' : 'ck3-do-boundary'
         });
+        if(isActive) {
+          layer.bringToFront();
+          // Add permanent label at center of DO polygon
+          var center = layer.getBounds().getCenter();
+          var shortName = doName.replace(/^(DOCa |DO Ca |DOP |DO |AOC |DOCG |VT |VP |DAC )/,'');
+          var lbl = L.marker(center, {
+            icon: L.divIcon({
+              className: 'do-map-label',
+              html: '<div style="background:' + doColor + ';color:#fff;font-family:\'DM Mono\',monospace;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.5);box-shadow:0 1px 4px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.3);text-align:center;line-height:1.2">' + shortName + '</div>',
+              iconSize: [0, 0],
+              iconAnchor: [0, 0]
+            }),
+            interactive: false,
+            zIndexOffset: 1000
+          }).addTo(_wineLeafletMap);
+          _wineDOLabels.push(lbl);
+        }
       });
     }
 
@@ -10842,6 +11296,8 @@ function _selectMapOrigin(name) {
     }
     // When deselecting: don't move the map at all — user stays where they are
 
+    // Update DO list for selected region
+    _updateWineDOList();
     // Update info panel
     _updateWineInfoPanel();
     // Update button states
@@ -10851,6 +11307,74 @@ function _selectMapOrigin(name) {
 
   // Fallback: full re-render if map doesn't exist
   renderVinos();
+}
+
+function _updateWineDOList() {
+  var panel = document.getElementById('wineDOList');
+  if(!panel) return;
+  var _en = LANG==='en';
+
+  if(!_mapSelectedOrigin) {
+    panel.innerHTML = '';
+    return;
+  }
+
+  // Same color palette as map labels
+  var _doColorPalette = ['#c49a3c','#7b4e8a','#2e7d5b','#c0392b','#2874a6','#d4851f','#8e6b3e','#1abc9c','#e74c8f','#5d6d7e','#d5a021','#6b3fa0'];
+
+  // Find DO names from _wineDOPolygons that match the selected origin
+  var dos = [];
+  var seen = {};
+  _wineDOPolygons.forEach(function(d) {
+    if(d.origin === _mapSelectedOrigin && !seen[d.name]) {
+      seen[d.name] = true;
+      dos.push(d.name);
+    }
+  });
+
+  // Also get DO names from wine regions
+  var wineRegions = [];
+  var seenR = {};
+  if(_wineByOrigin[_mapSelectedOrigin]) {
+    _wineByOrigin[_mapSelectedOrigin].forEach(function(w) {
+      if(w.region && !seenR[w.region]) {
+        seenR[w.region] = true;
+        wineRegions.push(w.region);
+      }
+    });
+  }
+
+  // Merge both lists, removing duplicates
+  var allDOs = [];
+  var seenAll = {};
+  dos.concat(wineRegions).forEach(function(d) {
+    if(!seenAll[d]) { seenAll[d] = true; allDOs.push(d); }
+  });
+
+  if(allDOs.length === 0) {
+    panel.innerHTML = '';
+    return;
+  }
+
+  // Count wines per DO
+  var winesPerDO = {};
+  if(_wineByOrigin[_mapSelectedOrigin]) {
+    _wineByOrigin[_mapSelectedOrigin].forEach(function(w) {
+      var r = w.region || '';
+      winesPerDO[r] = (winesPerDO[r]||0) + 1;
+    });
+  }
+
+  panel.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin:.6rem 0">' +
+    allDOs.map(function(d, i) {
+      var color = _doColorPalette[i % _doColorPalette.length];
+      var count = winesPerDO[d] || 0;
+      return '<span style="font-family:\'DM Mono\',monospace;font-size:.58rem;padding:.25rem .55rem;background:' + color + '18;border:1.5px solid ' + color + ';border-radius:6px;color:' + color + ';font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.background=\'' + color + '30\'" onmouseout="this.style.background=\'' + color + '18\'">' +
+        '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:' + color + ';margin-right:4px;vertical-align:middle"></span>' +
+        escapeHTML(d) + (count ? ' <span style="opacity:.6">(' + count + ')</span>' : '') +
+        '</span>';
+    }).join('') +
+    '</div>';
 }
 
 function _updateWineInfoPanel() {
