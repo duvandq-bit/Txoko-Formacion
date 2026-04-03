@@ -3096,16 +3096,16 @@ body::after{
 }
 .wine-dot-marker {
   background:radial-gradient(circle at 35% 35%,#f4d575,#c49a3c,#8b7030);
-  border:2px solid #c49a3c;border-radius:50%;
-  box-shadow:0 2px 8px rgba(0,0,0,.35),inset 0 -2px 4px rgba(0,0,0,.2),0 0 6px rgba(196,154,60,.3);
-  color:#fff;font-family:'DM Mono',monospace;font-size:10px;font-weight:bold;
+  border:1.5px solid #c49a3c;border-radius:50%;
+  box-shadow:0 1px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(0,0,0,.15),0 0 3px rgba(196,154,60,.2);
+  color:#fff;font-family:'DM Mono',monospace;font-size:8px;font-weight:bold;
   display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;
 }
-.wine-dot-marker:hover { transform:scale(1.15);box-shadow:0 0 14px rgba(196,154,60,.6),0 2px 8px rgba(0,0,0,.3); }
+.wine-dot-marker:hover { transform:scale(1.2);box-shadow:0 0 8px rgba(196,154,60,.5),0 1px 4px rgba(0,0,0,.25); }
 .wine-dot-marker.active {
   border-color:#ffd700;
-  box-shadow:0 0 20px rgba(255,215,0,.5),0 0 40px rgba(196,154,60,.25);
-  transform:scale(1.25);
+  box-shadow:0 0 12px rgba(255,215,0,.45),0 0 24px rgba(196,154,60,.2);
+  transform:scale(1.3);
 }
 .wine-region-popup .leaflet-popup-content-wrapper {
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);
@@ -9568,6 +9568,13 @@ function _renderWineCard(w, idx, filteredList){
 // ═══ INTERACTIVE WINE MAP ═══
 let _mapSelectedOrigin = null;
 let _wineLeafletMap = null;
+let _wineGeoLayer = null;
+let _wineGeoLayers = {};
+let _wineDotMarkers = [];
+let _wineNameMap = {};
+let _wineRegionColors = {};
+let _wineByOrigin = {};
+let _wineRegionDots = [];
 
 function _buildSpainSVG(regionDots, byOrigin) {
   const communities = [
@@ -9768,36 +9775,9 @@ function _renderWineMap(c, bar) {
     { name: 'Sur Africa', lat: -30, lng: 25, wines: byOrigin['Sur Africa'] || [] },
   ].filter(r => r.wines.length > 0);
 
-  // Selected origin info panel (same as before)
-  let infoPanel = '';
-  if (_mapSelectedOrigin && byOrigin[_mapSelectedOrigin]) {
-    const wines = byOrigin[_mapSelectedOrigin];
-    const regions = [...new Set(wines.map(w => w.region))];
-    const types = {};
-    wines.forEach(w => { types[w.type] = (types[w.type]||0)+1; });
-    const typeEmojis = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'};
-
-    infoPanel = '<div class="wine-map-info">' +
-      '<div class="wine-map-info-title">◇ ' + escapeHTML(_mapSelectedOrigin) + '</div>' +
-      '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:var(--parch3);margin-bottom:.5rem">' +
-      wines.length + ' vinos · ' + regions.length + ' DO · ' +
-      Object.entries(types).map(([t,n]) => (typeEmojis[t]||'') + n).join(' ') +
-      '</div>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.8rem">' +
-      regions.map(r => '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.12);border-radius:6px;color:var(--parch2)">' + escapeHTML(r) + '</span>').join('') +
-      '</div>' +
-      '<div class="wine-map-info-wines">' +
-      wines.sort((a,b) => a.price - b.price).map(w =>
-        '<div class="wine-map-wine-item" onclick="_showWineDetail(' + w.id + ', [' + wines.map(ww=>ww.id).join(',') + '])">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center">' +
-        '<div style="font-family:\'Cinzel\',serif;font-size:.8rem;color:var(--parchment)">' + (typeEmojis[w.type]||'🍷') + ' ' + escapeHTML(w.name) + '</div>' +
-        '<div style="font-family:\'Cinzel\',serif;font-size:.85rem;color:var(--gold);font-weight:600">' + w.price + '€</div>' +
-        '</div>' +
-        '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch3);margin-top:.15rem">' + escapeHTML(w.grapes||'') + ' · ' + escapeHTML(w.region) + '</div>' +
-        '</div>'
-      ).join('') +
-      '</div></div>';
-  }
+  // Store byOrigin globally for in-place updates
+  _wineByOrigin = byOrigin;
+  _wineRegionDots = regionDots;
 
   // Render the container with Leaflet map and buttons
   c.innerHTML = bar + '<div class="wine-map-container">' +
@@ -9809,10 +9789,10 @@ function _renderWineMap(c, bar) {
     '<div id="wineLeafletMap" class="wine-leaflet-map"></div>' +
     '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.4rem;letter-spacing:.05em">' + (_en ? 'Click a region or marker to explore its wines' : 'Toca una región o punto para explorar sus vinos') + '</div>' +
     '</div>' +
-    infoPanel +
-    '<div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center">' +
+    '<div id="wineInfoPanel"></div>' +
+    '<div id="wineOriginButtons" style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center">' +
     regionDots.map(r =>
-      '<button onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.3rem .6rem;border-radius:8px;border:1px solid ' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'rgba(196,154,60,.15)') + ';background:' + (_mapSelectedOrigin===r.name ? 'rgba(196,154,60,.15)' : 'rgba(196,154,60,.04)') + ';color:' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'var(--parch2)') + ';cursor:pointer;transition:all .2s">' +
+      '<button data-origin="' + r.name.replace(/"/g,'&quot;') + '" onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.3rem .6rem;border-radius:8px;border:1px solid ' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'rgba(196,154,60,.15)') + ';background:' + (_mapSelectedOrigin===r.name ? 'rgba(196,154,60,.15)' : 'rgba(196,154,60,.04)') + ';color:' + (_mapSelectedOrigin===r.name ? 'var(--gold)' : 'var(--parch2)') + ';cursor:pointer;transition:all .2s">' +
       r.name + ' <span style="opacity:.6">(' + r.wines.length + ')</span></button>'
     ).join('') +
     '</div></div>';
@@ -9830,10 +9810,10 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
 
   // Initialize map centered on Spain
   _wineLeafletMap = L.map('wineLeafletMap', {
-    center: [40, -3.5],
-    zoom: 6,
+    center: [42, -2],
+    zoom: 5,
     minZoom: 3,
-    maxZoom: 10,
+    maxZoom: 11,
     zoomControl: true,
     attributionControl: false
   });
@@ -9844,8 +9824,8 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     attribution: 'Txoko MB'
   }).addTo(_wineLeafletMap);
 
-  // Region colors matching wine origins
-  var regionColors = {
+  // Region colors — store globally for in-place updates
+  _wineRegionColors = {
     'Andalucía': '#8B4513',
     'Aragón': '#7B6B3A',
     'Principado de Asturias': '#3A6B5A',
@@ -9858,6 +9838,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     'Cataluña': '#1B3A5C',
     'Catalunya': '#1B3A5C',
     'Comunitat Valenciana': '#8B6B2A',
+    'Comunidad Valenciana': '#8B6B2A',
     'Valencia': '#8B6B2A',
     'Extremadura': '#6B5B3A',
     'Galicia': '#1B5E3B',
@@ -9869,11 +9850,12 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     'Navarra': '#7B3A3A',
     'País Vasco': '#3A5B4A',
     'Euskadi': '#3A5B4A',
-    'La Rioja': '#6B1530'
+    'La Rioja': '#6B1530',
+    'La Rioja-Álava': '#6B1530'
   };
 
-  // Name mapping from TopoJSON names to our wine origin names
-  var nameMap = {
+  // Name mapping — store globally
+  _wineNameMap = {
     'Andalucía': 'Andalucía',
     'Aragón': 'Aragón',
     'Principado de Asturias': 'Asturias',
@@ -9899,27 +9881,27 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     'La Rioja': 'La Rioja-Álava'
   };
 
-  var _geoLayers = {};
+  _wineGeoLayers = {};
+  _wineDotMarkers = [];
+  _wineGeoLayer = null;
 
   // Try to load real TopoJSON boundaries
   try {
     var topoRes = await fetch('https://unpkg.com/es-atlas@0.5.0/es/autonomous_regions.json');
     if(topoRes.ok) {
       var topoData = await topoRes.json();
-      // Find the object key (could be 'autonomous_regions' or similar)
       var objKey = Object.keys(topoData.objects)[0];
       var geojson = topojson.feature(topoData, topoData.objects[objKey]);
       console.log('[Txoko Map] TopoJSON loaded, object key:', objKey, 'features:', geojson.features.length);
       if(geojson.features.length > 0) console.log('[Txoko Map] Sample properties:', JSON.stringify(geojson.features[0].properties));
 
-      L.geoJSON(geojson, {
+      _wineGeoLayer = L.geoJSON(geojson, {
         style: function(feature) {
-          // Get name from properties - try multiple fields
           var rawName = feature.properties.name || feature.properties.NAME || feature.properties.nombre || feature.properties.NAMEUNIT || feature.id || '';
-          var wineOrigin = nameMap[rawName] || rawName;
+          var wineOrigin = _wineNameMap[rawName] || rawName;
           var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
           var isActive = _mapSelectedOrigin === wineOrigin;
-          var color = regionColors[rawName] || regionColors[wineOrigin] || '#9a8a6a';
+          var color = _wineRegionColors[rawName] || _wineRegionColors[wineOrigin] || '#9a8a6a';
 
           return {
             fillColor: color,
@@ -9933,15 +9915,13 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         },
         onEachFeature: function(feature, layer) {
           var rawName = feature.properties.name || feature.properties.NAME || feature.properties.nombre || feature.properties.NAMEUNIT || feature.id || '';
-          var wineOrigin = nameMap[rawName] || rawName;
+          var wineOrigin = _wineNameMap[rawName] || rawName;
           var hasWines = byOrigin[wineOrigin] && byOrigin[wineOrigin].length > 0;
 
-          _geoLayers[wineOrigin] = layer;
+          _wineGeoLayers[wineOrigin] = layer;
 
           if(hasWines) {
-            layer.on('click', function() {
-              _selectMapOrigin(wineOrigin);
-            });
+            layer.on('click', function() { _selectMapOrigin(wineOrigin); });
             layer.on('mouseover', function(e) {
               if(_mapSelectedOrigin !== wineOrigin) {
                 e.target.setStyle({ fillOpacity: 0.6, weight: 3, color: '#c49a3c' });
@@ -9949,20 +9929,20 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
             });
             layer.on('mouseout', function(e) {
               if(_mapSelectedOrigin !== wineOrigin) {
-                var c = regionColors[rawName] || '#9a8a6a';
                 e.target.setStyle({ fillOpacity: 0.5, weight: 2, color: '#2a1f0a' });
               }
             });
-            // Add region name label
+            // Region name label
             var center = layer.getBounds().getCenter();
-            var count = byOrigin[wineOrigin].length;
+            var count = byOrigin[wineOrigin] ? byOrigin[wineOrigin].length : 0;
             L.marker(center, {
               icon: L.divIcon({
                 className: 'wine-region-label',
-                html: wineOrigin + ' (' + count + ')',
+                html: wineOrigin + (count ? ' (' + count + ')' : ''),
                 iconSize: [100, 20],
                 iconAnchor: [50, 10]
-              })
+              }),
+              interactive: false
             }).addTo(_wineLeafletMap);
           }
         }
@@ -9972,11 +9952,12 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     console.warn('[Txoko] Failed to load Spain TopoJSON:', e);
   }
 
-  // Add wine dot markers for all origins (including international)
+  // Add wine dot markers — SMALLER sizes
   regionDots.forEach(function(r) {
     if(!r.lat || !r.lng) return;
     var isActive = _mapSelectedOrigin === r.name;
-    var sz = Math.max(20, Math.min(14 + r.wines.length * 2, 42));
+    var baseSize = Math.max(12, Math.min(10 + r.wines.length * 1.2, 26));
+    var sz = isActive ? baseSize + 4 : baseSize;
 
     var marker = L.marker([r.lat, r.lng], {
       icon: L.divIcon({
@@ -9987,12 +9968,8 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
       })
     });
 
-    marker.on('click', function() {
-      _selectMapOrigin(r.name);
-    });
-
-    // Add tooltip with name
-    marker.bindTooltip(r.name, {
+    marker.on('click', function() { _selectMapOrigin(r.name); });
+    marker.bindTooltip(r.name + ' (' + r.wines.length + ')', {
       permanent: false,
       direction: 'top',
       className: 'wine-region-label',
@@ -10000,9 +9977,10 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     });
 
     marker.addTo(_wineLeafletMap);
+    _wineDotMarkers.push({ name: r.name, marker: marker, baseSize: baseSize, count: r.wines.length });
   });
 
-  // Add CK3-style CSS for glowing active borders
+  // CK3-style CSS
   if(!document.getElementById('ck3MapStyle')) {
     var style = document.createElement('style');
     style.id = 'ck3MapStyle';
@@ -10010,15 +9988,149 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     document.head.appendChild(style);
   }
 
-  // Fit bounds to show Spain
+  // Initial view
   setTimeout(function() {
     _wineLeafletMap.invalidateSize();
-  }, 150);
+    // If a region is already selected, zoom to it
+    if(_mapSelectedOrigin) {
+      if(_wineGeoLayers[_mapSelectedOrigin]) {
+        _wineLeafletMap.flyToBounds(_wineGeoLayers[_mapSelectedOrigin].getBounds(), { padding: [40, 40], duration: 0.5, maxZoom: 9 });
+      }
+    }
+    // Render initial info panel
+    _updateWineInfoPanel();
+  }, 200);
 }
 
 function _selectMapOrigin(name) {
+  const prev = _mapSelectedOrigin;
   _mapSelectedOrigin = _mapSelectedOrigin === name ? null : name;
+
+  // If map exists, update in-place without rebuilding
+  if(_wineLeafletMap && _wineGeoLayer) {
+    // Update GeoJSON layer styles
+    _wineGeoLayer.eachLayer(function(layer) {
+      var feat = layer.feature;
+      if(!feat) return;
+      var rawName = feat.properties.name || feat.properties.NAME || feat.properties.nombre || feat.properties.NAMEUNIT || feat.id || '';
+      var wineOrigin = _wineNameMap[rawName] || rawName;
+      var hasWines = _wineByOrigin[wineOrigin] && _wineByOrigin[wineOrigin].length > 0;
+      var isActive = _mapSelectedOrigin === wineOrigin;
+      var color = _wineRegionColors[rawName] || _wineRegionColors[wineOrigin] || '#9a8a6a';
+
+      layer.setStyle({
+        fillColor: color,
+        fillOpacity: isActive ? 0.7 : (hasWines ? 0.5 : 0.25),
+        color: isActive ? '#ffd700' : (hasWines ? '#2a1f0a' : '#5a4a2a'),
+        weight: isActive ? 4 : (hasWines ? 2 : 1),
+        opacity: isActive ? 1 : 0.7,
+        dashArray: isActive ? '' : (hasWines ? '' : '3'),
+        className: isActive ? 'ck3-region-active' : (hasWines ? 'ck3-region-wine' : 'ck3-region')
+      });
+    });
+
+    // Update dot markers
+    if(_wineDotMarkers) {
+      _wineDotMarkers.forEach(function(item) {
+        var isActive = _mapSelectedOrigin === item.name;
+        var sz = isActive ? Math.max(16, item.baseSize + 4) : item.baseSize;
+        item.marker.setIcon(L.divIcon({
+          className: 'wine-dot-marker' + (isActive ? ' active' : ''),
+          html: '<span>' + item.count + '</span>',
+          iconSize: [sz, sz],
+          iconAnchor: [sz/2, sz/2]
+        }));
+      });
+    }
+
+    // Fly to selected region or back to overview
+    if(_mapSelectedOrigin) {
+      // Find the region bounds from GeoJSON layer or dot position
+      var targetBounds = null;
+      if(_wineGeoLayers[_mapSelectedOrigin]) {
+        targetBounds = _wineGeoLayers[_mapSelectedOrigin].getBounds();
+      }
+      // Also check dot markers for international regions
+      if(!targetBounds && _wineDotMarkers) {
+        var dot = _wineDotMarkers.find(function(d) { return d.name === _mapSelectedOrigin; });
+        if(dot) {
+          var ll = dot.marker.getLatLng();
+          targetBounds = L.latLngBounds(
+            [ll.lat - 2, ll.lng - 3],
+            [ll.lat + 2, ll.lng + 3]
+          );
+        }
+      }
+      if(targetBounds) {
+        _wineLeafletMap.flyToBounds(targetBounds, { padding: [40, 40], duration: 0.8, maxZoom: 9 });
+      }
+    } else {
+      // Deselected — zoom back to show Spain + Europe
+      _wineLeafletMap.flyTo([40, -3.5], 5, { duration: 0.6 });
+    }
+
+    // Update info panel
+    _updateWineInfoPanel();
+    // Update button states
+    _updateWineButtons();
+    return;
+  }
+
+  // Fallback: full re-render if map doesn't exist
   renderVinos();
+}
+
+function _updateWineInfoPanel() {
+  var panel = document.getElementById('wineInfoPanel');
+  if(!panel) return;
+  var _en = LANG==='en';
+
+  if(!_mapSelectedOrigin || !_wineByOrigin[_mapSelectedOrigin]) {
+    panel.innerHTML = '';
+    return;
+  }
+
+  var wines = _wineByOrigin[_mapSelectedOrigin];
+  var regions = [];
+  var seen = {};
+  wines.forEach(function(w) { if(w.region && !seen[w.region]) { seen[w.region] = true; regions.push(w.region); } });
+  var types = {};
+  wines.forEach(function(w) { types[w.type] = (types[w.type]||0)+1; });
+  var typeEmojis = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'};
+
+  panel.innerHTML = '<div class="wine-map-info">' +
+    '<div class="wine-map-info-title">◇ ' + escapeHTML(_mapSelectedOrigin) + '</div>' +
+    '<div style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:var(--parch3);margin-bottom:.5rem">' +
+    wines.length + ' vinos · ' + regions.length + ' DO · ' +
+    Object.entries(types).map(function(e) { return (typeEmojis[e[0]]||'') + e[1]; }).join(' ') +
+    '</div>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.8rem">' +
+    regions.map(function(r) { return '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.12);border-radius:6px;color:var(--parch2)">' + escapeHTML(r) + '</span>'; }).join('') +
+    '</div>' +
+    '<div class="wine-map-info-wines">' +
+    wines.sort(function(a,b) { return a.price - b.price; }).map(function(w) {
+      return '<div class="wine-map-wine-item" onclick="_showWineDetail(' + w.id + ', [' + wines.map(function(ww){return ww.id;}).join(',') + '])">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        '<div style="font-family:\'Cinzel\',serif;font-size:.8rem;color:var(--parchment)">' + (typeEmojis[w.type]||'🍷') + ' ' + escapeHTML(w.name) + '</div>' +
+        '<div style="font-family:\'Cinzel\',serif;font-size:.85rem;color:var(--gold);font-weight:600">' + w.price + '€</div>' +
+        '</div>' +
+        '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch3);margin-top:.15rem">' + escapeHTML(w.grapes||'') + ' · ' + escapeHTML(w.region) + '</div>' +
+        '</div>';
+    }).join('') +
+    '</div></div>';
+}
+
+function _updateWineButtons() {
+  var container = document.getElementById('wineOriginButtons');
+  if(!container) return;
+  var btns = container.querySelectorAll('button[data-origin]');
+  btns.forEach(function(btn) {
+    var origin = btn.getAttribute('data-origin');
+    var isActive = _mapSelectedOrigin === origin;
+    btn.style.borderColor = isActive ? 'var(--gold)' : 'rgba(196,154,60,.15)';
+    btn.style.background = isActive ? 'rgba(196,154,60,.15)' : 'rgba(196,154,60,.04)';
+    btn.style.color = isActive ? 'var(--gold)' : 'var(--parch2)';
+  });
 }
 
 // ═══ WINE SWIPE NAVIGATION ═══
