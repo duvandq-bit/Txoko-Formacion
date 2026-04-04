@@ -6078,8 +6078,26 @@ async function loginWithPassword(){
 
   submitBtn.textContent = LANG==='en' ? 'Verifying...' : 'Verificando...';
 
-  hashPin(pass).then(hashed => {
+  hashPin(pass).then(async (hashed) => {
     errEl.style.color = '';
+
+    // Helper: complete login after successful verification
+    function _completeLogin(userName, empObj, hashedPin) {
+      if(typeof recordPinSuccess === 'function') recordPinSuccess();
+      localStorage.setItem('txoko_last_user', userName);
+      const rememberCb = document.getElementById('loginRemember');
+      if(rememberCb && rememberCb.checked){
+        localStorage.setItem('txoko_session', JSON.stringify({user:userName, hash:hashedPin, ts:Date.now()}));
+      } else {
+        localStorage.removeItem('txoko_session');
+      }
+      empObj.lang = LANG;
+      saveDB();
+      supaUpsertEmployee(userName);
+      pinTarget = userName;
+      closePinAndEnter();
+    }
+
     if(emp && emp.pin){
       // Existing user (local or restored from cloud) — verify password
       let match = false;
@@ -6092,22 +6110,45 @@ async function loginWithPassword(){
       }
 
       if(match){
-        if(typeof recordPinSuccess === 'function') recordPinSuccess();
-        localStorage.setItem('txoko_last_user', resolvedName);
-        const rememberCb = document.getElementById('loginRemember');
-        if(rememberCb && rememberCb.checked){
-          localStorage.setItem('txoko_session', JSON.stringify({user:resolvedName, hash:hashed, ts:Date.now()}));
-        } else {
-          localStorage.removeItem('txoko_session');
-        }
-        emp.lang = LANG;
-        saveDB();
-        supaUpsertEmployee(resolvedName);
-        pinTarget = resolvedName;
-        closePinAndEnter();
+        _completeLogin(resolvedName, emp, hashed);
+      } else if(localExistedBefore && !emp._fromCloud) {
+        // LOCAL PIN MISMATCH → try Supabase cloud as fallback
+        // This handles cases where local data is stale/corrupted (e.g. different browser/device)
+        errEl.style.color = '#c49a3c';
+        errEl.textContent = LANG==='en' ? 'Local mismatch, checking cloud...' : 'No coincide local, verificando nube...';
+        try {
+          const cloudResult = await supaRestoreEmployee(name);
+          if(cloudResult) {
+            const cloudEmp = DB.employees[cloudResult];
+            if(cloudEmp && cloudEmp.pin) {
+              let cloudMatch = false;
+              if(cloudEmp.pin.length === 64 && /^[0-9a-f]+$/.test(cloudEmp.pin)){
+                cloudMatch = (hashed === cloudEmp.pin);
+              } else {
+                cloudMatch = (pass === cloudEmp.pin);
+                if(cloudMatch){ cloudEmp.pin = hashed; saveDB(); }
+              }
+              if(cloudMatch) {
+                resolvedName = cloudResult;
+                _completeLogin(resolvedName, cloudEmp, hashed);
+                submitBtn.disabled = false;
+                submitBtn.textContent = LANG==='en' ? 'Enter' : 'Entrar';
+                return;
+              }
+            }
+          }
+        } catch(e) { console.warn('[Txoko] Cloud fallback failed:', e); }
+
+        // Cloud also didn't match — show error
+        errEl.style.color = '';
+        if(typeof recordPinFail === 'function') recordPinFail();
+        errEl.textContent = LANG==='en' ? 'Incorrect password' : 'Contraseña incorrecta';
+        passInput.value = '';
+        passInput.style.borderColor = '#e85d5d';
+        setTimeout(() => { passInput.style.borderColor = ''; errEl.textContent = ''; }, 2500);
       } else {
         if(typeof recordPinFail === 'function') recordPinFail();
-        // Show PIN keypad if account was set up with 4-digit PIN
+        // Show PIN keypad if account was set up with 4-digit PIN (from cloud)
         if(emp._fromCloud || !localExistedBefore) {
           _showCloudPinLogin(resolvedName, emp);
         } else {
@@ -11022,7 +11063,8 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   mapEl.parentElement.style.position = 'relative';
   mapEl.parentElement.appendChild(badge);
 
-  // Initialize MapLibre GL JS — WebGL GPU-accelerated map with 3D terrain
+  // Initialize MapLibre GL JS — WebGL GPU-accelerated map
+  // NOTE: Terrain 3D is added AFTER load to avoid blocking if DEM source fails
   _wineLeafletMap = new maplibregl.Map({
     container: 'wineLeafletMap',
     style: {
@@ -11037,13 +11079,6 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
           ],
           tileSize: 256,
           maxzoom: 17
-        },
-        'terrain-dem': {
-          type: 'raster-dem',
-          tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
-          tileSize: 256,
-          maxzoom: 15,
-          encoding: 'terrarium'
         }
       },
       layers: [
@@ -11051,19 +11086,8 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         {
           id: 'topo-tiles', type: 'raster', source: 'topo-raster',
           paint: { 'raster-saturation': -0.35, 'raster-brightness-max': 0.93, 'raster-contrast': 0.08, 'raster-hue-rotate': 12 }
-        },
-        {
-          id: 'hillshade', type: 'hillshade', source: 'terrain-dem',
-          paint: {
-            'hillshade-shadow-color': '#473B24',
-            'hillshade-highlight-color': '#fff8e8',
-            'hillshade-accent-color': '#5a4a2a',
-            'hillshade-illumination-direction': 315,
-            'hillshade-exaggeration': 0.25
-          }
         }
-      ],
-      terrain: { source: 'terrain-dem', exaggeration: 1.5 }
+      ]
     },
     center: [-2, 42],
     zoom: 5,
@@ -11074,6 +11098,9 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     antialias: true,
     attributionControl: false
   });
+
+  // Error handler — log map errors to console
+  _wineLeafletMap.on('error', function(e) { console.warn('[Txoko Map] Error:', e.error || e); });
 
   // Navigation controls (zoom, compass, pitch)
   _wineLeafletMap.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'top-right');
@@ -11119,6 +11146,31 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   // ── Map load event — add all data layers ──
   _wineLeafletMap.on('load', async function() {
     console.log('[Txoko Map] MapLibre GL JS loaded (WebGL GPU-accelerated)');
+
+    // ── Try to add 3D terrain (non-blocking — map works without it) ──
+    try {
+      _wineLeafletMap.addSource('terrain-dem', {
+        type: 'raster-dem',
+        tiles: ['https://demotiles.maplibre.org/terrain-tiles/{z}/{x}/{y}.png'],
+        tileSize: 256,
+        maxzoom: 12
+      });
+      _wineLeafletMap.addLayer({
+        id: 'hillshade', type: 'hillshade', source: 'terrain-dem',
+        paint: {
+          'hillshade-shadow-color': '#473B24',
+          'hillshade-highlight-color': '#fff8e8',
+          'hillshade-accent-color': '#5a4a2a',
+          'hillshade-illumination-direction': 315,
+          'hillshade-exaggeration': 0.25
+        }
+      });
+      _wineLeafletMap.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
+      console.log('[Txoko Map] 3D terrain enabled');
+    } catch(e) {
+      console.warn('[Txoko Map] 3D terrain not available:', e.message);
+      // Map still works fine without terrain — just flat
+    }
 
     // Load province + country TopoJSON in parallel
     try {
