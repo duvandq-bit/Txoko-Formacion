@@ -3264,6 +3264,7 @@ body::after{
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
       <span class="header-uname" id="headerUsername"></span>
+      <button id="pushEnableBtn" onclick="enablePushManual()" style="display:none;background:rgba(255,80,80,.25);border:1px solid rgba(255,80,80,.5);cursor:pointer;padding:2px 8px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.5rem;color:#ff8;letter-spacing:.03em;animation:pulse 2s infinite" title="Activar notificaciones push">🔕</button>
       <button id="notifBell" onclick="renderNotifPanel()" style="display:none;background:transparent;border:none;cursor:pointer;padding:4px;position:relative;font-size:1.2rem;line-height:1">
         ◉<span id="notifBadge" style="position:absolute;top:0;right:0;background:var(--rose);color:#fff;border-radius:50%;width:14px;height:14px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
@@ -5222,24 +5223,47 @@ async function registerServiceWorker() {
 
 async function subscribeToPush(employeeName) {
   try {
+    // Step 1: Check if Notification API is available
+    if (!('Notification' in window)) {
+      console.warn('[Txoko Push] Notification API not available');
+      return;
+    }
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      console.warn('[Txoko Push] ServiceWorker or PushManager not available');
+      return;
+    }
+
+    // Step 2: Request permission
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') return;
+    console.log('[Txoko Push] Permission:', permission);
+    if (permission !== 'granted') {
+      console.warn('[Txoko Push] Permission denied or dismissed');
+      return;
+    }
 
+    // Step 3: Register service worker
     const reg = await registerServiceWorker();
-    if (!reg) return;
+    if (!reg) {
+      console.warn('[Txoko Push] Service worker registration failed');
+      return;
+    }
+    console.log('[Txoko Push] SW registered, scope:', reg.scope);
 
-    // Check if already subscribed
+    // Step 4: Get or create push subscription
     let sub = await reg.pushManager.getSubscription();
+    let isNew = false;
     if (!sub) {
       sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
       });
+      isNew = true;
     }
+    console.log('[Txoko Push] Subscription ' + (isNew ? 'created' : 'exists') + ':', sub.endpoint.substring(0, 50) + '...');
 
+    // Step 5: Save subscription to Supabase
     const subJSON = sub.toJSON();
-    // Save subscription to Supabase
-    await fetch(`${SUPA_URL}/rest/v1/push_subscriptions`, {
+    const saveRes = await fetch(`${SUPA_URL}/rest/v1/push_subscriptions`, {
       method: 'POST',
       headers: {
         'apikey': SUPA_KEY,
@@ -5254,8 +5278,69 @@ async function subscribeToPush(employeeName) {
         keys_auth: subJSON.keys.auth
       })
     });
-    // Push subscription saved successfully
-  } catch(e) { console.warn('[Txoko] Push subscribe error:', e); }
+    console.log('[Txoko Push] Saved to Supabase:', saveRes.status, saveRes.ok ? 'OK' : 'FAIL');
+
+    // Step 6: Send a silent self-test push to verify end-to-end
+    if (isNew) {
+      try {
+        await fetch(`${SUPA_URL}/functions/v1/send-push`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            target: employeeName,
+            title: '🔔 Notificaciones activadas',
+            body: '¡Recibirás avisos aunque la app esté cerrada!',
+            tag: 'push-welcome'
+          })
+        });
+      } catch(e2) { /* non-critical */ }
+    }
+    // Hide the enable button since push is now active
+    var pushBtn = document.getElementById('pushEnableBtn');
+    if(pushBtn) pushBtn.style.display = 'none';
+  } catch(e) { console.warn('[Txoko Push] Subscribe error:', e); }
+}
+
+// Check push status and show enable button if needed
+async function checkPushStatus() {
+  var pushBtn = document.getElementById('pushEnableBtn');
+  if(!pushBtn) return;
+  try {
+    if(!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+      pushBtn.style.display = 'none'; // Device doesn't support push at all
+      return;
+    }
+    if(Notification.permission === 'granted') {
+      // Check if subscription actually exists
+      var reg = await navigator.serviceWorker.getRegistration();
+      if(reg) {
+        var sub = await reg.pushManager.getSubscription();
+        if(sub) { pushBtn.style.display = 'none'; return; } // All good
+      }
+    }
+    // Show button if permission not granted OR no subscription
+    pushBtn.style.display = 'inline-block';
+  } catch(e) { pushBtn.style.display = 'inline-block'; }
+}
+
+// Manual push enable button handler
+async function enablePushManual() {
+  var pushBtn = document.getElementById('pushEnableBtn');
+  if(pushBtn) { pushBtn.textContent = '⏳'; pushBtn.style.background = 'rgba(255,200,0,.25)'; }
+  if(currentUser) await subscribeToPush(currentUser);
+  // Re-check status
+  await checkPushStatus();
+  if(pushBtn && pushBtn.style.display !== 'none') {
+    // Still not working — permission likely blocked
+    pushBtn.textContent = '🚫';
+    pushBtn.title = LANG==='en' ? 'Notifications blocked — enable in browser settings' : 'Notificaciones bloqueadas — actívalas en ajustes del navegador';
+    pushBtn.style.background = 'rgba(255,0,0,.2)';
+    pushBtn.onclick = function() {
+      alert(LANG==='en' ?
+        'Notifications are blocked.\n\n1. Tap the lock icon 🔒 in your browser address bar\n2. Find "Notifications"\n3. Change to "Allow"\n4. Reload the page' :
+        'Las notificaciones están bloqueadas.\n\n1. Toca el icono de candado 🔒 en la barra de direcciones\n2. Busca "Notificaciones"\n3. Cambia a "Permitir"\n4. Recarga la página');
+    };
+  }
 }
 
 // Update last_active_at in Supabase
@@ -6490,7 +6575,7 @@ function closePinAndEnter(){
   currentUser=pinTarget;
   resetSessionTimer();
   // Push notifications + activity tracking
-  subscribeToPush(pinTarget);
+  subscribeToPush(pinTarget).then(function() { checkPushStatus(); });
   supaUpdateLastActive(pinTarget);
   const empH=getEmp(pinTarget);
   const trophyH=getTrophyBadge(empH?.trophies||0);
