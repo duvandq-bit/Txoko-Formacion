@@ -3124,22 +3124,25 @@ body::after{
 .wine-map-wine-item:hover{background:rgba(196,154,60,.1)}
 
 /* ═══ LEAFLET MAP STYLES ═══ */
-/* ═══ ADVANCED MAP ENGINE ═══ */
+/* ═══ CLAUSEWITZ-INSPIRED MAP ENGINE ═══ */
 .wine-leaflet-map {
   width:100%;height:420px;border-radius:14px;
   border:2px solid rgba(196,154,60,.35);
   box-shadow:0 6px 32px rgba(28,42,34,.25), 0 2px 8px rgba(0,0,0,.1), inset 0 0 40px rgba(0,0,0,.04);
   overflow:hidden;position:relative;
 }
+/* ── Subtle vignette — soft dark edges ── */
 .wine-leaflet-map::after {
   content:'';position:absolute;inset:0;pointer-events:none;z-index:999;
   border-radius:12px;
-  box-shadow:inset 0 0 60px rgba(196,154,60,.06), inset 0 1px 0 rgba(255,255,255,.1);
+  background:radial-gradient(ellipse at 50% 45%, transparent 60%, rgba(42,31,10,.06) 85%, rgba(28,20,6,.12) 100%);
+  box-shadow:inset 0 0 40px rgba(28,20,6,.05), inset 0 1px 0 rgba(255,255,255,.06);
 }
+/* ── Light vintage tint — keeps terrain detail visible ── */
 .wine-leaflet-map .leaflet-tile-pane {
-  filter:saturate(0.35) brightness(0.94) contrast(1.08) sepia(0.25);
+  filter:saturate(0.55) brightness(0.93) contrast(1.08) sepia(0.12);
 }
-.leaflet-container { background:#d4cbb8 !important; font-family:'Quicksand',sans-serif; }
+.leaflet-container { background:#8a9e7c !important; font-family:'Quicksand',sans-serif; }
 .wine-region-label {
   background:none !important;border:none !important;box-shadow:none !important;
   font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:#1a1008;
@@ -3179,9 +3182,9 @@ body::after{
 .wine-region-popup .leaflet-popup-tip { background:#f0e8d8; }
 /* DO polygon animation on appear */
 @keyframes doFadeIn { from{opacity:0;stroke-dashoffset:200} to{opacity:1;stroke-dashoffset:0} }
-/* Leaflet path hover glow */
-.leaflet-interactive:hover { filter:brightness(1.15) drop-shadow(0 0 6px rgba(196,154,60,.4)); }
-.leaflet-interactive { transition:filter .25s ease, fill-opacity .25s ease; }
+/* Hover glow on polygons */
+.leaflet-interactive:hover { filter:brightness(1.1) drop-shadow(0 0 4px rgba(196,154,60,.3)); }
+.leaflet-interactive { transition:filter .25s ease, fill-opacity .25s ease, stroke-width .25s ease; }
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
@@ -10996,12 +10999,27 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     attributionControl: false
   });
 
-  // Elegant CartoDB Voyager tiles with vintage sepia filter (applied via CSS)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    attribution: 'Txoko MB',
-    subdomains: 'abcd'
+  // Terrain tiles with topographic detail (mountains, valleys, coastlines)
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 17,
+    attribution: 'Txoko MB'
   }).addTo(_wineLeafletMap);
+
+  // ── CK3-STYLE SVG FILTER: organic ink borders for DO polygons ──
+  var svgDefs = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svgDefs.setAttribute('width','0'); svgDefs.setAttribute('height','0');
+  svgDefs.style.position='absolute';
+  svgDefs.innerHTML = '<defs>' +
+    '<filter id="ck3ink" x="-5%" y="-5%" width="110%" height="110%">' +
+      '<feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="2" result="noise"/>' +
+      '<feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>' +
+    '</filter>' +
+    '<filter id="ck3glow">' +
+      '<feGaussianBlur stdDeviation="3" result="blur"/>' +
+      '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>' +
+    '</filter>' +
+  '</defs>';
+  mapEl.appendChild(svgDefs);
 
   // Define province-to-origin mapping (multiple variants for robustness)
   var provinceToOrigin = {
