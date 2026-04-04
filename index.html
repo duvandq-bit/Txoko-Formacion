@@ -5091,8 +5091,9 @@ async function supaRestoreEmployee(name) {
     const cloudName = r.name;
     const emp = getEmp(cloudName);
 
-    // Restore PIN from cloud if local doesn't have it
-    if(r.pin && !emp.pin) emp.pin = r.pin;
+    // ALWAYS restore PIN from cloud — cloud is the source of truth for credentials
+    // This fixes the case where local data has a corrupted/stale PIN
+    if(r.pin) emp.pin = r.pin;
     // Always take the highest XP between local and remote
     emp.xp = Math.max(emp.xp || 0, r.xp || 0);
     emp.streak = Math.max(emp.streak || 0, r.streak || 0);
@@ -5105,8 +5106,8 @@ async function supaRestoreEmployee(name) {
     try { const ec = JSON.parse(r.exam_correct||'{}'); if(Object.keys(ec).length) emp.examCorrect = ec; } catch(e){}
     try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){}
     saveDB();
-    // Sync back immediately so Supabase always has the latest
-    supaUpsertEmployee(cloudName);
+    // Do NOT sync back during restore — avoid overwriting cloud with stale local data
+    // supaUpsertEmployee will be called after successful login instead
     return cloudName; // Return the correct name from cloud
   } catch(e) { console.warn('[Txoko] Supabase restore error:', e.message); return false; }
 }
@@ -6052,25 +6053,25 @@ async function loginWithPassword(){
   let localExistedBefore = !!DB.employees[resolvedName] && !!DB.employees[resolvedName].pin;
   let localExists = localExistedBefore;
 
-  // If not found locally (or no pin), try Supabase
-  if(!localExists) {
-    errEl.textContent = LANG==='en' ? 'Searching cloud...' : 'Buscando en la nube...';
-    try {
-      const cloudResult = await supaRestoreEmployee(name);
-      if(cloudResult) {
-        resolvedName = cloudResult;
-        localExists = true;
-        if(DB.employees[resolvedName]) DB.employees[resolvedName]._fromCloud = true;
-        errEl.textContent = (LANG==='en' ? 'Found: ' : 'Encontrado: ') + resolvedName + ' (XP:' + (DB.employees[resolvedName].xp||0) + ')';
-      } else {
-        errEl.textContent = LANG==='en' ? 'Not found in cloud — creating new account' : 'No encontrado — creando cuenta nueva';
-      }
-    } catch(e) {
-      errEl.textContent = (LANG==='en' ? 'Cloud error: ' : 'Error nube: ') + e.message;
-      console.warn('[Txoko] Cloud restore failed:', e);
+  // ALWAYS try Supabase cloud sync — ensures PIN is up to date across devices
+  // This fixes stale/corrupted local PINs by restoring the cloud version
+  errEl.textContent = LANG==='en' ? 'Syncing with cloud...' : 'Sincronizando con la nube...';
+  try {
+    const cloudResult = await supaRestoreEmployee(name);
+    if(cloudResult) {
+      resolvedName = cloudResult;
+      localExists = true;
+      if(DB.employees[resolvedName] && !localExistedBefore) DB.employees[resolvedName]._fromCloud = true;
+      errEl.textContent = (LANG==='en' ? 'Found: ' : 'Encontrado: ') + resolvedName;
+    } else if(!localExists) {
+      errEl.textContent = LANG==='en' ? 'Not found — creating new account' : 'No encontrado — creando cuenta nueva';
     }
-  } else {
-    errEl.textContent = (LANG==='en' ? 'Found locally' : 'Encontrado local');
+  } catch(e) {
+    console.warn('[Txoko] Cloud sync failed:', e);
+    // If cloud fails but local exists, continue with local data
+    if(!localExists) {
+      errEl.textContent = (LANG==='en' ? 'Cloud error: ' : 'Error nube: ') + e.message;
+    }
   }
 
   // Get the employee (may have been restored from cloud)
@@ -6111,41 +6112,6 @@ async function loginWithPassword(){
 
       if(match){
         _completeLogin(resolvedName, emp, hashed);
-      } else if(localExistedBefore && !emp._fromCloud) {
-        // LOCAL PIN MISMATCH → try Supabase cloud as fallback
-        // This handles cases where local data is stale/corrupted (e.g. different browser/device)
-        errEl.style.color = '#c49a3c';
-        errEl.textContent = LANG==='en' ? 'Local mismatch, checking cloud...' : 'No coincide local, verificando nube...';
-        try {
-          const cloudResult = await supaRestoreEmployee(name);
-          if(cloudResult) {
-            const cloudEmp = DB.employees[cloudResult];
-            if(cloudEmp && cloudEmp.pin) {
-              let cloudMatch = false;
-              if(cloudEmp.pin.length === 64 && /^[0-9a-f]+$/.test(cloudEmp.pin)){
-                cloudMatch = (hashed === cloudEmp.pin);
-              } else {
-                cloudMatch = (pass === cloudEmp.pin);
-                if(cloudMatch){ cloudEmp.pin = hashed; saveDB(); }
-              }
-              if(cloudMatch) {
-                resolvedName = cloudResult;
-                _completeLogin(resolvedName, cloudEmp, hashed);
-                submitBtn.disabled = false;
-                submitBtn.textContent = LANG==='en' ? 'Enter' : 'Entrar';
-                return;
-              }
-            }
-          }
-        } catch(e) { console.warn('[Txoko] Cloud fallback failed:', e); }
-
-        // Cloud also didn't match — show error
-        errEl.style.color = '';
-        if(typeof recordPinFail === 'function') recordPinFail();
-        errEl.textContent = LANG==='en' ? 'Incorrect password' : 'Contraseña incorrecta';
-        passInput.value = '';
-        passInput.style.borderColor = '#e85d5d';
-        setTimeout(() => { passInput.style.borderColor = ''; errEl.textContent = ''; }, 2500);
       } else {
         if(typeof recordPinFail === 'function') recordPinFail();
         // Show PIN keypad if account was set up with 4-digit PIN (from cloud)
@@ -11050,8 +11016,10 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   var mapEl = document.getElementById('wineLeafletMap');
   if(!mapEl) return;
 
-  // Check WebGL support
-  if(!maplibregl.supported()) {
+  // Check WebGL support (maplibregl.supported() removed in v4 — detect manually)
+  var _webglOk = false;
+  try { var _c = document.createElement('canvas'); _webglOk = !!(_c.getContext('webgl2') || _c.getContext('webgl') || _c.getContext('experimental-webgl')); } catch(e) {}
+  if(!_webglOk) {
     mapEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:DM Mono,monospace;font-size:.7rem;color:var(--parch3);text-align:center;padding:2rem">Tu dispositivo no soporta WebGL.<br>El mapa requiere aceleración GPU.</div>';
     return;
   }
