@@ -2006,6 +2006,33 @@ body::after{
 .txoko-record-val{font-family:'Quicksand',sans-serif;font-size:1.6rem;font-weight:800;color:var(--candy-orange);}
 
 /* game screen */
+/* ═══ MR. SHOESMITH ADVANCED ANIMATIONS ═══ */
+/* Blinking animation for SVG eyes */
+@keyframes shoeBlink { 0%,92%,100%{transform:scaleY(1)} 95%{transform:scaleY(0.05)} }
+/* Subtle breathing for the character */
+@keyframes shoeBreathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1.5px)} }
+/* Face transition on mood change */
+@keyframes shoeFadeSwap { 0%{opacity:0;transform:scale(0.92)} 100%{opacity:1;transform:scale(1)} }
+/* Angry shake */
+@keyframes shoeShake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-3px) rotate(-1deg)} 30%{transform:translateX(3px) rotate(1deg)} 45%{transform:translateX(-2px)} 60%{transform:translateX(2px)} 75%{transform:translateX(-1px)} }
+/* Steam rising from ears when furious */
+@keyframes steamRise { 0%{opacity:.7;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-18px) scale(1.6)} }
+/* Wine glass gentle sway (calm state) */
+@keyframes glassSway { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(2deg)} }
+/* Eyebrow twitch (suspicious state) */
+@keyframes browTwitch { 0%,90%,100%{transform:translateY(0)} 93%{transform:translateY(-1.5px)} 96%{transform:translateY(0)} }
+/* Correct answer sparkle */
+@keyframes sparkle { 0%{opacity:0;transform:scale(0) rotate(0)} 50%{opacity:1;transform:scale(1.2) rotate(180deg)} 100%{opacity:0;transform:scale(0) rotate(360deg)} }
+/* Wrong answer screen flash */
+@keyframes wrongFlash { 0%{background:transparent} 15%{background:rgba(200,80,80,.08)} 100%{background:transparent} }
+/* Patience bar pulse when low */
+@keyframes patiencePulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+#txokoClientFace svg { animation:shoeBreathe 3s ease-in-out infinite; }
+#txokoClientFace { transition:all .4s cubic-bezier(.4,0,.2,1); }
+.shoe-mood-change #txokoClientFace { animation:shoeFadeSwap .35s ease-out; }
+.shoe-angry #txokoClientFace svg { animation:shoeShake .5s ease-in-out; }
+
 .txoko-game{padding:.75rem;max-width:480px;margin:0 auto;}
 .txoko-hud{
   display:flex;align-items:center;justify-content:space-between;
@@ -2021,17 +2048,25 @@ body::after{
   font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch2);
 }
 
-/* restaurant scene */
+/* restaurant scene — enhanced */
 .txoko-scene{
-  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
-  border:1.5px solid rgba(196,154,60,.12);border-radius:14px;
+  background:linear-gradient(170deg,#faf6ee 0%,#f0e8d8 60%,#e8dcc8 100%);
+  border:1.5px solid rgba(196,154,60,.15);border-radius:14px;
   padding:1rem;margin-bottom:.75rem;position:relative;overflow:hidden;min-height:80px;
+  box-shadow:inset 0 2px 12px rgba(196,154,60,.04), 0 2px 8px rgba(0,0,0,.04);
 }
 .txoko-scene::before{
   content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.03)' stroke-width='0.3'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.04)' stroke-width='0.4'/%3E%3C/svg%3E");
   background-size:40px 35px;pointer-events:none;
 }
+/* Ambient candlelight flicker in scene */
+.txoko-scene::after{
+  content:'';position:absolute;top:-50%;right:-30%;width:200px;height:200px;
+  background:radial-gradient(ellipse,rgba(255,200,80,.06) 0%,transparent 70%);
+  animation:candleFlicker 4s ease-in-out infinite alternate;pointer-events:none;
+}
+@keyframes candleFlicker { 0%{opacity:.4;transform:scale(1)} 33%{opacity:.7;transform:scale(1.05)} 66%{opacity:.3;transform:scale(.95)} 100%{opacity:.6;transform:scale(1.02)} }
 .txoko-waiter{
   display:flex;align-items:flex-start;gap:.75rem;
 }
@@ -2068,6 +2103,11 @@ body::after{
 .txoko-patience-fill{
   height:100%;border-radius:3px;
   transition:width .1s linear, background .3s ease;
+  box-shadow:0 0 4px rgba(196,154,60,.2);
+}
+.txoko-patience-fill.low{
+  animation:patiencePulse .6s ease-in-out infinite;
+  box-shadow:0 0 8px rgba(196,112,104,.4);
 }
 
 /* choices */
@@ -2090,13 +2130,19 @@ body::after{
   transform:translateX(3px);
 }
 .txoko-choice.correct{
-  background:linear-gradient(155deg,rgba(77,138,94,.1),rgba(77,138,94,.04));
-  border-color:rgba(77,138,94,.4);color:#1a3d2a;
+  background:linear-gradient(155deg,rgba(77,138,94,.12),rgba(77,138,94,.04));
+  border-color:rgba(77,138,94,.5);color:#1a3d2a;
+  box-shadow:0 0 12px rgba(77,138,94,.15), inset 0 0 20px rgba(77,138,94,.05);
+  animation:correctPop .35s cubic-bezier(.4,0,.2,1);
 }
+@keyframes correctPop { 0%{transform:scale(1)} 40%{transform:scale(1.02)} 100%{transform:scale(1)} }
 .txoko-choice.wrong{
-  background:linear-gradient(155deg,rgba(196,112,104,.1),rgba(196,112,104,.04));
-  border-color:rgba(196,112,104,.4);color:#5a1a1a;
+  background:linear-gradient(155deg,rgba(196,112,104,.12),rgba(196,112,104,.04));
+  border-color:rgba(196,112,104,.5);color:#5a1a1a;
+  box-shadow:0 0 12px rgba(196,112,104,.15);
+  animation:wrongShake .3s ease-out;
 }
+@keyframes wrongShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-2px)} 80%{transform:translateX(2px)} }
 .txoko-choice:disabled{cursor:default;}
 .txoko-choice-letter{
   font-family:'DM Mono',monospace;font-size:.8rem;
@@ -3078,50 +3124,64 @@ body::after{
 .wine-map-wine-item:hover{background:rgba(196,154,60,.1)}
 
 /* ═══ LEAFLET MAP STYLES ═══ */
+/* ═══ ADVANCED MAP ENGINE ═══ */
 .wine-leaflet-map {
-  width:100%;height:420px;border-radius:12px;
-  border:2px solid rgba(196,154,60,.3);
-  box-shadow:0 4px 24px rgba(28,42,34,.2), inset 0 0 30px rgba(0,0,0,.05);
-  overflow:hidden;
+  width:100%;height:420px;border-radius:14px;
+  border:2px solid rgba(196,154,60,.35);
+  box-shadow:0 6px 32px rgba(28,42,34,.25), 0 2px 8px rgba(0,0,0,.1), inset 0 0 40px rgba(0,0,0,.04);
+  overflow:hidden;position:relative;
+}
+.wine-leaflet-map::after {
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:999;
+  border-radius:12px;
+  box-shadow:inset 0 0 60px rgba(196,154,60,.06), inset 0 1px 0 rgba(255,255,255,.1);
 }
 .wine-leaflet-map .leaflet-tile-pane {
-  filter:saturate(0.6) brightness(0.92) contrast(1.1) sepia(0.15);
+  filter:saturate(0.35) brightness(0.94) contrast(1.08) sepia(0.25);
 }
-.leaflet-container { background:#8a9e7c !important; font-family:'Quicksand',sans-serif; }
+.leaflet-container { background:#d4cbb8 !important; font-family:'Quicksand',sans-serif; }
 .wine-region-label {
   background:none !important;border:none !important;box-shadow:none !important;
   font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:#1a1008;
-  text-shadow:0 0 4px rgba(255,245,220,.95),0 0 8px rgba(255,245,220,.7),0 1px 1px rgba(0,0,0,.15);
+  text-shadow:0 0 5px rgba(255,245,220,.98),0 0 10px rgba(255,245,220,.8),0 0 20px rgba(255,245,220,.4),0 1px 1px rgba(0,0,0,.18);
   white-space:nowrap;text-align:center;letter-spacing:0.5px;
 }
 .wine-dot-marker {
   background:radial-gradient(circle at 35% 35%,#f4d575,#c49a3c,#8b7030);
   border:1.5px solid #c49a3c;border-radius:50%;
-  box-shadow:0 1px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(0,0,0,.15),0 0 3px rgba(196,154,60,.2);
+  box-shadow:0 1px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(0,0,0,.15),0 0 6px rgba(196,154,60,.3);
   color:#fff;font-family:'DM Mono',monospace;font-size:8px;font-weight:bold;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);
 }
-.wine-dot-marker:hover { transform:scale(1.2);box-shadow:0 0 8px rgba(196,154,60,.5),0 1px 4px rgba(0,0,0,.25); }
+.wine-dot-marker:hover { transform:scale(1.25);box-shadow:0 0 12px rgba(196,154,60,.6),0 2px 6px rgba(0,0,0,.25); }
 .wine-dot-marker.active {
   border-color:#ffd700;
-  box-shadow:0 0 12px rgba(255,215,0,.45),0 0 24px rgba(196,154,60,.2);
-  transform:scale(1.3);
+  box-shadow:0 0 14px rgba(255,215,0,.5),0 0 28px rgba(196,154,60,.25);
+  transform:scale(1.35);
+  animation:dotPulse 2s ease-in-out infinite;
 }
+@keyframes dotPulse { 0%,100%{box-shadow:0 0 14px rgba(255,215,0,.5),0 0 28px rgba(196,154,60,.25)} 50%{box-shadow:0 0 20px rgba(255,215,0,.7),0 0 40px rgba(196,154,60,.35)} }
 .do-label-tooltip {
-  background:rgba(42,31,10,.85) !important;
-  border:1px solid rgba(196,154,60,.4) !important;border-radius:6px !important;
+  background:rgba(36,26,8,.88) !important;
+  border:1px solid rgba(196,154,60,.5) !important;border-radius:8px !important;
   color:#f4e8c8 !important;font-family:'DM Mono',monospace !important;font-size:9px !important;
-  padding:3px 8px !important;letter-spacing:.3px;
-  box-shadow:0 2px 8px rgba(0,0,0,.3) !important;
+  padding:4px 10px !important;letter-spacing:.4px;
+  box-shadow:0 4px 16px rgba(0,0,0,.4), 0 0 12px rgba(196,154,60,.15) !important;
   white-space:nowrap;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
 }
-.do-label-tooltip::before { border-bottom-color:rgba(42,31,10,.85) !important; }
+.do-label-tooltip::before { border-bottom-color:rgba(36,26,8,.88) !important; }
 .wine-region-popup .leaflet-popup-content-wrapper {
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);
-  border:1px solid rgba(196,154,60,.25);border-radius:12px;
-  box-shadow:0 8px 24px rgba(28,42,34,.15);
+  border:1px solid rgba(196,154,60,.3);border-radius:14px;
+  box-shadow:0 10px 32px rgba(28,42,34,.2), 0 0 8px rgba(196,154,60,.1);
 }
 .wine-region-popup .leaflet-popup-tip { background:#f0e8d8; }
+/* DO polygon animation on appear */
+@keyframes doFadeIn { from{opacity:0;stroke-dashoffset:200} to{opacity:1;stroke-dashoffset:0} }
+/* Leaflet path hover glow */
+.leaflet-interactive:hover { filter:brightness(1.15) drop-shadow(0 0 6px rgba(196,154,60,.4)); }
+.leaflet-interactive { transition:filter .25s ease, fill-opacity .25s ease; }
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
@@ -10936,10 +10996,11 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     attributionControl: false
   });
 
-  // Terrain tiles with medieval filter (applied via CSS)
-  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    maxZoom: 17,
-    attribution: 'Txoko MB'
+  // Elegant CartoDB Voyager tiles with vintage sepia filter (applied via CSS)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: 'Txoko MB',
+    subdomains: 'abcd'
   }).addTo(_wineLeafletMap);
 
   // Define province-to-origin mapping (multiple variants for robustness)
@@ -11206,11 +11267,12 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
 
       return {
         fillColor: isActive ? color : (hasWines ? color : 'transparent'),
-        fillOpacity: isActive ? 0.40 : (hasWines ? 0.12 : 0),
+        fillOpacity: isActive ? 0.45 : (hasWines ? 0.15 : 0),
         color: isActive ? '#ffd700' : (hasWines ? color : '#5a4a2a'),
-        weight: isActive ? 4 : (hasWines ? 2 : 1),
-        opacity: isActive ? 1 : (hasWines ? 0.7 : 0.4),
-        dashArray: isActive ? '' : '',
+        weight: isActive ? 3.5 : (hasWines ? 1.8 : 0.8),
+        opacity: isActive ? 1 : (hasWines ? 0.75 : 0.35),
+        dashArray: isActive ? '' : (hasWines ? '' : '4 3'),
+        lineCap: 'round', lineJoin: 'round',
         className: isActive ? 'ck3-region-active' : 'ck3-do-boundary'
       };
     },
@@ -19199,10 +19261,27 @@ function txTick(){
   if(fill){
     fill.style.width=pct+'%';
     fill.style.background=pct>50?'#4d8a5e':pct>25?'#e8a020':'#c47068';
+    fill.classList.toggle('low', pct<=25);
   }
   if(lbl) lbl.textContent=Math.ceil(txokoState.patienceLeft)+'s';
   const faceEl=document.getElementById('txokoClientFace');
-  if(faceEl){ const pctFace=txokoState.patienceLeft/txokoState.patienceMax*100; faceEl.innerHTML=txClientFace(txokoState.lives,pctFace); }
+  if(faceEl){
+    const pctFace=txokoState.patienceLeft/txokoState.patienceMax*100;
+    const oldMood = faceEl.dataset.mood||'5';
+    faceEl.innerHTML=txClientFace(txokoState.lives,pctFace);
+    const newMood = String(txokoState.lives);
+    if(oldMood !== newMood){ faceEl.classList.add('shoe-mood-change'); setTimeout(()=>faceEl.classList.remove('shoe-mood-change'),400); }
+    faceEl.dataset.mood = newMood;
+    // Add steam particles when lives <= 2
+    if(txokoState.lives<=2 && !document.getElementById('shoeSteam')){
+      const steam=document.createElement('div');steam.id='shoeSteam';
+      steam.style.cssText='position:absolute;top:-8px;right:-4px;pointer-events:none;z-index:10';
+      steam.innerHTML='<svg width="30" height="24" viewBox="0 0 30 24"><g opacity=".6"><circle cx="6" cy="18" r="3" fill="#c47068"><animate attributeName="cy" values="18;2" dur="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0" dur="1.2s" repeatCount="indefinite"/><animate attributeName="r" values="2;5" dur="1.2s" repeatCount="indefinite"/></circle><circle cx="15" cy="20" r="2.5" fill="#c47068"><animate attributeName="cy" values="20;4" dur="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0" dur="1.5s" repeatCount="indefinite"/><animate attributeName="r" values="2;4.5" dur="1.5s" repeatCount="indefinite"/></circle><circle cx="24" cy="16" r="2" fill="#c47068"><animate attributeName="cy" values="16;0" dur="1s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0" dur="1s" repeatCount="indefinite"/><animate attributeName="r" values="1.5;4" dur="1s" repeatCount="indefinite"/></circle></g></svg>';
+      faceEl.style.position='relative';faceEl.appendChild(steam);
+    } else if(txokoState.lives>2){
+      const oldSteam=document.getElementById('shoeSteam'); if(oldSteam) oldSteam.remove();
+    }
+  }
   if(txokoState.patienceLeft<=0){ clearInterval(txokoTimer); txAnswer(-1); }
 }
 
@@ -19222,6 +19301,9 @@ function txAnswer(idx){
     const _dish=DISHES.find(d=>getDish(d).name===txokoState.question.dishName);
     burstEmoji(_catSimple[_dish?.cat]||'⭐');
     txokoState.score++; txokoState.streak++;
+    // Sparkle effect on Mr. Shoesmith face
+    const _faceOk=document.getElementById('txokoClientFace');
+    if(_faceOk){ _faceOk.style.filter='brightness(1.15)'; setTimeout(()=>_faceOk.style.filter='',400); }
     const xpAmt = txokoState.streak>=5?15:txokoState.streak>=3?10:7;
     awardXP(xpAmt,LANG==='en'?'Correct order ':'Comanda correcta ');
 
@@ -19234,11 +19316,21 @@ function txAnswer(idx){
     txokoState.lives--;
     txokoState.streak=0;
 
-    // Screen shake on wrong answer
+    // Screen shake + face anger animation on wrong answer
     const gameEl=document.querySelector('.txoko-game');
     if(gameEl){
-      gameEl.style.animation='shake .3s';
-      setTimeout(()=>gameEl.style.animation='',350);
+      gameEl.style.animation='shake .3s, wrongFlash .4s ease-out';
+      setTimeout(()=>gameEl.style.animation='',450);
+    }
+    // Trigger angry face animation
+    const faceEl=document.getElementById('txokoClientFace');
+    if(faceEl){
+      faceEl.classList.add('shoe-mood-change');
+      if(txokoState.lives<=2) faceEl.closest('.txoko-game')?.classList.add('shoe-angry');
+      setTimeout(()=>{
+        faceEl.classList.remove('shoe-mood-change');
+        faceEl.closest('.txoko-game')?.classList.remove('shoe-angry');
+      }, 500);
     }
   }
 
