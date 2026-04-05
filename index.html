@@ -3351,6 +3351,10 @@ body::after{
   .sub-tabs button,
   .tunic-stab,
   .pin-key{min-height:44px;min-width:44px}
+  /* Wine sub-tabs: compact for 7 tabs on mobile */
+  .tunic-subtabs{gap:.35rem;padding:.4rem .5rem}
+  .tunic-stab{padding:.45rem .65rem;font-size:.62rem;gap:.25rem;border-radius:10px;min-width:auto}
+  .tunic-stab.active{padding:.45rem .75rem}
   /* Utility classes scale up on mobile */
   .f-mono-xs{font-size:.58rem}.f-mono-sm{font-size:.63rem}.f-mono-md{font-size:.68rem}.f-mono-base{font-size:.72rem}
   .f-qs-sm{font-size:.75rem}.f-qs-md{font-size:.78rem}.f-qs-base{font-size:.86rem}.f-qs-lg{font-size:.92rem}
@@ -10793,11 +10797,11 @@ function renderVinos(){
   const sub = _vinoSubTab || 'sommelier';
   const _en = LANG==='en';
   const tabs = [
-    ['sommelier','Sommelier','✨'],
+    ['sommelier','Somm','✨'],
     ['carta',_en?'Menu':'Carta','🍷'],
-    ['mapa',_en?'DO Map':'Mapa DO','🗺️'],
+    ['mapa',_en?'Map':'Mapa','🗺️'],
     ['aprende',_en?'Learn':'Aprende','📖'],
-    ['wineFlash','Flashcards','🃏'],
+    ['wineFlash','Flash','🃏'],
     ['wineQuiz','Quiz','🎯'],
     ['servicio',_en?'Service':'Servicio','💬']
   ];
