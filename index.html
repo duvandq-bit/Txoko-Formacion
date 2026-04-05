@@ -683,6 +683,18 @@ body::after{
 }
 .achievement-badge::before,.achievement-badge::after{}
 
+/* ═══ GEM UNLOCK CELEBRATION ANIMATIONS ═══ */
+@keyframes gemUnlockBurst{0%{transform:scale(0) rotate(-90deg);opacity:0;filter:brightness(2) saturate(2)}40%{transform:scale(1.3) rotate(5deg);opacity:1;filter:brightness(1.6) saturate(1.8)}70%{transform:scale(.95) rotate(-2deg);filter:brightness(1.2) saturate(1.4)}100%{transform:scale(1) rotate(0deg);opacity:1;filter:brightness(1.08) saturate(1.25)}}
+@keyframes gemSparkle{0%{box-shadow:0 0 0 0 rgba(255,215,0,0)}25%{box-shadow:0 0 20px 8px rgba(255,215,0,.5),0 0 40px 16px rgba(255,180,0,.2)}50%{box-shadow:0 0 30px 12px rgba(255,215,0,.3),0 0 60px 24px rgba(255,160,0,.15)}100%{box-shadow:0 0 0 0 rgba(255,215,0,0)}}
+@keyframes gemRaysRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes gemStarPop{0%{transform:scale(0) rotate(0deg);opacity:1}50%{transform:scale(1.2) rotate(180deg);opacity:.8}100%{transform:scale(0) rotate(360deg);opacity:0}}
+@keyframes gemRibbonFloat{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(-60px) rotate(45deg);opacity:0}}
+.gem-unlocking{animation:gemUnlockBurst .8s cubic-bezier(.22,1,.36,1) forwards}
+.gem-sparkle{animation:gemSparkle 1.2s ease-out}
+.gem-rays{position:absolute;inset:-20px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,transparent,rgba(255,215,0,.15),transparent,rgba(255,215,0,.15),transparent,rgba(255,215,0,.15),transparent,rgba(255,215,0,.15),transparent);animation:gemRaysRotate 3s linear infinite;opacity:0;transition:opacity .4s}
+.achievement-badge.just-unlocked .gem-rays{opacity:1}
+.achievement-badge.just-unlocked{animation:gemSparkle 1.2s ease-out}
+
 /* Shimmer loading effect */
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 .skeleton{background:linear-gradient(90deg,rgba(0,0,0,.04) 25%,rgba(0,0,0,.08) 50%,rgba(0,0,0,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--r2)}
@@ -1828,11 +1840,55 @@ body::after{
    RESPONSIVE
 ───────────────────────────────────────────────── */
 @media(max-width:600px){
-  .app-content{padding:1.25rem 1rem 2.5rem}
-  .fc-dish,.exam-dish-title{font-size:1.6rem}
-  .results-pct{font-size:2.2rem}
-  .login-logo h1{font-size:2.8rem}
-  .dash-hero-greeting{font-size:1.7rem}
+  /* ── Escala base: 16px → 18px en móvil (todas las rem crecen ~12%) ── */
+  html{font-size:18px}
+  .app-content{padding:1.25rem .85rem 2.5rem}
+  .fc-dish,.exam-dish-title{font-size:1.5rem}
+  .results-pct{font-size:2rem}
+  .login-logo h1{font-size:2.6rem}
+  .dash-hero-greeting{font-size:1.5rem}
+
+  /* ── Textos micro que siguen demasiado pequeños incluso con 18px base ── */
+  /* Labels DM Mono (antes .5-.58rem = 9-9.3px → ahora .62rem = 11.2px) */
+  .wine-info-label,
+  .leaderboard-title,
+  .app-credit{font-size:.62rem}
+
+  /* Valores de info (antes .65-.7rem → ahora .78rem = 14px) */
+  .wine-info-value,
+  .nav-btn,
+  .lang-btn{font-size:.78rem}
+
+  /* Tags y badges pequeños (antes .55rem = 8.8px → ahora .65rem = 11.7px) */
+  .wine-badge{font-size:.65rem}
+  /* Override inline .55rem (tags, micro-labels) → .65rem = 11.7px */
+  span[style*="font-size:.55rem"],
+  div[style*="font-size:.55rem"]{font-size:.63rem !important}
+  /* Override inline .6rem → .68rem */
+  span[style*="font-size:.6rem"],
+  div[style*="font-size:.6rem"]{font-size:.68rem !important}
+  /* Override inline .62rem → .7rem */
+  span[style*="font-size:.62rem"],
+  div[style*="font-size:.62rem"]{font-size:.7rem !important}
+
+  /* Notas de cata y story (asegurar legibilidad) */
+  .wine-story-box div[style*="font-size:.85rem"]{font-size:.9rem !important}
+
+  /* Ficha de servicio: labels y valores */
+  div[style*="font-size:.5rem"]{font-size:.58rem !important}
+  div[style*="font-size:.82rem"]{font-size:.88rem !important}
+  div[style*="font-size:.78rem"]{font-size:.84rem !important}
+  div[style*="font-size:.68rem"]{font-size:.75rem !important}
+
+  /* PIN modal */
+  .pin-modal-sub,.pin-error-msg,.pin-setup-info,.pin-modal-cancel{font-size:.78rem}
+
+  /* Header más compacto en móvil */
+  .header-uname{font-size:.82rem}
+  .btn-logout{font-size:.7rem;padding:.28rem .65rem}
+
+  /* Tabs de navegación */
+  .sub-tabs button,.filter-pill{font-size:.72rem;padding:.4rem .7rem}
 }
 
 /* ─────────────────────────────────────────────────
@@ -3179,7 +3235,127 @@ body::after{
 .maplibregl-canvas { border-radius:12px; }
 /* GPU badge */
 .ml-gpu-badge { position:absolute;bottom:6px;left:6px;z-index:10;font-family:'DM Mono',monospace;font-size:.45rem;color:rgba(196,154,60,.6);letter-spacing:.5px;pointer-events:none; }
+/* ═══ TOAST NOTIFICATIONS ═══ */
+.txk-toast-container{position:fixed;top:env(safe-area-inset-top,12px);left:50%;transform:translateX(-50%);z-index:10002;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;width:min(380px,90vw)}
+.txk-toast{pointer-events:auto;display:flex;align-items:center;gap:.6rem;padding:.65rem 1rem;border-radius:10px;font-family:'Quicksand',sans-serif;font-size:.78rem;line-height:1.4;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.25);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:toastIn .35s ease both;cursor:pointer;transition:opacity .2s}
+.txk-toast.out{animation:toastOut .3s ease forwards}
+.txk-toast-icon{font-size:1.1rem;flex-shrink:0}
+.txk-toast-msg{flex:1}
+.txk-toast-close{background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:.9rem;padding:2px 4px;flex-shrink:0}
+.txk-toast.toast-success{background:rgba(45,120,70,.92)}
+.txk-toast.toast-error{background:rgba(180,60,50,.92)}
+.txk-toast.toast-warning{background:rgba(180,140,30,.92)}
+.txk-toast.toast-info{background:rgba(50,90,140,.92)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-20px) scale(.95)}}
+/* ═══ LOADING SKELETON ═══ */
+.txk-skeleton{background:linear-gradient(90deg,rgba(196,154,60,.06) 25%,rgba(196,154,60,.12) 50%,rgba(196,154,60,.06) 75%);background-size:200% 100%;animation:txkShimmer 1.5s infinite;border-radius:8px;min-height:2rem}
+@keyframes txkShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
+/* ═══ SERVICIO FANTASMA — immersive re-engagement screen ═══ */
+.sf-overlay{position:fixed;inset:0;z-index:10003;background:#0a0f0c;overflow-y:auto;animation:fadeIn .5s ease}
+.sf-ambient{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 30% 20%,rgba(196,154,60,.06) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(77,138,94,.04) 0%,transparent 50%)}
+.sf-content{position:relative;z-index:1;max-width:420px;margin:0 auto;padding:1.5rem 1.2rem 3rem}
+.sf-header{text-align:center;margin-bottom:1.5rem;animation:slideUp .5s .1s ease both}
+.sf-mesa-num{font-family:'Cinzel',serif;font-size:2.8rem;font-weight:700;color:var(--gold);text-shadow:0 0 30px rgba(196,154,60,.4);margin-bottom:.2rem}
+.sf-mesa-sub{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(196,154,60,.6);letter-spacing:.2em;text-transform:uppercase}
+.sf-comensales{display:flex;justify-content:center;gap:.6rem;margin:1rem 0 .5rem}
+.sf-comensal{width:36px;height:36px;border-radius:50%;background:rgba(196,154,60,.1);border:1.5px solid rgba(196,154,60,.2);display:flex;align-items:center;justify-content:center;font-size:1rem;animation:scaleIn .3s ease both}
+.sf-comensal.alert{border-color:rgba(201,112,104,.4);background:rgba(201,112,104,.1)}
+.sf-timer-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin:1.2rem 0;overflow:hidden;position:relative}
+.sf-timer-fill{height:100%;background:linear-gradient(90deg,var(--gold),#d4944c);border-radius:2px;transition:width .5s linear}
+.sf-timer-fill.danger{background:linear-gradient(90deg,var(--rose),#ff4444)}
+.sf-timer-label{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);letter-spacing:.1em;text-align:right;margin-top:.2rem}
+.sf-scenario{background:rgba(255,255,255,.03);border:1px solid rgba(196,154,60,.12);border-radius:12px;padding:1.1rem;margin-bottom:1rem;animation:slideUp .4s ease both}
+.sf-scenario-speaker{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.sf-scenario-text{font-family:'Quicksand',sans-serif;font-size:.85rem;color:#e8e0d0;line-height:1.65;font-style:italic}
+.sf-options{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
+.sf-option{background:rgba(255,255,255,.04);border:1.5px solid rgba(196,154,60,.15);border-radius:10px;padding:.85rem 1rem;cursor:pointer;transition:all .25s;font-family:'Quicksand',sans-serif;font-size:.78rem;color:#d8d0c0;line-height:1.5;text-align:left;min-height:48px;display:flex;align-items:center;gap:.5rem}
+.sf-option:hover{border-color:rgba(196,154,60,.4);background:rgba(196,154,60,.06);transform:translateX(4px)}
+.sf-option:active{transform:scale(.98)}
+.sf-option.correct{border-color:rgba(77,138,94,.5);background:rgba(77,138,94,.12);color:#a8d5ba}
+.sf-option.wrong{border-color:rgba(201,112,104,.4);background:rgba(201,112,104,.08);color:#e8a8a0}
+.sf-option.disabled{pointer-events:none;opacity:.5}
+.sf-feedback{padding:.8rem 1rem;border-radius:10px;margin-top:.6rem;font-family:'Quicksand',sans-serif;font-size:.75rem;line-height:1.5;animation:slideUp .3s ease}
+.sf-feedback.good{background:rgba(77,138,94,.1);border:1px solid rgba(77,138,94,.2);color:#a8d5ba}
+.sf-feedback.bad{background:rgba(201,112,104,.1);border:1px solid rgba(201,112,104,.2);color:#e8a8a0}
+.sf-progress{display:flex;gap:.3rem;justify-content:center;margin:1rem 0}
+.sf-progress-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);transition:all .3s}
+.sf-progress-dot.done{background:var(--sage)}.sf-progress-dot.fail{background:var(--rose)}.sf-progress-dot.active{background:var(--gold);box-shadow:0 0 8px rgba(196,154,60,.5)}
+.sf-results{text-align:center;animation:scaleIn .5s cubic-bezier(.22,1,.36,1)}
+.sf-results-icon{font-size:4rem;margin-bottom:.5rem}
+.sf-results-title{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--gold);margin-bottom:.3rem}
+.sf-results-sub{font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parch3);margin-bottom:1.5rem;line-height:1.5}
+.sf-results-xp{font-family:'DM Mono',monospace;font-size:1.1rem;color:var(--gold);margin-bottom:1.5rem}
+.sf-btn-enter{background:linear-gradient(135deg,var(--gold),#d4944c);color:#1c2a22;border:none;border-radius:30px;padding:.85rem 2.5rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;letter-spacing:.06em;box-shadow:0 4px 20px rgba(196,154,60,.3);transition:all .3s}
+.sf-btn-enter:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(196,154,60,.4)}
+.sf-skip{font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.35);margin-top:1.2rem;cursor:pointer;letter-spacing:.08em;background:none;border:none;text-decoration:underline;text-underline-offset:3px}
+@keyframes sfPulseGlow{0%,100%{box-shadow:0 0 20px rgba(196,154,60,.1)}50%{box-shadow:0 0 40px rgba(196,154,60,.25)}}
+
+/* ═══ UTILITY CLASSES — replace common inline font+size+color combos ═══ */
+/* DM Mono family */
+.f-mono{font-family:'DM Mono',monospace}
+.f-mono-xs{font-family:'DM Mono',monospace;font-size:.5rem}
+.f-mono-sm{font-family:'DM Mono',monospace;font-size:.55rem}
+.f-mono-md{font-family:'DM Mono',monospace;font-size:.6rem}
+.f-mono-base{font-family:'DM Mono',monospace;font-size:.65rem}
+/* Quicksand family */
+.f-qs{font-family:'Quicksand',sans-serif}
+.f-qs-sm{font-family:'Quicksand',sans-serif;font-size:.68rem}
+.f-qs-md{font-family:'Quicksand',sans-serif;font-size:.72rem}
+.f-qs-base{font-family:'Quicksand',sans-serif;font-size:.8rem}
+.f-qs-lg{font-family:'Quicksand',sans-serif;font-size:.85rem}
+/* Cinzel family */
+.f-cin{font-family:'Cinzel',serif}
+.f-cin-md{font-family:'Cinzel',serif;font-size:.82rem}
+.f-cin-lg{font-family:'Cinzel',serif;font-size:1.1rem}
+/* Common color shortcuts */
+.c-gold{color:var(--gold)}.c-parch{color:var(--parchment)}.c-parch2{color:var(--parch2)}.c-parch3{color:var(--parch3)}.c-parch4{color:var(--parch4)}.c-sage{color:var(--sage)}.c-rose{color:var(--rose)}
+/* Layout utilities */
+.flex-center{display:flex;align-items:center;justify-content:center}
+.flex-col{display:flex;flex-direction:column}
+.gap-sm{gap:.4rem}.gap-md{gap:.7rem}.gap-lg{gap:1rem}
+/* Touch target enforcement (44px minimum for mobile) */
+.touch-target{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+
+/* ═══ EXPANDED MOBILE RESPONSIVE — covers inline style overrides ═══ */
+@media(max-width:600px){
+  /* Override ALL small DM Mono inline sizes */
+  [style*="font-family:'DM Mono'"][style*="font-size:.5rem"],
+  [style*="font-family:'DM Mono'"][style*="font-size:.48rem"]{font-size:.58rem !important}
+  [style*="font-family:'DM Mono'"][style*="font-size:.52rem"],
+  [style*="font-family:'DM Mono'"][style*="font-size:.55rem"]{font-size:.63rem !important}
+  [style*="font-family:'DM Mono'"][style*="font-size:.56rem"],
+  [style*="font-family:'DM Mono'"][style*="font-size:.58rem"]{font-size:.66rem !important}
+  [style*="font-family:'DM Mono'"][style*="font-size:.6rem"]{font-size:.68rem !important}
+  [style*="font-family:'DM Mono'"][style*="font-size:.62rem"]{font-size:.7rem !important}
+  /* Override ALL small Quicksand inline sizes */
+  [style*="font-family:'Quicksand'"][style*="font-size:.65rem"],
+  [style*="font-family:'Quicksand'"][style*="font-size:.68rem"]{font-size:.75rem !important}
+  [style*="font-family:'Quicksand'"][style*="font-size:.7rem"],
+  [style*="font-family:'Quicksand'"][style*="font-size:.72rem"]{font-size:.78rem !important}
+  [style*="font-family:'Quicksand'"][style*="font-size:.78rem"],
+  [style*="font-family:'Quicksand'"][style*="font-size:.8rem"]{font-size:.86rem !important}
+  /* Override small Cinzel inline sizes */
+  [style*="font-family:'Cinzel'"][style*="font-size:.72rem"],
+  [style*="font-family:'Cinzel'"][style*="font-size:.75rem"]{font-size:.82rem !important}
+  [style*="font-family:'Cinzel'"][style*="font-size:.82rem"]{font-size:.9rem !important}
+  /* Ensure letter-spacing doesn't eat mobile space */
+  [style*="letter-spacing:.18em"]{letter-spacing:.1em !important}
+  [style*="letter-spacing:.15em"]{letter-spacing:.08em !important}
+  /* Enforce minimum touch targets on all buttons/interactive */
+  button,
+  [onclick],
+  .nav-btn,
+  .filter-pill,
+  .sub-tabs button,
+  .tunic-stab,
+  .pin-key{min-height:44px;min-width:44px}
+  /* Utility classes scale up on mobile */
+  .f-mono-xs{font-size:.58rem}.f-mono-sm{font-size:.63rem}.f-mono-md{font-size:.68rem}.f-mono-base{font-size:.72rem}
+  .f-qs-sm{font-size:.75rem}.f-qs-md{font-size:.78rem}.f-qs-base{font-size:.86rem}.f-qs-lg{font-size:.92rem}
+  .f-cin-md{font-size:.9rem}.f-cin-lg{font-size:1.2rem}
+}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -3209,7 +3385,7 @@ body::after{
     <em class="login-subtitle" style="color:rgba(244,237,226,.4)">by Martín Berasategui · Formación de Equipo</em>
   </div>
 
-  <div class="login-card">
+  <div class="login-card" role="form" aria-label="Iniciar sesión">
     <div class="login-field">
       <label class="login-label" id="loginUserLabel" for="loginUser">Usuario</label>
       <input type="text" id="loginUser" class="login-input" placeholder="Tu nombre..." maxlength="30" autocomplete="username" spellcheck="false">
@@ -3258,26 +3434,26 @@ body::after{
 
 <!-- ═══════ APP ═══════ -->
 <div id="screenApp" class="screen">
-  <header class="app-header">
+  <header class="app-header" role="banner">
     <div class="header-logo">TXOKO<sup>MB</sup></div>
     <div class="header-spacer"></div>
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
       <span class="header-uname" id="headerUsername"></span>
-      <button id="pushEnableBtn" onclick="enablePushManual()" style="display:none;background:rgba(255,80,80,.25);border:1px solid rgba(255,80,80,.5);cursor:pointer;padding:2px 8px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.5rem;color:#ff8;letter-spacing:.03em;animation:pulse 2s infinite" title="Activar notificaciones push">🔕</button>
-      <button id="notifBell" onclick="renderNotifPanel()" style="display:none;background:transparent;border:none;cursor:pointer;padding:4px;position:relative;font-size:1.2rem;line-height:1">
-        ◉<span id="notifBadge" style="position:absolute;top:0;right:0;background:var(--rose);color:#fff;border-radius:50%;width:14px;height:14px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
+      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,80,80,.25);border:1px solid rgba(255,80,80,.5);cursor:pointer;padding:8px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:.6rem;color:#ff8;letter-spacing:.03em;animation:pulse 2s infinite;min-height:36px;min-width:36px" title="Activar notificaciones push">🔕</button>
+      <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:40px;min-width:40px">
+        ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
       <!-- Language toggle in header -->
-      <div style="display:flex;gap:.25rem;margin-right:.25rem">
-        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.9);letter-spacing:.05em">ES</button>
-        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.7);letter-spacing:.05em">EN</button>
+      <div style="display:flex;gap:.35rem;margin-right:.25rem">
+        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:32px">ES</button>
+        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:32px">EN</button>
       </div>
-      <button class="btn-logout" id="logoutBtn" onclick="logout()">Salir</button>
+      <button class="btn-logout" id="logoutBtn" onclick="logout()" aria-label="Cerrar sesión">Salir</button>
     </div>
   </header>
 
-  <nav class="app-nav" id="appNav">
+  <nav class="app-nav" id="appNav" role="navigation" aria-label="Navegación principal">
     <button class="nav-btn active" id="navDashboard" onclick="showTab('dashboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</button>
     <button class="nav-btn" id="navAprender" onclick="showTab('aprender')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Aprender</button>
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
@@ -3289,9 +3465,9 @@ body::after{
   </nav>
   <div class="nav-fade" id="navFade"></div>
 
-  <div class="app-content" id="appContent"></div>
+  <div class="app-content" id="appContent" role="main" aria-live="polite"></div>
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
-  <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido">◉</button>
+  <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
 </div>
 
 <script>
@@ -5380,7 +5556,7 @@ async function checkDuelBanner(user) {
         <div style="display:flex;align-items:center;gap:.75rem">
           <div style="flex:1">
             <div style="font-family:'Cinzel',serif;font-size:1rem;color:#fff;margin-bottom:.2rem">
-              <strong>${challenger}</strong> ${LANG==='en'?'has challenged you!':'te ha retado!'}
+              <strong>${escapeHTML(challenger)}</strong> ${LANG==='en'?'has challenged you!':'te ha retado!'}
             </div>
             <div style="font-size:.68rem;color:rgba(255,255,255,.5)">⏰ ${hoursLeft}h ${LANG==='en'?'remaining':'restantes'} · ${LANG==='en'?'5 questions':'5 preguntas'}</div>
           </div>
@@ -5437,7 +5613,7 @@ async function renderNotifPanel() {
             <div style="display:flex;gap:.5rem;align-items:flex-start">
               <span style="font-size:1rem">${typeIcon(n.type)}</span>
               <div style="flex:1">
-                <div style="font-size:.82rem;color:var(--parchment);line-height:1.4">${n.message}</div>
+                <div style="font-size:.82rem;color:var(--parchment);line-height:1.4">${escapeHTML(n.message)}</div>
                 <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);margin-top:.3rem">${new Date(n.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div>
               </div>
             </div>
@@ -5554,12 +5730,102 @@ function escapeHTML(str){
   if(!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+
+// ═══ TOAST NOTIFICATION SYSTEM ═══
+const _toastContainer = (function(){
+  const c = document.createElement('div');
+  c.className = 'txk-toast-container';
+  c.id = 'txkToastContainer';
+  c.setAttribute('aria-live','polite');
+  c.setAttribute('role','status');
+  document.body.appendChild(c);
+  return c;
+})();
+
+function showToast(msg, type='info', duration=4000){
+  const t = document.createElement('div');
+  t.className = 'txk-toast toast-' + type;
+  const icons = {success:'✓',error:'✗',warning:'⚠',info:'ℹ'};
+  t.innerHTML = '<span class="txk-toast-icon">'+(icons[type]||'ℹ')+'</span><span class="txk-toast-msg">'+escapeHTML(msg)+'</span><button class="txk-toast-close" aria-label="Cerrar">&times;</button>';
+  t.querySelector('.txk-toast-close').onclick = function(){ dismissToast(t); };
+  t.onclick = function(e){ if(e.target.className!=='txk-toast-close') dismissToast(t); };
+  _toastContainer.appendChild(t);
+  if(duration > 0) setTimeout(function(){ dismissToast(t); }, duration);
+  // Max 3 visible
+  while(_toastContainer.children.length > 3){
+    dismissToast(_toastContainer.firstChild);
+  }
+  return t;
+}
+function dismissToast(t){
+  if(!t || !t.parentNode) return;
+  t.classList.add('out');
+  setTimeout(function(){ if(t.parentNode) t.remove(); }, 300);
+}
+
+// ═══ SUPABASE FETCH WRAPPER — error feedback + retry ═══
+async function supaFetch(path, options, opts){
+  opts = opts || {};
+  var retries = opts.retries || 1;
+  var silent = opts.silent || false;
+  var label = opts.label || 'datos';
+  var url = path.startsWith('http') ? path : SUPA_URL + path;
+  var headers = Object.assign({
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY,
+    'Content-Type': 'application/json'
+  }, (options && options.headers) || {});
+  var fetchOpts = Object.assign({}, options || {}, { headers: headers });
+
+  for(var attempt = 0; attempt <= retries; attempt++){
+    try {
+      var res = await fetch(url, fetchOpts);
+      if(!res.ok){
+        if(attempt < retries) continue;
+        if(!silent) showToast('Error al cargar ' + label + ' ('+res.status+')', 'error');
+        return null;
+      }
+      // For methods that don't return body (204, etc)
+      if(res.status === 204 || (options && options.method && options.method !== 'GET' && fetchOpts.headers['Prefer'] && fetchOpts.headers['Prefer'].includes('return=minimal'))){
+        return { ok: true };
+      }
+      return await res.json();
+    } catch(e){
+      if(attempt < retries) continue;
+      if(!silent) showToast('Sin conexión — ' + label + ' no disponible', 'warning', 5000);
+      return null;
+    }
+  }
+  return null;
+}
+
+// ═══ LOADING SKELETON HELPER ═══
+function showSkeleton(container, count){
+  count = count || 3;
+  var html = '';
+  for(var i=0; i<count; i++){
+    html += '<div class="txk-skeleton" style="height:'+(1.5 + Math.random()*1.5)+'rem;margin-bottom:.5rem"></div>';
+  }
+  if(typeof container === 'string') container = document.getElementById(container);
+  if(container) container.innerHTML = html;
+}
 async function hashPin(pin){
   const enc = new TextEncoder().encode(pin+'txoko_salt_2026');
   const buf = await crypto.subtle.digest('SHA-256', enc);
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-const _pinAttempts={count:0,lockedUntil:0};
+// ═══ PIN RATE LIMITING — persistent across page reloads ═══
+const _pinAttempts = (function() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('txoko_pin_rl') || '{}');
+    // Validate structure and expiry
+    if(saved.lockedUntil && Date.now() >= saved.lockedUntil) return {count:0,lockedUntil:0,streak:0};
+    return {count: saved.count||0, lockedUntil: saved.lockedUntil||0, streak: saved.streak||0};
+  } catch(e) { return {count:0,lockedUntil:0,streak:0}; }
+})();
+function _savePinRL() {
+  try { localStorage.setItem('txoko_pin_rl', JSON.stringify(_pinAttempts)); } catch(e) {}
+}
 function checkPinRateLimit(){
   if(Date.now()<_pinAttempts.lockedUntil) return false;
   return true;
@@ -5567,11 +5833,15 @@ function checkPinRateLimit(){
 function recordPinFail(){
   _pinAttempts.count++;
   if(_pinAttempts.count>=3){
-    _pinAttempts.lockedUntil=Date.now()+30000; // 30s lockout
-    _pinAttempts.count=0;
+    _pinAttempts.streak++;
+    // Exponential lockout: 30s → 60s → 5min → 15min (max)
+    var lockMs = Math.min(30000 * Math.pow(2, _pinAttempts.streak - 1), 900000);
+    _pinAttempts.lockedUntil = Date.now() + lockMs;
+    _pinAttempts.count = 0;
   }
+  _savePinRL();
 }
-function recordPinSuccess(){ _pinAttempts.count=0; _pinAttempts.lockedUntil=0; }
+function recordPinSuccess(){ _pinAttempts.count=0; _pinAttempts.lockedUntil=0; _pinAttempts.streak=0; _savePinRL(); }
 function getPinLockRemaining(){ return Math.max(0,Math.ceil((_pinAttempts.lockedUntil-Date.now())/1000)); }
 
 // Session timeout (15 min inactivity)
@@ -5913,6 +6183,448 @@ function checkStreak(){
   // Show streak notification in dashboard
   if(emp.streak>1) showStreakToast(emp.streak);
 }
+
+// ═══════════════════════════════════════════════════════════
+// ═══ SERVICIO FANTASMA — Re-engagement system ═══
+// ═══════════════════════════════════════════════════════════
+
+const SF_TABLES = [300,301,302,303,304,305,306,307,308,309,400,401,402,403,404,405,406,407,408,409,410,500,501,502,503,504,505];
+
+const SF_SCENARIOS_ES = [
+  {type:'alergia', speaker:'🍽️ MAÎTRE', text:'"{guest}" en la mesa {mesa} tiene alergia a {allergen}. Ha pedido recomendación de entrantes. ¿Qué le dices?'},
+  {type:'maridaje', speaker:'🍷 SOMMELIER', text:'La mesa {mesa} ha pedido un vino para acompañar "{dish}". ¿Qué recomiendas?'},
+  {type:'cubiertos', speaker:'👨‍🍳 JEFE DE SALA', text:'La mesa {mesa} ha pedido "{dish}". ¿Con qué cubiertos se sirve?'},
+  {type:'ingredientes', speaker:'🍽️ MAÎTRE', text:'El comensal de la mesa {mesa} pregunta qué lleva exactamente "{dish}". ¿Cómo se lo explicas?'},
+  {type:'protocolo', speaker:'👨‍🍳 JEFE DE SALA', text:'La mesa {mesa} es un VIP del hotel. Pregunta por la historia de "{dish}". ¿Qué le cuentas?'},
+  {type:'alternativa', speaker:'🍽️ MAÎTRE', text:'La mesa {mesa} tiene un niño que no puede comer {allergen}. Han pedido "{dish}" que lleva ese alérgeno. ¿Qué alternativa ofreces?'},
+  {type:'vino_temp', speaker:'🍷 SOMMELIER', text:'La mesa {mesa} dice que el vino está demasiado frío. Es un {wineType}. ¿A qué temperatura debería servirse?'},
+  {type:'comanda', speaker:'👨‍🍳 JEFE DE SALA', text:'La mesa {mesa} tiene 4 comensales: dos sin gluten, uno vegetariano. ¿Qué combinación de platos propones?'}
+];
+const SF_SCENARIOS_EN = [
+  {type:'alergia', speaker:'🍽️ MAÎTRE', text:'"{guest}" at table {mesa} has a {allergen} allergy. They asked for starter recommendations. What do you say?'},
+  {type:'maridaje', speaker:'🍷 SOMMELIER', text:'Table {mesa} asked for a wine to pair with "{dish}". What do you recommend?'},
+  {type:'cubiertos', speaker:'👨‍🍳 HEAD WAITER', text:'Table {mesa} ordered "{dish}". Which cutlery do you serve it with?'},
+  {type:'ingredientes', speaker:'🍽️ MAÎTRE', text:'The guest at table {mesa} asks what exactly is in "{dish}". How do you explain it?'},
+  {type:'protocolo', speaker:'👨‍🍳 HEAD WAITER', text:'Table {mesa} is a hotel VIP. They ask about the story behind "{dish}". What do you tell them?'},
+  {type:'alternativa', speaker:'🍽️ MAÎTRE', text:'Table {mesa} has a child who can\'t eat {allergen}. They ordered "{dish}" which contains it. What alternative do you offer?'},
+  {type:'vino_temp', speaker:'🍷 SOMMELIER', text:'Table {mesa} says the wine is too cold. It\'s a {wineType}. What temperature should it be served at?'},
+  {type:'comanda', speaker:'👨‍🍳 HEAD WAITER', text:'Table {mesa} has 4 guests: two gluten-free, one vegetarian. What dish combination do you suggest?'}
+];
+
+const SF_GUEST_NAMES = ['Sr. Martínez','Sra. Takahashi','Sr. Anderson','Sra. García','Sr. Weber','Sra. Dupont','Sr. Al-Rashid','Sra. O\'Brien','Sr. Rossi','Sra. Kim','Sr. Johansen','Sra. Fernández'];
+const SF_WINE_TEMPS = {tinto:{correct:'16-18°C',wrong:['8-10°C','4-6°C','22-24°C']},blanco:{correct:'8-10°C',wrong:['16-18°C','4-6°C','20°C']},rosado:{correct:'8-12°C',wrong:['18°C','4°C','22°C']},espumoso:{correct:'6-8°C',wrong:['14°C','18°C','Room temp']}};
+
+function _sfDaysInactive(emp){
+  var last = emp.lastStudyDay || '';
+  if(!last) return 999;
+  var d1 = new Date(last+'T12:00:00');
+  var d2 = new Date(todayStr()+'T12:00:00');
+  return Math.floor((d2 - d1) / 86400000);
+}
+
+function _sfShouldTrigger(emp){
+  return _sfDaysInactive(emp) >= 7;
+}
+
+function _sfDifficulty(emp){
+  var days = _sfDaysInactive(emp);
+  if(days >= 21) return {level:'vip', questions:6, timer:150, label:'VIP'};
+  if(days >= 14) return {level:'medio', questions:5, timer:180, label:'★★'};
+  return {level:'facil', questions:3, timer:200, label:'★'};
+}
+
+function _sfPickMesa(){
+  return SF_TABLES[Math.floor(Math.random()*SF_TABLES.length)];
+}
+
+function _sfGenerateQuestions(count){
+  var questions = [];
+  var usedTypes = {};
+  var scenarios = LANG==='en' ? SF_SCENARIOS_EN : SF_SCENARIOS_ES;
+  var attempts = 0;
+
+  while(questions.length < count && attempts < 50){
+    attempts++;
+    var scIdx = Math.floor(Math.random()*scenarios.length);
+    var sc = scenarios[scIdx];
+    if(usedTypes[sc.type] && questions.length < scenarios.length) continue;
+
+    var mesa = _sfPickMesa();
+    var guest = SF_GUEST_NAMES[Math.floor(Math.random()*SF_GUEST_NAMES.length)];
+    var dish = DISHES[Math.floor(Math.random()*DISHES.length)];
+    var dishEN = (typeof DISHES_EN!=='undefined' && DISHES_EN.length) ? DISHES_EN.find(function(d){return d.id===dish.id;}) : null;
+    var dishName = (LANG==='en' && dishEN) ? dishEN.name : dish.name;
+    var allergens = dish.allergens || [];
+    var allergen = allergens.length ? allergens[Math.floor(Math.random()*allergens.length)] : 'Gluten';
+    var wineType = ['tinto','blanco','rosado','espumoso'][Math.floor(Math.random()*4)];
+    var wine = (typeof WINES!=='undefined' && WINES.length) ? WINES[Math.floor(Math.random()*WINES.length)] : null;
+
+    var text = sc.text
+      .replace('{mesa}',mesa)
+      .replace('{guest}',guest)
+      .replace('{dish}',dishName)
+      .replace('{allergen}', LANG==='en' ? (ALLERGEN_MAP[allergen]||allergen) : allergen)
+      .replace('{wineType}', LANG==='en' ? wineType : wineType);
+
+    var q = {text:text, speaker:sc.speaker, type:sc.type, mesa:mesa, options:[], correctIdx:0, feedback:''};
+
+    // Generate options based on type
+    if(sc.type==='alergia'){
+      var safe = DISHES.filter(function(d){ return d.cat===dish.cat && !(d.allergens||[]).includes(allergen) && d.id!==dish.id; });
+      if(!safe.length) safe = DISHES.filter(function(d){ return !(d.allergens||[]).includes(allergen); });
+      var safeDish = safe.length ? safe[Math.floor(Math.random()*safe.length)] : null;
+      var safeName = safeDish ? ((LANG==='en'&&dishEN)?((DISHES_EN.find(function(d2){return d2.id===safeDish.id;})||{}).name||safeDish.name):safeDish.name) : 'Ensalada';
+      var dangerDish = DISHES.filter(function(d){return (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
+      var danger1 = dangerDish.length ? dangerDish[Math.floor(Math.random()*dangerDish.length)] : dish;
+      var danger2 = dangerDish.length>1 ? dangerDish[(Math.floor(Math.random()*dangerDish.length)+1)%dangerDish.length] : dish;
+      q.options = [
+        (LANG==='en'?'I recommend ':'Recomiendo ')+'"'+safeName+'"'+(LANG==='en'?', it\'s free of ':' que no contiene ')+allergen,
+        (LANG==='en'?'Try ':'Pruebe ')+'"'+danger1.name+'"'+(LANG==='en'?', it\'s excellent':' está excelente'),
+        (LANG==='en'?'All our starters are allergen-free':'Todos nuestros entrantes son libres de alérgenos')
+      ];
+      q.correctIdx = 0;
+      q.feedback = LANG==='en' ? 'Correct! Always verify allergens and suggest safe alternatives.' : '¡Correcto! Siempre verifica alérgenos y sugiere alternativas seguras.';
+
+    } else if(sc.type==='cubiertos'){
+      var correctCutlery = dish.cutlery || 'Tenedor trinchero, Cuchillo trinchero';
+      var wrongCutleries = ['Cuchara sopera, Tenedor de postre','Pala de pescado, Tenedor de pescado','Tenedor de postre, Cuchara de postre','Cuchillo de carne, Tenedor de marisco'];
+      var wrongs = wrongCutleries.filter(function(c){return c!==correctCutlery;});
+      q.options = [correctCutlery, wrongs[0], wrongs[1]];
+      q.correctIdx = 0;
+      q.feedback = LANG==='en' ? 'Correct! Proper cutlery is key for a luxury dining experience.' : '¡Correcto! Los cubiertos correctos son clave en alta gastronomía.';
+
+    } else if(sc.type==='maridaje'){
+      if(wine && typeof WINES!=='undefined'){
+        var pairingWines = WINES.filter(function(w){return w.pairings && w.pairings.some(function(p){return p.toLowerCase().includes(dish.cat.toLowerCase().substring(0,4));});});
+        var correctWine = pairingWines.length ? pairingWines[Math.floor(Math.random()*pairingWines.length)] : WINES[0];
+        var otherWines = WINES.filter(function(w){return w.id!==correctWine.id;});
+        var w1 = otherWines[Math.floor(Math.random()*otherWines.length)];
+        var w2 = otherWines[(Math.floor(Math.random()*otherWines.length)+3)%otherWines.length];
+        q.options = [correctWine.name, w1?w1.name:'Rioja Reserva', w2?w2.name:'Albariño'];
+        q.correctIdx = 0;
+        q.feedback = LANG==='en' ? 'Great pairing choice! Wine knowledge elevates the service.' : '¡Gran elección de maridaje! El conocimiento de vinos eleva el servicio.';
+      } else {
+        continue;
+      }
+
+    } else if(sc.type==='vino_temp'){
+      var temps = SF_WINE_TEMPS[wineType] || SF_WINE_TEMPS.tinto;
+      q.options = [temps.correct, temps.wrong[0], temps.wrong[1]];
+      q.correctIdx = 0;
+      q.feedback = LANG==='en' ? 'Perfect temperature! This shows professionalism.' : '¡Temperatura perfecta! Esto demuestra profesionalismo.';
+
+    } else if(sc.type==='ingredientes'){
+      var realIngr = dish.ingredients || 'Ingredientes variados de temporada';
+      var fakeIngr1 = 'Trufa negra, foie gras, salsa de Pedro Ximénez, reducción de oporto';
+      var fakeIngr2 = 'Langosta, caviar de Beluga, espuma de champán, oro comestible';
+      q.options = [realIngr.length>80?realIngr.substring(0,80)+'...':realIngr, fakeIngr1, fakeIngr2];
+      q.correctIdx = 0;
+      q.feedback = LANG==='en' ? 'Excellent! Knowing ingredients is essential for allergen safety.' : '¡Excelente! Conocer los ingredientes es esencial para la seguridad de alérgenos.';
+
+    } else if(sc.type==='protocolo'){
+      var realHistory = dish.history || (LANG==='en'?'A signature dish of the restaurant':'Un plato emblemático del restaurante');
+      q.options = [
+        realHistory.length>90?realHistory.substring(0,90)+'...':realHistory,
+        LANG==='en'?'I\'m not sure, let me check with the kitchen':'No estoy seguro, déjeme consultar con cocina',
+        LANG==='en'?'It\'s a classic French recipe adapted by Chef Berasategui':'Es una receta clásica francesa adaptada por el Chef Berasategui'
+      ];
+      q.correctIdx = 0;
+      q.feedback = LANG==='en' ? 'The story behind each dish creates an unforgettable experience.' : 'La historia detrás de cada plato crea una experiencia inolvidable.';
+
+    } else if(sc.type==='alternativa'){
+      var safeDishes = DISHES.filter(function(d){return d.cat===dish.cat && !(d.allergens||[]).includes(allergen) && d.id!==dish.id;});
+      var safeAlt = safeDishes.length ? safeDishes[0] : DISHES.find(function(d){return !(d.allergens||[]).includes(allergen);});
+      var safeAltName = safeAlt ? safeAlt.name : 'Ensalada de temporada';
+      q.options = [
+        (LANG==='en'?'I suggest "'+safeAltName+'", free of '+allergen:'Sugiero "'+safeAltName+'", libre de '+allergen),
+        (LANG==='en'?'We can remove the '+allergen+' from the dish':'Podemos retirar el/la '+allergen+' del plato'),
+        (LANG==='en'?'Unfortunately we have no alternatives':'Lamentablemente no tenemos alternativas')
+      ];
+      q.correctIdx = 0;
+      q.feedback = LANG==='en' ? 'Always offer a safe alternative, never assume ingredients can be removed.' : 'Siempre ofrece una alternativa segura, nunca asumas que se pueden retirar ingredientes.';
+
+    } else if(sc.type==='comanda'){
+      var gfDishes = DISHES.filter(function(d){return !(d.allergens||[]).includes('Gluten');}).slice(0,3);
+      var vegDishes = DISHES.filter(function(d){return d.cat==='Vegetariano';});
+      var gfNames = gfDishes.map(function(d){return d.name;}).join(', ');
+      var vegName = vegDishes.length ? vegDishes[0].name : 'Ensalada';
+      q.options = [
+        (LANG==='en'?'GF: ':'Sin gluten: ')+gfNames+(LANG==='en'?'. Veg: ':'. Vegano: ')+vegName,
+        LANG==='en'?'I\'ll bring the full menu and let them choose':'Les traigo la carta completa y que elijan ellos',
+        LANG==='en'?'We can adapt any dish to any allergy':'Podemos adaptar cualquier plato a cualquier alergia'
+      ];
+      q.correctIdx = 0;
+      q.feedback = LANG==='en' ? 'Proactive suggestions show expertise and care for the guest.' : 'Las sugerencias proactivas demuestran conocimiento y atención al comensal.';
+    }
+
+    // Shuffle options (keep track of correct)
+    var correctText = q.options[0];
+    for(var si=q.options.length-1;si>0;si--){
+      var sj=Math.floor(Math.random()*(si+1));
+      var tmp=q.options[si];q.options[si]=q.options[sj];q.options[sj]=tmp;
+    }
+    q.correctIdx = q.options.indexOf(correctText);
+
+    usedTypes[sc.type] = true;
+    questions.push(q);
+  }
+  return questions;
+}
+
+// ═══ SERVICIO FANTASMA — RENDER ═══
+var _sfState = null;
+
+function launchServicioFantasma(emp){
+  var diff = _sfDifficulty(emp);
+  var questions = _sfGenerateQuestions(diff.questions);
+  if(!questions.length) return false;
+  var mesa = questions[0].mesa;
+
+  _sfState = {
+    questions: questions,
+    current: 0,
+    score: 0,
+    mesa: mesa,
+    diff: diff,
+    timer: diff.timer,
+    timerInterval: null,
+    answered: false,
+    daysAway: _sfDaysInactive(emp)
+  };
+
+  var overlay = document.createElement('div');
+  overlay.id = 'sfOverlay';
+  overlay.className = 'sf-overlay';
+  overlay.innerHTML = '<div class="sf-ambient"></div><div class="sf-content" id="sfContent"></div>';
+  document.body.appendChild(overlay);
+
+  _sfRenderIntro();
+  return true;
+}
+
+function _sfRenderIntro(){
+  var s = _sfState;
+  var _en = LANG==='en';
+  var comensalesHTML = '';
+  var numCom = 2 + Math.floor(Math.random()*3);
+  var emojis = ['👨','👩','👴','👱‍♀️','👦','👩‍🦰'];
+  var alertIdx = Math.floor(Math.random()*numCom);
+  for(var i=0;i<numCom;i++){
+    comensalesHTML += '<div class="sf-comensal'+(i===alertIdx?' alert':'')+'" style="animation-delay:'+(i*0.1)+'s">'+emojis[i%emojis.length]+'</div>';
+  }
+  document.getElementById('sfContent').innerHTML =
+    '<div class="sf-header">'+
+      '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:rgba(196,154,60,.4);letter-spacing:.2em;margin-bottom:.5rem">◇ '+(_en?'GHOST SERVICE':'SERVICIO FANTASMA')+' ◇</div>'+
+      '<div class="sf-mesa-num">'+(_en?'Table ':'Mesa ')+s.mesa+'</div>'+
+      '<div class="sf-mesa-sub">'+s.diff.questions+(_en?' decisions · ':' decisiones · ')+Math.floor(s.diff.timer/60)+':'+('0'+s.diff.timer%60).slice(-2)+' '+(_en?'min':'min')+'</div>'+
+      '<div class="sf-comensales">'+comensalesHTML+'</div>'+
+    '</div>'+
+    '<div class="sf-scenario" style="animation-delay:.3s">'+
+      '<div class="sf-scenario-text" style="text-align:center;font-style:normal;color:var(--parch3);font-size:.78rem;line-height:1.7">'+
+        (_en?'The guests have just arrived and need your help. Answer their questions correctly to prove you\'re ready for service.':'Los comensales acaban de llegar y necesitan tu ayuda. Responde sus preguntas correctamente para demostrar que estás listo para el servicio.')+
+        '<br><br>'+
+        '<span style="color:var(--gold);font-family:\'DM Mono\',monospace;font-size:.6rem">'+(_en?'BONUS: ×2 XP for returning!':'BONUS: ×2 XP por volver!')+'</span>'+
+      '</div>'+
+    '</div>'+
+    '<div style="text-align:center;margin-top:1.5rem">'+
+      '<button class="sf-btn-enter" onclick="_sfStartService()">'+(_en?'Begin Service':'Comenzar Servicio')+'</button>'+
+      '<br><button class="sf-skip" onclick="_sfSkip()">'+(_en?'Skip to dashboard':'Ir al dashboard')+'</button>'+
+    '</div>';
+}
+
+function _sfStartService(){
+  _sfState.timerInterval = setInterval(_sfTick, 1000);
+  _sfRenderQuestion();
+}
+
+function _sfTick(){
+  if(!_sfState) return;
+  _sfState.timer--;
+  var bar = document.getElementById('sfTimerFill');
+  var label = document.getElementById('sfTimerLabel');
+  if(bar){
+    var pct = (_sfState.timer / _sfState.diff.timer) * 100;
+    bar.style.width = pct + '%';
+    if(pct < 20) bar.classList.add('danger');
+  }
+  if(label){
+    var m = Math.floor(_sfState.timer/60);
+    var sec = _sfState.timer%60;
+    label.textContent = m+':'+('0'+sec).slice(-2);
+  }
+  if(_sfState.timer <= 0){
+    clearInterval(_sfState.timerInterval);
+    _sfFinish();
+  }
+}
+
+function _sfRenderQuestion(){
+  var s = _sfState;
+  var q = s.questions[s.current];
+  var _en = LANG==='en';
+  s.answered = false;
+
+  var progressHTML = '<div class="sf-progress">';
+  for(var i=0;i<s.questions.length;i++){
+    var cls = i<s.current ? (s.questions[i]._correct ? 'done' : 'fail') : (i===s.current ? 'active' : '');
+    progressHTML += '<div class="sf-progress-dot '+cls+'"></div>';
+  }
+  progressHTML += '</div>';
+
+  var pct = (s.timer / s.diff.timer) * 100;
+  var optionsHTML = '';
+  for(var j=0;j<q.options.length;j++){
+    optionsHTML += '<button class="sf-option" onclick="_sfAnswer('+j+')" data-idx="'+j+'">'+
+      '<span style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:var(--gold);opacity:.5;flex-shrink:0">'+(j+1)+'</span> '+
+      escapeHTML(q.options[j])+
+    '</button>';
+  }
+
+  document.getElementById('sfContent').innerHTML =
+    progressHTML+
+    '<div class="sf-timer-bar"><div class="sf-timer-fill'+(pct<20?' danger':'')+'" id="sfTimerFill" style="width:'+pct+'%"></div></div>'+
+    '<div class="sf-timer-label" id="sfTimerLabel">'+Math.floor(s.timer/60)+':'+('0'+(s.timer%60)).slice(-2)+'</div>'+
+    '<div class="sf-scenario">'+
+      '<div class="sf-scenario-speaker">'+q.speaker+'</div>'+
+      '<div class="sf-scenario-text">"'+escapeHTML(q.text)+'"</div>'+
+    '</div>'+
+    '<div class="sf-options" id="sfOptions">'+optionsHTML+'</div>'+
+    '<div id="sfFeedback"></div>';
+}
+
+function _sfAnswer(idx){
+  if(!_sfState || _sfState.answered) return;
+  _sfState.answered = true;
+  var q = _sfState.questions[_sfState.current];
+  var isCorrect = idx === q.correctIdx;
+  q._correct = isCorrect;
+  if(isCorrect) _sfState.score++;
+
+  // Highlight options
+  var btns = document.querySelectorAll('#sfOptions .sf-option');
+  btns.forEach(function(b,i){
+    b.classList.add('disabled');
+    if(i===q.correctIdx) b.classList.add('correct');
+    if(i===idx && !isCorrect) b.classList.add('wrong');
+  });
+
+  // Show feedback
+  var fb = document.getElementById('sfFeedback');
+  if(fb){
+    fb.innerHTML = '<div class="sf-feedback '+(isCorrect?'good':'bad')+'">'+
+      (isCorrect?'✓ ':'✗ ')+escapeHTML(q.feedback)+
+    '</div>';
+  }
+
+  if(typeof playSound==='function') playSound(isCorrect?'correct':'wrong');
+
+  // Auto-advance after 2s
+  setTimeout(function(){
+    if(!_sfState) return;
+    _sfState.current++;
+    if(_sfState.current >= _sfState.questions.length){
+      clearInterval(_sfState.timerInterval);
+      _sfFinish();
+    } else {
+      _sfRenderQuestion();
+    }
+  }, 2200);
+}
+
+function _sfFinish(){
+  if(!_sfState) return;
+  clearInterval(_sfState.timerInterval);
+  var s = _sfState;
+  var total = s.questions.length;
+  var pct = Math.round(s.score/total*100);
+  var _en = LANG==='en';
+  var excellent = pct >= 80;
+
+  // Award XP (×2 bonus for comeback)
+  var baseXP = s.score * 20;
+  var bonusXP = baseXP; // ×2
+  var totalXP = baseXP + bonusXP;
+
+  var emp = getEmp(currentUser);
+  if(emp){
+    // Streak rescue — don't reset to 0, give them 1
+    if((emp.streak||0)===0) emp.streak = 1;
+    emp.lastStudyDay = todayStr();
+    // Mark ghost service completed
+    emp._sfCompleted = emp._sfCompleted || [];
+    emp._sfCompleted.push({date:todayStr(), score:s.score, total:total, daysAway:s.daysAway});
+    saveDB();
+  }
+  if(totalXP > 0 && typeof awardXP==='function') awardXP(totalXP, _en?'Ghost Service comeback bonus':'Bonus Servicio Fantasma por volver');
+
+  var icon = excellent ? '🏆' : (pct>=50 ? '👏' : '💪');
+  var title = excellent
+    ? (_en?'Exceptional Service!':'¡Servicio Excepcional!')
+    : pct>=50
+      ? (_en?'Good Service':'Buen Servicio')
+      : (_en?'Keep Practicing':'Sigue Practicando');
+  var sub = excellent
+    ? (_en?'You haven\'t lost your touch. The guests are delighted!':'No has perdido el toque. ¡Los comensales están encantados!')
+    : pct>=50
+      ? (_en?'Solid work. A few more shifts and you\'ll be back on top.':'Buen trabajo. Unos turnos más y volverás a estar arriba.')
+      : (_en?'The guests noticed some hesitation. Time to review the menu.':'Los comensales notaron dudas. Es hora de repasar la carta.');
+
+  document.getElementById('sfContent').innerHTML =
+    '<div class="sf-results">'+
+      '<div class="sf-results-icon">'+icon+'</div>'+
+      '<div class="sf-results-title">'+title+'</div>'+
+      '<div class="sf-results-sub">'+sub+'</div>'+
+      '<div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem">'+
+        '<div style="text-align:center"><div style="font-family:\'Cinzel\',serif;font-size:1.8rem;color:var(--gold)">'+s.score+'/'+total+'</div><div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em">'+(_en?'CORRECT':'ACIERTOS')+'</div></div>'+
+        '<div style="text-align:center"><div style="font-family:\'Cinzel\',serif;font-size:1.8rem;color:var(--sage)">'+s.daysAway+'</div><div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em">'+(_en?'DAYS AWAY':'DÍAS FUERA')+'</div></div>'+
+      '</div>'+
+      '<div class="sf-results-xp">+'+totalXP+' XP <span style="font-size:.65rem;opacity:.6">(×2 '+(_en?'comeback':'regreso')+')</span></div>'+
+      (excellent?'<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--gold);margin-bottom:1rem;letter-spacing:.1em">🏅 '+(_en?'GHOST SERVICE BADGE EARNED':'INSIGNIA SERVICIO FANTASMA')+'</div>':'')+
+      '<button class="sf-btn-enter" onclick="_sfClose()">'+(_en?'Enter App':'Entrar a la App')+'</button>'+
+    '</div>';
+
+  if(typeof launchConfetti==='function' && excellent) launchConfetti(3000);
+}
+
+function _sfClose(){
+  var overlay = document.getElementById('sfOverlay');
+  if(overlay){
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity .4s ease';
+    setTimeout(function(){ if(overlay.parentNode) overlay.remove(); }, 400);
+  }
+  _sfState = null;
+  showTab('dashboard');
+  checkStreak();
+}
+
+function _sfSkip(){
+  clearInterval(_sfState?_sfState.timerInterval:0);
+  _sfState = null;
+  var overlay = document.getElementById('sfOverlay');
+  if(overlay) overlay.remove();
+  showTab('dashboard');
+  checkStreak();
+}
+
+// ═══ Push notification text for ghost service ═══
+function _sfPushText(){
+  var mesa = _sfPickMesa();
+  var _en = LANG==='en';
+  var messages = _en ? [
+    {title:'🔔 Table '+mesa+' — 4 guests',body:'A guest has a nut allergy and is asking for recommendations. Can you handle it?'},
+    {title:'🍷 Table '+mesa+' needs you',body:'They ordered the tasting menu and want a wine pairing. Are you ready?'},
+    {title:'⚡ Service alert — Table '+mesa,body:'VIP guest asking about the story behind a dish. Can you help?'},
+    {title:'🍽️ Table '+mesa+' — Special request',body:'Gluten-free guests need alternatives. Your expertise is needed.'}
+  ] : [
+    {title:'🔔 Mesa '+mesa+' — 4 comensales',body:'Un comensal tiene alergia a frutos secos y pide recomendación. ¿Puedes atenderle?'},
+    {title:'🍷 La mesa '+mesa+' te necesita',body:'Han pedido menú degustación y quieren maridaje. ¿Estás listo?'},
+    {title:'⚡ Alerta de servicio — Mesa '+mesa,body:'Cliente VIP pregunta por la historia de un plato. ¿Puedes ayudar?'},
+    {title:'🍽️ Mesa '+mesa+' — Petición especial',body:'Comensales sin gluten necesitan alternativas. Tu experiencia es necesaria.'}
+  ];
+  return messages[Math.floor(Math.random()*messages.length)];
+}
+
 function showStreakToast(days){
   setTimeout(()=>{
     const toast=document.createElement('div');
@@ -6599,6 +7311,10 @@ function closePinAndEnter(){
     // Show onboarding only if user has never earned XP; once they earn XP it stops
     if(!emp.xp || emp.xp <= 0){
       showOnboarding();
+    } else if(typeof _sfShouldTrigger==='function' && _sfShouldTrigger(emp)){
+      // ═══ SERVICIO FANTASMA — intercept inactive user ═══
+      var launched = launchServicioFantasma(emp);
+      if(!launched){ showTab('dashboard'); checkStreak(); }
     } else {
       showTab('dashboard');
       checkStreak();
@@ -6636,7 +7352,15 @@ function pinCancel(){
 function logout(){
   if(currentUser) supaUpsertEmployee(currentUser);
   stopLiveQuizPolling();
-  clearTimeout(_sessionTimer);
+  // ── Clear ALL active timers/intervals to prevent memory leaks ──
+  clearTimeout(_sessionTimer); _sessionTimer = null;
+  clearInterval(timerInterval); timerInterval = null;
+  clearInterval(_liveCheckInterval); _liveCheckInterval = null;
+  clearInterval(_duelTimerInterval); _duelTimerInterval = null;
+  clearInterval(liveQuizInterval); liveQuizInterval = null;
+  clearInterval(livePlayerInterval); livePlayerInterval = null;
+  clearInterval(liveCountdownTimer); liveCountdownTimer = null;
+  clearInterval(txokoTimer); txokoTimer = null;
   currentUser=null;
   localStorage.removeItem('txoko_session');
   document.getElementById('screenLogin').classList.add('active');
@@ -6680,6 +7404,25 @@ try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
 // ═══════ TABS ═══════
 // Sub-tab state
 let _subTab = { aprender:'flashcards', protocolo:'protocolo', ranking:'ranking' };
+
+// ═══ KEYBOARD NAVIGATION ═══
+document.addEventListener('keydown', function(e){
+  // Escape closes any modal/overlay
+  if(e.key === 'Escape'){
+    var overlay = document.querySelector('.pin-overlay');
+    if(overlay) { overlay.remove(); return; }
+    var notifPanel = document.getElementById('notifPanelOverlay');
+    if(notifPanel) { notifPanel.remove(); return; }
+  }
+  // Arrow keys in nav
+  if(document.activeElement && document.activeElement.classList.contains('nav-btn')){
+    var btns = Array.from(document.querySelectorAll('.nav-btn'));
+    var idx = btns.indexOf(document.activeElement);
+    if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); btns[(idx+1)%btns.length].focus(); }
+    if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); btns[(idx-1+btns.length)%btns.length].focus(); }
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); document.activeElement.click(); }
+  }
+});
 
 function showTab(tab){
   currentTab=tab;
@@ -13922,7 +14665,7 @@ function nextExamQ(){
     const session={score:examScore,total:examDishes.length,topic:examConfig.topic,cat:examConfig.cat,time,date:todayStr(),ts:Date.now()};
     emp.sessions=emp.sessions||[];emp.sessions.push(session);
     saveDB();examResults=session;
-    supaInsertScore(session, currentUser);
+    supaInsertScore(session, currentUser).catch(function(){ if(typeof showToast==='function') showToast('Error guardando puntuación','warning',3000); });
     // Award XP for exam
     const pctExam=Math.round(examScore/examDishes.length*100);
     const baseXP=examDishes.length*3;
@@ -15532,7 +16275,7 @@ function renderProtocoloExamResults() {
   const bonus = pct>=90?30:pct>=70?15:pct>=50?5:0;
   if(bonus) awardXP(bonus, `${LANG==='en'?'Protocol exam':'Examen protocolo'} (${pct}%)`);
   // Save to Supabase
-  supaInsertScore({ score, total: questions.length, topic: 'protocolo', cat: sectionId||'all', time }, currentUser);
+  supaInsertScore({ score, total: questions.length, topic: 'protocolo', cat: sectionId||'all', time }, currentUser).catch(function(){ if(typeof showToast==='function') showToast('Error guardando puntuación','warning',3000); });
   // Save protocol best score
   const emp = getEmp(currentUser);
   if(emp) {
@@ -15971,7 +16714,7 @@ function renderAllergenResults() {
   const cls = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
   const bonus = pct>=90?30:pct>=70?15:pct>=50?5:0;
   if (bonus) awardXP(bonus, `${LANG==='en'?'Allergen exam':'Examen alérgenos'} (${pct}%)`);
-  supaInsertScore({ score, total: questions.length, topic: 'alergenos', cat: cat||'all', time }, currentUser);
+  supaInsertScore({ score, total: questions.length, topic: 'alergenos', cat: cat||'all', time }, currentUser).catch(function(){ if(typeof showToast==='function') showToast('Error guardando puntuación','warning',3000); });
   // Save allergen best score
   const emp = getEmp(currentUser);
   if(emp) {
@@ -17278,7 +18021,7 @@ async function renderDuel() {
         const empR = getEmp(p.name);
         return `<div class="duel-season-row" style="${isMe?'background:var(--gold-b);border-radius:var(--r2);padding:.4rem .5rem;':''}">
           <div class="duel-season-pos">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-          <div class="duel-season-name">${p.name}${getTrophyBadge(empR?.trophies)}${isMe?' <span style="color:var(--gold);font-size:.65rem">← tú</span>':''}</div>
+          <div class="duel-season-name">${escapeHTML(p.name)}${getTrophyBadge(empR?.trophies)}${isMe?' <span style="color:var(--gold);font-size:.65rem">← tú</span>':''}</div>
           <div style="font-size:.65rem;color:var(--parch3);margin-right:.5rem">${p.wins}V ${p.losses}D${p.draws?' '+p.draws+LANG==='en'?'D':'E':''}</div>
           <div class="duel-season-pts">${p.wins*3+p.draws}</div>
         </div>`;
@@ -17317,7 +18060,7 @@ async function renderDuel() {
         const loser = cWins ? d.challenged : dWins ? d.challenger : null;
         const isMe = d.challenger === currentUser || d.challenged === currentUser;
         return `<div class="duel-feed-item">
-          ${isMe ? '<strong>' : ''}${winner ? `<span class="duel-feed-win">⚡ ${winner}</span> venció a <span class="duel-feed-loss">${loser}</span> · ${Math.max(d.challenger_score,d.defender_score)}-${Math.min(d.challenger_score,d.defender_score)}` : `🤝 ${d.challenger} vs ${d.challenged} · Empate ${d.challenger_score}-${d.defender_score}`}${isMe ? '</strong>' : ''}
+          ${isMe ? '<strong>' : ''}${winner ? `<span class="duel-feed-win">⚡ ${escapeHTML(winner)}</span> venció a <span class="duel-feed-loss">${escapeHTML(loser)}</span> · ${Math.max(d.challenger_score,d.defender_score)}-${Math.min(d.challenger_score,d.defender_score)}` : `🤝 ${escapeHTML(d.challenger)} vs ${escapeHTML(d.challenged)} · Empate ${d.challenger_score}-${d.defender_score}`}${isMe ? '</strong>' : ''}
         </div>`;
       }).join('')}
     </div>` : ''}
@@ -18279,19 +19022,46 @@ function showAchievementDetail(achievementId){
 
 function showAchievementToast(ach){
   const toast=document.createElement('div');
-  toast.style.cssText='position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:10000;background:linear-gradient(135deg,#1c2a22,#2a3530);border:1px solid var(--gold-a);border-radius:12px;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(196,154,60,.1);opacity:0;transition:all .4s cubic-bezier(.22,1,.36,1);max-width:320px;';
+  toast.style.cssText='position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:10000;background:linear-gradient(135deg,#1c2a22,#2a3530);border:1px solid var(--gold-a);border-radius:12px;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(196,154,60,.1);opacity:0;transition:all .4s cubic-bezier(.22,1,.36,1);max-width:340px;overflow:visible;';
   toast.innerHTML=`
-    <div style="width:32px;height:32px;animation:badgeUnlock .6s cubic-bezier(.22,1,.36,1) forwards">${gemSVG(ach.gemColors[0],ach.gemColors[1],ach.gemColors[2],ach.gemShape)}</div>
-    <div>
+    <div style="position:relative;width:40px;height:40px;flex-shrink:0">
+      <div class="gem-rays"></div>
+      <div class="gem-unlocking" style="width:40px;height:40px">${gemSVG(ach.gemColors[0],ach.gemColors[1],ach.gemColors[2],ach.gemShape)}</div>
+    </div>
+    <div style="flex:1">
       <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;opacity:.8">${LANG==='en'?'Achievement Unlocked':'Logro Desbloqueado'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:.95rem;color:#f2eae0;margin-top:.1rem">${LANG==='en'?ach.title_en:ach.title}</div>
+      <div style="font-family:'Cinzel',serif;font-size:.95rem;color:#f2eae0;margin-top:.15rem">${LANG==='en'?ach.title_en:ach.title}</div>
       <div style="font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--parch3);margin-top:.1rem">${LANG==='en'?ach.desc_en:ach.desc}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.45rem;color:var(--gold);opacity:.6;margin-top:.25rem">+50 XP ✦</div>
     </div>`;
   document.body.appendChild(toast);
+  // Spawn floating sparkle particles around the gem
+  _spawnGemParticles(toast);
   requestAnimationFrame(()=>{toast.style.opacity='1';toast.style.transform='translateX(-50%) translateY(0)';});
-  if(typeof launchConfetti==='function')launchConfetti(2000);
+  if(typeof launchConfetti==='function')launchConfetti(2500);
   if(typeof playSound==='function')playSound('levelUp');
-  setTimeout(()=>{toast.style.opacity='0';toast.style.transform='translateX(-50%) translateY(-20px)';setTimeout(()=>toast.remove(),400);},4000);
+  // Pulse glow on the toast
+  setTimeout(()=>{ toast.style.boxShadow='0 8px 32px rgba(0,0,0,.4),0 0 40px rgba(255,215,0,.3),0 0 0 1px rgba(196,154,60,.3)'; },300);
+  setTimeout(()=>{ toast.style.boxShadow='0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(196,154,60,.1)'; },1500);
+  setTimeout(()=>{toast.style.opacity='0';toast.style.transform='translateX(-50%) translateY(-20px)';setTimeout(()=>toast.remove(),400);},5000);
+}
+
+// ═══ GEM PARTICLE EFFECTS ═══
+function _spawnGemParticles(container){
+  var colors=['#ffd700','#ffaa00','#fff4cc','#e8c87a','#ff8c00'];
+  for(var i=0;i<8;i++){
+    var p=document.createElement('div');
+    var angle=Math.random()*Math.PI*2;
+    var dist=30+Math.random()*40;
+    var dx=Math.cos(angle)*dist;
+    var dy=Math.sin(angle)*dist;
+    var size=3+Math.random()*4;
+    var color=colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText='position:absolute;left:28px;top:16px;width:'+size+'px;height:'+size+'px;background:'+color+';border-radius:50%;pointer-events:none;z-index:10001;opacity:1;transition:all '+(0.6+Math.random()*0.6)+'s cubic-bezier(.22,1,.36,1);box-shadow:0 0 6px '+color+';';
+    container.appendChild(p);
+    requestAnimationFrame(function(el,x,y){return function(){el.style.transform='translate('+x+'px,'+y+'px) scale(0)';el.style.opacity='0';};}(p,dx,dy));
+    setTimeout(function(el){return function(){if(el.parentNode)el.remove();};}(p),1200);
+  }
 }
 
 function renderAchievementsSection(){
@@ -20223,14 +20993,49 @@ function txGameOver(){
 // Sync when user leaves the app (closes tab, switches app)
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'hidden' && currentUser) {
-    supaUpsertEmployee(currentUser);
+    _beaconSync(currentUser);
   }
 });
 
-// Sync before page unload
+// Sync before page unload — use sendBeacon for reliability
 window.addEventListener('beforeunload', () => {
-  if(currentUser) supaUpsertEmployee(currentUser);
+  if(currentUser) _beaconSync(currentUser);
 });
+
+// ═══ BEACON SYNC — survives page unload ═══
+function _beaconSync(name){
+  if(!name) return;
+  var emp = DB.employees[name];
+  if(!emp) return;
+  var payload = JSON.stringify({
+    name: name,
+    pin: emp.pin || null,
+    xp: emp.xp || 0,
+    streak: emp.streak || 0,
+    last_study_day: emp.lastStudyDay || null,
+    topic_scores: JSON.stringify(emp.topicScores || {}),
+    known_dishes: JSON.stringify(emp.knownDishes || {}),
+    exam_correct: JSON.stringify(emp.examCorrect || {}),
+    sessions_count: (emp.sessions || []).length,
+    sessions_data: JSON.stringify((emp.sessions || []).slice(-20)),
+    txoko_record: emp.txokoRecord || 0,
+    avatar: emp.avatar || null,
+    duel_wins: emp.duelWins || 0,
+    updated_at: new Date().toISOString()
+  });
+  // sendBeacon is fire-and-forget — browser guarantees delivery even during unload
+  if(navigator.sendBeacon){
+    var blob = new Blob([payload], {type:'application/json'});
+    // sendBeacon doesn't support custom headers, so use Supabase REST with apikey in URL
+    var sent = navigator.sendBeacon(
+      SUPA_URL+'/rest/v1/employees?on_conflict=name&apikey='+SUPA_KEY,
+      blob
+    );
+    if(sent) return; // beacon queued successfully
+  }
+  // Fallback: try regular fetch (may be aborted by browser)
+  try { supaUpsertEmployee(name); } catch(e){}
+}
 
 
 // ── Diagnóstico Supabase — ejecutar desde consola: txokoDiag() ──
