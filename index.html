@@ -11081,7 +11081,8 @@ function renderVinosCarta(){
 }
 
 function _renderWineCard(w, idx, filteredList){
-  const typeLabels = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
+  const _en = LANG==='en';
+  const typeLabels = _en ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'} : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
   const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'};
   const typeColors = {blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'};
   const bgColor = typeColors[w.type] || 'var(--gold)';
@@ -13516,7 +13517,7 @@ function _renderWineFlashcards(c, bar){
 
     <!-- Card -->
     <div onclick="_wfFlipped=!_wfFlipped;renderVinos()" class="wine-flashcard${_wfFlipped?' flipped':''}">
-      <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${card.cat==='Principiante'?'var(--sage)':_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em;z-index:1">${card.cat==='Principiante'?'🌱 ':card.cat==='Servicio'?'💬 ':''}${card.cat}</div>
+      <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${card.cat==='Principiante'?'var(--sage)':_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em;z-index:1">${card.cat==='Principiante'?'🌱 ':card.cat==='Servicio'?'💬 ':''}${_en?({Principiante:'Beginner',Conceptos:'Concepts','Nuestra Carta':'Menu',Maridaje:'Pairings',Servicio:'Service'}[card.cat]||card.cat):card.cat}</div>
       <div style="position:absolute;top:.7rem;right:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.08em;z-index:1">${_wfFlipped?(_en?'✦ Answer':'✦ Respuesta'):(_en?'◇ Question':'◇ Pregunta')}</div>
 
       ${_wfFlipped?`
