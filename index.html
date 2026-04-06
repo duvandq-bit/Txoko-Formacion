@@ -822,6 +822,28 @@ body::after{
   flex-shrink:0;
 }
 
+/* Wine bottle images */
+.wine-bottle-img{
+  width:100%;height:100%;object-fit:contain;
+  transition:opacity .4s ease;
+}
+.wine-bottle-wrap{
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#f8f4ec 0%,#ede7db 100%);
+  border-radius:var(--r2);overflow:hidden;position:relative;
+  border:1px solid rgba(196,154,60,.1);
+}
+.wine-bottle-wrap.card-size{width:100%;height:120px;margin-bottom:.6rem}
+.wine-bottle-wrap.detail-size{width:200px;height:280px;margin:0 auto 1.2rem}
+.wine-bottle-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.3rem;opacity:.4;
+}
+.wine-bottle-placeholder .icon{font-size:2rem}
+.wine-bottle-placeholder .label{
+  font-family:'DM Mono',monospace;font-size:.5rem;
+  color:var(--parch3);letter-spacing:.08em;text-transform:uppercase;
+}
 .wine-detail-overlay{
   position:fixed;inset:0;z-index:9998;
   background:rgba(244,237,226,.97);
@@ -5105,6 +5127,32 @@ const STORAGE_KEY='txoko_data_v4';
 // ═══════ SUPABASE ═══════
 const SUPA_URL='https://advkoujfgbrrjvqexrcu.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdmtvdWpmZ2Jycmp2cWV4cmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODAxODgsImV4cCI6MjA4ODc1NjE4OH0.4MTKzEy_c5x3eWjWJPfS216TTVAVNNlP1Wo_-h1Nt4c';
+
+// Wine image helpers
+const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
+function _wineSlug(name){
+  return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+function _wineImgUrl(wine){
+  return WINE_IMG_BASE + _wineSlug(wine.name) + '.webp';
+}
+const _wineImgCache = {};
+function _wineImgHtml(wine, size){
+  const cls = size === 'detail' ? 'detail-size' : 'card-size';
+  const typeIcons = {blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'};
+  const icon = typeIcons[wine.type] || '🍷';
+  const url = _wineImgUrl(wine);
+  const placeholder = `<div class="wine-bottle-placeholder"><div class="icon">${icon}</div><div class="label">${escapeHTML(wine.type||'')}</div></div>`;
+  if(_wineImgCache[wine.id] === false){
+    return `<div class="wine-bottle-wrap ${cls}">${placeholder}</div>`;
+  }
+  return `<div class="wine-bottle-wrap ${cls}">
+    <img class="wine-bottle-img" src="${url}" alt="${escapeHTML(wine.name)}" loading="lazy"
+      onerror="_wineImgCache[${wine.id}]=false;this.style.display='none';this.nextElementSibling.style.display='flex'"
+      onload="_wineImgCache[${wine.id}]=true;this.nextElementSibling.style.display='none'">
+    ${placeholder}
+  </div>`;
+}
 
 async function supaInsertScore(session, employee) {
   try {
@@ -9773,7 +9821,7 @@ const WINES = [
 let _wineFilter = 'all';
 let _wineSearch = '';
 let _wineView = 'grid';
-let _vinoSubTab = 'carta';
+let _vinoSubTab = 'sommelier';
 
 // ═══ WINE EDUCATION DATA ═══
 const WINE_CONCEPTS = [
@@ -10800,7 +10848,7 @@ function renderVinos(){
   const sub = _vinoSubTab || 'sommelier';
   const _en = LANG==='en';
   const tabs = [
-    ['sommelier','Somm','✨'],
+    ['sommelier','Vinos','✨'],
     ['carta',_en?'Menu':'Carta','🍷'],
     ['mapa',_en?'Map':'Mapa','🗺️'],
     ['aprende',_en?'Learn':'Aprende','📖'],
@@ -10907,6 +10955,7 @@ function _renderSommelier(c, bar){
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
       ${featured.map((w,i) => `
         <div onclick="_showWineDetail(${w.id}, [${featured.map(f=>f.id).join(',')}])" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
+          ${_wineImgHtml(w, 'card')}
           <div style="display:flex;align-items:center;gap:.5rem;position:relative">
             <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3))">${{blanco:'🥂',tinto:'🍷',rosado:'🌸',espumoso:'✨',dulce:'🍯'}[w.type]||'🍷'}</div>
             <div style="flex:1">
@@ -11050,6 +11099,7 @@ function _renderWineCard(w, idx, filteredList){
         ${w.glass?'<span class="wine-badge" style="background:var(--sage-a);color:var(--sage);border:1px solid rgba(77,138,94,.2)">◎ Copa</span>':''}
       </div>
     </div>
+    ${_wineImgHtml(w, 'card')}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;position:relative">
       <div style="flex:1">
         <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);line-height:1.2">${escapeHTML(w.name)}</div>
@@ -13118,6 +13168,8 @@ function _showWineDetail(id, list, direction){
         ${w.kosher?'<span class="wine-badge" style="background:rgba(196,154,60,.06);color:var(--parch3);border:1px solid rgba(196,154,60,.1)">✡ Kosher</span>':''}
       </div>
     </div>
+
+    ${_wineImgHtml(w, 'detail')}
 
     <div class="wine-detail-title">${escapeHTML(w.name)}</div>
     ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3)">Añada ${w.year}</div>`:''}
