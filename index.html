@@ -11043,12 +11043,12 @@ function renderVinosCarta(){
   c.innerHTML = `
     <div style="padding:.5rem 0 1rem">
       <div class="wine-section-header">
-        <div class="wine-section-title">◇ Carta de Vinos ◇</div>
+        <div class="wine-section-title">◇ ${_en?'Wine List':'Carta de Vinos'} ◇</div>
         <div class="wine-section-sub">TXOKO by Martín Berasategui</div>
       </div>
 
       <div class="wine-storybook-intro wine-enchanted">
-        <div class="wine-storybook-text">"Cada botella guarda un viaje, cada copa abre un capítulo. Explora nuestra colección y descubre la historia que hay detrás de cada vino."</div>
+        <div class="wine-storybook-text">"${_en?'Every bottle holds a journey, every glass opens a chapter. Explore our collection and discover the story behind each wine.':'Cada botella guarda un viaje, cada copa abre un capítulo. Explora nuestra colección y descubre la historia que hay detrás de cada vino.'}"</div>
       </div>
 
       <!-- Search -->
@@ -11094,9 +11094,9 @@ function _renderWineCard(w, idx, filteredList){
       <div class="wine-type-icon" style="background:linear-gradient(135deg,${bgColor},rgba(196,154,60,.3))">${typeIcons[w.type]||'🍷'}</div>
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;flex:1">
         <span class="wine-badge" style="background:rgba(196,154,60,.08);color:var(--gold);border:1px solid rgba(196,154,60,.15)">${typeLabels[w.type]||w.type}</span>
-        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ Recomendado</span>':''}
+        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ '+(_en?'Recommended':'Recomendado')+'</span>':''}
         ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.08);color:#8b6914;border:1px solid rgba(139,105,20,.15)">◆ Vega Sicilia</span>':''}
-        ${w.glass?'<span class="wine-badge" style="background:var(--sage-a);color:var(--sage);border:1px solid rgba(77,138,94,.2)">◎ Copa</span>':''}
+        ${w.glass?'<span class="wine-badge" style="background:var(--sage-a);color:var(--sage);border:1px solid rgba(77,138,94,.2)">◎ '+(_en?'By Glass':'Copa')+'</span>':''}
       </div>
     </div>
     ${_wineImgHtml(w, 'card')}
@@ -13008,10 +13008,11 @@ function _wineDecantAdvice(w) {
   const notes = (w.notes||'').toLowerCase();
   const story = (w.story||'').toLowerCase();
   const price = w.price || 0;
-  if(type !== 'tinto') return 'No necesario';
+  const _en = LANG==='en';
+  if(type !== 'tinto') return _en?'Not necessary':'No necesario';
   if(notes.includes('potente') || notes.includes('complej') || notes.includes('estructura') || notes.includes('robusto') || price > 150) return '30–60 min';
   if(story.includes('barrica') || story.includes('crianza') || price > 80) return '15–30 min';
-  return 'Opcional';
+  return _en?'Optional':'Opcional';
 }
 
 function _wineCellarAdvice(w) {
@@ -13020,64 +13021,60 @@ function _wineCellarAdvice(w) {
   const story = (w.story||'').toLowerCase();
   const price = w.price || 0;
   const year = w.year;
-  if(type === 'espumoso') return 'Beber ya';
-  if(type === 'rosado') return 'Beber joven';
+  const _en = LANG==='en';
+  const y = _en?'years':'años';
+  if(type === 'espumoso') return _en?'Drink now':'Beber ya';
+  if(type === 'rosado') return _en?'Drink young':'Beber joven';
   if(type === 'blanco') {
-    if(story.includes('barrica') || notes.includes('complej') || price > 120) return '2–5 años';
-    return '1–3 años';
+    if(story.includes('barrica') || notes.includes('complej') || price > 120) return '2–5 '+y;
+    return '1–3 '+y;
   }
   if(type === 'tinto') {
-    if(notes.includes('potente') || notes.includes('estructura') || story.includes('gran reserva') || price > 200) return '5–15+ años';
-    if(story.includes('barrica') || story.includes('crianza') || price > 100) return '3–8 años';
-    return '2–5 años';
+    if(notes.includes('potente') || notes.includes('estructura') || story.includes('gran reserva') || price > 200) return '5–15+ '+y;
+    if(story.includes('barrica') || story.includes('crianza') || price > 100) return '3–8 '+y;
+    return '2–5 '+y;
   }
-  return '1–3 años';
+  return '1–3 '+y;
 }
 
 function _wineCrianzaInfo(w) {
   const story = w.story || '';
   const storyL = story.toLowerCase();
   const parts = [];
-  // Helper: detect barrel wood type from full story
+  const _en = LANG==='en';
+  const mo = _en?'months':'meses';
   function _woodType() {
-    if(storyL.includes('roble francés') || storyL.includes('roble frances')) return 'roble francés';
-    if(storyL.includes('roble americano')) return 'roble americano';
-    if(storyL.includes('roble')) return 'roble';
+    if(storyL.includes('roble francés') || storyL.includes('roble frances')) return _en?'French oak':'roble francés';
+    if(storyL.includes('roble americano')) return _en?'American oak':'roble americano';
+    if(storyL.includes('roble')) return _en?'oak':'roble';
     return '';
   }
-  // Pattern 1: "X meses en barrica/barril/roble ..."
   const p1 = story.match(/(\d+)\s*meses?\s*(?:en\s+)?(?:barrica|barril(?:es)?|roble)/i);
-  // Pattern 2: "barrica/barril ... X meses"
   const p2 = story.match(/(?:barrica|barril(?:es)?)\s+[^.]*?(\d+)\s*meses/i);
-  // Pattern 3: "envejecido X meses"
   const p3 = story.match(/envejecid[oa]\s+(\d+)\s*meses/i);
   const timeLias = story.match(/(\d+)\s*meses?\s+sobre\s+l[ií]as/i);
   const barrelMonths = p1 ? p1[1] : (p2 ? p2[1] : (p3 ? p3[1] : null));
   if(barrelMonths) {
     const wood = _woodType();
-    parts.push(barrelMonths + ' meses en ' + (wood ? wood : 'barrica'));
+    parts.push(barrelMonths+' '+mo+(_en?' in ':' en ')+(wood ? wood : (_en?'barrel':'barrica')));
   } else if((storyL.includes('barrica') || storyL.includes('barril')) && !storyL.includes('sin barrica')) {
     const wood = _woodType();
-    parts.push('Crianza en ' + (wood ? wood : 'barrica'));
+    parts.push((_en?'Ageing in ':'Crianza en ')+(wood ? wood : (_en?'barrel':'barrica')));
   }
   if(timeLias) {
-    parts.push(timeLias[1] + ' meses sobre lías');
+    parts.push(timeLias[1]+' '+mo+(_en?' on lees':' sobre lías'));
   } else if(!barrelMonths && storyL.includes('sobre l')) {
-    if(story.match(/sobre\s+l[ií]as/i)) parts.push('Reposo sobre lías');
+    if(story.match(/sobre\s+l[ií]as/i)) parts.push(_en?'Resting on lees':'Reposo sobre lías');
   }
-  // Vessel types
-  if(storyL.includes('acero inoxidable') || storyL.includes('acero a baja')) parts.push('Fermentación en acero inoxidable');
-  if(storyL.includes('hormigón')) parts.push('Depósitos de hormigón');
-  if(storyL.includes('ánfora') || storyL.includes('anfora')) parts.push('Crianza en ánfora');
-  if(storyL.includes('maceración carbónica') || storyL.includes('maceracion carbonica')) parts.push('Maceración carbónica');
-  // Crianza category
-  if(storyL.includes('gran reserva')) parts.push('Categoría Gran Reserva');
-  else if(storyL.includes('reserva') && !storyL.includes('sin reserva') && !barrelMonths) parts.push('Categoría Reserva');
-  // Bottle aging
+  if(storyL.includes('acero inoxidable') || storyL.includes('acero a baja')) parts.push(_en?'Stainless steel fermentation':'Fermentación en acero inoxidable');
+  if(storyL.includes('hormigón')) parts.push(_en?'Concrete tanks':'Depósitos de hormigón');
+  if(storyL.includes('ánfora') || storyL.includes('anfora')) parts.push(_en?'Aged in amphora':'Crianza en ánfora');
+  if(storyL.includes('maceración carbónica') || storyL.includes('maceracion carbonica')) parts.push(_en?'Carbonic maceration':'Maceración carbónica');
+  if(storyL.includes('gran reserva')) parts.push(_en?'Gran Reserva category':'Categoría Gran Reserva');
+  else if(storyL.includes('reserva') && !storyL.includes('sin reserva') && !barrelMonths) parts.push(_en?'Reserva category':'Categoría Reserva');
   const botMatch = story.match(/(\d+)\s*meses?\s*(?:en\s+)?botella/i) || story.match(/botella\s*(?:durante|por)\s+(\d+)\s*meses/i);
-  if(botMatch) parts.push((botMatch[1]||botMatch[2]) + ' meses en botella');
-  // Levaduras
-  if(storyL.includes('levaduras silvestres') || storyL.includes('levaduras autóctonas') || storyL.includes('levaduras nativas')) parts.push('Fermentación con levaduras silvestres');
+  if(botMatch) parts.push((botMatch[1]||botMatch[2])+' '+mo+(_en?' in bottle':' en botella'));
+  if(storyL.includes('levaduras silvestres') || storyL.includes('levaduras autóctonas') || storyL.includes('levaduras nativas')) parts.push(_en?'Wild yeast fermentation':'Fermentación con levaduras silvestres');
   if(!parts.length) return '';
   return parts.join(' ◇ ');
 }
@@ -13409,14 +13406,21 @@ function _renderWineLearn(c, bar){
       <div class="wine-concept-card card-animate" style="animation-delay:.1s">
         <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">🎨 ${_en?'What Color Tells You':'Lo que el Color te Dice'}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;position:relative">
-          ${[
+          ${(_en?[
+            ['Pale white','Young and light','#f5f0d0','#8a8040'],
+            ['Golden white','Full-bodied or aged','#e8d080','#7a6530'],
+            ['Light pink','Soft and fresh rosé','#f5c0d0','#8a5060'],
+            ['Ruby/Purple','Young red','#9a2050','#f0c0d0'],
+            ['Garnet','Aged red','#6a1530','#e0b0c0'],
+            ['Brick/Brown','Very old red','#804030','#e0c8b8']
+          ]:[
             ['Blanco pálido','Joven y ligero','#f5f0d0','#8a8040'],
             ['Blanco dorado','Con cuerpo o envejecido','#e8d080','#7a6530'],
             ['Rosa claro','Rosado suave y fresco','#f5c0d0','#8a5060'],
             ['Rubí/Púrpura','Tinto joven','#9a2050','#f0c0d0'],
             ['Granate','Tinto con crianza','#6a1530','#e0b0c0'],
             ['Teja/Marrón','Tinto muy viejo','#804030','#e0c8b8']
-          ].map(([nombre,signif,bg,textCol])=>`
+          ]).map(([nombre,signif,bg,textCol])=>`
             <div style="display:flex;align-items:center;gap:.4rem;padding:.3rem .4rem;border-radius:6px;background:rgba(196,154,60,.02)">
               <div style="width:18px;height:18px;border-radius:50%;background:${bg};border:1px solid rgba(0,0,0,.1);flex-shrink:0"></div>
               <div>
@@ -13429,13 +13433,17 @@ function _renderWineLearn(c, bar){
 
       <!-- 3-Step Tasting Visual -->
       <div class="wine-concept-card card-animate" style="animation-delay:.15s">
-        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">👁️ Los 3 Pasos de la Cata</div>
+        <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--parchment);margin-bottom:.6rem;position:relative">👁️ ${_en?'The 3 Steps of Tasting':'Los 3 Pasos de la Cata'}</div>
         <div style="display:flex;justify-content:center;gap:.5rem;position:relative">
-          ${[
+          ${(_en?[
+            ['👁️','SIGHT','Tilt the glass.\nIntense or pale color?','var(--candy-blue)'],
+            ['👃','NOSE','Smell without swirling,\nthen swirl and smell.','var(--candy-purple)'],
+            ['👅','PALATE','Small sip.\nAcidic, sweet, tannic?','var(--candy-red)']
+          ]:[
             ['👁️','VISTA','Inclina la copa.\n¿Color intenso o pálido?','var(--candy-blue)'],
             ['👃','NARIZ','Huele sin agitar,\nluego agita y huele.','var(--candy-purple)'],
             ['👅','BOCA','Sorbo pequeño.\n¿Ácido, dulce, tánico?','var(--candy-red)']
-          ].map(([ico,step,desc,col],i)=>`
+          ]).map(([ico,step,desc,col],i)=>`
             <div style="flex:1;text-align:center;padding:.6rem .3rem;border-radius:10px;background:rgba(196,154,60,.03);border:1px solid rgba(196,154,60,.08)">
               <div style="font-size:1.4rem;margin-bottom:.3rem">${ico}</div>
               <div style="font-family:'Cinzel',serif;font-size:.65rem;color:${col};letter-spacing:.08em;margin-bottom:.2rem">${step}</div>
@@ -13446,7 +13454,7 @@ function _renderWineLearn(c, bar){
       </div>
     </div>
 
-    <div class="section-eyebrow">◇ Nuestras Regiones</div>
+    <div class="section-eyebrow">◇ ${_en?'Our Regions':'Nuestras Regiones'}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem">
       ${WINE_REGIONS.map((r,i)=>`
         <div onclick="this.querySelector('.wr-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
@@ -13483,21 +13491,22 @@ function _renderWineFlashcards(c, bar){
   const filtered = _wfCat==='all' ? WINE_FLASHCARDS : WINE_FLASHCARDS.filter(f=>f.cat===_wfCat);
   if(_wfIdx >= filtered.length) _wfIdx = 0;
   const card = filtered[_wfIdx];
-  if(!card){ c.innerHTML = bar + '<div style="text-align:center;color:var(--parch3);padding:3rem">No hay flashcards</div>'; return; }
+  const _en = LANG==='en';
+  if(!card){ c.innerHTML = bar + '<div style="text-align:center;color:var(--parch3);padding:3rem">'+(_en?'No flashcards':'No hay flashcards')+'</div>'; return; }
 
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <div class="wine-section-header">
-      <div class="wine-section-title">◇ Pergaminos del Vino ◇</div>
-      <div class="wine-section-sub">${_wfIdx+1} / ${filtered.length} tarjetas</div>
+      <div class="wine-section-title">◇ ${_en?'Wine Parchments':'Pergaminos del Vino'} ◇</div>
+      <div class="wine-section-sub">${_wfIdx+1} / ${filtered.length} ${_en?'cards':'tarjetas'}</div>
     </div>
 
     <div class="wine-storybook-intro wine-enchanted">
-      <div class="wine-storybook-text">${_wfCat==='all'||_wfCat==='Principiante'?'"Si eres nuevo en el mundo del vino, empieza por las tarjetas de Principiante. Cada acierto es un paso más hacia el conocimiento."':'"Cada tarjeta es un pequeño secreto esperando ser revelado. Toca para descubrir lo que el vino quiere contarte."'}</div>
+      <div class="wine-storybook-text">${_wfCat==='all'||_wfCat==='Principiante'?(_en?'"If you\'re new to the world of wine, start with the Beginner cards. Every correct answer is a step towards knowledge."':'"Si eres nuevo en el mundo del vino, empieza por las tarjetas de Principiante. Cada acierto es un paso más hacia el conocimiento."'):(_en?'"Each card is a little secret waiting to be revealed. Tap to discover what wine wants to tell you."':'"Cada tarjeta es un pequeño secreto esperando ser revelado. Toca para descubrir lo que el vino quiere contarte."')}</div>
     </div>
 
     <!-- Category filters -->
     <div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:1.2rem;padding-bottom:.3rem;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-padding:0 .5rem">
-      ${[['all','📚 Todos'],['Principiante','🌱 Principiante'],['Conceptos','🌿 Conceptos'],['Nuestra Carta','🍷 Carta'],['Maridaje','🤝 Maridaje'],['Servicio','💬 Servicio']].filter(([id])=>id==='all'||cats.includes(id)).map(([id,label])=>`<button onclick="_wfCat='${id}';_wfIdx=0;_wfFlipped=false;renderVinos()" class="wine-filter-pill${_wfCat===id?' active':''}">${label}</button>`).join('')}
+      ${(_en?[['all','📚 All'],['Principiante','🌱 Beginner'],['Conceptos','🌿 Concepts'],['Nuestra Carta','🍷 Menu'],['Maridaje','🤝 Pairings'],['Servicio','💬 Service']]:[['all','📚 Todos'],['Principiante','🌱 Principiante'],['Conceptos','🌿 Conceptos'],['Nuestra Carta','🍷 Carta'],['Maridaje','🤝 Maridaje'],['Servicio','💬 Servicio']]).filter(([id])=>id==='all'||cats.includes(id)).map(([id,label])=>`<button onclick="_wfCat='${id}';_wfIdx=0;_wfFlipped=false;renderVinos()" class="wine-filter-pill${_wfCat===id?' active':''}">${label}</button>`).join('')}
     </div>
 
     <!-- Progress -->
@@ -13508,24 +13517,24 @@ function _renderWineFlashcards(c, bar){
     <!-- Card -->
     <div onclick="_wfFlipped=!_wfFlipped;renderVinos()" class="wine-flashcard${_wfFlipped?' flipped':''}">
       <div style="position:absolute;top:.7rem;left:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:${card.cat==='Principiante'?'var(--sage)':_wfFlipped?'var(--gold)':'var(--parch4)'};text-transform:uppercase;letter-spacing:.1em;z-index:1">${card.cat==='Principiante'?'🌱 ':card.cat==='Servicio'?'💬 ':''}${card.cat}</div>
-      <div style="position:absolute;top:.7rem;right:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.08em;z-index:1">${_wfFlipped?'✦ Respuesta':'◇ Pregunta'}</div>
+      <div style="position:absolute;top:.7rem;right:.9rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.08em;z-index:1">${_wfFlipped?(_en?'✦ Answer':'✦ Respuesta'):(_en?'◇ Question':'◇ Pregunta')}</div>
 
       ${_wfFlipped?`
         <div style="font-family:'Quicksand',sans-serif;font-size:.92rem;color:var(--parchment);line-height:1.6;position:relative">${card.a}</div>
       `:`
         <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.5;margin-bottom:.8rem;position:relative">${card.q}</div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);font-style:italic;position:relative">💡 Pista: ${card.hint}</div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:1rem;position:relative">◇ Toca para descubrir ◇</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);font-style:italic;position:relative">💡 ${_en?'Hint':'Pista'}: ${card.hint}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch4);margin-top:1rem;position:relative">◇ ${_en?'Tap to reveal':'Toca para descubrir'} ◇</div>
       `}
     </div>
 
     <!-- Navigation -->
     <div style="display:flex;justify-content:center;gap:.8rem;margin-top:1rem">
-      <button onclick="_wfIdx=Math.max(0,_wfIdx-1);_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-ghost">◇ Anterior</button>
-      <button onclick="_wfIdx=(_wfIdx+1)%${filtered.length};_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-gold">Siguiente ◇</button>
+      <button onclick="_wfIdx=Math.max(0,_wfIdx-1);_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-ghost">◇ ${_en?'Previous':'Anterior'}</button>
+      <button onclick="_wfIdx=(_wfIdx+1)%${filtered.length};_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-gold">${_en?'Next':'Siguiente'} ◇</button>
     </div>
     <div style="text-align:center;margin-top:.6rem">
-      <button onclick="_wfIdx=Math.floor(Math.random()*${filtered.length});_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-ghost" style="font-family:'DM Mono',monospace;font-size:.65rem">🎲 Aleatorio</button>
+      <button onclick="_wfIdx=Math.floor(Math.random()*${filtered.length});_wfFlipped=false;renderVinos()" class="tunic-btn tunic-btn-ghost" style="font-family:'DM Mono',monospace;font-size:.65rem">🎲 ${_en?'Random':'Aleatorio'}</button>
     </div>
   </div>`;
 }
@@ -13606,19 +13615,19 @@ function _renderWineQuiz(c, bar){
 
   c.innerHTML = bar + `<div class="wq-container">
     <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);font-weight:700;margin-bottom:.3rem">Quiz de Vinos</div>
-      <div style="font-size:.8rem;color:var(--parch2)">Pon a prueba tu conocimiento vinícola</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);font-weight:700;margin-bottom:.3rem">${LANG==='en'?'Wine Quiz':'Quiz de Vinos'}</div>
+      <div style="font-size:.8rem;color:var(--parch2)">${LANG==='en'?'Test your wine knowledge':'Pon a prueba tu conocimiento vinícola'}</div>
     </div>
     <div class="wq-cat-grid">
       <button class="wq-cat-btn wq-cat-all" onclick="_startWineQuiz('all',15)">
         <div class="wq-cat-icon">🍷</div>
-        <div class="wq-cat-name">Todas</div>
-        <div class="wq-cat-count">${WINE_FLASHCARDS.length} preguntas</div>
+        <div class="wq-cat-name">${LANG==='en'?'All':'Todas'}</div>
+        <div class="wq-cat-count">${WINE_FLASHCARDS.length} ${LANG==='en'?'questions':'preguntas'}</div>
       </button>
       ${cats.map(ct => `<button class="wq-cat-btn" onclick="_startWineQuiz('${ct}',Math.min(10,${catCounts[ct]}))">
         <div class="wq-cat-icon">${{Principiante:'🌱',Conceptos:'💎',['Nuestra Carta']:'📜',Maridaje:'🍽️',Servicio:'🥂'}[ct]||'📋'}</div>
-        <div class="wq-cat-name">${ct}</div>
-        <div class="wq-cat-count">${catCounts[ct]} preguntas</div>
+        <div class="wq-cat-name">${LANG==='en'?({Principiante:'Beginner',Conceptos:'Concepts',['Nuestra Carta']:'Our Menu',Maridaje:'Pairings',Servicio:'Service'}[ct]||ct):ct}</div>
+        <div class="wq-cat-count">${catCounts[ct]} ${LANG==='en'?'questions':'preguntas'}</div>
       </button>`).join('')}
     </div>
   </div>`;
