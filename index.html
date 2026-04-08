@@ -5280,6 +5280,7 @@ async function supaUpsertEmployee(name, retries=2) {
         txoko_record: emp.txokoRecord || 0,
         avatar: emp.avatar || null,
         duel_wins: emp.duelWins || 0,
+        last_login: emp.lastLoginTs || null,
         updated_at: new Date().toISOString()
       })
     });
@@ -5363,7 +5364,8 @@ async function supaFetchAllEmployees() {
       examCorrect: (() => { try { return JSON.parse(r.exam_correct||'{}'); } catch(e){ return {}; } })(),
       sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ return Array(r.sessions_count||0).fill({}); } })(),
       txokoRecord: r.txoko_record || 0,
-      duelWins: r.duel_wins || 0
+      duelWins: r.duel_wins || 0,
+      lastLoginTs: r.last_login || null
     }));
   } catch(e) { return null; }
 }
@@ -6945,6 +6947,7 @@ async function loginWithPassword(){
         localStorage.removeItem('txoko_session');
       }
       empObj.lang = LANG;
+      empObj.lastLoginTs = new Date().toISOString();
       saveDB();
       supaUpsertEmployee(userName);
       pinTarget = userName;
@@ -7341,6 +7344,9 @@ function closePinAndEnter(){
 
   currentUser=pinTarget;
   resetSessionTimer();
+  // Track login timestamp
+  const _loginEmp = getEmp(pinTarget);
+  if(_loginEmp){ _loginEmp.lastLoginTs = new Date().toISOString(); saveDB(); }
   // Push notifications + activity tracking
   subscribeToPush(pinTarget).then(function() { checkPushStatus(); });
   supaUpdateLastActive(pinTarget);
@@ -15927,6 +15933,59 @@ function renderSupDashboard(){
             <div class="stat-lbl">${LANG==='en'?'Inactive':'Inactivos'}</div>
           </div>
         </div>
+        ${(()=>{
+          // Connected today section
+          const todayDate = todayStr();
+          const connectedToday = empNames.filter(n => {
+            const lt = allEmps[n].lastLoginTs;
+            if(!lt) return false;
+            return lt.substring(0,10) === todayDate;
+          }).sort((a,b) => (allEmps[b].lastLoginTs||'').localeCompare(allEmps[a].lastLoginTs||''));
+          const notConnected = empNames.filter(n => {
+            const lt = allEmps[n].lastLoginTs;
+            return !lt || lt.substring(0,10) !== todayDate;
+          });
+          return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem">
+              <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase">${LANG==='en'?'Connected Today':'Conectados Hoy'}</div>
+              <div style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:${connectedToday.length>0?'var(--sage)':'var(--rose)'}">${connectedToday.length} / ${empNames.length}</div>
+            </div>
+            ${connectedToday.length > 0 ? `<div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.6rem">
+              ${connectedToday.map(n => {
+                const lt = allEmps[n].lastLoginTs;
+                const d = new Date(lt);
+                const timeStr = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+                const avatar = getEmpAvatar(n);
+                const lvl = getLevelInfo(allEmps[n].xp||0);
+                return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:rgba(136,176,131,.08);border:1px solid rgba(136,176,131,.15);border-radius:var(--r2)">
+                  <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,rgba(196,154,60,.15),rgba(196,154,60,.05));display:flex;align-items:center;justify-content:center;font-size:.7rem">${avatar}</div>
+                  <div style="flex:1">
+                    <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:600;color:var(--parchment)">${n}</div>
+                    <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch3)">${lvl.title} · Nv.${lvl.level}</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--sage);font-weight:600">${timeStr}</div>
+                    <div style="font-family:'DM Mono',monospace;font-size:.45rem;color:var(--parch4)">${LANG==='en'?'online':'conectado'}</div>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>` : `<div style="font-size:.75rem;color:var(--parch4);font-style:italic;margin-bottom:.6rem">${LANG==='en'?'No connections yet today':'Nadie se ha conectado hoy aún'}</div>`}
+            ${notConnected.length > 0 ? `<div style="border-top:1px solid var(--line);padding-top:.5rem">
+              <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem">${LANG==='en'?'Not connected today':'Sin conectarse hoy'}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:.3rem">
+                ${notConnected.map(n => {
+                  const lt = allEmps[n].lastLoginTs;
+                  let ago = '';
+                  if(lt){
+                    const diff = Math.floor((Date.now() - new Date(lt).getTime())/(86400000));
+                    ago = diff === 1 ? (LANG==='en'?'1d ago':'hace 1d') : (LANG==='en'?diff+'d ago':'hace '+diff+'d');
+                  } else { ago = LANG==='en'?'never':'nunca'; }
+                  return `<span style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3);padding:.25rem .5rem;background:rgba(196,112,104,.06);border:1px solid rgba(196,112,104,.12);border-radius:20px">${n} <span style="font-family:'DM Mono',monospace;font-size:.5rem;opacity:.7">${ago}</span></span>`;
+                }).join('')}
+              </div>
+            </div>` : ''}
+          </div>`;
+        })()}
         ${renderWeeklyChallenge()}
         ${renderSupActivityHeatmap(Object.values(allEmps))}
         ${renderSupScoreTrend(Object.values(allEmps))}
