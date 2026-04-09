@@ -21493,7 +21493,7 @@ function _svcUpdateResults(){
         <div class="svc-result-cat">${d.cat||''}</div>
         ${_svcTab === 'allergens' ? `<div>${(d.allergens && d.allergens.length) ? d.allergens.map(a => `<span class="svc-allergen-tag danger">${a}</span>`).join('') : `<span class="svc-allergen-tag safe">${_en?'None':'Ninguno'}</span>`}</div>` : ''}
         ${_svcTab === 'wine' ? _svcGetWinePreview(d, _en) : ''}
-        ${_svcTab === 'cutlery' ? `<div class="svc-cutlery">${d.cutlery||(_en?'Not specified':'No especificado')}</div>` : ''}
+        ${_svcTab === 'ingredients' ? `<div style="font-size:.68rem;color:#8b949e;line-height:1.4;margin-top:.3rem">${(d.ingredients||'').substring(0,120)}${(d.ingredients||'').length>120?'...':''}</div>` : ''}
         ${_svcTab === 'plating' ? `<div style="font-size:.68rem;color:#8b949e;line-height:1.4;margin-top:.3rem">${(d.notes||'').substring(0,100)}${(d.notes||'').length>100?'...':''}</div>` : ''}
       </div>`).join('');
     }
@@ -21522,7 +21522,7 @@ function _renderServiceMode(){
     ['allergens', _en?'Allergens':'Alérgenos', '⚠'],
     ['wine', _en?'Wine':'Vinos', '🍷'],
     ['plating', _en?'Plating':'Emplatado', '🍽'],
-    ['cutlery', _en?'Cutlery':'Marcaje', '🔪']
+    ['ingredients', _en?'Ingredients':'Ingredientes', '🧾']
   ];
 
   // Detail view of a selected dish
@@ -21551,10 +21551,9 @@ function _renderServiceMode(){
           ${d.history ? `<div style="font-size:.7rem;color:#8b949e;line-height:1.5;font-style:italic;border-left:2px solid #c49a3c;padding-left:.6rem;margin-top:.5rem">${d.history}</div>` : ''}
         ` : ''}
 
-        ${_svcTab === 'cutlery' || _svcTab === 'all' ? `
-          <div class="svc-section-title">${_en?'Cutlery':'Marcaje'}</div>
-          ${d.cutlery ? `<div class="svc-cutlery">🔪 ${d.cutlery}</div>` : `<div style="font-size:.72rem;color:#484f58">${_en?'Not specified':'No especificado'}</div>`}
-          ${d.ingredients ? `<div class="svc-section-title" style="margin-top:.6rem">${_en?'Ingredients':'Ingredientes'}</div><div style="font-size:.72rem;color:#8b949e;line-height:1.5">${d.ingredients}</div>` : ''}
+        ${_svcTab === 'ingredients' || _svcTab === 'all' ? `
+          <div class="svc-section-title">${_en?'Ingredients':'Ingredientes'}</div>
+          ${d.ingredients ? `<div style="font-size:.75rem;color:#e6edf3;line-height:1.7">${d.ingredients}</div>` : `<div style="font-size:.72rem;color:#484f58">${_en?'Not specified':'No especificado'}</div>`}
         ` : ''}
       </div>`;
       return;
