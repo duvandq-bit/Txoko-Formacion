@@ -2393,6 +2393,163 @@ body::after{
 
 
 /* ═══ SERVICE COMPANION MODE ═══ */
+/* ═══ SENSORY MAP ═══ */
+.sensory-wrap{padding:.3rem .8rem 2rem;max-width:600px;margin:0 auto}
+.sensory-header{text-align:center;padding:.8rem 0 .3rem}
+.sensory-header h2{font-family:var(--ff-display);font-size:1.1rem;color:var(--gold);margin:0 0 .2rem}
+.sensory-header p{font-size:.72rem;color:rgba(28,42,34,.5);margin:0;line-height:1.4}
+.sensory-modes{display:flex;gap:.3rem;justify-content:center;margin:.8rem 0}
+.sensory-mode{padding:.4rem .8rem;border-radius:14px;border:1px solid rgba(182,161,105,.3);background:transparent;font-size:.7rem;color:var(--olive);cursor:pointer;transition:all .2s;min-height:36px;display:flex;align-items:center}
+.sensory-mode.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+.sensory-search-wrap{position:relative;margin:.5rem 0 1rem}
+.sensory-search{width:100%;padding:.65rem 1rem .65rem 2.2rem;border:1px solid rgba(182,161,105,.25);border-radius:22px;font-size:.78rem;background:var(--cream);color:var(--olive);outline:none;transition:border-color .2s;box-sizing:border-box;min-height:44px}
+.sensory-search:focus{border-color:var(--gold)}
+.sensory-search-wrap::before{content:'🔍';position:absolute;left:.8rem;top:50%;transform:translateY(-50%);font-size:.7rem;pointer-events:none}
+.sensory-wheel-wrap{position:relative;width:280px;height:280px;margin:0 auto 1rem}
+.sensory-wheel-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--cream),#f8f3e8);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;text-align:center;font-size:.58rem;color:var(--olive);font-weight:700;z-index:3;box-shadow:0 3px 15px rgba(182,161,105,.2);line-height:1.3}
+.sensory-note{position:absolute;width:54px;height:54px;border-radius:50%;border:2.5px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);box-shadow:0 3px 10px rgba(0,0,0,.12);z-index:4;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.sensory-note .sn-ico{font-size:1.1rem;line-height:1}
+.sensory-note .sn-lbl{font-size:.52rem;font-weight:700;margin-top:1px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);white-space:nowrap}
+.sensory-note:active{transform:scale(1.15)!important}
+.sensory-note.active{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold),0 4px 20px rgba(182,161,105,.4);z-index:6}
+.sensory-line{position:absolute;top:50%;left:50%;height:1px;background:rgba(182,161,105,.1);transform-origin:0 0;z-index:1;transition:all .3s}
+.sensory-line.active{height:2px;background:var(--gold)}
+.sensory-detail{margin-top:.5rem;animation:snsIn .3s ease}
+@keyframes snsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sensory-detail-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.sensory-detail-icon{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.sensory-detail-title{font-family:var(--ff-display);font-size:.95rem;color:var(--olive)}
+.sensory-detail-sub{font-size:.68rem;color:rgba(28,42,34,.5)}
+.sensory-why{font-size:.73rem;color:rgba(28,42,34,.6);line-height:1.5;padding:.7rem;background:rgba(182,161,105,.06);border-radius:8px;border-left:3px solid var(--gold);margin-bottom:1rem}
+.sensory-section{margin-bottom:1rem}
+.sensory-section-title{font-size:.68rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;display:flex;align-items:center;gap:.3rem}
+.sensory-card{display:flex;align-items:center;gap:.5rem;padding:.55rem .6rem;background:var(--cream);border-radius:10px;margin-bottom:.35rem;cursor:pointer;transition:all .2s;border:1px solid rgba(0,0,0,.03);min-height:44px}
+.sensory-card:hover,.sensory-card:active{border-color:var(--gold);box-shadow:0 2px 8px rgba(182,161,105,.12)}
+.sensory-card-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sensory-card-info{flex:1;min-width:0}
+.sensory-card-name{font-size:.76rem;font-weight:600;color:var(--olive);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sensory-card-meta{font-size:.62rem;color:rgba(28,42,34,.45)}
+.sensory-intensity{display:flex;gap:3px;margin-left:auto;flex-shrink:0}
+.sensory-dot{width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,.1)}
+.sensory-dot.on{background:var(--gold)}
+.sensory-radar-wrap{width:220px;height:220px;margin:1rem auto}
+.sensory-fp{background:var(--cream);border-radius:12px;padding:1rem;border:1px solid rgba(182,161,105,.15);margin-bottom:1rem;animation:snsIn .3s ease}
+.sensory-fp-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
+.sensory-fp-badge{padding:3px 10px;border-radius:10px;font-size:.6rem;font-weight:700;color:#fff}
+.sensory-fp-name{font-family:var(--ff-display);font-size:.95rem;color:var(--olive)}
+.sensory-fp-notes{display:flex;flex-wrap:wrap;gap:.3rem;margin:.5rem 0}
+.sensory-fp-tag{padding:3px 9px;border-radius:10px;font-size:.6rem;font-weight:600;color:#fff;cursor:pointer;transition:transform .2s;opacity:.9}
+.sensory-fp-tag:hover{transform:scale(1.1);opacity:1}
+.sensory-fp-section{margin-top:1rem}
+.sensory-fp-section-title{font-size:.68rem;font-weight:700;color:var(--gold);margin-bottom:.5rem}
+.sensory-back{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;border-radius:14px;border:1px solid rgba(182,161,105,.3);background:transparent;font-size:.72rem;color:var(--olive);cursor:pointer;margin-bottom:.8rem;min-height:36px}
+.sensory-back:hover{border-color:var(--gold);background:rgba(182,161,105,.05)}
+/* Sensory responsive: small phones */
+@media(max-width:380px){.sensory-wheel-wrap{width:240px;height:240px}.sensory-note{width:46px;height:46px}.sensory-note .sn-ico{font-size:.95rem}.sensory-note .sn-lbl{font-size:.46rem}.sensory-wheel-center{width:62px;height:62px;font-size:.5rem}.sensory-radar-wrap{width:190px;height:190px}}
+@media(max-width:320px){.sensory-wheel-wrap{width:210px;height:210px}.sensory-note{width:40px;height:40px}.sensory-note .sn-ico{font-size:.85rem}.sensory-note .sn-lbl{display:none}.sensory-wheel-center{width:56px;height:56px;font-size:.45rem}.sensory-wrap{padding:.3rem .5rem 2rem}.sensory-radar-wrap{width:170px;height:170px}}
+/* ═══ RULETA TXOKO ═══ */
+.ruleta-wrap{padding:.5rem 0 2rem;max-width:500px;margin:0 auto;text-align:center}
+.ruleta-header{margin-bottom:1rem}
+.ruleta-header h2{font-family:var(--ff-display);font-size:1.2rem;color:var(--gold);margin:0 0 .2rem}
+.ruleta-header p{font-size:.72rem;color:rgba(28,42,34,.5);margin:0}
+.ruleta-players{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin:.8rem 0}
+.ruleta-player{padding:.25rem .6rem;border-radius:12px;font-size:.65rem;font-weight:600;background:rgba(182,161,105,.1);color:var(--olive);border:1px solid rgba(182,161,105,.2);cursor:pointer;transition:all .2s}
+.ruleta-player.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+.ruleta-player.remove:hover{background:#e74c3c;color:#fff;border-color:#e74c3c}
+.ruleta-add-player{padding:.25rem .6rem;border-radius:12px;font-size:.65rem;border:1px dashed rgba(182,161,105,.4);background:transparent;color:var(--gold);cursor:pointer}
+.ruleta-wheel-area{position:relative;width:300px;height:300px;margin:0 auto 1rem;touch-action:none}
+.ruleta-pointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);z-index:10;font-size:1.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));animation:pointerBounce 1s ease infinite}
+@keyframes pointerBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(4px)}}
+.ruleta-svg{width:100%;height:100%;transition:transform 4s cubic-bezier(.17,.67,.12,.99);transform-origin:center center}
+.ruleta-svg.spinning{pointer-events:none}
+.ruleta-spin-btn{margin-top:.5rem;padding:.7rem 2rem;border-radius:25px;background:linear-gradient(135deg,var(--gold),#a07830);color:#fff;font-size:.85rem;font-weight:700;font-family:var(--ff-display);border:none;cursor:pointer;box-shadow:0 4px 15px rgba(182,161,105,.3);transition:all .2s;min-height:48px;touch-action:manipulation}
+.ruleta-spin-btn:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(182,161,105,.4)}
+.ruleta-spin-btn:active{transform:scale(.97)}
+.ruleta-spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.ruleta-result{margin-top:1.2rem;padding:1rem;border-radius:14px;animation:snsIn .4s ease;text-align:left}
+.ruleta-result-cat{display:flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem}
+.ruleta-result-text{font-size:.9rem;color:var(--olive);line-height:1.6;font-weight:500}
+.ruleta-result-player{font-size:.72rem;color:rgba(28,42,34,.5);margin-top:.6rem;font-style:italic}
+.ruleta-history{margin-top:1.5rem;text-align:left}
+.ruleta-history-title{font-size:.65rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem}
+.ruleta-history-item{font-size:.65rem;color:rgba(28,42,34,.5);padding:.3rem 0;border-bottom:1px solid rgba(0,0,0,.03)}
+.ruleta-back{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;border-radius:14px;border:1px solid rgba(182,161,105,.3);background:transparent;font-size:.72rem;color:var(--olive);cursor:pointer;margin-bottom:.8rem}
+@media(max-width:380px){.ruleta-wheel-area{width:260px;height:260px}.ruleta-spin-btn{font-size:.78rem;padding:.6rem 1.5rem}}
+@media(min-width:768px){.ruleta-wheel-area{width:380px;height:380px}.ruleta-result-text{font-size:1rem}.ruleta-header h2{font-size:1.4rem}}
+
+/* Sensory responsive: desktop */
+@media(min-width:768px){.sensory-wheel-wrap{width:380px;height:380px}.sensory-note{width:64px;height:64px}.sensory-note .sn-ico{font-size:1.3rem}.sensory-note .sn-lbl{font-size:.6rem}.sensory-wheel-center{width:90px;height:90px;font-size:.65rem}.sensory-radar-wrap{width:280px;height:280px}.sensory-card-name{font-size:.82rem}.sensory-why{font-size:.78rem}.sensory-detail-title{font-size:1.05rem}.sensory-fp-name{font-size:1.05rem}.sensory-header h2{font-size:1.3rem}}
+
+/* ═══════════════════════════════════════════════════════
+   TXOKO CLUB — Avatar Editor + Isometric Room
+   ═══════════════════════════════════════════════════════ */
+
+/* Avatar Editor */
+.avt-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;z-index:10000}
+.avt-modal{background:#1a1a2e;border:2px solid #c49a3c;border-radius:10px;padding:1.2rem;max-width:460px;width:92%;max-height:90vh;overflow-y:auto;color:#e0e0e0;box-shadow:0 8px 40px rgba(0,0,0,.8)}
+.avt-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:2px solid #c49a3c;padding-bottom:.7rem}
+.avt-title{font-family:'Cinzel',serif;font-size:1.15rem;color:#c49a3c;font-weight:700}
+.avt-body{display:flex;flex-direction:column;gap:1rem}
+.avt-preview{display:flex;justify-content:center;margin-bottom:.5rem}
+.avt-preview canvas{border:2px solid #c49a3c;border-radius:6px;background:linear-gradient(135deg,#2d2d44,#1a1a2e);image-rendering:pixelated;image-rendering:crisp-edges}
+.avt-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:.8rem}
+.avt-tab{background:#2d2d44;border:2px solid #444;color:#999;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600;transition:all .2s}
+.avt-tab:hover{border-color:#c49a3c;color:#c49a3c}
+.avt-tab.active{background:#c49a3c;color:#1a1a2e;border-color:#c49a3c}
+.avt-cat{display:none}.avt-cat.active{display:block}
+.avt-group-lbl{font-size:.68rem;color:#c49a3c;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700}
+.avt-swatches{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.avt-swatch{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s}
+.avt-swatch:hover{transform:scale(1.15);border-color:#888}
+.avt-swatch.sel{border-color:#c49a3c;box-shadow:0 0 10px rgba(196,154,60,.6)}
+.avt-styles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.avt-style-item{background:#2d2d44;border:2px solid #444;padding:6px;border-radius:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s;min-height:60px;justify-content:center}
+.avt-style-item:hover{border-color:#c49a3c}
+.avt-style-item.sel{background:linear-gradient(135deg,#c49a3c,#a47a2c);border-color:#c49a3c;color:#1a1a2e}
+.avt-style-item.sel .avt-style-lbl{color:#1a1a2e;font-weight:700}
+.avt-style-lbl{font-size:.65rem;text-align:center;color:#999}
+.avt-style-ico{font-size:1.3rem}
+.avt-footer{display:flex;gap:10px;margin-top:1rem;justify-content:center}
+.avt-btn{padding:10px 24px;border:none;border-radius:6px;cursor:pointer;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;min-height:44px}
+.avt-btn-save{background:linear-gradient(135deg,#c49a3c,#a47a2c);color:#1a1a2e}
+.avt-btn-save:hover{background:linear-gradient(135deg,#e0b856,#c49a3c)}
+.avt-btn-back{background:#2d2d44;color:#c49a3c;border:2px solid #c49a3c}
+.avt-btn-back:hover{background:#3a3a52}
+
+/* Social Room */
+.social-wrap{display:flex;flex-direction:column;width:100%;height:calc(100vh - 60px);background:#0a0e1a;overflow:hidden;position:relative}
+.social-header{padding:10px 16px;background:rgba(20,25,45,.95);border-bottom:2px solid rgba(196,154,60,.4);display:flex;justify-content:space-between;align-items:center;color:#e0e8f0}
+.social-room-name{font-family:'Cinzel',serif;font-size:.95rem;color:#c49a3c;font-weight:700}
+.social-room-name span{font-size:.7rem;color:#7a8fa0;margin-left:6px;font-family:Arial,sans-serif;font-weight:400}
+.social-actions{display:flex;gap:8px}
+.social-btn{padding:6px 14px;background:linear-gradient(135deg,#2d2d44,#1a1a2e);color:#c49a3c;border:1px solid #c49a3c;border-radius:4px;cursor:pointer;font-size:.72rem;transition:all .2s;min-height:36px;font-weight:600}
+.social-btn:hover{background:#c49a3c;color:#1a1a2e}
+.social-canvas-wrap{flex:1;position:relative;overflow:hidden}
+.social-canvas-wrap canvas{display:block;width:100%;height:100%;image-rendering:pixelated;cursor:crosshair}
+.social-chat-bar{padding:8px 12px;background:rgba(20,25,45,.95);border-top:2px solid rgba(196,154,60,.4);display:flex;gap:8px;align-items:center}
+.social-chat-input{flex:1;padding:8px 12px;background:rgba(50,60,90,.8);border:1px solid rgba(196,154,60,.4);border-radius:20px;color:#e0e8f0;font-size:.82rem;font-family:Arial,sans-serif;min-height:36px}
+.social-chat-input:focus{outline:none;border-color:#c49a3c;box-shadow:0 0 8px rgba(196,154,60,.3)}
+.social-chat-input::placeholder{color:#7a8fa0}
+.social-send-btn{padding:8px 16px;background:linear-gradient(135deg,#c49a3c,#a47a2c);color:#1a1a2e;border:none;border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:700;transition:all .2s;min-height:36px}
+.social-send-btn:hover{background:linear-gradient(135deg,#e0b856,#c49a3c)}
+.social-history-btn{padding:6px 12px;background:transparent;color:#c49a3c;border:1px solid rgba(196,154,60,.4);border-radius:20px;cursor:pointer;font-size:.7rem;transition:all .2s;min-height:36px}
+.social-history-btn:hover{background:rgba(196,154,60,.15)}
+#socialHistoryPanel{position:absolute;bottom:60px;right:12px;width:260px;max-height:280px;background:rgba(20,25,45,.98);border:2px solid #c49a3c;border-radius:8px;display:none;flex-direction:column;box-shadow:0 4px 20px rgba(0,0,0,.6);z-index:100}
+.social-hist-header{padding:8px 12px;border-bottom:1px solid rgba(196,154,60,.3);display:flex;justify-content:space-between;align-items:center;color:#c49a3c;font-weight:700;font-size:.75rem}
+.social-hist-close{cursor:pointer;color:#c49a3c;font-size:1.1rem;line-height:1}
+.social-hist-close:hover{color:#e74c3c}
+.social-hist-msgs{flex:1;overflow-y:auto;padding:8px;font-size:.72rem;color:#c0c8d0}
+.social-hist-msg{margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(196,154,60,.15)}
+.social-hist-msg:last-child{border-bottom:none}
+.social-hist-sender{color:#c49a3c;font-weight:700;font-size:.68rem}
+.social-hist-time{color:#7a8fa0;font-size:.6rem;margin-top:1px}
+.social-hist-text{color:#d0d8e0;word-wrap:break-word;margin-top:2px;line-height:1.3}
+.social-online{display:flex;gap:4px;align-items:center;font-size:.65rem;color:#7a8fa0}
+.social-online-dot{width:6px;height:6px;border-radius:50%;background:#2ecc71;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+
+@media(min-width:768px){.avt-modal{max-width:600px;padding:1.5rem}.avt-styles{grid-template-columns:repeat(4,1fr)}.social-canvas-wrap canvas{cursor:crosshair}}
+
 .svc-overlay{position:fixed;inset:0;z-index:9999;background:#0d1117;color:#e6edf3;display:flex;flex-direction:column;overflow:hidden;font-family:'Quicksand',sans-serif;transition:opacity .2s ease}
 .svc-overlay.svc-hidden{opacity:0;pointer-events:none}
 .svc-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;background:#161b22;border-bottom:1px solid #30363d}
@@ -3433,6 +3590,7 @@ body::after{
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -3532,7 +3690,7 @@ body::after{
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
     <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Protocolo</button>
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
-    <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
+    <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')" style="position:relative"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos<span id="navClubDot" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:#2ecc71;box-shadow:0 0 4px #2ecc71;animation:pulse-dot 2s infinite"></span></button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
@@ -3542,6 +3700,7 @@ body::after{
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
   <button class="svc-fab" id="svcFab" onclick="toggleServiceMode()" title="Modo Servicio" style="display:none">⚡</button>
+  <button id="clubFab" onclick="renderTxokoClub()" style="display:none;position:fixed;bottom:72px;right:12px;z-index:800;width:44px;height:44px;border-radius:50%;border:2px solid #2ecc71;background:rgba(26,26,46,.92);color:#2ecc71;font-size:18px;cursor:pointer;box-shadow:0 2px 12px rgba(46,204,113,.3);animation:pulse-dot 2s infinite;-webkit-tap-highlight-color:transparent" title="Volver al Txoko Club">🏠</button>
 </div>
 <div class="svc-overlay svc-hidden" id="svcOverlay"></div>
 
@@ -7535,6 +7694,8 @@ document.addEventListener('keydown', function(e){
 
 function showTab(tab){
   currentTab=tab;
+  // Show/hide club FAB when connected but on another tab
+  if(_isClubConnected)_updateClubIndicator(_isClubConnected());
   // Track night study for achievement
   const _h = new Date().getHours();
   if(_h >= 23 || _h < 5){
@@ -10093,6 +10254,239 @@ let _wineSearch = '';
 let _wineView = 'grid';
 let _vinoSubTab = 'sommelier';
 
+// ═══ SENSORY MAP DATA ═══
+let _snsMode = 'wheel'; // wheel | wines | dishes
+let _snsActive = null;   // active note key
+let _snsSearch = '';
+let _snsDetail = null;   // {type:'wine'|'dish', id:...}
+
+const SNS_NOTES = {
+  citrico:  {icon:'🍋',color:'#f4d03f',es:'Cítrico',en:'Citrus',
+    why_es:'Los cítricos aportan frescura y acidez que limpian el paladar. Conectan vinos blancos frescos con pescados, mariscos y ensaladas.',
+    why_en:'Citrus notes provide freshness and acidity that cleanse the palate. They connect crisp white wines with fish, seafood and salads.'},
+  floral:   {icon:'🌸',color:'#e8a0bf',es:'Floral',en:'Floral',
+    why_es:'Las notas florales aportan elegancia y delicadeza. Conectan vinos aromáticos con platos sutiles, quesos suaves y postres ligeros.',
+    why_en:'Floral notes bring elegance and delicacy. They connect aromatic wines with subtle dishes, soft cheeses and light desserts.'},
+  frutal:   {icon:'🍎',color:'#e74c3c',es:'Frutal',en:'Fruity',
+    why_es:'La fruta es el corazón del vino. Los vinos frutales son versátiles y conectan con carnes, embutidos, arroces y platos especiados.',
+    why_en:'Fruit is the heart of wine. Fruity wines are versatile and connect with meats, charcuterie, rice dishes and spiced plates.'},
+  herbal:   {icon:'🌿',color:'#27ae60',es:'Herbal',en:'Herbal',
+    why_es:'Las notas herbáceas aportan frescura verde que conecta con verduras, ensaladas, pescados a la plancha y cocina mediterránea.',
+    why_en:'Herbal notes bring green freshness that connects with vegetables, salads, grilled fish and Mediterranean cuisine.'},
+  mineral:  {icon:'💎',color:'#7fb3d8',es:'Mineral',en:'Mineral',
+    why_es:'La mineralidad refleja el terroir volcánico o granítico. Conecta vinos de terroir con mariscos crudos, ostras y pescados frescos.',
+    why_en:'Minerality reflects volcanic or granite terroir. It connects terroir wines with raw shellfish, oysters and fresh fish.'},
+  especiado:{icon:'🌶️',color:'#e67e22',es:'Especiado',en:'Spicy',
+    why_es:'Las especias en el vino (pimienta, clavo, canela) complementan carnes rojas, guisos, embutidos curados y platos con carácter.',
+    why_en:'Wine spices (pepper, clove, cinnamon) complement red meats, stews, cured meats and dishes with character.'},
+  ahumado:  {icon:'🔥',color:'#8b7355',es:'Ahumado',en:'Smoky',
+    why_es:'El ahumado conecta vinos de crianza con carnes a la brasa, embutidos ahumados y platos con texturas tostadas complejas.',
+    why_en:'Smokiness connects aged wines with grilled meats, smoked charcuterie and dishes with complex toasted textures.'},
+  tostado:  {icon:'🍞',color:'#d4a574',es:'Tostado',en:'Toasted',
+    why_es:'Las notas tostadas (de barrica) complementan platos con costra dorada, fritos crujientes, quesos maduros y carnes asadas.',
+    why_en:'Toasted notes (from barrel aging) complement dishes with golden crust, crispy fried foods, aged cheeses and roasted meats.'},
+  dulce:    {icon:'🍯',color:'#f39c12',es:'Dulce',en:'Sweet',
+    why_es:'La dulzura equilibra la acidez y el picante. Conecta con postres, foie, quesos azules y platos agridulces.',
+    why_en:'Sweetness balances acidity and spice. It connects with desserts, foie gras, blue cheeses and sweet-sour dishes.'},
+  salino:   {icon:'🧂',color:'#3498db',es:'Salino',en:'Saline',
+    why_es:'La salinidad atlántica conecta vinos costeros con mariscos, ostras, cefalópodos y pescados del mar.',
+    why_en:'Atlantic salinity connects coastal wines with shellfish, oysters, cephalopods and ocean fish.'},
+  umami:    {icon:'🍖',color:'#8e44ad',es:'Umami',en:'Umami',
+    why_es:'El umami (sabroso profundo) conecta vinos con cuerpo con carnes curadas, quesos maduros, setas y caldos concentrados.',
+    why_en:'Umami (deep savory) connects full-bodied wines with cured meats, aged cheeses, mushrooms and concentrated broths.'},
+  balsamico:{icon:'🌲',color:'#1a5276',es:'Balsámico',en:'Balsamic',
+    why_es:'Las notas balsámicas (eucalipto, resina) aportan frescura elegante que complementa carnes de caza, guisos y platos complejos.',
+    why_en:'Balsamic notes (eucalyptus, resin) bring elegant freshness that complements game meats, stews and complex dishes.'}
+};
+
+// Wine sensory profiles: wineId → [[noteKey, intensity(1-3)], ...]
+const WINE_SNS = {
+  // Blancos Canarias
+  1:  [['citrico',2],['mineral',3],['floral',1]],
+  2:  [['mineral',3],['salino',2],['herbal',1]],
+  3:  [['floral',2],['herbal',2],['mineral',2]],
+  4:  [['floral',2],['mineral',2],['salino',2]],
+  5:  [['citrico',2],['mineral',3],['floral',1]],
+  6:  [['citrico',2],['mineral',2],['frutal',1]],
+  7:  [['floral',3],['dulce',2],['frutal',2]],
+  // Blancos Galicia/Rioja
+  8:  [['citrico',3],['mineral',2],['frutal',1]],
+  9:  [['frutal',2],['floral',2],['mineral',1]],
+  10: [['frutal',2],['floral',2],['herbal',1]],
+  11: [['tostado',2],['frutal',2],['especiado',1]],
+  12: [['citrico',2],['mineral',2],['frutal',1]],
+  13: [['tostado',2],['frutal',2],['floral',1]],
+  14: [['citrico',2],['floral',2],['frutal',1]],
+  15: [['citrico',2],['mineral',1],['frutal',2]],
+  // Blancos Galicia
+  16: [['citrico',2],['mineral',2],['floral',1]],
+  17: [['mineral',2],['citrico',2],['herbal',1]],
+  18: [['frutal',2],['floral',2],['mineral',1]],
+  19: [['citrico',2],['salino',3],['mineral',1]],
+  20: [['frutal',2],['floral',2],['citrico',1]],
+  21: [['frutal',2],['floral',2],['citrico',1]],
+  // Blancos Francia/Internacional
+  22: [['tostado',2],['frutal',2],['floral',1]],
+  23: [['mineral',3],['citrico',2],['herbal',1]],
+  24: [['citrico',2],['mineral',2],['floral',1]],
+  25: [['mineral',2],['herbal',2],['citrico',1]],
+  26: [['dulce',2],['floral',2],['frutal',2]],
+  27: [['dulce',2],['floral',2],['frutal',2]],
+  28: [['citrico',2],['mineral',2],['floral',2]],
+  29: [['tostado',2],['frutal',2],['citrico',1]],
+  30: [['floral',2],['frutal',2],['citrico',1]],
+  // Tintos Rioja
+  31: [['frutal',2],['especiado',1],['herbal',1]],
+  32: [['frutal',2],['especiado',2],['tostado',2]],
+  33: [['frutal',2],['especiado',2],['tostado',1]],
+  34: [['frutal',2],['herbal',1],['especiado',1]],
+  35: [['tostado',3],['especiado',2],['frutal',2]],
+  36: [['tostado',3],['especiado',2],['frutal',2]],
+  37: [['tostado',3],['especiado',2],['frutal',2]],
+  38: [['especiado',2],['tostado',2],['frutal',2]],
+  39: [['tostado',3],['especiado',2],['balsamico',2]],
+  40: [['especiado',2],['tostado',2],['frutal',1]],
+  41: [['frutal',2],['especiado',2],['tostado',1]],
+  42: [['tostado',2],['especiado',2],['frutal',2]],
+  43: [['balsamico',2],['tostado',2],['especiado',2]],
+  44: [['tostado',2],['especiado',2],['frutal',2]],
+  45: [['tostado',3],['especiado',2],['balsamico',2]],
+  46: [['tostado',3],['balsamico',2],['especiado',2]],
+  47: [['frutal',3],['especiado',2],['tostado',2]],
+  48: [['tostado',3],['balsamico',3],['especiado',2]],
+  // Tintos CyL
+  49: [['frutal',2],['especiado',2],['tostado',1]],
+  50: [['tostado',2],['especiado',2],['balsamico',1]],
+  51: [['frutal',2],['tostado',2],['especiado',1]],
+  52: [['tostado',2],['especiado',2],['frutal',1]],
+  53: [['tostado',3],['frutal',2],['especiado',2]],
+  54: [['tostado',3],['frutal',2],['especiado',2]],
+  55: [['frutal',2],['especiado',2],['tostado',1]],
+  56: [['tostado',3],['balsamico',2],['especiado',2]],
+  // Andalucía
+  57: [['especiado',2],['ahumado',2],['frutal',1]],
+  // Canarias Tinto
+  58: [['frutal',2],['herbal',2],['mineral',2]],
+  59: [['frutal',2],['herbal',1],['especiado',1]],
+  60: [['mineral',2],['ahumado',2],['frutal',1]],
+  61: [['frutal',2],['mineral',2],['herbal',1]],
+  62: [['mineral',2],['frutal',1],['ahumado',1]],
+  // Galicia Tinto
+  63: [['frutal',2],['herbal',2],['mineral',1]],
+  64: [['frutal',2],['mineral',2],['herbal',1]],
+  65: [['frutal',2],['especiado',2],['mineral',1]],
+  // Islas/Murcia/CLM
+  66: [['frutal',2],['herbal',2],['mineral',1]],
+  67: [['frutal',2],['especiado',2],['ahumado',1]],
+  68: [['frutal',2],['especiado',2],['tostado',1]],
+  69: [['frutal',2],['especiado',2],['tostado',1]],
+  // Francia Tinto
+  70: [['frutal',2],['especiado',1],['herbal',1]],
+  71: [['frutal',2],['herbal',1],['especiado',1]],
+  72: [['frutal',2],['tostado',2],['especiado',1]],
+  73: [['especiado',3],['frutal',2],['herbal',1]],
+  74: [['frutal',2],['herbal',2],['tostado',1]],
+  75: [['tostado',2],['especiado',2],['frutal',2]],
+  76: [['especiado',3],['frutal',2],['herbal',1]],
+  77: [['frutal',2],['herbal',2],['mineral',1]],
+  78: [['frutal',2],['herbal',2],['tostado',1]],
+  // Internacional
+  79: [['frutal',2],['especiado',2],['mineral',1]],
+  80: [['frutal',2],['especiado',2],['tostado',1]],
+  81: [['frutal',2],['especiado',2],['mineral',1]],
+  // Cataluña
+  82: [['frutal',2],['mineral',2],['herbal',1]],
+  83: [['frutal',2],['especiado',2],['herbal',1]],
+  84: [['mineral',2],['especiado',2],['frutal',2]],
+  85: [['tostado',2],['frutal',2],['especiado',1]],
+  86: [['frutal',2],['especiado',2],['herbal',1]],
+  87: [['tostado',2],['frutal',2],['especiado',2]],
+  88: [['mineral',2],['especiado',2],['frutal',2]],
+  89: [['mineral',3],['especiado',2],['balsamico',2]],
+  90: [['frutal',2],['herbal',1],['tostado',1]],
+  91: [['frutal',2],['tostado',2],['especiado',1]],
+  // Rosado
+  92: [['frutal',3],['floral',2],['citrico',1]],
+  93: [['frutal',2],['floral',2],['citrico',1]],
+  // Dulce
+  94: [['dulce',3],['floral',2],['frutal',2]],
+  95: [['dulce',3],['floral',2],['especiado',1]],
+  // Espumoso
+  96: [['citrico',2],['floral',2],['frutal',1]],
+  97: [['tostado',2],['citrico',2],['floral',1]],
+  98: [['citrico',2],['floral',2],['frutal',1]],
+  99: [['citrico',2],['floral',2],['frutal',1]],
+  100:[['tostado',2],['citrico',2],['floral',1]],
+  101:[['tostado',2],['citrico',2],['frutal',1]],
+  102:[['tostado',2],['citrico',2],['mineral',1]],
+  103:[['tostado',2],['citrico',2],['mineral',2]],
+  104:[['frutal',2],['floral',2],['citrico',1]],
+  105:[['frutal',2],['citrico',2],['floral',1]],
+  // Copa
+  106:[['herbal',2],['citrico',2],['frutal',1]],
+  107:[['herbal',2],['citrico',2],['frutal',1]],
+  108:[['mineral',2],['citrico',2],['salino',2]],
+  109:[['frutal',2],['especiado',1],['tostado',1]],
+  110:[['frutal',2],['especiado',1],['tostado',1]],
+  // Nuevos
+  111:[['citrico',2],['salino',2],['mineral',2]],
+  112:[['herbal',2],['citrico',2],['frutal',1]],
+  113:[['floral',2],['frutal',2],['mineral',1]],
+  114:[['frutal',2],['especiado',2],['tostado',2]],
+  115:[['frutal',2],['especiado',1],['herbal',1]],
+  116:[['especiado',2],['tostado',2],['frutal',1]],
+  117:[['especiado',3],['frutal',2],['ahumado',1]],
+  118:[['frutal',2],['especiado',2],['mineral',1]],
+  119:[['frutal',2],['herbal',2],['mineral',2]],
+  120:[['frutal',3],['especiado',2],['tostado',2]]
+};
+
+// Dish sensory profiles: dishName → [[noteKey, intensity], ...]
+const DISH_SNS = {
+  'Selección de ostras':         [['salino',3],['mineral',2],['citrico',1]],
+  'Calamares a la Andaluza':     [['tostado',2],['salino',2],['citrico',1]],
+  'Fish and chips':              [['tostado',2],['salino',2],['umami',1]],
+  'Lobster Roll':                [['umami',2],['salino',2],['dulce',1]],
+  'Mejillones a la brasa':       [['ahumado',2],['salino',2],['umami',2]],
+  'Tataki de atún':              [['umami',3],['citrico',1],['especiado',1]],
+  'Tartar de lomo de atún':      [['umami',3],['citrico',2],['especiado',1]],
+  'Ensalada de Mero del Hierro': [['citrico',2],['salino',1],['herbal',1]],
+  'Lubina crujiente con mayonesa de leche de tigre':[['umami',2],['citrico',2],['tostado',1]],
+  'Txuleta de atún con tomate en texturas':         [['umami',3],['ahumado',1],['frutal',1]],
+  'Tabla de quesos canarios':    [['umami',2],['salino',2],['dulce',1]],
+  'Jamón ibérico de bellota Gran Reserva':           [['umami',3],['salino',2],['dulce',1]],
+  'Tabla de embutidos':          [['umami',2],['salino',2],['especiado',1]],
+  'Entrecot de Wagyu 300g':      [['umami',3],['ahumado',2],['tostado',1]],
+  'T-bone de Wagyu 1.1kg':       [['umami',3],['ahumado',2],['tostado',1]],
+  'Entrecot de Angus 300g':      [['umami',3],['ahumado',2],['especiado',1]],
+  'Tartar de Wagyu dry':         [['umami',3],['especiado',1],['citrico',1]],
+  'Cordero asado':               [['umami',2],['ahumado',2],['herbal',1]],
+  'Rejo de pulpo con papa y mojo verde':             [['umami',2],['ahumado',1],['salino',1]],
+  'Pulpo a la brasa sobre trinxat de papa canaria':  [['ahumado',2],['umami',2],['salino',1]],
+  'Tomates aliñados':            [['frutal',2],['herbal',2],['citrico',1]],
+  'Tartar de remolacha':         [['dulce',2],['herbal',1],['citrico',1]],
+  'Tartar de tomate y queso':    [['frutal',2],['umami',1],['herbal',1]],
+  'Coca de calabacín':           [['herbal',2],['tostado',1],['frutal',1]],
+  'Ravioli de pularda':          [['umami',2],['tostado',1],['herbal',1]],
+  'Peras escalivadas con cremoso de queso de cabra': [['dulce',2],['frutal',2],['herbal',1]],
+  'Arroz cremoso de verduras':   [['umami',2],['herbal',2],['tostado',1]],
+  'Croquetas':                   [['tostado',2],['umami',2],['salino',1]],
+  'Patatas cerilla fritas':      [['tostado',2],['salino',2],['umami',1]],
+  'Huevo frito con chistorra':   [['umami',2],['tostado',1],['especiado',2]],
+  'Milanesa de pollo al mojo rojo':                  [['tostado',2],['umami',2],['especiado',1]],
+  'Bao de brisket':              [['umami',2],['dulce',1],['ahumado',2]],
+  'Cecina de Wagyu Premium':     [['umami',3],['ahumado',2],['salino',1]],
+  'Langostinos con salsa ligera de calabaza avainillada':[['dulce',1],['umami',2],['especiado',1]],
+  'Linguini con tartar de langostino':               [['umami',2],['citrico',1],['tostado',1]],
+  'Parmentier de papa canaria':  [['tostado',1],['umami',1],['mineral',1]],
+  'Lubina a la brasa con ensalada de papaya':        [['ahumado',2],['frutal',1],['citrico',1]],
+  'Raviolis de espinaca y queso parmesano':          [['umami',2],['herbal',2],['tostado',1]],
+  'Tomates ecológicos':          [['frutal',2],['herbal',2],['citrico',1]],
+  'Tartar de remolacha, aguacate y manzana ácida':   [['dulce',2],['herbal',1],['citrico',2]],
+  'Tomate Cherry al ajillo':     [['frutal',1],['especiado',2],['herbal',1]],
+  'Coca de tomate':              [['frutal',2],['tostado',1],['herbal',1]]
+};
+
 // ═══ WINE EDUCATION DATA ═══
 const WINE_CONCEPTS = [
   // ═══ NIVEL PRINCIPIANTE ═══
@@ -11239,6 +11633,414 @@ function _buildSommelierResults() {
   return '';
 }
 
+// ═══ SENSORY MAP FUNCTIONS ═══
+function _renderSensoryMap(c, bar){
+  const _en = LANG==='en';
+  const noteKeys = Object.keys(SNS_NOTES);
+
+  // If viewing a specific wine or dish detail
+  if(_snsDetail){
+    _renderSensoryDetail(c, bar);
+    return;
+  }
+
+  // Mode buttons
+  const modes = `<div class="sensory-modes">
+    <button class="sensory-mode${_snsMode==='wheel'?' active':''}" onclick="_snsMode='wheel';_snsActive=null;_snsSearch='';renderVinos()">🎯 ${_en?'Wheel':'Rueda'}</button>
+    <button class="sensory-mode${_snsMode==='wines'?' active':''}" onclick="_snsMode='wines';_snsActive=null;renderVinos()">🍷 ${_en?'Wines':'Vinos'}</button>
+    <button class="sensory-mode${_snsMode==='dishes'?' active':''}" onclick="_snsMode='dishes';_snsActive=null;renderVinos()">🍽️ ${_en?'Dishes':'Platos'}</button>
+  </div>`;
+
+  let content = '';
+
+  if(_snsMode === 'wheel'){
+    content = _buildSensoryWheel(_en, noteKeys);
+  } else if(_snsMode === 'wines'){
+    content = _buildSensoryList('wines', _en);
+  } else {
+    content = _buildSensoryList('dishes', _en);
+  }
+
+  c.innerHTML = bar + `<div class="sensory-wrap">
+    <div class="sensory-header">
+      <h2>🎨 ${_en?'Sensory Map':'Mapa Sensorial'}</h2>
+      <p>${_en?'Discover the invisible threads connecting wines and dishes through flavors and aromas':'Descubre los hilos invisibles que conectan vinos y platos a través de sabores y aromas'}</p>
+    </div>
+    ${modes}
+    ${content}
+  </div>`;
+
+  // Position wheel notes with JS after render
+  if(_snsMode === 'wheel'){
+    requestAnimationFrame(()=> _positionWheelNotes());
+  }
+}
+
+function _positionWheelNotes(){
+  const wrap = document.querySelector('.sensory-wheel-wrap');
+  if(!wrap) return;
+  const notes = wrap.querySelectorAll('.sensory-note');
+  const lines = wrap.querySelectorAll('.sensory-line');
+  const w = wrap.offsetWidth;
+  const h = wrap.offsetHeight;
+  const cx = w/2, cy = h/2;
+  const r = Math.min(w,h)/2 - 32;
+  const noteKeys = Object.keys(SNS_NOTES);
+
+  notes.forEach((el, i)=>{
+    const angle = (i * (360/noteKeys.length) - 90) * Math.PI/180;
+    const x = cx + r * Math.cos(angle) - el.offsetWidth/2;
+    const y = cy + r * Math.sin(angle) - el.offsetHeight/2;
+    el.style.left = x+'px';
+    el.style.top = y+'px';
+  });
+  lines.forEach((el, i)=>{
+    const angle = (i * (360/noteKeys.length) - 90) * Math.PI/180;
+    const len = r - 10;
+    el.style.width = len+'px';
+    el.style.transform = `rotate(${angle}rad)`;
+  });
+}
+
+function _buildSensoryWheel(_en, noteKeys){
+  const notesHTML = noteKeys.map((key, i)=>{
+    const n = SNS_NOTES[key];
+    const isActive = _snsActive === key;
+    return `<div class="sensory-note${isActive?' active':''}" style="background:${n.color}" onclick="_snsSelectNote('${key}')">
+      <span class="sn-ico">${n.icon}</span>
+      <span class="sn-lbl">${_en?n.en:n.es}</span>
+    </div>`;
+  }).join('');
+
+  const linesHTML = noteKeys.map((key, i)=>{
+    return `<div class="sensory-line${_snsActive===key?' active':''}"></div>`;
+  }).join('');
+
+  const centerText = _snsActive
+    ? `${SNS_NOTES[_snsActive].icon}<br>${_en?SNS_NOTES[_snsActive].en:SNS_NOTES[_snsActive].es}`
+    : (_en?'Tap a<br>flavor':'Toca un<br>sabor');
+
+  let detailHTML = '';
+  if(_snsActive){
+    detailHTML = _buildNoteDetail(_snsActive, _en);
+  }
+
+  return `<div class="sensory-wheel-wrap">
+    ${linesHTML}
+    <div class="sensory-wheel-center">${centerText}</div>
+    ${notesHTML}
+  </div>${detailHTML}`;
+}
+
+function _snsSelectNote(key){
+  _snsActive = (_snsActive === key) ? null : key;
+  renderVinos();
+  // Scroll to detail if note selected
+  if(_snsActive){
+    setTimeout(()=>{
+      const det = document.querySelector('.sensory-detail');
+      if(det) det.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }, 100);
+  }
+}
+
+function _buildNoteDetail(key, _en){
+  const n = SNS_NOTES[key];
+  // Find wines with this note
+  const matchingWines = [];
+  for(const [wid, profile] of Object.entries(WINE_SNS)){
+    const match = profile.find(p=>p[0]===key);
+    if(match){
+      const wine = WINES.find(w=>w.id===parseInt(wid));
+      if(wine) matchingWines.push({wine, intensity:match[1]});
+    }
+  }
+  matchingWines.sort((a,b)=>b.intensity-a.intensity);
+
+  // Find dishes with this note
+  const matchingDishes = [];
+  for(const [dname, profile] of Object.entries(DISH_SNS)){
+    const match = profile.find(p=>p[0]===key);
+    if(match) matchingDishes.push({name:dname, intensity:match[1]});
+  }
+  matchingDishes.sort((a,b)=>b.intensity-a.intensity);
+
+  const typeColors = {blanco:'#c8a84e',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
+
+  const wineCards = matchingWines.slice(0,12).map(({wine:w, intensity:int})=>`
+    <div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()">
+      <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
+      <div class="sensory-card-info">
+        <div class="sensory-card-name">${w.name}</div>
+        <div class="sensory-card-meta">${w.grapes} · ${w.origin}</div>
+      </div>
+      <div class="sensory-intensity">${'<span class="sensory-dot on"></span>'.repeat(int)}${'<span class="sensory-dot"></span>'.repeat(3-int)}</div>
+    </div>`).join('');
+
+  const dishCards = matchingDishes.slice(0,10).map(({name:d, intensity:int})=>`
+    <div class="sensory-card" onclick="_snsDetail={type:'dish',name:'${d.replace(/'/g,"\\'")}'};renderVinos()">
+      <div class="sensory-card-dot" style="background:#6b8f71"></div>
+      <div class="sensory-card-info">
+        <div class="sensory-card-name">${d}</div>
+      </div>
+      <div class="sensory-intensity">${'<span class="sensory-dot on"></span>'.repeat(int)}${'<span class="sensory-dot"></span>'.repeat(3-int)}</div>
+    </div>`).join('');
+
+  return `<div class="sensory-detail">
+    <div class="sensory-detail-head">
+      <div class="sensory-detail-icon" style="background:${n.color}">${n.icon}</div>
+      <div>
+        <div class="sensory-detail-title">${_en?n.en:n.es}</div>
+        <div class="sensory-detail-sub">${matchingWines.length} ${_en?'wines':'vinos'} · ${matchingDishes.length} ${_en?'dishes':'platos'}</div>
+      </div>
+    </div>
+    <div class="sensory-why">${_en?n.why_en:n.why_es}</div>
+    <div class="sensory-section">
+      <div class="sensory-section-title">🍷 ${_en?'Wines with this note':'Vinos con esta nota'} (${matchingWines.length})</div>
+      ${wineCards}
+      ${matchingWines.length > 12 ? `<div style="text-align:center;font-size:.65rem;color:rgba(28,42,34,.4);padding:.3rem">+${matchingWines.length-12} ${_en?'more':'más'}...</div>` : ''}
+    </div>
+    <div class="sensory-section">
+      <div class="sensory-section-title">🍽️ ${_en?'Dishes with this note':'Platos con esta nota'} (${matchingDishes.length})</div>
+      ${dishCards}
+    </div>
+  </div>`;
+}
+
+function _buildSensoryList(mode, _en){
+  const q = _snsSearch.toLowerCase().trim();
+  const typeColors = {blanco:'#c8a84e',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
+  const typeLabels = {blanco:_en?'White':'Blanco',tinto:_en?'Red':'Tinto',rosado:_en?'Rosé':'Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Sweet':'Dulce'};
+
+  let searchHTML = `<div class="sensory-search-wrap">
+    <input class="sensory-search" type="text" placeholder="${_en?'Search...':'Buscar...'}"
+      value="${escapeHTML(_snsSearch)}" oninput="_snsSearch=this.value;_snsRenderList()" id="snsSearchInput">
+  </div><div id="snsListArea">`;
+
+  if(mode === 'wines'){
+    let wines = WINES.filter(w => WINE_SNS[w.id]);
+    if(q) wines = wines.filter(w => w.name.toLowerCase().includes(q) || (w.grapes||'').toLowerCase().includes(q) || (w.origin||'').toLowerCase().includes(q));
+    searchHTML += wines.map(w=>{
+      const profile = WINE_SNS[w.id] || [];
+      const tags = profile.map(([k,int])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
+      return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()" style="flex-wrap:wrap">
+        <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
+        <div class="sensory-card-info">
+          <div class="sensory-card-name">${w.name}</div>
+          <div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${w.grapes} · ${w.price}€</div>
+        </div>
+        <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
+      </div>`;
+    }).join('');
+    if(wines.length === 0) searchHTML += `<div style="text-align:center;color:rgba(28,42,34,.4);font-size:.75rem;padding:2rem">${_en?'No wines found':'No se encontraron vinos'}</div>`;
+  } else {
+    let dishes = Object.keys(DISH_SNS);
+    if(q) dishes = dishes.filter(d=>d.toLowerCase().includes(q));
+    searchHTML += dishes.map(d=>{
+      const profile = DISH_SNS[d] || [];
+      const tags = profile.map(([k,int])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
+      return `<div class="sensory-card" onclick="_snsDetail={type:'dish',name:'${d.replace(/'/g,"\\'")}'};renderVinos()" style="flex-wrap:wrap">
+        <div class="sensory-card-dot" style="background:#6b8f71"></div>
+        <div class="sensory-card-info">
+          <div class="sensory-card-name">${d}</div>
+        </div>
+        <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
+      </div>`;
+    }).join('');
+    if(dishes.length === 0) searchHTML += `<div style="text-align:center;color:rgba(28,42,34,.4);font-size:.75rem;padding:2rem">${_en?'No dishes found':'No se encontraron platos'}</div>`;
+  }
+  searchHTML += '</div>';
+  return searchHTML;
+}
+
+// Debounced list re-render for search
+function _snsRenderList(){
+  clearTimeout(window._snsSearchTimer);
+  window._snsSearchTimer = setTimeout(()=>{
+    const area = document.getElementById('snsListArea');
+    if(!area) return;
+    const _en = LANG==='en';
+    const q = _snsSearch.toLowerCase().trim();
+    const typeColors = {blanco:'#c8a84e',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
+    const typeLabels = {blanco:_en?'White':'Blanco',tinto:_en?'Red':'Tinto',rosado:_en?'Rosé':'Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Sweet':'Dulce'};
+    let html = '';
+    if(_snsMode === 'wines'){
+      let wines = WINES.filter(w => WINE_SNS[w.id]);
+      if(q) wines = wines.filter(w => w.name.toLowerCase().includes(q) || (w.grapes||'').toLowerCase().includes(q) || (w.origin||'').toLowerCase().includes(q));
+      html = wines.map(w=>{
+        const profile = WINE_SNS[w.id] || [];
+        const tags = profile.map(([k])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
+        return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()" style="flex-wrap:wrap">
+          <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
+          <div class="sensory-card-info"><div class="sensory-card-name">${w.name}</div><div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${w.grapes} · ${w.price}€</div></div>
+          <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
+        </div>`;
+      }).join('');
+      if(!wines.length) html = `<div style="text-align:center;color:rgba(28,42,34,.4);font-size:.75rem;padding:2rem">${_en?'No wines found':'No se encontraron vinos'}</div>`;
+    } else {
+      let dishes = Object.keys(DISH_SNS);
+      if(q) dishes = dishes.filter(d=>d.toLowerCase().includes(q));
+      html = dishes.map(d=>{
+        const profile = DISH_SNS[d] || [];
+        const tags = profile.map(([k])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
+        return `<div class="sensory-card" onclick="_snsDetail={type:'dish',name:'${d.replace(/'/g,"\\'")}'};renderVinos()" style="flex-wrap:wrap">
+          <div class="sensory-card-dot" style="background:#6b8f71"></div>
+          <div class="sensory-card-info"><div class="sensory-card-name">${d}</div></div>
+          <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
+        </div>`;
+      }).join('');
+      if(!dishes.length) html = `<div style="text-align:center;color:rgba(28,42,34,.4);font-size:.75rem;padding:2rem">${_en?'No dishes found':'No se encontraron platos'}</div>`;
+    }
+    area.innerHTML = html;
+  }, 120);
+}
+
+function _renderSensoryDetail(c, bar){
+  const _en = LANG==='en';
+  const noteKeys = Object.keys(SNS_NOTES);
+  const typeColors = {blanco:'#c8a84e',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
+
+  if(_snsDetail.type === 'wine'){
+    const w = WINES.find(x=>x.id===_snsDetail.id);
+    if(!w){ _snsDetail=null; renderVinos(); return; }
+    const profile = WINE_SNS[w.id] || [];
+    const profileMap = {};
+    profile.forEach(([k,v])=> profileMap[k]=v);
+
+    // Build radar SVG
+    const radar = _buildRadarSVG(profileMap, 100);
+
+    // Sensory tags
+    const tags = profile.map(([k,int])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color};cursor:pointer" onclick="_snsDetail=null;_snsMode='wheel';_snsActive='${k}';renderVinos()">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es} ${'●'.repeat(int)}${'○'.repeat(3-int)}</span>`).join(' ');
+
+    // Matching dishes via pairings
+    const pairCards = (w.pairings||[]).filter(d=>DISH_SNS[d]).map(d=>{
+      const dp = DISH_SNS[d];
+      const shared = dp.filter(([k])=>profileMap[k]);
+      const sharedTags = shared.map(([k])=>`<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SNS_NOTES[k].color}"></span>`).join(' ');
+      return `<div class="sensory-card" onclick="_snsDetail={type:'dish',name:'${d.replace(/'/g,"\\'")}'};renderVinos()">
+        <div class="sensory-card-dot" style="background:#6b8f71"></div>
+        <div class="sensory-card-info"><div class="sensory-card-name">${d}</div><div class="sensory-card-meta">${shared.length} ${_en?'shared notes':'notas compartidas'} ${sharedTags}</div></div>
+      </div>`;
+    }).join('');
+
+    c.innerHTML = bar + `<div class="sensory-wrap">
+      <button class="sensory-back" onclick="_snsDetail=null;renderVinos()">← ${_en?'Back':'Volver'}</button>
+      <div class="sensory-fp">
+        <div class="sensory-fp-head">
+          <div class="sensory-fp-badge" style="background:${typeColors[w.type]||'#888'}">${w.type.toUpperCase()}</div>
+          <div class="sensory-fp-name">${w.name}</div>
+        </div>
+        <div style="font-size:.65rem;color:rgba(28,42,34,.5);margin-bottom:.5rem">${w.grapes} · ${w.origin} · ${w.price}€</div>
+        <div class="sensory-radar-wrap">${radar}</div>
+        <div style="text-align:center;font-size:.6rem;color:rgba(28,42,34,.4);margin-bottom:.5rem">${_en?'Sensory Fingerprint':'Huella Sensorial'}</div>
+        <div class="sensory-fp-notes">${tags}</div>
+        ${pairCards ? `<div class="sensory-fp-section">
+          <div class="sensory-fp-section-title">🍽️ ${_en?'Recommended Pairings':'Maridajes Recomendados'}</div>
+          ${pairCards}
+        </div>` : ''}
+      </div>
+    </div>`;
+
+  } else if(_snsDetail.type === 'dish'){
+    const dname = _snsDetail.name;
+    const profile = DISH_SNS[dname] || [];
+    const profileMap = {};
+    profile.forEach(([k,v])=> profileMap[k]=v);
+
+    const radar = _buildRadarSVG(profileMap, 100);
+
+    const tags = profile.map(([k,int])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color};cursor:pointer" onclick="_snsDetail=null;_snsMode='wheel';_snsActive='${k}';renderVinos()">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es} ${'●'.repeat(int)}${'○'.repeat(3-int)}</span>`).join(' ');
+
+    // Find wines that pair with this dish
+    const matchWines = WINES.filter(w=>(w.pairings||[]).includes(dname) && WINE_SNS[w.id]);
+    const wineCards = matchWines.map(w=>{
+      const wp = WINE_SNS[w.id] || [];
+      const wpMap = {};
+      wp.forEach(([k,v])=>wpMap[k]=v);
+      const shared = profile.filter(([k])=>wpMap[k]);
+      const sharedTags = shared.map(([k])=>`<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SNS_NOTES[k].color}"></span>`).join(' ');
+      return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()">
+        <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
+        <div class="sensory-card-info"><div class="sensory-card-name">${w.name}</div><div class="sensory-card-meta">${w.grapes} · ${w.price}€ · ${shared.length} ${_en?'shared':'compartidas'} ${sharedTags}</div></div>
+      </div>`;
+    }).join('');
+
+    c.innerHTML = bar + `<div class="sensory-wrap">
+      <button class="sensory-back" onclick="_snsDetail=null;renderVinos()">← ${_en?'Back':'Volver'}</button>
+      <div class="sensory-fp">
+        <div class="sensory-fp-head">
+          <div class="sensory-fp-badge" style="background:#6b8f71">🍽️</div>
+          <div class="sensory-fp-name">${dname}</div>
+        </div>
+        <div class="sensory-radar-wrap">${radar}</div>
+        <div style="text-align:center;font-size:.6rem;color:rgba(28,42,34,.4);margin-bottom:.5rem">${_en?'Flavor Profile':'Perfil de Sabor'}</div>
+        <div class="sensory-fp-notes">${tags}</div>
+        ${wineCards ? `<div class="sensory-fp-section">
+          <div class="sensory-fp-section-title">🍷 ${_en?'Matching Wines':'Vinos que Conectan'}</div>
+          ${wineCards}
+        </div>` : ''}
+      </div>
+    </div>`;
+  }
+}
+
+function _buildRadarSVG(profileMap, r){
+  const keys = Object.keys(SNS_NOTES);
+  const n = keys.length;
+  const cx = r + 20, cy = r + 20;
+  const _en = LANG==='en';
+
+  // Background grid
+  let gridLines = '';
+  [0.33, 0.66, 1].forEach(scale=>{
+    let pts = keys.map((k,i)=>{
+      const angle = (i * 360/n - 90) * Math.PI/180;
+      return `${cx + r*scale*Math.cos(angle)},${cy + r*scale*Math.sin(angle)}`;
+    }).join(' ');
+    gridLines += `<polygon points="${pts}" fill="none" stroke="rgba(182,161,105,${scale===1?0.2:0.1})" stroke-width="1"/>`;
+  });
+
+  // Axis lines
+  let axes = keys.map((k,i)=>{
+    const angle = (i * 360/n - 90) * Math.PI/180;
+    return `<line x1="${cx}" y1="${cy}" x2="${cx+r*Math.cos(angle)}" y2="${cy+r*Math.sin(angle)}" stroke="rgba(182,161,105,0.1)" stroke-width="1"/>`;
+  }).join('');
+
+  // Data polygon
+  let dataPts = keys.map((k,i)=>{
+    const val = (profileMap[k]||0)/3;
+    const angle = (i * 360/n - 90) * Math.PI/180;
+    return `${cx + r*val*Math.cos(angle)},${cy + r*val*Math.sin(angle)}`;
+  }).join(' ');
+
+  // Labels
+  let labels = keys.map((k,i)=>{
+    const angle = (i * 360/n - 90) * Math.PI/180;
+    const lx = cx + (r+15)*Math.cos(angle);
+    const ly = cy + (r+15)*Math.sin(angle);
+    const sn = SNS_NOTES[k];
+    const hasVal = profileMap[k];
+    return `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="${hasVal?'9':'7'}" fill="${hasVal?sn.color:'rgba(28,42,34,0.3)'}" font-weight="${hasVal?'700':'400'}">${sn.icon}</text>`;
+  }).join('');
+
+  // Data dots
+  let dots = keys.map((k,i)=>{
+    const val = (profileMap[k]||0)/3;
+    if(!val) return '';
+    const angle = (i * 360/n - 90) * Math.PI/180;
+    const dx = cx + r*val*Math.cos(angle);
+    const dy = cy + r*val*Math.sin(angle);
+    return `<circle cx="${dx}" cy="${dy}" r="4" fill="${SNS_NOTES[k].color}" stroke="#fff" stroke-width="1.5"/>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${(r+20)*2} ${(r+20)*2}" width="100%" height="100%">
+    ${gridLines}${axes}
+    <polygon points="${dataPts}" fill="rgba(182,161,105,0.15)" stroke="var(--gold)" stroke-width="2"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
 function renderVinos(){
   const c = document.getElementById('appContent');
   const sub = _vinoSubTab || 'sommelier';
@@ -11246,6 +12048,7 @@ function renderVinos(){
   const tabs = [
     ['sommelier','Vinos','✨'],
     ['carta',_en?'Menu':'Carta','🍷'],
+    ['sensorial',_en?'Sensory':'Sensorial','🎨'],
     ['mapa',_en?'Map':'Mapa','🗺️'],
     ['aprende',_en?'Learn':'Aprende','📖'],
     ['wineFlash','Flash','🃏'],
@@ -11259,6 +12062,7 @@ function renderVinos(){
   try {
     if(sub === 'sommelier'){ _renderSommelier(c, bar); }
     else if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
+    else if(sub === 'sensorial'){ _renderSensoryMap(c, bar); }
     else if(sub === 'mapa'){ _renderWineMap(c, bar); }
     else if(sub === 'aprende'){ _renderWineLearn(c, bar); }
     else if(sub === 'wineFlash'){ _renderWineFlashcards(c, bar); }
@@ -20432,6 +21236,1676 @@ function txLevel(score){
 }
 
 // ── Render: home screen ─────────────────────────────
+// ═══ RULETA TXOKO ═══
+let _ruletaPlayers = [];
+let _ruletaSpinning = false;
+let _ruletaResult = null;
+let _ruletaHistory = [];
+let _ruletaAngle = 0;
+
+const RULETA_CATS = [
+  {key:'impro',icon:'🎭',color:'#9b59b6',es:'Impro',en:'Improv'},
+  {key:'speed',icon:'⚡',color:'#f1c40f',es:'Speed',en:'Speed'},
+  {key:'queHarias',icon:'🤔',color:'#3498db',es:'Situación',en:'Scenario'},
+  {key:'cumplido',icon:'💕',color:'#e8a0bf',es:'Cumplido',en:'Compliment'},
+  {key:'dato',icon:'🌍',color:'#27ae60',es:'Dato',en:'Fact'},
+  {key:'absurdo',icon:'🤣',color:'#e67e22',es:'Absurdo',en:'Absurd'},
+  {key:'reto',icon:'🏋️',color:'#e74c3c',es:'Reto',en:'Challenge'},
+  {key:'comodin',icon:'🃏',color:'#c49a3c',es:'Comodín',en:'Wildcard'}
+];
+
+const RULETA_CONTENT = {
+  impro: {
+    es:['Imita cómo un cliente pide vino como si fuera un experto pero no tiene ni idea',
+      'Actúa como un sommelier describiendo un vaso de agua del grifo como si fuera un gran vino',
+      'Haz de cliente que intenta pronunciar "Crozes-Hermitage" por primera vez',
+      'Imita al cliente más simpático que hayas tenido esta semana',
+      'Presenta el Castillo Ygay Gran Reserva como si fuera un anuncio de televisión de los 90',
+      'Actúa como un crítico gastronómico exagerado probando unas patatas fritas',
+      'Imita cómo reaccionaría un cliente si le dices que el vino más barato es el mejor',
+      'Haz de camarero/a novato en su primer día describiendo un plato que no conoce',
+      'Narra un maridaje como si fuera un partido de fútbol emocionante',
+      'Imita al compañero/a que está a tu derecha pidiendo en un restaurante'],
+    en:['Imitate a customer ordering wine as if they were an expert but have no clue',
+      'Act as a sommelier describing a glass of tap water as if it were a grand wine',
+      'Pretend to be a customer trying to pronounce "Crozes-Hermitage" for the first time',
+      'Imitate the nicest customer you had this week',
+      'Present Castillo Ygay Gran Reserva as if it were a 90s TV commercial',
+      'Act as an exaggerated food critic tasting some french fries',
+      'Imitate how a customer would react if you told them the cheapest wine is the best',
+      'Act as a first-day waiter describing a dish they don\'t know',
+      'Narrate a wine pairing as if it were an exciting football match',
+      'Imitate the colleague to your right ordering at a restaurant']
+  },
+  speed: {
+    es:['Nombra 3 vinos blancos de Canarias en 8 segundos',
+      'Di 4 alérgenos comunes en 6 segundos',
+      'Nombra 5 uvas tintas diferentes en 10 segundos',
+      'Di 3 vinos de la Rioja en 7 segundos',
+      'Nombra 2 platos que contengan marisco en 5 segundos',
+      'Di los 3 tipos de espumoso de la carta en 8 segundos',
+      'Nombra 4 regiones vinícolas de España en 8 segundos',
+      'Di 3 vinos que se sirvan por copa en 6 segundos',
+      'Nombra 2 vinos de Vega Sicilia en 5 segundos',
+      'Di 5 ingredientes del Tataki de atún en 10 segundos'],
+    en:['Name 3 white wines from the Canary Islands in 8 seconds',
+      'Name 4 common allergens in 6 seconds',
+      'Name 5 different red grape varieties in 10 seconds',
+      'Name 3 wines from Rioja in 7 seconds',
+      'Name 2 dishes that contain shellfish in 5 seconds',
+      'Name the 3 types of sparkling wine on our menu in 8 seconds',
+      'Name 4 Spanish wine regions in 8 seconds',
+      'Name 3 wines served by the glass in 6 seconds',
+      'Name 2 Vega Sicilia wines in 5 seconds',
+      'Name 5 ingredients in the Tuna Tataki in 10 seconds']
+  },
+  queHarias: {
+    es:['Un cliente dice que su Remelluri sabe a corcho. Tú lo pruebas y está perfecto. ¿Qué haces?',
+      'Una madre te dice que su hijo tiene alergia severa a los frutos secos. ¿Cuál es tu protocolo?',
+      'Llega un grupo de 8 sin reserva a las 21:45. ¿Cómo lo gestionas?',
+      'Un cliente dice que no le gusta el plato que pidió, pero se lo ha comido casi entero. ¿Qué haces?',
+      'Dos mesas te piden la cuenta al mismo tiempo y una tercera quiere pedir. ¿Priorización?',
+      'Un cliente te pide que le recomiendes un vino pero dice que todos le parecen caros. ¿Qué dices?',
+      'Se te cae una copa vacía al suelo junto a una mesa VIP. ¿Cómo reaccionas?',
+      'Un cliente quiere tomar una foto contigo y con el plato para Instagram. ¿Es apropiado?',
+      'La cocina te avisa de 25 minutos de retraso en los principales. Tienes 4 mesas esperando. ¿Qué haces?',
+      'Un cliente insiste en un maridaje que tú sabes que no funcionará bien. ¿Le dices algo?'],
+    en:['A customer says their Remelluri tastes corked. You try it and it\'s perfect. What do you do?',
+      'A mother tells you her child has a severe nut allergy. What\'s your protocol?',
+      'A group of 8 arrives without a reservation at 9:45 PM. How do you handle it?',
+      'A customer says they don\'t like their dish, but they\'ve eaten almost all of it. What do you do?',
+      'Two tables ask for the bill at the same time and a third wants to order. Prioritization?',
+      'A customer asks for a wine recommendation but says everything seems expensive. What do you say?',
+      'You drop an empty glass on the floor next to a VIP table. How do you react?',
+      'A customer wants to take a photo with you and the dish for Instagram. Is it appropriate?',
+      'The kitchen warns of a 25-minute delay on mains. You have 4 tables waiting. What do you do?',
+      'A customer insists on a pairing you know won\'t work well. Do you say something?']
+  },
+  cumplido: {
+    es:['Dile algo bonito a la persona que tengas enfrente',
+      'Menciona algo que admiras de cómo trabaja un compañero/a',
+      'Comparte el mejor momento de equipo que recuerdes',
+      'Agradece a alguien del equipo algo que hizo por ti esta semana',
+      'Dile a la persona de tu derecha qué habilidad tiene que te gustaría aprender',
+      'Comparte un momento en que un compañero/a te salvó durante el servicio',
+      'Di cuál es la mejor cualidad profesional de la persona que tienes a la izquierda',
+      'Cuenta algo divertido que pasó esta semana y que te hizo reír gracias a un compañero/a'],
+    en:['Say something nice to the person in front of you',
+      'Mention something you admire about how a colleague works',
+      'Share the best team moment you can remember',
+      'Thank someone on the team for something they did for you this week',
+      'Tell the person on your right what skill of theirs you\'d like to learn',
+      'Share a moment when a colleague saved you during service',
+      'Say what the best professional quality is of the person to your left',
+      'Share something funny that happened this week that made you laugh thanks to a colleague']
+  },
+  dato: {
+    es:['Una botella de champagne tiene aproximadamente 49 millones de burbujas',
+      'El vino tinto más antiguo del mundo tiene más de 8.000 años y se descubrió en Georgia',
+      'Se necesitan unas 600 uvas para hacer una botella de vino',
+      'España tiene la mayor superficie de viñedo del mundo pero es el tercer productor',
+      'La palabra "sommelier" viene del francés y originalmente significaba "conductor de bestias de carga"',
+      'Existe un vino español llamado "Lágrimas de Canarias" porque las viñas canarias nunca sufrieron la filoxera',
+      'La forma de la copa de vino no es por estética: afecta directamente a cómo percibes los aromas',
+      'El corcho del vino se extrae del alcornoque y un árbol puede producir corcho durante 150 años',
+      'La Malvasía que servimos en Txoko es descendiente de cepas que los nobles europeos importaron hace siglos',
+      'Los monjes benedictinos fueron los primeros en clasificar viñedos por calidad en la Borgoña medieval'],
+    en:['A bottle of champagne has approximately 49 million bubbles',
+      'The oldest red wine in the world is over 8,000 years old and was discovered in Georgia',
+      'About 600 grapes are needed to make one bottle of wine',
+      'Spain has the largest vineyard surface in the world but is only the third largest producer',
+      'The word "sommelier" comes from French and originally meant "pack animal driver"',
+      'There\'s a Spanish wine called "Tears of the Canaries" because Canarian vines never suffered phylloxera',
+      'The shape of a wine glass isn\'t aesthetic: it directly affects how you perceive aromas',
+      'Wine cork is extracted from cork oak trees, and one tree can produce cork for 150 years',
+      'The Malvasía we serve at Txoko descends from vines that European nobles imported centuries ago',
+      'Benedictine monks were the first to classify vineyards by quality in medieval Burgundy']
+  },
+  absurdo: {
+    es:['¿Qué vino de la carta serías y por qué? Defiéndelo como si tu vida dependiera de ello',
+      'Describe el Remelluri Blanco como si fuera un perfume de lujo',
+      'Inventa un maridaje absurdo y convéncenos de que funciona',
+      'Si el Castillo Ygay fuera una persona famosa, ¿quién sería y por qué?',
+      'Crea un eslogan publicitario para las Patatas cerilla fritas como si fueran alta cocina',
+      'Describe la experiencia de comer Tataki de atún como si narraras una escena romántica de película',
+      'Si pudieras bañarte en cualquier vino de la carta, ¿cuál elegirías y por qué?',
+      'Inventa un nombre para un nuevo cóctel usando solo ingredientes del menú de Txoko',
+      'Presenta el menú de Txoko como si fuera un rapero en una batalla de gallos',
+      'Si los platos del menú fueran superhéroes, ¿cuál sería el más poderoso y cuál su poder?'],
+    en:['Which wine from our list would you be and why? Defend it as if your life depended on it',
+      'Describe Remelluri Blanco as if it were a luxury perfume',
+      'Invent an absurd pairing and convince us it works',
+      'If Castillo Ygay were a famous person, who would it be and why?',
+      'Create an advertising slogan for french fries as if they were haute cuisine',
+      'Describe eating Tuna Tataki as if narrating a romantic movie scene',
+      'If you could bathe in any wine from our list, which would you choose and why?',
+      'Invent a name for a new cocktail using only ingredients from the Txoko menu',
+      'Present the Txoko menu as if you were a rapper in a freestyle battle',
+      'If the menu dishes were superheroes, which would be the most powerful and what\'s their power?']
+  },
+  reto: {
+    es:['Nombra un plato y su maridaje ideal sin pensarlo más de 3 segundos. El grupo juzga.',
+      'Describe un vino de la carta SOLO con gestos, sin hablar. Los demás adivinan.',
+      'Cierra los ojos y señala un punto de la carta de vinos. Tienes que describir ese vino.',
+      'Di los precios de 3 vinos que elija el grupo. Si fallas más de 5€, pierdes.',
+      'El grupo elige un plato. Tienes que decir TODOS sus alérgenos en 10 segundos.',
+      'Cuenta de memoria 5 uvas diferentes que se usen en los vinos de la carta.',
+      'Describe la diferencia entre un Tempranillo de Rioja y uno de Ribera del Duero.',
+      'El grupo dice un tipo de cliente. Tienes que hacer la recomendación perfecta en 15 segundos.'],
+    en:['Name a dish and its ideal pairing without thinking for more than 3 seconds. The group judges.',
+      'Describe a wine from our list ONLY with gestures, no talking. Others guess.',
+      'Close your eyes and point at the wine list. You have to describe that wine.',
+      'Name the prices of 3 wines the group chooses. If you\'re off by more than €5, you lose.',
+      'The group picks a dish. You must name ALL its allergens in 10 seconds.',
+      'Name from memory 5 different grapes used in our wine list.',
+      'Describe the difference between a Tempranillo from Rioja and one from Ribera del Duero.',
+      'The group names a customer type. You must make the perfect recommendation in 15 seconds.']
+  },
+  comodin: {
+    es:['¡Comodín! Elige tú la categoría que quieras y gira otra vez.',
+      '¡Comodín! Puedes retar a cualquier compañero/a a hacer lo que tú quieras (dentro de lo razonable).',
+      '¡Comodín! Todo el grupo tiene que hacer algo juntos: inventen un brindis creativo.',
+      '¡Comodín! Elige a alguien del grupo para que cuente su anécdota más graciosa del restaurante.'],
+    en:['Wildcard! Choose any category you want and spin again.',
+      'Wildcard! You can challenge any colleague to do whatever you want (within reason).',
+      'Wildcard! The whole group has to do something together: invent a creative toast.',
+      'Wildcard! Choose someone from the group to tell their funniest restaurant story.']
+  }
+};
+
+function renderRuleta(){
+  const _en = LANG==='en';
+  const c = document.getElementById('appContent');
+  const cats = RULETA_CATS;
+  const n = cats.length;
+  const r = 50; // SVG radius percentage
+
+  // Build SVG wheel segments
+  let segments = '';
+  let labels = '';
+  for(let i=0; i<n; i++){
+    const angle1 = (i * 360/n - 90) * Math.PI/180;
+    const angle2 = ((i+1) * 360/n - 90) * Math.PI/180;
+    const x1 = 50 + r*Math.cos(angle1);
+    const y1 = 50 + r*Math.sin(angle1);
+    const x2 = 50 + r*Math.cos(angle2);
+    const y2 = 50 + r*Math.sin(angle2);
+    segments += `<path d="M50,50 L${x1},${y1} A${r},${r} 0 0,1 ${x2},${y2} Z" fill="${cats[i].color}" stroke="#fff" stroke-width=".5"/>`;
+    // Label at midpoint
+    const midAngle = ((i+0.5) * 360/n - 90) * Math.PI/180;
+    const lx = 50 + (r*0.65)*Math.cos(midAngle);
+    const ly = 50 + (r*0.65)*Math.sin(midAngle);
+    const rot = (i+0.5)*360/n;
+    labels += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="3.5" fill="#fff" font-weight="700" transform="rotate(${rot},${lx},${ly})" style="text-shadow:0 1px 2px rgba(0,0,0,.4)">${cats[i].icon}</text>`;
+    // Small text label
+    const lx2 = 50 + (r*0.42)*Math.cos(midAngle);
+    const ly2 = 50 + (r*0.42)*Math.sin(midAngle);
+    labels += `<text x="${lx2}" y="${ly2}" text-anchor="middle" dominant-baseline="central" font-size="2.2" fill="#fff" font-weight="600" transform="rotate(${rot},${lx2},${ly2})" style="text-shadow:0 1px 1px rgba(0,0,0,.3)">${_en?cats[i].en:cats[i].es}</text>`;
+  }
+
+  // Players section
+  const playersHTML = _ruletaPlayers.length > 0
+    ? _ruletaPlayers.map((p,i)=>`<span class="ruleta-player${_ruletaResult&&_ruletaResult.playerIdx===i?' active':''}" onclick="_removeRuletaPlayer(${i})" title="${_en?'Tap to remove':'Toca para eliminar'}">${p} ×</span>`).join('')
+    : `<span style="font-size:.65rem;color:rgba(28,42,34,.4)">${_en?'Add players (optional)':'Añade jugadores (opcional)'}</span>`;
+
+  // Result section
+  let resultHTML = '';
+  if(_ruletaResult){
+    const cat = RULETA_CATS.find(c=>c.key===_ruletaResult.category);
+    resultHTML = `<div class="ruleta-result" style="background:${cat.color}15;border:2px solid ${cat.color}40">
+      <div class="ruleta-result-cat" style="color:${cat.color}">${cat.icon} ${_en?cat.en:cat.es}</div>
+      <div class="ruleta-result-text">${_ruletaResult.text}</div>
+      ${_ruletaResult.player ? `<div class="ruleta-result-player">👤 ${_ruletaResult.player}</div>` : ''}
+    </div>`;
+  }
+
+  // History
+  let historyHTML = '';
+  if(_ruletaHistory.length > 0){
+    historyHTML = `<div class="ruleta-history">
+      <div class="ruleta-history-title">${_en?'History':'Historial'}</div>
+      ${_ruletaHistory.slice(0,5).map(h=>{
+        const cat = RULETA_CATS.find(c=>c.key===h.category);
+        return `<div class="ruleta-history-item">${cat.icon} ${h.player?h.player+': ':''}${h.text.substring(0,60)}${h.text.length>60?'...':''}</div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  c.innerHTML = `<div class="ruleta-wrap">
+    <button class="ruleta-back" onclick="showTab('txoko')">← ${_en?'Back to Games':'Volver a Juegos'}</button>
+    <div class="ruleta-header">
+      <h2>🎡 Ruleta Txoko</h2>
+      <p>${_en?'Spin the wheel and have fun with the team!':'¡Gira la ruleta y diviértete con el equipo!'}</p>
+    </div>
+    <div class="ruleta-players">
+      ${playersHTML}
+      <button class="ruleta-add-player" onclick="_addRuletaPlayer()">+ ${_en?'Player':'Jugador'}</button>
+    </div>
+    <div class="ruleta-wheel-area">
+      <div class="ruleta-pointer">▼</div>
+      <svg class="ruleta-svg" id="ruletaSvg" viewBox="0 0 100 100" style="transform:rotate(${_ruletaAngle}deg)">
+        ${segments}
+        ${labels}
+        <circle cx="50" cy="50" r="8" fill="var(--cream)" stroke="var(--gold)" stroke-width="1"/>
+        <text x="50" y="51" text-anchor="middle" dominant-baseline="central" font-size="3.5" fill="var(--olive)" font-weight="700">${_en?'SPIN':'GIRA'}</text>
+      </svg>
+    </div>
+    <button class="ruleta-spin-btn" id="ruletaSpinBtn" onclick="_spinRuleta()" ${_ruletaSpinning?'disabled':''}>${_ruletaSpinning?(_en?'Spinning...':'Girando...'):(_en?'🎡 Spin the wheel!':'🎡 ¡Gira la ruleta!')}</button>
+    ${resultHTML}
+    ${historyHTML}
+  </div>`;
+}
+
+function _addRuletaPlayer(){
+  const _en = LANG==='en';
+  const name = prompt(_en?'Player name:':'Nombre del jugador:');
+  if(name && name.trim()){
+    _ruletaPlayers.push(name.trim());
+    renderRuleta();
+  }
+}
+
+function _removeRuletaPlayer(idx){
+  _ruletaPlayers.splice(idx,1);
+  renderRuleta();
+}
+
+function _spinRuleta(){
+  if(_ruletaSpinning) return;
+  _ruletaSpinning = true;
+  _ruletaResult = null;
+  const _en = LANG==='en';
+
+  const btn = document.getElementById('ruletaSpinBtn');
+  if(btn){ btn.disabled = true; btn.textContent = _en?'Spinning...':'Girando...'; }
+
+  // Random extra rotations (5-8 full turns) + random final angle
+  const extraTurns = (5 + Math.random()*3) * 360;
+  const finalAngle = Math.random() * 360;
+  const totalRotation = _ruletaAngle + extraTurns + finalAngle;
+
+  const svg = document.getElementById('ruletaSvg');
+  if(svg){
+    svg.style.transition = 'transform 4s cubic-bezier(.17,.67,.12,.99)';
+    svg.style.transform = `rotate(${totalRotation}deg)`;
+  }
+
+  setTimeout(()=>{
+    _ruletaAngle = totalRotation % 360;
+    _ruletaSpinning = false;
+
+    // Determine which segment the pointer (top) landed on
+    // Pointer is at top (0°/360°). Segments start from -90° (top).
+    // The wheel rotated clockwise by _ruletaAngle degrees.
+    // The segment under the pointer corresponds to the angle.
+    const normalizedAngle = (360 - (_ruletaAngle % 360)) % 360;
+    const segmentSize = 360 / RULETA_CATS.length;
+    const segmentIdx = Math.floor(normalizedAngle / segmentSize);
+    const cat = RULETA_CATS[segmentIdx];
+
+    // Pick random content from this category
+    const content = RULETA_CONTENT[cat.key];
+    const texts = _en ? content.en : content.es;
+    const text = texts[Math.floor(Math.random()*texts.length)];
+
+    // Pick random player if any
+    let player = null;
+    let playerIdx = -1;
+    if(_ruletaPlayers.length > 0){
+      playerIdx = Math.floor(Math.random()*_ruletaPlayers.length);
+      player = _ruletaPlayers[playerIdx];
+    }
+
+    _ruletaResult = {category:cat.key, text, player, playerIdx};
+    _ruletaHistory.unshift({category:cat.key, text, player});
+    if(_ruletaHistory.length > 20) _ruletaHistory.pop();
+
+    renderRuleta();
+  }, 4200);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TXOKO CLUB — Habbo-style Isometric Room + Avatar Editor + Chat
+// ═══════════════════════════════════════════════════════════════════
+
+/* ── Avatar Palettes ── */
+const AVT_SKIN=[
+  '#fce4d4','#f4d4b8','#e8c4a3','#dbb594','#d4a574',
+  '#c49464','#b8956a','#a07850','#8b6f47','#7a5c3a',
+  '#6b5a3d','#5a4530','#4a3728','#3d2b1e'
+];
+const AVT_HAIR_C=['#1a1a1a','#2d1810','#3d2817','#5a3a2a','#8b6f47','#c49a3c','#c41e3a','#5a3a4a','#e8a030','#d45b90'];
+const AVT_TOP_C=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#34495e','#e67e22','#e84393','#fd79a8'];
+const AVT_HAIR_STYLES_M=8; // male: 0-7
+const AVT_HAIR_STYLES_F=10; // female: 0-9
+
+function _avtHash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h=h&h;}return Math.abs(h);}
+function _avtDefault(name){const h=_avtHash(name||'X');const g=(h>>20)%2===0?'male':'female';const maxH=g==='female'?AVT_HAIR_STYLES_F:AVT_HAIR_STYLES_M;return{gender:g,hair:{style:h%maxH,color:AVT_HAIR_C[(h>>3)%AVT_HAIR_C.length]},skin:AVT_SKIN[(h>>6)%AVT_SKIN.length],top:{style:(h>>9)%5,color:AVT_TOP_C[(h>>12)%AVT_TOP_C.length]},accessory:(h>>15)%6,expression:(h>>18)%4};}
+function _avtParse(json){try{const d=JSON.parse(json);if(!d.gender)d.gender='male';return d;}catch(e){return null;}}
+function _darken(c,f){const r=Math.floor(parseInt(c.substr(1,2),16)*f),g=Math.floor(parseInt(c.substr(3,2),16)*f),b=Math.floor(parseInt(c.substr(5,2),16)*f);return '#'+r.toString(16).padStart(2,'0')+g.toString(16).padStart(2,'0')+b.toString(16).padStart(2,'0');}
+function _lighten(c,f){const r=Math.min(255,Math.floor(parseInt(c.substr(1,2),16)*f)),g=Math.min(255,Math.floor(parseInt(c.substr(3,2),16)*f)),b=Math.min(255,Math.floor(parseInt(c.substr(5,2),16)*f));return '#'+r.toString(16).padStart(2,'0')+g.toString(16).padStart(2,'0')+b.toString(16).padStart(2,'0');}
+
+/* ── drawAvatar — Full Habbo-style animation system ──
+   Supports: gender (male/female), 4 directions, walk frames, sit, dance, wave, idle blink
+   pose: 'stand'|'walk1'|'walk2'|'sit'|'dance1'|'dance2'|'dance3'|'dance4'|'wave'|'blink'
+   dir: 'down'|'up'|'left'|'right' */
+function drawAvatar(ctx,x,y,data,scale,dir,pose){
+  ctx.imageSmoothingEnabled=false;
+  const d=data||_avtDefault('');
+  const s=scale||1;
+  const p=pose||'stand';
+  const dr=dir||'down';
+  const isFemale=(d.gender==='female');
+  const ox=Math.round(x-12*s),oy=Math.round(y);
+  const O='#000';
+  const sk=d.skin,skD=_darken(sk,.78),skL=_lighten(sk,1.12);
+  const tc=d.top.color,tcD=_darken(tc,.65),tcL=_lighten(tc,1.15);
+  const hc=d.hair.color,hcD=_darken(hc,.7),hcL=_lighten(hc,1.2);
+  const pantC=isFemale?'#34495e':'#2c3e50',pantD=isFemale?'#222f3a':'#1a252f',shoeC='#1a1a1a';
+  const F=(rx,ry,w,h,fill)=>{ctx.fillStyle=fill;ctx.fillRect(ox+rx*s,oy+ry*s,w*s,h*s);};
+
+  // Direction-based shading: which side is lit
+  const facingRight=(dr==='right'||dr==='down');
+  const sL=facingRight?skD:skL, sR=facingRight?skL:skD;
+  const tL=facingRight?tcD:tcL, tR=facingRight?tcL:tcD;
+
+  // ═══ SHADOW ═══
+  ctx.fillStyle='rgba(0,0,0,.18)';ctx.beginPath();
+  ctx.ellipse(ox+12*s,oy+39*s,8*s,2*s,0,0,Math.PI*2);ctx.fill();
+
+  // ═══ LEGS (pose-dependent) ═══
+  const isSit=(p==='sit');
+  const isWalk1=(p==='walk1');
+  const isWalk2=(p==='walk2');
+  const isDance=(p.startsWith('dance'));
+  const isWave=(p==='wave');
+
+  if(isSit){
+    F(7,30,1,4,O);F(12,30,1,4,O);F(7,30,6,1,O);
+    F(8,31,4,3,pantC);F(8,31,2,3,pantD);
+    F(6,34,7,1,shoeC);F(6,33,1,2,O);F(13,33,1,2,O);
+    F(13,30,1,4,O);F(18,30,1,4,O);F(13,30,6,1,O);
+    F(14,31,4,3,pantC);F(14,31,2,3,pantD);
+    F(12,34,7,1,shoeC);F(12,33,1,2,O);F(19,33,1,2,O);
+    if(isFemale){F(6,34,7,1,pantC);F(12,34,7,1,pantC);} // skirt/dress hint
+  } else if(isWalk1){
+    F(5,30,1,7,O);F(10,30,1,7,O);F(5,30,6,1,O);
+    F(6,31,4,5,pantC);F(6,31,2,5,pantD);
+    F(4,36,7,1,O);F(4,37,7,1,shoeC);F(4,36,1,2,O);F(11,36,1,2,O);
+    F(15,30,1,7,O);F(20,30,1,7,O);F(15,30,6,1,O);
+    F(16,31,4,5,pantC);F(16,31,2,5,pantD);
+    F(14,36,7,1,O);F(14,37,7,1,shoeC);F(14,36,1,2,O);F(21,36,1,2,O);
+  } else if(isWalk2){
+    F(9,30,1,7,O);F(14,30,1,7,O);F(9,30,6,1,O);
+    F(10,31,4,5,pantC);F(10,31,2,5,pantD);
+    F(8,36,7,1,O);F(8,37,7,1,shoeC);F(8,36,1,2,O);F(15,36,1,2,O);
+    F(11,30,1,7,O);F(16,30,1,7,O);F(11,30,6,1,O);
+    F(12,31,4,5,pantC);F(12,31,2,5,pantD);
+    F(10,36,7,1,O);F(10,37,7,1,shoeC);F(10,36,1,2,O);F(17,36,1,2,O);
+  } else if(isDance){
+    const df=parseInt(p.charAt(5))||1;
+    if(df===1){
+      F(4,29,1,8,O);F(9,29,1,8,O);F(4,29,6,1,O);F(5,30,4,6,pantC);F(5,30,2,6,pantD);F(3,36,7,1,shoeC);F(3,36,1,1,O);F(10,36,1,1,O);
+      F(15,29,1,8,O);F(20,29,1,8,O);F(15,29,6,1,O);F(16,30,4,6,pantC);F(16,30,2,6,pantD);F(14,36,7,1,shoeC);F(14,36,1,1,O);F(21,36,1,1,O);
+    } else if(df===2){
+      F(8,30,1,7,O);F(16,30,1,7,O);F(9,31,3,5,pantC);F(13,31,3,5,pantD);
+      F(7,36,5,1,shoeC);F(14,36,5,1,shoeC);F(7,36,1,1,O);F(12,36,1,1,O);F(14,36,1,1,O);F(19,36,1,1,O);
+    } else if(df===3){
+      F(7,30,1,7,O);F(12,30,1,7,O);F(8,31,4,5,pantC);F(6,36,7,1,shoeC);
+      F(16,28,1,5,O);F(21,28,1,5,O);F(17,29,4,3,pantC);F(22,32,5,1,shoeC);
+    } else {
+      F(7,28,1,7,O);F(12,28,1,7,O);F(8,29,4,5,pantC);F(6,34,7,1,shoeC);
+      F(13,28,1,7,O);F(18,28,1,7,O);F(14,29,4,5,pantC);F(12,34,7,1,shoeC);
+    }
+  } else {
+    // Standing (default)
+    F(7,30,1,7,O);F(12,30,1,7,O);F(7,30,6,1,O);
+    F(8,31,4,5,pantC);F(8,31,2,5,pantD);
+    F(7,36,6,1,O);F(6,37,7,1,shoeC);F(6,36,1,2,O);F(13,36,1,2,O);
+    F(13,30,1,7,O);F(18,30,1,7,O);F(13,30,6,1,O);
+    F(14,31,4,5,pantC);F(14,31,2,5,pantD);
+    F(13,36,6,1,O);F(12,37,7,1,shoeC);F(12,36,1,2,O);F(19,36,1,2,O);
+  }
+
+  // ═══ TORSO ═══
+  const torsoY=isSit?19:17;
+  const torsoH=isSit?11:12;
+  if(isFemale){
+    // Female torso: narrower shoulders, wider hips, curved
+    F(5,torsoY,1,torsoH+1,O);F(19,torsoY,1,torsoH+1,O);F(5,torsoY,14,1,O);F(4,torsoY+torsoH-2,1,3,O);F(19,torsoY+torsoH-2,1,3,O);F(4,torsoY+torsoH,16,1,O);
+    F(6,torsoY+1,13,torsoH-3,tc);F(6,torsoY+1,4,torsoH-3,tL);F(15,torsoY+1,4,torsoH-3,tR);
+    // Hip flare
+    F(5,torsoY+torsoH-3,14,2,tc);F(5,torsoY+torsoH-3,4,2,tL);F(15,torsoY+torsoH-3,4,2,tR);
+    F(8,torsoY+1,7,1,tcD);
+    // Collar/neckline detail
+    F(10,torsoY+1,4,2,sk);F(10,torsoY+1,1,2,sL);F(13,torsoY+1,1,2,sR);
+  } else {
+    // Male torso: broader, straighter
+    F(4,torsoY,1,torsoH+1,O);F(19,torsoY,1,torsoH+1,O);F(4,torsoY,16,1,O);F(4,torsoY+torsoH,16,1,O);
+    F(5,torsoY+1,14,torsoH-1,tc);F(5,torsoY+1,4,torsoH-1,tL);F(15,torsoY+1,4,torsoH-1,tR);
+    F(8,torsoY+1,8,1,tcD);
+  }
+  // Clothing style details (both genders)
+  if(d.top.style===1){F(5,torsoY+1,14,2,tcD);F(8,torsoY+3,8,1,_lighten(tc,1.3));}
+  if(d.top.style===2){F(5,torsoY+1,3,torsoH-1,tcD);F(16,torsoY+1,3,torsoH-1,tcD);F(10,torsoY+1,4,torsoH-1,_lighten(tc,1.05));}
+  if(d.top.style===3){const bgC=isFemale?'#34495e':'#2c3e50';F(5,torsoY+1,14,torsoH-1,bgC);F(8,torsoY+1,8,torsoH-1,tc);}
+  if(d.top.style===4){F(5,torsoY+1,14,torsoH-1,'#ffffff');F(5,torsoY+1,14,2,'#f0f0f0');F(10,torsoY+3,4,1,'#c49a3c');}
+  if(!isFemale){F(12,torsoY+4,1,1,tcD);F(12,torsoY+7,1,1,tcD);} // buttons for male
+
+  // ═══ ARMS (pose-dependent) ═══
+  if(isWave){
+    F(1,torsoY+1,1,9,O);F(4,torsoY+1,1,9,O);F(1,torsoY+1,4,1,O);F(1,torsoY+10,4,1,O);
+    F(2,torsoY+2,2,6,tc);F(2,torsoY+2,1,6,tL);F(2,torsoY+8,2,2,sk);
+    F(19,torsoY-5,1,7,O);F(22,torsoY-5,1,7,O);F(19,torsoY-5,4,1,O);F(19,torsoY+2,4,1,O);
+    F(20,torsoY-4,2,5,tc);F(21,torsoY-4,1,5,tR);
+    F(20,torsoY-7,2,2,sk);F(21,torsoY-7,1,2,sR);
+    F(19,torsoY-7,4,1,O);F(19,torsoY-7,1,3,O);F(22,torsoY-7,1,3,O);
+  } else if(isDance){
+    const df=parseInt(p.charAt(5))||1;
+    if(df===1||df===3){
+      F(0,torsoY-3,1,7,O);F(3,torsoY-3,1,7,O);F(0,torsoY-3,4,1,O);
+      F(1,torsoY-2,2,5,tc);F(1,torsoY-2,1,5,tL);F(1,torsoY-5,2,2,sk);
+      F(20,torsoY-3,1,7,O);F(23,torsoY-3,1,7,O);F(20,torsoY-3,4,1,O);
+      F(21,torsoY-2,2,5,tc);F(22,torsoY-2,1,5,tR);F(21,torsoY-5,2,2,sk);
+    } else {
+      F(0,torsoY+1,1,9,O);F(3,torsoY+1,1,9,O);F(0,torsoY+1,4,1,O);F(0,torsoY+10,4,1,O);
+      F(1,torsoY+2,2,6,tc);F(1,torsoY+8,2,2,sk);
+      F(20,torsoY+1,1,9,O);F(23,torsoY+1,1,9,O);F(20,torsoY+1,4,1,O);F(20,torsoY+10,4,1,O);
+      F(21,torsoY+2,2,6,tc);F(21,torsoY+8,2,2,sk);
+    }
+  } else {
+    // Normal arms
+    const armW=isFemale?2:2;
+    F(1,torsoY+1,1,9,O);F(4,torsoY+1,1,9,O);F(1,torsoY+1,4,1,O);F(1,torsoY+10,4,1,O);
+    F(2,torsoY+2,2,6,tc);F(2,torsoY+2,1,6,tL);F(2,torsoY+8,2,2,sk);F(2,torsoY+8,1,2,sL);
+    F(19,torsoY+1,1,9,O);F(22,torsoY+1,1,9,O);F(19,torsoY+1,4,1,O);F(19,torsoY+10,4,1,O);
+    F(20,torsoY+2,2,6,tc);F(21,torsoY+2,1,6,tR);F(20,torsoY+8,2,2,sk);F(21,torsoY+8,1,2,sR);
+  }
+
+  // ═══ HEAD ═══
+  const headY=isSit?2:0;
+  const isDanceJump=(p==='dance4');
+  const hy=isDanceJump?headY-2:headY;
+  F(5,hy+1,14,1,O);F(4,hy+2,1,12,O);F(19,hy+2,1,12,O);F(5,hy+14,14,1,O);
+  F(4,hy+2,2,1,O);F(18,hy+2,2,1,O);
+  F(5,hy+2,14,12,sk);F(5,hy+2,4,12,sL);F(15,hy+2,4,12,sR);
+  // Neck
+  F(9,hy+15,6,2,sk);F(9,hy+15,2,2,sL);F(13,hy+15,2,2,sR);
+  F(8,hy+15,1,2,O);F(15,hy+15,1,2,O);
+
+  // ═══ EYES (direction + blink + gender) ═══
+  const ey=hy+5;
+  const isBlink=(p==='blink');
+  if(isBlink){
+    F(8,ey+1,3,1,O);F(13,ey+1,3,1,O);
+    if(isFemale){F(7,ey,1,1,O);F(11,ey,1,1,O);F(12,ey,1,1,O);F(16,ey,1,1,O);} // eyelashes when closed
+    F(10,hy+9,4,1,O);
+  } else if(dr==='left'){
+    F(6,ey,2,2,O);F(12,ey,2,2,O);F(6,ey,1,1,'#fff');F(12,ey,1,1,'#fff');
+    if(isFemale){F(6,ey-1,1,1,O);F(12,ey-1,1,1,O);} // lashes
+    F(10,hy+9,4,1,O);
+  } else if(dr==='right'){
+    F(10,ey,2,2,O);F(16,ey,2,2,O);F(11,ey,1,1,'#fff');F(17,ey,1,1,'#fff');
+    if(isFemale){F(11,ey-1,1,1,O);F(17,ey-1,1,1,O);} // lashes
+    F(10,hy+9,4,1,O);
+  } else if(dr==='up'){
+    F(8,ey-1,2,2,O);F(14,ey-1,2,2,O);F(8,ey-1,1,1,'#fff');F(14,ey-1,1,1,'#fff');
+    F(10,hy+9,4,1,O);
+  } else {
+    // Down (default) — use expression
+    if(d.expression===0){
+      F(8,ey,2,1,'#fff');F(8,ey+1,2,1,O);F(14,ey,2,1,'#fff');F(14,ey+1,2,1,O);F(9,ey+1,1,1,'#1a3a5a');F(15,ey+1,1,1,'#1a3a5a');
+      if(isFemale){F(7,ey-1,1,1,O);F(10,ey-1,1,1,O);F(13,ey-1,1,1,O);F(16,ey-1,1,1,O);} // eyelashes
+      F(10,hy+9,4,1,O);F(9,hy+9,1,1,O);F(14,hy+9,1,1,O);
+      if(isFemale){F(10,hy+9,4,1,'#c0505a');F(10,hy+10,4,1,'#d06070');} // lips
+    }
+    else if(d.expression===1){
+      F(8,ey,2,2,O);F(14,ey,2,2,O);F(8,ey,1,1,'#fff');F(14,ey,1,1,'#fff');
+      if(isFemale){F(7,ey-1,1,1,O);F(10,ey-1,1,1,O);F(13,ey-1,1,1,O);F(16,ey-1,1,1,O);}
+      F(10,hy+9,4,1,O);
+      if(isFemale){F(10,hy+9,4,1,'#c0505a');}
+    }
+    else if(d.expression===2){
+      F(7,ey,3,3,O);F(8,ey+1,1,1,'#fff');F(14,ey,3,3,O);F(15,ey+1,1,1,'#fff');
+      if(isFemale){F(6,ey-1,1,1,O);F(10,ey-1,1,1,O);F(13,ey-1,1,1,O);F(17,ey-1,1,1,O);}
+      F(10,hy+9,3,2,O);F(11,hy+10,1,1,sk);
+      if(isFemale){F(10,hy+9,3,1,'#c0505a');}
+    }
+    else{
+      F(8,ey,2,2,O);F(8,ey,1,1,'#fff');F(14,ey+1,3,1,O);
+      if(isFemale){F(7,ey-1,1,1,O);F(10,ey-1,1,1,O);F(13,ey,1,1,O);F(17,ey,1,1,O);}
+      F(10,hy+9,4,1,O);F(9,hy+9,1,1,O);F(14,hy+9,1,1,O);
+      if(isFemale){F(10,hy+9,4,1,'#c0505a');}
+    }
+  }
+  // Nose + blush
+  F(12,hy+7,1,2,_darken(sk,.85));
+  ctx.globalAlpha=isFemale?.18:.12;F(7,hy+8,2,1,'#e74c3c');F(15,hy+8,2,1,'#e74c3c');ctx.globalAlpha=1;
+
+  // ═══ HAIR (direction-aware, gender-aware) ═══
+  const hhy=hy;
+  if(dr==='up'){
+    F(5,hhy+1,14,13,hc);F(5,hhy,14,2,hcD);F(5,hhy,14,1,O);F(4,hhy+1,1,13,O);F(19,hhy+1,1,13,O);
+    // Female back-hair extensions
+    if(isFemale&&d.hair.style>=6){
+      if(d.hair.style===6||d.hair.style===7){// Ponytail/Long flowing back view
+        F(9,hhy+14,6,8,hc);F(9,hhy+14,2,8,hcD);F(13,hhy+14,2,8,hcL);F(8,hhy+14,1,8,O);F(15,hhy+14,1,8,O);F(9,hhy+22,6,1,O);
+      }
+      if(d.hair.style===8){// Twin tails back view
+        F(4,hhy+8,4,12,hc);F(4,hhy+8,1,12,hcD);F(3,hhy+8,1,12,O);F(8,hhy+8,1,12,O);F(4,hhy+20,4,1,O);
+        F(16,hhy+8,4,12,hc);F(19,hhy+8,1,12,hcD);F(15,hhy+8,1,12,O);F(20,hhy+8,1,12,O);F(16,hhy+20,4,1,O);
+      }
+    }
+  } else {
+    // Front/side view — draw styled hair
+    // === SHARED STYLES (0-5) available to both genders ===
+    if(d.hair.style===0){F(5,hhy,14,3,hc);F(5,hhy-1,3,2,hc);F(10,hhy-2,4,3,hc);F(16,hhy-1,3,2,hc);F(4,hhy+1,2,4,hcD);F(18,hhy+1,2,4,hcD);F(5,hhy-1,14,1,O);F(5,hhy-2,1,2,O);F(10,hhy-3,4,1,O);F(19,hhy-1,1,2,O);F(6,hhy,12,1,hcL);}
+    else if(d.hair.style===1){F(4,hhy-1,16,5,hc);F(4,hhy+4,3,10,hc);F(17,hhy+4,3,10,hc);F(4,hhy-2,16,1,O);F(3,hhy-1,1,15,O);F(20,hhy-1,1,15,O);F(5,hhy,14,1,hcL);F(4,hhy+4,2,10,hcD);F(18,hhy+4,2,10,hcD);}
+    else if(d.hair.style===2){F(4,hhy-1,16,5,hc);F(3,hhy,2,6,hc);F(19,hhy,2,6,hc);F(5,hhy-3,3,3,hc);F(9,hhy-3,4,3,hc);F(16,hhy-3,3,3,hc);F(4,hhy-4,16,1,O);F(3,hhy-1,1,7,O);F(20,hhy-1,1,7,O);F(5,hhy,14,1,hcL);}
+    else if(d.hair.style===3){F(5,hhy-1,14,4,hc);F(5,hhy-1,14,1,hcL);F(5,hhy-2,14,1,O);F(4,hhy-1,1,4,O);F(19,hhy-1,1,4,O);}
+    else if(d.hair.style===4){F(4,hhy-1,16,5,hc);F(3,hhy+2,2,5,hc);F(19,hhy+2,2,5,hc);F(7,hhy-2,10,2,hc);F(4,hhy-2,16,1,O);F(3,hhy+1,1,7,O);F(20,hhy+1,1,7,O);F(5,hhy,14,1,hcL);F(4,hhy+2,2,5,hcD);F(19,hhy+2,2,5,hcD);}
+    else if(d.hair.style===5){F(5,hhy-1,14,4,hc);F(5,hhy-1,14,1,hcL);F(8,hhy-6,8,5,hc);F(9,hhy-7,6,2,hc);F(8,hhy-7,8,1,O);F(7,hhy-6,1,6,O);F(16,hhy-6,1,6,O);F(9,hhy-8,6,1,O);F(9,hhy-5,6,1,hcL);F(5,hhy-2,14,1,O);F(4,hhy-1,1,4,O);F(19,hhy-1,1,4,O);}
+    // === FEMALE-ONLY STYLES (6-9) ===
+    else if(d.hair.style===6){
+      // Ponytail: base hair + tail extending back-right
+      F(5,hhy-1,14,4,hc);F(5,hhy-1,14,1,hcL);F(4,hhy+1,2,3,hcD);F(18,hhy+1,2,3,hcD);
+      F(5,hhy-2,14,1,O);F(4,hhy-1,1,4,O);F(19,hhy-1,1,4,O);
+      // Ponytail flowing down back-right
+      F(18,hhy+4,3,10,hc);F(20,hhy+4,1,10,hcD);F(17,hhy+4,1,10,O);F(21,hhy+4,1,10,O);F(18,hhy+14,3,1,O);
+      // Hair tie
+      F(18,hhy+3,3,2,_darken(hc,.5));
+    }
+    else if(d.hair.style===7){
+      // Long flowing: full-length hair both sides
+      F(4,hhy-1,16,5,hc);F(3,hhy+4,3,14,hc);F(18,hhy+4,3,14,hc);
+      F(4,hhy-2,16,1,O);F(3,hhy-1,1,19,O);F(20,hhy-1,1,19,O);F(2,hhy+4,1,14,O);F(21,hhy+4,1,14,O);
+      F(3,hhy+18,3,1,O);F(18,hhy+18,3,1,O);
+      F(5,hhy,14,1,hcL);F(3,hhy+4,2,14,hcD);F(19,hhy+4,2,14,hcD);
+      // Bangs
+      F(5,hhy+3,4,2,hcD);F(15,hhy+3,4,2,hcD);
+    }
+    else if(d.hair.style===8){
+      // Twin tails (coletas)
+      F(5,hhy-1,14,4,hc);F(5,hhy-1,14,1,hcL);
+      F(5,hhy-2,14,1,O);F(4,hhy-1,1,4,O);F(19,hhy-1,1,4,O);
+      // Left tail
+      F(2,hhy+3,4,14,hc);F(2,hhy+3,1,14,hcD);F(1,hhy+3,1,14,O);F(6,hhy+3,1,14,O);F(2,hhy+17,4,1,O);
+      // Right tail
+      F(18,hhy+3,4,14,hc);F(21,hhy+3,1,14,hcD);F(17,hhy+3,1,14,O);F(22,hhy+3,1,14,O);F(18,hhy+17,4,1,O);
+      // Ribbons/ties
+      F(3,hhy+2,2,2,_darken(hc,.5));F(19,hhy+2,2,2,_darken(hc,.5));
+    }
+    else if(d.hair.style===9){
+      // Bob cut: short, frames face, elegant
+      F(4,hhy-1,16,5,hc);F(3,hhy+4,3,6,hc);F(18,hhy+4,3,6,hc);
+      F(4,hhy-2,16,1,O);F(3,hhy-1,1,11,O);F(20,hhy-1,1,11,O);F(2,hhy+4,1,6,O);F(21,hhy+4,1,6,O);
+      F(3,hhy+10,3,1,O);F(18,hhy+10,3,1,O);
+      F(5,hhy,14,1,hcL);F(3,hhy+4,2,6,hcD);F(19,hhy+4,2,6,hcD);
+      // Bangs
+      F(6,hhy+3,5,1,hcD);
+    }
+    // === MALE-ONLY STYLES (6-7) ===
+    else if(d.hair.style===6&&!isFemale){
+      // Fade: short sides, medium top
+      F(5,hhy-1,14,3,hc);F(5,hhy-1,14,1,hcL);F(5,hhy-2,14,1,O);F(4,hhy-1,1,3,O);F(19,hhy-1,1,3,O);
+      F(4,hhy+2,2,3,_darken(hc,.6));F(18,hhy+2,2,3,_darken(hc,.6));
+    }
+    else if(d.hair.style===7&&!isFemale){
+      // Slicked back
+      F(5,hhy-2,14,5,hc);F(5,hhy-3,14,1,O);F(4,hhy-2,1,5,O);F(19,hhy-2,1,5,O);
+      F(6,hhy-1,12,1,hcL);F(5,hhy-2,14,1,hcD);
+    }
+    // Mirror hair for left/right
+    if(dr==='left'){F(4,hhy+1,3,5,hcD);}
+    if(dr==='right'){F(17,hhy+1,3,5,hcD);}
+  }
+
+  // ═══ ACCESSORIES ═══
+  if(d.accessory===1){F(6,hhy-4,12,4,'#fff');F(7,hhy-8,10,4,'#fff');F(8,hhy-11,8,3,'#f8f8f8');F(6,hhy-4,12,1,'#e0e0e0');F(5,hhy-4,1,4,O);F(18,hhy-4,1,4,O);F(6,hhy-5,12,1,O);F(7,hhy-8,1,4,O);F(16,hhy-8,1,4,O);F(7,hhy-9,10,1,O);F(8,hhy-11,1,3,O);F(15,hhy-11,1,3,O);F(8,hhy-12,8,1,O);F(9,hhy-10,6,1,'#f0f0f0');}
+  else if(d.accessory===2){const ay=torsoY+3;F(6,ay,12,10,'#fff');F(6,ay,12,1,'#e8e8e8');F(9,ay+2,6,1,'#e0e0e0');F(10,ay,4,1,'#c49a3c');F(5,ay,1,10,O);F(18,ay,1,10,O);F(6,ay+10,12,1,O);}
+  else if(d.accessory===3){const ty2=torsoY+1;F(11,ty2,2,2,O);F(10,ty2+2,4,2,'#8b1a1a');F(11,ty2+4,2,6,'#8b1a1a');F(10,ty2+10,4,2,'#8b1a1a');F(10,ty2+2,1,2,'#6b0a0a');F(11,ty2+4,1,6,'#6b0a0a');}
+  else if(d.accessory===4){const gey=ey;F(7,gey-1,4,4,O);F(13,gey-1,4,4,O);F(11,gey,2,1,O);F(8,gey,2,2,'rgba(180,220,255,.45)');F(14,gey,2,2,'rgba(180,220,255,.45)');}
+  else if(d.accessory===5){F(5,hhy+1,14,2,'#e67e22');F(5,hhy+1,14,1,'#f39c12');F(5,hhy,14,1,O);F(5,hhy+3,14,1,O);}
+
+  // ═══ DANCE EFFECTS ═══
+  if(isDance){
+    ctx.globalAlpha=.5;ctx.fillStyle='#c49a3c';ctx.font=(6*s)+'px Arial';
+    const dn=parseInt(p.charAt(5))||1;
+    if(dn%2===1)ctx.fillText('♪',ox+20*s,oy-4*s);
+    if(dn%2===0)ctx.fillText('♫',ox-2*s,oy-2*s);
+    ctx.globalAlpha=1;
+  }
+  if(isWave){
+    ctx.strokeStyle='#c49a3c';ctx.lineWidth=s;ctx.globalAlpha=.4;
+    ctx.beginPath();ctx.arc(ox+23*s,oy+(torsoY-6)*s,3*s,-.5,1);ctx.stroke();
+    ctx.beginPath();ctx.arc(ox+24*s,oy+(torsoY-8)*s,2*s,-.5,1);ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+}
+
+/* ── Animation state per user ── */
+let _avtAnimState={};
+function _getAnimState(uid){
+  if(!_avtAnimState[uid])_avtAnimState[uid]={pose:'stand',frame:0,action:'idle',lastTick:0,blinkTimer:0,nextBlink:3000+Math.random()*5000};
+  return _avtAnimState[uid];
+}
+
+function _tickAnimation(uid,isMoving){
+  const st=_getAnimState(uid);
+  const now=Date.now();
+  const dt=now-st.lastTick;
+  if(dt<120)return st.pose; // throttle to ~8fps for pixel feel
+  st.lastTick=now;
+
+  if(isMoving){
+    st.action='walk';st.frame=(st.frame+1)%4;
+    st.pose=st.frame<2?'walk1':'walk2';
+  } else if(st.action==='dance'){
+    st.frame=(st.frame+1)%8;
+    st.pose='dance'+((st.frame%4)+1);
+  } else if(st.action==='wave'){
+    st.frame++;
+    st.pose='wave';
+    if(st.frame>12){st.action='idle';st.pose='stand';st.frame=0;}
+  } else if(st.action==='sit'){
+    st.pose='sit';
+  } else {
+    // Idle: occasional blink
+    st.blinkTimer+=dt;
+    if(st.blinkTimer>=st.nextBlink){
+      st.pose='blink';st.blinkTimer=0;st.nextBlink=2500+Math.random()*5000;st.frame=0;
+    } else if(st.pose==='blink'){
+      st.frame++;
+      if(st.frame>2){st.pose='stand';st.frame=0;}
+    } else {
+      st.pose='stand';
+    }
+  }
+  return st.pose;
+}
+
+/* ── Avatar Editor ── */
+let _avtEditorData=null;
+let _avtEditorCb=null;
+
+function renderAvatarEditor(onDone){
+  const _en=LANG==='en';
+  const emp=getEmp(currentUser);
+  _avtEditorData=emp.avatar?_avtParse(emp.avatar):_avtDefault(currentUser);
+  if(!_avtEditorData) _avtEditorData=_avtDefault(currentUser);
+  if(!_avtEditorData.gender)_avtEditorData.gender='male';
+  _avtEditorCb=onDone||null;
+  let activeTab='gender';
+
+  const hairNM=_en?['Spiky','Long','Curly','Buzz','Wavy','Topknot','Fade','Slicked']:['Púas','Largo','Rizado','Rapado','Ondulado','Moño','Degradado','Peinado'];
+  const hairNF=_en?['Spiky','Long','Curly','Buzz','Wavy','Topknot','Ponytail','Flowing','Twin Tails','Bob']:['Púas','Largo','Rizado','Rapado','Ondulado','Moño','Coleta','Suelto','Coletas','Bob'];
+  const topN=_en?['Shirt','Sweater','Jacket','Vest','Uniform']:['Camisa','Jersey','Chaqueta','Chaleco','Uniforme'];
+  const accN=_en?['None','Chef Hat','Apron','Tie','Glasses','Headband']:['Ninguno','Gorro Chef','Delantal','Corbata','Gafas','Cinta'];
+  const accIco=['❌','👨‍🍳','🧑‍🍳','👔','🤓','🎀'];
+  const expN=_en?['Smile','Neutral','Surprised','Wink']:['Sonrisa','Neutral','Sorpresa','Guiño'];
+  const expIco=['😊','😐','😮','😉'];
+
+  function _renderEditor(){
+    const d=_avtEditorData;
+    const isFemale=(d.gender==='female');
+    const hairNames=isFemale?hairNF:hairNM;
+    const tabs=[['gender',_en?'Gender':'Género'],['hair',_en?'Hair':'Pelo'],['skin',_en?'Skin':'Piel'],['clothes',_en?'Clothes':'Ropa'],['acc',_en?'Accessories':'Accesorios'],['exp',_en?'Expression':'Expresión']];
+
+    let html='<div class="avt-overlay" id="avtOverlay"><div class="avt-modal">';
+    html+='<div class="avt-header"><div class="avt-title">'+(_en?'Avatar Editor':'Editor de Avatar')+'</div></div>';
+    // Preview
+    html+='<div class="avt-preview"><canvas id="avtPreviewCvs" width="140" height="190"></canvas></div>';
+    // Tabs
+    html+='<div class="avt-tabs">';
+    tabs.forEach(t=>{html+='<div class="avt-tab'+(activeTab===t[0]?' active':'')+'" onclick="_avtTab(\''+t[0]+'\')">'+t[1]+'</div>';});
+    html+='</div>';
+    // Gender
+    html+='<div class="avt-cat'+(activeTab==='gender'?' active':'')+'"><div class="avt-group-lbl">'+(_en?'Choose your character':'Elige tu personaje')+'</div><div class="avt-styles">';
+    html+='<div class="avt-style-item'+(d.gender==='male'?' sel':'')+'" onclick="_avtSet(\'gn\',\'male\')"><div class="avt-style-ico" style="font-size:28px">🧑</div><div class="avt-style-lbl">'+(_en?'Male':'Hombre')+'</div></div>';
+    html+='<div class="avt-style-item'+(d.gender==='female'?' sel':'')+'" onclick="_avtSet(\'gn\',\'female\')"><div class="avt-style-ico" style="font-size:28px">👩</div><div class="avt-style-lbl">'+(_en?'Female':'Mujer')+'</div></div>';
+    html+='</div></div>';
+    // Hair
+    html+='<div class="avt-cat'+(activeTab==='hair'?' active':'')+'"><div class="avt-group-lbl">'+(_en?'Style':'Estilo')+'</div><div class="avt-styles">';
+    hairNames.forEach((n,i)=>{html+='<div class="avt-style-item'+(d.hair.style===i?' sel':'')+'" onclick="_avtSet(\'hs\','+i+')"><div class="avt-style-ico">💇</div><div class="avt-style-lbl">'+n+'</div></div>';});
+    html+='</div><div class="avt-group-lbl" style="margin-top:12px">'+(_en?'Color':'Color')+'</div><div class="avt-swatches">';
+    AVT_HAIR_C.forEach(c=>{html+='<div class="avt-swatch'+(d.hair.color===c?' sel':'')+'" style="background:'+c+'" onclick="_avtSet(\'hc\',\''+c+'\')"></div>';});
+    html+='</div></div>';
+    // Skin
+    html+='<div class="avt-cat'+(activeTab==='skin'?' active':'')+'"><div class="avt-group-lbl">'+(_en?'Skin Tone':'Tono de Piel')+'</div><div class="avt-swatches" style="grid-template-columns:repeat(7,1fr)">';
+    AVT_SKIN.forEach(c=>{html+='<div class="avt-swatch'+(d.skin===c?' sel':'')+'" style="background:'+c+'" onclick="_avtSet(\'sk\',\''+c+'\')"></div>';});
+    html+='</div></div>';
+    // Clothes
+    html+='<div class="avt-cat'+(activeTab==='clothes'?' active':'')+'"><div class="avt-group-lbl">'+(_en?'Style':'Estilo')+'</div><div class="avt-styles">';
+    topN.forEach((n,i)=>{html+='<div class="avt-style-item'+(d.top.style===i?' sel':'')+'" onclick="_avtSet(\'ts\','+i+')"><div class="avt-style-ico">👕</div><div class="avt-style-lbl">'+n+'</div></div>';});
+    html+='</div><div class="avt-group-lbl" style="margin-top:12px">'+(_en?'Color':'Color')+'</div><div class="avt-swatches">';
+    AVT_TOP_C.forEach(c=>{html+='<div class="avt-swatch'+(d.top.color===c?' sel':'')+'" style="background:'+c+'" onclick="_avtSet(\'tc\',\''+c+'\')"></div>';});
+    html+='</div></div>';
+    // Accessories
+    html+='<div class="avt-cat'+(activeTab==='acc'?' active':'')+'"><div class="avt-group-lbl">'+(_en?'Accessory':'Accesorio')+'</div><div class="avt-styles">';
+    accN.forEach((n,i)=>{html+='<div class="avt-style-item'+(d.accessory===i?' sel':'')+'" onclick="_avtSet(\'ac\','+i+')"><div class="avt-style-ico">'+accIco[i]+'</div><div class="avt-style-lbl">'+n+'</div></div>';});
+    html+='</div></div>';
+    // Expression
+    html+='<div class="avt-cat'+(activeTab==='exp'?' active':'')+'"><div class="avt-group-lbl">'+(_en?'Expression':'Expresión')+'</div><div class="avt-styles">';
+    expN.forEach((n,i)=>{html+='<div class="avt-style-item'+(d.expression===i?' sel':'')+'" onclick="_avtSet(\'ex\','+i+')"><div class="avt-style-ico">'+expIco[i]+'</div><div class="avt-style-lbl">'+n+'</div></div>';});
+    html+='</div></div>';
+    // Footer
+    html+='<div class="avt-footer"><button class="avt-btn avt-btn-back" onclick="_avtClose()">'+(_en?'Back':'Atrás')+'</button>';
+    html+='<button class="avt-btn avt-btn-save" onclick="_avtSave()">'+(_en?'Save':'Guardar')+'</button></div>';
+    html+='</div></div>';
+
+    // If overlay exists replace, else add
+    let ov=document.getElementById('avtOverlay');
+    if(ov){ov.outerHTML=html;}
+    else{document.body.insertAdjacentHTML('beforeend',html);}
+
+    // Draw preview
+    setTimeout(()=>{
+      const cvs=document.getElementById('avtPreviewCvs');
+      if(!cvs)return;
+      const ctx=cvs.getContext('2d');
+      ctx.fillStyle='#1a1a2e';ctx.fillRect(0,0,140,190);
+      drawAvatar(ctx,70,40,_avtEditorData,3,'down');
+    },30);
+  }
+
+  _renderEditor();
+  // Expose helpers
+  window._avtTab=function(t){activeTab=t;_renderEditor();};
+  window._avtSet=function(k,v){
+    if(k==='gn'){
+      _avtEditorData.gender=v;
+      // Clamp hair style to valid range for new gender
+      const maxH=v==='female'?AVT_HAIR_STYLES_F:AVT_HAIR_STYLES_M;
+      if(_avtEditorData.hair.style>=maxH)_avtEditorData.hair.style=0;
+    }
+    else if(k==='hs')_avtEditorData.hair.style=v;
+    else if(k==='hc')_avtEditorData.hair.color=v;
+    else if(k==='sk')_avtEditorData.skin=v;
+    else if(k==='ts')_avtEditorData.top.style=v;
+    else if(k==='tc')_avtEditorData.top.color=v;
+    else if(k==='ac')_avtEditorData.accessory=v;
+    else if(k==='ex')_avtEditorData.expression=v;
+    _renderEditor();
+  };
+  window._avtClose=function(){
+    const ov=document.getElementById('avtOverlay');
+    if(ov)ov.remove();
+    if(_avtEditorCb)_avtEditorCb(null);
+  };
+  window._avtSave=async function(){
+    const json=JSON.stringify(_avtEditorData);
+    // Save locally
+    const emp=getEmp(currentUser);
+    emp.avatar=json;
+    saveLocal();
+    // Save to Supabase
+    try{
+      await fetch(`${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(currentUser)}`,{
+        method:'PATCH',
+        headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({avatar:json})
+      });
+    }catch(e){console.warn('Avatar save error:',e);}
+    const ov=document.getElementById('avtOverlay');
+    if(ov)ov.remove();
+    if(_avtEditorCb)_avtEditorCb(_avtEditorData);
+  };
+}
+
+/* ── Isometric Room: Terraza Nocturna ── */
+const ISO={TW:48,TH:24,COLS:12,ROWS:8};
+let _socState={canvas:null,ctx:null,raf:null,sbChan:null,sbChatChan:null,
+  myPos:{x:6,y:4},myTarget:{x:6,y:4},myDir:'down',
+  users:{},bubbles:{},chatHist:[],dirty:true,lastPres:0,
+  furniture:{},moveTimer:null};
+
+function _isoXY(tx,ty,cw){
+  const ox=cw/2;const oy=80;
+  return{x:ox+(tx-ty)*(ISO.TW/2),y:oy+(tx+ty)*(ISO.TH/2)};
+}
+function _tileFromScreen(sx,sy,cw){
+  const ox=cw/2;const oy=80;
+  const rx=sx-ox,ry=sy-oy;
+  const tx=Math.round((rx/(ISO.TW/2)+ry/(ISO.TH/2))/2);
+  const ty=Math.round((ry/(ISO.TH/2)-rx/(ISO.TW/2))/2);
+  return{x:tx,y:ty};
+}
+function _initFurniture(){
+  _socState.furniture={};
+  [[2,2],[2,3],[3,2],[3,3], // table 1
+   [8,3],[8,4],[9,3],[9,4], // table 2
+   [5,6],[6,6],[7,6]        // bar
+  ].forEach(([x,y])=>{_socState.furniture[x+','+y]=true;});
+}
+function _walkable(tx,ty){return tx>=0&&tx<ISO.COLS&&ty>=0&&ty<ISO.ROWS&&!_socState.furniture[tx+','+ty];}
+
+function _drawSky(ctx,w,h){
+  const g=ctx.createLinearGradient(0,0,0,h*.55);
+  g.addColorStop(0,'#060c1f');g.addColorStop(.3,'#0e1530');g.addColorStop(.7,'#141a3a');g.addColorStop(1,'#0a0e1a');
+  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  // Stars (layered: small dim + medium bright + rare twinkle)
+  for(let i=0;i<100;i++){
+    const sx=Math.abs((Math.sin(i*12.9898+i)*43758.5453)%1)*w;
+    const sy=Math.abs((Math.sin(i*78.233+i*2)*43758.5453)%1)*h*.45;
+    const bright=i%7===0;const med=i%3===0;
+    ctx.globalAlpha=bright?.8:med?.5:.2;
+    ctx.fillStyle=bright?'#fffde8':'#c8d8ff';
+    const sz=bright?2:med?1.5:1;
+    ctx.fillRect(sx,sy,sz,sz);
+    if(bright){ctx.globalAlpha=.15;ctx.fillStyle='#fffde8';ctx.beginPath();ctx.arc(sx,sy,4,0,Math.PI*2);ctx.fill();}
+  }
+  ctx.globalAlpha=1;
+  // Moon (crescent with glow)
+  const mx=w*.8,my=38;
+  ctx.fillStyle='rgba(232,220,180,.08)';ctx.beginPath();ctx.arc(mx,my,30,0,Math.PI*2);ctx.fill(); // outer glow
+  ctx.fillStyle='rgba(232,220,180,.15)';ctx.beginPath();ctx.arc(mx,my,20,0,Math.PI*2);ctx.fill(); // inner glow
+  ctx.fillStyle='#e8dcc0';ctx.beginPath();ctx.arc(mx,my,14,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#060c1f';ctx.beginPath();ctx.arc(mx+5,my-3,12,0,Math.PI*2);ctx.fill(); // crescent shadow
+}
+
+function _drawStringLights(ctx,w){
+  for(let row=0;row<3;row++){
+    const ly=48+row*22,sag=10+row*2;
+    // Wire
+    ctx.strokeStyle='rgba(60,50,30,.6)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(10,ly);
+    for(let lx=30;lx<w-10;lx+=50){ctx.quadraticCurveTo(lx+12,ly+sag,lx+25,ly);}
+    ctx.stroke();
+    // Bulbs with warm glow
+    for(let lx=35;lx<w-10;lx+=50){
+      const by=ly+sag-2;
+      // Glow layers
+      ctx.fillStyle='rgba(255,200,80,.06)';ctx.beginPath();ctx.arc(lx,by,16,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,200,80,.12)';ctx.beginPath();ctx.arc(lx,by,8,0,Math.PI*2);ctx.fill();
+      // Bulb body
+      ctx.fillStyle=row%2===0?'#ffe088':'#ffd060';
+      ctx.beginPath();ctx.arc(lx,by,2.5,0,Math.PI*2);ctx.fill();
+      // Bulb outline
+      ctx.strokeStyle='rgba(0,0,0,.4)';ctx.lineWidth=.5;ctx.stroke();
+    }
+  }
+}
+
+/* ── Isometric helpers for 3D furniture ── */
+function _isoTile(ctx,cx,cy,tw,th,topC,frontC,sideC,h){
+  // Draw a 3D isometric box: top diamond + front face + right side face
+  const hw=tw/2,hh=th/2;
+  // Top face (diamond)
+  ctx.fillStyle=topC;ctx.beginPath();
+  ctx.moveTo(cx,cy-h);ctx.lineTo(cx+hw,cy+hh-h);ctx.lineTo(cx,cy+th-h);ctx.lineTo(cx-hw,cy+hh-h);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
+  // Front face (left)
+  ctx.fillStyle=frontC;ctx.beginPath();
+  ctx.moveTo(cx-hw,cy+hh-h);ctx.lineTo(cx,cy+th-h);ctx.lineTo(cx,cy+th);ctx.lineTo(cx-hw,cy+hh);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
+  // Right side face
+  ctx.fillStyle=sideC;ctx.beginPath();
+  ctx.moveTo(cx,cy+th-h);ctx.lineTo(cx+hw,cy+hh-h);ctx.lineTo(cx+hw,cy+hh);ctx.lineTo(cx,cy+th);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
+}
+
+function _drawFloor(ctx,cw){
+  const hw=ISO.TW/2,hh=ISO.TH/2;
+  for(let tx=0;tx<ISO.COLS;tx++){
+    for(let ty=0;ty<ISO.ROWS;ty++){
+      const{x,y}=_isoXY(tx,ty,cw);
+      // Habbo-style floor: diamond tile with border + subtle shading
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+hw,y+hh);ctx.lineTo(x,y+ISO.TH);ctx.lineTo(x-hw,y+hh);ctx.closePath();
+      // Alternating tiles with subtle difference
+      const base=(tx+ty)%2===0;
+      ctx.fillStyle=base?'#252840':'#2a2d48';ctx.fill();
+      // Inner highlight (Habbo tiles have a raised look)
+      ctx.beginPath();ctx.moveTo(x,y+2);ctx.lineTo(x+hw-3,y+hh);ctx.lineTo(x,y+ISO.TH-2);ctx.lineTo(x-hw+3,y+hh);ctx.closePath();
+      ctx.fillStyle=base?'#2d3050':'#323558';ctx.fill();
+      // Grid outline (Habbo black border)
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+hw,y+hh);ctx.lineTo(x,y+ISO.TH);ctx.lineTo(x-hw,y+hh);ctx.closePath();
+      ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
+    }
+  }
+  // Floor edge depth (Habbo-style platform edge)
+  const edgeH=8;
+  // Bottom edge
+  for(let tx=0;tx<ISO.COLS;tx++){
+    const{x,y}=_isoXY(tx,ISO.ROWS-1,cw);
+    const hw2=ISO.TW/2;
+    ctx.fillStyle='#1a1c30';ctx.beginPath();
+    ctx.moveTo(x-hw2,y+hh);ctx.lineTo(x,y+ISO.TH);ctx.lineTo(x,y+ISO.TH+edgeH);ctx.lineTo(x-hw2,y+hh+edgeH);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
+  }
+  // Right edge
+  for(let ty=0;ty<ISO.ROWS;ty++){
+    const{x,y}=_isoXY(ISO.COLS-1,ty,cw);
+    const hw2=ISO.TW/2;
+    ctx.fillStyle='#14162a';ctx.beginPath();
+    ctx.moveTo(x,y+ISO.TH);ctx.lineTo(x+hw2,y+hh);ctx.lineTo(x+hw2,y+hh+edgeH);ctx.lineTo(x,y+ISO.TH+edgeH);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
+  }
+}
+
+function _drawFurnitureSprites(ctx,cw){
+  const TW=ISO.TW,TH=ISO.TH;
+
+  // ═══ TABLE 1 — isometric 3D box with candle ═══
+  let p=_isoXY(2.5,2.5,cw);
+  _isoTile(ctx,p.x,p.y+TH/2,TW*1.2,TH*1.2,'#8b5a3c','#5a3a20','#6b4a2a',14);
+  // Table legs (4 small rectangles)
+  ctx.fillStyle='#3a2510';
+  ctx.fillRect(p.x-TW/2*.5,p.y+TH/2,3,10);ctx.fillRect(p.x+TW/2*.3,p.y+TH/2,3,10);
+  // Candle on table
+  ctx.fillStyle='#e8d8b0';ctx.fillRect(p.x-1,p.y-12,3,10); // wax
+  ctx.fillStyle='#000';ctx.fillRect(p.x-2,p.y-12,5,1);ctx.fillRect(p.x-2,p.y-2,5,1); // outline
+  // Flame with glow
+  ctx.fillStyle='rgba(255,200,60,.12)';ctx.beginPath();ctx.arc(p.x+.5,p.y-16,10,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#ff9922';ctx.beginPath();ctx.moveTo(p.x+.5,p.y-19);ctx.quadraticCurveTo(p.x+3,p.y-15,p.x+.5,p.y-12);ctx.quadraticCurveTo(p.x-2,p.y-15,p.x+.5,p.y-19);ctx.fill();
+  ctx.fillStyle='#ffee66';ctx.beginPath();ctx.moveTo(p.x+.5,p.y-17);ctx.quadraticCurveTo(p.x+1.5,p.y-15,p.x+.5,p.y-13);ctx.quadraticCurveTo(p.x-.5,p.y-15,p.x+.5,p.y-17);ctx.fill();
+
+  // ═══ TABLE 2 — same style ═══
+  p=_isoXY(8.5,3.5,cw);
+  _isoTile(ctx,p.x,p.y+TH/2,TW*1.2,TH*1.2,'#8b5a3c','#5a3a20','#6b4a2a',14);
+  ctx.fillStyle='#3a2510';
+  ctx.fillRect(p.x-TW/2*.5,p.y+TH/2,3,10);ctx.fillRect(p.x+TW/2*.3,p.y+TH/2,3,10);
+  // Wine glass
+  ctx.strokeStyle='rgba(200,200,220,.5)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(p.x-3,p.y-4);ctx.quadraticCurveTo(p.x,p.y-10,p.x+3,p.y-4);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(p.x,p.y-4);ctx.lineTo(p.x,p.y+2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(p.x-3,p.y+2);ctx.lineTo(p.x+3,p.y+2);ctx.stroke();
+  ctx.fillStyle='rgba(120,20,40,.4)';ctx.beginPath();ctx.moveTo(p.x-2,p.y-6);ctx.quadraticCurveTo(p.x,p.y-9,p.x+2,p.y-6);ctx.lineTo(p.x+2,p.y-4);ctx.lineTo(p.x-2,p.y-4);ctx.fill();
+
+  // ═══ BAR COUNTER — long isometric box ═══
+  const b1=_isoXY(5,6,cw),b2=_isoXY(8,6,cw);
+  const barCx=(b1.x+b2.x)/2,barCy=(b1.y+b2.y)/2+TH/2;
+  _isoTile(ctx,barCx,barCy,TW*2.5,TH*1.2,'#6b4423','#4a2a10','#5a3418',18);
+  // Bar top highlight
+  ctx.fillStyle='rgba(196,154,60,.12)';
+  ctx.beginPath();ctx.moveTo(barCx,barCy-18);ctx.lineTo(barCx+TW*1.1,barCy+TH*.5-18);ctx.lineTo(barCx,barCy+TH*1.1-18);ctx.lineTo(barCx-TW*1.1,barCy+TH*.5-18);ctx.closePath();ctx.fill();
+  // Bottles on bar (isometric pixel bottles with outlines)
+  const bottles=[{c:'#7a1030',x:-20},{c:'#1a4a1a',x:-6},{c:'#c49a3c',x:8},{c:'#2a2a6a',x:22}];
+  bottles.forEach(bt=>{
+    const bx=barCx+bt.x,by_=barCy-26;
+    ctx.fillStyle=bt.c;ctx.fillRect(bx-2,by_,5,10);
+    ctx.fillStyle=_darken(bt.c,.6);ctx.fillRect(bx-1,by_-4,3,4); // neck
+    ctx.fillStyle='#000';
+    ctx.fillRect(bx-3,by_,1,10);ctx.fillRect(bx+3,by_,1,10);ctx.fillRect(bx-2,by_-1,6,1);ctx.fillRect(bx-2,by_+10,6,1); // outline
+    ctx.fillRect(bx-2,by_-4,1,4);ctx.fillRect(bx+2,by_-4,1,4);ctx.fillRect(bx-1,by_-5,3,1);
+    // Label
+    ctx.fillStyle='rgba(255,255,255,.3)';ctx.fillRect(bx-1,by_+3,3,3);
+  });
+
+  // ═══ POTTED PLANTS — isometric pots with pixel leaves ═══
+  [[0.5,0.5],[10.5,1.5],[1,7],[11,6]].forEach(([ptx,pty])=>{
+    const pp=_isoXY(ptx,pty,cw);
+    // Pot (isometric trapezoid)
+    ctx.fillStyle='#8b5a3c';
+    ctx.beginPath();ctx.moveTo(pp.x-6,pp.y+2);ctx.lineTo(pp.x+6,pp.y+2);ctx.lineTo(pp.x+5,pp.y+14);ctx.lineTo(pp.x-5,pp.y+14);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#6b3a1c';ctx.beginPath();ctx.moveTo(pp.x,pp.y+2);ctx.lineTo(pp.x+6,pp.y+2);ctx.lineTo(pp.x+5,pp.y+14);ctx.lineTo(pp.x,pp.y+14);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#000';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pp.x-6,pp.y+2);ctx.lineTo(pp.x+6,pp.y+2);ctx.lineTo(pp.x+5,pp.y+14);ctx.lineTo(pp.x-5,pp.y+14);ctx.closePath();ctx.stroke();
+    // Pot rim
+    ctx.fillStyle='#a06a4a';ctx.fillRect(pp.x-7,pp.y,14,3);ctx.strokeStyle='#000';ctx.strokeRect(pp.x-7,pp.y,14,3);
+    // Soil
+    ctx.fillStyle='#3a2510';
+    ctx.beginPath();ctx.ellipse(pp.x,pp.y+1,5,2,0,0,Math.PI*2);ctx.fill();
+    // Pixel leaves (Habbo style: small colored squares)
+    const greens=['#2ecc71','#27ae60','#1a8c4e','#34d87a','#1e7a3e'];
+    [[-6,-8],[-3,-12],[0,-15],[3,-12],[6,-8],[-4,-5],[4,-5],[-1,-18],[2,-10],[-5,-14],[5,-14]].forEach(([lx,ly],i)=>{
+      ctx.fillStyle=greens[i%greens.length];
+      ctx.fillRect(pp.x+lx-2,pp.y+ly-2,4,4);
+      ctx.strokeStyle='#0a4a1a';ctx.lineWidth=.5;ctx.strokeRect(pp.x+lx-2,pp.y+ly-2,4,4);
+    });
+  });
+
+  // ═══ RAILING — Habbo style iron posts + rail ═══
+  // Right edge railing
+  ctx.lineWidth=1;
+  for(let ry=0;ry<=ISO.ROWS;ry++){
+    const r=_isoXY(ISO.COLS-.3,ry,cw);
+    // Post (vertical black bar with gold cap)
+    const postX=r.x,postY=r.y+TH/2;
+    ctx.fillStyle='#2a2a2a';ctx.fillRect(postX-1.5,postY-20,3,22);
+    ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.strokeRect(postX-1.5,postY-20,3,22);
+    // Gold cap
+    ctx.fillStyle='#c49a3c';ctx.fillRect(postX-2.5,postY-22,5,3);
+    ctx.strokeStyle='#000';ctx.strokeRect(postX-2.5,postY-22,5,3);
+  }
+  // Horizontal rails connecting posts
+  ctx.strokeStyle='#3a3a3a';ctx.lineWidth=2;
+  for(let rail=0;rail<2;rail++){
+    ctx.beginPath();
+    for(let ry=0;ry<=ISO.ROWS;ry++){
+      const r=_isoXY(ISO.COLS-.3,ry,cw);
+      const py=r.y+TH/2-8-rail*8;
+      if(ry===0)ctx.moveTo(r.x,py);
+      else ctx.lineTo(r.x,py);
+    }
+    ctx.stroke();
+    // Rail outline
+    ctx.strokeStyle='#000';ctx.lineWidth=.5;
+    ctx.beginPath();
+    for(let ry=0;ry<=ISO.ROWS;ry++){
+      const r=_isoXY(ISO.COLS-.3,ry,cw);
+      if(ry===0)ctx.moveTo(r.x,r.y+TH/2-7-rail*8);else ctx.lineTo(r.x,r.y+TH/2-7-rail*8);
+    }
+    ctx.stroke();
+  }
+
+  // ═══ CHAIRS near tables (small isometric cubes) ═══
+  [[1.5,3],[3.5,1.5],[7.5,4],[9.5,2.5]].forEach(([cx,cy])=>{
+    const cp=_isoXY(cx,cy,cw);
+    _isoTile(ctx,cp.x,cp.y+TH/2,TW*.5,TH*.5,'#5a4a3a','#3a2a1a','#4a3a2a',8);
+    // Chair back
+    ctx.fillStyle='#4a3a2a';ctx.fillRect(cp.x-TW/4*.4,cp.y-6,TW*.2,6);
+    ctx.strokeStyle='#000';ctx.lineWidth=.5;ctx.strokeRect(cp.x-TW/4*.4,cp.y-6,TW*.2,6);
+  });
+}
+
+function _drawUsers(ctx,cw){
+  // Sort by tile depth (Y+X) for proper Habbo-style overlap
+  const ulist=Object.entries(_socState.users).sort((a,b)=>(a[1].pos.y+a[1].pos.x)-(b[1].pos.y+b[1].pos.x));
+  ulist.forEach(([uid,u])=>{
+    const{x,y}=_isoXY(u.pos.x,u.pos.y,cw);
+    const avt=u.avatar||_avtDefault(uid);
+    drawAvatar(ctx,x,y-14,avt,1.3,u.dir||'down');
+    // Habbo-style name plate (white bg, black text, outline)
+    const name=u.name||uid;
+    ctx.font='bold 8px Arial';
+    const nw=ctx.measureText(name).width+8;
+    const nx=x-nw/2,ny=y+32;
+    // Plate bg
+    ctx.fillStyle='rgba(255,255,255,.85)';
+    ctx.fillRect(nx,ny,nw,12);
+    ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.strokeRect(nx,ny,nw,12);
+    // Name text
+    ctx.fillStyle='#000';ctx.textAlign='center';
+    ctx.fillText(name,x,ny+9);
+    // Speech bubble (Habbo style: white with black border + tail)
+    const bub=_socState.bubbles[uid];
+    if(bub&&Date.now()-bub.t<5000){
+      const age=Date.now()-bub.t;
+      ctx.globalAlpha=age<4200?1:Math.max(0,1-(age-4200)/800);
+      ctx.font='bold 9px Arial';
+      const txt=bub.msg.length>35?bub.msg.slice(0,35)+'…':bub.msg;
+      const tw=ctx.measureText(txt).width;
+      const bw=tw+14,bh=20;
+      const bx=x-bw/2,by_=y-58;
+      // Shadow
+      ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(bx+2,by_+2,bw,bh);
+      // Bubble body (white — Habbo signature)
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(bx,by_,bw,bh);
+      ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.strokeRect(bx,by_,bw,bh);
+      // Tail (triangle pointing down)
+      ctx.fillStyle='#ffffff';
+      ctx.beginPath();ctx.moveTo(x-4,by_+bh);ctx.lineTo(x+4,by_+bh);ctx.lineTo(x,by_+bh+7);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#000';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(x-4,by_+bh);ctx.lineTo(x,by_+bh+7);ctx.lineTo(x+4,by_+bh);ctx.stroke();
+      // White cover the top of tail inside bubble
+      ctx.fillStyle='#ffffff';ctx.fillRect(x-3,by_+bh-1,6,2);
+      // Text (black on white — Habbo style)
+      ctx.fillStyle='#000';ctx.textAlign='center';
+      ctx.fillText(txt,x,by_+14);
+      ctx.globalAlpha=1;
+    }
+  });
+}
+
+function _socRender(){
+  const ctx=_socState.ctx;if(!ctx)return;
+  const cvs=_socState.canvas;
+  const w=cvs.width,h=cvs.height;
+  ctx.clearRect(0,0,w,h);
+  _drawSky(ctx,w,h);
+  _drawStringLights(ctx,w);
+  _drawFloor(ctx,w);
+  _drawFurnitureSprites(ctx,w);
+  _drawUsers(ctx,w);
+  _socState.dirty=false;
+}
+
+function _socMove(){
+  const c=_socState.myPos,t=_socState.myTarget;
+  if(c.x===t.x&&c.y===t.y)return;
+  const dx=Math.sign(t.x-c.x),dy=Math.sign(t.y-c.y);
+  const nx=c.x+dx,ny=c.y+dy;
+  if(_walkable(nx,ny)){c.x=nx;c.y=ny;}
+  else if(dx!==0&&_walkable(c.x+dx,c.y)){c.x+=dx;}
+  else if(dy!==0&&_walkable(c.x,c.y+dy)){c.y+=dy;}
+  else{_socState.myTarget={x:c.x,y:c.y};return;}
+  // Direction
+  if(Math.abs(dx)>Math.abs(dy))_socState.myDir=dx>0?'right':'left';
+  else _socState.myDir=dy>0?'down':'up';
+  // Update my user entry
+  if(_socState.users[currentUser]){
+    _socState.users[currentUser].pos={x:c.x,y:c.y};
+    _socState.users[currentUser].dir=_socState.myDir;
+  }
+  _socState.dirty=true;
+  _socBroadcastPresence();
+}
+
+let _socMoveInterval=null;
+function _socStartMoving(){
+  if(_socMoveInterval)return;
+  _socMoveInterval=setInterval(()=>{
+    _socMove();
+    if(_socState.myPos.x===_socState.myTarget.x&&_socState.myPos.y===_socState.myTarget.y){
+      clearInterval(_socMoveInterval);_socMoveInterval=null;
+    }
+  },180);
+}
+
+function _socGameLoop(){
+  // Clean old bubbles
+  const now=Date.now();
+  Object.keys(_socState.bubbles).forEach(k=>{if(now-_socState.bubbles[k].t>5000)delete _socState.bubbles[k];});
+  if(_socState.dirty)_socRender();
+  _socState.raf=requestAnimationFrame(_socGameLoop);
+}
+
+function _socBroadcastPresence(){
+  const now=Date.now();
+  if(now-_socState.lastPres<500)return;
+  _socState.lastPres=now;
+  if(!_socState.sbChan)return;
+  const emp=getEmp(currentUser);
+  const avt=emp.avatar?_avtParse(emp.avatar):_avtDefault(currentUser);
+  _socState.sbChan.track({
+    user_id:currentUser,name:currentUser,
+    px:_socState.myPos.x,py:_socState.myPos.y,
+    dir:_socState.myDir,avatar:avt
+  });
+}
+
+function _socOnClick(e){
+  const rect=_socState.canvas.getBoundingClientRect();
+  const sx=(e.clientX-rect.left)*((_socState.canvas.width)/rect.width);
+  const sy=(e.clientY-rect.top)*((_socState.canvas.height)/rect.height);
+  const tile=_tileFromScreen(sx,sy,_socState.canvas.width);
+  if(_walkable(tile.x,tile.y)){
+    _socState.myTarget={x:tile.x,y:tile.y};
+    _socStartMoving();
+  }
+}
+
+async function _socSendChat(text){
+  if(!text||!text.trim())return;
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/chat_messages`,{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({employee:currentUser,message:text.trim(),room:'terraza'})
+    });
+  }catch(e){console.warn('Chat send error:',e);}
+}
+
+function _socUpdateHistoryPanel(){
+  const el=document.getElementById('socHistMsgs');if(!el)return;
+  el.innerHTML=_socState.chatHist.map(m=>{
+    const t=new Date(m.created_at);
+    return '<div class="social-hist-msg"><div class="social-hist-sender">'+m.employee+'</div><div class="social-hist-time">'+t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div><div class="social-hist-text">'+m.message+'</div></div>';
+  }).join('');
+  el.scrollTop=el.scrollHeight;
+}
+
+async function _socInitRealtime(){
+  if(!window.supabase)return;
+  const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+
+  // Presence channel
+  _socState.sbChan=sb.channel('room:terraza',{config:{presence:{key:currentUser}}})
+    .on('presence',{event:'sync'},()=>{
+      const state=_socState.sbChan.presenceState();
+      // Update users map from presence
+      const newUsers={};
+      Object.entries(state).forEach(([key,states])=>{
+        if(!states.length)return;
+        const s=states[0];
+        const uid=s.user_id||key;
+        const existing=_socState.users[uid];
+        newUsers[uid]={name:s.name||uid,pos:{x:s.px||6,y:s.py||4},dir:s.dir||'down',avatar:s.avatar||null};
+        // Preserve drawPos for smooth interpolation
+        if(existing&&existing.drawPos)newUsers[uid].drawPos=existing.drawPos;
+      });
+      _socState.users=newUsers;
+      _socState.dirty=true;
+      // Update online count
+      const cnt=Object.keys(newUsers).length;
+      const el=document.getElementById('socOnlineCnt');
+      if(el)el.textContent=cnt;
+    })
+    .subscribe(async(status)=>{
+      if(status==='SUBSCRIBED'){
+        _socBroadcastPresence();
+      }
+    });
+
+  // Chat channel (postgres_changes)
+  _socState.sbChatChan=sb.channel('chat-changes')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:'room=eq.terraza'},(payload)=>{
+      const msg=payload.new;
+      _socState.chatHist.push(msg);
+      if(_socState.chatHist.length>30)_socState.chatHist.shift();
+      // Show bubble
+      _socState.bubbles[msg.employee]={msg:msg.message,t:Date.now()};
+      _socState.dirty=true;
+      _socUpdateHistoryPanel();
+    })
+    .subscribe();
+
+  // Load last 20 messages
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/chat_messages?room=eq.terraza&order=created_at.desc&limit=20&select=employee,message,created_at`,
+      {headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`}});
+    if(res.ok){
+      const msgs=await res.json();
+      _socState.chatHist=msgs.reverse();
+      _socUpdateHistoryPanel();
+    }
+  }catch(e){console.warn('Chat history load error:',e);}
+}
+
+function _socResize(){
+  if(!_socState.canvas)return;
+  const wrap=_socState.canvas.parentElement;
+  if(!wrap)return;
+  _socState.canvas.width=wrap.clientWidth;
+  _socState.canvas.height=wrap.clientHeight;
+  _socState.dirty=true;
+}
+
+/* ── Pause UI only (keep Supabase connection alive) ── */
+function _pauseSocialUI(){
+  if(_socState.raf){cancelAnimationFrame(_socState.raf);_socState.raf=null;}
+  if(_socMoveInterval){clearInterval(_socMoveInterval);_socMoveInterval=null;}
+  if(_socState.canvas)_socState.canvas.removeEventListener('click',_socOnClick);
+  window.removeEventListener('resize',_socResize);
+  _socState.canvas=null;_socState.ctx=null;
+  _socState.dirty=true;
+}
+/* ── Full disconnect (logout / explicit disconnect) ── */
+function _fullDisconnectSocial(){
+  _pauseSocialUI();
+  if(_socState.sbChan){try{_socState.sbChan.unsubscribe();}catch(e){}_socState.sbChan=null;}
+  if(_socState.sbChatChan){try{_socState.sbChatChan.unsubscribe();}catch(e){}_socState.sbChatChan=null;}
+  _socState.users={};_socState.bubbles={};_socState.chatHist=[];
+  _socState.myPos={x:6,y:4};_socState.myTarget={x:6,y:4};_socState.myDir='down';
+  _socState.lastPres=0;_socState.furniture={};_socState.moveTimer=null;
+  _updateClubIndicator(false);
+}
+/* ── Legacy alias for full cleanup ── */
+function _cleanupSocial(){_fullDisconnectSocial();}
+/* ── Check if user is connected to club ── */
+function _isClubConnected(){return !!_socState.sbChan;}
+/* ── Update the persistent indicator in nav + floating button ── */
+function _updateClubIndicator(on){
+  const dot=document.getElementById('navClubDot');
+  if(dot)dot.style.display=on?'inline-block':'none';
+  const fab=document.getElementById('clubFab');
+  if(fab)fab.style.display=(on&&currentTab!=='txoko')?'block':'none';
+}
+
+/* ── Sprite Cache System ── */
+let _spriteCache={room:null,avatars:{}};
+
+function _cacheRoomSprite(w,h){
+  // Pre-render the entire static room (sky+lights+floor+furniture) to an offscreen canvas
+  const oc=document.createElement('canvas');oc.width=w;oc.height=h;
+  const octx=oc.getContext('2d');
+  _drawSky(octx,w,h);
+  _drawStringLights(octx,w);
+  _drawFloor(octx,w);
+  _drawFurnitureSprites(octx,w);
+  _spriteCache.room=oc;
+}
+
+function _cacheAvatarSprite(uid,avatarData){
+  // Pre-render static standing pose for loading screen preview
+  const sc=1.3,gw=Math.ceil(26*sc)+8,gh=Math.ceil(44*sc)+8;
+  const oc=document.createElement('canvas');oc.width=gw;oc.height=gh;
+  const octx=oc.getContext('2d');
+  drawAvatar(octx,gw/2,4,avatarData,sc,'down','stand');
+  _spriteCache.avatars[uid]=oc;
+}
+
+/* ── Chair positions for sitting ── */
+const CHAIR_TILES=[{x:1,y:3,dir:'right'},{x:3,y:1,dir:'down'},{x:7,y:4,dir:'left'},{x:9,y:2,dir:'down'}];
+
+function _isChairTile(tx,ty){return CHAIR_TILES.find(c=>c.x===tx&&c.y===ty);}
+
+function _drawUsersAnimated(ctx,cw){
+  const ulist=Object.entries(_socState.users).sort((a,b)=>(a[1].pos.y+a[1].pos.x)-(b[1].pos.y+b[1].pos.x));
+  ulist.forEach(([uid,u])=>{
+    // Smooth interpolation between tiles
+    const drawPos=u.drawPos||u.pos;
+    const{x,y}=_isoXY(drawPos.x,drawPos.y,cw);
+    const avt=u.avatar||_avtDefault(uid);
+    const isMe=(uid===currentUser);
+    const isMoving=isMe?(u.drawPos?(Math.abs(u.drawPos.x-u.pos.x)>0.03||Math.abs(u.drawPos.y-u.pos.y)>0.03||_socState.myPos.x!==_socState.myTarget.x||_socState.myPos.y!==_socState.myTarget.y):false):false;
+    const animSt=_getAnimState(uid);
+    const pose=_tickAnimation(uid,isMoving);
+    const dir=u.dir||'down';
+
+    // Draw avatar live with current animation frame
+    drawAvatar(ctx,x,y-14,avt,1.3,dir,pose);
+
+    // Habbo-style name plate
+    const name=u.name||uid;
+    ctx.font='bold 8px Arial';
+    const nw=ctx.measureText(name).width+8;
+    const nx=x-nw/2,ny=y+36;
+    ctx.fillStyle='rgba(255,255,255,.88)';ctx.fillRect(nx,ny,nw,12);
+    ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.strokeRect(nx,ny,nw,12);
+    ctx.fillStyle='#000';ctx.textAlign='center';ctx.fillText(name,x,ny+9);
+
+    // Action indicator for sit/dance
+    if(animSt.action==='dance'){
+      ctx.font='bold 7px Arial';ctx.fillStyle='#c49a3c';ctx.fillText('💃',x+nw/2+4,ny+9);
+    }
+    if(animSt.action==='sit'){
+      ctx.font='bold 7px Arial';ctx.fillStyle='#7a8fa0';ctx.fillText('🪑',x+nw/2+4,ny+9);
+    }
+
+    // Speech bubble (Habbo white style)
+    const bub=_socState.bubbles[uid];
+    if(bub&&Date.now()-bub.t<5000){
+      const age=Date.now()-bub.t;
+      ctx.globalAlpha=age<4200?1:Math.max(0,1-(age-4200)/800);
+      ctx.font='bold 9px Arial';
+      const txt=bub.msg.length>35?bub.msg.slice(0,35)+'…':bub.msg;
+      const tw=ctx.measureText(txt).width;
+      const bw=tw+14,bh=20,bx2=x-bw/2,by2=y-62;
+      ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(bx2+2,by2+2,bw,bh);
+      ctx.fillStyle='#fff';ctx.fillRect(bx2,by2,bw,bh);
+      ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.strokeRect(bx2,by2,bw,bh);
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(x-4,by2+bh);ctx.lineTo(x+4,by2+bh);ctx.lineTo(x,by2+bh+7);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-4,by2+bh);ctx.lineTo(x,by2+bh+7);ctx.lineTo(x+4,by2+bh);ctx.stroke();
+      ctx.fillStyle='#fff';ctx.fillRect(x-3,by2+bh-1,6,2);
+      ctx.fillStyle='#000';ctx.textAlign='center';ctx.fillText(txt,x,by2+14);
+      ctx.globalAlpha=1;
+    }
+  });
+}
+
+/* ── Smooth walking (lerp between tiles) ── */
+function _socSmoothMove(){
+  const c=_socState.myPos;
+  const u=_socState.users[currentUser];
+  if(!u)return;
+  if(!u.drawPos)u.drawPos={x:c.x,y:c.y};
+
+  const dx=c.x-u.drawPos.x;
+  const dy=c.y-u.drawPos.y;
+  const dist=Math.abs(dx)+Math.abs(dy);
+
+  // Already at exact position — check chair auto-sit
+  if(dist<0.02){
+    u.drawPos.x=c.x;u.drawPos.y=c.y;
+    const chair=_isChairTile(c.x,c.y);
+    const animSt=_getAnimState(currentUser);
+    if(chair&&animSt.action!=='dance'){animSt.action='sit';u.dir=chair.dir;}
+    else if(animSt.action==='sit'&&!chair){animSt.action='idle';}
+    return;
+  }
+
+  // Smooth lerp toward actual tile pos (always, even when arrived at target)
+  const speed=0.22;
+  u.drawPos.x+=dx*speed;
+  u.drawPos.y+=dy*speed;
+  // Snap when very close to avoid floating point drift
+  if(Math.abs(c.x-u.drawPos.x)<0.02)u.drawPos.x=c.x;
+  if(Math.abs(c.y-u.drawPos.y)<0.02)u.drawPos.y=c.y;
+  _socState.dirty=true;
+}
+
+/* ── Action functions (dance, wave, sit) ── */
+function _socDance(){
+  const st=_getAnimState(currentUser);
+  st.action=st.action==='dance'?'idle':'dance';st.frame=0;
+  _socState.dirty=true;
+}
+function _socWave(){
+  const st=_getAnimState(currentUser);
+  st.action='wave';st.frame=0;
+  _socState.dirty=true;
+}
+function _socSit(){
+  const st=_getAnimState(currentUser);
+  const chair=_isChairTile(_socState.myPos.x,_socState.myPos.y);
+  if(chair){st.action='sit';_socState.users[currentUser].dir=chair.dir;}
+  else{st.action=st.action==='sit'?'idle':'sit';}
+  st.frame=0;_socState.dirty=true;
+}
+
+/* ── Optimized render: cached room + live animated users ── */
+function _socRenderCached(){
+  const ctx=_socState.ctx;if(!ctx)return;
+  const cvs=_socState.canvas;
+  const w=cvs.width,h=cvs.height;
+  if(_spriteCache.room&&_spriteCache.room.width===w&&_spriteCache.room.height===h){
+    ctx.drawImage(_spriteCache.room,0,0);
+  }else{
+    _cacheRoomSprite(w,h);
+    ctx.drawImage(_spriteCache.room,0,0);
+  }
+  _drawUsersAnimated(ctx,w);
+  _socState.dirty=false;
+}
+
+function renderTxokoClub(){
+  const _en=LANG==='en';
+
+  // If already connected (just paused), resume immediately
+  if(_isClubConnected()){
+    _pauseSocialUI(); // clean any stale RAF/canvas refs
+    _resumeClubRoom();
+    return;
+  }
+
+  // First time — full loading screen
+  _fullDisconnectSocial();
+
+  // ═══ LOADING SCREEN ═══
+  document.getElementById('appContent').innerHTML=`
+    <div class="social-wrap" style="justify-content:center;align-items:center">
+      <div style="text-align:center;padding:2rem">
+        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:#c49a3c;margin-bottom:1.5rem;letter-spacing:2px">TXOKO CLUB</div>
+        <div style="font-size:.8rem;color:#7a8fa0;margin-bottom:1.5rem">${_en?'Loading Night Terrace...':'Cargando Terraza Nocturna...'}</div>
+        <div style="width:200px;height:6px;background:#1a1a2e;border:1px solid #c49a3c;border-radius:3px;margin:0 auto;overflow:hidden">
+          <div id="clubLoadBar" style="width:0%;height:100%;background:linear-gradient(90deg,#c49a3c,#e0b856);border-radius:2px;transition:width .3s"></div>
+        </div>
+        <div id="clubLoadMsg" style="font-size:.65rem;color:#555;margin-top:.8rem">${_en?'Preparing sprites...':'Preparando sprites...'}</div>
+      </div>
+    </div>`;
+
+  const bar=document.getElementById('clubLoadBar');
+  const msg=document.getElementById('clubLoadMsg');
+
+  // Simulated loading stages with real work
+  const stages=[
+    {pct:15,txt:_en?'Building sky & stars...':'Construyendo cielo y estrellas...',fn:()=>{_initFurniture();}},
+    {pct:35,txt:_en?'Rendering floor tiles...':'Renderizando baldosas...',fn:()=>{}},
+    {pct:55,txt:_en?'Placing furniture...':'Colocando muebles...',fn:()=>{
+      _cacheRoomSprite(420,350);
+    }},
+    {pct:75,txt:_en?'Creating your avatar...':'Creando tu avatar...',fn:()=>{
+      const emp=getEmp(currentUser);
+      const avt=emp.avatar?_avtParse(emp.avatar):_avtDefault(currentUser);
+      _cacheAvatarSprite(currentUser,avt);
+    }},
+    {pct:90,txt:_en?'Connecting to room...':'Conectando a la sala...',fn:()=>{}},
+    {pct:100,txt:_en?'Welcome!':'¡Bienvenido!',fn:()=>{}}
+  ];
+
+  let stageIdx=0;
+  function _runStage(){
+    if(stageIdx>=stages.length){
+      setTimeout(_launchClubRoom,300);
+      return;
+    }
+    const s=stages[stageIdx];
+    bar.style.width=s.pct+'%';
+    msg.textContent=s.txt;
+    s.fn();
+    stageIdx++;
+    setTimeout(_runStage,250+Math.random()*200);
+  }
+  setTimeout(_runStage,400);
+}
+
+function _launchClubRoom(){
+  const _en=LANG==='en';
+  const emp=getEmp(currentUser);
+  const avt=emp.avatar?_avtParse(emp.avatar):_avtDefault(currentUser);
+
+  document.getElementById('appContent').innerHTML=`
+    <div class="social-wrap">
+      <div class="social-header">
+        <div class="social-room-name">Txoko Club<span style="margin-left:8px;font-size:.7rem;color:#7a8fa0;font-family:Arial,sans-serif;font-weight:400">${_en?'Night Terrace':'Terraza Nocturna'} <span class="social-online-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#2ecc71;margin-right:2px;vertical-align:middle"></span><span id="socOnlineCnt">1</span></span></div>
+        <div class="social-actions">
+          <button class="social-btn" onclick="_spriteCache.avatars={};_avtAnimState={};renderAvatarEditor(function(d){if(d)renderTxokoClub();})">✏️ Avatar</button>
+          <button class="social-btn" onclick="_pauseSocialUI();renderTxoko()">← ${_en?'Back':'Atrás'}</button>
+          <button class="social-btn" onclick="_fullDisconnectSocial();renderTxoko()" style="font-size:.65rem;opacity:.7" title="${_en?'Disconnect':'Desconectar'}">⏏</button>
+        </div>
+      </div>
+      <div class="social-canvas-wrap" id="socCanvasWrap"><canvas id="socCanvas"></canvas></div>
+      <div class="social-chat-bar">
+        <button class="social-history-btn" onclick="_socDance()" title="${_en?'Dance':'Bailar'}">💃</button>
+        <button class="social-history-btn" onclick="_socWave()" title="${_en?'Wave':'Saludar'}">👋</button>
+        <button class="social-history-btn" onclick="_socSit()" title="${_en?'Sit':'Sentarse'}">🪑</button>
+        <input type="text" id="socChatInput" class="social-chat-input" placeholder="${_en?'Type a message...':'Escribe un mensaje...'}" maxlength="200">
+        <button class="social-send-btn" id="socSendBtn">${_en?'Send':'Enviar'}</button>
+        <button class="social-history-btn" id="socHistBtn">💬</button>
+      </div>
+      <div id="socialHistoryPanel">
+        <div class="social-hist-header"><span>${_en?'Chat History':'Historial de Chat'}</span><span class="social-hist-close" id="socHistClose">&times;</span></div>
+        <div class="social-hist-msgs" id="socHistMsgs"></div>
+      </div>
+    </div>`;
+
+  // Setup canvas
+  const cvs=document.getElementById('socCanvas');
+  _socState.canvas=cvs;
+  _socState.ctx=cvs.getContext('2d');
+
+  // Size canvas + cache room at correct size
+  _socResize();
+  _cacheRoomSprite(cvs.width,cvs.height);
+  window.addEventListener('resize',()=>{_socResize();_spriteCache.room=null;_socState.dirty=true;});
+
+  // Set initial user with drawPos for smooth lerp
+  _socState.myPos={x:6,y:4};_socState.myTarget={x:6,y:4};
+  _socState.users[currentUser]={name:currentUser,pos:{x:6,y:4},drawPos:{x:6,y:4},dir:'down',avatar:avt};
+  _avtAnimState={};
+
+  // Canvas click
+  cvs.addEventListener('click',_socOnClick);
+
+  // Chat input
+  const inp=document.getElementById('socChatInput');
+  const sendBtn=document.getElementById('socSendBtn');
+  const sendMsg=()=>{_socSendChat(inp.value);inp.value='';};
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMsg();}});
+  sendBtn.addEventListener('click',sendMsg);
+
+  // History toggle
+  const histBtn=document.getElementById('socHistBtn');
+  const histPanel=document.getElementById('socialHistoryPanel');
+  const histClose=document.getElementById('socHistClose');
+  histBtn.addEventListener('click',()=>{histPanel.style.display=histPanel.style.display==='flex'?'none':'flex';});
+  histClose.addEventListener('click',()=>{histPanel.style.display='none';});
+
+  // Start Realtime
+  _socInitRealtime();
+
+  // Start game loop (uses cached room + live animated users)
+  _socState.dirty=true;
+  _socGameLoopCached();
+  _updateClubIndicator(true);
+}
+
+/* ── Resume club room (already connected, just re-attach UI) ── */
+function _resumeClubRoom(){
+  const _en=LANG==='en';
+  const emp=getEmp(currentUser);
+  const avt=emp.avatar?_avtParse(emp.avatar):_avtDefault(currentUser);
+
+  document.getElementById('appContent').innerHTML=`
+    <div class="social-wrap">
+      <div class="social-header">
+        <div class="social-room-name">Txoko Club<span style="margin-left:8px;font-size:.7rem;color:#7a8fa0;font-family:Arial,sans-serif;font-weight:400">${_en?'Night Terrace':'Terraza Nocturna'} <span class="social-online-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#2ecc71;margin-right:2px;vertical-align:middle"></span><span id="socOnlineCnt">${Object.keys(_socState.users).length||1}</span></span></div>
+        <div class="social-actions">
+          <button class="social-btn" onclick="_spriteCache.avatars={};_avtAnimState={};renderAvatarEditor(function(d){if(d)renderTxokoClub();})">✏️ Avatar</button>
+          <button class="social-btn" onclick="_pauseSocialUI();renderTxoko()">← ${_en?'Back':'Atrás'}</button>
+          <button class="social-btn" onclick="_fullDisconnectSocial();renderTxoko()" style="font-size:.65rem;opacity:.7" title="${_en?'Disconnect':'Desconectar'}">⏏</button>
+        </div>
+      </div>
+      <div class="social-canvas-wrap" id="socCanvasWrap"><canvas id="socCanvas"></canvas></div>
+      <div class="social-chat-bar">
+        <button class="social-history-btn" onclick="_socDance()" title="${_en?'Dance':'Bailar'}">💃</button>
+        <button class="social-history-btn" onclick="_socWave()" title="${_en?'Wave':'Saludar'}">👋</button>
+        <button class="social-history-btn" onclick="_socSit()" title="${_en?'Sit':'Sentarse'}">🪑</button>
+        <input type="text" id="socChatInput" class="social-chat-input" placeholder="${_en?'Type a message...':'Escribe un mensaje...'}" maxlength="200">
+        <button class="social-send-btn" id="socSendBtn">${_en?'Send':'Enviar'}</button>
+        <button class="social-history-btn" id="socHistBtn">💬</button>
+      </div>
+      <div id="socialHistoryPanel">
+        <div class="social-hist-header"><span>${_en?'Chat History':'Historial de Chat'}</span><span class="social-hist-close" id="socHistClose">&times;</span></div>
+        <div class="social-hist-msgs" id="socHistMsgs"></div>
+      </div>
+    </div>`;
+
+  // Re-attach canvas
+  const cvs=document.getElementById('socCanvas');
+  _socState.canvas=cvs;
+  _socState.ctx=cvs.getContext('2d');
+  _socResize();
+  _spriteCache.room=null; // re-cache at new size
+  _cacheRoomSprite(cvs.width,cvs.height);
+
+  // Re-attach events
+  cvs.addEventListener('click',_socOnClick);
+  window.addEventListener('resize',()=>{_socResize();_spriteCache.room=null;_socState.dirty=true;});
+  const inp=document.getElementById('socChatInput');
+  const sendBtn=document.getElementById('socSendBtn');
+  const sendMsg=()=>{_socSendChat(inp.value);inp.value='';};
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMsg();}});
+  sendBtn.addEventListener('click',sendMsg);
+  const histBtn=document.getElementById('socHistBtn');
+  const histPanel=document.getElementById('socialHistoryPanel');
+  const histClose=document.getElementById('socHistClose');
+  histBtn.addEventListener('click',()=>{histPanel.style.display=histPanel.style.display==='flex'?'none':'flex';});
+  histClose.addEventListener('click',()=>{histPanel.style.display='none';});
+
+  // Update avatar in case it changed
+  if(_socState.users[currentUser])_socState.users[currentUser].avatar=avt;
+
+  // Refresh chat history panel
+  _socUpdateHistoryPanel();
+
+  // Restart game loop
+  _socState.dirty=true;
+  _socGameLoopCached();
+
+  // Broadcast presence again
+  _socBroadcastPresence();
+}
+
+function _socGameLoopCached(){
+  const now=Date.now();
+  // Clean old bubbles
+  Object.keys(_socState.bubbles).forEach(k=>{if(now-_socState.bubbles[k].t>5000){delete _socState.bubbles[k];_socState.dirty=true;}});
+  // Smooth movement interpolation
+  _socSmoothMove();
+  // Animations always run (blink, dance, walk)
+  let anyAnimating=false;
+  Object.keys(_socState.users).forEach(uid=>{
+    const st=_getAnimState(uid);
+    if(st.action!=='idle'||st.pose==='blink')anyAnimating=true;
+  });
+  if(anyAnimating||Object.keys(_socState.bubbles).length>0)_socState.dirty=true;
+  if(_socState.dirty)_socRenderCached();
+  _socState.raf=requestAnimationFrame(_socGameLoopCached);
+}
+
 function renderTxoko(){
   const _en=LANG==='en';
   const emp=getEmp(currentUser);
@@ -20445,6 +22919,22 @@ function renderTxoko(){
       <div class="games-header">
         <div class="games-header-title">${_en?'Games':'Juegos'}</div>
         <div class="games-header-sub">${_en?'Train while competing':'Entrena mientras compites'}</div>
+      </div>
+
+      <!-- TXOKO CLUB — Habbo-style room -->
+      <div class="game-card" onclick="renderTxokoClub()" style="--gc-accent:#a8d5ff;--gc-accent2:#4a6fa5;--gc-glow:rgba(168,213,255,.1)">
+        <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(168,213,255,.1),rgba(74,111,165,.05))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(168,213,255,.2)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(168,213,255,.06)"/><rect x="10" y="10" width="20" height="20" rx="3" fill="none" stroke="#a8d5ff" stroke-width="1"/><circle cx="16" cy="18" r="3" fill="#a8d5ff" opacity=".7"/><circle cx="24" cy="18" r="3" fill="#7ab3ff" opacity=".7"/><path d="M12,26 Q15,23 20,25 Q25,23 28,26" stroke="#a8d5ff" stroke-width=".8" fill="none"/><circle cx="20" cy="6" r="2" fill="#ff9" opacity=".8"/></svg></div>
+        <div class="game-card-body">
+          <div class="game-card-label">${_en?'CLUB':'CLUB'}</div>
+          <div class="game-card-title">Txoko Club</div>
+          <div class="game-card-desc">${_en?'Welcome to the Club! Hang out with your team in a virtual terrace with real-time chat, Habbo-style avatars & chill vibes.':'¡Bienvenido al Club! Pasa el rato con tu equipo en una terraza virtual con chat en tiempo real, avatares estilo Habbo y buen rollo.'}</div>
+          <div class="game-card-meta">
+            <span class="game-card-badge">🌙 ${_en?'Night Terrace':'Terraza Nocturna'}</span>
+            <span class="game-card-badge">💬 ${_en?'Real-time':'Tiempo real'}</span>
+            ${_isClubConnected()?'<span class="game-card-badge" style="background:rgba(46,204,113,.2);color:#2ecc71;border-color:#2ecc71">● '+(_en?'Connected':'Conectado')+'</span>':''}
+          </div>
+        </div>
+        <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
       </div>
 
       <!-- TXOKO: Survive the service -->
@@ -20516,7 +23006,20 @@ function renderTxoko(){
         <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
       </div>
 
-
+      <!-- RULETA TXOKO -->
+      <div class="game-card" onclick="renderRuleta()" style="--gc-accent:#9b59b6;--gc-accent2:#7d3c98;--gc-glow:rgba(155,89,182,.08)">
+        <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(155,89,182,.08),rgba(155,89,182,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(155,89,182,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(155,89,182,.06)"/><circle cx="20" cy="20" r="12" fill="none" stroke="#9b59b6" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="14" stroke="#9b59b6" stroke-width=".8"/><line x1="20" y1="26" x2="20" y2="32" stroke="#9b59b6" stroke-width=".8"/><line x1="8" y1="20" x2="14" y2="20" stroke="#9b59b6" stroke-width=".8"/><line x1="26" y1="20" x2="32" y2="20" stroke="#9b59b6" stroke-width=".8"/><circle cx="20" cy="20" r="3" fill="#9b59b6"/><polygon points="20,6 18,3 22,3" fill="#e74c3c"/></svg></div>
+        <div class="game-card-body">
+          <div class="game-card-label">${_en?'PARTY GAME':'JUEGO GRUPAL'}</div>
+          <div class="game-card-title">${_en?'Txoko Roulette':'Ruleta Txoko'}</div>
+          <div class="game-card-desc">${_en?'Spin the wheel after work! Improv, challenges, absurd questions & compliments for the whole team.':'¡Gira la ruleta después del trabajo! Impro, retos, preguntas absurdas y cumplidos para todo el equipo.'}</div>
+          <div class="game-card-meta">
+            <span class="game-card-badge">🎡 8 ${_en?'categories':'categorías'}</span>
+            <span class="game-card-badge">👥 ${_en?'Multiplayer':'Multijugador'}</span>
+          </div>
+        </div>
+        <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+      </div>
 
       <!-- TOP 10 at bottom — loads after games -->
       <div id="txTop10Wrap" style="margin-top:.5rem">${renderTxTop10()}</div>
