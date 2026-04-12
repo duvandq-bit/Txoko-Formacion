@@ -12102,7 +12102,7 @@ function _buildRadarSVG(profileMap, r){
     const ly = cy + (r+15)*Math.sin(angle);
     const sn = SNS_NOTES[k];
     const hasVal = profileMap[k];
-    return `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="${hasVal?'9':'7'}" fill="${hasVal?sn.color:'rgba(28,42,34,0.3)'}" font-weight="${hasVal?'700':'400'}">${sn.icon}</text>`;
+    return `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="${hasVal?'9':'7'}" fill="${hasVal?sn.color:'rgba(28,42,34,0.3)'}" font-weight="${hasVal?'700':'400'}">${_en?sn.en:sn.es}</text>`;
   }).join('');
 
   // Data dots
@@ -21325,14 +21325,14 @@ let _ruletaHistory = [];
 let _ruletaAngle = 0;
 
 const RULETA_CATS = [
-  {key:'impro',icon:TXKO_ICONS.rImpro,color:'#9b59b6',es:'Impro',en:'Improv'},
-  {key:'speed',icon:TXKO_ICONS.rSpeed,color:'#f1c40f',es:'Speed',en:'Speed'},
-  {key:'queHarias',icon:TXKO_ICONS.rScenario,color:'#3498db',es:'Situación',en:'Scenario'},
-  {key:'cumplido',icon:TXKO_ICONS.rCumplido,color:'#e8a0bf',es:'Cumplido',en:'Compliment'},
-  {key:'dato',icon:TXKO_ICONS.rDato,color:'#27ae60',es:'Dato',en:'Fact'},
-  {key:'absurdo',icon:TXKO_ICONS.rAbsurdo,color:'#e67e22',es:'Absurdo',en:'Absurd'},
-  {key:'reto',icon:TXKO_ICONS.rReto,color:'#e74c3c',es:'Reto',en:'Challenge'},
-  {key:'comodin',icon:TXKO_ICONS.rWildcard,color:'#c49a3c',es:'Comodín',en:'Wildcard'}
+  {key:'impro',icon:TXKO_ICONS.rImpro,abbr:'IM',color:'#9b59b6',es:'Impro',en:'Improv'},
+  {key:'speed',icon:TXKO_ICONS.rSpeed,abbr:'SP',color:'#f1c40f',es:'Speed',en:'Speed'},
+  {key:'queHarias',icon:TXKO_ICONS.rScenario,abbr:'SC',color:'#3498db',es:'Situación',en:'Scenario'},
+  {key:'cumplido',icon:TXKO_ICONS.rCumplido,abbr:'CO',color:'#e8a0bf',es:'Cumplido',en:'Compliment'},
+  {key:'dato',icon:TXKO_ICONS.rDato,abbr:'DA',color:'#27ae60',es:'Dato',en:'Fact'},
+  {key:'absurdo',icon:TXKO_ICONS.rAbsurdo,abbr:'AB',color:'#e67e22',es:'Absurdo',en:'Absurd'},
+  {key:'reto',icon:TXKO_ICONS.rReto,abbr:'RE',color:'#e74c3c',es:'Reto',en:'Challenge'},
+  {key:'comodin',icon:TXKO_ICONS.rWildcard,abbr:'WC',color:'#c49a3c',es:'Comodín',en:'Wildcard'}
 ];
 
 const RULETA_CONTENT = {
@@ -21517,7 +21517,7 @@ function renderRuleta(){
     const lx = 50 + (r*0.65)*Math.cos(midAngle);
     const ly = 50 + (r*0.65)*Math.sin(midAngle);
     const rot = (i+0.5)*360/n;
-    labels += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="3.5" fill="#fff" font-weight="700" transform="rotate(${rot},${lx},${ly})" style="text-shadow:0 1px 2px rgba(0,0,0,.4)">${cats[i].icon}</text>`;
+    labels += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="3.5" fill="#fff" font-weight="700" transform="rotate(${rot},${lx},${ly})" style="text-shadow:0 1px 2px rgba(0,0,0,.4)">${cats[i].abbr||(_en?cats[i].en:cats[i].es)}</text>`;
     // Small text label
     const lx2 = 50 + (r*0.42)*Math.cos(midAngle);
     const ly2 = 50 + (r*0.42)*Math.sin(midAngle);
