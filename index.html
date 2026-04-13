@@ -1069,7 +1069,7 @@ body::after{
   position:relative;overflow:hidden;transition:all .2s;
 }
 .wine-pairing-strip:hover{border-color:var(--gold2)}
-.wc-detail.open,.wr-detail.open,.ss-detail.open{max-height:600px!important}
+.wc-detail.open,.wr-detail.open,.ss-detail.open,.we-detail.open{max-height:800px!important}
 
 /* ─────────────────────────────────────────────────
    WINE FAIRY-TALE ENCHANTMENT
@@ -7299,13 +7299,7 @@ function _renderSmartCard(){
   // Generate 3 quick questions
   const qs = _djGenerateQuiz(dish);
 
-  const existing = document.getElementById('smartOverlay');
-  if(existing) existing.remove();
-
-  const overlay = document.createElement('div');
-  overlay.id = 'smartOverlay';
-  overlay.className = 'dj-overlay';
-  overlay.innerHTML = `
+  const newContent = `
     <div class="dj-container">
       <div class="dj-bg"></div>
       <div class="dj-header">
@@ -7325,7 +7319,17 @@ function _renderSmartCard(){
       </div>
     </div>
   `;
-  document.body.appendChild(overlay);
+  const existing = document.getElementById('smartOverlay');
+  if(existing){
+    // Update in-place to avoid white flash
+    existing.innerHTML = newContent;
+  } else {
+    const overlay = document.createElement('div');
+    overlay.id = 'smartOverlay';
+    overlay.className = 'dj-overlay';
+    overlay.innerHTML = newContent;
+    document.body.appendChild(overlay);
+  }
 
   // Render quiz questions
   _smartQuizState = { qs:qs, answered:0, correct:0, dishId:dishId };
@@ -7410,13 +7414,7 @@ function _renderSmartSummary(){
 
   if(xpEarned > 0) awardXP(xpEarned, _en ? 'Smart Review' : 'Repaso Inteligente');
 
-  const existing = document.getElementById('smartOverlay');
-  if(existing) existing.remove();
-
-  const overlay = document.createElement('div');
-  overlay.id = 'smartOverlay';
-  overlay.className = 'dj-overlay';
-  overlay.innerHTML = `
+  const summaryContent = `
     <div class="dj-container">
       <div class="dj-bg"></div>
       <div class="dj-header">
@@ -7452,7 +7450,16 @@ function _renderSmartSummary(){
       </div>
     </div>
   `;
-  document.body.appendChild(overlay);
+  const existing = document.getElementById('smartOverlay');
+  if(existing){
+    existing.innerHTML = summaryContent;
+  } else {
+    const overlay = document.createElement('div');
+    overlay.id = 'smartOverlay';
+    overlay.className = 'dj-overlay';
+    overlay.innerHTML = summaryContent;
+    document.body.appendChild(overlay);
+  }
 }
 
 // XP bar widget — call inside any render to show the bar
@@ -8824,7 +8831,7 @@ function showTab(tab){
     c.style.transform='translateY(0)';
     try {
       // Route sub-tabs through their parent so the sub-tab bar is always rendered
-      const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderAprender,lqa:renderProtocoloHub,vinos:renderVinos};
+      const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderAprender,lqa:renderProtocoloHub,vinos:renderVinos};
       renderMap[tab]();
     } catch(e) {
       c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+tab+':</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
@@ -12204,6 +12211,242 @@ const WINE_CONCEPTS = [
     short: 'La forma de la copa influye directamente en cómo percibimos el vino.',
     detail: 'Copa grande y ancha para tintos con cuerpo (permite oxigenación). Copa más estrecha para blancos (mantiene la frescura). Copa tipo flauta o tulipa para espumosos (preserva las burbujas). Siempre sujetar la copa por el tallo para no calentar el vino.',
     tip: 'Al huésped: "Utilizamos esta copa específica para que pueda apreciar al máximo los aromas y la temperatura ideal del vino."'
+  }
+];
+
+// ═══════════════════════════════════════════════════════════════
+// WINE ENCYCLOPEDIA — Deep Technical Knowledge from Our Wines
+// ═══════════════════════════════════════════════════════════════
+const WINE_ENCYCLOPEDIA = [
+  // ── VINIFICACIÓN: Procesos ──
+  {
+    id:'fermentation', category:'vinificacion', title:'Fermentación Alcohólica', title_en:'Alcoholic Fermentation',
+    icon:'🧪', level:'intermedio',
+    body:'La fermentación alcohólica es el corazón de la elaboración del vino. Las levaduras (microorganismos) consumen el azúcar natural de la uva y lo transforman en alcohol etílico y CO₂. Este proceso dura entre 7 y 30 días según el estilo deseado. La temperatura es clave: a menor temperatura (14-16°C), se preservan aromas delicados (ideal para blancos); a mayor temperatura (25-28°C), se extraen más color y taninos (ideal para tintos). En Txoko, nuestros blancos canarios como Viñatigo fermentan a 16-18°C para preservar su frescura atlántica, mientras que tintos como Marqués de Murrieta fermentan a 26-28°C para extraer máxima estructura.',
+    body_en:'Alcoholic fermentation is the heart of winemaking. Yeasts consume the grape\'s natural sugar and transform it into ethyl alcohol and CO₂. This process takes 7-30 days depending on the desired style. Temperature is key: lower temps (14-16°C) preserve delicate aromas (ideal for whites); higher temps (25-28°C) extract more color and tannins (ideal for reds). At Txoko, our Canarian whites like Viñatigo ferment at 16-18°C to preserve Atlantic freshness, while reds like Marqués de Murrieta ferment at 26-28°C for maximum structure.',
+    examples:'Viñatigo (16-18°C, acero), Marqués de Murrieta Reserva (26-28°C, roble), Artifice (15-17°C, levaduras salvajes)',
+    guest:'Al huésped: "Este vino ha fermentado lentamente a baja temperatura para conservar toda la frescura de la uva."'
+  },
+  {
+    id:'malolactic', category:'vinificacion', title:'Fermentación Maloláctica', title_en:'Malolactic Fermentation',
+    icon:'🔄', level:'intermedio',
+    body:'La fermentación maloláctica (FML) es un segundo proceso que ocurre después de la fermentación alcohólica. Las bacterias lácticas transforman el ácido málico (agresivo, como el de la manzana verde) en ácido láctico (suave, como el de la leche). El resultado: un vino más suave, redondo y cremoso en boca. Es ESENCIAL en casi todos los tintos y opcional en blancos. Cuando un blanco hace FML (como algunos Chardonnay con barrica), gana cuerpo y notas mantecosas. Cuando NO la hace, conserva acidez vibrante y frescura. En nuestra carta: Marqués de Murrieta Reserva hace FML completa en barrica (suave y cremoso), mientras que Cepado Albariño la evita para mantener su acidez atlántica.',
+    body_en:'Malolactic fermentation (MLF) is a secondary process after alcoholic fermentation. Lactic bacteria convert harsh malic acid (like green apple) into softer lactic acid (like milk). The result: a smoother, rounder, creamier wine. It\'s ESSENTIAL in nearly all reds and optional in whites. When a white undergoes MLF (like some barrel-aged Chardonnay), it gains body and buttery notes. When it DOESN\'T, it preserves vibrant acidity and freshness. From our list: Marqués de Murrieta Reserva does complete MLF in barrel (smooth and creamy), while Cepado Albariño skips it to maintain Atlantic acidity.',
+    examples:'Marqués de Murrieta Reserva (FML completa en barrica), Cepado Albariño (sin FML), Contino Reserva (FML controlada)',
+    guest:'Al huésped: "Este tinto ha pasado por fermentación maloláctica, por eso nota esa textura tan suave y sedosa."'
+  },
+  {
+    id:'wild-yeast', category:'vinificacion', title:'Levaduras Salvajes vs Seleccionadas', title_en:'Wild vs Selected Yeasts',
+    icon:'🦠', level:'avanzado',
+    body:'Las levaduras son los microorganismos que hacen posible el vino. Existen dos filosofías: LEVADURAS SELECCIONADAS (comerciales): son predecibles, fiables y producen fermentaciones limpias y controladas. La mayoría de bodegas las usan. LEVADURAS SALVAJES (autóctonas/indígenas): son las que viven naturalmente en la piel de la uva y en la bodega. Dan vinos más complejos y expresivos del terroir, pero son más arriesgadas — la fermentación puede ser impredecible. En nuestra carta, Artifice Blanco fermenta exclusivamente con levaduras salvajes, lo que le da esa complejidad mineral única. Colet A Priori usa levaduras seleccionadas para garantizar una burbuja fina y consistente.',
+    body_en:'Yeasts are the microorganisms that make wine possible. Two philosophies exist: SELECTED YEASTS (commercial): predictable, reliable, producing clean, controlled fermentations. Most wineries use them. WILD YEASTS (indigenous/native): naturally living on grape skins and in the cellar. They produce more complex wines expressive of terroir, but are riskier — fermentation can be unpredictable. From our list, Artifice Blanco ferments exclusively with wild yeast, giving it unique mineral complexity. Colet A Priori uses selected yeast to guarantee fine, consistent bubbles.',
+    examples:'Artifice Blanco (levaduras salvajes), Colet A Priori (levaduras seleccionadas), Remelluri Reserva (autóctonas)',
+    guest:'Al huésped: "Este vino se elabora con levaduras naturales de la propia viña, lo que le da un carácter único e irrepetible."'
+  },
+  {
+    id:'maceration', category:'vinificacion', title:'Maceración', title_en:'Maceration',
+    icon:'⏱️', level:'intermedio',
+    body:'La maceración es el tiempo que el mosto (zumo) permanece en contacto con las pieles de la uva. Es lo que da COLOR, TANINOS y AROMAS al vino. Sin maceración: vino blanco (transparente). Maceración corta (2-6 horas): vino rosado. Maceración larga (7-30 días): vino tinto con cuerpo. MACERACIÓN EN FRÍO (pre-fermentativa): Se enfría el mosto a 5-8°C antes de fermentar para extraer aromas frutales sin extraer taninos duros. Técnica usada en blancos aromáticos y rosados. MACERACIÓN EXTENDIDA (post-fermentativa): Se deja el vino con las pieles después de fermentar para suavizar taninos. Común en grandes tintos de guarda como nuestro Alion 2020.',
+    body_en:'Maceration is the time juice spends in contact with grape skins. It gives wine COLOR, TANNINS, and AROMAS. No maceration: white wine (clear). Short maceration (2-6 hours): rosé. Long maceration (7-30 days): full-bodied red. COLD MACERATION (pre-fermentative): Must is chilled to 5-8°C before fermentation to extract fruity aromas without harsh tannins. Used in aromatic whites and rosés. EXTENDED MACERATION (post-fermentative): Wine stays on skins after fermentation to soften tannins. Common in great aging reds like our Alion 2020.',
+    examples:'Muga Rosado (maceración corta), Alion 2020 (maceración extendida), Cepado (maceración en frío)',
+    guest:'Al huésped: "Este vino tiene este color tan intenso porque ha estado en contacto con la piel de la uva durante semanas."'
+  },
+  // ── CRIANZA: Roble y Envejecimiento ──
+  {
+    id:'french-oak', category:'crianza', title:'Roble Francés', title_en:'French Oak',
+    icon:'🇫🇷', level:'avanzado',
+    body:'El roble francés (Quercus petraea/robur) es considerado el más elegante del mundo para envejecer vino. Se obtiene de bosques históricos como Allier, Nevers, Tronçais y Vosges. Sus características: GRANO FINO — poro más cerrado que permite una microoxigenación lenta y delicada. AROMAS — aporta notas sutiles de vainilla, especias dulces (clavo, canela), tostados finos y un toque sedoso. TANINOS — más finos y elegantes que el roble americano. PRECIO — una barrica francesa cuesta 800-1.200€ (el doble que la americana). En nuestra carta: Marqués de Murrieta Reserva envejece 22 meses en roble francés, lo que le da esa elegancia clásica riojana. Alion 2020 pasa 14 meses en roble francés nuevo para máxima intensidad.',
+    body_en:'French oak (Quercus petraea/robur) is considered the most elegant wood for aging wine. It comes from historic forests like Allier, Nevers, Tronçais, and Vosges. Characteristics: FINE GRAIN — tighter pores allow slow, delicate micro-oxygenation. AROMAS — subtle vanilla, sweet spices (clove, cinnamon), fine toast, silky touch. TANNINS — finer and more elegant than American oak. PRICE — a French barrel costs €800-1,200 (double American). From our list: Marqués de Murrieta Reserva ages 22 months in French oak for classic Rioja elegance. Alion 2020 spends 14 months in new French oak for maximum intensity.',
+    examples:'Marqués de Murrieta Reserva (22 meses), Alion 2020 (14 meses, roble nuevo), Remelluri Reserva (18 meses)',
+    guest:'Al huésped: "Este vino ha envejecido en roble francés, que le aporta esas notas elegantes de vainilla y especias que está notando."'
+  },
+  {
+    id:'american-oak', category:'crianza', title:'Roble Americano', title_en:'American Oak',
+    icon:'🇺🇸', level:'avanzado',
+    body:'El roble americano (Quercus alba) tiene un carácter completamente diferente al francés. Sus características: GRANO GRUESO — poro más abierto que permite una oxigenación más rápida e intensa. AROMAS — aporta notas potentes de coco, vainilla dulce, caramelo y notas lácteas. TANINOS — más intensos y marcados. PRECIO — una barrica cuesta 400-600€, más asequible que la francesa. TRADICIÓN — Es el roble clásico de la Rioja tradicional. Las bodegas históricas lo usaban porque España importaba barricas americanas de bourbon. En nuestra carta: Los vinos que combinan roble francés y americano (como Les Cousins L\'Inconscient) obtienen lo mejor de ambos mundos: elegancia francesa + potencia americana.',
+    body_en:'American oak (Quercus alba) has a completely different character from French. Characteristics: COARSE GRAIN — more open pores allow faster, more intense oxygenation. AROMAS — powerful notes of coconut, sweet vanilla, caramel, and dairy. TANNINS — more intense and pronounced. PRICE — a barrel costs €400-600, more affordable than French. TRADITION — Classic Rioja oak. Historic wineries used it because Spain imported American bourbon barrels. From our list: Wines combining French and American oak (like Les Cousins L\'Inconscient) get the best of both: French elegance + American power.',
+    examples:'Les Cousins L\'Inconscient (francés + americano, 16 meses), Sierra Cantabria Reserva',
+    guest:'Al huésped: "Este vino combina roble francés y americano — note cómo tiene elegancia pero también esa potencia dulce tan agradable."'
+  },
+  {
+    id:'new-vs-used', category:'crianza', title:'Barrica Nueva vs Usada', title_en:'New vs Used Barrel',
+    icon:'🪵', level:'avanzado',
+    body:'La edad de la barrica cambia completamente el resultado: BARRICA NUEVA (1er uso): Aporta MÁXIMO sabor a madera — vainilla intensa, tostados, especias. Domina el vino si se abusa. Los grandes vinos usan un % de barrica nueva (20-100%). BARRICA DE 2º-3er USO: Más sutil — integra sin dominar. Aporta oxigenación y textura pero menos sabor a madera. BARRICA VIEJA (4+ usos): Apenas aporta sabor — funciona como recipiente neutral para microoxigenación. El coste importa: una barrica nueva de roble francés cuesta ~1.000€ y se usa efectivamente solo 3-4 veces. Por eso los vinos en barrica nueva son más caros. En nuestra carta: Alion 2020 usa barrica 100% nueva (máxima expresión), mientras que Contino Reserva mezcla nueva y usada para equilibrar.',
+    body_en:'Barrel age completely changes the result: NEW BARREL (1st use): Maximum wood flavor — intense vanilla, toast, spices. Can overwhelm if overused. Great wines use a % of new barrels (20-100%). 2ND-3RD USE: More subtle — integrates without dominating. Adds oxygenation and texture with less wood flavor. OLD BARREL (4+ uses): Barely adds flavor — works as a neutral vessel for micro-oxygenation. Cost matters: a new French oak barrel costs ~€1,000 and is effectively used only 3-4 times. That\'s why new-barrel wines cost more. From our list: Alion 2020 uses 100% new barrel (maximum expression), while Contino Reserva blends new and used for balance.',
+    examples:'Alion 2020 (100% barrica nueva), Contino Reserva (mezcla nueva/usada), Remelluri (barrica de 2-3 usos)',
+    guest:'Al huésped: "Este vino ha envejecido en barrica nueva, por eso tiene esos aromas tan intensos a vainilla y tostado."'
+  },
+  {
+    id:'batonnage', category:'crianza', title:'Bâtonnage (Batido de Lías)', title_en:'Bâtonnage (Lees Stirring)',
+    icon:'🥄', level:'avanzado',
+    body:'El bâtonnage es una técnica francesa que consiste en REMOVER las lías (levaduras muertas sedimentadas) que quedan en el fondo del depósito o barrica. Se hace con un bastón o pala, agitando el vino periódicamente. ¿Para qué? Las lías liberan MANOPROTEÍNAS que dan al vino: textura cremosa y untuosa, mayor volumen en boca, estabilidad del color, y protección natural contra la oxidación. Es especialmente importante en blancos con barrica y espumosos. La frecuencia varía: semanal, quincenal o mensual según el estilo buscado. En nuestra carta: Artifice Blanco tiene remontajes manuales cada 20 días sobre lías autóctonas. Los grandes Champagnes como Andre Clouet reposan sobre lías durante años.',
+    body_en:'Bâtonnage is a French technique of STIRRING the lees (dead yeast sediment) at the bottom of the tank or barrel. It\'s done with a stick or paddle, periodically agitating the wine. Why? Lees release MANNOPROTEINS giving the wine: creamy, unctuous texture, greater volume in mouth, color stability, and natural oxidation protection. Especially important for barrel-fermented whites and sparkling wines. Frequency varies: weekly, bi-weekly, or monthly depending on style. From our list: Artifice Blanco has manual punch-downs every 20 days on indigenous lees. Great Champagnes like Andre Clouet rest on lees for years.',
+    examples:'Artifice Blanco (bâtonnage cada 20 días), Andre Clouet Champagne (lías durante años), Pazo Barrantes (mensual)',
+    guest:'Al huésped: "Este vino tiene esa textura tan cremosa porque ha reposado sobre sus propias levaduras durante meses."'
+  },
+  {
+    id:'aging-time', category:'crianza', title:'Tiempos de Crianza en España', title_en:'Spanish Aging Classifications',
+    icon:'📅', level:'intermedio',
+    body:'En España, la ley regula los tiempos mínimos de envejecimiento: JOVEN: Sin crianza en barrica. Fresco, frutal, para beber pronto. CRIANZA: Mínimo 24 meses totales, de los cuales al menos 6 en barrica (12 en Rioja/Ribera). RESERVA: Mínimo 36 meses totales, de los cuales al menos 12 en barrica. GRAN RESERVA: Mínimo 60 meses totales, de los cuales al menos 18 en barrica. Pero ojo: muchas bodegas superan ampliamente estos mínimos. Marqués de Murrieta Reserva pasa 22 meses en barrica (casi el doble del mínimo). Y algunas bodegas de calidad no usan estas clasificaciones para no confundir — prefieren nombres propios como Alion o Contino.',
+    body_en:'In Spain, law regulates minimum aging times: JOVEN: No barrel aging. Fresh, fruity, drink soon. CRIANZA: Minimum 24 months total, at least 6 in barrel (12 in Rioja/Ribera). RESERVA: Minimum 36 months total, at least 12 in barrel. GRAN RESERVA: Minimum 60 months total, at least 18 in barrel. But note: many wineries far exceed these minimums. Marqués de Murrieta Reserva spends 22 months in barrel (nearly double the minimum). And some quality wineries skip these classifications entirely — preferring proprietary names like Alion or Contino.',
+    examples:'Marqués de Murrieta Reserva (22 meses barrica), Alion 2020 (14 meses, sin clasificación oficial)',
+    guest:'Al huésped: "Este Reserva ha envejecido 22 meses en barrica — casi el doble de lo que exige la ley. Eso habla de la calidad de la bodega."'
+  },
+  {
+    id:'cement-tanks', category:'crianza', title:'Depósitos de Cemento/Hormigón', title_en:'Cement/Concrete Tanks',
+    icon:'🏗️', level:'avanzado',
+    body:'Los depósitos de cemento u hormigón son una tendencia que recupera tradiciones antiguas. A diferencia del acero inoxidable (totalmente neutro) y la barrica (que aporta sabor), el cemento está en un punto medio: MICROOXIGENACIÓN sutil a través de los poros del material (similar a la barrica pero sin sabor a madera). ESTABILIDAD TÉRMICA natural — el cemento mantiene temperatura constante sin necesidad de control electrónico. TEXTURA — aporta una textura más sedosa y redonda que el acero. NEUTRALIDAD — no añade aromas de madera, preservando la expresión pura de la fruta y el terroir. En nuestra carta: Les Cousins L\'Inconscient fermenta en cemento para obtener la expresión pura del Priorat sin interferencia de madera.',
+    body_en:'Cement/concrete tanks are a trend recovering ancient traditions. Unlike stainless steel (totally neutral) and barrel (adds flavor), cement sits in between: Subtle MICRO-OXYGENATION through material pores (similar to barrel but without wood flavor). Natural THERMAL STABILITY — cement maintains constant temperature without electronic control. TEXTURE — adds silkier, rounder texture than steel. NEUTRALITY — adds no wood aromas, preserving pure fruit and terroir expression. From our list: Les Cousins L\'Inconscient ferments in cement to get pure Priorat expression without wood interference.',
+    examples:'Les Cousins L\'Inconscient (cemento), algunos vinos de Priorat y Borgoña',
+    guest:'Al huésped: "Este vino fermenta en depósitos de hormigón — una técnica que preserva toda la pureza de la fruta sin interferencia de la madera."'
+  },
+  // ── UVA: Selección y Terroir ──
+  {
+    id:'terroir', category:'uva', title:'Terroir: Suelo, Clima y Tradición', title_en:'Terroir: Soil, Climate & Tradition',
+    icon:'🌍', level:'intermedio',
+    body:'Terroir es un concepto francés que engloba TODO lo que hace único a un vino más allá de la uva: el SUELO (volcánico, calizo, pizarra, arcilla), el CLIMA (atlántico, mediterráneo, continental), la ALTITUD (frescura nocturna a mayor altura), la ORIENTACIÓN (sur = más sol = más madurez), y la TRADICIÓN humana (cómo se cultiva y vinifica). En nuestra carta hay terroirs fascinantes: VOLCÁNICO (Canarias): suelo negro de lava que da mineralidad y salinidad — Viñatigo, Artifice, Crater. PIZARRA (Priorat): roca que retiene calor y concentra sabores — Les Cousins, Álvaro Palacios. CALIZO (Rioja): suelo que da finura y elegancia — Marqués de Murrieta, Contino. GRANITO (Galicia): piedra que aporta frescura mineral — Cepado, Pazo Barrantes.',
+    body_en:'Terroir is a French concept encompassing EVERYTHING that makes a wine unique beyond the grape: SOIL (volcanic, limestone, slate, clay), CLIMATE (Atlantic, Mediterranean, continental), ALTITUDE (nighttime freshness at higher elevation), ASPECT (south-facing = more sun = more ripeness), and human TRADITION (how it\'s grown and made). Our list features fascinating terroirs: VOLCANIC (Canarias): black lava soil giving minerality and salinity — Viñatigo, Artifice, Crater. SLATE (Priorat): heat-retaining rock concentrating flavors — Les Cousins, Álvaro Palacios. LIMESTONE (Rioja): soil giving finesse and elegance — Marqués de Murrieta, Contino. GRANITE (Galicia): stone adding mineral freshness — Cepado, Pazo Barrantes.',
+    examples:'Canarias (volcánico), Priorat (pizarra), Rioja (calizo), Galicia (granito)',
+    guest:'Al huésped: "Este vino nace en suelo volcánico/pizarra/calizo — es el terroir lo que le da ese carácter tan especial que no encontrará en ningún otro lugar."'
+  },
+  {
+    id:'volcanic-soil', category:'uva', title:'Suelo Volcánico (Canarias)', title_en:'Volcanic Soil (Canary Islands)',
+    icon:'🌋', level:'intermedio',
+    body:'El suelo volcánico de Canarias es uno de los más especiales del mundo vinícola. Está compuesto de basalto, cenizas volcánicas y lapilli (piedra pómez). Características únicas: DRENAJE extremo — el agua pasa rápidamente, obligando a las raíces a profundizar mucho en busca de agua (estrés hídrico que concentra sabores). MINERALES — hierro, magnesio, potasio en abundancia, que la vid absorbe y transmite al vino (esa salinidad y mineralidad que notamos). PH BAJO — suelos ácidos que dan vinos frescos y vibrantes. CALOR RETENIDO — la piedra negra absorbe calor durante el día y lo libera por la noche. Las viñas canarias además son PRE-FILOXÉRICAS: nunca fueron atacadas por la plaga que destruyó Europa, conservando raíces originales centenarias.',
+    body_en:'Canarian volcanic soil is among the most special in the wine world. Composed of basalt, volcanic ash, and lapilli (pumice). Unique characteristics: Extreme DRAINAGE — water passes quickly, forcing roots to go deep seeking moisture (water stress that concentrates flavors). MINERALS — abundant iron, magnesium, potassium absorbed by vines and transmitted to wine (the salinity and minerality we taste). LOW PH — acidic soils giving fresh, vibrant wines. HEAT RETENTION — black stone absorbs daytime heat and releases it at night. Canarian vines are also PRE-PHYLLOXERA: never attacked by the plague that destroyed Europe, preserving centennial original rootstocks.',
+    examples:'Viñatigo (450-600m, suelo negro), Artifice (viñas 80+ años), Crater (Lanzarote, hoyos en lava)',
+    guest:'Al huésped: "Este vino nace de viñas centenarias en suelo volcánico de Tenerife. Son viñas únicas en el mundo que sobrevivieron a la plaga que destruyó Europa."'
+  },
+  {
+    id:'slate-priorat', category:'uva', title:'Pizarra (Licorella) del Priorat', title_en:'Slate (Licorella) of Priorat',
+    icon:'⛰️', level:'avanzado',
+    body:'La licorella es el tipo de pizarra que define los viñedos del Priorat. Es una roca metamórfica compuesta de mica, cuarzo y feldespato que se descompone en láminas finas. Propiedades únicas: RETENCIÓN DE CALOR — la pizarra oscura absorbe el intenso sol mediterráneo y lo libera gradualmente, permitiendo madurez completa incluso en laderas extremas. DRENAJE TOTAL — las raíces deben penetrar las grietas de la roca para buscar agua, a veces hasta 20 metros de profundidad. RENDIMIENTOS MÍNIMOS — cada viña produce muy poca uva pero extraordinariamente concentrada. MINERAL — transmite un carácter mineral y "terroso" único al vino. El Priorat tiene denominación DOCa (junto con Rioja, la única en España). Vinos como Álvaro Palacios y Les Terrasses expresan la pizarra en cada sorbo.',
+    body_en:'Licorella is the slate type defining Priorat vineyards. It\'s a metamorphic rock of mica, quartz, and feldspar that decomposes into thin sheets. Unique properties: HEAT RETENTION — dark slate absorbs intense Mediterranean sun and releases it gradually, enabling full ripeness even on extreme slopes. TOTAL DRAINAGE — roots must penetrate rock cracks seeking water, sometimes up to 20 meters deep. MINIMAL YIELDS — each vine produces very little but extraordinarily concentrated fruit. MINERAL — transmits unique mineral and "earthy" character to wine. Priorat holds DOCa designation (with Rioja, the only one in Spain). Wines like Álvaro Palacios and Les Terrasses express slate in every sip.',
+    examples:'Les Cousins L\'Inconscient (pizarra, Priorat), Álvaro Palacios, Les Terrasses, Porrera',
+    guest:'Al huésped: "Este vino nace en laderas de pizarra donde las raíces penetran hasta 20 metros de profundidad. Eso le da esa intensidad y mineralidad increíbles."'
+  },
+  {
+    id:'harvest', category:'uva', title:'Vendimia: Manual vs Mecánica', title_en:'Harvest: Manual vs Mechanical',
+    icon:'🧺', level:'intermedio',
+    body:'La vendimia es la recogida de la uva y uno de los momentos más críticos del año. VENDIMIA MANUAL: Cada racimo se corta a mano, permitiendo seleccionar solo los mejores. Es más lenta y cara (6-10x más costosa) pero esencial para vinos de calidad. Permite: selección racimo por racimo, evitar uvas dañadas o verdes, transporte suave sin romper la fruta. VENDIMIA MECÁNICA: Una máquina sacude las viñas y recoge la uva. Rápida y económica pero menos selectiva. Aceptable para vinos de volumen. VENDIMIA NOCTURNA: Algunas bodegas recogen de noche o madrugada para mantener la uva fría y evitar oxidación prematura. TODOS los vinos de nuestra carta son de vendimia manual — es una señal inequívoca de calidad y compromiso.',
+    body_en:'Harvest is grape picking — one of the most critical moments of the year. MANUAL HARVEST: Each cluster is hand-cut, allowing selection of only the best. Slower and more expensive (6-10x more costly) but essential for quality wines. Allows: cluster-by-cluster selection, avoiding damaged or unripe grapes, gentle transport without breaking fruit. MECHANICAL HARVEST: A machine shakes vines and collects grapes. Fast and economical but less selective. Acceptable for volume wines. NIGHT HARVEST: Some wineries pick at night to keep grapes cold and prevent premature oxidation. ALL wines on our list are hand-harvested — an unmistakable sign of quality and commitment.',
+    examples:'Todos nuestros 120 vinos son de vendimia manual',
+    guest:'Al huésped: "Todos nuestros vinos se recogen a mano, racimo por racimo. Es la única forma de garantizar que solo la mejor uva llega a la bodega."'
+  },
+  {
+    id:'vine-age', category:'uva', title:'Edad de la Viña (Viñas Viejas)', title_en:'Vine Age (Old Vines)',
+    icon:'🌳', level:'avanzado',
+    body:'La edad de la viña influye dramáticamente en la calidad del vino. VIÑA JOVEN (0-15 años): Produce mucha uva pero con menos concentración. Buenos vinos sencillos. VIÑA ADULTA (15-40 años): Equilibrio ideal entre producción y calidad. La mayoría de buenos vinos. VIÑA VIEJA (40-80 años): Produce MUY poca uva pero extraordinariamente concentrada. Raíces profundas que extraen minerales de capas profundas del suelo. Vinos complejos y con carácter. VIÑA CENTENARIA (80+ años): Joyas enológicas. Producen cantidades mínimas de uva hiperconcetrada. En Canarias, nuestras viñas más antiguas superan los 100 años sobre PIE FRANCO (raíz original, no injertada), algo casi imposible de encontrar fuera de las islas. Artifice trabaja con viñas de 80+ años. Los rendimientos bajan: una viña joven produce 80-100 hl/ha, una vieja puede dar solo 20-35 hl/ha.',
+    body_en:'Vine age dramatically influences wine quality. YOUNG VINE (0-15 years): Produces lots of grapes but with less concentration. Good simple wines. ADULT VINE (15-40 years): Ideal balance between production and quality. Most good wines. OLD VINE (40-80 years): Produces VERY little but extraordinarily concentrated fruit. Deep roots extracting minerals from deep soil layers. Complex wines with character. CENTENNIAL VINE (80+ years): Enological jewels. Minimal quantities of hyper-concentrated grapes. In Canarias, our oldest vines exceed 100 years on OWN ROOTSTOCK (ungrafted), almost impossible to find elsewhere. Artifice works with 80+ year vines. Yields drop: young vine produces 80-100 hl/ha, old vine may give only 20-35 hl/ha.',
+    examples:'Artifice (viñas 80+ años), Akaet Parajes (centenarias), Viñatigo (60+ años), Remelluri (50+ años)',
+    guest:'Al huésped: "Este vino nace de viñas de más de 80 años. Con la edad, la viña produce menos uva pero muchísimo más concentrada — es pura intensidad en copa."'
+  },
+  {
+    id:'yields', category:'uva', title:'Rendimientos (hl/ha)', title_en:'Yields (hl/ha)',
+    icon:'📉', level:'avanzado',
+    body:'El rendimiento mide cuánto vino produce un viñedo por hectárea. Es uno de los indicadores más importantes de calidad: A MENOR RENDIMIENTO, MAYOR CONCENTRACIÓN. Los números: Vino industrial: 80-120 hl/ha. Vino de calidad: 40-60 hl/ha. Vino premium: 25-40 hl/ha. Gran vino: menos de 25 hl/ha. Algunos de nuestros vinos: Viñatigo Blanco produce solo 40 hl/ha en suelo volcánico. Artifice Blanco da apenas 35 hl/ha con viñas centenarias. Los grandes Priorat como Álvaro Palacios pueden bajar de 20 hl/ha. Las denominaciones de origen regulan rendimientos máximos para garantizar calidad. Cuando ves "bajos rendimientos" en una ficha técnica, es sinónimo de concentración y calidad.',
+    body_en:'Yield measures how much wine a vineyard produces per hectare. It\'s one of the most important quality indicators: LOWER YIELD = GREATER CONCENTRATION. The numbers: Industrial wine: 80-120 hl/ha. Quality wine: 40-60 hl/ha. Premium wine: 25-40 hl/ha. Great wine: under 25 hl/ha. Some of our wines: Viñatigo Blanco produces only 40 hl/ha on volcanic soil. Artifice Blanco yields barely 35 hl/ha with centennial vines. Great Priorats like Álvaro Palacios can go below 20 hl/ha. Origin denominations regulate maximum yields to guarantee quality. When you see "low yields" on a tech sheet, it\'s synonymous with concentration and quality.',
+    examples:'Viñatigo (40 hl/ha), Artifice (35 hl/ha), Priorat (<25 hl/ha)',
+    guest:'Al huésped: "Este vino viene de viñedos que producen apenas un tercio de lo normal — toda esa concentración la nota usted en copa."'
+  },
+  // ── TÉCNICAS ESPECIALES ──
+  {
+    id:'sparkling-method', category:'tecnicas', title:'Método Tradicional (Espumosos)', title_en:'Traditional Method (Sparkling)',
+    icon:'🥂', level:'intermedio',
+    body:'El método tradicional (también llamado champenoise) es la forma más noble de elaborar espumoso. El proceso: 1) Se elabora un vino base tranquilo normal. 2) Se embotella con una mezcla de azúcar y levaduras (licor de tiraje). 3) Ocurre una SEGUNDA FERMENTACIÓN dentro de la botella — las levaduras producen CO₂ que queda atrapado, creando las burbujas. 4) El vino reposa sobre lías (levaduras muertas) durante meses o años, ganando complejidad. 5) Se gira gradualmente la botella (removido/remuage) para concentrar los sedimentos en el cuello. 6) Se congela el cuello y se expulsan los sedimentos (degüelle/dégorgement). 7) Se añade el licor de expedición que define el dulzor final (Brut, Extra Brut, etc.). Nuestro Colet A Priori reposa 24-30 meses sobre lías. Los grandes Champagnes como Andre Clouet y Gatinois, años.',
+    body_en:'The traditional method (also called champenoise) is the noblest way to make sparkling wine. The process: 1) A normal still base wine is made. 2) It\'s bottled with sugar and yeast mixture (tirage liquor). 3) A SECOND FERMENTATION occurs inside the bottle — yeast produces CO₂ that gets trapped, creating bubbles. 4) Wine rests on lees (dead yeast) for months or years, gaining complexity. 5) Bottles are gradually rotated (riddling/remuage) to concentrate sediment in the neck. 6) The neck is frozen and sediment expelled (disgorgement/dégorgement). 7) Dosage liquor is added defining final sweetness (Brut, Extra Brut, etc.). Our Colet A Priori rests 24-30 months on lees. Great Champagnes like Andre Clouet and Gatinois rest for years.',
+    examples:'Colet A Priori (24-30 meses lías), Andre Clouet Champagne, Gatinois Champagne, Recaredo',
+    guest:'Al huésped: "Este espumoso se elabora por método tradicional — la misma técnica que el Champagne. Las burbujas nacen dentro de la botella, no se añaden."'
+  },
+  {
+    id:'destemming', category:'tecnicas', title:'Despalillado y Uva Entera', title_en:'Destemming & Whole Cluster',
+    icon:'🍇', level:'avanzado',
+    body:'Antes de fermentar, hay una decisión clave: ¿quitamos el raspón (tallo del racimo) o no? DESPALILLADO: Se separa la uva del tallo. Es lo más común. Elimina taninos verdes y sabores herbáceos que puede aportar el raspón. Da vinos más frutales y suaves. MACERACIÓN CON RASPÓN (uva entera): Se fermenta el racimo completo. El raspón aporta taninos firmes, frescura, complejidad y notas especiadas/florales. Técnica muy usada en Borgoña (Pinot Noir) y por enólogos de vanguardia. Algunos vinos de nuestra carta mencionan "despalillado total" (100% sin raspón) o "% de racimo entero" según el estilo buscado.',
+    body_en:'Before fermentation, there\'s a key decision: remove the stems (rachis) or not? DESTEMMING: Grapes are separated from stems. Most common. Removes green tannins and herbaceous flavors stems can contribute. Gives fruitier, softer wines. WHOLE CLUSTER FERMENTATION: Complete clusters ferment together. Stems add firm tannins, freshness, complexity, and spicy/floral notes. Technique widely used in Burgundy (Pinot Noir) and by avant-garde winemakers. Some wines on our list mention "total destemming" (100% stemless) or "% whole cluster" depending on style.',
+    examples:'Remelluri Reserva (parcial), vinos de Borgoña (tradición de racimo entero)',
+    guest:'Al huésped: "Este vino incluye parte de los tallos del racimo en la fermentación — es una técnica borgoñona que le da esa complejidad especiada que nota."'
+  },
+  {
+    id:'filtration', category:'tecnicas', title:'Filtración y Clarificación', title_en:'Filtration & Fining',
+    icon:'🔬', level:'avanzado',
+    body:'Antes de embotellar, el enólogo decide si filtrar el vino o no. FILTRACIÓN: Se pasa el vino por un filtro para eliminar partículas, levaduras residuales y bacterias. Da un vino brillante y estable pero puede perder algo de complejidad. CLARIFICACIÓN (con agentes): Se usa bentonita (arcilla), clara de huevo, o caseína para precipitar partículas en suspensión. SIN FILTRAR: Cada vez más bodegas de calidad embotellan sin filtrar para preservar máxima complejidad y textura. El vino puede ser ligeramente turbio pero con más carácter. En nuestra carta: Artifice Blanco se embotella SIN FILTRACIÓN — expresión pura del terroir volcánico. Es una declaración de intenciones: nada se interpone entre la viña y tu copa.',
+    body_en:'Before bottling, the winemaker decides whether to filter or not. FILTRATION: Wine passes through a filter to remove particles, residual yeast, and bacteria. Gives a brilliant, stable wine but may lose some complexity. FINING (with agents): Bentonite (clay), egg white, or casein precipitate suspended particles. UNFILTERED: Increasingly, quality wineries bottle unfiltered to preserve maximum complexity and texture. Wine may be slightly hazy but with more character. From our list: Artifice Blanco is bottled UNFILTERED — pure volcanic terroir expression. It\'s a statement: nothing stands between vineyard and glass.',
+    examples:'Artifice Blanco (sin filtración), Viñatigo (clarificación con bentonita)',
+    guest:'Al huésped: "Este vino se ha embotellado sin filtrar para preservar toda su complejidad — es la expresión más pura del viñedo."'
+  },
+  {
+    id:'sulfites', category:'tecnicas', title:'Sulfitos en el Vino', title_en:'Sulfites in Wine',
+    icon:'🧫', level:'intermedio',
+    body:'Los sulfitos (SO₂) son el conservante más antiguo del vino, usado desde la época romana. Funciones: ANTIOXIDANTE — protege el vino de la oxidación (que lo vuelve avinagrado). ANTIMICROBIANO — controla bacterias y levaduras no deseadas. Casi TODOS los vinos contienen sulfitos, incluso los "naturales" (la fermentación produce pequeñas cantidades de forma natural). Niveles típicos: Vino convencional: 100-200 mg/L. Vino "bajo en sulfitos": 50-80 mg/L. Vino natural: 10-40 mg/L. La sensibilidad a sulfitos es rara pero real (afecta a ~1% de la población, más en asmáticos). En nuestra carta: Artifice declara "ausencia de sulfitación añadida" — uno de los pocos vinos que no añade sulfitos artificiales, confiando únicamente en los producidos naturalmente.',
+    body_en:'Sulfites (SO₂) are wine\'s oldest preservative, used since Roman times. Functions: ANTIOXIDANT — protects wine from oxidation (which turns it vinegary). ANTIMICROBIAL — controls unwanted bacteria and yeast. Nearly ALL wines contain sulfites, even "natural" ones (fermentation naturally produces small amounts). Typical levels: Conventional wine: 100-200 mg/L. "Low sulfite" wine: 50-80 mg/L. Natural wine: 10-40 mg/L. Sulfite sensitivity is rare but real (~1% of population, more in asthmatics). From our list: Artifice declares "no added sulfitation" — one of few wines adding no artificial sulfites, relying solely on naturally produced ones.',
+    examples:'Artifice (sin sulfitos añadidos), la mayoría de nuestros vinos (sulfitación controlada)',
+    guest:'Al huésped: "Si le preocupan los sulfitos, este vino no tiene sulfitos añadidos — solo los naturales de la fermentación."'
+  },
+  // ── SERVICIO ──
+  {
+    id:'decanting-when', category:'servicio', title:'Cuándo y Cómo Decantar', title_en:'When & How to Decant',
+    icon:'🫗', level:'intermedio',
+    body:'Decantar significa trasvasar el vino de la botella a un decantador de cristal. Hay DOS razones para hacerlo: 1) OXIGENAR vinos jóvenes y potentes — el contacto con el aire "abre" el vino, suaviza taninos y libera aromas. Decantar 30-60 minutos antes de servir. Ideal para: Alion 2020, tintos jóvenes del Priorat, Cowboy de Black Angus 700g con tinto potente. 2) SEPARAR SEDIMENTOS de vinos viejos — los vinos añejos desarrollan sedimentos naturales. Se decanta suavemente para dejar el sedimento en la botella. Solo 10-15 minutos, ¡demasiado aire puede "apagar" un vino viejo! NUNCA decantar: espumosos (pierden burbujas), blancos ligeros (pierden frescura), ni vinos muy viejos y delicados sin supervisión.',
+    body_en:'Decanting means pouring wine from bottle to a crystal decanter. TWO reasons: 1) OXYGENATE young, powerful wines — air contact "opens" the wine, softens tannins, releases aromas. Decant 30-60 minutes before serving. Ideal for: Alion 2020, young Priorat reds. 2) SEPARATE SEDIMENT from aged wines — old wines develop natural deposits. Decant gently to leave sediment in bottle. Only 10-15 minutes — too much air can "kill" an old wine! NEVER decant: sparkling (lose bubbles), light whites (lose freshness), or very old delicate wines unsupervised.',
+    examples:'Alion 2020 (decantar 45 min), Marqués de Murrieta Reserva (30 min), Gran Reserva (15 min, cuidado)',
+    guest:'Al huésped: "Permítame decantar este vino durante 30 minutos — al oxigenarse va a desarrollar toda su expresión aromática."'
+  },
+  {
+    id:'glass-shape', category:'servicio', title:'Copa Correcta por Tipo de Vino', title_en:'Correct Glass by Wine Type',
+    icon:'🍷', level:'intermedio',
+    body:'La copa no es un capricho — la forma dirige el vino a diferentes partes de la lengua y concentra o dispersa los aromas: COPA BORGOÑA (balón grande): Para tintos delicados como Pinot Noir. Boca ancha que dispersa el vino sobre toda la lengua, resaltando sutilezas. COPA BURDEOS (tulipa alta): Para tintos potentes como Cabernet, Tempranillo. Dirige el vino al centro-fondo de la boca, equilibrando taninos. COPA BLANCO (más pequeña): Menor volumen para mantener la temperatura fría. Boca más cerrada para concentrar aromas delicados. COPA FLAUTA/TULIPA: Para espumosos. Forma alargada que preserva las burbujas y dirige los aromas. COPA JEREZ/CATAVINOS: Para dulces y generosos. Pequeña para servicio moderado. REGLA DE ORO: Servir hasta 1/3 de la copa máximo — el espacio vacío es donde se concentran los aromas.',
+    body_en:'The glass isn\'t vanity — shape directs wine to different tongue parts and concentrates or disperses aromas: BURGUNDY GLASS (large bowl): For delicate reds like Pinot Noir. Wide mouth disperses wine across entire tongue, highlighting subtleties. BORDEAUX GLASS (tall tulip): For powerful reds like Cabernet, Tempranillo. Directs wine to center-back of mouth, balancing tannins. WHITE GLASS (smaller): Less volume to maintain cold temperature. More closed mouth to concentrate delicate aromas. FLUTE/TULIP: For sparkling. Elongated shape preserves bubbles and directs aromas. SHERRY/CATAVINOS: For sweet and fortified. Small for moderate serving. GOLDEN RULE: Serve to maximum 1/3 of glass — the empty space is where aromas concentrate.',
+    examples:'Nuestros tintos en copa Burdeos, blancos en copa de blanco, espumosos en copa tulipa',
+    guest:'Al huésped: "Utilizamos esta copa específica porque su forma permite que los aromas se concentren y pueda apreciarlos plenamente."'
+  },
+  {
+    id:'serving-temp', category:'servicio', title:'Temperaturas de Servicio Exactas', title_en:'Exact Serving Temperatures',
+    icon:'🌡️', level:'intermedio',
+    body:'La temperatura correcta puede hacer o destruir un vino: ESPUMOSOS: 6-8°C (bien fríos). Las burbujas se conservan mejor. Nuestros Colet, Andre Clouet, Gatinois. BLANCOS LIGEROS: 7-9°C (fríos). Preserva frescura y acidez. Cepado, Viñatigo, Fenomenal SB. BLANCOS CON CUERPO: 10-12°C (frescos). Permite apreciar la complejidad. Pazo Barrantes, Godeval. ROSADOS: 8-10°C (fríos). Muga Rosado. TINTOS JÓVENES/LIGEROS: 14-16°C (ligeramente frescos). Les Cousins, Crater Tinto. TINTOS CON CRIANZA: 16-18°C (temperatura ambiente de bodega, NO de salón). Marqués de Murrieta, Contino, Alion. DULCES: 6-8°C (bien fríos). Tamerán Malvasía. TRUCO: Si un tinto está demasiado caliente (>20°C), 5 minutos en cubitera. Si un blanco está demasiado frío, copa en mano 2 minutos.',
+    body_en:'Correct temperature can make or break a wine: SPARKLING: 6-8°C (well chilled). Bubbles are best preserved. Our Colet, Andre Clouet, Gatinois. LIGHT WHITES: 7-9°C (cold). Preserves freshness and acidity. Cepado, Viñatigo, Fenomenal SB. FULL-BODIED WHITES: 10-12°C (cool). Allows complexity appreciation. Pazo Barrantes, Godeval. ROSÉS: 8-10°C (cold). Muga Rosado. YOUNG/LIGHT REDS: 14-16°C (slightly cool). Les Cousins, Crater Tinto. AGED REDS: 16-18°C (cellar temperature, NOT room temperature). Marqués de Murrieta, Contino, Alion. SWEET: 6-8°C (well chilled). Tamerán Malvasía. TIP: If a red is too warm (>20°C), 5 minutes in ice bucket. If a white is too cold, hand on glass 2 minutes.',
+    examples:'Espumosos (6-8°C), Blancos (7-12°C), Rosados (8-10°C), Tintos (14-18°C), Dulces (6-8°C)',
+    guest:'Al huésped: "Le sirvo este vino a exactamente X°C, su temperatura ideal para que pueda disfrutar todos los matices."'
+  },
+  {
+    id:'order-service', category:'servicio', title:'Orden de Servicio de Vinos', title_en:'Wine Service Order',
+    icon:'📋', level:'intermedio',
+    body:'El orden en que se sirven los vinos durante una comida importa mucho: REGLA GENERAL: De ligero a intenso, de seco a dulce, de joven a viejo. ORDEN TÍPICO EN TXOKO: 1º Espumoso (aperitivo) → 2º Blanco ligero (entrantes/pescado) → 3º Blanco con cuerpo o Rosado (platos intermedios) → 4º Tinto joven (carnes ligeras) → 5º Tinto con crianza (carnes potentes, wagyu) → 6º Dulce (postre). ¿POR QUÉ? Si empiezas con un tinto potente, tu paladar no apreciará un blanco delicado después. Cada vino "prepara" el paladar para el siguiente. EXCEPCIÓN: Si el cliente solo quiere un tipo de vino, respeta su elección siempre.',
+    body_en:'The order wines are served during a meal matters greatly: GENERAL RULE: Light to intense, dry to sweet, young to old. TYPICAL ORDER AT TXOKO: 1st Sparkling (aperitif) → 2nd Light white (starters/fish) → 3rd Full white or Rosé (intermediate courses) → 4th Young red (light meats) → 5th Aged red (powerful meats, wagyu) → 6th Sweet (dessert). WHY? If you start with a powerful red, your palate won\'t appreciate a delicate white afterwards. Each wine "prepares" the palate for the next. EXCEPTION: If the guest only wants one type, always respect their choice.',
+    examples:'Aperitivo (Colet) → Entrante (Cepado) → Pescado (Pazo Barrantes) → Carne (Marqués de Murrieta) → Postre (Tamerán)',
+    guest:'Al huésped: "Le sugiero empezar con este blanco fresco y luego pasar a un tinto con más cuerpo para las carnes. Así disfrutará la progresión de sabores."'
+  },
+  // ── UVAS PRINCIPALES ──
+  {
+    id:'tempranillo', category:'uvas', title:'Tempranillo: La Reina de España', title_en:'Tempranillo: Spain\'s Queen',
+    icon:'👑', level:'intermedio',
+    body:'El Tempranillo es LA uva tinta de España, presente en nuestras mejores regiones. Características: COLOR intenso cereza-rubí. AROMAS de cereza, ciruela, cuero, tabaco, vainilla (con crianza). TANINOS medios-altos, elegantes. ACIDEZ media. VERSATILIDAD enorme — desde jóvenes frutales hasta Gran Reservas de décadas. Según la región cambia su nombre y expresión: RIOJA: Se llama Tempranillo. Elegante, con crianza en roble. Nuestros Marqués de Murrieta, Contino, Sierra Cantabria. RIBERA DEL DUERO: Se llama Tinto Fino. Más potente y concentrado por la altitud (800m+). Nuestros Alion, Sitio de Valderíz, Montebaco. TORO: Se llama Tinta de Toro. Aún más potente por el clima extremo. Nuestro Numanthia. Es la 4ª uva más plantada del mundo.',
+    body_en:'Tempranillo is THE red grape of Spain, present in our best regions. Characteristics: Intense cherry-ruby COLOR. AROMAS of cherry, plum, leather, tobacco, vanilla (with aging). Medium-high, elegant TANNINS. Medium ACIDITY. Enormous VERSATILITY — from young fruity to decade-old Gran Reservas. Its name and expression change by region: RIOJA: Called Tempranillo. Elegant, oak-aged. Our Marqués de Murrieta, Contino, Sierra Cantabria. RIBERA DEL DUERO: Called Tinto Fino. More powerful and concentrated due to altitude (800m+). Our Alion, Sitio de Valderíz, Montebaco. TORO: Called Tinta de Toro. Even more powerful due to extreme climate. Our Numanthia. It\'s the world\'s 4th most planted grape.',
+    examples:'Marqués de Murrieta (Rioja), Alion (Ribera del Duero), Numanthia (Toro)',
+    guest:'Al huésped: "El Tempranillo es la gran uva de España. En Rioja es elegante, en Ribera del Duero más potente. ¿Qué estilo prefiere?"'
+  },
+  {
+    id:'garnacha', category:'uvas', title:'Garnacha: Mediterráneo en Copa', title_en:'Garnacha: Mediterranean in a Glass',
+    icon:'🌞', level:'intermedio',
+    body:'La Garnacha es la segunda uva tinta más importante de España y una de las más plantadas del mundo. Características: COLOR rubí pálido a medio (menos color que Tempranillo). AROMAS de fresa, frambuesa, especias, hierbas mediterráneas. ALCOHOL generalmente alto (14-15%) por su maduración en climas cálidos. TANINOS suaves y redondos. CUERPO medio-completo. Es la uva ESTRELLA del Priorat, donde alcanza su máxima expresión en las pizarras de licorella. Nuestros vinos: Les Cousins L\'Inconscient, Porrera, Les Terrasses, Álvaro Palacios — todos con Garnacha como base. También protagoniza los grandes rosados como Muga Rosado (Garnacha de Rioja).',
+    body_en:'Garnacha is Spain\'s second most important red grape and one of the world\'s most planted. Characteristics: Pale to medium ruby COLOR (less than Tempranillo). AROMAS of strawberry, raspberry, spices, Mediterranean herbs. Generally high ALCOHOL (14-15%) from ripening in warm climates. Soft, round TANNINS. Medium-full BODY. It\'s the STAR grape of Priorat, reaching maximum expression on licorella slate. Our wines: Les Cousins, Porrera, Les Terrasses, Álvaro Palacios — all Garnacha-based. Also stars in great rosés like Muga Rosado (Rioja Garnacha).',
+    examples:'Les Cousins (Priorat), Muga Rosado (Rioja), Álvaro Palacios, Les Terrasses',
+    guest:'Al huésped: "La Garnacha es pura esencia mediterránea — en el Priorat alcanza una intensidad increíble gracias a la pizarra."'
+  },
+  {
+    id:'albarino', category:'uvas', title:'Albariño: Frescura Atlántica', title_en:'Albariño: Atlantic Freshness',
+    icon:'🌊', level:'intermedio',
+    body:'El Albariño es la gran uva blanca del noroeste de España, reina de las Rías Baixas gallegas. Características: COLOR amarillo pálido con reflejos verdosos. AROMAS de melocotón blanco, albaricoque, cítricos, flores blancas, y esa marca registrada: SALINIDAD atlántica. ACIDEZ alta y vibrante — es lo que la hace perfecta con mariscos. CUERPO ligero a medio. SIN BARRICA generalmente — se busca preservar la frescura. Es la MEJOR uva de España para mariscos y pescados. En nuestra carta: Cepado Albariño es nuestra referencia — pura Rías Baixas con esa mineralidad salina que dialoga perfectamente con nuestros pescados canarios. Pazo Barrantes (de Marqués de Murrieta) le da más cuerpo con crianza sobre lías.',
+    body_en:'Albariño is northwestern Spain\'s great white grape, queen of Galicia\'s Rías Baixas. Characteristics: Pale yellow COLOR with green highlights. AROMAS of white peach, apricot, citrus, white flowers, and its signature: Atlantic SALINITY. High, vibrant ACIDITY — what makes it perfect with seafood. Light to medium BODY. Generally NO BARREL — freshness is the goal. Spain\'s BEST grape for seafood and fish. From our list: Cepado Albariño is our reference — pure Rías Baixas with that saline minerality that dialogues perfectly with our Canarian fish. Pazo Barrantes (from Marqués de Murrieta) adds body with lees aging.',
+    examples:'Cepado Albariño (Rías Baixas), Pazo Barrantes (Rías Baixas, con lías)',
+    guest:'Al huésped: "El Albariño es la uva perfecta para el marisco — tiene una frescura y salinidad atlántica que realza cada bocado."'
+  },
+  {
+    id:'listan', category:'uvas', title:'Listán: El Tesoro Canario', title_en:'Listán: The Canarian Treasure',
+    icon:'🏝️', level:'avanzado',
+    body:'Las variedades Listán son el tesoro vinícola de Canarias, únicas en el mundo por ser PRE-FILOXÉRICAS (sobre pie franco). LISTÁN BLANCO: La más plantada en Canarias. Uva versátil que en suelo volcánico da vinos con mineralidad salina, notas cítricas y una frescura atlántica inconfundible. Nuestros Viñatigo y Artifice son referencia. LISTÁN NEGRO: La tinta canaria por excelencia. Da vinos con taninos suaves, acidez vibrante, aromas de frutos rojos con notas volcánicas/ahumadas. Nuestro Crater y Titerok la trabajan. Ambas variedades crecen en condiciones extremas: suelo volcánico, vientos atlánticos, altitudes de 200-1.500m. Las viñas se cultivan en HOYOS excavados en la lava (Lanzarote) o en CORDÓN TRENZADO (Tenerife) pegadas al suelo para protegerse del viento.',
+    body_en:'Listán varieties are Canarias\' vinicultural treasure, unique in the world for being PRE-PHYLLOXERA (own-rooted). LISTÁN BLANCO: Most planted in Canarias. Versatile grape that on volcanic soil produces wines with saline minerality, citrus notes, and unmistakable Atlantic freshness. Our Viñatigo and Artifice are references. LISTÁN NEGRO: Canarian red par excellence. Produces wines with soft tannins, vibrant acidity, red fruit aromas with volcanic/smoky notes. Our Crater and Titerok work with it. Both varieties grow in extreme conditions: volcanic soil, Atlantic winds, 200-1,500m altitude. Vines are grown in HOLES dug in lava (Lanzarote) or in BRAIDED CORDONS (Tenerife) hugging the ground for wind protection.',
+    examples:'Viñatigo (Listán Blanco), Artifice (Listán Blanco), Crater (Listán Negro), Titerok (Listán Negro)',
+    guest:'Al huésped: "Esta uva solo existe en Canarias — crece en suelo volcánico y sus viñas tienen más de 100 años. Es literalmente un tesoro único en el planeta."'
   }
 ];
 
@@ -16178,6 +16421,61 @@ function _renderWineLearn(c, bar){
           </div>
         </div>`).join('')}
     </div>
+
+    <!-- WINE ENCYCLOPEDIA — Deep Technical Knowledge -->
+    ${(()=>{
+      const catMap = {vinificacion:{label:_en?'Winemaking':'Vinificación',icon:'🧪',color:'var(--candy-purple)'},crianza:{label:_en?'Aging & Oak':'Crianza y Roble',icon:'🪵',color:'var(--gold)'},uva:{label:_en?'Grape & Terroir':'Uva y Terroir',icon:'🌍',color:'var(--sage)'},tecnicas:{label:_en?'Special Techniques':'Técnicas Especiales',icon:'🔬',color:'var(--candy-blue)'},servicio:{label:_en?'Service':'Servicio',icon:'🍷',color:'var(--candy-red)'},uvas:{label:_en?'Key Grape Varieties':'Uvas Principales',icon:'🍇',color:'var(--candy-pink)'}};
+      const filteredEnc = _wineLearnLevel==='all' ? WINE_ENCYCLOPEDIA : WINE_ENCYCLOPEDIA.filter(e=>e.level===_wineLearnLevel);
+      if(filteredEnc.length===0) return '';
+      const grouped = {};
+      filteredEnc.forEach(e=>{if(!grouped[e.category]) grouped[e.category]=[];grouped[e.category].push(e);});
+      return `
+        <div class="section-eyebrow" style="margin-top:1.5rem">📚 ${_en?'Wine Encyclopedia':'Enciclopedia del Vino'} · ${filteredEnc.length} ${_en?'topics':'temas'}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-bottom:1rem;line-height:1.5">${_en?'Everything you need to know about winemaking, oak aging, grape varieties, and service — explained with examples from our own wine list.':'Todo lo que necesitas saber sobre vinificación, crianza en roble, variedades de uva y servicio — explicado con ejemplos de nuestra propia carta.'}</div>
+        ${Object.entries(grouped).map(([cat,items])=>{
+          const cm = catMap[cat]||{label:cat,icon:'📖',color:'var(--gold)'};
+          return `
+            <div style="margin-bottom:1.2rem">
+              <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem">
+                <span style="font-size:1rem">${cm.icon}</span>
+                <span style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:${cm.color}">${cm.label} (${items.length})</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.45rem">
+                ${items.map((e,i)=>{
+                  const lvlCol = e.level==='principiante'?'rgba(77,138,94,.1)':e.level==='intermedio'?'rgba(196,154,60,.08)':'rgba(122,106,170,.08)';
+                  const lvlTxt = e.level==='principiante'?'var(--sage)':e.level==='intermedio'?'var(--gold)':'var(--candy-purple)';
+                  const title = _en?(e.title_en||e.title):e.title;
+                  const body = _en?(e.body_en||e.body):e.body;
+                  return `<div onclick="this.querySelector('.we-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.03}s;border-left:3px solid ${cm.color}">
+                    <div style="display:flex;align-items:center;gap:.5rem;position:relative">
+                      <span style="font-size:1.1rem">${e.icon}</span>
+                      <div style="flex:1">
+                        <div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap">
+                          <span style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment)">${title}</span>
+                          <span style="font-family:'DM Mono',monospace;font-size:.4rem;padding:.12rem .35rem;border-radius:4px;background:${lvlCol};color:${lvlTxt};letter-spacing:.06em;text-transform:uppercase">${levelLabels[e.level]||e.level}</span>
+                        </div>
+                      </div>
+                      <svg style="opacity:.3;transition:transform .2s;color:var(--gold)" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="we-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
+                      <div style="margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(196,154,60,.08)">
+                        <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.7;margin-bottom:.7rem">${body}</div>
+                        ${e.examples?`<div style="padding:.4rem .6rem;border-radius:8px;background:rgba(196,154,60,.04);border:1px solid rgba(196,154,60,.08);margin-bottom:.6rem">
+                          <div style="font-family:'DM Mono',monospace;font-size:.45rem;color:var(--gold-b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem">🍷 ${_en?'FROM OUR LIST':'EN NUESTRA CARTA'}</div>
+                          <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch2)">${e.examples}</div>
+                        </div>`:''}
+                        ${e.guest?`<div class="wine-script-box">
+                          <div class="wine-info-label" style="margin-left:.5rem">💬 ${_en?'How to explain to the guest':'Cómo explicarlo al huésped'}</div>
+                          <div style="font-family:'Quicksand',sans-serif;font-size:.74rem;color:var(--parchment);font-style:italic;line-height:1.45;margin-left:.5rem">${e.guest}</div>
+                        </div>`:''}
+                      </div>
+                    </div>
+                  </div>`;
+                }).join('')}
+              </div>
+            </div>`;
+        }).join('')}`;
+    })()}
 
     <!-- Visual learning aids -->
     <div class="section-eyebrow">◎ ${_en?'Visual Guides':'Guías Visuales Rápidas'}</div>
