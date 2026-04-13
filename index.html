@@ -3541,6 +3541,110 @@ body::after{
   .f-qs-sm{font-size:.75rem}.f-qs-md{font-size:.78rem}.f-qs-base{font-size:.86rem}.f-qs-lg{font-size:.92rem}
   .f-cin-md{font-size:.9rem}.f-cin-lg{font-size:1.2rem}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DISH JOURNEY — Immersive Learning Mode
+   ═══════════════════════════════════════════════════════════════ */
+.dj-overlay{position:fixed;inset:0;z-index:9999;background:#0a120e;overflow:hidden;animation:djFadeIn .4s ease}
+@keyframes djFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes djSlideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes djSlideLeft{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes djPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes djGlow{0%,100%{box-shadow:0 0 20px rgba(196,154,60,.2)}50%{box-shadow:0 0 40px rgba(196,154,60,.4)}}
+@keyframes djTypewriter{from{width:0}to{width:100%}}
+@keyframes djIngredientPop{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@keyframes djAllergenShake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-3px)}20%,40%,60%,80%{transform:translateX(3px)}}
+@keyframes djCheckmark{0%{stroke-dashoffset:30}100%{stroke-dashoffset:0}}
+@keyframes djStarBurst{0%{transform:scale(0) rotate(0);opacity:1}100%{transform:scale(1.5) rotate(180deg);opacity:0}}
+@keyframes djCountUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes djProgressFill{from{width:0}to{width:var(--target-w)}}
+@keyframes djFloatUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-60px);opacity:0}}
+
+.dj-container{width:100%;height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.dj-bg{position:absolute;inset:0;background:linear-gradient(165deg,#0a120e 0%,#14221a 30%,#1c2a22 60%,#14221a 100%);z-index:0}
+.dj-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 20%,rgba(196,154,60,.06),transparent 60%);pointer-events:none}
+.dj-bg::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23c49a3c' stroke-opacity='.015' fill='none'/%3E%3C/svg%3E");pointer-events:none}
+
+.dj-header{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;flex-shrink:0}
+.dj-close{width:36px;height:36px;border-radius:50%;background:rgba(244,237,226,.06);border:1px solid rgba(244,237,226,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s}
+.dj-close:hover{background:rgba(244,237,226,.12)}
+.dj-close svg{stroke:#f4ede2;width:16px;height:16px}
+.dj-phase-dots{display:flex;gap:6px;align-items:center}
+.dj-dot{width:8px;height:8px;border-radius:50%;background:rgba(244,237,226,.12);transition:all .4s ease}
+.dj-dot.active{background:#c49a3c;box-shadow:0 0 10px rgba(196,154,60,.5);transform:scale(1.3)}
+.dj-dot.done{background:rgba(77,138,94,.6)}
+
+.dj-body{position:relative;z-index:2;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 1.2rem 2rem;scrollbar-width:none}
+.dj-body::-webkit-scrollbar{display:none}
+
+.dj-phase-label{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(196,154,60,.5);text-align:center;margin-bottom:.6rem;animation:djSlideUp .5s ease}
+.dj-phase-title{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:700;color:#f4ede2;text-align:center;line-height:1.3;margin-bottom:.3rem;animation:djSlideUp .5s .1s both;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.dj-dish-name{font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:rgba(196,154,60,.7);text-align:center;margin-bottom:1.5rem;animation:djSlideUp .5s .2s both}
+
+/* Phase 1: Story */
+.dj-story-card{background:linear-gradient(165deg,rgba(244,237,226,.04),rgba(244,237,226,.01));border:1px solid rgba(196,154,60,.1);border-radius:16px;padding:1.5rem 1.2rem;margin-bottom:1rem;animation:djSlideUp .6s .3s both}
+.dj-story-text{font-family:'Quicksand',sans-serif;font-size:.82rem;color:rgba(244,237,226,.85);line-height:1.8;text-align:justify}
+.dj-story-text::first-letter{font-family:'Cinzel',serif;font-size:2.5rem;float:left;line-height:1;margin-right:.4rem;color:#c49a3c;font-weight:700}
+.dj-story-quote{font-family:'Cinzel',serif;font-size:.9rem;color:#c49a3c;text-align:center;font-style:italic;margin:1.2rem 0;line-height:1.6;animation:djSlideUp .6s .5s both}
+
+/* Phase 2: Ingredients */
+.dj-ing-grid{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:1rem}
+.dj-ing-item{padding:.5rem .8rem;background:linear-gradient(135deg,rgba(244,237,226,.06),rgba(244,237,226,.02));border:1px solid rgba(244,237,226,.08);border-radius:12px;font-family:'Quicksand',sans-serif;font-size:.75rem;color:rgba(244,237,226,.8);animation:djIngredientPop .4s var(--delay) both;cursor:default;transition:all .3s}
+.dj-ing-item:hover{background:rgba(196,154,60,.08);border-color:rgba(196,154,60,.2)}
+.dj-ing-item.allergen{border-color:rgba(231,76,60,.3);background:linear-gradient(135deg,rgba(231,76,60,.08),rgba(231,76,60,.03));color:#e8a0a0}
+.dj-ing-count{font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.3);text-align:center;margin-top:1rem;animation:djSlideUp .5s .8s both}
+
+/* Phase 3: Allergens */
+.dj-allerg-card{background:linear-gradient(165deg,rgba(231,76,60,.06),rgba(231,76,60,.02));border:1px solid rgba(231,76,60,.12);border-radius:16px;padding:1rem;margin-bottom:.8rem;animation:djSlideUp .4s var(--delay) both}
+.dj-allerg-name{font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:700;color:#e8a0a0;margin-bottom:.25rem}
+.dj-allerg-info{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(244,237,226,.45);line-height:1.5}
+.dj-safe-card{background:linear-gradient(165deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.15);border-radius:16px;padding:1rem;text-align:center;animation:djSlideUp .5s .2s both}
+.dj-safe-text{font-family:'Quicksand',sans-serif;font-size:.82rem;color:#6b8f71}
+
+/* Phase 4: Service */
+.dj-service-item{display:flex;gap:.7rem;align-items:flex-start;padding:.8rem;background:linear-gradient(135deg,rgba(244,237,226,.04),rgba(244,237,226,.01));border:1px solid rgba(244,237,226,.06);border-left:3px solid rgba(196,154,60,.3);border-radius:0 12px 12px 0;margin-bottom:.6rem;animation:djSlideLeft .4s var(--delay) both}
+.dj-service-icon{font-size:1.1rem;flex-shrink:0;margin-top:.1rem}
+.dj-service-label{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(196,154,60,.5);margin-bottom:.15rem}
+.dj-service-value{font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(244,237,226,.85);line-height:1.5}
+
+/* Phase 5: Quiz */
+.dj-quiz-card{background:linear-gradient(165deg,rgba(244,237,226,.05),rgba(244,237,226,.02));border:1px solid rgba(244,237,226,.08);border-radius:16px;padding:1.2rem;margin-bottom:1rem;animation:djSlideUp .5s var(--delay) both}
+.dj-quiz-q{font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:600;color:#f4ede2;margin-bottom:.8rem;line-height:1.5}
+.dj-quiz-opts{display:flex;flex-direction:column;gap:.4rem}
+.dj-quiz-opt{padding:.6rem .8rem;border-radius:10px;background:rgba(244,237,226,.03);border:1px solid rgba(244,237,226,.08);font-family:'Quicksand',sans-serif;font-size:.75rem;color:rgba(244,237,226,.75);cursor:pointer;transition:all .3s;text-align:left}
+.dj-quiz-opt:hover{background:rgba(196,154,60,.06);border-color:rgba(196,154,60,.15)}
+.dj-quiz-opt.correct{background:rgba(77,138,94,.15);border-color:rgba(77,138,94,.4);color:#a8d8b0}
+.dj-quiz-opt.wrong{background:rgba(231,76,60,.1);border-color:rgba(231,76,60,.3);color:#e8a0a0}
+.dj-quiz-opt.disabled{pointer-events:none;opacity:.6}
+.dj-quiz-result{font-family:'DM Mono',monospace;font-size:.6rem;margin-top:.4rem;padding:.4rem .6rem;border-radius:8px;animation:djSlideUp .3s ease}
+.dj-quiz-result.ok{color:#6b8f71;background:rgba(77,138,94,.08)}
+.dj-quiz-result.fail{color:#c47068;background:rgba(231,76,60,.08)}
+
+/* Phase 6: Mastery */
+.dj-mastery{text-align:center;padding:2rem 1rem;animation:djSlideUp .6s ease}
+.dj-mastery-icon{font-size:4rem;margin-bottom:.8rem;animation:djPulse 1.5s ease infinite}
+.dj-mastery-title{font-family:'Cinzel',serif;font-size:1.4rem;color:#c49a3c;margin-bottom:.4rem;text-shadow:0 0 20px rgba(196,154,60,.3)}
+.dj-mastery-subtitle{font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(244,237,226,.5);margin-bottom:1.5rem}
+.dj-mastery-score{font-family:'DM Mono',monospace;font-size:2.5rem;font-weight:700;color:#f4ede2;margin-bottom:.3rem;animation:djCountUp .5s .3s both}
+.dj-mastery-label{font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.5);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
+.dj-mastery-bar{height:6px;background:rgba(244,237,226,.06);border-radius:3px;margin:0 auto 1.5rem;max-width:240px;overflow:hidden}
+.dj-mastery-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#c49a3c,#e8c44c);animation:djProgressFill 1s .5s both}
+.dj-mastery-xp{font-family:'DM Mono',monospace;font-size:1rem;color:#c49a3c;margin-bottom:1.5rem;animation:djCountUp .5s .7s both}
+
+/* Nav buttons */
+.dj-nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem 1.2rem;flex-shrink:0;gap:.6rem}
+.dj-btn{padding:.7rem 1.5rem;border-radius:30px;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .3s;border:none}
+.dj-btn-prev{background:rgba(244,237,226,.06);color:rgba(244,237,226,.6);border:1px solid rgba(244,237,226,.1)}
+.dj-btn-prev:hover{background:rgba(244,237,226,.1)}
+.dj-btn-next{background:linear-gradient(135deg,#c49a3c,#d4a840);color:#1c2a22;font-weight:700;box-shadow:0 4px 20px rgba(196,154,60,.3)}
+.dj-btn-next:hover{box-shadow:0 4px 30px rgba(196,154,60,.5);transform:translateY(-1px)}
+.dj-btn-next:disabled{opacity:.4;pointer-events:none}
+.dj-btn-next.complete{background:linear-gradient(135deg,#4d8a5e,#6ba872)}
+
+/* Journey button in dish list */
+.dj-launch-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border-radius:20px;background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.05));border:1px solid rgba(196,154,60,.2);color:#c49a3c;font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.05em;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.dj-launch-btn:hover{background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.1));box-shadow:0 2px 12px rgba(196,154,60,.2)}
+.dj-launch-btn.mastered{background:linear-gradient(135deg,rgba(77,138,94,.12),rgba(77,138,94,.05));border-color:rgba(77,138,94,.25);color:#6b8f71}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -6441,6 +6545,399 @@ function showLevelUpModal(levelInfo){
   playSound('levelup');
   document.body.appendChild(modal);
   modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DISH JOURNEY — Immersive Step-by-Step Learning Mode
+// ═══════════════════════════════════════════════════════════════
+var _djState = { dishId:null, phase:0, quizScore:0, quizAnswered:0, quizTotal:3 };
+
+function launchDishJourney(dishId){
+  const dish = DISHES.find(d=>d.id===dishId);
+  if(!dish) return;
+  _djState = { dishId:dishId, phase:0, quizScore:0, quizAnswered:0, quizTotal:3, quizQuestions:null };
+  _djState.quizQuestions = _djGenerateQuiz(dish);
+  _djRender();
+}
+
+function _djRender(){
+  const dish = DISHES.find(d=>d.id===_djState.dishId);
+  if(!dish) return;
+  const dd = getDish(dish);
+  const _en = LANG==='en';
+  const phases = [
+    {label:_en?'CHAPTER 1':'CAPÍTULO 1', title:_en?'The Story':'La Historia', icon:'📖'},
+    {label:_en?'CHAPTER 2':'CAPÍTULO 2', title:_en?'Ingredients':'Ingredientes', icon:'🧂'},
+    {label:_en?'CHAPTER 3':'CAPÍTULO 3', title:_en?'Allergens':'Alérgenos', icon:'⚠️'},
+    {label:_en?'CHAPTER 4':'CAPÍTULO 4', title:_en?'Service':'Servicio', icon:'🍽️'},
+    {label:_en?'CHAPTER 5':'CAPÍTULO 5', title:_en?'Do You Remember?':'¿Lo Recuerdas?', icon:'🧠'},
+    {label:_en?'COMPLETE':'COMPLETADO', title:_en?'Mastery':'Maestría', icon:'🏆'}
+  ];
+  const p = _djState.phase;
+  const ph = phases[p];
+
+  // Phase dots
+  const dots = phases.map((_,i)=>`<div class="dj-dot${i===p?' active':''}${i<p?' done':''}"></div>`).join('');
+
+  // Phase body
+  let body = '';
+  if(p===0) body = _djPhaseStory(dish, dd, _en);
+  else if(p===1) body = _djPhaseIngredients(dish, dd, _en);
+  else if(p===2) body = _djPhaseAllergens(dish, dd, _en);
+  else if(p===3) body = _djPhaseService(dish, dd, _en);
+  else if(p===4) body = _djPhaseQuiz(dish, dd, _en);
+  else if(p===5) body = _djPhaseMastery(dish, dd, _en);
+
+  // Nav buttons
+  const isLast = p===5;
+  const isFirst = p===0;
+  const quizIncomplete = p===4 && _djState.quizAnswered < _djState.quizTotal;
+  let navHtml = '<div class="dj-nav">';
+  if(!isFirst && !isLast) navHtml += `<button class="dj-btn dj-btn-prev" onclick="_djPrev()">← ${_en?'Back':'Atrás'}</button>`;
+  else navHtml += '<div></div>';
+  if(isLast) navHtml += `<button class="dj-btn dj-btn-next complete" onclick="_djClose()">✓ ${_en?'Finish':'Finalizar'}</button>`;
+  else navHtml += `<button class="dj-btn dj-btn-next" ${quizIncomplete?'disabled':''} onclick="_djNext()">${_en?'Continue':'Continuar'} →</button>`;
+  navHtml += '</div>';
+
+  // Remove existing overlay
+  const existing = document.getElementById('djOverlay');
+  if(existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'djOverlay';
+  overlay.className = 'dj-overlay';
+  overlay.innerHTML = `
+    <div class="dj-container">
+      <div class="dj-bg"></div>
+      <div class="dj-header">
+        <div class="dj-close" onclick="_djClose()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+        <div class="dj-phase-dots">${dots}</div>
+        <div style="width:36px"></div>
+      </div>
+      <div class="dj-body">
+        <div class="dj-phase-label">${ph.icon} ${ph.label}</div>
+        <div class="dj-phase-title">${ph.title}</div>
+        <div class="dj-dish-name">${dd.name}</div>
+        ${body}
+      </div>
+      ${navHtml}
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function _djNext(){ if(_djState.phase<5){_djState.phase++;_djRender();} }
+function _djPrev(){ if(_djState.phase>0){_djState.phase--;_djRender();} }
+function _djClose(){
+  const overlay = document.getElementById('djOverlay');
+  if(overlay){
+    overlay.style.opacity='0';
+    overlay.style.transition='opacity .3s';
+    setTimeout(()=>overlay.remove(), 300);
+  }
+}
+
+// ── Phase 1: Story ──
+function _djPhaseStory(dish, dd, _en){
+  const story = dd.history || (_en?'No story available for this dish yet.':'No hay historia disponible para este plato aún.');
+  const notes = dd.notes || '';
+  return `
+    <div class="dj-story-card">
+      <div class="dj-story-text">${story}</div>
+    </div>
+    ${notes?`<div class="dj-story-quote">"${notes.substring(0,120)}${notes.length>120?'...':''}"</div>`:''}
+  `;
+}
+
+// ── Phase 2: Ingredients ──
+function _djPhaseIngredients(dish, dd, _en){
+  const raw = dish.ingredients || '';
+  const items = raw.split(',').map(s=>s.trim()).filter(Boolean);
+  if(items.length===0 && raw){
+    raw.split('.').forEach(s=>{if(s.trim()) items.push(s.trim());});
+  }
+  const allergenNames = (dish.allergens||[]).map(a=>a.toLowerCase());
+  const allergenIngredients = {
+    'gluten':['harina','pan','trigo','cebada','centeno','avena','tempura','rebozado','breadcrumbs','flour','wheat'],
+    'lácteos':['leche','nata','queso','mantequilla','crema','yogur','parmesano','milk','cream','cheese','butter'],
+    'huevos':['huevo','yema','clara','mayonesa','egg','mayo'],
+    'pescado':['pescado','atún','mero','lubina','salmón','anchoa','fish','tuna','bass','salmon'],
+    'mariscos':['langostino','gamba','bogavante','cangrejo','shrimp','prawn','lobster','crab'],
+    'crustáceos':['langostino','gamba','bogavante','cangrejo','shrimp','prawn','lobster','crab'],
+    'moluscos':['calamar','pulpo','mejillón','ostra','txipiron','squid','octopus','mussel','oyster'],
+    'frutos secos':['almendra','nuez','avellana','pistacho','cacahuete','almond','walnut','hazelnut','pistachio','peanut'],
+    'soja':['soja','soy','edamame','tofu'],
+    'apio':['apio','celery'],
+    'mostaza':['mostaza','mustard'],
+    'sésamo':['sésamo','sesame'],
+    'sulfitos':['vino','vinagre','wine','vinegar','sulfito']
+  };
+
+  const isAllergenIngredient = (ing) => {
+    const low = ing.toLowerCase();
+    for(const a of allergenNames){
+      const keywords = allergenIngredients[a]||[];
+      for(const kw of keywords){ if(low.includes(kw)) return true; }
+    }
+    return false;
+  };
+
+  const grid = items.map((ing,i)=>{
+    const isA = isAllergenIngredient(ing);
+    return `<div class="dj-ing-item${isA?' allergen':''}" style="--delay:${0.15+i*0.06}s">${isA?'⚠ ':''}${ing}</div>`;
+  }).join('');
+
+  return `
+    <div style="text-align:center;margin-bottom:.8rem;animation:djSlideUp .5s .2s both">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(196,154,60,.4);margin-bottom:.3rem">${_en?'TAP TO EXPLORE':'EXPLORA LOS INGREDIENTES'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:rgba(244,237,226,.5)">${_en?'Items marked with ⚠ contain allergens':'Los marcados con ⚠ contienen alérgenos'}</div>
+    </div>
+    <div class="dj-ing-grid">${grid}</div>
+    <div class="dj-ing-count">${items.length} ${_en?'ingredients':'ingredientes'}</div>
+  `;
+}
+
+// ── Phase 3: Allergens ──
+function _djPhaseAllergens(dish, dd, _en){
+  const allergens = dish.allergens||[];
+  const notes = dd.notes||'';
+
+  const allergenData = {
+    'Gluten':{icon:'🌾',color:'#d4a017',en:'Gluten',desc_en:'Found in wheat, barley, rye. Present in breading, flour, bread.',desc_es:'Presente en trigo, cebada, centeno. En rebozados, harina, pan.'},
+    'Lácteos':{icon:'🥛',color:'#4888a0',en:'Dairy',desc_en:'Milk, cream, cheese, butter. Common in sauces and desserts.',desc_es:'Leche, nata, queso, mantequilla. Común en salsas y postres.'},
+    'Huevos':{icon:'🥚',color:'#f5a623',en:'Eggs',desc_en:'Eggs, yolk, whites. In mayonnaise, breading, desserts.',desc_es:'Huevos, yema, clara. En mayonesas, rebozados, postres.'},
+    'Pescado':{icon:'🐟',color:'#2e86c1',en:'Fish',desc_en:'All types of fish. Pay attention to sauces and broths.',desc_es:'Todo tipo de pescado. Atención a salsas y caldos.'},
+    'Mariscos':{icon:'🦐',color:'#e74c3c',en:'Shellfish',desc_en:'Crustaceans: shrimp, lobster, crab.',desc_es:'Crustáceos: langostino, bogavante, cangrejo.'},
+    'Crustáceos':{icon:'🦀',color:'#e74c3c',en:'Crustaceans',desc_en:'Shrimp, lobster, crab and derivatives.',desc_es:'Langostino, bogavante, cangrejo y derivados.'},
+    'Moluscos':{icon:'🦑',color:'#dc143c',en:'Molluscs',desc_en:'Squid, octopus, mussels, oysters.',desc_es:'Calamar, pulpo, mejillones, ostras.'},
+    'Frutos secos':{icon:'🥜',color:'#8b4513',en:'Tree Nuts',desc_en:'Almonds, walnuts, hazelnuts, pistachios.',desc_es:'Almendras, nueces, avellanas, pistachos.'},
+    'Soja':{icon:'🫘',color:'#5a9a6e',en:'Soy',desc_en:'Soy sauce, tofu, edamame, soy lecithin.',desc_es:'Salsa de soja, tofu, edamame, lecitina de soja.'},
+    'Apio':{icon:'🥬',color:'#228b22',en:'Celery',desc_en:'Celery stalks, root, and in spice mixes.',desc_es:'Tallos, raíz de apio, en mezclas de especias.'},
+    'Mostaza':{icon:'🟡',color:'#daa520',en:'Mustard',desc_en:'Mustard seeds, powder, and prepared mustard.',desc_es:'Semillas, polvo y mostaza preparada.'},
+    'Sésamo':{icon:'⚪',color:'#d2691e',en:'Sesame',desc_en:'Sesame seeds, tahini, sesame oil.',desc_es:'Semillas de sésamo, tahini, aceite de sésamo.'},
+    'Sulfitos':{icon:'🍷',color:'#7a6aaa',en:'Sulphites',desc_en:'In wines, vinegars, dried fruits, some sauces.',desc_es:'En vinos, vinagres, frutas secas, algunas salsas.'},
+    'Cacahuetes':{icon:'🥜',color:'#cd853f',en:'Peanuts',desc_en:'Peanuts and peanut oil.',desc_es:'Cacahuetes y aceite de cacahuete.'}
+  };
+
+  if(allergens.length===0){
+    return `<div class="dj-safe-card"><div style="font-size:2.5rem;margin-bottom:.5rem">✅</div><div class="dj-safe-text">${_en?'This dish contains no declared allergens!':'¡Este plato no contiene alérgenos declarados!'}</div></div>`;
+  }
+
+  // Parse notes for removable info
+  const notesLow = notes.toLowerCase();
+  const cards = allergens.map((a,i)=>{
+    const data = allergenData[a]||{icon:'⚠️',color:'#c49a3c',en:a,desc_en:'Be cautious.',desc_es:'Precaución.'};
+    const isRemovable = notesLow.includes(a.toLowerCase()) && (notesLow.includes('sin '+a.toLowerCase()) || notesLow.includes('remov') || notesLow.includes('quitar') || notesLow.includes('opcional'));
+    return `<div class="dj-allerg-card" style="--delay:${0.15+i*0.12}s;border-left:4px solid ${data.color}">
+      <div class="dj-allerg-name">${data.icon} ${_en?data.en:a}</div>
+      <div class="dj-allerg-info">${_en?data.desc_en:data.desc_es}</div>
+      ${isRemovable?`<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#6b8f71;background:rgba(77,138,94,.08);padding:.2rem .4rem;border-radius:6px;display:inline-block">♻ ${_en?'May be removable on request':'Posiblemente eliminable bajo petición'}</div>`:''}
+    </div>`;
+  }).join('');
+
+  return `
+    <div style="text-align:center;margin-bottom:1rem;animation:djSlideUp .4s .1s both">
+      <div style="display:inline-block;padding:.3rem .8rem;border-radius:20px;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.15);font-family:'DM Mono',monospace;font-size:.6rem;color:#e8a0a0">
+        ${allergens.length} ${_en?'allergen'+(allergens.length!==1?'s':''):'alérgeno'+(allergens.length!==1?'s':'')} ${_en?'detected':'detectado'+(allergens.length!==1?'s':'')}
+      </div>
+    </div>
+    ${cards}
+    ${notes?`<div style="margin-top:.8rem;padding:.8rem;border-radius:12px;background:rgba(244,237,226,.03);border:1px solid rgba(244,237,226,.05);animation:djSlideUp .4s .6s both">
+      <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(196,154,60,.4);margin-bottom:.3rem">📋 ${_en?'SERVICE NOTES':'NOTAS DE SERVICIO'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:rgba(244,237,226,.6);line-height:1.6">${notes}</div>
+    </div>`:''}
+  `;
+}
+
+// ── Phase 4: Service ──
+function _djPhaseService(dish, dd, _en){
+  const cutleryItems = dish.cutlery ? dish.cutlery.split(',').map(c=>c.trim()).filter(Boolean) : [];
+  const items = [];
+
+  if(cutleryItems.length){
+    items.push({icon:'🍴', label:_en?'CUTLERY':'CUBERTERÍA', value:cutleryItems.join(', ')});
+  }
+  items.push({icon:'📂', label:_en?'CATEGORY':'CATEGORÍA', value:_en?catLocal(dish.cat):dish.cat});
+
+  if(dish.allergens && dish.allergens.length){
+    items.push({icon:'⚠️', label:_en?'ALLERGEN ALERT':'ALERTA ALÉRGENOS', value:(_en?'Always inform guest about: ':'Siempre informar sobre: ')+dish.allergens.map(a=>allergenLocal?allergenLocal(a):a).join(', ')});
+  }
+
+  if(dd.notes){
+    const shortNotes = dd.notes.length > 200 ? dd.notes.substring(0,200)+'...' : dd.notes;
+    items.push({icon:'📝', label:_en?'SPECIAL NOTES':'NOTAS ESPECIALES', value:shortNotes});
+  }
+
+  // Add pairing wines if any
+  const pairingWines = typeof WINES!=='undefined' ? WINES.filter(function(w){return w.pairings && w.pairings.some(function(p){return p.toLowerCase().includes(dish.name.toLowerCase().substring(0,8));});}).slice(0,3) : [];
+  if(pairingWines.length){
+    items.push({icon:'🍷', label:_en?'WINE PAIRING':'MARIDAJE', value:pairingWines.map(w=>w.name).join(', ')});
+  }
+
+  return items.map((item,i)=>`
+    <div class="dj-service-item" style="--delay:${0.15+i*0.1}s">
+      <div class="dj-service-icon">${item.icon}</div>
+      <div>
+        <div class="dj-service-label">${item.label}</div>
+        <div class="dj-service-value">${item.value}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Phase 5: Quiz Generator ──
+function _djGenerateQuiz(dish){
+  const _en = LANG==='en';
+  const dd = getDish(dish);
+  const questions = [];
+  const allDishes = DISHES;
+  const allergenPool = ['Gluten','Lácteos','Huevos','Pescado','Mariscos','Crustáceos','Moluscos','Frutos secos','Soja','Apio','Mostaza','Sésamo','Sulfitos'];
+
+  // Q1: Allergen question
+  if(dish.allergens && dish.allergens.length > 0){
+    const correctA = dish.allergens[Math.floor(Math.random()*dish.allergens.length)];
+    const wrongPool = allergenPool.filter(a=>!dish.allergens.includes(a));
+    const wrongs = _djShuffle(wrongPool).slice(0,3);
+    const opts = _djShuffle([correctA, ...wrongs]);
+    questions.push({
+      q: _en ? `Which of these allergens is present in "${dd.name}"?` : `¿Cuál de estos alérgenos tiene "${dd.name}"?`,
+      options: opts.map(o=>_en?(allergenData_en[o]||o):o),
+      correctIdx: opts.indexOf(correctA),
+      explain: _en ? `${dd.name} contains: ${dish.allergens.join(', ')}` : `${dd.name} contiene: ${dish.allergens.join(', ')}`
+    });
+  } else {
+    questions.push({
+      q: _en ? `How many allergens does "${dd.name}" have?` : `¿Cuántos alérgenos tiene "${dd.name}"?`,
+      options: ['0', '1', '2', '3+'],
+      correctIdx: 0,
+      explain: _en ? 'This dish has no declared allergens!' : '¡Este plato no tiene alérgenos declarados!'
+    });
+  }
+
+  // Q2: Category question
+  const allCats = [...new Set(allDishes.map(d=>d.cat))];
+  const correctCat = dish.cat;
+  const wrongCats = _djShuffle(allCats.filter(c=>c!==correctCat)).slice(0,3);
+  const catOpts = _djShuffle([correctCat,...wrongCats]);
+  questions.push({
+    q: _en ? `What category does "${dd.name}" belong to?` : `¿A qué categoría pertenece "${dd.name}"?`,
+    options: catOpts.map(c=>catLocal?catLocal(c):c),
+    correctIdx: catOpts.indexOf(correctCat),
+    explain: _en ? `It belongs to: ${catLocal?catLocal(correctCat):correctCat}` : `Pertenece a: ${catLocal?catLocal(correctCat):correctCat}`
+  });
+
+  // Q3: Ingredient or storytelling question
+  const ingredients = dish.ingredients ? dish.ingredients.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  if(ingredients.length >= 3){
+    // "Which ingredient is NOT in this dish?"
+    const otherDishes = allDishes.filter(d=>d.id!==dish.id && d.ingredients);
+    const otherIngs = otherDishes.flatMap(d=>d.ingredients.split(',').map(s=>s.trim()).filter(Boolean));
+    const dishIngsLow = ingredients.map(i=>i.toLowerCase());
+    const fakeIng = _djShuffle(otherIngs.filter(i=>!dishIngsLow.includes(i.toLowerCase()) && i.length>2 && i.length<30))[0] || (_en?'Truffle oil':'Aceite de trufa');
+    const realIngs = _djShuffle(ingredients.filter(i=>i.length>2 && i.length<30)).slice(0,3);
+    const allOpts = _djShuffle([fakeIng, ...realIngs]);
+    questions.push({
+      q: _en ? `Which ingredient is NOT in "${dd.name}"?` : `¿Cuál de estos ingredientes NO lleva "${dd.name}"?`,
+      options: allOpts,
+      correctIdx: allOpts.indexOf(fakeIng),
+      explain: _en ? `"${fakeIng}" is not part of this dish.` : `"${fakeIng}" no forma parte de este plato.`
+    });
+  } else if(dish.history && dish.history.length > 30){
+    // Storytelling question - true/false style
+    questions.push({
+      q: _en ? `Does this dish have a storytelling narrative associated with it?` : `¿Tiene este plato una historia/storytelling asociada?`,
+      options: [_en?'Yes':'Sí', _en?'No':'No', _en?'Only in dinner':'Solo en cena', _en?'Only for VIP':'Solo para VIP'],
+      correctIdx: 0,
+      explain: _en ? 'Yes! Every dish at Txoko has a story worth sharing with guests.' : '¡Sí! Cada plato de Txoko tiene una historia que vale la pena compartir con los clientes.'
+    });
+  } else {
+    questions.push({
+      q: _en ? `What cutlery is recommended for "${dd.name}"?` : `¿Qué cubertería se recomienda para "${dd.name}"?`,
+      options: _djShuffle([dish.cutlery||(_en?'Steak knife and fork':'Tenedor trinchero, Cuchillo trinchero'), _en?'Soup spoon':'Cuchara sopera', _en?'Dessert spoon':'Cuchara de postre', _en?'Fish knife':'Cuchillo de pescado']),
+      correctIdx: 0,
+      explain: _en ? `Recommended: ${dish.cutlery||'Standard cutlery'}` : `Recomendado: ${dish.cutlery||'Cubertería estándar'}`
+    });
+  }
+
+  return questions;
+}
+
+var allergenData_en = {'Gluten':'Gluten','Lácteos':'Dairy','Huevos':'Eggs','Pescado':'Fish','Mariscos':'Shellfish','Crustáceos':'Crustaceans','Moluscos':'Molluscs','Frutos secos':'Tree Nuts','Soja':'Soy','Apio':'Celery','Mostaza':'Mustard','Sésamo':'Sesame','Sulfitos':'Sulphites','Cacahuetes':'Peanuts'};
+
+function _djShuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function _djPhaseQuiz(dish, dd, _en){
+  const qs = _djState.quizQuestions||[];
+  return qs.map((q,qi)=>{
+    const answered = _djState['q'+qi] !== undefined;
+    const userAnswer = _djState['q'+qi];
+    return `<div class="dj-quiz-card" style="--delay:${0.1+qi*0.15}s">
+      <div class="dj-quiz-q">${qi+1}. ${q.q}</div>
+      <div class="dj-quiz-opts">
+        ${q.options.map((opt,oi)=>{
+          let cls = 'dj-quiz-opt';
+          if(answered){
+            cls += ' disabled';
+            if(oi===q.correctIdx) cls += ' correct';
+            else if(oi===userAnswer && oi!==q.correctIdx) cls += ' wrong';
+          }
+          return `<div class="${cls}" onclick="_djAnswer(${qi},${oi})">${opt}</div>`;
+        }).join('')}
+      </div>
+      ${answered?`<div class="dj-quiz-result ${userAnswer===q.correctIdx?'ok':'fail'}">${userAnswer===q.correctIdx?'✓ ':('✗ ')}${q.explain}</div>`:''}
+    </div>`;
+  }).join('') + `
+    <div style="text-align:center;margin-top:.8rem;animation:djSlideUp .5s .5s both">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.3)">${_djState.quizAnswered}/${_djState.quizTotal} ${_en?'answered':'respondidas'}</div>
+    </div>
+  `;
+}
+
+function _djAnswer(qIdx, optIdx){
+  if(_djState['q'+qIdx] !== undefined) return; // already answered
+  _djState['q'+qIdx] = optIdx;
+  _djState.quizAnswered++;
+  const qs = _djState.quizQuestions||[];
+  if(optIdx === qs[qIdx].correctIdx) _djState.quizScore++;
+  _djRender();
+}
+
+// ── Phase 6: Mastery ──
+function _djPhaseMastery(dish, dd, _en){
+  const score = _djState.quizScore;
+  const total = _djState.quizTotal;
+  const pct = Math.round((score/total)*100);
+  const xpEarned = score * 15 + (pct===100 ? 25 : 0); // bonus for perfect
+  const isPerfect = pct === 100;
+  const isGood = pct >= 66;
+
+  // Award XP and mark as mastered
+  if(!_djState.xpAwarded){
+    _djState.xpAwarded = true;
+    if(xpEarned > 0) awardXP(xpEarned, _en ? 'Dish Journey: '+dd.name : 'Viaje: '+dd.name);
+    if(isGood){
+      const emp = getEmp(currentUser);
+      if(!emp.journeyMastered) emp.journeyMastered = {};
+      emp.journeyMastered[dish.id] = { score:pct, date:Date.now() };
+      saveDB();
+    }
+  }
+
+  return `<div class="dj-mastery">
+    <div class="dj-mastery-icon">${isPerfect?'🏆':isGood?'⭐':'📚'}</div>
+    <div class="dj-mastery-title">${isPerfect?(_en?'Perfect Mastery!':'¡Maestría Perfecta!'):isGood?(_en?'Well Done!':'¡Bien Hecho!'):(_en?'Keep Practicing':'Sigue Practicando')}</div>
+    <div class="dj-mastery-subtitle">${dd.name}</div>
+    <div class="dj-mastery-score">${score}/${total}</div>
+    <div class="dj-mastery-label">${_en?'CORRECT ANSWERS':'RESPUESTAS CORRECTAS'}</div>
+    <div class="dj-mastery-bar"><div class="dj-mastery-fill" style="--target-w:${pct}%;background:linear-gradient(90deg,${isPerfect?'#c49a3c,#e8c44c':isGood?'#4d8a5e,#6ba872':'#c47068,#d48880'})"></div></div>
+    <div class="dj-mastery-xp">+${xpEarned} XP</div>
+    ${isPerfect?`<div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:rgba(196,154,60,.7);animation:djPulse 2s infinite">🎖 ${_en?'Dish Mastered — Perfect Score Bonus +25 XP':'Plato Dominado — Bonus Puntuación Perfecta +25 XP'}</div>`:''}
+    ${!isGood?`<div style="margin-top:.5rem"><button class="dj-btn dj-btn-next" onclick="_djState.phase=0;_djState.quizScore=0;_djState.quizAnswered=0;_djState.xpAwarded=false;_djState.quizQuestions=_djGenerateQuiz(DISHES.find(d=>d.id===_djState.dishId));_djRender()" style="font-size:.72rem;padding:.5rem 1.2rem">🔄 ${_en?'Try Again':'Intentar de nuevo'}</button></div>`:''}
+  </div>`;
 }
 
 // XP bar widget — call inside any render to show the bar
@@ -16642,7 +17139,10 @@ function searchRepaso(query) {
         ${allergenHtml}
         ${dd.notes?`<div class="repaso-note">${dd.notes}</div>`:''}
       </div>
-      <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="Marcar como dominado">${isKnown?'✓':'○'}</button>
+      <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0">
+        <button class="dj-launch-btn${(getEmp(currentUser).journeyMastered||{})[d.id]?' mastered':''}" onclick="event.stopPropagation();launchDishJourney(${d.id})" title="${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}">${(getEmp(currentUser).journeyMastered||{})[d.id]?'✓ ':'▶ '}${LANG==='en'?'Journey':'Viaje'}</button>
+        <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="Marcar como dominado">${isKnown?'✓':'○'}</button>
+      </div>
     </div>`;
   }).join('');
 
@@ -16674,7 +17174,10 @@ function renderRepasoTopic(){
         ${allergenHtml}
         ${dd.notes?`<div class="repaso-note">${dd.notes}</div>`:''}
       </div>
-      <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="Marcar como dominado">${isKnown?'✓':'○'}</button>
+      <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0">
+        <button class="dj-launch-btn${(getEmp(currentUser).journeyMastered||{})[d.id]?' mastered':''}" onclick="event.stopPropagation();launchDishJourney(${d.id})" title="${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}">${(getEmp(currentUser).journeyMastered||{})[d.id]?'✓ ':'▶ '}${LANG==='en'?'Journey':'Viaje'}</button>
+        <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="Marcar como dominado">${isKnown?'✓':'○'}</button>
+      </div>
     </div>`;
   }).join('');
 
@@ -16721,6 +17224,7 @@ function renderRepasoDishDetail(dishId){
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">${dish.cat}</div>
       <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--parchment);margin-bottom:.2rem">${dish.name}</div>
       ${isKnown ? `<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--sage)">✓ ${LANG==='en'?'Mastered':'Dominado'}</div>` : ''}
+      <button class="dj-launch-btn${(emp.journeyMastered||{})[dish.id]?' mastered':''}" onclick="launchDishJourney(${dish.id})" style="margin-top:.6rem;padding:.45rem .9rem;font-size:.6rem">${(emp.journeyMastered||{})[dish.id]?'✓ ':'🚀 '}${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}</button>
     </div>
 
     <div style="display:flex;justify-content:center;margin-bottom:1.2rem">
