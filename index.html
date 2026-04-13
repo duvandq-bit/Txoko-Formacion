@@ -3636,6 +3636,10 @@ body::after{
     <button class="btn-primary login-submit-btn" id="loginSubmitBtn" onclick="loginWithPassword()">Entrar</button>
   </div>
 
+  <div style="text-align:center;padding:.6rem 1.2rem;margin-top:.5rem">
+    <p id="disclaimerText" style="font-family:'Quicksand',sans-serif;font-size:.58rem;color:rgba(244,237,226,.35);line-height:1.5;margin:0">Aplicación desarrollada de forma independiente por Duvan Stiven Ramírez Duque. Todos los derechos reservados © 2026.</p>
+  </div>
+
   <div class="login-footer">
     <div class="login-lang-pills">
       <button class="login-lang-pill active" id="langPillEs" onclick="setLang('es')">ES</button>
@@ -7311,6 +7315,8 @@ function renderLogin(){
   if(legalLink) legalLink.textContent = LANG==='en' ? 'Legal notice' : 'Aviso legal';
   const remLabel = document.getElementById('loginRememberLabel');
   if(remLabel) remLabel.querySelector('span').textContent = LANG==='en' ? 'Keep me signed in' : 'Mantener sesión iniciada';
+  const disclaimerEl = document.getElementById('disclaimerText');
+  if(disclaimerEl) disclaimerEl.textContent = LANG==='en' ? 'Application independently developed by Duvan Stiven Ramírez Duque. All rights reserved \u00A9 2026.' : 'Aplicaci\u00F3n desarrollada de forma independiente por Duvan Stiven Ram\u00EDrez Duque. Todos los derechos reservados \u00A9 2026.';
   // Restore checkbox state
   const remCb = document.getElementById('loginRemember');
   if(remCb) remCb.checked = !!localStorage.getItem('txoko_session');
@@ -7799,7 +7805,9 @@ function showTab(tab){
     c.style.opacity='1';
     c.style.transform='translateY(0)';
     try {
-      ({dashboard:renderDashboard,aprender:renderAprender,flashcards:renderFlashcards,exam:renderExam,repaso:renderRepaso,stats:renderStats,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderVideos,lqa:renderLqa,vinos:renderVinos})[tab]();
+      // Route sub-tabs through their parent so the sub-tab bar is always rendered
+      const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderAprender,lqa:renderProtocoloHub,vinos:renderVinos};
+      renderMap[tab]();
     } catch(e) {
       c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+tab+':</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
       console.error('showTab error:', e);
@@ -22248,9 +22256,12 @@ function drawAvatar(ctx, x, y, data, scale, dir, pose) {
     F(16, 37, 1, 2, O);
 
     if (isFemale) {
-      // Female sitting: visible skirt
-      F(7, 35, 18, 1, pantC);
-      F(8, 38, 16, 1, pantC);
+      // Female sitting: visible flared skirt
+      F(6, 32, 20, 1, O);
+      F(7, 32, 18, 4, pantC);
+      F(7, 32, 6, 4, _darken(pantC, 0.85));
+      F(19, 32, 6, 4, _lighten(pantC, 1.1));
+      F(6, 36, 20, 1, O);
     }
   } else if (isWalk1) {
     // Walking frame 1: left leg forward, right leg back
@@ -22405,16 +22416,24 @@ function drawAvatar(ctx, x, y, data, scale, dir, pose) {
     F(24, 39, 1, 2, O);
 
     if (isFemale) {
-      // Female standing: skirt visible
-      F(7, 32, 18, 2, pantC);
-      F(8, 34, 16, 1, _darken(pantC, 0.6));
+      // Female standing: knee-length flared skirt
+      F(6, 32, 20, 1, O);
+      F(7, 32, 18, 4, pantC);
+      F(7, 32, 6, 4, _darken(pantC, 0.85));
+      F(19, 32, 6, 4, _lighten(pantC, 1.1));
+      F(8, 36, 16, 1, _darken(pantC, 0.65));
+      F(6, 36, 20, 1, O);
     }
   }
 
   // ═══ BELT (all poses) ═══
-  F(8, 31, 16, 1, _darken(pantC, 0.7));
-  F(14, 30, 4, 2, '#c49a3c');
-  F(15, 30, 2, 2, _lighten('#c49a3c', 1.2));
+  F(7, 31, 18, 1, '#1a1a1a');
+  F(8, 30, 16, 1, _darken(pantC, 0.6));
+  // Gold buckle with highlight
+  F(13, 30, 6, 2, '#b8860b');
+  F(14, 30, 4, 2, '#d4af37');
+  F(15, 30, 2, 2, _lighten('#d4af37', 1.3));
+  F(15, 31, 2, 1, '#c49a3c');
 
   // ═══ TORSO ═══
   const torsoY = isSit ? 21 : 19;
@@ -22429,18 +22448,41 @@ function drawAvatar(ctx, x, y, data, scale, dir, pose) {
     F(24, torsoY + torsoH - 1, 1, 2, O);
     F(6, torsoY + torsoH + 1, 20, 1, O);
 
+    // Blazer base fill
     F(8, torsoY + 1, 16, torsoH - 2, tc);
     F(8, torsoY + 1, 5, torsoH - 2, tL);
     F(19, torsoY + 1, 5, torsoH - 2, tR);
 
-    // White shirt collar
-    F(11, torsoY + 1, 10, 2, '#ffffff');
-    F(12, torsoY + 3, 8, 1, _lighten('#ffffff', 1.1));
+    // White shirt V-opening (visible under lapels)
+    F(13, torsoY + 1, 6, 2, '#ffffff');
+    F(14, torsoY + 3, 4, 2, '#ffffff');
+    F(14, torsoY + 5, 4, torsoH - 6, '#f5f5f5');
 
-    // Gold buttons
-    F(15, torsoY + 3, 1, 1, '#c49a3c');
-    F(15, torsoY + 6, 1, 1, '#c49a3c');
-    F(15, torsoY + 9, 1, 1, '#c49a3c');
+    // V-shaped lapels (dark lines forming V from shoulders)
+    F(8, torsoY + 1, 2, 1, tcD);
+    F(9, torsoY + 2, 2, 1, tcD);
+    F(10, torsoY + 3, 2, 1, tcD);
+    F(11, torsoY + 4, 2, 1, tcD);
+    F(12, torsoY + 5, 1, 1, tcD);
+    F(22, torsoY + 1, 2, 1, tcD);
+    F(21, torsoY + 2, 2, 1, tcD);
+    F(20, torsoY + 3, 2, 1, tcD);
+    F(19, torsoY + 4, 2, 1, tcD);
+    F(19, torsoY + 5, 1, 1, tcD);
+
+    // Lapel highlight (inner edge)
+    F(8, torsoY + 1, 1, 1, _lighten(tc, 1.25));
+    F(23, torsoY + 1, 1, 1, _lighten(tc, 1.25));
+
+    // White collar points above lapels
+    F(11, torsoY + 1, 2, 1, '#ffffff');
+    F(19, torsoY + 1, 2, 1, '#ffffff');
+
+    // Gold buttons on center
+    F(15, torsoY + 4, 2, 1, '#d4af37');
+    F(16, torsoY + 4, 1, 1, _lighten('#d4af37', 1.3));
+    F(15, torsoY + 7, 2, 1, '#d4af37');
+    F(16, torsoY + 7, 1, 1, _lighten('#d4af37', 1.3));
   } else {
     // Male torso: broader
     F(6, torsoY, 1, torsoH + 1, O);
@@ -22448,27 +22490,54 @@ function drawAvatar(ctx, x, y, data, scale, dir, pose) {
     F(6, torsoY, 20, 1, O);
     F(6, torsoY + torsoH, 20, 1, O);
 
+    // Blazer base fill
     F(7, torsoY + 1, 18, torsoH - 1, tc);
     F(7, torsoY + 1, 5, torsoH - 1, tL);
     F(20, torsoY + 1, 5, torsoH - 1, tR);
 
-    // White shirt collar
-    F(10, torsoY + 1, 12, 2, '#ffffff');
-    F(11, torsoY + 3, 10, 1, _lighten('#ffffff', 1.1));
+    // White shirt V-opening (visible under lapels)
+    F(13, torsoY + 1, 6, 2, '#ffffff');
+    F(14, torsoY + 3, 4, 2, '#ffffff');
+    F(14, torsoY + 5, 4, torsoH - 5, '#f5f5f5');
 
-    // Gold buttons
-    F(15, torsoY + 2, 1, 1, '#c49a3c');
-    F(15, torsoY + 5, 1, 1, '#c49a3c');
-    F(15, torsoY + 8, 1, 1, '#c49a3c');
+    // V-shaped lapels (dark lines forming V from shoulders)
+    F(7, torsoY + 1, 2, 1, tcD);
+    F(8, torsoY + 2, 2, 1, tcD);
+    F(9, torsoY + 3, 2, 1, tcD);
+    F(10, torsoY + 4, 2, 1, tcD);
+    F(11, torsoY + 5, 2, 1, tcD);
+    F(12, torsoY + 6, 1, 1, tcD);
+    F(23, torsoY + 1, 2, 1, tcD);
+    F(22, torsoY + 2, 2, 1, tcD);
+    F(21, torsoY + 3, 2, 1, tcD);
+    F(20, torsoY + 4, 2, 1, tcD);
+    F(19, torsoY + 5, 2, 1, tcD);
+    F(19, torsoY + 6, 1, 1, tcD);
+
+    // Lapel highlight (inner edge)
+    F(7, torsoY + 1, 1, 1, _lighten(tc, 1.25));
+    F(24, torsoY + 1, 1, 1, _lighten(tc, 1.25));
+
+    // White collar points above lapels
+    F(11, torsoY + 1, 2, 1, '#ffffff');
+    F(19, torsoY + 1, 2, 1, '#ffffff');
+
+    // Gold buttons with highlight
+    F(15, torsoY + 3, 2, 1, '#d4af37');
+    F(16, torsoY + 3, 1, 1, _lighten('#d4af37', 1.3));
+    F(15, torsoY + 6, 2, 1, '#d4af37');
+    F(16, torsoY + 6, 1, 1, _lighten('#d4af37', 1.3));
+    F(15, torsoY + 9, 2, 1, '#d4af37');
+    F(16, torsoY + 9, 1, 1, _lighten('#d4af37', 1.3));
   }
 
   // Clothing style variations
   if (d.top.style === 1) {
-    // Lapel style
-    F(7, torsoY + 1, 2, 4, tcD);
-    F(23, torsoY + 1, 2, 4, tcD);
-    F(8, torsoY + 5, 1, 2, _lighten(tc, 1.3));
-    F(23, torsoY + 5, 1, 2, _lighten(tc, 1.3));
+    // Extra-pronounced lapel style
+    F(7, torsoY + 1, 3, 5, tcD);
+    F(22, torsoY + 1, 3, 5, tcD);
+    F(9, torsoY + 5, 2, 2, _lighten(tc, 1.3));
+    F(21, torsoY + 5, 2, 2, _lighten(tc, 1.3));
   } else if (d.top.style === 2) {
     // Vest style
     F(7, torsoY + 1, 3, torsoH - 1, tcD);
@@ -22585,158 +22654,195 @@ function drawAvatar(ctx, x, y, data, scale, dir, pose) {
   F(12, headY + 18, 1, 2, O);
   F(19, headY + 18, 1, 2, O);
 
-  // ═══ HEAD (oval shape, 20px wide at widest) ═══
-  // Head outline and base
-  F(8, headY + 1, 16, 1, O);
-  F(7, headY + 2, 1, 16, O);
-  F(24, headY + 2, 1, 16, O);
-  F(8, headY + 18, 16, 1, O);
-  F(7, headY + 2, 2, 1, O);
-  F(23, headY + 2, 2, 1, O);
+  // ═══ HEAD (large round chibi oval, 20px wide) ═══
+  // Smooth oval outline
+  F(10, headY, 12, 1, O);
+  F(8, headY + 1, 2, 1, O);
+  F(22, headY + 1, 2, 1, O);
+  F(7, headY + 2, 1, 1, O);
+  F(24, headY + 2, 1, 1, O);
+  F(6, headY + 3, 1, 13, O);
+  F(25, headY + 3, 1, 13, O);
+  F(7, headY + 16, 1, 1, O);
+  F(24, headY + 16, 1, 1, O);
+  F(8, headY + 17, 2, 1, O);
+  F(22, headY + 17, 2, 1, O);
+  F(10, headY + 18, 12, 1, O);
 
-  // Head skin layers - chibi oval shape
-  F(9, headY + 2, 14, 1, sk);
-  F(8, headY + 3, 16, 14, sk);
-  F(9, headY + 18, 14, 1, sk);
-  F(8, headY + 2, 4, 1, sk);
-  F(20, headY + 2, 4, 1, sk);
+  // Head skin layers - smooth chibi oval fill
+  F(10, headY + 1, 12, 1, sk);
+  F(8, headY + 2, 16, 1, sk);
+  F(7, headY + 3, 18, 13, sk);
+  F(8, headY + 16, 16, 1, sk);
+  F(10, headY + 17, 12, 1, sk);
 
-  // Shading on head
-  F(8, headY + 3, 5, 14, sL);
-  F(19, headY + 3, 5, 14, sR);
-  F(9, headY + 2, 12, 1, _lighten(sk, 1.15));
+  // Directional shading on head
+  F(7, headY + 3, 5, 13, sL);
+  F(20, headY + 3, 5, 13, sR);
+  // Forehead highlight
+  F(10, headY + 1, 8, 2, _lighten(sk, 1.15));
 
-  // ═══ EYES (large anime style) ═══
+  // ═══ EYES (large anime/chibi style with detail) ═══
   const eyY = headY + 8;
   const isBlink = (p === 'blink');
   const irisC = isFemale ? '#2980b9' : '#2c1810';
   const irisL = isFemale ? '#5dade2' : '#4a3020';
+  const irisD = isFemale ? '#1a5276' : '#1a0c08';
 
   if (isBlink) {
-    // Closed eyes - horizontal lines
-    F(9, eyY + 1, 4, 1, O);
-    F(19, eyY + 1, 4, 1, O);
+    // Closed eyes - curved lines
+    F(9, eyY + 2, 5, 1, O);
+    F(8, eyY + 1, 1, 1, O);
+    F(14, eyY + 1, 1, 1, O);
+    F(19, eyY + 2, 5, 1, O);
+    F(18, eyY + 1, 1, 1, O);
+    F(24, eyY + 1, 1, 1, O);
     if (isFemale) {
-      // Eyelashes when closed
-      F(8, eyY, 1, 1, O);
-      F(12, eyY, 1, 1, O);
-      F(18, eyY, 1, 1, O);
-      F(22, eyY, 1, 1, O);
+      F(8, eyY, 2, 1, O);
+      F(13, eyY, 2, 1, O);
+      F(18, eyY, 2, 1, O);
+      F(23, eyY, 2, 1, O);
     }
   } else if (dr === 'left') {
-    // Left side profile
+    // Left side profile - one visible eye
     F(8, eyY, 6, 6, O);
     F(9, eyY + 1, 4, 4, '#ffffff');
+    F(9, eyY + 1, 3, 3, irisL);
     F(10, eyY + 2, 2, 2, irisC);
-    F(11, eyY + 3, 1, 1, '#000000');
-    F(11, eyY + 2, 1, 1, '#ffffff');
+    F(11, eyY + 3, 1, 1, irisD);
+    F(10, eyY + 1, 1, 1, '#ffffff');
 
     if (isFemale) {
-      F(8, eyY - 1, 1, 1, O);
-      F(12, eyY - 1, 1, 1, O);
-      F(8, eyY - 2, 5, 1, O);
+      F(7, eyY - 1, 2, 1, O);
+      F(13, eyY - 1, 2, 1, O);
+      F(8, eyY - 1, 6, 1, _darken(O, 0.5));
     }
   } else if (dr === 'right') {
-    // Right side profile
+    // Right side profile - one visible eye
     F(18, eyY, 6, 6, O);
-    F(18, eyY + 1, 4, 4, '#ffffff');
-    F(18, eyY + 2, 2, 2, irisC);
-    F(19, eyY + 3, 1, 1, '#000000');
-    F(19, eyY + 2, 1, 1, '#ffffff');
+    F(19, eyY + 1, 4, 4, '#ffffff');
+    F(20, eyY + 1, 3, 3, irisL);
+    F(20, eyY + 2, 2, 2, irisC);
+    F(21, eyY + 3, 1, 1, irisD);
+    F(22, eyY + 1, 1, 1, '#ffffff');
 
     if (isFemale) {
-      F(22, eyY - 1, 1, 1, O);
-      F(26, eyY - 1, 1, 1, O);
-      F(18, eyY - 2, 5, 1, O);
+      F(17, eyY - 1, 2, 1, O);
+      F(23, eyY - 1, 2, 1, O);
+      F(18, eyY - 1, 6, 1, _darken(O, 0.5));
     }
   } else if (dr === 'up') {
-    // Back view - just top of head visible
-    F(9, eyY - 2, 4, 4, O);
-    F(19, eyY - 2, 4, 4, O);
-    F(10, eyY - 2, 2, 1, '#ffffff');
-    F(20, eyY - 2, 2, 1, '#ffffff');
+    // Back view - no eyes visible, just hair
   } else {
-    // Forward facing (down) - full eyes with expressions
+    // Forward facing (down) - full detailed eyes
     const expr = d.expression || 0;
 
     if (expr === 0) {
-      // Happy/neutral expression
-      // Left eye
+      // Happy/neutral - large anime eyes with gradient iris
+      // Left eye outline
       F(8, eyY, 6, 6, O);
+      // White sclera
       F(9, eyY + 1, 4, 4, '#ffffff');
+      // Iris gradient (lighter top, darker bottom)
+      F(9, eyY + 1, 1, 1, irisL);
+      F(10, eyY + 1, 2, 1, irisL);
+      F(9, eyY + 2, 1, 2, irisC);
       F(10, eyY + 2, 2, 2, irisC);
-      F(11, eyY + 3, 1, 1, '#000000');
-      F(11, eyY + 2, 1, 1, '#ffffff');
+      F(12, eyY + 2, 1, 2, irisL);
+      // Dark pupil
+      F(10, eyY + 3, 2, 1, irisD);
+      F(11, eyY + 2, 1, 1, irisD);
+      // Highlights (two white dots for sparkle)
+      F(10, eyY + 1, 1, 1, '#ffffff');
+      F(12, eyY + 3, 1, 1, '#ffffff');
 
-      // Right eye
+      // Right eye outline
       F(18, eyY, 6, 6, O);
+      // White sclera
       F(19, eyY + 1, 4, 4, '#ffffff');
+      // Iris gradient
+      F(19, eyY + 1, 1, 1, irisL);
+      F(20, eyY + 1, 2, 1, irisL);
+      F(19, eyY + 2, 1, 2, irisC);
       F(20, eyY + 2, 2, 2, irisC);
-      F(21, eyY + 3, 1, 1, '#000000');
-      F(21, eyY + 2, 1, 1, '#ffffff');
+      F(22, eyY + 2, 1, 2, irisL);
+      // Dark pupil
+      F(20, eyY + 3, 2, 1, irisD);
+      F(21, eyY + 2, 1, 1, irisD);
+      // Highlights
+      F(20, eyY + 1, 1, 1, '#ffffff');
+      F(22, eyY + 3, 1, 1, '#ffffff');
 
       if (isFemale) {
-        // Eyelashes for female
-        F(8, eyY - 1, 1, 1, O);
-        F(12, eyY - 1, 1, 1, O);
-        F(18, eyY - 1, 1, 1, O);
-        F(22, eyY - 1, 1, 1, O);
+        // Thick eyelashes for female (upper lash line)
+        F(8, eyY - 1, 2, 1, O);
+        F(12, eyY - 1, 2, 1, O);
+        F(18, eyY - 1, 2, 1, O);
+        F(22, eyY - 1, 2, 1, O);
+        // Lower lash accent
+        F(8, eyY + 5, 1, 1, O);
+        F(18, eyY + 5, 1, 1, O);
       }
     } else if (expr === 1) {
-      // Surprised/excited
-      // Left eye (large)
+      // Surprised/excited - extra large eyes
+      // Left eye (7x7)
       F(7, eyY - 1, 7, 7, O);
       F(8, eyY, 5, 5, '#ffffff');
       F(9, eyY + 1, 3, 3, irisC);
-      F(10, eyY + 2, 1, 1, '#000000');
-      F(10, eyY + 1, 1, 1, '#ffffff');
+      F(8, eyY, 2, 1, irisL);
+      F(10, eyY + 2, 1, 1, irisD);
+      F(9, eyY + 1, 1, 1, '#ffffff');
+      F(11, eyY + 3, 1, 1, '#ffffff');
 
-      // Right eye (large)
+      // Right eye (7x7)
       F(18, eyY - 1, 7, 7, O);
       F(19, eyY, 5, 5, '#ffffff');
       F(20, eyY + 1, 3, 3, irisC);
-      F(21, eyY + 2, 1, 1, '#000000');
-      F(21, eyY + 1, 1, 1, '#ffffff');
+      F(19, eyY, 2, 1, irisL);
+      F(21, eyY + 2, 1, 1, irisD);
+      F(20, eyY + 1, 1, 1, '#ffffff');
+      F(22, eyY + 3, 1, 1, '#ffffff');
 
       if (isFemale) {
-        F(7, eyY - 2, 1, 1, O);
-        F(12, eyY - 2, 1, 1, O);
-        F(18, eyY - 2, 1, 1, O);
-        F(23, eyY - 2, 1, 1, O);
+        F(7, eyY - 2, 2, 1, O);
+        F(12, eyY - 2, 2, 1, O);
+        F(18, eyY - 2, 2, 1, O);
+        F(23, eyY - 2, 2, 1, O);
       }
     } else if (expr === 2) {
-      // Sad/closed eyes
-      // Left eye (closed/down)
-      F(8, eyY + 1, 5, 2, O);
-      F(9, eyY + 2, 3, 1, '#ffffff');
-
-      // Right eye (closed/down)
-      F(19, eyY + 1, 5, 2, O);
-      F(20, eyY + 2, 3, 1, '#ffffff');
+      // Sad/closed eyes - curved downward
+      F(8, eyY + 2, 6, 1, O);
+      F(9, eyY + 1, 4, 1, O);
+      F(18, eyY + 2, 6, 1, O);
+      F(19, eyY + 1, 4, 1, O);
 
       if (isFemale) {
-        F(8, eyY - 1, 1, 1, O);
-        F(11, eyY - 1, 1, 1, O);
-        F(19, eyY - 1, 1, 1, O);
-        F(22, eyY - 1, 1, 1, O);
+        F(8, eyY, 1, 1, O);
+        F(13, eyY, 1, 1, O);
+        F(18, eyY, 1, 1, O);
+        F(23, eyY, 1, 1, O);
       }
     } else {
       // Winking/playful
-      // Left eye (open)
+      // Left eye (open with detail)
       F(8, eyY, 6, 6, O);
       F(9, eyY + 1, 4, 4, '#ffffff');
+      F(9, eyY + 1, 1, 1, irisL);
       F(10, eyY + 2, 2, 2, irisC);
-      F(11, eyY + 3, 1, 1, '#000000');
-      F(11, eyY + 2, 1, 1, '#ffffff');
+      F(11, eyY + 3, 1, 1, irisD);
+      F(10, eyY + 1, 1, 1, '#ffffff');
+      F(12, eyY + 3, 1, 1, '#ffffff');
 
-      // Right eye (wink - closed)
+      // Right eye (wink - curved closed line)
       F(19, eyY + 2, 4, 1, O);
+      F(18, eyY + 1, 1, 1, O);
+      F(23, eyY + 1, 1, 1, O);
 
       if (isFemale) {
-        F(8, eyY - 1, 1, 1, O);
-        F(12, eyY - 1, 1, 1, O);
+        F(8, eyY - 1, 2, 1, O);
+        F(12, eyY - 1, 2, 1, O);
         F(18, eyY + 1, 1, 1, O);
-        F(22, eyY + 1, 1, 1, O);
+        F(23, eyY + 1, 1, 1, O);
       }
     }
   }
@@ -22798,10 +22904,10 @@ function drawAvatar(ctx, x, y, data, scale, dir, pose) {
     }
   }
 
-  // ═══ BLUSH ═══
-  ctx.globalAlpha = isFemale ? 0.25 : 0.12;
-  F(6, eyY + 4, 2, 2, '#e74c3c');
-  F(24, eyY + 4, 2, 2, '#e74c3c');
+  // ═══ BLUSH (chibi style round cheek blush) ═══
+  ctx.globalAlpha = isFemale ? 0.3 : 0.15;
+  F(7, eyY + 4, 3, 2, '#ff6b6b');
+  F(22, eyY + 4, 3, 2, '#ff6b6b');
   ctx.globalAlpha = 1;
 
   // ═══ HAIR (all styles, all directions) ═══
@@ -23811,39 +23917,72 @@ function _pixiUpdateUsers(app){
 }
 
 function _pixiInit(container){
-  // Create PIXI app
-  _socState.pixiApp=new PIXI.Application({
-    width:container.clientWidth,
-    height:container.clientHeight,
-    backgroundAlpha:0,
-    resizeTo:container,
-    antialias:true,
-    resolution:1
-  });
+  // Check if PixiJS loaded
+  if(typeof PIXI === 'undefined'){
+    console.warn('PixiJS not loaded, falling back to Canvas 2D');
+    _pixiInitFallback(container);
+    return;
+  }
+  try {
+    // Create PIXI app
+    _socState.pixiApp=new PIXI.Application({
+      width:container.clientWidth,
+      height:container.clientHeight,
+      backgroundAlpha:0,
+      resizeTo:container,
+      antialias:true,
+      resolution:1
+    });
 
-  container.appendChild(_socState.pixiApp.view);
+    container.appendChild(_socState.pixiApp.view);
 
-  // Create layers
-  const skyLayer=_pixiBuildSky(_socState.pixiApp);
-  const lightLayer=_pixiBuildLights(_socState.pixiApp);
-  const floorLayer=_pixiBuildFloor(_socState.pixiApp);
-  const furnitureLayer=_pixiBuildFurniture(_socState.pixiApp);
-  _socState.pixiAvatarLayer=new PIXI.Container();
+    // Create layers
+    const skyLayer=_pixiBuildSky(_socState.pixiApp);
+    const lightLayer=_pixiBuildLights(_socState.pixiApp);
+    const floorLayer=_pixiBuildFloor(_socState.pixiApp);
+    const furnitureLayer=_pixiBuildFurniture(_socState.pixiApp);
+    _socState.pixiAvatarLayer=new PIXI.Container();
 
-  _socState.pixiApp.stage.addChild(skyLayer);
-  _socState.pixiApp.stage.addChild(lightLayer);
-  _socState.pixiApp.stage.addChild(floorLayer);
-  _socState.pixiApp.stage.addChild(furnitureLayer);
-  _socState.pixiApp.stage.addChild(_socState.pixiAvatarLayer);
+    _socState.pixiApp.stage.addChild(skyLayer);
+    _socState.pixiApp.stage.addChild(lightLayer);
+    _socState.pixiApp.stage.addChild(floorLayer);
+    _socState.pixiApp.stage.addChild(furnitureLayer);
+    _socState.pixiApp.stage.addChild(_socState.pixiAvatarLayer);
 
-  // Ticker for smooth animation
-  _socState.pixiTicker=_socState.pixiApp.ticker;
-  _socState.pixiTicker.add(()=>{
+    // Ticker for smooth animation
+    _socState.pixiTicker=_socState.pixiApp.ticker;
+    _socState.pixiTicker.add(()=>{
+      const now=Date.now();
+      Object.keys(_socState.bubbles).forEach(k=>{if(now-_socState.bubbles[k].t>5000){delete _socState.bubbles[k];}});
+      _socSmoothMove();
+      _pixiUpdateUsers(_socState.pixiApp);
+    });
+  } catch(e) {
+    console.error('PixiJS init failed:', e);
+    _pixiInitFallback(container);
+  }
+}
+
+function _pixiInitFallback(container){
+  // Canvas 2D fallback when PixiJS fails
+  const cvs = container.querySelector('canvas') || document.createElement('canvas');
+  cvs.width = container.clientWidth;
+  cvs.height = container.clientHeight;
+  cvs.style.width = '100%';
+  cvs.style.height = '100%';
+  if(!cvs.parentElement) container.appendChild(cvs);
+  _socState.canvas = cvs;
+  _socState.ctx = cvs.getContext('2d');
+  _socState.dirty = true;
+  // Start 2D game loop
+  function _fallbackLoop(){
     const now=Date.now();
-    Object.keys(_socState.bubbles).forEach(k=>{if(now-_socState.bubbles[k].t>5000){delete _socState.bubbles[k];}});
+    Object.keys(_socState.bubbles).forEach(k=>{if(now-_socState.bubbles[k].t>5000)delete _socState.bubbles[k];});
     _socSmoothMove();
-    _pixiUpdateUsers(_socState.pixiApp);
-  });
+    if(_socState.dirty) _socRender();
+    _socState.raf=requestAnimationFrame(_fallbackLoop);
+  }
+  _socState.raf=requestAnimationFrame(_fallbackLoop);
 }
 
 function _darken_hex(col,amount){
@@ -24707,10 +24846,13 @@ function _launchClubRoom(){
   _socState.users[currentUser]={name:currentUser,pos:{x:9,y:7},drawPos:{x:9,y:7},dir:'down',avatar:avt};
   _avtAnimState={};
 
-  // PixiJS view events
-  _socState.pixiApp.view.addEventListener('click',_socOnClick);
-  _socState.pixiApp.view.addEventListener('mousemove',_socOnMouseMove);
-  _socState.pixiApp.view.addEventListener('mouseleave',_socOnMouseLeave);
+  // View events (PixiJS or Canvas 2D fallback)
+  const evTarget = _socState.pixiApp ? _socState.pixiApp.view : _socState.canvas;
+  if(evTarget){
+    evTarget.addEventListener('click',_socOnClick);
+    evTarget.addEventListener('mousemove',_socOnMouseMove);
+    evTarget.addEventListener('mouseleave',_socOnMouseLeave);
+  }
   window.addEventListener('resize',_socResize);
 
   // Chat input
@@ -24769,9 +24911,12 @@ function _resumeClubRoom(){
   _pixiInit(wrap);
 
   // Re-attach events
-  _socState.pixiApp.view.addEventListener('click',_socOnClick);
-  _socState.pixiApp.view.addEventListener('mousemove',_socOnMouseMove);
-  _socState.pixiApp.view.addEventListener('mouseleave',_socOnMouseLeave);
+  const evTarget = _socState.pixiApp ? _socState.pixiApp.view : _socState.canvas;
+  if(evTarget){
+    evTarget.addEventListener('click',_socOnClick);
+    evTarget.addEventListener('mousemove',_socOnMouseMove);
+    evTarget.addEventListener('mouseleave',_socOnMouseLeave);
+  }
   window.addEventListener('resize',_socResize);
 
   const inp=document.getElementById('socChatInput');
