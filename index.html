@@ -23981,9 +23981,13 @@ function _initFurniture(){
   [[2,2],[2,3],[3,2],[3,3],   // table 1
    [6,10],[6,11],[7,10],[7,11], // table 2
    [13,4],[13,5],[14,4],[14,5], // table 3
-   [9,2],[10,2],[11,2],       // bar (longer now)
-   [1,12],[2,12],             // plant 1
-   [16,12],[17,12]            // plant 2
+   [9,2],[10,2],[11,2],       // bar
+   [1,1],[1,2],[1,3],         // sofa left wall
+   [14,1],[15,1],[16,1],      // sofa right wall
+   [1,8],[1,9],               // small sofa
+   [1,5],[1,6],               // bookshelf
+   [0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9],[0,10],[0,11],[0,12],[0,13], // left wall edge
+   [17,0],[17,1],[17,2],[17,3],[17,4],[17,5],[17,6],[17,7],[17,8],[17,9],[17,10],[17,11],[17,12],[17,13] // right wall edge
   ].forEach(([x,y])=>{_socState.furniture[x+','+y]=true;});
 }
 function _walkable(tx,ty){return tx>=0&&tx<ISO.COLS&&ty>=0&&ty<ISO.ROWS&&!_socState.furniture[tx+','+ty];}
@@ -24526,28 +24530,137 @@ function _darken_hex(col,amount){
   return (r<<16)|(g<<8)|b;
 }
 
-function _drawSky(ctx,w,h){
-  const g=ctx.createLinearGradient(0,0,0,h*.55);
-  g.addColorStop(0,'#060c1f');g.addColorStop(.3,'#0e1530');g.addColorStop(.7,'#141a3a');g.addColorStop(1,'#0a0e1a');
-  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-  // Stars (layered: small dim + medium bright + rare twinkle)
-  for(let i=0;i<100;i++){
-    const sx=Math.abs((Math.sin(i*12.9898+i)*43758.5453)%1)*w;
-    const sy=Math.abs((Math.sin(i*78.233+i*2)*43758.5453)%1)*h*.45;
-    const bright=i%7===0;const med=i%3===0;
-    ctx.globalAlpha=bright?.8:med?.5:.2;
-    ctx.fillStyle=bright?'#fffde8':'#c8d8ff';
-    const sz=bright?2:med?1.5:1;
-    ctx.fillRect(sx,sy,sz,sz);
-    if(bright){ctx.globalAlpha=.15;ctx.fillStyle='#fffde8';ctx.beginPath();ctx.arc(sx,sy,4,0,Math.PI*2);ctx.fill();}
+function _drawWalls(ctx,w,h){
+  // Dark background (indoor room)
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillRect(0,0,w,h);
+
+  const cw=w;
+  const wallH=130; // wall height above floor
+
+  // Calculate corner positions
+  const backCorner=_isoXY(0,0,cw);
+  const leftFront=_isoXY(0,ISO.ROWS,cw);
+  const rightFront=_isoXY(ISO.COLS,0,cw);
+
+  // LEFT WALL
+  ctx.fillStyle='#7a3030'; // dark red
+  ctx.beginPath();
+  ctx.moveTo(backCorner.x,backCorner.y);
+  ctx.lineTo(backCorner.x,backCorner.y-wallH);
+  ctx.lineTo(leftFront.x,leftFront.y-wallH);
+  ctx.lineTo(leftFront.x,leftFront.y);
+  ctx.closePath();
+  ctx.fill();
+
+  // Left wall wallpaper pattern (subtle darker diamonds)
+  const patternSpacing=20;
+  ctx.strokeStyle='rgba(0,0,0,.15)';
+  ctx.lineWidth=0.5;
+  // Diagonal lines for pattern
+  for(let i=-5;i<20;i++){
+    const startX=backCorner.x+i*patternSpacing;
+    const startY=backCorner.y-wallH;
+    ctx.beginPath();
+    ctx.moveTo(startX,startY);
+    ctx.lineTo(startX+(leftFront.x-backCorner.x),startY+(leftFront.y-backCorner.y-wallH));
+    ctx.stroke();
   }
-  ctx.globalAlpha=1;
-  // Moon (crescent with glow)
-  const mx=w*.8,my=38;
-  ctx.fillStyle='rgba(232,220,180,.08)';ctx.beginPath();ctx.arc(mx,my,30,0,Math.PI*2);ctx.fill(); // outer glow
-  ctx.fillStyle='rgba(232,220,180,.15)';ctx.beginPath();ctx.arc(mx,my,20,0,Math.PI*2);ctx.fill(); // inner glow
-  ctx.fillStyle='#e8dcc0';ctx.beginPath();ctx.arc(mx,my,14,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#060c1f';ctx.beginPath();ctx.arc(mx+5,my-3,12,0,Math.PI*2);ctx.fill(); // crescent shadow
+
+  // LEFT WALL baseboard
+  ctx.fillStyle='#4a1a1a';
+  ctx.beginPath();
+  ctx.moveTo(backCorner.x,backCorner.y);
+  ctx.lineTo(leftFront.x,leftFront.y);
+  ctx.lineTo(leftFront.x,leftFront.y-8);
+  ctx.lineTo(backCorner.x,backCorner.y-8);
+  ctx.closePath();
+  ctx.fill();
+
+  // RIGHT WALL
+  ctx.fillStyle='#8a3838'; // slightly lighter red (light from left)
+  ctx.beginPath();
+  ctx.moveTo(backCorner.x,backCorner.y);
+  ctx.lineTo(backCorner.x,backCorner.y-wallH);
+  ctx.lineTo(rightFront.x,rightFront.y-wallH);
+  ctx.lineTo(rightFront.x,rightFront.y);
+  ctx.closePath();
+  ctx.fill();
+
+  // Right wall wallpaper pattern
+  ctx.strokeStyle='rgba(0,0,0,.12)';
+  ctx.lineWidth=0.5;
+  for(let i=-5;i<20;i++){
+    const startX=backCorner.x+i*patternSpacing;
+    const startY=backCorner.y-wallH;
+    ctx.beginPath();
+    ctx.moveTo(startX,startY);
+    ctx.lineTo(startX+(rightFront.x-backCorner.x),startY+(rightFront.y-backCorner.y-wallH));
+    ctx.stroke();
+  }
+
+  // RIGHT WALL baseboard
+  ctx.fillStyle='#5a2020';
+  ctx.beginPath();
+  ctx.moveTo(backCorner.x,backCorner.y);
+  ctx.lineTo(rightFront.x,rightFront.y);
+  ctx.lineTo(rightFront.x,rightFront.y-8);
+  ctx.lineTo(backCorner.x,backCorner.y-8);
+  ctx.closePath();
+  ctx.fill();
+
+  // Top border of walls
+  ctx.strokeStyle='#5a2020';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(leftFront.x,leftFront.y-wallH);
+  ctx.lineTo(backCorner.x,backCorner.y-wallH);
+  ctx.lineTo(rightFront.x,rightFront.y-wallH);
+  ctx.stroke();
+
+  // Picture frames on left wall (2 frames)
+  const frames=[
+    {t:0.3,label:'Txoko'},
+    {t:0.7,label:'Formación'}
+  ];
+  frames.forEach(frame=>{
+    const interpX=backCorner.x+(leftFront.x-backCorner.x)*frame.t;
+    const interpY=backCorner.y+(leftFront.y-backCorner.y)*frame.t-wallH*0.6;
+    // Frame border
+    ctx.fillStyle='#6a5a4a';
+    ctx.fillRect(interpX-20,interpY-16,40,32);
+    // Frame inner
+    ctx.fillStyle='#c8b8a8';
+    ctx.fillRect(interpX-18,interpY-14,36,28);
+  });
+
+  // Wall sconces (warm lights) - replace string lights
+  const sconces=[
+    {tx:3,ty:3},
+    {tx:15,ty:3},
+    {tx:4,ty:11},
+    {tx:14,ty:11}
+  ];
+  sconces.forEach(sconce=>{
+    const p=_isoXY(sconce.tx,sconce.ty,cw);
+    // Sconce glow
+    ctx.fillStyle='rgba(255,200,100,.08)';
+    ctx.beginPath();
+    ctx.arc(p.x,p.y-wallH+25,24,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle='rgba(255,200,100,.12)';
+    ctx.beginPath();
+    ctx.arc(p.x,p.y-wallH+25,14,0,Math.PI*2);
+    ctx.fill();
+    // Sconce bracket
+    ctx.fillStyle='#5a4a3a';
+    ctx.fillRect(p.x-8,p.y-wallH+20,16,10);
+    // Bulb
+    ctx.fillStyle='#ffc800';
+    ctx.beginPath();
+    ctx.arc(p.x,p.y-wallH+25,4,0,Math.PI*2);
+    ctx.fill();
+  });
 }
 
 function _drawStringLights(ctx,w){
@@ -24598,12 +24711,31 @@ function _drawFloor(ctx,cw){
       const{x,y}=_isoXY(tx,ty,cw);
       // Habbo-style floor: diamond tile with border + subtle shading
       ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+hw,y+hh);ctx.lineTo(x,y+ISO.TH);ctx.lineTo(x-hw,y+hh);ctx.closePath();
-      // Alternating tiles with subtle difference
+      // Alternating tiles with warm beige/gray colors (Habbo style)
       const base=(tx+ty)%2===0;
-      ctx.fillStyle=base?'#252840':'#2a2d48';ctx.fill();
+      ctx.fillStyle=base?'#c8c0b0':'#d0c8b8';ctx.fill();
       // Inner highlight (Habbo tiles have a raised look)
       ctx.beginPath();ctx.moveTo(x,y+2);ctx.lineTo(x+hw-3,y+hh);ctx.lineTo(x,y+ISO.TH-2);ctx.lineTo(x-hw+3,y+hh);ctx.closePath();
-      ctx.fillStyle=base?'#2d3050':'#323558';ctx.fill();
+      ctx.fillStyle=base?'#b8b0a0':'#c0b8a8';ctx.fill();
+
+      // Crosshatch pattern inside diamond
+      ctx.strokeStyle='rgba(0,0,0,.08)';
+      ctx.lineWidth=0.5;
+      // Horizontal-ish lines across the diamond
+      for(let cl=0;cl<3;cl++){
+        const frac=(cl+1)/4;
+        const lx1=x-hw*(1-frac),ly1=y+hh*frac;
+        const lx2=x+hw*(1-frac),ly2=y+hh*frac;
+        ctx.beginPath();ctx.moveTo(lx1,ly1);ctx.lineTo(lx2,ly2);ctx.stroke();
+      }
+      // Perpendicular lines
+      for(let cl=0;cl<3;cl++){
+        const frac=(cl+1)/4;
+        const lx3=x-hw*frac,ly3=y+hh*(1-frac);
+        const lx4=x+hw*frac,ly4=y+hh*(1+frac);
+        ctx.beginPath();ctx.moveTo(lx3,ly3);ctx.lineTo(lx4,ly4);ctx.stroke();
+      }
+
       // Grid outline (Habbo black border)
       ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+hw,y+hh);ctx.lineTo(x,y+ISO.TH);ctx.lineTo(x-hw,y+hh);ctx.closePath();
       ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
@@ -24622,7 +24754,7 @@ function _drawFloor(ctx,cw){
   for(let tx=0;tx<ISO.COLS;tx++){
     const{x,y}=_isoXY(tx,ISO.ROWS-1,cw);
     const hw2=ISO.TW/2;
-    ctx.fillStyle='#1a1c30';ctx.beginPath();
+    ctx.fillStyle='#a8a090';ctx.beginPath();
     ctx.moveTo(x-hw2,y+hh);ctx.lineTo(x,y+ISO.TH);ctx.lineTo(x,y+ISO.TH+edgeH);ctx.lineTo(x-hw2,y+hh+edgeH);ctx.closePath();ctx.fill();
     ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
   }
@@ -24630,7 +24762,7 @@ function _drawFloor(ctx,cw){
   for(let ty=0;ty<ISO.ROWS;ty++){
     const{x,y}=_isoXY(ISO.COLS-1,ty,cw);
     const hw2=ISO.TW/2;
-    ctx.fillStyle='#14162a';ctx.beginPath();
+    ctx.fillStyle='#b0a898';ctx.beginPath();
     ctx.moveTo(x,y+ISO.TH);ctx.lineTo(x+hw2,y+hh);ctx.lineTo(x+hw2,y+hh+edgeH);ctx.lineTo(x,y+ISO.TH+edgeH);ctx.closePath();ctx.fill();
     ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.stroke();
   }
@@ -24835,43 +24967,78 @@ function _drawFurnitureSprites(ctx,cw){
     [[-3,-14],[2,-16],[5,-11]].forEach(([hx,hy])=>{ctx.fillRect(cx+hx,cy+hy,1,1);});
   });
 
-  // ═══ RAILING — ornate iron with gold finials ═══
-  ctx.lineWidth=1;
-  // Right edge posts
-  for(let ry=0;ry<=ISO.ROWS;ry++){
-    const r=_isoXY(ISO.COLS-.3,ry,cw);
-    const px=r.x,py=r.y+TH/2;
-    // Post body (dark iron with highlight)
-    ctx.fillStyle='#2a2a2a';ctx.fillRect(px-2,py-22,4,24);
-    ctx.fillStyle='#3a3a3a';ctx.fillRect(px-2,py-22,1,24);
-    ctx.strokeStyle='#000';ctx.lineWidth=0.5;ctx.strokeRect(px-2,py-22,4,24);
-    // Decorative mid-ring
-    ctx.fillStyle='#4a4a4a';ctx.fillRect(px-3,py-12,6,2);
-    // Gold finial (ball-topped)
-    ctx.fillStyle='#c49a3c';ctx.fillRect(px-3,py-25,6,3);ctx.strokeStyle='#000';ctx.strokeRect(px-3,py-25,6,3);
-    ctx.fillStyle='#e0b856';ctx.beginPath();ctx.arc(px,py-27,2.5,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle='#8a6a1a';ctx.lineWidth=0.5;ctx.stroke();
-    ctx.fillStyle='rgba(255,255,255,.3)';ctx.fillRect(px-1,py-28,1,1);
+  // ═══ SOFAS — Habbo-style upholstered sofas along walls ═══
+  function _drawSofa(tx,ty,len,color,dir){
+    // dir: 'left' (along left wall) or 'right' (along right wall)
+    const sofaC=color||'#8b4040';
+    const sofaD=_darken(sofaC,.7);
+    const sofaL=_lighten(sofaC,1.15);
+    for(let si=0;si<len;si++){
+      const stx=dir==='right'?tx+si:tx;
+      const sty=dir==='right'?ty:ty+si;
+      const sp=_isoXY(stx+.5,sty+.5,cw);
+      const cx=sp.x,cy=sp.y+TH/2;
+      // Seat cushion
+      _isoTile(ctx,cx,cy,TW*.9,TH*.9,sofaC,sofaD,sofaL,5);
+      // Cushion crease
+      ctx.strokeStyle='rgba(0,0,0,.15)';ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(cx-2,cy-4);ctx.lineTo(cx+2,cy-2);ctx.stroke();
+    }
+    // Back rest (continuous along the wall)
+    for(let si=0;si<len;si++){
+      const stx=dir==='right'?tx+si:tx;
+      const sty=dir==='right'?ty:ty+si;
+      const sp=_isoXY(stx+.5,sty+.5,cw);
+      const cx=sp.x,cy=sp.y+TH/2;
+      const backH=12;
+      if(dir==='right'){
+        // Back against top (left-wall side)
+        ctx.fillStyle=sofaD;ctx.fillRect(cx-TW*.4,cy-TH*.4-backH,TW*.8,backH);
+        ctx.fillStyle=sofaC;ctx.fillRect(cx-TW*.4,cy-TH*.4-backH,TW*.3,backH);
+        ctx.strokeStyle='#000';ctx.lineWidth=0.5;ctx.strokeRect(cx-TW*.4,cy-TH*.4-backH,TW*.8,backH);
+      } else {
+        // Back against right wall
+        ctx.fillStyle=sofaD;ctx.fillRect(cx+TW*.15,cy-TH*.3-backH,TW*.3,backH);
+        ctx.fillStyle=sofaC;ctx.fillRect(cx+TW*.15,cy-TH*.3-backH,TW*.1,backH);
+        ctx.strokeStyle='#000';ctx.lineWidth=0.5;ctx.strokeRect(cx+TW*.15,cy-TH*.3-backH,TW*.3,backH);
+      }
+    }
+    // Armrests at ends
+    const first=_isoXY((dir==='right'?tx:tx)+.5,(dir==='right'?ty:ty)+.5,cw);
+    const last=_isoXY((dir==='right'?tx+len-1:tx)+.5,(dir==='right'?ty:ty+len-1)+.5,cw);
+    [first,last].forEach(ap=>{
+      ctx.fillStyle=sofaD;
+      ctx.fillRect(ap.x-4,ap.y+TH/2-8,8,4);
+      ctx.strokeStyle='#000';ctx.lineWidth=0.5;ctx.strokeRect(ap.x-4,ap.y+TH/2-8,8,4);
+    });
   }
-  // Horizontal rails (double rail with decorative pattern)
-  for(let rail=0;rail<2;rail++){
-    ctx.strokeStyle='#3a3a3a';ctx.lineWidth=2;
-    ctx.beginPath();
-    for(let ry=0;ry<=ISO.ROWS;ry++){
-      const r=_isoXY(ISO.COLS-.3,ry,cw);
-      const py=r.y+TH/2-9-rail*9;
-      if(ry===0)ctx.moveTo(r.x,py);else ctx.lineTo(r.x,py);
+  // Sofa along left wall (top-left area)
+  _drawSofa(1,1,3,'#8b4040','left');
+  // Sofa along right wall (top-right area)
+  _drawSofa(14,1,3,'#8b4040','right');
+  // Small sofa in corner
+  _drawSofa(1,8,2,'#6b5a30','left');
+
+  // ═══ BOOKSHELF against left wall ═══
+  const bsh=_isoXY(1,5.5,cw);
+  // Shelf body
+  ctx.fillStyle='#5a3a20';ctx.fillRect(bsh.x-12,bsh.y-30,24,32);
+  ctx.fillStyle='#4a2a10';ctx.fillRect(bsh.x,bsh.y-30,12,32);
+  ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.strokeRect(bsh.x-12,bsh.y-30,24,32);
+  // Shelves
+  for(let sh=0;sh<3;sh++){
+    const sy=bsh.y-28+sh*10;
+    ctx.fillStyle='#6b4a28';ctx.fillRect(bsh.x-11,sy+8,22,2);
+    ctx.strokeStyle='#000';ctx.lineWidth=0.5;ctx.strokeRect(bsh.x-11,sy+8,22,2);
+    // Books on shelf
+    const bookColors=['#7a1a1a','#1a4a2a','#3a3a7a','#7a6a1a','#5a1a5a','#1a5a5a'];
+    for(let b=0;b<4;b++){
+      const bx=bsh.x-9+b*5;
+      const bh=5+Math.sin(b*3+sh*2)*2;
+      ctx.fillStyle=bookColors[(b+sh*3)%bookColors.length];
+      ctx.fillRect(bx,sy+8-bh,4,bh);
+      ctx.strokeStyle='#000';ctx.lineWidth=0.3;ctx.strokeRect(bx,sy+8-bh,4,bh);
     }
-    ctx.stroke();
-    // Highlight on top edge of rail
-    ctx.strokeStyle='#4a4a4a';ctx.lineWidth=0.5;
-    ctx.beginPath();
-    for(let ry=0;ry<=ISO.ROWS;ry++){
-      const r=_isoXY(ISO.COLS-.3,ry,cw);
-      const py=r.y+TH/2-10-rail*9;
-      if(ry===0)ctx.moveTo(r.x,py);else ctx.lineTo(r.x,py);
-    }
-    ctx.stroke();
   }
 
   // ═══ CHAIRS — detailed near tables ═══
@@ -24968,8 +25135,7 @@ function _socRender(){
   if(w<2||h<2) return; // canvas not ready
   ctx.clearRect(0,0,w,h);
   try {
-    _drawSky(ctx,w,h);
-    _drawStringLights(ctx,w);
+    _drawWalls(ctx,w,h);
     _drawFloor(ctx,w);
     _drawFurnitureSprites(ctx,w);
     // Use animated user rendering if available
@@ -25312,11 +25478,10 @@ function _updateClubIndicator(on){
 let _spriteCache={room:null,avatars:{}};
 
 function _cacheRoomSprite(w,h){
-  // Pre-render the entire static room (sky+lights+floor+furniture) to an offscreen canvas
+  // Pre-render the entire static room (walls+floor+furniture) to an offscreen canvas
   const oc=document.createElement('canvas');oc.width=w;oc.height=h;
   const octx=oc.getContext('2d');
-  _drawSky(octx,w,h);
-  _drawStringLights(octx,w);
+  _drawWalls(octx,w,h);
   _drawFloor(octx,w);
   _drawFurnitureSprites(octx,w);
   _spriteCache.room=oc;
