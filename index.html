@@ -2450,34 +2450,56 @@ body::after{
 @media(max-width:380px){.sensory-wheel-wrap{width:260px;height:260px}.sensory-note{width:50px;height:50px}.sensory-note .sn-ico{font-size:1rem}.sensory-note .sn-lbl{font-size:.48rem}.sensory-wheel-center{width:68px;height:68px;font-size:.52rem}.sensory-radar-wrap{width:190px;height:190px}}
 @media(max-width:320px){.sensory-wheel-wrap{width:230px;height:230px}.sensory-note{width:44px;height:44px}.sensory-note .sn-ico{font-size:.9rem}.sensory-note .sn-lbl{display:none}.sensory-wheel-center{width:60px;height:60px;font-size:.48rem}.sensory-wrap{padding:.3rem .5rem 2rem}.sensory-radar-wrap{width:170px;height:170px}}
 /* ═══ RULETA TXOKO ═══ */
-.ruleta-wrap{padding:.5rem 0 2rem;max-width:500px;margin:0 auto;text-align:center}
-.ruleta-header{margin-bottom:1rem}
-.ruleta-header h2{font-family:var(--ff-display);font-size:1.2rem;color:var(--gold);margin:0 0 .2rem}
-.ruleta-header p{font-size:.72rem;color:rgba(28,42,34,.5);margin:0}
-.ruleta-players{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin:.8rem 0}
-.ruleta-player{padding:.25rem .6rem;border-radius:12px;font-size:.65rem;font-weight:600;background:rgba(182,161,105,.1);color:var(--olive);border:1px solid rgba(182,161,105,.2);cursor:pointer;transition:all .2s}
-.ruleta-player.active{background:var(--gold);color:#fff;border-color:var(--gold)}
-.ruleta-player.remove:hover{background:#e74c3c;color:#fff;border-color:#e74c3c}
-.ruleta-add-player{padding:.25rem .6rem;border-radius:12px;font-size:.65rem;border:1px dashed rgba(182,161,105,.4);background:transparent;color:var(--gold);cursor:pointer}
-.ruleta-wheel-area{position:relative;width:300px;height:300px;margin:0 auto 1rem;touch-action:none}
-.ruleta-pointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);z-index:10;font-size:1.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));animation:pointerBounce 1s ease infinite}
-@keyframes pointerBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(4px)}}
-.ruleta-svg{width:100%;height:100%;transition:transform 4s cubic-bezier(.17,.67,.12,.99);transform-origin:center center}
+.ruleta-wrap{padding:.5rem 0 2rem;max-width:540px;margin:0 auto;text-align:center}
+.ruleta-header{margin-bottom:.8rem}
+.ruleta-header h2{font-family:var(--ff-display);font-size:1.3rem;color:var(--gold);margin:0 0 .15rem;text-shadow:0 1px 3px rgba(182,161,105,.2)}
+.ruleta-header p{font-size:.72rem;color:rgba(28,42,34,.45);margin:0}
+.ruleta-players{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin:.8rem 0;align-items:center}
+.ruleta-player{padding:.3rem .7rem;border-radius:20px;font-size:.65rem;font-weight:700;background:linear-gradient(135deg,rgba(182,161,105,.15),rgba(182,161,105,.05));color:var(--olive);border:1.5px solid rgba(182,161,105,.3);cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.ruleta-player::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,.1) 50%,transparent 60%);transition:transform .3s}
+.ruleta-player:hover::before{transform:translateX(100%)}
+.ruleta-player.active{background:linear-gradient(135deg,var(--gold),#a07830);color:#fff;border-color:var(--gold);box-shadow:0 2px 8px rgba(182,161,105,.3)}
+.ruleta-player.remove:hover{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border-color:#e74c3c}
+.ruleta-add-player{padding:.3rem .7rem;border-radius:20px;font-size:.65rem;border:1.5px dashed rgba(182,161,105,.4);background:transparent;color:var(--gold);cursor:pointer;font-weight:600;transition:all .2s}
+.ruleta-add-player:hover{background:rgba(182,161,105,.08);border-color:var(--gold)}
+.ruleta-wheel-area{position:relative;width:300px;height:300px;margin:0 auto 1rem;touch-action:none;filter:drop-shadow(0 8px 25px rgba(0,0,0,.15))}
+.ruleta-pointer{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:10;width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid var(--gold);filter:drop-shadow(0 3px 6px rgba(0,0,0,.3));animation:pointerBounce 1.2s ease infinite}
+@keyframes pointerBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
+.ruleta-pointer::after{content:'';position:absolute;top:-20px;left:-6px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:10px solid #e0c070}
+.ruleta-wheel-glow{position:absolute;inset:-15px;border-radius:50%;background:radial-gradient(circle,rgba(182,161,105,.12) 40%,transparent 70%);pointer-events:none;z-index:0}
+.ruleta-svg{width:100%;height:100%;transition:transform 4.5s cubic-bezier(.15,.7,.08,.98);transform-origin:center center;position:relative;z-index:1}
 .ruleta-svg.spinning{pointer-events:none}
-.ruleta-spin-btn{margin-top:.5rem;padding:.7rem 2rem;border-radius:25px;background:linear-gradient(135deg,var(--gold),#a07830);color:#fff;font-size:.85rem;font-weight:700;font-family:var(--ff-display);border:none;cursor:pointer;box-shadow:0 4px 15px rgba(182,161,105,.3);transition:all .2s;min-height:48px;touch-action:manipulation}
-.ruleta-spin-btn:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(182,161,105,.4)}
-.ruleta-spin-btn:active{transform:scale(.97)}
-.ruleta-spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.ruleta-result{margin-top:1.2rem;padding:1rem;border-radius:14px;animation:snsIn .4s ease;text-align:left}
-.ruleta-result-cat{display:flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem}
-.ruleta-result-text{font-size:.9rem;color:var(--olive);line-height:1.6;font-weight:500}
-.ruleta-result-player{font-size:.72rem;color:rgba(28,42,34,.5);margin-top:.6rem;font-style:italic}
-.ruleta-history{margin-top:1.5rem;text-align:left}
-.ruleta-history-title{font-size:.65rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem}
-.ruleta-history-item{font-size:.65rem;color:rgba(28,42,34,.5);padding:.3rem 0;border-bottom:1px solid rgba(0,0,0,.03)}
-.ruleta-back{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;border-radius:14px;border:1px solid rgba(182,161,105,.3);background:transparent;font-size:.72rem;color:var(--olive);cursor:pointer;margin-bottom:.8rem}
-@media(max-width:380px){.ruleta-wheel-area{width:260px;height:260px}.ruleta-spin-btn{font-size:.78rem;padding:.6rem 1.5rem}}
-@media(min-width:768px){.ruleta-wheel-area{width:380px;height:380px}.ruleta-result-text{font-size:1rem}.ruleta-header h2{font-size:1.4rem}}
+.ruleta-spin-btn{margin-top:.6rem;padding:.8rem 2.5rem;border-radius:30px;background:linear-gradient(135deg,var(--gold),#a07830);color:#fff;font-size:.88rem;font-weight:700;font-family:var(--ff-display);border:none;cursor:pointer;box-shadow:0 4px 18px rgba(182,161,105,.35);transition:all .2s;min-height:50px;touch-action:manipulation;position:relative;overflow:hidden;letter-spacing:.5px}
+.ruleta-spin-btn::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 60%);animation:ruletaBtnGlow 2.5s ease infinite}
+@keyframes ruletaBtnGlow{0%,100%{transform:translate(-30%,-30%) scale(1);opacity:.5}50%{transform:translate(30%,30%) scale(1.2);opacity:1}}
+.ruleta-spin-btn:hover{transform:scale(1.06);box-shadow:0 6px 24px rgba(182,161,105,.45)}
+.ruleta-spin-btn:active{transform:scale(.96)}
+.ruleta-spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;animation:none}
+.ruleta-spin-btn:disabled::before{animation:none}
+.ruleta-result{margin-top:1.2rem;padding:1.2rem;border-radius:16px;animation:ruletaResultIn .5s cubic-bezier(.34,1.56,.64,1);text-align:left;position:relative;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+@keyframes ruletaResultIn{from{opacity:0;transform:scale(.85) translateY(15px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.ruleta-result::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;filter:blur(30px);opacity:.15;pointer-events:none}
+.ruleta-result-cat{display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:.6rem}
+.ruleta-result-cat svg{width:1.2em;height:1.2em}
+.ruleta-result-text{font-size:.92rem;color:var(--olive);line-height:1.65;font-weight:500}
+.ruleta-result-player{font-size:.72rem;color:rgba(28,42,34,.5);margin-top:.7rem;font-style:italic;display:flex;align-items:center;gap:.3rem}
+.ruleta-result-player::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.ruleta-result-actions{display:flex;gap:.5rem;margin-top:.8rem}
+.ruleta-result-action{padding:.35rem .7rem;border-radius:12px;font-size:.62rem;font-weight:600;border:1.5px solid rgba(182,161,105,.3);background:transparent;color:var(--olive);cursor:pointer;transition:all .2s}
+.ruleta-result-action:hover{background:rgba(182,161,105,.1);border-color:var(--gold)}
+.ruleta-history{margin-top:1.2rem;text-align:left}
+.ruleta-history-title{font-size:.62rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;display:flex;align-items:center;gap:.3rem}
+.ruleta-history-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(182,161,105,.3),transparent)}
+.ruleta-history-item{font-size:.65rem;color:rgba(28,42,34,.5);padding:.4rem .5rem;border-bottom:1px solid rgba(0,0,0,.04);display:flex;align-items:flex-start;gap:.4rem;border-radius:6px;transition:background .15s}
+.ruleta-history-item:hover{background:rgba(182,161,105,.04)}
+.ruleta-history-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ruleta-back{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;border-radius:14px;border:1px solid rgba(182,161,105,.3);background:transparent;font-size:.72rem;color:var(--olive);cursor:pointer;margin-bottom:.8rem;transition:all .2s}
+.ruleta-back:hover{background:rgba(182,161,105,.08)}
+.ruleta-score{display:flex;justify-content:center;gap:1.2rem;margin:.6rem 0;font-size:.65rem;color:rgba(28,42,34,.4)}
+.ruleta-score-item{display:flex;flex-direction:column;align-items:center;gap:.1rem}
+.ruleta-score-num{font-size:1.1rem;font-weight:700;color:var(--gold)}
+@media(max-width:380px){.ruleta-wheel-area{width:260px;height:260px}.ruleta-spin-btn{font-size:.78rem;padding:.65rem 1.8rem}}
+@media(min-width:768px){.ruleta-wheel-area{width:380px;height:380px}.ruleta-result-text{font-size:1rem}.ruleta-header h2{font-size:1.5rem}.ruleta-wrap{max-width:600px}}
 
 /* Sensory responsive: desktop */
 @media(min-width:768px){.sensory-wheel-wrap{width:420px;height:420px}.sensory-note{width:72px;height:72px}.sensory-note .sn-ico{font-size:1.4rem}.sensory-note .sn-lbl{font-size:.62rem}.sensory-wheel-center{width:100px;height:100px;font-size:.7rem}.sensory-radar-wrap{width:280px;height:280px}.sensory-card-name{font-size:.82rem}.sensory-why{font-size:.78rem}.sensory-detail-title{font-size:1.05rem}.sensory-fp-name{font-size:1.05rem}.sensory-header h2{font-size:1.4rem}}
@@ -21985,7 +22007,19 @@ const RULETA_CONTENT = {
       'Imita cómo reaccionaría un cliente si le dices que el vino más barato es el mejor',
       'Haz de camarero/a novato en su primer día describiendo un plato que no conoce',
       'Narra un maridaje como si fuera un partido de fútbol emocionante',
-      'Imita al compañero/a que está a tu derecha pidiendo en un restaurante'],
+      'Imita al compañero/a que está a tu derecha pidiendo en un restaurante',
+      'Actúa como Martín Berasategui presentando su nueva creación con emoción extrema',
+      'Imita a un cliente indeciso que cambia de opinión cada 5 segundos',
+      'Haz de locutor de radio anunciando las tapas del día con máxima emoción',
+      'Dramatiza el momento en que abres una botella de vino como si fuera una ceremonia épica',
+      'Imita cómo sería un servicio si todo el personal hablara cantando ópera',
+      'Actúa como un turista que intenta pedir en español usando solo gestos',
+      'Haz de chef explicando un plato sencillo como si fuera una obra de arte en un museo',
+      'Imita a un cliente intentando hacer una foto perfecta del plato durante 5 minutos',
+      'Presenta el postre como si fuera un anuncio de perfume francés',
+      'Haz de árbitro de fútbol pero evaluando el emplatado de un plato',
+      'Imita al maitre más exagerado del mundo recibiendo a los clientes',
+      'Actúa el momento en que un sommelier descubre que un vino está pasado... pero el cliente dice que le encanta'],
     en:['Imitate a customer ordering wine as if they were an expert but have no clue',
       'Act as a sommelier describing a glass of tap water as if it were a grand wine',
       'Pretend to be a customer trying to pronounce "Crozes-Hermitage" for the first time',
@@ -21995,7 +22029,19 @@ const RULETA_CONTENT = {
       'Imitate how a customer would react if you told them the cheapest wine is the best',
       'Act as a first-day waiter describing a dish they don\'t know',
       'Narrate a wine pairing as if it were an exciting football match',
-      'Imitate the colleague to your right ordering at a restaurant']
+      'Imitate the colleague to your right ordering at a restaurant',
+      'Act as Martín Berasategui presenting his new creation with extreme emotion',
+      'Imitate an indecisive customer who changes their mind every 5 seconds',
+      'Be a radio host announcing today\'s tapas with maximum excitement',
+      'Dramatize opening a bottle of wine as if it were an epic ceremony',
+      'Imitate how service would be if everyone sang in opera',
+      'Act as a tourist trying to order in Spanish using only gestures',
+      'Be a chef explaining a simple dish as if it were a museum masterpiece',
+      'Imitate a customer trying to take the perfect photo of their dish for 5 minutes',
+      'Present dessert as if it were a luxury perfume commercial',
+      'Be a football referee but evaluating the plating of a dish',
+      'Imitate the most exaggerated maître d\' in the world greeting guests',
+      'Act out a sommelier discovering a wine is corked... but the customer says they love it']
   },
   speed: {
     es:['Nombra 3 vinos blancos de Canarias en 8 segundos',
@@ -22007,7 +22053,19 @@ const RULETA_CONTENT = {
       'Nombra 4 regiones vinícolas de España en 8 segundos',
       'Di 3 vinos que se sirvan por copa en 6 segundos',
       'Nombra 2 vinos de Vega Sicilia en 5 segundos',
-      'Di 5 ingredientes del Tataki de atún en 10 segundos'],
+      'Di 5 ingredientes del Tataki de atún en 10 segundos',
+      'Nombra 3 platos del menú de almuerzo en 5 segundos',
+      'Di 6 tipos de alergia alimentaria en 10 segundos',
+      'Nombra los 4 pasos del protocolo de servicio de vino en 8 segundos',
+      'Di 3 champagnes o espumosos de la carta en 7 segundos',
+      'Nombra 5 países productores de vino en 8 segundos',
+      'Di los alérgenos del plato que más se sirve en 6 segundos',
+      'Nombra 3 postres de la carta en 5 segundos',
+      'Di 4 cosas que debes comprobar al abrir una botella de vino en 8 segundos',
+      'Nombra 3 tipos de copa que usamos en Txoko en 6 segundos',
+      'Di 5 ingredientes de la ensalada del menú en 8 segundos',
+      'Nombra 2 vinos de más de 100 euros de la carta en 5 segundos',
+      'Di los 14 alérgenos principales en 30 segundos'],
     en:['Name 3 white wines from the Canary Islands in 8 seconds',
       'Name 4 common allergens in 6 seconds',
       'Name 5 different red grape varieties in 10 seconds',
@@ -22017,7 +22075,19 @@ const RULETA_CONTENT = {
       'Name 4 Spanish wine regions in 8 seconds',
       'Name 3 wines served by the glass in 6 seconds',
       'Name 2 Vega Sicilia wines in 5 seconds',
-      'Name 5 ingredients in the Tuna Tataki in 10 seconds']
+      'Name 5 ingredients in the Tuna Tataki in 10 seconds',
+      'Name 3 lunch menu dishes in 5 seconds',
+      'Name 6 types of food allergies in 10 seconds',
+      'Name the 4 steps of wine service protocol in 8 seconds',
+      'Name 3 champagnes or sparkling wines on the menu in 7 seconds',
+      'Name 5 wine-producing countries in 8 seconds',
+      'Name the allergens in our most popular dish in 6 seconds',
+      'Name 3 desserts from the menu in 5 seconds',
+      'Name 4 things you must check when opening a wine bottle in 8 seconds',
+      'Name 3 types of glasses we use at Txoko in 6 seconds',
+      'Name 5 ingredients in the menu salad in 8 seconds',
+      'Name 2 wines over 100 euros on the menu in 5 seconds',
+      'Name the 14 major allergens in 30 seconds']
   },
   queHarias: {
     es:['Un cliente dice que su Remelluri sabe a corcho. Tú lo pruebas y está perfecto. ¿Qué haces?',
@@ -22029,7 +22099,17 @@ const RULETA_CONTENT = {
       'Se te cae una copa vacía al suelo junto a una mesa VIP. ¿Cómo reaccionas?',
       'Un cliente quiere tomar una foto contigo y con el plato para Instagram. ¿Es apropiado?',
       'La cocina te avisa de 25 minutos de retraso en los principales. Tienes 4 mesas esperando. ¿Qué haces?',
-      'Un cliente insiste en un maridaje que tú sabes que no funcionará bien. ¿Le dices algo?'],
+      'Un cliente insiste en un maridaje que tú sabes que no funcionará bien. ¿Le dices algo?',
+      'Una pareja te dice que es su aniversario y quieren algo especial. ¿Cómo sorprendes?',
+      'Un cliente famoso pide que no le molesten pero otros clientes quieren fotos. ¿Qué haces?',
+      'Se va la luz durante el servicio principal. ¿Cuáles son tus primeros 3 pasos?',
+      'Un cliente descubre que el plato contiene un alérgeno que no se le informó. ¿Protocolo?',
+      'Una mesa de 12 personas quiere dividir la cuenta de 12 formas diferentes. ¿Cómo gestionas?',
+      'Un cliente te dice que quiere proponer matrimonio durante la cena. ¿Cómo ayudas?',
+      'El sommelier no está y un cliente experto te pide una recomendación técnica. ¿Qué haces?',
+      'Un niño pequeño está llorando y molestando a las mesas de alrededor. ¿Cómo actúas?',
+      'Te das cuenta de que te has equivocado de plato en una mesa. Ya han empezado a comer. ¿Qué haces?',
+      'Un cliente habitual pide un plato que ya no está en la carta. ¿Cómo lo manejas?'],
     en:['A customer says their Remelluri tastes corked. You try it and it\'s perfect. What do you do?',
       'A mother tells you her child has a severe nut allergy. What\'s your protocol?',
       'A group of 8 arrives without a reservation at 9:45 PM. How do you handle it?',
@@ -22039,7 +22119,17 @@ const RULETA_CONTENT = {
       'You drop an empty glass on the floor next to a VIP table. How do you react?',
       'A customer wants to take a photo with you and the dish for Instagram. Is it appropriate?',
       'The kitchen warns of a 25-minute delay on mains. You have 4 tables waiting. What do you do?',
-      'A customer insists on a pairing you know won\'t work well. Do you say something?']
+      'A customer insists on a pairing you know won\'t work well. Do you say something?',
+      'A couple tells you it\'s their anniversary and they want something special. How do you surprise them?',
+      'A famous customer asks not to be bothered but other diners want photos. What do you do?',
+      'The lights go out during the main course service. What are your first 3 steps?',
+      'A customer discovers the dish contains an allergen they weren\'t told about. Protocol?',
+      'A table of 12 people wants to split the bill 12 different ways. How do you manage it?',
+      'A customer tells you they want to propose marriage during dinner. How do you help?',
+      'The sommelier is absent and an expert customer asks for a technical recommendation. What do you do?',
+      'A small child is crying and disturbing nearby tables. How do you act?',
+      'You realize you brought the wrong dish to a table. They\'ve already started eating. What do you do?',
+      'A regular customer orders a dish that\'s no longer on the menu. How do you handle it?']
   },
   cumplido: {
     es:['Dile algo bonito a la persona que tengas enfrente',
@@ -22049,7 +22139,17 @@ const RULETA_CONTENT = {
       'Dile a la persona de tu derecha qué habilidad tiene que te gustaría aprender',
       'Comparte un momento en que un compañero/a te salvó durante el servicio',
       'Di cuál es la mejor cualidad profesional de la persona que tienes a la izquierda',
-      'Cuenta algo divertido que pasó esta semana y que te hizo reír gracias a un compañero/a'],
+      'Cuenta algo divertido que pasó esta semana y que te hizo reír gracias a un compañero/a',
+      'Cuenta cuál fue el primer día de trabajo de un compañero/a que recuerdes y qué te impresionó',
+      'Di algo que hayas aprendido de cada persona del equipo presente',
+      'Dedica un brindis improvisado al equipo',
+      'Cuenta el momento más divertido que hayas vivido con alguien del equipo',
+      'Di cuál es el superpoder secreto de la persona que está frente a ti',
+      'Elige a alguien del grupo y explica por qué harías un viaje con esa persona',
+      'Di algo que admires de la persona más nueva del equipo',
+      'Comparte un momento en que el equipo te hizo sentir orgulloso/a de trabajar aquí',
+      'Di tres cosas positivas sobre el servicio de esta semana',
+      'Agradece a alguien algo que hace todos los días y que normalmente pasa desapercibido'],
     en:['Say something nice to the person in front of you',
       'Mention something you admire about how a colleague works',
       'Share the best team moment you can remember',
@@ -22057,7 +22157,17 @@ const RULETA_CONTENT = {
       'Tell the person on your right what skill of theirs you\'d like to learn',
       'Share a moment when a colleague saved you during service',
       'Say what the best professional quality is of the person to your left',
-      'Share something funny that happened this week that made you laugh thanks to a colleague']
+      'Share something funny that happened this week that made you laugh thanks to a colleague',
+      'Remember someone\'s first day at work and what impressed you about them',
+      'Share one thing you\'ve learned from each person on the team here',
+      'Give an impromptu toast to the team',
+      'Tell the funniest moment you\'ve shared with someone on the team',
+      'Say what the secret superpower is of the person across from you',
+      'Pick someone from the group and explain why you\'d go on a trip with them',
+      'Say something you admire about the newest team member',
+      'Share a moment when the team made you feel proud to work here',
+      'Name three positive things about service this week',
+      'Thank someone for something they do daily that often goes unnoticed']
   },
   dato: {
     es:['Una botella de champagne tiene aproximadamente 49 millones de burbujas',
@@ -22069,7 +22179,19 @@ const RULETA_CONTENT = {
       'La forma de la copa de vino no es por estética: afecta directamente a cómo percibes los aromas',
       'El corcho del vino se extrae del alcornoque y un árbol puede producir corcho durante 150 años',
       'La Malvasía que servimos en Txoko es descendiente de cepas que los nobles europeos importaron hace siglos',
-      'Los monjes benedictinos fueron los primeros en clasificar viñedos por calidad en la Borgoña medieval'],
+      'Los monjes benedictinos fueron los primeros en clasificar viñedos por calidad en la Borgoña medieval',
+      'El vino tiene más de 200 compuestos aromáticos diferentes, más que el perfume más complejo',
+      'Martín Berasategui tiene 12 estrellas Michelin repartidas en varios restaurantes',
+      'El Txakoli se sirve vertiéndolo desde altura para activar sus burbujas naturales',
+      'Las Islas Canarias tienen las viñas más antiguas de Europa, pre-filoxera',
+      'Un sommelier profesional puede distinguir hasta 1.000 aromas diferentes',
+      'La temperatura del vino cambia su sabor: 2°C de más pueden arruinar un blanco',
+      'El vidrio de las copas Riedel está diseñado para dirigir el vino a zonas específicas de la lengua',
+      'En Japón existe un vino hecho con uvas Koshu que tiene más de 1.300 años de historia',
+      'El primer restaurante del mundo abrió en París en 1765',
+      'El queso y el vino hacen buena pareja porque la grasa del queso limpia los taninos',
+      'El Ritz-Carlton Abama tiene su propio microclima que permite cultivar productos únicos',
+      'Una copa de vino tiene tantas calorías como un vaso de zumo de naranja natural'],
     en:['A bottle of champagne has approximately 49 million bubbles',
       'The oldest red wine in the world is over 8,000 years old and was discovered in Georgia',
       'About 600 grapes are needed to make one bottle of wine',
@@ -22079,7 +22201,19 @@ const RULETA_CONTENT = {
       'The shape of a wine glass isn\'t aesthetic: it directly affects how you perceive aromas',
       'Wine cork is extracted from cork oak trees, and one tree can produce cork for 150 years',
       'The Malvasía we serve at Txoko descends from vines that European nobles imported centuries ago',
-      'Benedictine monks were the first to classify vineyards by quality in medieval Burgundy']
+      'Benedictine monks were the first to classify vineyards by quality in medieval Burgundy',
+      'Wine has over 200 different aromatic compounds, more than the most complex perfume',
+      'Martín Berasategui holds 12 Michelin stars spread across several restaurants',
+      'Txakoli is poured from height to activate its natural bubbles',
+      'The Canary Islands have Europe\'s oldest vines, pre-phylloxera',
+      'A professional sommelier can distinguish up to 1,000 different aromas',
+      'Wine temperature changes its taste: 2°C more can ruin a white wine',
+      'Riedel wine glass design directs wine to specific zones on your tongue',
+      'In Japan there\'s a wine made from Koshu grapes with over 1,300 years of history',
+      'The world\'s first restaurant opened in Paris in 1765',
+      'Cheese and wine pair well because fat cleans the wine\'s tannins',
+      'Ritz-Carlton Abama has its own microclimate allowing unique products to grow',
+      'A glass of wine has as many calories as a glass of fresh orange juice']
   },
   absurdo: {
     es:['¿Qué vino de la carta serías y por qué? Defiéndelo como si tu vida dependiera de ello',
@@ -22091,7 +22225,17 @@ const RULETA_CONTENT = {
       'Si pudieras bañarte en cualquier vino de la carta, ¿cuál elegirías y por qué?',
       'Inventa un nombre para un nuevo cóctel usando solo ingredientes del menú de Txoko',
       'Presenta el menú de Txoko como si fuera un rapero en una batalla de gallos',
-      'Si los platos del menú fueran superhéroes, ¿cuál sería el más poderoso y cuál su poder?'],
+      'Si los platos del menú fueran superhéroes, ¿cuál sería el más poderoso y cuál su poder?',
+      'Si pudieras fusionar dos platos de la carta para crear uno nuevo, ¿cuáles y cómo se llamaría?',
+      'Inventa una excusa creativa de por qué el restaurante solo sirve postres hoy',
+      'Si el restaurante fuera un planeta, ¿cómo se llamaría y cuál sería su ley más importante?',
+      'Convence al grupo de que el agua con gas es en realidad un vino molecular invisible',
+      'Si tuvieras que crear un uniforme nuevo para el equipo basado en un animal, ¿cuál sería?',
+      'Inventa un ritual secreto que todo el equipo debe hacer antes de abrir el restaurante',
+      'Si cada sección del restaurante fuera un país, ¿cuáles serían y por qué?',
+      'Crea un himno para el equipo en 15 segundos (puedes cantarlo)',
+      'Si pudieras añadir un plato imposible a la carta, ¿cuál sería y qué ingredientes tendría?',
+      'Argumenta por qué las patatas fritas son el plato más elegante del mundo'],
     en:['Which wine from our list would you be and why? Defend it as if your life depended on it',
       'Describe Remelluri Blanco as if it were a luxury perfume',
       'Invent an absurd pairing and convince us it works',
@@ -22101,7 +22245,17 @@ const RULETA_CONTENT = {
       'If you could bathe in any wine from our list, which would you choose and why?',
       'Invent a name for a new cocktail using only ingredients from the Txoko menu',
       'Present the Txoko menu as if you were a rapper in a freestyle battle',
-      'If the menu dishes were superheroes, which would be the most powerful and what\'s their power?']
+      'If the menu dishes were superheroes, which would be the most powerful and what\'s their power?',
+      'If you could merge two menu dishes to create one new dish, which would it be and what would you call it?',
+      'Invent a creative excuse for why the restaurant only serves desserts today',
+      'If the restaurant were a planet, what would you call it and what would be its most important law?',
+      'Convince the group that sparkling water is actually invisible molecular wine',
+      'If you had to create a new team uniform based on an animal, which would it be?',
+      'Invent a secret ritual everyone must do before opening the restaurant',
+      'If each section of the restaurant were a country, which would they be and why?',
+      'Create an anthem for the team in 15 seconds (you can sing it)',
+      'If you could add an impossible dish to the menu, what would it be and what ingredients?',
+      'Argue why french fries are the most elegant dish in the world']
   },
   reto: {
     es:['Nombra un plato y su maridaje ideal sin pensarlo más de 3 segundos. El grupo juzga.',
@@ -22111,25 +22265,65 @@ const RULETA_CONTENT = {
       'El grupo elige un plato. Tienes que decir TODOS sus alérgenos en 10 segundos.',
       'Cuenta de memoria 5 uvas diferentes que se usen en los vinos de la carta.',
       'Describe la diferencia entre un Tempranillo de Rioja y uno de Ribera del Duero.',
-      'El grupo dice un tipo de cliente. Tienes que hacer la recomendación perfecta en 15 segundos.'],
+      'El grupo dice un tipo de cliente. Tienes que hacer la recomendación perfecta en 15 segundos.',
+      'Con los ojos cerrados, describe paso a paso cómo se prepara tu plato favorito del menú',
+      'El grupo elige un vino: tienes que decir región, uva, y temperatura de servicio',
+      'Recita de memoria la secuencia completa del servicio de mesa desde la bienvenida',
+      'Describe las diferencias entre los 3 vinos blancos más vendidos de la carta',
+      'Haz una recomendación completa (entrante, principal, postre, vino) para un vegetariano exigente',
+      'Di de memoria qué cubiertos van con cada plato del menú degustación',
+      'El grupo te da un presupuesto. Diseña un menú completo con vinos sin pasarte',
+      'Nombra 3 platos de la carta y sus alérgenos sin equivocarte en ninguno',
+      'Explica a un "cliente" ficticio qué es la crianza, reserva y gran reserva',
+      'Demuestra sin materiales cómo se decanta un vino correctamente',
+      'Di los maridajes ideales para 3 platos que el grupo elija al azar',
+      'Resuelve esta situación: un cliente dice que es alérgico al sulfito, ¿qué vinos le puedes ofrecer?'],
     en:['Name a dish and its ideal pairing without thinking for more than 3 seconds. The group judges.',
       'Describe a wine from our list ONLY with gestures, no talking. Others guess.',
       'Close your eyes and point at the wine list. You have to describe that wine.',
       'Name the prices of 3 wines the group chooses. If you\'re off by more than €5, you lose.',
       'The group picks a dish. You must name ALL its allergens in 10 seconds.',
       'Name from memory 5 different grapes used in our wine list.',
-      'Describe the difference between a Tempranillo from Rioja and one from Ribera del Duero.',
-      'The group names a customer type. You must make the perfect recommendation in 15 seconds.']
+      'Describe the difference between a Tempranillo from Rioja and one from Ribiera del Duero.',
+      'The group names a customer type. You must make the perfect recommendation in 15 seconds.',
+      'With your eyes closed, describe step by step how your favorite menu dish is prepared',
+      'The group picks a wine: say the region, grape variety, and serving temperature',
+      'Recite the complete sequence of table service from greeting to goodbye from memory',
+      'Describe the differences between the 3 best-selling white wines on our menu',
+      'Make a complete recommendation (starter, main, dessert, wine) for a demanding vegetarian',
+      'Say from memory what utensils go with each dish on the tasting menu',
+      'The group gives you a budget. Design a complete menu with wines without going over',
+      'Name 3 dishes from the menu and their allergens without making mistakes',
+      'Explain to a fictional customer what aging, reserve, and gran reserve mean',
+      'Demonstrate without materials how to properly decant a wine',
+      'Say the ideal pairings for 3 dishes the group picks at random',
+      'Solve this: a customer says they\'re allergic to sulfites—which wines can you offer them?']
   },
   comodin: {
     es:['¡Comodín! Elige tú la categoría que quieras y gira otra vez.',
       '¡Comodín! Puedes retar a cualquier compañero/a a hacer lo que tú quieras (dentro de lo razonable).',
       '¡Comodín! Todo el grupo tiene que hacer algo juntos: inventen un brindis creativo.',
-      '¡Comodín! Elige a alguien del grupo para que cuente su anécdota más graciosa del restaurante.'],
+      '¡Comodín! Elige a alguien del grupo para que cuente su anécdota más graciosa del restaurante.',
+      '¡Comodín! La persona a tu izquierda tiene que bailar 10 segundos. Tú eliges la canción imaginaria.',
+      '¡Comodín! Todo el equipo tiene que decir su momento favorito de la semana, uno por uno.',
+      '¡Comodín! Inventa una regla nueva para las próximas 3 rondas (ej: hay que contestar en rima).',
+      '¡Comodín! Elige a dos personas del grupo para que hagan una escena de "cliente difícil" improvisada.',
+      '¡Comodín! Cuenta un secreto inofensivo o algo que nadie del equipo sepa de ti.',
+      '¡Comodín! El grupo vota: ¿quién del equipo sobreviviría más tiempo en una isla desierta?',
+      '¡Comodín! Elige a alguien y hazle 3 preguntas rápidas que tenga que responder en 2 segundos cada una.',
+      '¡Comodín! Todo el equipo tiene que hacer un aplauso sincronizado y gritar el nombre del restaurante.'],
     en:['Wildcard! Choose any category you want and spin again.',
       'Wildcard! You can challenge any colleague to do whatever you want (within reason).',
       'Wildcard! The whole group has to do something together: invent a creative toast.',
-      'Wildcard! Choose someone from the group to tell their funniest restaurant story.']
+      'Wildcard! Choose someone from the group to tell their funniest restaurant story.',
+      'Wildcard! The person to your left must dance for 10 seconds. You choose the imaginary song.',
+      'Wildcard! Everyone on the team must share their favorite moment from the week, one by one.',
+      'Wildcard! Invent a new rule for the next 3 rounds (e.g., answers must rhyme).',
+      'Wildcard! Pick two people to improvise a scene of a "difficult customer".',
+      'Wildcard! Share a harmless secret or something nobody on the team knows about you.',
+      'Wildcard! The group votes: who on the team would survive longest on a desert island?',
+      'Wildcard! Pick someone and ask them 3 quick questions—2 seconds to answer each one.',
+      'Wildcard! The whole team must applaud in sync and shout the restaurant\'s name.']
   }
 };
 
@@ -22138,11 +22332,15 @@ function renderRuleta(){
   const c = document.getElementById('appContent');
   const cats = RULETA_CATS;
   const n = cats.length;
-  const r = 50; // SVG radius percentage
+  const r = 46; // SVG radius
 
-  // Build SVG wheel segments
+  // Build SVG wheel with outer ring
   let segments = '';
   let labels = '';
+  // Outer decorative ring
+  segments += `<circle cx="50" cy="50" r="49" fill="none" stroke="#8b6f47" stroke-width="2" opacity=".6"/>`;
+  segments += `<circle cx="50" cy="50" r="48" fill="none" stroke="#c49a3c" stroke-width=".5" opacity=".3"/>`;
+
   for(let i=0; i<n; i++){
     const angle1 = (i * 360/n - 90) * Math.PI/180;
     const angle2 = ((i+1) * 360/n - 90) * Math.PI/180;
@@ -22150,32 +22348,65 @@ function renderRuleta(){
     const y1 = 50 + r*Math.sin(angle1);
     const x2 = 50 + r*Math.cos(angle2);
     const y2 = 50 + r*Math.sin(angle2);
-    segments += `<path d="M50,50 L${x1},${y1} A${r},${r} 0 0,1 ${x2},${y2} Z" fill="${cats[i].color}" stroke="#fff" stroke-width=".5"/>`;
-    // Label at midpoint
+    // Segment with slight gradient effect
+    segments += `<path d="M50,50 L${x1},${y1} A${r},${r} 0 0,1 ${x2},${y2} Z" fill="${cats[i].color}" stroke="rgba(255,255,255,.3)" stroke-width=".3"/>`;
+    // Darker inner edge for depth
+    const ri = r * 0.15;
+    const ix1 = 50 + ri*Math.cos(angle1);
+    const iy1 = 50 + ri*Math.sin(angle1);
+    const ix2 = 50 + ri*Math.cos(angle2);
+    const iy2 = 50 + ri*Math.sin(angle2);
+    segments += `<path d="M50,50 L${ix1},${iy1} A${ri},${ri} 0 0,1 ${ix2},${iy2} Z" fill="${cats[i].color}" opacity=".3"/>`;
+
+    // Peg dots on outer edge (like real roulette)
+    const pegAngle = (i * 360/n - 90) * Math.PI/180;
+    const pegX = 50 + (r+1.5)*Math.cos(pegAngle);
+    const pegY = 50 + (r+1.5)*Math.sin(pegAngle);
+    segments += `<circle cx="${pegX}" cy="${pegY}" r=".8" fill="#c49a3c" opacity=".6"/>`;
+
+    // Label at midpoint with abbreviation
     const midAngle = ((i+0.5) * 360/n - 90) * Math.PI/180;
-    const lx = 50 + (r*0.65)*Math.cos(midAngle);
-    const ly = 50 + (r*0.65)*Math.sin(midAngle);
+    const lx = 50 + (r*0.7)*Math.cos(midAngle);
+    const ly = 50 + (r*0.7)*Math.sin(midAngle);
     const rot = (i+0.5)*360/n;
-    labels += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="3.5" fill="#fff" font-weight="700" transform="rotate(${rot},${lx},${ly})" style="text-shadow:0 1px 2px rgba(0,0,0,.4)">${cats[i].abbr||(_en?cats[i].en:cats[i].es)}</text>`;
-    // Small text label
-    const lx2 = 50 + (r*0.42)*Math.cos(midAngle);
-    const ly2 = 50 + (r*0.42)*Math.sin(midAngle);
-    labels += `<text x="${lx2}" y="${ly2}" text-anchor="middle" dominant-baseline="central" font-size="2.2" fill="#fff" font-weight="600" transform="rotate(${rot},${lx2},${ly2})" style="text-shadow:0 1px 1px rgba(0,0,0,.3)">${_en?cats[i].en:cats[i].es}</text>`;
+    labels += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="3.8" fill="#fff" font-weight="800" transform="rotate(${rot},${lx},${ly})" style="text-shadow:0 1px 3px rgba(0,0,0,.5)">${cats[i].abbr}</text>`;
+    // Category name
+    const lx2 = 50 + (r*0.45)*Math.cos(midAngle);
+    const ly2 = 50 + (r*0.45)*Math.sin(midAngle);
+    labels += `<text x="${lx2}" y="${ly2}" text-anchor="middle" dominant-baseline="central" font-size="2" fill="rgba(255,255,255,.8)" font-weight="600" transform="rotate(${rot},${lx2},${ly2})">${_en?cats[i].en:cats[i].es}</text>`;
   }
 
   // Players section
   const playersHTML = _ruletaPlayers.length > 0
     ? _ruletaPlayers.map((p,i)=>`<span class="ruleta-player${_ruletaResult&&_ruletaResult.playerIdx===i?' active':''}" onclick="_removeRuletaPlayer(${i})" title="${_en?'Tap to remove':'Toca para eliminar'}">${p} ×</span>`).join('')
-    : `<span style="font-size:.65rem;color:rgba(28,42,34,.4)">${_en?'Add players (optional)':'Añade jugadores (opcional)'}</span>`;
+    : `<span style="font-size:.65rem;color:rgba(28,42,34,.35)">${_en?'Add players for more fun!':'¡Añade jugadores para más diversión!'}</span>`;
 
-  // Result section
+  // Result card
   let resultHTML = '';
   if(_ruletaResult){
     const cat = RULETA_CATS.find(c=>c.key===_ruletaResult.category);
-    resultHTML = `<div class="ruleta-result" style="background:${cat.color}15;border:2px solid ${cat.color}40">
-      <div class="ruleta-result-cat" style="color:${cat.color}">${cat.icon} ${_en?cat.en:cat.es}</div>
-      <div class="ruleta-result-text">${_ruletaResult.text}</div>
-      ${_ruletaResult.player ? `<div class="ruleta-result-player">${_ruletaResult.player}</div>` : ''}
+    resultHTML = `<div class="ruleta-result" style="background:linear-gradient(135deg,${cat.color}12,${cat.color}08);border:2px solid ${cat.color}50">
+      <div class="ruleta-result" style="background:none;border:none;padding:0;margin:0;animation:none">
+        <div class="ruleta-result-cat" style="color:${cat.color}">${cat.icon} ${_en?cat.en:cat.es}</div>
+        <div class="ruleta-result-text">${_ruletaResult.text}</div>
+        ${_ruletaResult.player ? `<div class="ruleta-result-player">${_en?'Turn:':'Turno:'} <strong>${_ruletaResult.player}</strong></div>` : ''}
+        <div class="ruleta-result-actions">
+          <button class="ruleta-result-action" onclick="_spinRuletaSameCategory('${cat.key}')">${_en?'Another from this category':'Otra de esta categoría'}</button>
+          <button class="ruleta-result-action" onclick="_spinRuleta()">${_en?'Spin again':'Girar de nuevo'}</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Score counters
+  let scoreHTML = '';
+  if(_ruletaHistory.length > 0){
+    const catCounts = {};
+    _ruletaHistory.forEach(h=>{catCounts[h.category]=(catCounts[h.category]||0)+1;});
+    scoreHTML = `<div class="ruleta-score">
+      <div class="ruleta-score-item"><div class="ruleta-score-num">${_ruletaHistory.length}</div><div>${_en?'Spins':'Tiradas'}</div></div>
+      <div class="ruleta-score-item"><div class="ruleta-score-num">${_ruletaPlayers.length||'-'}</div><div>${_en?'Players':'Jugadores'}</div></div>
+      <div class="ruleta-score-item"><div class="ruleta-score-num">${Object.keys(catCounts).length}/${RULETA_CATS.length}</div><div>${_en?'Categories':'Categorías'}</div></div>
     </div>`;
   }
 
@@ -22184,9 +22415,9 @@ function renderRuleta(){
   if(_ruletaHistory.length > 0){
     historyHTML = `<div class="ruleta-history">
       <div class="ruleta-history-title">${_en?'History':'Historial'}</div>
-      ${_ruletaHistory.slice(0,5).map(h=>{
+      ${_ruletaHistory.slice(0,8).map(h=>{
         const cat = RULETA_CATS.find(c=>c.key===h.category);
-        return `<div class="ruleta-history-item">${cat.icon} ${h.player?h.player+': ':''}${h.text.substring(0,60)}${h.text.length>60?'...':''}</div>`;
+        return `<div class="ruleta-history-item"><span class="ruleta-history-dot" style="background:${cat.color}"></span><span>${h.player?'<strong>'+h.player+'</strong>: ':''}${h.text.substring(0,65)}${h.text.length>65?'…':''}</span></div>`;
       }).join('')}
     </div>`;
   }
@@ -22194,23 +22425,26 @@ function renderRuleta(){
   c.innerHTML = `<div class="ruleta-wrap">
     <button class="ruleta-back" onclick="showTab('txoko')">← ${_en?'Back to Games':'Volver a Juegos'}</button>
     <div class="ruleta-header">
-      <h2>Ruleta Txoko</h2>
+      <h2>🎰 Ruleta Txoko</h2>
       <p>${_en?'Spin the wheel and have fun with the team!':'¡Gira la ruleta y diviértete con el equipo!'}</p>
     </div>
     <div class="ruleta-players">
       ${playersHTML}
       <button class="ruleta-add-player" onclick="_addRuletaPlayer()">+ ${_en?'Player':'Jugador'}</button>
     </div>
+    ${scoreHTML}
     <div class="ruleta-wheel-area">
-      <div class="ruleta-pointer">▼</div>
+      <div class="ruleta-wheel-glow"></div>
+      <div class="ruleta-pointer"></div>
       <svg class="ruleta-svg" id="ruletaSvg" viewBox="0 0 100 100" style="transform:rotate(${_ruletaAngle}deg)">
         ${segments}
         ${labels}
-        <circle cx="50" cy="50" r="8" fill="var(--cream)" stroke="var(--gold)" stroke-width="1"/>
-        <text x="50" y="51" text-anchor="middle" dominant-baseline="central" font-size="3.5" fill="var(--olive)" font-weight="700">${_en?'SPIN':'GIRA'}</text>
+        <circle cx="50" cy="50" r="9" fill="var(--cream,#faf6ee)" stroke="var(--gold,#b6a169)" stroke-width="1.2"/>
+        <circle cx="50" cy="50" r="6" fill="var(--gold,#b6a169)" opacity=".15"/>
+        <text x="50" y="51.5" text-anchor="middle" dominant-baseline="central" font-size="3" fill="var(--olive,#1c2a22)" font-weight="800" letter-spacing=".5">${_en?'SPIN':'GIRA'}</text>
       </svg>
     </div>
-    <button class="ruleta-spin-btn" id="ruletaSpinBtn" onclick="_spinRuleta()" ${_ruletaSpinning?'disabled':''}>${_ruletaSpinning?(_en?'Spinning...':'Girando...'):(_en?'Spin the wheel!':'¡Gira la ruleta!')}</button>
+    <button class="ruleta-spin-btn" id="ruletaSpinBtn" onclick="_spinRuleta()" ${_ruletaSpinning?'disabled':''}>${_ruletaSpinning?(_en?'Spinning...':'Girando...'):(_en?'🎲 Spin the wheel!':'🎲 ¡Gira la ruleta!')}</button>
     ${resultHTML}
     ${historyHTML}
   </div>`;
@@ -22230,6 +22464,25 @@ function _removeRuletaPlayer(idx){
   renderRuleta();
 }
 
+function _spinRuletaSameCategory(catKey){
+  const _en = LANG==='en';
+  const cat = RULETA_CATS.find(c=>c.key===catKey);
+  if(!cat) return;
+  const content = RULETA_CONTENT[cat.key];
+  const texts = _en ? content.en : content.es;
+  const text = texts[Math.floor(Math.random()*texts.length)];
+  let player = null;
+  let playerIdx = -1;
+  if(_ruletaPlayers.length > 0){
+    playerIdx = Math.floor(Math.random()*_ruletaPlayers.length);
+    player = _ruletaPlayers[playerIdx];
+  }
+  _ruletaResult = {category:cat.key, text, player, playerIdx};
+  _ruletaHistory.unshift({category:cat.key, text, player});
+  if(_ruletaHistory.length > 30) _ruletaHistory.pop();
+  renderRuleta();
+}
+
 function _spinRuleta(){
   if(_ruletaSpinning) return;
   _ruletaSpinning = true;
@@ -22239,36 +22492,42 @@ function _spinRuleta(){
   const btn = document.getElementById('ruletaSpinBtn');
   if(btn){ btn.disabled = true; btn.textContent = _en?'Spinning...':'Girando...'; }
 
-  // Random extra rotations (5-8 full turns) + random final angle
-  const extraTurns = (5 + Math.random()*3) * 360;
+  // Random extra rotations (6-10 full turns) + random final angle for longer spin
+  const extraTurns = (6 + Math.random()*4) * 360;
   const finalAngle = Math.random() * 360;
   const totalRotation = _ruletaAngle + extraTurns + finalAngle;
 
   const svg = document.getElementById('ruletaSvg');
   if(svg){
-    svg.style.transition = 'transform 4s cubic-bezier(.17,.67,.12,.99)';
+    svg.style.transition = 'transform 4.5s cubic-bezier(.15,.7,.08,.98)';
     svg.style.transform = `rotate(${totalRotation}deg)`;
   }
 
+  // Add tick sound simulation with subtle visual flashes
+  let tickCount = 0;
+  const tickInterval = setInterval(()=>{
+    tickCount++;
+    const glow = document.querySelector('.ruleta-wheel-glow');
+    if(glow){
+      glow.style.background = `radial-gradient(circle,rgba(182,161,105,${.15+Math.random()*.1}) 40%,transparent 70%)`;
+    }
+    if(tickCount > 40) clearInterval(tickInterval);
+  }, 80);
+
   setTimeout(()=>{
+    clearInterval(tickInterval);
     _ruletaAngle = totalRotation % 360;
     _ruletaSpinning = false;
 
-    // Determine which segment the pointer (top) landed on
-    // Pointer is at top (0°/360°). Segments start from -90° (top).
-    // The wheel rotated clockwise by _ruletaAngle degrees.
-    // The segment under the pointer corresponds to the angle.
     const normalizedAngle = (360 - (_ruletaAngle % 360)) % 360;
     const segmentSize = 360 / RULETA_CATS.length;
     const segmentIdx = Math.floor(normalizedAngle / segmentSize);
     const cat = RULETA_CATS[segmentIdx];
 
-    // Pick random content from this category
     const content = RULETA_CONTENT[cat.key];
     const texts = _en ? content.en : content.es;
     const text = texts[Math.floor(Math.random()*texts.length)];
 
-    // Pick random player if any
     let player = null;
     let playerIdx = -1;
     if(_ruletaPlayers.length > 0){
@@ -22278,10 +22537,18 @@ function _spinRuleta(){
 
     _ruletaResult = {category:cat.key, text, player, playerIdx};
     _ruletaHistory.unshift({category:cat.key, text, player});
-    if(_ruletaHistory.length > 20) _ruletaHistory.pop();
+    if(_ruletaHistory.length > 30) _ruletaHistory.pop();
+
+    // Flash effect on landing
+    const wrap = document.querySelector('.ruleta-wrap');
+    if(wrap){
+      wrap.style.transition = 'filter .1s';
+      wrap.style.filter = 'brightness(1.3)';
+      setTimeout(()=>{wrap.style.filter = 'brightness(1)';},150);
+    }
 
     renderRuleta();
-  }, 4200);
+  }, 4800);
 }
 
 // ═══════════════════════════════════════════════════════════════════
