@@ -6915,12 +6915,24 @@ function _djPhaseMastery(dish, dd, _en){
   const isPerfect = pct === 100;
   const isGood = pct >= 66;
 
-  // Award XP and mark as mastered
+  // Award XP, update SRS, record adaptive data, mark as mastered
   if(!_djState.xpAwarded){
     _djState.xpAwarded = true;
     if(xpEarned > 0) awardXP(xpEarned, _en ? 'Dish Journey: '+dd.name : 'Viaje: '+dd.name);
+    const emp = getEmp(currentUser);
+    // Update SRS with quiz quality
+    const srsQuality = _srsQualityFromScore(score, total);
+    _srsUpdate(emp, dish.id, srsQuality);
+    // Record adaptive learning data per question
+    const qs = _djState.quizQuestions||[];
+    qs.forEach((q,qi) => {
+      const userAns = _djState['q'+qi];
+      if(userAns !== undefined){
+        const qType = qi===0?'allergen':qi===1?'category':'ingredient';
+        _adaptiveRecord(emp, dish.id, qType, userAns===q.correctIdx, null);
+      }
+    });
     if(isGood){
-      const emp = getEmp(currentUser);
       if(!emp.journeyMastered) emp.journeyMastered = {};
       emp.journeyMastered[dish.id] = { score:pct, date:Date.now() };
       saveDB();
@@ -6938,6 +6950,509 @@ function _djPhaseMastery(dish, dd, _en){
     ${isPerfect?`<div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:rgba(196,154,60,.7);animation:djPulse 2s infinite">🎖 ${_en?'Dish Mastered — Perfect Score Bonus +25 XP':'Plato Dominado — Bonus Puntuación Perfecta +25 XP'}</div>`:''}
     ${!isGood?`<div style="margin-top:.5rem"><button class="dj-btn dj-btn-next" onclick="_djState.phase=0;_djState.quizScore=0;_djState.quizAnswered=0;_djState.xpAwarded=false;_djState.quizQuestions=_djGenerateQuiz(DISHES.find(d=>d.id===_djState.dishId));_djRender()" style="font-size:.72rem;padding:.5rem 1.2rem">🔄 ${_en?'Try Again':'Intentar de nuevo'}</button></div>`:''}
   </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SPACED REPETITION SYSTEM (SRS) — SM-2 Algorithm
+// ═══════════════════════════════════════════════════════════════
+// Each dish in emp.srs[dishId] = { ef, interval, reps, nextReview, lastScore }
+// ef = easiness factor (starts at 2.5), interval = days until next review
+// Quality: 0-2 = fail (reset), 3 = hard, 4 = good, 5 = perfect
+
+function _srsGetData(emp, dishId){
+  if(!emp.srs) emp.srs = {};
+  if(!emp.srs[dishId]) emp.srs[dishId] = { ef:2.5, interval:0, reps:0, nextReview:0, lastScore:null, history:[] };
+  return emp.srs[dishId];
+}
+
+function _srsUpdate(emp, dishId, quality){
+  // quality: 0-5 (SM-2 scale)
+  const d = _srsGetData(emp, dishId);
+  const now = Date.now();
+  const DAY = 86400000;
+
+  // Record history for adaptive learning
+  d.history.push({ date:now, q:quality });
+  if(d.history.length > 20) d.history = d.history.slice(-20);
+
+  if(quality < 3){
+    // Failed — reset repetitions but keep ef
+    d.reps = 0;
+    d.interval = 0;
+    d.nextReview = now + DAY * 0.25; // Review again in 6 hours
+  } else {
+    // Passed
+    if(d.reps === 0) d.interval = 1;
+    else if(d.reps === 1) d.interval = 3;
+    else d.interval = Math.round(d.interval * d.ef);
+
+    d.reps++;
+    d.nextReview = now + DAY * d.interval;
+  }
+
+  // Update easiness factor (SM-2 formula)
+  d.ef = d.ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+  if(d.ef < 1.3) d.ef = 1.3;
+  d.lastScore = quality;
+
+  saveDB();
+}
+
+function _srsQualityFromScore(correct, total){
+  const pct = total > 0 ? correct / total : 0;
+  if(pct >= 1) return 5;      // perfect
+  if(pct >= 0.8) return 4;    // good
+  if(pct >= 0.6) return 3;    // hard pass
+  if(pct >= 0.4) return 2;    // fail
+  if(pct >= 0.2) return 1;    // bad fail
+  return 0;                    // complete fail
+}
+
+function _srsDueCount(emp){
+  if(!emp.srs) return DISHES.length; // all dishes need first review
+  const now = Date.now();
+  let count = 0;
+  DISHES.forEach(d => {
+    const s = emp.srs[d.id];
+    if(!s || now >= s.nextReview) count++;
+  });
+  return count;
+}
+
+function _srsDueDishes(emp){
+  if(!emp.srs) emp.srs = {};
+  const now = Date.now();
+  const due = [];
+  const unseen = [];
+  DISHES.forEach(d => {
+    const s = emp.srs[d.id];
+    if(!s || s.reps === 0) unseen.push({ dish:d, urgency: 100, type:'new' });
+    else if(now >= s.nextReview){
+      const overdue = (now - s.nextReview) / 86400000; // days overdue
+      due.push({ dish:d, urgency: overdue + (6 - (s.lastScore||3)), type:'review' });
+    }
+  });
+  // Sort: most urgent reviews first, then new dishes
+  due.sort((a,b) => b.urgency - a.urgency);
+  return [...due, ...unseen];
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ADAPTIVE LEARNING — Weakness Detection & Personalized Quizzes
+// ═══════════════════════════════════════════════════════════════
+// Tracks: emp.adaptive = { allergenMiss:{}, categoryMiss:{}, ingredientMiss:{}, totalQuizzes:0 }
+
+function _adaptiveGetData(emp){
+  if(!emp.adaptive) emp.adaptive = { allergenMiss:{}, categoryMiss:{}, ingredientMiss:{}, totalQuizzes:0, totalCorrect:0, streakBest:0, streakCurrent:0 };
+  return emp.adaptive;
+}
+
+function _adaptiveRecord(emp, dishId, questionType, wasCorrect, detail){
+  const ad = _adaptiveGetData(emp);
+  ad.totalQuizzes++;
+  if(wasCorrect) ad.totalCorrect++;
+
+  // Track streaks
+  if(wasCorrect){ ad.streakCurrent++; if(ad.streakCurrent > ad.streakBest) ad.streakBest = ad.streakCurrent; }
+  else ad.streakCurrent = 0;
+
+  if(!wasCorrect){
+    if(questionType === 'allergen'){
+      const dish = DISHES.find(d=>d.id===dishId);
+      if(dish && dish.allergens){
+        dish.allergens.forEach(a => { ad.allergenMiss[a] = (ad.allergenMiss[a]||0) + 1; });
+      }
+    }
+    if(questionType === 'category'){
+      const dish = DISHES.find(d=>d.id===dishId);
+      if(dish) ad.categoryMiss[dish.cat] = (ad.categoryMiss[dish.cat]||0) + 1;
+    }
+    if(questionType === 'ingredient'){
+      ad.ingredientMiss[dishId] = (ad.ingredientMiss[dishId]||0) + 1;
+    }
+  }
+  saveDB();
+}
+
+function _adaptiveWeaknesses(emp){
+  const ad = _adaptiveGetData(emp);
+  const weaknesses = [];
+
+  // Find weakest allergens
+  const allergenEntries = Object.entries(ad.allergenMiss).sort((a,b)=>b[1]-a[1]);
+  if(allergenEntries.length > 0){
+    allergenEntries.slice(0,3).forEach(([a,count]) => {
+      if(count >= 2) weaknesses.push({ type:'allergen', key:a, count:count, priority: count * 3 });
+    });
+  }
+
+  // Find weakest categories
+  const catEntries = Object.entries(ad.categoryMiss).sort((a,b)=>b[1]-a[1]);
+  if(catEntries.length > 0){
+    catEntries.slice(0,2).forEach(([c,count]) => {
+      if(count >= 2) weaknesses.push({ type:'category', key:c, count:count, priority: count * 2 });
+    });
+  }
+
+  // Find weakest dishes (by ingredient failures)
+  const ingEntries = Object.entries(ad.ingredientMiss).sort((a,b)=>b[1]-a[1]);
+  if(ingEntries.length > 0){
+    ingEntries.slice(0,3).forEach(([id,count]) => {
+      if(count >= 1) weaknesses.push({ type:'ingredient', key:id, count:count, priority: count * 2.5 });
+    });
+  }
+
+  return weaknesses.sort((a,b) => b.priority - a.priority);
+}
+
+function _adaptiveSelectDishes(emp, count){
+  const ad = _adaptiveGetData(emp);
+  const weaknesses = _adaptiveWeaknesses(emp);
+  const selected = [];
+  const used = new Set();
+
+  // Priority 1: Dishes from weak allergen categories
+  weaknesses.filter(w=>w.type==='allergen').forEach(w => {
+    if(selected.length >= count) return;
+    const dishes = DISHES.filter(d => d.allergens && d.allergens.includes(w.key) && !used.has(d.id));
+    if(dishes.length){
+      const pick = dishes[Math.floor(Math.random()*dishes.length)];
+      selected.push(pick);
+      used.add(pick.id);
+    }
+  });
+
+  // Priority 2: Dishes from weak categories
+  weaknesses.filter(w=>w.type==='category').forEach(w => {
+    if(selected.length >= count) return;
+    const dishes = DISHES.filter(d => d.cat === w.key && !used.has(d.id));
+    if(dishes.length){
+      const pick = dishes[Math.floor(Math.random()*dishes.length)];
+      selected.push(pick);
+      used.add(pick.id);
+    }
+  });
+
+  // Priority 3: Specific weak dishes
+  weaknesses.filter(w=>w.type==='ingredient').forEach(w => {
+    if(selected.length >= count) return;
+    const dish = DISHES.find(d => d.id === parseInt(w.key) && !used.has(d.id));
+    if(dish){ selected.push(dish); used.add(dish.id); }
+  });
+
+  // Fill remaining with SRS due dishes
+  if(selected.length < count){
+    const due = _srsDueDishes(emp);
+    for(const item of due){
+      if(selected.length >= count) break;
+      if(!used.has(item.dish.id)){ selected.push(item.dish); used.add(item.dish.id); }
+    }
+  }
+
+  return selected;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SMART REVIEW UI — "Repaso Inteligente"
+// ═══════════════════════════════════════════════════════════════
+var _smartReviewState = { queue:[], current:0, sessionScore:0, sessionTotal:0 };
+
+function renderSmartReview(){
+  const c = document.getElementById('appContent');
+  const _en = LANG==='en';
+  const emp = getEmp(currentUser);
+  const ad = _adaptiveGetData(emp);
+  const dueCount = _srsDueCount(emp);
+  const weaknesses = _adaptiveWeaknesses(emp);
+  const accuracy = ad.totalQuizzes > 0 ? Math.round((ad.totalCorrect/ad.totalQuizzes)*100) : 0;
+
+  // Stats cards
+  const statsHtml = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.2rem">
+      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:700;color:${dueCount>0?'var(--rose)':'var(--sage)'}">${dueCount}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase">${_en?'Due':'Pendientes'}</div>
+      </div>
+      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--gold)">${accuracy}%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase">${_en?'Accuracy':'Precisión'}</div>
+      </div>
+      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--sage)">${ad.streakBest||0} 🔥</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase">${_en?'Best Streak':'Mejor Racha'}</div>
+      </div>
+    </div>
+  `;
+
+  // Weakness map
+  let weakHtml = '';
+  if(weaknesses.length > 0){
+    weakHtml = `
+      <div style="margin-bottom:1.2rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">🎯 ${_en?'YOUR WEAK SPOTS':'TUS PUNTOS DÉBILES'}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          ${weaknesses.slice(0,5).map(w => {
+            const icon = w.type==='allergen'?'⚠️':w.type==='category'?'📂':'🧂';
+            const label = w.type==='allergen'?(_en?(allergenData_en[w.key]||w.key):w.key):w.type==='category'?(catLocal?catLocal(w.key):w.key):(()=>{const d=DISHES.find(x=>x.id===parseInt(w.key));return d?getDish(d).name:'?';})();
+            return `<span style="display:inline-flex;align-items:center;gap:.25rem;padding:.3rem .6rem;border-radius:20px;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.12);font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--rose)">${icon} ${label} <span style="font-family:'DM Mono',monospace;font-size:.5rem;opacity:.6">×${w.count}</span></span>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // SRS progress bar (mastered / learning / new)
+  const mastered = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps >= 4 && s.ef >= 2.2; }).length;
+  const learning = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps > 0 && (s.reps < 4 || s.ef < 2.2); }).length;
+  const newDishes = DISHES.length - mastered - learning;
+  const total = DISHES.length;
+
+  const progressHtml = `
+    <div style="margin-bottom:1.2rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.4rem">📊 ${_en?'KNOWLEDGE MAP':'MAPA DE CONOCIMIENTO'}</div>
+      <div style="height:10px;border-radius:5px;background:var(--line);overflow:hidden;display:flex">
+        <div style="width:${(mastered/total)*100}%;background:linear-gradient(90deg,#4d8a5e,#6ba872);transition:width .5s"></div>
+        <div style="width:${(learning/total)*100}%;background:linear-gradient(90deg,#c49a3c,#d4a840);transition:width .5s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:.35rem;font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">
+        <span>🟢 ${_en?'Mastered':'Dominados'}: ${mastered}</span>
+        <span>🟡 ${_en?'Learning':'Aprendiendo'}: ${learning}</span>
+        <span>⚪ ${_en?'New':'Nuevos'}: ${newDishes}</span>
+      </div>
+    </div>
+  `;
+
+  // Next review sessions
+  const dueDishes = _srsDueDishes(emp);
+  const sessionSize = Math.min(5, dueDishes.length);
+
+  let nextDishesHtml = '';
+  if(dueDishes.length > 0){
+    const preview = dueDishes.slice(0,6);
+    nextDishesHtml = `
+      <div style="margin-bottom:1rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">📋 ${_en?'NEXT UP FOR REVIEW':'PRÓXIMOS PARA REPASAR'}</div>
+        ${preview.map((item,i) => {
+          const dd = getDish(item.dish);
+          const s = (emp.srs||{})[item.dish.id];
+          const reps = s ? s.reps : 0;
+          const typeLabel = item.type === 'new' ? (_en?'NEW':'NUEVO') : (_en?'REVIEW':'REPASO');
+          const typeColor = item.type === 'new' ? 'var(--sage)' : 'var(--gold)';
+          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem .6rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.35rem;animation:fadeInUp .3s ${i*0.05}s both">
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}</div>
+              <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4)">${dd.cat} · ${reps} ${_en?'reviews':'repasos'}</div>
+            </div>
+            <span style="font-family:'DM Mono',monospace;font-size:.45rem;padding:.15rem .4rem;border-radius:10px;background:${typeColor}15;color:${typeColor};border:1px solid ${typeColor}30">${typeLabel}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  c.innerHTML = `
+    <div class="section-eyebrow">🧠 ${_en?'Smart Review':'Repaso Inteligente'}</div>
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.6">${_en?'Your brain forgets what you don\'t review. This system knows exactly when you need to see each dish again.':'Tu cerebro olvida lo que no repasas. Este sistema sabe exactamente cuándo necesitas volver a ver cada plato.'}</div>
+    </div>
+    ${statsHtml}
+    ${progressHtml}
+    ${weakHtml}
+    ${nextDishesHtml}
+    ${dueDishes.length > 0 ? `
+      <button onclick="_startSmartSession()" style="display:block;width:100%;padding:.85rem;border-radius:var(--r2);background:linear-gradient(135deg,#c49a3c,#d4a840);color:#1c2a22;border:none;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(196,154,60,.3);transition:all .3s;letter-spacing:.02em">
+        🚀 ${_en?`Start Smart Session (${sessionSize} dishes)`:`Iniciar Sesión Inteligente (${sessionSize} platos)`}
+      </button>
+      <div style="text-align:center;margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4)">${_en?'Powered by spaced repetition + adaptive AI':'Potenciado por repetición espaciada + IA adaptativa'}</div>
+    ` : `
+      <div style="text-align:center;padding:1.5rem;background:var(--ink2);border-radius:var(--r2);border:1px solid rgba(77,138,94,.15)">
+        <div style="font-size:2rem;margin-bottom:.4rem">🎉</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--sage)">${_en?'All caught up!':'¡Todo al día!'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.3rem">${_en?'No dishes due for review right now':'No hay platos pendientes de repaso ahora mismo'}</div>
+      </div>
+    `}
+  `;
+}
+
+function _startSmartSession(){
+  const emp = getEmp(currentUser);
+  const dishes = _adaptiveSelectDishes(emp, 5);
+  if(dishes.length === 0) return;
+
+  _smartReviewState = { queue:dishes.map(d=>d.id), current:0, sessionScore:0, sessionTotal:0, results:{} };
+  _renderSmartCard();
+}
+
+function _renderSmartCard(){
+  const state = _smartReviewState;
+  const _en = LANG==='en';
+  if(state.current >= state.queue.length){
+    _renderSmartSummary();
+    return;
+  }
+
+  const dishId = state.queue[state.current];
+  const dish = DISHES.find(d=>d.id===dishId);
+  if(!dish){ state.current++; _renderSmartCard(); return; }
+  const dd = getDish(dish);
+
+  // Generate 3 quick questions
+  const qs = _djGenerateQuiz(dish);
+
+  const existing = document.getElementById('smartOverlay');
+  if(existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'smartOverlay';
+  overlay.className = 'dj-overlay';
+  overlay.innerHTML = `
+    <div class="dj-container">
+      <div class="dj-bg"></div>
+      <div class="dj-header">
+        <div class="dj-close" onclick="_endSmartSession()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.5);letter-spacing:.1em">${state.current+1} / ${state.queue.length}</div>
+        <div style="width:36px"></div>
+      </div>
+      <div class="dj-body">
+        <div class="dj-phase-label">🧠 ${_en?'SMART REVIEW':'REPASO INTELIGENTE'}</div>
+        <div class="dj-phase-title">${dd.name}</div>
+        <div class="dj-dish-name">${dd.cat} · ${dish.allergens.length} ${_en?'allergens':'alérgenos'}</div>
+        <div id="smartQuizArea"></div>
+      </div>
+      <div class="dj-nav">
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.3)">${_en?'Score':'Puntos'}: ${state.sessionScore}/${state.sessionTotal}</div>
+        <button id="smartNextBtn" class="dj-btn dj-btn-next" onclick="_smartNext()" disabled>${_en?'Next Dish':'Siguiente Plato'} →</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Render quiz questions
+  _smartQuizState = { qs:qs, answered:0, correct:0, dishId:dishId };
+  _renderSmartQuiz();
+}
+
+var _smartQuizState = {};
+
+function _renderSmartQuiz(){
+  const area = document.getElementById('smartQuizArea');
+  if(!area) return;
+  const _en = LANG==='en';
+  const qs = _smartQuizState.qs;
+
+  area.innerHTML = qs.map((q,qi)=>{
+    const answered = _smartQuizState['a'+qi] !== undefined;
+    const userAnswer = _smartQuizState['a'+qi];
+    return `<div class="dj-quiz-card" style="--delay:${0.1+qi*0.12}s">
+      <div class="dj-quiz-q">${qi+1}. ${q.q}</div>
+      <div class="dj-quiz-opts">
+        ${q.options.map((opt,oi)=>{
+          let cls = 'dj-quiz-opt';
+          if(answered){
+            cls += ' disabled';
+            if(oi===q.correctIdx) cls += ' correct';
+            else if(oi===userAnswer && oi!==q.correctIdx) cls += ' wrong';
+          }
+          return `<div class="${cls}" onclick="_smartAnswer(${qi},${oi})">${opt}</div>`;
+        }).join('')}
+      </div>
+      ${answered?`<div class="dj-quiz-result ${userAnswer===q.correctIdx?'ok':'fail'}">${userAnswer===q.correctIdx?'✓':'✗'} ${q.explain}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function _smartAnswer(qIdx, optIdx){
+  if(_smartQuizState['a'+qIdx] !== undefined) return;
+  _smartQuizState['a'+qIdx] = optIdx;
+  _smartQuizState.answered++;
+  const qs = _smartQuizState.qs;
+  const isCorrect = optIdx === qs[qIdx].correctIdx;
+  if(isCorrect) _smartQuizState.correct++;
+
+  _smartReviewState.sessionTotal++;
+  if(isCorrect) _smartReviewState.sessionScore++;
+
+  // Record for adaptive learning
+  const emp = getEmp(currentUser);
+  const qType = qIdx === 0 ? 'allergen' : qIdx === 1 ? 'category' : 'ingredient';
+  _adaptiveRecord(emp, _smartQuizState.dishId, qType, isCorrect, null);
+
+  _renderSmartQuiz();
+
+  // Enable next button when all answered
+  if(_smartQuizState.answered >= qs.length){
+    const btn = document.getElementById('smartNextBtn');
+    if(btn) btn.disabled = false;
+
+    // Update SRS for this dish
+    const quality = _srsQualityFromScore(_smartQuizState.correct, qs.length);
+    _srsUpdate(emp, _smartQuizState.dishId, quality);
+    _smartReviewState.results[_smartQuizState.dishId] = { correct:_smartQuizState.correct, total:qs.length, quality:quality };
+  }
+}
+
+function _smartNext(){
+  _smartReviewState.current++;
+  _renderSmartCard();
+}
+
+function _endSmartSession(){
+  const overlay = document.getElementById('smartOverlay');
+  if(overlay){ overlay.style.opacity='0'; overlay.style.transition='opacity .3s'; setTimeout(()=>overlay.remove(), 300); }
+  renderAprender();
+}
+
+function _renderSmartSummary(){
+  const state = _smartReviewState;
+  const _en = LANG==='en';
+  const pct = state.sessionTotal > 0 ? Math.round((state.sessionScore / state.sessionTotal) * 100) : 0;
+  const xpEarned = state.sessionScore * 10 + (pct === 100 ? 30 : pct >= 80 ? 15 : 0);
+
+  if(xpEarned > 0) awardXP(xpEarned, _en ? 'Smart Review' : 'Repaso Inteligente');
+
+  const existing = document.getElementById('smartOverlay');
+  if(existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'smartOverlay';
+  overlay.className = 'dj-overlay';
+  overlay.innerHTML = `
+    <div class="dj-container">
+      <div class="dj-bg"></div>
+      <div class="dj-header">
+        <div class="dj-close" onclick="_endSmartSession()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+        <div></div>
+        <div style="width:36px"></div>
+      </div>
+      <div class="dj-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+        <div class="dj-mastery">
+          <div class="dj-mastery-icon">${pct>=80?'🏆':pct>=60?'⭐':'📚'}</div>
+          <div class="dj-mastery-title">${_en?'Session Complete':'Sesión Completada'}</div>
+          <div class="dj-mastery-subtitle">${state.queue.length} ${_en?'dishes reviewed':'platos repasados'}</div>
+          <div class="dj-mastery-score">${state.sessionScore}/${state.sessionTotal}</div>
+          <div class="dj-mastery-label">${_en?'CORRECT ANSWERS':'RESPUESTAS CORRECTAS'}</div>
+          <div class="dj-mastery-bar"><div class="dj-mastery-fill" style="--target-w:${pct}%;background:linear-gradient(90deg,${pct>=80?'#4d8a5e,#6ba872':pct>=60?'#c49a3c,#d4a840':'#c47068,#d48880'})"></div></div>
+          <div class="dj-mastery-xp">+${xpEarned} XP</div>
+
+          <div style="display:flex;flex-direction:column;gap:.4rem;width:100%;max-width:300px;margin-top:1rem">
+            ${state.queue.map(id => {
+              const r = state.results[id] || { correct:0, total:3 };
+              const d = DISHES.find(x=>x.id===id);
+              const dd = d ? getDish(d) : { name:'?' };
+              const rpct = r.total > 0 ? Math.round((r.correct/r.total)*100) : 0;
+              return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem .6rem;background:rgba(244,237,226,.03);border:1px solid rgba(244,237,226,.05);border-radius:8px;text-align:left">
+                <span style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:rgba(244,237,226,.7);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}</span>
+                <span style="font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;color:${rpct>=80?'#6ba872':rpct>=60?'#c49a3c':'#c47068'};flex-shrink:0;margin-left:.5rem">${r.correct}/${r.total}</span>
+              </div>`;
+            }).join('')}
+          </div>
+
+          <button onclick="_endSmartSession()" class="dj-btn dj-btn-next" style="margin-top:1.5rem">${_en?'Back to Dashboard':'Volver al Panel'}</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 }
 
 // XP bar widget — call inside any render to show the bar
@@ -8332,12 +8847,14 @@ function renderAprender(){
   const c=document.getElementById('appContent');
   const sub = _subTab.aprender || 'flashcards';
   const _en = LANG==='en';
+  const _srsCount = _srsDueCount(getEmp(currentUser));
   const bar = _subTabBar([
+    ['smart',_en?'Smart Review':'Repaso IA',_srsCount>0?'🔴':'🧠'],
     ['flashcards','Flashcards',''],
     ['repaso',_en?'Explore':'Explorar',''],
     ['videos',_en?'Videos':'Videos','']
   ], sub, 'aprender');
-  ({flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos})[sub]();
+  ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos})[sub]();
   c.insertAdjacentHTML('afterbegin', bar);
 }
 
@@ -12767,6 +13284,14 @@ function _positionWheelNotes(){
     el.style.width = len+'px';
     el.style.transform = `rotate(${angle}rad)`;
   });
+}
+
+function _lighten(hex, factor){
+  const h = hex.replace('#','');
+  const r = Math.min(255, Math.round(parseInt(h.substr(0,2),16)*factor));
+  const g = Math.min(255, Math.round(parseInt(h.substr(2,2),16)*factor));
+  const b = Math.min(255, Math.round(parseInt(h.substr(4,2),16)*factor));
+  return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
 }
 
 function _buildSensoryWheel(_en, noteKeys){
