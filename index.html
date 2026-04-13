@@ -3645,6 +3645,51 @@ body::after{
 .dj-launch-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border-radius:20px;background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.05));border:1px solid rgba(196,154,60,.2);color:#c49a3c;font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.05em;cursor:pointer;transition:all .3s;text-transform:uppercase}
 .dj-launch-btn:hover{background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.1));box-shadow:0 2px 12px rgba(196,154,60,.2)}
 .dj-launch-btn.mastered{background:linear-gradient(135deg,rgba(77,138,94,.12),rgba(77,138,94,.05));border-color:rgba(77,138,94,.25);color:#6b8f71}
+
+/* ═══ Smart Review v2: Timer, Combo, Difficulty ═══ */
+.sr-timer-ring{width:52px;height:52px;position:relative;flex-shrink:0}
+.sr-timer-ring svg{transform:rotate(-90deg);width:52px;height:52px}
+.sr-timer-ring circle{fill:none;stroke-width:3}
+.sr-timer-ring .sr-ring-bg{stroke:rgba(244,237,226,.08)}
+.sr-timer-ring .sr-ring-fg{stroke:#c49a3c;stroke-linecap:round;transition:stroke-dashoffset .15s linear,stroke .3s}
+.sr-timer-ring .sr-ring-fg.warn{stroke:#e07b5a}
+.sr-timer-ring .sr-ring-fg.danger{stroke:#c47068}
+.sr-timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:rgba(244,237,226,.8)}
+
+.sr-combo{position:absolute;top:12px;right:12px;z-index:10;text-align:center;pointer-events:none}
+.sr-combo-count{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:900;color:#c49a3c;text-shadow:0 0 20px rgba(196,154,60,.5);transition:all .2s}
+.sr-combo-count.big{transform:scale(1.4);color:#e8c44c;text-shadow:0 0 30px rgba(232,196,76,.7)}
+.sr-combo-label{font-family:'DM Mono',monospace;font-size:.42rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(196,154,60,.6)}
+.sr-combo-mult{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:700;color:#e8c44c;animation:djPulse 1s infinite}
+
+.sr-speed-bonus{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'DM Mono',monospace;font-size:.85rem;font-weight:700;color:#e8c44c;pointer-events:none;animation:djFloatUp .8s ease forwards;z-index:20}
+
+.sr-diff-badge{display:inline-flex;align-items:center;gap:.25rem;padding:.2rem .5rem;border-radius:12px;font-family:'DM Mono',monospace;font-size:.45rem;letter-spacing:.08em;text-transform:uppercase}
+.sr-diff-badge.beginner{background:rgba(77,138,94,.1);color:#6b8f71;border:1px solid rgba(77,138,94,.2)}
+.sr-diff-badge.intermediate{background:rgba(196,154,60,.1);color:#c49a3c;border:1px solid rgba(196,154,60,.2)}
+.sr-diff-badge.advanced{background:rgba(224,123,90,.1);color:#e07b5a;border:1px solid rgba(224,123,90,.2)}
+.sr-diff-badge.expert{background:rgba(196,60,60,.1);color:#c44040;border:1px solid rgba(196,60,60,.2)}
+
+.sr-xp-float{position:fixed;top:40%;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:900;color:#c49a3c;text-shadow:0 0 20px rgba(196,154,60,.6);pointer-events:none;z-index:9999;animation:djFloatUp 1.2s ease forwards}
+
+/* Activity calendar */
+.sr-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.sr-cal-day{width:100%;aspect-ratio:1;border-radius:3px;background:rgba(244,237,226,.04);border:1px solid transparent}
+.sr-cal-day.l1{background:rgba(77,138,94,.15);border-color:rgba(77,138,94,.2)}
+.sr-cal-day.l2{background:rgba(77,138,94,.3);border-color:rgba(77,138,94,.35)}
+.sr-cal-day.l3{background:rgba(77,138,94,.5);border-color:rgba(77,138,94,.55)}
+.sr-cal-day.today{box-shadow:0 0 0 1px #c49a3c}
+
+/* Rank badges */
+.sr-rank{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;border:1px solid}
+.sr-rank.novato{background:rgba(244,237,226,.04);border-color:rgba(244,237,226,.1);color:var(--parch4)}
+.sr-rank.aprendiz{background:rgba(77,138,94,.06);border-color:rgba(77,138,94,.15);color:#6b8f71}
+.sr-rank.camarero{background:rgba(196,154,60,.08);border-color:rgba(196,154,60,.2);color:#c49a3c}
+.sr-rank.sommelier{background:rgba(224,123,90,.08);border-color:rgba(224,123,90,.2);color:#e07b5a}
+.sr-rank.maestro{background:linear-gradient(135deg,rgba(196,154,60,.12),rgba(224,123,90,.08));border-color:rgba(196,154,60,.3);color:#e8c44c}
+
+@keyframes srPulseCombo{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes srShakeWrong{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -7153,10 +7198,260 @@ function _adaptiveSelectDishes(emp, count){
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SMART REVIEW UI — "Repaso Inteligente"
+// SMART REVIEW v2 — Timer, Combo, Dynamic Difficulty, Analytics
 // ═══════════════════════════════════════════════════════════════
-var _smartReviewState = { queue:[], current:0, sessionScore:0, sessionTotal:0 };
 
+var _smartReviewState = { queue:[], current:0, sessionScore:0, sessionTotal:0, combo:0, bestCombo:0, totalTime:0, xpTotal:0, difficulty:'beginner' };
+var _smartQuizState = {};
+var _srTimerInterval = null;
+
+// ── Difficulty Engine ──
+function _srGetDifficulty(emp){
+  const ad = _adaptiveGetData(emp);
+  const accuracy = ad.totalQuizzes > 0 ? (ad.totalCorrect / ad.totalQuizzes) : 0;
+  const totalSessions = Math.floor(ad.totalQuizzes / 3); // approx sessions
+  if(totalSessions < 3 || accuracy < 0.5) return 'beginner';
+  if(totalSessions < 8 || accuracy < 0.65) return 'intermediate';
+  if(totalSessions < 20 || accuracy < 0.8) return 'advanced';
+  return 'expert';
+}
+
+function _srDiffLabel(diff, _en){
+  const map = {
+    beginner: _en ? 'Beginner' : 'Principiante',
+    intermediate: _en ? 'Intermediate' : 'Intermedio',
+    advanced: _en ? 'Advanced' : 'Avanzado',
+    expert: _en ? 'Expert' : 'Experto'
+  };
+  return map[diff] || diff;
+}
+
+function _srDiffIcon(diff){
+  return { beginner:'🌱', intermediate:'🌿', advanced:'🔥', expert:'💎' }[diff] || '🌱';
+}
+
+function _srTimerSeconds(diff){
+  return { beginner:20, intermediate:15, advanced:12, expert:8 }[diff] || 20;
+}
+
+// ── Rank System ──
+function _srGetRank(emp){
+  const ad = _adaptiveGetData(emp);
+  const mastered = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps >= 4 && s.ef >= 2.2; }).length;
+  const pct = DISHES.length > 0 ? mastered / DISHES.length : 0;
+  const accuracy = ad.totalQuizzes > 0 ? (ad.totalCorrect / ad.totalQuizzes) : 0;
+  if(pct >= 0.85 && accuracy >= 0.85) return { id:'maestro', icon:'👨‍🍳', label_es:'Maestro de Sala', label_en:'Floor Master' };
+  if(pct >= 0.6 && accuracy >= 0.75) return { id:'sommelier', icon:'🍷', label_es:'Sommelier Junior', label_en:'Junior Sommelier' };
+  if(pct >= 0.35 && accuracy >= 0.6) return { id:'camarero', icon:'🍽️', label_es:'Camarero Experto', label_en:'Expert Server' };
+  if(pct >= 0.1) return { id:'aprendiz', icon:'📖', label_es:'Aprendiz', label_en:'Apprentice' };
+  return { id:'novato', icon:'🌱', label_es:'Novato', label_en:'Newcomer' };
+}
+
+// ── Activity Calendar Data ──
+function _srGetActivityDays(emp){
+  // Collect all review dates from SRS history
+  const days = {};
+  if(!emp.srs) return days;
+  Object.values(emp.srs).forEach(s => {
+    if(s.history) s.history.forEach(h => {
+      const day = new Date(h.date).toISOString().slice(0,10);
+      days[day] = (days[day]||0) + 1;
+    });
+  });
+  return days;
+}
+
+// ── Smart Question Generator v2 (difficulty-aware) ──
+function _srGenerateQuiz(dish, difficulty){
+  const _en = LANG==='en';
+  const dd = getDish(dish);
+  const questions = [];
+  const allDishes = DISHES;
+  const allergenPool = ['Gluten','Lácteos','Huevos','Pescado','Mariscos','Crustáceos','Moluscos','Frutos secos','Soja','Apio','Mostaza','Sésamo','Sulfitos'];
+
+  // ─── Question 1: Allergen (difficulty-scaled) ───
+  if(difficulty === 'expert'){
+    // Scenario: "A guest says they have X allergy. Can they eat this dish?"
+    const randomAllergen = allergenPool[Math.floor(Math.random()*allergenPool.length)];
+    const hasIt = dish.allergens && dish.allergens.includes(randomAllergen);
+    const allergenLabel = _en ? (allergenData_en[randomAllergen]||randomAllergen) : randomAllergen;
+    const opts = _en ? ['Yes, it\'s safe','No, it contains this allergen','Only without sauce','Ask the chef first'] : ['Sí, es seguro','No, contiene ese alérgeno','Solo sin salsa','Preguntar al chef primero'];
+    const correctIdx = hasIt ? 1 : 0;
+    questions.push({
+      q: _en ? `A guest says: "I'm allergic to ${allergenLabel}." Can they eat "${dd.name}"?` : `Un cliente dice: "Soy alérgico a ${allergenLabel}." ¿Puede comer "${dd.name}"?`,
+      options: opts,
+      correctIdx: correctIdx,
+      explain: hasIt ? (_en ? `No! ${dd.name} contains ${allergenLabel}.` : `¡No! ${dd.name} contiene ${allergenLabel}.`) : (_en ? `Yes, ${dd.name} does not contain ${allergenLabel}.` : `Sí, ${dd.name} no contiene ${allergenLabel}.`),
+      type: 'allergen'
+    });
+  } else if(difficulty === 'advanced' && dish.allergens && dish.allergens.length >= 2){
+    // "How many allergens does this dish have?"
+    const correct = dish.allergens.length;
+    const opts = _djShuffle([correct, correct+1, Math.max(0,correct-1), correct+2].map(String));
+    questions.push({
+      q: _en ? `How many allergens does "${dd.name}" have exactly?` : `¿Cuántos alérgenos tiene exactamente "${dd.name}"?`,
+      options: opts,
+      correctIdx: opts.indexOf(String(correct)),
+      explain: _en ? `It has ${correct}: ${dish.allergens.map(a=>allergenData_en[a]||a).join(', ')}` : `Tiene ${correct}: ${dish.allergens.join(', ')}`,
+      type: 'allergen'
+    });
+  } else if(dish.allergens && dish.allergens.length > 0){
+    // Standard: "Which allergen IS present?"
+    const correctA = dish.allergens[Math.floor(Math.random()*dish.allergens.length)];
+    const wrongPool = allergenPool.filter(a=>!dish.allergens.includes(a));
+    const wrongs = _djShuffle(wrongPool).slice(0,3);
+    const opts = _djShuffle([correctA, ...wrongs]);
+    questions.push({
+      q: _en ? `Which allergen is present in "${dd.name}"?` : `¿Cuál de estos alérgenos tiene "${dd.name}"?`,
+      options: opts.map(o=>_en?(allergenData_en[o]||o):o),
+      correctIdx: opts.indexOf(correctA),
+      explain: _en ? `${dd.name} contains: ${dish.allergens.map(a=>allergenData_en[a]||a).join(', ')}` : `${dd.name} contiene: ${dish.allergens.join(', ')}`,
+      type: 'allergen'
+    });
+  } else {
+    questions.push({
+      q: _en ? `How many allergens does "${dd.name}" have?` : `¿Cuántos alérgenos tiene "${dd.name}"?`,
+      options: ['0','1','2','3+'],
+      correctIdx: 0,
+      explain: _en ? 'This dish has no declared allergens!' : '¡Este plato no tiene alérgenos declarados!',
+      type: 'allergen'
+    });
+  }
+
+  // ─── Question 2: Category / Cross-dish (difficulty-scaled) ───
+  if(difficulty === 'expert' || difficulty === 'advanced'){
+    // "Which of these dishes shares an allergen with X?"
+    const targetAllergen = dish.allergens && dish.allergens.length > 0 ? dish.allergens[Math.floor(Math.random()*dish.allergens.length)] : null;
+    if(targetAllergen){
+      const sameAllergen = allDishes.filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(targetAllergen));
+      const diffAllergen = allDishes.filter(d=>d.id!==dish.id && d.allergens && !d.allergens.includes(targetAllergen));
+      if(sameAllergen.length > 0 && diffAllergen.length >= 2){
+        const correctDish = sameAllergen[Math.floor(Math.random()*sameAllergen.length)];
+        const wrongDishes = _djShuffle(diffAllergen).slice(0,3);
+        const opts = _djShuffle([correctDish, ...wrongDishes]);
+        const allergenLabel = _en ? (allergenData_en[targetAllergen]||targetAllergen) : targetAllergen;
+        questions.push({
+          q: _en ? `Which dish also contains ${allergenLabel}, like "${dd.name}"?` : `¿Qué plato también contiene ${allergenLabel}, como "${dd.name}"?`,
+          options: opts.map(d=>getDish(d).name),
+          correctIdx: opts.indexOf(correctDish),
+          explain: _en ? `${getDish(correctDish).name} also has ${allergenLabel}.` : `${getDish(correctDish).name} también tiene ${allergenLabel}.`,
+          type: 'category'
+        });
+      } else {
+        _srAddCategoryQ(questions, dish, dd, allDishes, _en);
+      }
+    } else {
+      _srAddCategoryQ(questions, dish, dd, allDishes, _en);
+    }
+  } else {
+    _srAddCategoryQ(questions, dish, dd, allDishes, _en);
+  }
+
+  // ─── Question 3: Ingredient / Service / Wine (rotates) ───
+  const q3Type = Math.random();
+  const ingredients = dish.ingredients ? dish.ingredients.split(',').map(s=>s.trim()).filter(Boolean) : [];
+
+  if(q3Type < 0.35 && ingredients.length >= 3){
+    // Ingredient question
+    const otherDishes = allDishes.filter(d=>d.id!==dish.id && d.ingredients);
+    const otherIngs = otherDishes.flatMap(d=>d.ingredients.split(',').map(s=>s.trim()).filter(Boolean));
+    const dishIngsLow = ingredients.map(i=>i.toLowerCase());
+    const fakeIng = _djShuffle(otherIngs.filter(i=>!dishIngsLow.includes(i.toLowerCase()) && i.length>2 && i.length<30))[0] || (_en?'Truffle oil':'Aceite de trufa');
+    const realIngs = _djShuffle(ingredients.filter(i=>i.length>2 && i.length<30)).slice(0,3);
+    const allOpts = _djShuffle([fakeIng, ...realIngs]);
+    questions.push({
+      q: _en ? `Which ingredient is NOT in "${dd.name}"?` : `¿Cuál NO es ingrediente de "${dd.name}"?`,
+      options: allOpts,
+      correctIdx: allOpts.indexOf(fakeIng),
+      explain: _en ? `"${fakeIng}" is not part of this dish.` : `"${fakeIng}" no forma parte de este plato.`,
+      type: 'ingredient'
+    });
+  } else if(q3Type < 0.6 && typeof WINES !== 'undefined'){
+    // Wine pairing question — find wines that pair with this dish
+    const dishNameLow = dish.name.toLowerCase().substring(0,8);
+    const matchingWines = WINES.filter(function(w){ return w.pairings && w.pairings.some(function(p){ return p.toLowerCase().includes(dishNameLow); }); });
+    const nonMatchingWines = WINES.filter(function(w){ return !w.pairings || !w.pairings.some(function(p){ return p.toLowerCase().includes(dishNameLow); }); });
+    if(matchingWines.length > 0 && nonMatchingWines.length >= 2){
+      const correctWine = matchingWines[Math.floor(Math.random()*matchingWines.length)];
+      const wrongs = _djShuffle(nonMatchingWines).slice(0,3);
+      const opts = _djShuffle([correctWine, ...wrongs]);
+      questions.push({
+        q: _en ? `Which wine pairs well with "${dd.name}"?` : `¿Qué vino marida bien con "${dd.name}"?`,
+        options: opts.map(w=>w.name),
+        correctIdx: opts.indexOf(correctWine),
+        explain: _en ? `Recommended: ${correctWine.name}` : `Recomendado: ${correctWine.name}`,
+        type: 'ingredient'
+      });
+    } else {
+      _srAddServiceQ(questions, dish, dd, _en);
+    }
+  } else if(q3Type < 0.8){
+    // Service/cutlery question
+    _srAddServiceQ(questions, dish, dd, _en);
+  } else {
+    // "Is this dish for lunch, dinner, or both?"
+    const isLunch = dish.servicio === 'almuerzo' || dish.servicio === 'ambos';
+    const isDinner = dish.servicio === 'cena' || dish.servicio === 'ambos';
+    const isBoth = dish.servicio === 'ambos';
+    const opts = _en ? ['Lunch only','Dinner only','Both services','Neither'] : ['Solo almuerzo','Solo cena','Ambos servicios','Ninguno'];
+    const correctIdx = isBoth ? 2 : isLunch ? 0 : isDinner ? 1 : 3;
+    questions.push({
+      q: _en ? `When is "${dd.name}" served?` : `¿Cuándo se sirve "${dd.name}"?`,
+      options: opts,
+      correctIdx: correctIdx,
+      explain: _en ? `It's served at: ${dish.servicio||'both services'}` : `Se sirve en: ${dish.servicio||'ambos servicios'}`,
+      type: 'ingredient'
+    });
+  }
+
+  // ─── Question 4 (bonus for advanced/expert) ───
+  if((difficulty === 'advanced' || difficulty === 'expert') && dish.allergens && dish.allergens.length >= 2){
+    // "Which of these is NOT an allergen in this dish?"
+    const notPresent = allergenPool.filter(a=>!dish.allergens.includes(a));
+    if(notPresent.length >= 1){
+      const correctAnswer = notPresent[Math.floor(Math.random()*notPresent.length)];
+      const realAllergens = _djShuffle([...dish.allergens]).slice(0,3);
+      const opts = _djShuffle([correctAnswer, ...realAllergens]);
+      questions.push({
+        q: _en ? `Which of these is NOT an allergen in "${dd.name}"?` : `¿Cuál de estos NO es alérgeno de "${dd.name}"?`,
+        options: opts.map(a=>_en?(allergenData_en[a]||a):a),
+        correctIdx: opts.indexOf(correctAnswer),
+        explain: _en ? `${allergenData_en[correctAnswer]||correctAnswer} is not present. Allergens: ${dish.allergens.map(a=>allergenData_en[a]||a).join(', ')}` : `${correctAnswer} no está presente. Alérgenos: ${dish.allergens.join(', ')}`,
+        type: 'allergen'
+      });
+    }
+  }
+
+  return questions;
+}
+
+function _srAddCategoryQ(questions, dish, dd, allDishes, _en){
+  const allCats = [...new Set(allDishes.map(d=>d.cat))];
+  const correctCat = dish.cat;
+  const wrongCats = _djShuffle(allCats.filter(c=>c!==correctCat)).slice(0,3);
+  const catOpts = _djShuffle([correctCat,...wrongCats]);
+  questions.push({
+    q: _en ? `What category does "${dd.name}" belong to?` : `¿A qué categoría pertenece "${dd.name}"?`,
+    options: catOpts.map(c=>catLocal?catLocal(c):c),
+    correctIdx: catOpts.indexOf(correctCat),
+    explain: _en ? `It belongs to: ${catLocal?catLocal(correctCat):correctCat}` : `Pertenece a: ${catLocal?catLocal(correctCat):correctCat}`,
+    type: 'category'
+  });
+}
+
+function _srAddServiceQ(questions, dish, dd, _en){
+  const cutlery = dish.cutlery || (_en?'Standard cutlery':'Cubertería estándar');
+  const opts = _djShuffle([cutlery, _en?'Soup spoon':'Cuchara sopera', _en?'Dessert fork':'Tenedor de postre', _en?'Fish knife':'Cuchillo de pescado']);
+  questions.push({
+    q: _en ? `What cutlery is recommended for "${dd.name}"?` : `¿Qué cubertería se recomienda para "${dd.name}"?`,
+    options: opts,
+    correctIdx: opts.indexOf(cutlery),
+    explain: _en ? `Recommended: ${cutlery}` : `Recomendado: ${cutlery}`,
+    type: 'ingredient'
+  });
+}
+
+// ── Dashboard ──
 function renderSmartReview(){
   const c = document.getElementById('appContent');
   const _en = LANG==='en';
@@ -7165,43 +7460,40 @@ function renderSmartReview(){
   const dueCount = _srsDueCount(emp);
   const weaknesses = _adaptiveWeaknesses(emp);
   const accuracy = ad.totalQuizzes > 0 ? Math.round((ad.totalCorrect/ad.totalQuizzes)*100) : 0;
+  const diff = _srGetDifficulty(emp);
+  const rank = _srGetRank(emp);
 
-  // Stats cards
+  // Rank + Difficulty header
+  const rankHtml = `
+    <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;margin-bottom:1rem">
+      <div class="sr-rank ${rank.id}">${rank.icon} ${_en?rank.label_en:rank.label_es}</div>
+      <div class="sr-diff-badge ${diff}">${_srDiffIcon(diff)} ${_srDiffLabel(diff,_en)}</div>
+    </div>
+  `;
+
+  // Stats cards (4 now)
   const statsHtml = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.2rem">
-      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;text-align:center">
-        <div style="font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:700;color:${dueCount>0?'var(--rose)':'var(--sage)'}">${dueCount}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase">${_en?'Due':'Pendientes'}</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:1.2rem">
+      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:${dueCount>0?'var(--rose)':'var(--sage)'}">${dueCount}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Due':'Pendientes'}</div>
       </div>
-      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;text-align:center">
-        <div style="font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--gold)">${accuracy}%</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase">${_en?'Accuracy':'Precisión'}</div>
+      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--gold)">${accuracy}%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Accuracy':'Precisión'}</div>
       </div>
-      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;text-align:center">
-        <div style="font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--sage)">${ad.streakBest||0} 🔥</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase">${_en?'Best Streak':'Mejor Racha'}</div>
+      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--sage)">${ad.streakBest||0}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Best Streak':'Mejor Racha'}</div>
+      </div>
+      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#e07b5a">${ad.totalQuizzes||0}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Answered':'Respondidas'}</div>
       </div>
     </div>
   `;
 
-  // Weakness map
-  let weakHtml = '';
-  if(weaknesses.length > 0){
-    weakHtml = `
-      <div style="margin-bottom:1.2rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">🎯 ${_en?'YOUR WEAK SPOTS':'TUS PUNTOS DÉBILES'}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
-          ${weaknesses.slice(0,5).map(w => {
-            const icon = w.type==='allergen'?'⚠️':w.type==='category'?'📂':'🧂';
-            const label = w.type==='allergen'?(_en?(allergenData_en[w.key]||w.key):w.key):w.type==='category'?(catLocal?catLocal(w.key):w.key):(()=>{const d=DISHES.find(x=>x.id===parseInt(w.key));return d?getDish(d).name:'?';})();
-            return `<span style="display:inline-flex;align-items:center;gap:.25rem;padding:.3rem .6rem;border-radius:20px;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.12);font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--rose)">${icon} ${label} <span style="font-family:'DM Mono',monospace;font-size:.5rem;opacity:.6">×${w.count}</span></span>`;
-          }).join('')}
-        </div>
-      </div>
-    `;
-  }
-
-  // SRS progress bar (mastered / learning / new)
+  // SRS progress bar
   const mastered = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps >= 4 && s.ef >= 2.2; }).length;
   const learning = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps > 0 && (s.reps < 4 || s.ef < 2.2); }).length;
   const newDishes = DISHES.length - mastered - learning;
@@ -7209,41 +7501,73 @@ function renderSmartReview(){
 
   const progressHtml = `
     <div style="margin-bottom:1.2rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.4rem">📊 ${_en?'KNOWLEDGE MAP':'MAPA DE CONOCIMIENTO'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.4rem">📊 ${_en?'KNOWLEDGE MAP':'MAPA DE CONOCIMIENTO'}</div>
       <div style="height:10px;border-radius:5px;background:var(--line);overflow:hidden;display:flex">
-        <div style="width:${(mastered/total)*100}%;background:linear-gradient(90deg,#4d8a5e,#6ba872);transition:width .5s"></div>
-        <div style="width:${(learning/total)*100}%;background:linear-gradient(90deg,#c49a3c,#d4a840);transition:width .5s"></div>
+        <div style="width:${total>0?(mastered/total)*100:0}%;background:linear-gradient(90deg,#4d8a5e,#6ba872);transition:width .5s"></div>
+        <div style="width:${total>0?(learning/total)*100:0}%;background:linear-gradient(90deg,#c49a3c,#d4a840);transition:width .5s"></div>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-top:.35rem;font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">
-        <span>🟢 ${_en?'Mastered':'Dominados'}: ${mastered}</span>
-        <span>🟡 ${_en?'Learning':'Aprendiendo'}: ${learning}</span>
-        <span>⚪ ${_en?'New':'Nuevos'}: ${newDishes}</span>
+      <div style="display:flex;justify-content:space-between;margin-top:.35rem;font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4)">
+        <span style="color:#6ba872">● ${_en?'Mastered':'Dominados'}: ${mastered}</span>
+        <span style="color:#c49a3c">● ${_en?'Learning':'Aprendiendo'}: ${learning}</span>
+        <span style="color:var(--parch4)">● ${_en?'New':'Nuevos'}: ${newDishes}</span>
       </div>
     </div>
   `;
 
-  // Next review sessions
+  // Activity calendar (last 28 days)
+  const activityDays = _srGetActivityDays(emp);
+  const today = new Date();
+  let calHtml = '<div style="margin-bottom:1.2rem"><div style="font-family:\'DM Mono\',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.4rem">📅 ' + (_en?'ACTIVITY (28 DAYS)':'ACTIVIDAD (28 DÍAS)') + '</div><div class="sr-cal">';
+  for(let i=27;i>=0;i--){
+    const d = new Date(today);
+    d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    const count = activityDays[key]||0;
+    const lvl = count >= 10 ? 'l3' : count >= 5 ? 'l2' : count >= 1 ? 'l1' : '';
+    const isToday = i===0 ? ' today' : '';
+    calHtml += `<div class="sr-cal-day ${lvl}${isToday}" title="${key}: ${count}"></div>`;
+  }
+  calHtml += '</div></div>';
+
+  // Weakness map
+  let weakHtml = '';
+  if(weaknesses.length > 0){
+    weakHtml = `
+      <div style="margin-bottom:1.2rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">🎯 ${_en?'YOUR WEAK SPOTS':'TUS PUNTOS DÉBILES'}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          ${weaknesses.slice(0,5).map(w => {
+            const icon = w.type==='allergen'?'⚠️':w.type==='category'?'📂':'🧂';
+            const label = w.type==='allergen'?(_en?(allergenData_en[w.key]||w.key):w.key):w.type==='category'?(catLocal?catLocal(w.key):w.key):(()=>{const d=DISHES.find(x=>x.id===parseInt(w.key));return d?getDish(d).name:'?';})();
+            return `<span style="display:inline-flex;align-items:center;gap:.25rem;padding:.3rem .6rem;border-radius:20px;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.12);font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--rose)">${icon} ${label} <span style="font-family:'DM Mono',monospace;font-size:.45rem;opacity:.6">×${w.count}</span></span>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // Next dishes
   const dueDishes = _srsDueDishes(emp);
   const sessionSize = Math.min(5, dueDishes.length);
 
   let nextDishesHtml = '';
   if(dueDishes.length > 0){
-    const preview = dueDishes.slice(0,6);
+    const preview = dueDishes.slice(0,5);
     nextDishesHtml = `
       <div style="margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">📋 ${_en?'NEXT UP FOR REVIEW':'PRÓXIMOS PARA REPASAR'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">📋 ${_en?'NEXT UP':'PRÓXIMOS'}</div>
         ${preview.map((item,i) => {
           const dd = getDish(item.dish);
           const s = (emp.srs||{})[item.dish.id];
           const reps = s ? s.reps : 0;
           const typeLabel = item.type === 'new' ? (_en?'NEW':'NUEVO') : (_en?'REVIEW':'REPASO');
           const typeColor = item.type === 'new' ? 'var(--sage)' : 'var(--gold)';
-          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem .6rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.35rem;animation:fadeInUp .3s ${i*0.05}s both">
+          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.45rem .6rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.3rem;animation:fadeInUp .3s ${i*0.05}s both">
             <div style="flex:1;min-width:0">
-              <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}</div>
-              <div style="font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4)">${dd.cat} · ${reps} ${_en?'reviews':'repasos'}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}</div>
+              <div style="font-family:'DM Mono',monospace;font-size:.45rem;color:var(--parch4)">${dd.cat} · ${reps} ${_en?'reviews':'repasos'}</div>
             </div>
-            <span style="font-family:'DM Mono',monospace;font-size:.45rem;padding:.15rem .4rem;border-radius:10px;background:${typeColor}15;color:${typeColor};border:1px solid ${typeColor}30">${typeLabel}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:.42rem;padding:.12rem .35rem;border-radius:10px;background:${typeColor}15;color:${typeColor};border:1px solid ${typeColor}30">${typeLabel}</span>
           </div>`;
         }).join('')}
       </div>
@@ -7252,38 +7576,122 @@ function renderSmartReview(){
 
   c.innerHTML = `
     <div class="section-eyebrow">🧠 ${_en?'Smart Review':'Repaso Inteligente'}</div>
-    <div style="text-align:center;margin-bottom:1rem">
-      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.6">${_en?'Your brain forgets what you don\'t review. This system knows exactly when you need to see each dish again.':'Tu cerebro olvida lo que no repasas. Este sistema sabe exactamente cuándo necesitas volver a ver cada plato.'}</div>
+    <div style="text-align:center;margin-bottom:.8rem">
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${_en?'AI-powered adaptive learning with spaced repetition, difficulty scaling, and speed challenges.':'Aprendizaje adaptativo con repetición espaciada, dificultad dinámica y desafíos de velocidad.'}</div>
     </div>
+    ${rankHtml}
     ${statsHtml}
     ${progressHtml}
+    ${calHtml}
     ${weakHtml}
     ${nextDishesHtml}
     ${dueDishes.length > 0 ? `
       <button onclick="_startSmartSession()" style="display:block;width:100%;padding:.85rem;border-radius:var(--r2);background:linear-gradient(135deg,#c49a3c,#d4a840);color:#1c2a22;border:none;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(196,154,60,.3);transition:all .3s;letter-spacing:.02em">
-        🚀 ${_en?`Start Smart Session (${sessionSize} dishes)`:`Iniciar Sesión Inteligente (${sessionSize} platos)`}
+        🚀 ${_en?`Start Session (${sessionSize} dishes · ${_srDiffLabel(diff,_en)})`:`Iniciar Sesión (${sessionSize} platos · ${_srDiffLabel(diff,_en)})`}
       </button>
-      <div style="text-align:center;margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4)">${_en?'Powered by spaced repetition + adaptive AI':'Potenciado por repetición espaciada + IA adaptativa'}</div>
+      <div style="text-align:center;margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.45rem;color:var(--parch4)">${_en?'Timer + Combo + Adaptive AI + Spaced Repetition':'Temporizador + Combo + IA Adaptativa + Repetición Espaciada'}</div>
     ` : `
       <div style="text-align:center;padding:1.5rem;background:var(--ink2);border-radius:var(--r2);border:1px solid rgba(77,138,94,.15)">
         <div style="font-size:2rem;margin-bottom:.4rem">🎉</div>
         <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--sage)">${_en?'All caught up!':'¡Todo al día!'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.3rem">${_en?'No dishes due for review right now':'No hay platos pendientes de repaso ahora mismo'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.3rem">${_en?'Come back later for new reviews':'Vuelve más tarde para nuevos repasos'}</div>
       </div>
     `}
   `;
 }
 
+// ── Session Start ──
 function _startSmartSession(){
   const emp = getEmp(currentUser);
+  const diff = _srGetDifficulty(emp);
   const dishes = _adaptiveSelectDishes(emp, 5);
   if(dishes.length === 0) return;
 
-  _smartReviewState = { queue:dishes.map(d=>d.id), current:0, sessionScore:0, sessionTotal:0, results:{} };
+  _smartReviewState = {
+    queue: dishes.map(d=>d.id),
+    current: 0,
+    sessionScore: 0,
+    sessionTotal: 0,
+    combo: 0,
+    bestCombo: 0,
+    totalTime: 0,
+    xpTotal: 0,
+    difficulty: diff,
+    results: {},
+    startTime: Date.now()
+  };
   _renderSmartCard();
 }
 
+// ── Timer Logic ──
+function _srStartTimer(){
+  _srStopTimer();
+  const diff = _smartReviewState.difficulty;
+  const maxSec = _srTimerSeconds(diff);
+  _smartQuizState.timerMax = maxSec;
+  _smartQuizState.timerLeft = maxSec;
+  _smartQuizState.timerStart = Date.now();
+
+  _srUpdateTimerUI();
+  _srTimerInterval = setInterval(()=>{
+    const elapsed = (Date.now() - _smartQuizState.timerStart) / 1000;
+    _smartQuizState.timerLeft = Math.max(0, _smartQuizState.timerMax - elapsed);
+    _srUpdateTimerUI();
+    if(_smartQuizState.timerLeft <= 0){
+      _srStopTimer();
+      // Auto-fail unanswered questions
+      const qs = _smartQuizState.qs;
+      for(let i=0;i<qs.length;i++){
+        if(_smartQuizState['a'+i] === undefined){
+          _smartQuizState['a'+i] = -1; // timeout
+          _smartQuizState.answered++;
+          _smartReviewState.sessionTotal++;
+          _smartReviewState.combo = 0;
+          const emp = getEmp(currentUser);
+          const qType = i===0?'allergen':i===1?'category':'ingredient';
+          _adaptiveRecord(emp, _smartQuizState.dishId, qType, false, null);
+        }
+      }
+      _renderSmartQuiz();
+      // Enable next
+      const btn = document.getElementById('smartNextBtn');
+      if(btn) btn.disabled = false;
+      // Update SRS
+      const emp = getEmp(currentUser);
+      const quality = _srsQualityFromScore(_smartQuizState.correct, qs.length);
+      _srsUpdate(emp, _smartQuizState.dishId, quality);
+      _smartReviewState.results[_smartQuizState.dishId] = { correct:_smartQuizState.correct, total:qs.length, quality:quality, avgTime:_smartQuizState.timerMax };
+    }
+  }, 100);
+}
+
+function _srStopTimer(){
+  if(_srTimerInterval){ clearInterval(_srTimerInterval); _srTimerInterval = null; }
+}
+
+function _srUpdateTimerUI(){
+  const ring = document.getElementById('srTimerRing');
+  if(!ring) return;
+  const left = _smartQuizState.timerLeft;
+  const max = _smartQuizState.timerMax;
+  const pct = left / max;
+  const circ = 2 * Math.PI * 22; // radius 22
+  const offset = circ * (1 - pct);
+
+  const fg = ring.querySelector('.sr-ring-fg');
+  const num = ring.querySelector('.sr-timer-num');
+  if(fg){
+    fg.style.strokeDasharray = circ;
+    fg.style.strokeDashoffset = offset;
+    fg.classList.toggle('warn', pct < 0.4 && pct >= 0.2);
+    fg.classList.toggle('danger', pct < 0.2);
+  }
+  if(num) num.textContent = Math.ceil(left);
+}
+
+// ── Render Card ──
 function _renderSmartCard(){
+  _srStopTimer();
   const state = _smartReviewState;
   const _en = LANG==='en';
   if(state.current >= state.queue.length){
@@ -7296,32 +7704,38 @@ function _renderSmartCard(){
   if(!dish){ state.current++; _renderSmartCard(); return; }
   const dd = getDish(dish);
 
-  // Generate 3 quick questions
-  const qs = _djGenerateQuiz(dish);
+  const qs = _srGenerateQuiz(dish, state.difficulty);
+  const diff = state.difficulty;
 
   const newContent = `
     <div class="dj-container">
       <div class="dj-bg"></div>
+      ${state.combo >= 2 ? `<div class="sr-combo"><div class="sr-combo-count${state.combo>=5?' big':''}">${state.combo}</div><div class="sr-combo-label">COMBO</div>${state.combo>=3?`<div class="sr-combo-mult">×${Math.min(3,1+Math.floor(state.combo/3))}</div>`:''}</div>` : ''}
       <div class="dj-header">
         <div class="dj-close" onclick="_endSmartSession()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.5);letter-spacing:.1em">${state.current+1} / ${state.queue.length}</div>
-        <div style="width:36px"></div>
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <div class="sr-diff-badge ${diff}">${_srDiffIcon(diff)} ${_srDiffLabel(diff,_en)}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:rgba(196,154,60,.5);letter-spacing:.1em">${state.current+1}/${state.queue.length}</div>
+        </div>
+        <div class="sr-timer-ring" id="srTimerRing">
+          <svg viewBox="0 0 52 52"><circle class="sr-ring-bg" cx="26" cy="26" r="22"/><circle class="sr-ring-fg" cx="26" cy="26" r="22" stroke-dasharray="${2*Math.PI*22}" stroke-dashoffset="0"/></svg>
+          <div class="sr-timer-num">${_srTimerSeconds(diff)}</div>
+        </div>
       </div>
       <div class="dj-body">
         <div class="dj-phase-label">🧠 ${_en?'SMART REVIEW':'REPASO INTELIGENTE'}</div>
         <div class="dj-phase-title">${dd.name}</div>
-        <div class="dj-dish-name">${dd.cat} · ${dish.allergens.length} ${_en?'allergens':'alérgenos'}</div>
+        <div class="dj-dish-name">${dd.cat} · ${dish.allergens?dish.allergens.length:0} ${_en?'allergens':'alérgenos'}</div>
         <div id="smartQuizArea"></div>
       </div>
       <div class="dj-nav">
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.3)">${_en?'Score':'Puntos'}: ${state.sessionScore}/${state.sessionTotal}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.3)">${_en?'Score':'Puntos'}: ${state.sessionScore}/${state.sessionTotal}${state.xpTotal>0?' · +'+state.xpTotal+'XP':''}</div>
         <button id="smartNextBtn" class="dj-btn dj-btn-next" onclick="_smartNext()" disabled>${_en?'Next Dish':'Siguiente Plato'} →</button>
       </div>
     </div>
   `;
   const existing = document.getElementById('smartOverlay');
   if(existing){
-    // Update in-place to avoid white flash
     existing.innerHTML = newContent;
   } else {
     const overlay = document.createElement('div');
@@ -7331,13 +7745,12 @@ function _renderSmartCard(){
     document.body.appendChild(overlay);
   }
 
-  // Render quiz questions
-  _smartQuizState = { qs:qs, answered:0, correct:0, dishId:dishId };
+  _smartQuizState = { qs:qs, answered:0, correct:0, dishId:dishId, qTimes:[] };
   _renderSmartQuiz();
+  _srStartTimer();
 }
 
-var _smartQuizState = {};
-
+// ── Render Quiz ──
 function _renderSmartQuiz(){
   const area = document.getElementById('smartQuizArea');
   if(!area) return;
@@ -7347,6 +7760,7 @@ function _renderSmartQuiz(){
   area.innerHTML = qs.map((q,qi)=>{
     const answered = _smartQuizState['a'+qi] !== undefined;
     const userAnswer = _smartQuizState['a'+qi];
+    const isTimeout = userAnswer === -1;
     return `<div class="dj-quiz-card" style="--delay:${0.1+qi*0.12}s">
       <div class="dj-quiz-q">${qi+1}. ${q.q}</div>
       <div class="dj-quiz-opts">
@@ -7360,38 +7774,82 @@ function _renderSmartQuiz(){
           return `<div class="${cls}" onclick="_smartAnswer(${qi},${oi})">${opt}</div>`;
         }).join('')}
       </div>
-      ${answered?`<div class="dj-quiz-result ${userAnswer===q.correctIdx?'ok':'fail'}">${userAnswer===q.correctIdx?'✓':'✗'} ${q.explain}</div>`:''}
+      ${answered?`<div class="dj-quiz-result ${(userAnswer===q.correctIdx)?'ok':'fail'}">${isTimeout?'⏱️':((userAnswer===q.correctIdx)?'✓':'✗')} ${isTimeout?(_en?'Time\'s up!':'¡Tiempo agotado!'):q.explain}</div>`:''}
     </div>`;
   }).join('');
 }
 
+// ── Answer Handler ──
 function _smartAnswer(qIdx, optIdx){
   if(_smartQuizState['a'+qIdx] !== undefined) return;
+  const answerTime = _smartQuizState.timerMax - _smartQuizState.timerLeft;
   _smartQuizState['a'+qIdx] = optIdx;
   _smartQuizState.answered++;
+  _smartQuizState.qTimes.push(answerTime);
+
   const qs = _smartQuizState.qs;
   const isCorrect = optIdx === qs[qIdx].correctIdx;
   if(isCorrect) _smartQuizState.correct++;
 
   _smartReviewState.sessionTotal++;
-  if(isCorrect) _smartReviewState.sessionScore++;
+  if(isCorrect){
+    _smartReviewState.sessionScore++;
+    _smartReviewState.combo++;
+    if(_smartReviewState.combo > _smartReviewState.bestCombo) _smartReviewState.bestCombo = _smartReviewState.combo;
 
-  // Record for adaptive learning
+    // Speed bonus XP
+    const speedBonus = answerTime < 3 ? 5 : answerTime < 5 ? 3 : answerTime < 8 ? 1 : 0;
+    const comboMult = Math.min(3, 1 + Math.floor(_smartReviewState.combo / 3));
+    const qXP = (10 + speedBonus) * comboMult;
+    _smartReviewState.xpTotal += qXP;
+
+    // Show floating XP
+    if(speedBonus > 0){
+      const fb = document.createElement('div');
+      fb.className = 'sr-speed-bonus';
+      fb.textContent = `+${qXP} XP`;
+      const quizArea = document.getElementById('smartQuizArea');
+      if(quizArea){ quizArea.style.position='relative'; quizArea.appendChild(fb); setTimeout(()=>fb.remove(),900); }
+    }
+  } else {
+    _smartReviewState.combo = 0;
+  }
+
+  // Update combo display
+  const comboEl = document.querySelector('.sr-combo');
+  if(_smartReviewState.combo >= 2){
+    if(comboEl){
+      comboEl.querySelector('.sr-combo-count').textContent = _smartReviewState.combo;
+      comboEl.querySelector('.sr-combo-count').classList.toggle('big', _smartReviewState.combo >= 5);
+      const multEl = comboEl.querySelector('.sr-combo-mult');
+      if(multEl) multEl.textContent = '×' + Math.min(3, 1 + Math.floor(_smartReviewState.combo / 3));
+    }
+  }
+
+  // Record adaptive
   const emp = getEmp(currentUser);
-  const qType = qIdx === 0 ? 'allergen' : qIdx === 1 ? 'category' : 'ingredient';
+  const qType = qs[qIdx].type || (qIdx===0?'allergen':qIdx===1?'category':'ingredient');
   _adaptiveRecord(emp, _smartQuizState.dishId, qType, isCorrect, null);
 
   _renderSmartQuiz();
 
-  // Enable next button when all answered
+  // All answered?
   if(_smartQuizState.answered >= qs.length){
+    _srStopTimer();
     const btn = document.getElementById('smartNextBtn');
     if(btn) btn.disabled = false;
 
-    // Update SRS for this dish
+    const avgTime = _smartQuizState.qTimes.length > 0 ? _smartQuizState.qTimes.reduce((a,b)=>a+b,0)/_smartQuizState.qTimes.length : 0;
+    _smartReviewState.totalTime += _smartQuizState.qTimes.reduce((a,b)=>a+b,0);
+
     const quality = _srsQualityFromScore(_smartQuizState.correct, qs.length);
     _srsUpdate(emp, _smartQuizState.dishId, quality);
-    _smartReviewState.results[_smartQuizState.dishId] = { correct:_smartQuizState.correct, total:qs.length, quality:quality };
+    _smartReviewState.results[_smartQuizState.dishId] = {
+      correct: _smartQuizState.correct,
+      total: qs.length,
+      quality: quality,
+      avgTime: Math.round(avgTime*10)/10
+    };
   }
 }
 
@@ -7401,18 +7859,31 @@ function _smartNext(){
 }
 
 function _endSmartSession(){
+  _srStopTimer();
   const overlay = document.getElementById('smartOverlay');
   if(overlay){ overlay.style.opacity='0'; overlay.style.transition='opacity .3s'; setTimeout(()=>overlay.remove(), 300); }
   renderAprender();
 }
 
+// ── Summary ──
 function _renderSmartSummary(){
+  _srStopTimer();
   const state = _smartReviewState;
   const _en = LANG==='en';
   const pct = state.sessionTotal > 0 ? Math.round((state.sessionScore / state.sessionTotal) * 100) : 0;
-  const xpEarned = state.sessionScore * 10 + (pct === 100 ? 30 : pct >= 80 ? 15 : 0);
 
-  if(xpEarned > 0) awardXP(xpEarned, _en ? 'Smart Review' : 'Repaso Inteligente');
+  // Calculate XP: base per correct + combo bonus + speed bonuses + perfect bonus
+  const baseXP = state.xpTotal;
+  const perfectBonus = pct === 100 ? 50 : pct >= 90 ? 25 : pct >= 80 ? 10 : 0;
+  const comboBonus = state.bestCombo >= 5 ? 30 : state.bestCombo >= 3 ? 15 : 0;
+  const totalXP = baseXP + perfectBonus + comboBonus;
+
+  if(totalXP > 0) awardXP(totalXP, _en ? 'Smart Review' : 'Repaso Inteligente');
+
+  const avgTime = state.totalTime > 0 && state.sessionTotal > 0 ? (state.totalTime / state.sessionTotal) : 0;
+  const totalSec = Math.round((Date.now() - (state.startTime||Date.now())) / 1000);
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
 
   const summaryContent = `
     <div class="dj-container">
@@ -7424,23 +7895,43 @@ function _renderSmartSummary(){
       </div>
       <div class="dj-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
         <div class="dj-mastery">
-          <div class="dj-mastery-icon">${pct>=80?'🏆':pct>=60?'⭐':'📚'}</div>
+          <div class="dj-mastery-icon">${pct>=90?'🏆':pct>=70?'⭐':pct>=50?'📚':'💪'}</div>
           <div class="dj-mastery-title">${_en?'Session Complete':'Sesión Completada'}</div>
-          <div class="dj-mastery-subtitle">${state.queue.length} ${_en?'dishes reviewed':'platos repasados'}</div>
-          <div class="dj-mastery-score">${state.sessionScore}/${state.sessionTotal}</div>
-          <div class="dj-mastery-label">${_en?'CORRECT ANSWERS':'RESPUESTAS CORRECTAS'}</div>
+          <div class="dj-mastery-subtitle">${state.queue.length} ${_en?'dishes':'platos'} · ${_srDiffLabel(state.difficulty,_en)} · ${mins}:${String(secs).padStart(2,'0')}</div>
+          <div class="dj-mastery-score">${pct}%</div>
+          <div class="dj-mastery-label">${state.sessionScore}/${state.sessionTotal} ${_en?'CORRECT':'CORRECTAS'}</div>
           <div class="dj-mastery-bar"><div class="dj-mastery-fill" style="--target-w:${pct}%;background:linear-gradient(90deg,${pct>=80?'#4d8a5e,#6ba872':pct>=60?'#c49a3c,#d4a840':'#c47068,#d48880'})"></div></div>
-          <div class="dj-mastery-xp">+${xpEarned} XP</div>
 
-          <div style="display:flex;flex-direction:column;gap:.4rem;width:100%;max-width:300px;margin-top:1rem">
+          <!-- Stats grid -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;width:100%;max-width:300px;margin:1rem 0">
+            <div style="background:rgba(244,237,226,.03);border:1px solid rgba(244,237,226,.06);border-radius:10px;padding:.5rem">
+              <div style="font-family:'DM Mono',monospace;font-size:1rem;font-weight:700;color:#e8c44c">+${totalXP}</div>
+              <div style="font-family:'DM Mono',monospace;font-size:.4rem;color:rgba(244,237,226,.4);letter-spacing:.08em">XP</div>
+            </div>
+            <div style="background:rgba(244,237,226,.03);border:1px solid rgba(244,237,226,.06);border-radius:10px;padding:.5rem">
+              <div style="font-family:'DM Mono',monospace;font-size:1rem;font-weight:700;color:#e07b5a">${state.bestCombo}</div>
+              <div style="font-family:'DM Mono',monospace;font-size:.4rem;color:rgba(244,237,226,.4);letter-spacing:.08em">${_en?'BEST COMBO':'MEJOR COMBO'}</div>
+            </div>
+            <div style="background:rgba(244,237,226,.03);border:1px solid rgba(244,237,226,.06);border-radius:10px;padding:.5rem">
+              <div style="font-family:'DM Mono',monospace;font-size:1rem;font-weight:700;color:#6ba872">${Math.round(avgTime*10)/10}s</div>
+              <div style="font-family:'DM Mono',monospace;font-size:.4rem;color:rgba(244,237,226,.4);letter-spacing:.08em">${_en?'AVG TIME':'TIEMPO MEDIO'}</div>
+            </div>
+          </div>
+
+          ${perfectBonus > 0 ? `<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#e8c44c;margin-bottom:.3rem;animation:djPulse 1.5s infinite">🌟 ${_en?'Perfect Bonus':'Bonus Perfecto'}: +${perfectBonus} XP</div>` : ''}
+          ${comboBonus > 0 ? `<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#e07b5a;margin-bottom:.5rem">🔥 ${_en?'Combo Bonus':'Bonus Combo'}: +${comboBonus} XP</div>` : ''}
+
+          <!-- Per-dish results -->
+          <div style="display:flex;flex-direction:column;gap:.35rem;width:100%;max-width:300px;margin-top:.5rem">
             ${state.queue.map(id => {
-              const r = state.results[id] || { correct:0, total:3 };
+              const r = state.results[id] || { correct:0, total:3, avgTime:0 };
               const d = DISHES.find(x=>x.id===id);
               const dd = d ? getDish(d) : { name:'?' };
               const rpct = r.total > 0 ? Math.round((r.correct/r.total)*100) : 0;
               return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem .6rem;background:rgba(244,237,226,.03);border:1px solid rgba(244,237,226,.05);border-radius:8px;text-align:left">
-                <span style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:rgba(244,237,226,.7);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}</span>
-                <span style="font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;color:${rpct>=80?'#6ba872':rpct>=60?'#c49a3c':'#c47068'};flex-shrink:0;margin-left:.5rem">${r.correct}/${r.total}</span>
+                <span style="font-family:'Quicksand',sans-serif;font-size:.68rem;color:rgba(244,237,226,.7);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}</span>
+                <span style="font-family:'DM Mono',monospace;font-size:.5rem;color:rgba(244,237,226,.35);margin:0 .3rem">${r.avgTime}s</span>
+                <span style="font-family:'DM Mono',monospace;font-size:.58rem;font-weight:700;color:${rpct>=80?'#6ba872':rpct>=60?'#c49a3c':'#c47068'};flex-shrink:0">${r.correct}/${r.total}</span>
               </div>`;
             }).join('')}
           </div>
@@ -8856,7 +9347,7 @@ function renderAprender(){
   const _en = LANG==='en';
   const _srsCount = _srsDueCount(getEmp(currentUser));
   const bar = _subTabBar([
-    ['smart',_en?'Smart Review':'Repaso IA',_srsCount>0?'🔴':'🧠'],
+    ['smart',_en?'Smart Review':'Repaso Inteligente',_srsCount>0?'🔴':'🧠'],
     ['flashcards','Flashcards',''],
     ['repaso',_en?'Explore':'Explorar',''],
     ['videos',_en?'Videos':'Videos','']
