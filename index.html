@@ -3201,14 +3201,17 @@ body::after{
 }
 .game-card-arrow svg{position:relative;z-index:1}
 .sound-toggle{
-  position:fixed;bottom:52px;right:12px;
+  position:fixed;bottom:14px;left:12px;
   width:36px;height:36px;border-radius:50%;
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);
   display:flex;align-items:center;justify-content:center;
-  font-size:1rem;cursor:pointer;z-index:500;
+  font-size:1rem;cursor:pointer;z-index:9500;
   box-shadow:0 3px 12px rgba(28,42,34,.1);transition:all .2s;
 }
 .sound-toggle:hover{border-color:var(--gold-a);transform:scale(1.1);}
+@media (max-width: 640px){
+  .sound-toggle{bottom:14px;left:10px;width:38px;height:38px}
+}
 
 /* ── TUNIC Geometric Decorations ── */
 .tunic-divider{
@@ -19132,7 +19135,7 @@ function flipCard(){
 
 // Visual click feedback for rate buttons — Tunic-style burst + sound
 function _fcRateFire(btn){
-  try{ if(typeof playSound==='function') playSound(btn.classList.contains('fc-rate-again')?'wrong':(btn.classList.contains('fc-rate-good')?'correct':'click')); }catch(e){}
+  try{ if(typeof playSound==='function') playSound(btn.classList.contains('fc-rate-again')?'review':(btn.classList.contains('fc-rate-good')?'correct':'click')); }catch(e){}
   if(!btn||!btn.classList) return;
   btn.classList.remove('fc-rate-fire'); void btn.offsetWidth;
   btn.classList.add('fc-rate-fire');
@@ -23536,6 +23539,25 @@ function playSound(type){
       gain.gain.setValueAtTime(0.1,ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
       osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
+    } else if(type==='review'){
+      // Suave "anotado" — neutro, sin connotacion de error.
+      // Dos notas descendentes sine, cortas y cálidas.
+      osc.type='sine';
+      osc.frequency.setValueAtTime(440,ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(330,ctx.currentTime+0.22);
+      gain.gain.setValueAtTime(0.0001,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.09,ctx.currentTime+0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.28);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
+    } else if(type==='click'){
+      // Click breve neutro para "Lo sé" / confirmacion ligera.
+      osc.type='triangle';
+      osc.frequency.setValueAtTime(620,ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(540,ctx.currentTime+0.1);
+      gain.gain.setValueAtTime(0.0001,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.07,ctx.currentTime+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.15);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.16);
     } else if(type==='levelup'){
       [523,659,784,1047].forEach((f,i)=>{
         const o2=ctx.createOscillator();const g2=ctx.createGain();
