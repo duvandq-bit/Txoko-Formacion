@@ -721,6 +721,222 @@ body::after{
   content:'';flex:1;height:1.5px;
   background:linear-gradient(90deg,rgba(196,154,60,.2),transparent);
 }
+.sr-live-dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#ff6b4d,#c45a3a);
+  box-shadow:0 0 0 0 rgba(196,90,58,.55);
+  animation:sr-live-pulse 1.8s ease-out infinite;
+  vertical-align:middle;margin-right:.2rem;
+}
+@keyframes sr-live-pulse{
+  0%   { box-shadow:0 0 0 0 rgba(196,90,58,.55); transform:scale(1); }
+  70%  { box-shadow:0 0 0 8px rgba(196,90,58,0);  transform:scale(1.08); }
+  100% { box-shadow:0 0 0 0 rgba(196,90,58,0);   transform:scale(1); }
+}
+
+/* ═══════ Repaso Inteligente — futuristic console ═══════ */
+.ri-console{
+  position:relative;max-width:640px;margin:0 auto;padding:1.8rem 1.6rem 1.5rem;
+  background:linear-gradient(180deg,#ffffff 0%,#faf6ee 100%);
+  border:1px solid rgba(28,42,34,.1);
+  border-radius:14px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 1px 2px rgba(28,42,34,.04),
+    0 8px 32px rgba(28,42,34,.08);
+  overflow:hidden;
+}
+.ri-grid-bg{
+  position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background-image:
+    linear-gradient(rgba(74,143,111,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,143,111,.06) 1px, transparent 1px);
+  background-size:24px 24px;
+  mask-image:radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.7), transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.7), transparent 70%);
+}
+.ri-console > *{ position:relative;z-index:1 }
+
+.ri-header{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding-bottom:1.1rem;margin-bottom:1.1rem;
+  border-bottom:1px solid rgba(28,42,34,.08);
+}
+.ri-brand{ display:flex;align-items:center;gap:.75rem }
+.ri-brand-mark{
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#ffffff,#f3ead4);
+  border:1px solid rgba(196,154,60,.3);border-radius:10px;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset, 0 2px 6px rgba(74,143,111,.12);
+}
+.ri-brand-title{
+  font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;
+  color:#1c2a22;letter-spacing:.2em;line-height:1;margin-bottom:.25rem;
+}
+.ri-brand-sub{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  color:#6b7e73;letter-spacing:.06em;
+}
+.ri-status-col{
+  display:flex;align-items:center;gap:.55rem;
+  padding:.4rem .7rem;
+  background:rgba(74,143,111,.06);
+  border:1px solid rgba(74,143,111,.2);border-radius:999px;
+}
+.ri-status-dot{
+  width:7px;height:7px;border-radius:50%;background:#4a8f6f;
+  box-shadow:0 0 0 0 rgba(74,143,111,.5);
+  animation:ri-pulse 2s ease-out infinite;
+}
+@keyframes ri-pulse{
+  0%{ box-shadow:0 0 0 0 rgba(74,143,111,.5) }
+  70%{ box-shadow:0 0 0 8px rgba(74,143,111,0) }
+  100%{ box-shadow:0 0 0 0 rgba(74,143,111,0) }
+}
+.ri-status-lines{ display:flex;flex-direction:column;line-height:1 }
+.ri-status-top{
+  font-family:'DM Mono',monospace;font-size:.58rem;font-weight:600;
+  color:#2d5c44;letter-spacing:.08em;margin-bottom:.2rem;
+}
+.ri-status-sub{
+  font-family:'DM Mono',monospace;font-size:.52rem;
+  color:#6b7e73;letter-spacing:.1em;
+}
+
+.ri-stats-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.3rem;
+}
+.ri-stat{
+  text-align:center;padding:.75rem .4rem;
+  background:rgba(255,255,255,.65);
+  border:1px solid rgba(28,42,34,.08);border-radius:10px;
+  transition:border-color .2s, transform .2s;
+}
+.ri-stat:hover{ border-color:rgba(196,154,60,.4);transform:translateY(-1px) }
+.ri-stat-v{
+  font-family:'Cinzel',serif;font-size:1.35rem;font-weight:600;
+  color:#1c2a22;line-height:1;margin-bottom:.35rem;
+  background:linear-gradient(135deg,#1c2a22 0%,#4a8f6f 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.ri-stat-l{
+  font-family:'DM Mono',monospace;font-size:.55rem;
+  color:#6b7e73;letter-spacing:.1em;text-transform:uppercase;
+}
+
+.ri-preview{
+  position:relative;padding:1rem 1.1rem;margin-bottom:1.3rem;
+  background:linear-gradient(135deg,rgba(74,143,111,.04) 0%,rgba(196,154,60,.04) 100%);
+  border:1px solid rgba(28,42,34,.1);border-left:3px solid #c49a3c;
+  border-radius:10px;
+}
+.ri-preview-label{
+  font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600;
+  color:#c49a3c;letter-spacing:.15em;margin-bottom:.55rem;
+}
+.ri-preview-quote{
+  font-family:'Georgia','Cormorant Garamond',serif;font-size:1.02rem;
+  color:#1c2a22;line-height:1.5;font-style:italic;margin-bottom:.6rem;
+}
+.ri-preview-meta{
+  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.05em;
+}
+.ri-preview-dish{ color:#2d5c44;font-weight:600 }
+.ri-preview-dot{ color:#c49a3c }
+.ri-preview-cat{ color:#6b7e73;text-transform:uppercase;letter-spacing:.12em;font-size:.52rem }
+
+.ri-section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:0 .2rem .65rem;
+}
+.ri-section-title{
+  font-family:'DM Mono',monospace;font-size:.6rem;font-weight:600;
+  color:#2d5c44;letter-spacing:.15em;
+}
+.ri-section-count{
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  color:#c49a3c;font-weight:600;
+  padding:.15rem .45rem;border:1px solid rgba(196,154,60,.35);
+  border-radius:999px;background:rgba(196,154,60,.06);
+}
+
+.ri-allergen-grid{
+  display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.4rem;
+}
+.ri-allergen-chip{
+  font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:500;
+  color:#1c2a22;
+  background:rgba(255,255,255,.7);
+  border:1px solid rgba(28,42,34,.12);
+  padding:.35rem .7rem;border-radius:6px;
+  transition:all .2s;
+}
+.ri-allergen-chip:hover{
+  border-color:#c49a3c;color:#1c2a22;
+  background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(74,143,111,.05));
+  transform:translateY(-1px);
+}
+
+.ri-cta-wrap{
+  display:flex;flex-direction:column;gap:.6rem;
+  padding-top:.3rem;border-top:1px solid rgba(28,42,34,.08);
+  margin-top:.4rem;padding-top:1.1rem;
+}
+.ri-cta{
+  display:flex;align-items:center;justify-content:center;gap:.85rem;
+  padding:1rem 1.3rem;width:100%;
+  background:linear-gradient(135deg,#2d5c44 0%,#4a8f6f 55%,#2d5c44 100%);
+  background-size:200% 100%;background-position:0% 50%;
+  border:none;border-radius:12px;color:#fff6e2;cursor:pointer;
+  font-family:'Cinzel',serif;font-weight:600;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.2) inset,
+    0 2px 0 #1f4431,
+    0 6px 16px rgba(45,92,68,.28);
+  transition:all .3s cubic-bezier(.2,.8,.3,1);
+}
+.ri-cta:hover{
+  background-position:100% 50%;transform:translateY(-2px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.25) inset,
+    0 3px 0 #1f4431,
+    0 10px 22px rgba(45,92,68,.38);
+}
+.ri-cta:active{ transform:translateY(1px);box-shadow:0 1px 0 #1f4431 }
+.ri-cta-icon{
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,246,226,.18);color:#fff6e2;
+}
+.ri-cta-text{ display:flex;flex-direction:column;align-items:flex-start;gap:.2rem }
+.ri-cta-top{
+  font-size:.92rem;font-weight:700;letter-spacing:.2em;
+  color:#fff6e2;
+}
+.ri-cta-sub{
+  font-family:'DM Mono',monospace;font-size:.58rem;font-weight:400;
+  color:rgba(255,246,226,.82);letter-spacing:.06em;text-transform:uppercase;
+}
+.ri-secondary{
+  background:transparent;border:1px solid rgba(28,42,34,.15);
+  color:#6b7e73;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;
+  letter-spacing:.1em;padding:.6rem 1rem;border-radius:8px;
+  transition:all .2s;
+}
+.ri-secondary:hover{
+  border-color:#c49a3c;color:#1c2a22;
+  background:rgba(196,154,60,.04);
+}
+
+@media(max-width:640px){
+  .ri-console{ padding:1.4rem 1rem 1.2rem }
+  .ri-header{ flex-direction:column;align-items:flex-start;gap:.7rem }
+  .ri-brand-title{ font-size:.85rem }
+  .ri-cta-top{ font-size:.82rem;letter-spacing:.15em }
+  .ri-stat-v{ font-size:1.15rem }
+}
 
 .card{
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:2px solid var(--ink3);
@@ -1360,9 +1576,9 @@ body::after{
 .fc-ribbon-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.35),transparent);border-radius:inherit}
 
 /* The card itself */
-.fc-scene{cursor:pointer;margin-bottom:1.5rem;position:relative;perspective:1200px;width:100%;max-width:420px;margin:0 auto;height:min(70vh,480px)}
+.fc-scene{cursor:pointer;margin-bottom:1.5rem;position:relative;perspective:1200px;width:100%;max-width:460px;margin:0 auto;min-height:340px}
 .fc-card{
-  width:100%;min-height:300px;
+  width:100%;min-height:340px;position:relative;
   filter:drop-shadow(0 8px 28px rgba(0,0,0,.09));
 }
 @keyframes fcFlipOut{
@@ -1374,13 +1590,17 @@ body::after{
   to{transform:perspective(900px) rotateY(0deg)}
 }
 .fc-face{
-  position:absolute;top:0;left:0;right:0;bottom:0;
+  position:relative;
   backface-visibility:hidden;-webkit-backface-visibility:hidden;
   background:linear-gradient(155deg,#f8f0e0,#ede4d0);
   border:1.5px solid rgba(196,154,60,.18);border-radius:16px;
-  padding:1.5rem;display:flex;flex-direction:column;
+  padding:1.4rem 1.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;
   box-shadow:0 4px 16px rgba(28,42,34,.08);overflow:hidden;
+  min-height:340px;max-height:72vh;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(196,154,60,.3) transparent;
 }
+.fc-face::-webkit-scrollbar{width:6px}
+.fc-face::-webkit-scrollbar-thumb{background:rgba(196,154,60,.3);border-radius:3px}
 .fc-face::before{
   content:'';position:absolute;top:0;left:0;right:0;bottom:0;
   background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.06)' stroke-width='0.5'/%3E%3C/svg%3E");
@@ -1457,21 +1677,65 @@ body::after{
   padding-bottom:.5rem;
 }
 
-/* Rating buttons — larger, more tactile */
-.fc-rating{display:flex;gap:.55rem;justify-content:center;flex-wrap:wrap;padding-top:.25rem}
+/* ── Rating buttons — TUNIC style with runes, glow & living animation ── */
+.fc-rating{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;padding-top:.35rem;perspective:600px;max-width:460px;margin:0 auto}
 .fc-rate-btn{
-  flex:1;padding:.6rem;border-radius:10px;cursor:pointer;
-  font-family:'Quicksand',sans-serif;font-size:.75rem;font-weight:600;
-  transition:all .2s;border:1.5px solid;
+  position:relative;flex:1;min-width:88px;padding:.55rem .5rem .5rem;border-radius:11px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.7rem;font-weight:500;letter-spacing:.05em;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, background .2s;
+  border:1.5px solid;background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 50%,#f0e8d8 100%);
+  display:flex;flex-direction:column;align-items:center;gap:.35rem;overflow:hidden;
+  box-shadow:0 2px 0 rgba(28,42,34,.08),0 4px 14px rgba(28,42,34,.06),inset 0 1px 0 rgba(255,255,255,.7);
+  animation:fc-rate-idle 3.8s ease-in-out infinite;
 }
-.fc-rate-btn::after{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,.25),transparent);border-radius:inherit;pointer-events:none}
-.fc-rate-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.15);}
-.fc-rate-again{color:var(--rose);border-color:rgba(201,112,112,.3);background:var(--rose-a)}
-.fc-rate-again:hover{background:rgba(201,112,112,.2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,112,112,.15)}
-.fc-rate-ok{color:var(--azure);border-color:rgba(112,149,200,.3);background:var(--azure-a)}
-.fc-rate-ok:hover{background:rgba(112,149,200,.2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(112,149,200,.15)}
-.fc-rate-good{color:var(--sage);border-color:rgba(77,138,94,.3);background:var(--sage-a)}
-.fc-rate-good:hover{background:rgba(77,138,94,.2);transform:translateY(-2px);box-shadow:0 4px 12px rgba(77,138,94,.15)}
+.fc-rate-btn::before{
+  content:'';position:absolute;inset:2px;border-radius:11px;pointer-events:none;
+  border:1px dashed currentColor;opacity:.18;
+}
+.fc-rate-btn::after{
+  content:'';position:absolute;top:-60%;left:-30%;width:160%;height:220%;
+  background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);
+  pointer-events:none;transform:translateX(-120%);transition:transform .7s ease;
+}
+.fc-rate-btn:hover::after{transform:translateX(60%)}
+.fc-rate-btn:hover{animation-play-state:paused;transform:translateY(-4px) scale(1.03);box-shadow:0 6px 18px rgba(28,42,34,.15),0 2px 0 rgba(28,42,34,.08),inset 0 1px 0 rgba(255,255,255,.8)}
+.fc-rate-btn:active{transform:translateY(2px) scale(.98);transition:all .08s;box-shadow:0 1px 0 rgba(28,42,34,.1)}
+.fc-rate-btn .fc-rate-rune{
+  width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:currentColor;opacity:.12;transition:all .25s;
+  position:relative;
+}
+.fc-rate-btn .fc-rate-rune svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.8;opacity:1;filter:brightness(.35)}
+.fc-rate-btn:hover .fc-rate-rune{opacity:.25;transform:rotate(20deg) scale(1.15)}
+.fc-rate-btn .fc-rate-lbl{line-height:1;position:relative;z-index:2}
+.fc-rate-btn .fc-rate-kbd{
+  position:absolute;top:4px;right:6px;font-family:'DM Mono',monospace;font-size:.42rem;
+  letter-spacing:.08em;opacity:.38;color:currentColor;
+}
+
+@keyframes fc-rate-idle{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-1.5px)}
+}
+@keyframes fc-rate-pulse{
+  0%,100%{box-shadow:0 2px 0 rgba(28,42,34,.08),0 4px 14px rgba(28,42,34,.06),inset 0 1px 0 rgba(255,255,255,.7),0 0 0 0 var(--fc-glow,rgba(196,154,60,.5))}
+  50%{box-shadow:0 2px 0 rgba(28,42,34,.08),0 4px 14px rgba(28,42,34,.06),inset 0 1px 0 rgba(255,255,255,.7),0 0 0 6px transparent}
+}
+
+.fc-rate-again{color:#b55858;border-color:rgba(201,112,112,.35);--fc-glow:rgba(201,112,112,.35)}
+.fc-rate-again:hover{background:linear-gradient(155deg,#fdf5f2,#fae8e3);border-color:rgba(201,112,112,.6)}
+.fc-rate-ok{color:#4d6a96;border-color:rgba(112,149,200,.35);--fc-glow:rgba(112,149,200,.35);animation:fc-rate-idle 3.8s ease-in-out infinite .2s, fc-rate-pulse 2.6s ease-in-out infinite}
+.fc-rate-ok:hover{background:linear-gradient(155deg,#f4f6fb,#e8eff8);border-color:rgba(112,149,200,.6)}
+.fc-rate-good{color:#3e7d52;border-color:rgba(77,138,94,.4);--fc-glow:rgba(77,138,94,.4);animation:fc-rate-idle 3.8s ease-in-out infinite .4s}
+.fc-rate-good:hover{background:linear-gradient(155deg,#f3f8f2,#e6f1e7);border-color:rgba(77,138,94,.6)}
+
+/* Choose animation on click — quick press/flash */
+.fc-rate-btn.fc-rate-fire{animation:fc-rate-fire .5s ease forwards !important}
+@keyframes fc-rate-fire{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.08);box-shadow:0 0 0 12px var(--fc-glow,transparent),0 6px 18px rgba(0,0,0,.12)}
+  100%{transform:scale(1);box-shadow:0 0 0 0 transparent}
+}
 
 /* ─────────────────────────────────────────────────
    EXAM SETUP
@@ -2548,6 +2812,167 @@ body::after{
   .svc-fab::after{inset:-12px}
 }
 
+/* ═══ PROTOCOL CHAPTER CARDS — Tunic-inspired ═══ */
+.pr-section-heading{
+  display:flex;align-items:center;gap:.75rem;
+  margin:1.1rem 0 .9rem;padding:0 .1rem;
+}
+.pr-section-heading-line{
+  flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.35),transparent);
+}
+.pr-section-heading-text{
+  font-family:'Cinzel',serif;font-size:.75rem;font-weight:600;
+  color:#2d5c44;letter-spacing:.3em;text-transform:uppercase;
+  padding:0 .2rem;
+}
+.pr-chapter{
+  position:relative;margin-bottom:.85rem;cursor:pointer;
+  background:linear-gradient(155deg,#ffffff 0%,#faf6ee 100%);
+  border:1px solid rgba(28,42,34,.1);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset, 0 2px 10px rgba(28,42,34,.05);
+  transition:transform .25s cubic-bezier(.2,.8,.3,1), box-shadow .25s, border-color .25s;
+}
+.pr-chapter:hover{
+  transform:translateY(-2px);
+  border-color:var(--sc);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 6px 22px rgba(28,42,34,.1), 0 0 0 1px color-mix(in srgb, var(--sc) 25%, transparent);
+}
+.pr-chapter:hover .pr-chapter-arrow{ transform:translateX(3px);color:var(--sc) }
+.pr-chapter:hover .pr-chapter-numeral{ color:var(--sc);border-color:var(--sc) }
+.pr-chapter-bar{
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg, var(--sc) 0%, color-mix(in srgb, var(--sc) 60%, #c49a3c) 100%);
+}
+.pr-chapter-body{
+  display:flex;align-items:center;gap:1rem;
+  padding:1.1rem 1.2rem 1rem;
+}
+.pr-chapter-numeral{
+  width:38px;height:38px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;
+  color:#6b7e73;letter-spacing:.05em;
+  border:1.5px solid rgba(28,42,34,.15);border-radius:50%;
+  background:rgba(255,255,255,.7);
+  transition:all .25s;
+}
+.pr-chapter-icon{
+  width:44px;height:44px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:12px;
+  background:color-mix(in srgb, var(--sc) 10%, #ffffff);
+  border:1.5px solid color-mix(in srgb, var(--sc) 25%, transparent);
+  color:var(--sc);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+}
+.pr-chapter-content{ flex:1;min-width:0 }
+.pr-chapter-title{
+  font-family:'Cinzel',serif;font-size:1rem;font-weight:600;
+  color:#1c2a22;letter-spacing:.02em;line-height:1.25;margin-bottom:.25rem;
+}
+.pr-chapter-sub{
+  font-family:'Quicksand',sans-serif;font-size:.72rem;
+  color:#6b7e73;line-height:1.4;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.pr-chapter-arrow{
+  flex-shrink:0;color:#b5bcb7;
+  transition:transform .25s, color .25s;
+}
+.pr-chapter-actions{
+  display:flex;align-items:stretch;gap:0;
+  border-top:1px solid rgba(28,42,34,.06);
+  background:rgba(28,42,34,.015);
+}
+.pr-act{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.65rem .5rem;
+  background:transparent;border:none;cursor:pointer;
+  font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:600;
+  color:#6b7e73;letter-spacing:.03em;
+  border-right:1px solid rgba(28,42,34,.06);
+  transition:all .2s;
+}
+.pr-act:last-child{ border-right:none }
+.pr-act:hover{ background:rgba(196,154,60,.06);color:#1c2a22 }
+.pr-act-primary{ color:var(--sc);font-weight:700 }
+.pr-act-primary:hover{ background:color-mix(in srgb, var(--sc) 7%, transparent);color:var(--sc) }
+.pr-act svg{ flex-shrink:0 }
+
+@media(max-width:640px){
+  .pr-chapter-body{ padding:.9rem 1rem .85rem;gap:.75rem }
+  .pr-chapter-numeral{ width:32px;height:32px;font-size:.82rem }
+  .pr-chapter-icon{ width:38px;height:38px }
+  .pr-chapter-title{ font-size:.92rem }
+  .pr-act span{ font-size:.68rem }
+}
+
+/* Protocol back button */
+.pr-back{
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:#ffffff;border:1px solid rgba(28,42,34,.12);
+  border-radius:10px;padding:.5rem .85rem;margin-bottom:1rem;
+  font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;
+  color:#2d5c44;letter-spacing:.12em;cursor:pointer;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(28,42,34,.05);
+  transition:all .2s;
+}
+.pr-back:hover{
+  border-color:#c49a3c;color:#1c2a22;
+  background:linear-gradient(135deg,#ffffff,rgba(196,154,60,.05));
+  transform:translateX(-2px);
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset, 0 3px 8px rgba(196,154,60,.12);
+}
+.pr-back svg{ transition:transform .2s }
+.pr-back:hover svg{ transform:translateX(-2px) }
+
+/* Section header + actions */
+.pr-sec-head{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.15rem;margin-bottom:.7rem;
+  background:linear-gradient(135deg,#ffffff, color-mix(in srgb, var(--sc) 5%, #ffffff));
+  border:1px solid color-mix(in srgb, var(--sc) 25%, rgba(28,42,34,.1));
+  border-left:4px solid var(--sc);
+  border-radius:12px;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 2px 10px rgba(28,42,34,.05);
+}
+.pr-sec-icon{
+  width:48px;height:48px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:12px;
+  background:color-mix(in srgb, var(--sc) 12%, #ffffff);
+  border:1.5px solid color-mix(in srgb, var(--sc) 30%, transparent);
+  color:var(--sc);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+}
+.pr-sec-title{
+  font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;
+  color:#1c2a22;letter-spacing:.03em;line-height:1.2;margin-bottom:.2rem;
+}
+.pr-sec-meta{
+  font-family:'DM Mono',monospace;font-size:.62rem;
+  color:#6b7e73;letter-spacing:.1em;text-transform:uppercase;
+}
+.pr-sec-actions{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.1rem;
+}
+.pr-sec-act{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;
+  padding:.8rem .5rem;
+  background:#ffffff;border:1px solid rgba(28,42,34,.1);border-radius:10px;
+  font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:600;
+  color:#2d5c44;letter-spacing:.02em;cursor:pointer;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 2px 6px rgba(28,42,34,.04);
+  transition:all .2s;
+}
+.pr-sec-act:hover{
+  border-color:var(--sc);color:var(--sc);transform:translateY(-1px);
+  background:linear-gradient(155deg,#ffffff, color-mix(in srgb, var(--sc) 6%, #ffffff));
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset, 0 4px 12px color-mix(in srgb, var(--sc) 15%, transparent);
+}
+
 /* ═══ SUPERVISOR PANEL ═══ */
 .sup-wrap{padding:1rem;max-width:520px;margin:0 auto;}
 .sup-hero{
@@ -3619,6 +4044,16 @@ body::after{
 .dj-quiz-result{font-family:'DM Mono',monospace;font-size:.6rem;margin-top:.4rem;padding:.4rem .6rem;border-radius:8px;animation:djSlideUp .3s ease}
 .dj-quiz-result.ok{color:#6b8f71;background:rgba(77,138,94,.08)}
 .dj-quiz-result.fail{color:#c47068;background:rgba(231,76,60,.08)}
+.dj-qprog{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;padding:0 .1rem}
+.dj-qprog-label{font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.7);letter-spacing:.12em;text-transform:uppercase}
+.dj-qprog-dots{display:flex;gap:.3rem}
+.dj-qprog-dot{width:8px;height:8px;border-radius:50%;background:rgba(244,237,226,.12);border:1px solid rgba(244,237,226,.2);transition:all .3s}
+.dj-qprog-dot.current{background:rgba(196,154,60,.4);border-color:rgba(196,154,60,.7);box-shadow:0 0 8px rgba(196,154,60,.4);animation:dj-qcur 1.4s ease-in-out infinite}
+.dj-qprog-dot.ok{background:rgba(77,138,94,.5);border-color:rgba(77,138,94,.8)}
+.dj-qprog-dot.fail{background:rgba(231,76,60,.35);border-color:rgba(231,76,60,.6)}
+@keyframes dj-qcur{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.25);opacity:1}}
+.dj-qnext{display:block;margin:.9rem auto 0;padding:.65rem 1.3rem;background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.1));border:1px solid rgba(196,154,60,.45);border-radius:10px;color:#f4c962;font-family:'Cinzel',serif;font-weight:600;font-size:.72rem;letter-spacing:.12em;cursor:pointer;transition:all .25s;animation:djSlideUp .35s ease}
+.dj-qnext:hover{background:linear-gradient(135deg,rgba(196,154,60,.3),rgba(196,154,60,.18));border-color:rgba(196,154,60,.7);transform:translateY(-1px);box-shadow:0 4px 14px rgba(196,154,60,.2)}
 
 /* Phase 6: Mastery */
 .dj-mastery{text-align:center;padding:2rem 1rem;animation:djSlideUp .6s ease}
@@ -3646,47 +4081,78 @@ body::after{
 .dj-launch-btn:hover{background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.1));box-shadow:0 2px 12px rgba(196,154,60,.2)}
 .dj-launch-btn.mastered{background:linear-gradient(135deg,rgba(77,138,94,.12),rgba(77,138,94,.05));border-color:rgba(77,138,94,.25);color:#6b8f71}
 
-/* ═══ Smart Review v2: Timer, Combo, Difficulty ═══ */
+/* ═══ Smart Review v2: Timer, Combo, Difficulty (light parchment theme) ═══ */
 .sr-timer-ring{width:52px;height:52px;position:relative;flex-shrink:0}
 .sr-timer-ring svg{transform:rotate(-90deg);width:52px;height:52px}
 .sr-timer-ring circle{fill:none;stroke-width:3}
-.sr-timer-ring .sr-ring-bg{stroke:rgba(244,237,226,.08)}
+.sr-timer-ring .sr-ring-bg{stroke:rgba(28,42,34,.08)}
 .sr-timer-ring .sr-ring-fg{stroke:#c49a3c;stroke-linecap:round;transition:stroke-dashoffset .15s linear,stroke .3s}
 .sr-timer-ring .sr-ring-fg.warn{stroke:#e07b5a}
 .sr-timer-ring .sr-ring-fg.danger{stroke:#c47068}
-.sr-timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:rgba(244,237,226,.8)}
+.sr-timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:var(--parch2)}
 
 .sr-combo{position:absolute;top:12px;right:12px;z-index:10;text-align:center;pointer-events:none}
-.sr-combo-count{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:900;color:#c49a3c;text-shadow:0 0 20px rgba(196,154,60,.5);transition:all .2s}
-.sr-combo-count.big{transform:scale(1.4);color:#e8c44c;text-shadow:0 0 30px rgba(232,196,76,.7)}
-.sr-combo-label{font-family:'DM Mono',monospace;font-size:.42rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(196,154,60,.6)}
-.sr-combo-mult{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:700;color:#e8c44c;animation:djPulse 1s infinite}
+.sr-combo-count{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:900;color:#b8892e;text-shadow:0 2px 8px rgba(196,154,60,.35);transition:all .2s}
+.sr-combo-count.big{transform:scale(1.4);color:#d4a840;text-shadow:0 2px 14px rgba(212,168,64,.5)}
+.sr-combo-label{font-family:'DM Mono',monospace;font-size:.42rem;letter-spacing:.15em;text-transform:uppercase;color:var(--parch3)}
+.sr-combo-mult{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:700;color:#b8892e;animation:djPulse 1s infinite}
 
-.sr-speed-bonus{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'DM Mono',monospace;font-size:.85rem;font-weight:700;color:#e8c44c;pointer-events:none;animation:djFloatUp .8s ease forwards;z-index:20}
+.sr-speed-bonus{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'DM Mono',monospace;font-size:.85rem;font-weight:700;color:#b8892e;text-shadow:0 0 12px rgba(255,255,255,.8);pointer-events:none;animation:djFloatUp .8s ease forwards;z-index:20}
 
-.sr-diff-badge{display:inline-flex;align-items:center;gap:.25rem;padding:.2rem .5rem;border-radius:12px;font-family:'DM Mono',monospace;font-size:.45rem;letter-spacing:.08em;text-transform:uppercase}
-.sr-diff-badge.beginner{background:rgba(77,138,94,.1);color:#6b8f71;border:1px solid rgba(77,138,94,.2)}
-.sr-diff-badge.intermediate{background:rgba(196,154,60,.1);color:#c49a3c;border:1px solid rgba(196,154,60,.2)}
-.sr-diff-badge.advanced{background:rgba(224,123,90,.1);color:#e07b5a;border:1px solid rgba(224,123,90,.2)}
-.sr-diff-badge.expert{background:rgba(196,60,60,.1);color:#c44040;border:1px solid rgba(196,60,60,.2)}
+.sr-diff-badge{display:inline-flex;align-items:center;gap:.25rem;padding:.2rem .55rem;border-radius:12px;font-family:'Cinzel',serif;font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.sr-diff-badge.beginner{background:rgba(77,138,94,.12);color:#4d8a5e;border:1px solid rgba(77,138,94,.3)}
+.sr-diff-badge.intermediate{background:rgba(196,154,60,.14);color:#9c7a2e;border:1px solid rgba(196,154,60,.35)}
+.sr-diff-badge.advanced{background:rgba(224,123,90,.14);color:#c45a3a;border:1px solid rgba(224,123,90,.32)}
+.sr-diff-badge.expert{background:linear-gradient(135deg,rgba(196,60,60,.15),rgba(224,123,90,.1));color:#a83030;border:1px solid rgba(196,60,60,.35)}
 
-.sr-xp-float{position:fixed;top:40%;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:900;color:#c49a3c;text-shadow:0 0 20px rgba(196,154,60,.6);pointer-events:none;z-index:9999;animation:djFloatUp 1.2s ease forwards}
+.sr-xp-float{position:fixed;top:40%;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:900;color:#b8892e;text-shadow:0 2px 14px rgba(255,255,255,.9);pointer-events:none;z-index:9999;animation:djFloatUp 1.2s ease forwards}
 
-/* Activity calendar */
-.sr-cal{display:grid;grid-template-columns:repeat(7,18px);gap:3px;justify-content:center}
-.sr-cal-day{width:18px;height:18px;border-radius:3px;background:rgba(244,237,226,.08);border:1px solid rgba(244,237,226,.06)}
-.sr-cal-day.l1{background:rgba(77,138,94,.15);border-color:rgba(77,138,94,.2)}
-.sr-cal-day.l2{background:rgba(77,138,94,.3);border-color:rgba(77,138,94,.35)}
-.sr-cal-day.l3{background:rgba(77,138,94,.5);border-color:rgba(77,138,94,.55)}
-.sr-cal-day.today{box-shadow:0 0 0 1px #c49a3c}
+/* Activity calendar — GitHub-style heatmap on parchment */
+.sr-cal-wrap{background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid var(--ink3);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1.2rem;box-shadow:0 2px 0 var(--ink4)}
+.sr-cal-title{font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;text-align:center}
+.sr-cal{display:grid;grid-template-columns:repeat(7,16px);gap:3px;justify-content:center}
+.sr-cal-day{width:16px;height:16px;border-radius:3px;background:rgba(28,42,34,.06);border:1px solid rgba(28,42,34,.08);transition:transform .15s}
+.sr-cal-day:hover{transform:scale(1.25);z-index:2}
+.sr-cal-day.l1{background:rgba(77,138,94,.35);border-color:rgba(77,138,94,.45)}
+.sr-cal-day.l2{background:rgba(77,138,94,.6);border-color:rgba(77,138,94,.7)}
+.sr-cal-day.l3{background:#4d8a5e;border-color:#3d7a4e;box-shadow:0 1px 3px rgba(77,138,94,.3)}
+.sr-cal-day.today{box-shadow:0 0 0 2px #c49a3c,0 0 6px rgba(196,154,60,.4)}
+.sr-cal-legend{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:.6rem;font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase}
+.sr-cal-legend-dot{width:10px;height:10px;border-radius:2px;border:1px solid rgba(28,42,34,.12)}
 
-/* Rank badges */
-.sr-rank{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;border:1px solid}
-.sr-rank.novato{background:rgba(244,237,226,.04);border-color:rgba(244,237,226,.1);color:var(--parch4)}
-.sr-rank.aprendiz{background:rgba(77,138,94,.06);border-color:rgba(77,138,94,.15);color:#6b8f71}
-.sr-rank.camarero{background:rgba(196,154,60,.08);border-color:rgba(196,154,60,.2);color:#c49a3c}
-.sr-rank.sommelier{background:rgba(224,123,90,.08);border-color:rgba(224,123,90,.2);color:#e07b5a}
-.sr-rank.maestro{background:linear-gradient(135deg,rgba(196,154,60,.12),rgba(224,123,90,.08));border-color:rgba(196,154,60,.3);color:#e8c44c}
+/* Rank badges — parchment theme */
+.sr-rank{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:20px;font-family:'Cinzel',serif;font-size:.68rem;font-weight:600;letter-spacing:.05em;border:1.5px solid}
+.sr-rank.novato{background:linear-gradient(135deg,#f4ede2,#ebe3d5);border-color:var(--ink4);color:var(--parch2)}
+.sr-rank.aprendiz{background:linear-gradient(135deg,rgba(77,138,94,.1),rgba(77,138,94,.04));border-color:rgba(77,138,94,.3);color:#3d7a4e}
+.sr-rank.camarero{background:linear-gradient(135deg,rgba(196,154,60,.14),rgba(196,154,60,.06));border-color:rgba(196,154,60,.35);color:#9c7a2e}
+.sr-rank.sommelier{background:linear-gradient(135deg,rgba(224,123,90,.14),rgba(224,123,90,.06));border-color:rgba(224,123,90,.32);color:#c45a3a}
+.sr-rank.maestro{background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(224,123,90,.14));border-color:rgba(196,154,60,.4);color:#8a5a1c;box-shadow:0 2px 8px rgba(196,154,60,.2)}
+
+/* Smart Review stats cards — elegant parchment */
+.sr-stat{background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid var(--ink3);border-radius:var(--r2);padding:.65rem .4rem;text-align:center;box-shadow:0 2px 0 var(--ink4);transition:transform .2s}
+.sr-stat:hover{transform:translateY(-2px)}
+.sr-stat-val{font-family:'Cinzel',serif;font-size:1.35rem;font-weight:700;line-height:1}
+.sr-stat-label{font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch3);letter-spacing:.08em;text-transform:uppercase;margin-top:.25rem}
+
+/* Smart Review weakness chips */
+.sr-weak-wrap{background:linear-gradient(155deg,rgba(196,112,104,.05),rgba(196,112,104,.02));border:1.5px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1.2rem}
+.sr-weak-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .7rem;border-radius:20px;background:rgba(196,112,104,.1);border:1px solid rgba(196,112,104,.25);font-family:'Quicksand',sans-serif;font-size:.68rem;color:#a8564c;font-weight:500}
+
+/* Smart Review "next up" cards */
+.sr-next-wrap{background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid var(--ink3);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1.2rem;box-shadow:0 2px 0 var(--ink4)}
+.sr-next-item{display:flex;align-items:center;justify-content:space-between;padding:.55rem .75rem;background:#fffaf0;border:1px solid var(--ink3);border-radius:var(--r3);margin-bottom:.4rem;transition:all .2s}
+.sr-next-item:last-child{margin-bottom:0}
+.sr-next-item:hover{border-color:var(--gold);transform:translateX(3px)}
+.sr-next-title{font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-next-meta{font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch3);letter-spacing:.04em}
+.sr-next-tag{font-family:'DM Mono',monospace;font-size:.45rem;padding:.2rem .45rem;border-radius:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;flex-shrink:0;margin-left:.5rem}
+.sr-next-tag.new{background:rgba(77,138,94,.12);color:#3d7a4e;border:1px solid rgba(77,138,94,.3)}
+.sr-next-tag.review{background:rgba(196,154,60,.14);color:#9c7a2e;border:1px solid rgba(196,154,60,.35)}
+
+/* Smart Review start button — elegant gold */
+.sr-start-btn{display:block;width:100%;padding:1rem;border-radius:var(--r2);background:linear-gradient(135deg,#c49a3c,#d4aa4c);color:#fff;border:none;font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;letter-spacing:.05em;cursor:pointer;box-shadow:0 4px 14px rgba(196,154,60,.3),inset 0 1px 0 rgba(255,255,255,.25);transition:all .25s;text-transform:uppercase}
+.sr-start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,154,60,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+.sr-start-btn:active{transform:translateY(0)}
 
 @keyframes srPulseCombo{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
 @keyframes srShakeWrong{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
@@ -3779,7 +4245,7 @@ body::after{
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
       <span class="header-uname" id="headerUsername"></span>
-      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,80,80,.25);border:1px solid rgba(255,80,80,.5);cursor:pointer;padding:8px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:.6rem;color:#ff8;letter-spacing:.03em;animation:pulse 2s infinite;min-height:36px;min-width:36px" title="Activar notificaciones push">◎</button>
+      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:32px;min-width:32px" title="Activar notificaciones push">◎</button>
       <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:40px;min-width:40px">
         ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
@@ -5180,7 +5646,7 @@ window.addEventListener('resize', updateNavFade);
 
 // ═══ AVATAR SYSTEM ═══
 const AVATAR_OPTIONS = [
-  'A','B','C','D',LANG==='en'?'D':'E','F','G','H','I','J',
+  'A','B','C','D','E','F','G','H','I','J',
   'K','L','M','N','O','P','Q','R','S','T',
   '◆','★','◈','◇','~','♯','◎','△','▽','○'
 ];
@@ -5459,7 +5925,6 @@ const DISHES = [
 
 const TOPICS=[
   {key:'allergens',get label(){return t('topicAllergens')},q:(d)=>{const dd=getDish(d);return t('qAllergens',dd.name)},a:(d)=>{const dd=getDish(d);return dd.allergens.length===0?t('noAllergens'):dd.allergens.map(allergenLocal).join(' · ')}},
-  {key:'cutlery',get label(){return t('topicCutlery')},q:(d)=>{const dd=getDish(d);return t('qCutlery',dd.name)},a:(d)=>{ const note=getSalsaNote(d); return note||cutleryLocal(getDish(d).cutlery); }},
   {key:'ingredients',get label(){return t('topicIngredients')},q:(d)=>{const dd=getDish(d);return t('qIngredients',dd.name)},a:(d)=>{const dd=getDish(d);return dd.ingredients||'—'}},
   {key:'history',get label(){return t('topicHistory')},q:(d)=>{const dd=getDish(d);return t('qHistory',dd.name)},a:(d)=>{const dd=getDish(d);return dd.history||t('noHistory')}},
 ];
@@ -7262,7 +7727,385 @@ function _srGetActivityDays(emp){
 }
 
 // ── Smart Question Generator v2 (difficulty-aware) ──
+// ═══════════════════════════════════════════════════════════════════════
+// SIMULACIÓN CONTEXTUAL — Scenario-based Smart Review
+// Generates realistic client interactions using dish × allergen × ingredient
+// combinatorics. Each scenario is a "what would you say if a client asks..."
+// ═══════════════════════════════════════════════════════════════════════
+const _SIM_PROFILES = {
+  celiac:       { es:'celíaco/a', en:'celiac', allergen:'Gluten', intro_es:['Soy celíaco','Tengo celiaquía','Me diagnosticaron celiaquía hace poco'], intro_en:['I\'m celiac','I have celiac disease','I was recently diagnosed celiac'] },
+  lactose:      { es:'intolerante a la lactosa', en:'lactose intolerant', allergen:'Lácteos', intro_es:['Soy intolerante a la lactosa','No puedo tomar lácteos','Me sientan fatal los lácteos'], intro_en:['I\'m lactose intolerant','I can\'t have dairy','Dairy doesn\'t agree with me'] },
+  egg:          { es:'alérgico/a al huevo', en:'egg-allergic', allergen:'Huevos', intro_es:['Soy alérgico al huevo','Mi hijo es alérgico al huevo'], intro_en:['I\'m allergic to eggs','My child is egg-allergic'] },
+  fish:         { es:'alérgico/a al pescado', en:'fish-allergic', allergen:'Pescado', intro_es:['Soy alérgico al pescado','No tolero el pescado'], intro_en:['I\'m allergic to fish','I can\'t eat fish'] },
+  shellfish:    { es:'alérgico/a al marisco', en:'shellfish-allergic', allergen:'Crustáceos', intro_es:['Soy alérgico al marisco','Crustáceos y moluscos me dan reacción'], intro_en:['I\'m allergic to shellfish','Crustaceans trigger a reaction'] },
+  mollusk:      { es:'alérgico/a a moluscos', en:'mollusk-allergic', allergen:'Moluscos', intro_es:['No puedo tomar moluscos'], intro_en:['I can\'t have mollusks'] },
+  nut:          { es:'alérgico/a a los frutos secos', en:'nut-allergic', allergen:'Frutos secos', intro_es:['Soy alérgico a los frutos secos','Alergia severa a nueces y almendras'], intro_en:['I have a nut allergy','Severe nut allergy'] },
+  soy:          { es:'alérgico/a a la soja', en:'soy-allergic', allergen:'Soja', intro_es:['No puedo tomar soja'], intro_en:['I can\'t have soy'] },
+  mustard:      { es:'alérgico/a a la mostaza', en:'mustard-allergic', allergen:'Mostaza', intro_es:['Soy alérgico a la mostaza'], intro_en:['I\'m allergic to mustard'] },
+  sulfite:      { es:'sensible a los sulfitos', en:'sulfite-sensitive', allergen:'Sulfitos', intro_es:['Los sulfitos me dan dolor de cabeza','Soy sensible a los sulfitos'], intro_en:['Sulfites give me headaches','I\'m sulfite-sensitive'] },
+  sesame:       { es:'alérgico/a al sésamo', en:'sesame-allergic', allergen:'Granos de sésamo', intro_es:['Soy alérgico al sésamo'], intro_en:['I\'m sesame-allergic'] },
+  celery:       { es:'alérgico/a al apio', en:'celery-allergic', allergen:'Apio', intro_es:['Soy alérgico al apio'], intro_en:['I\'m celery-allergic'] },
+  peanut:       { es:'alérgico/a al cacahuete', en:'peanut-allergic', allergen:'Cacahuete', intro_es:['Tengo alergia severa al cacahuete','Mi hija es alérgica al cacahuete'], intro_en:['Severe peanut allergy','My daughter is peanut-allergic'] },
+  vegetarian:   { es:'vegetariano/a', en:'vegetarian', allergen:null, intro_es:['Soy vegetariano','Somos vegetarianos'], intro_en:['I\'m vegetarian','We\'re vegetarians'] },
+  pregnant:     { es:'embarazada', en:'pregnant', allergen:null, intro_es:['Estoy embarazada','Mi mujer está embarazada'], intro_en:['I\'m pregnant','My wife is pregnant'] },
+  child:        { es:'con un niño pequeño', en:'with a young child', allergen:null, intro_es:['Vengo con un niño de 4 años','Es para mi hijo pequeño'], intro_en:['I\'m with a 4-year-old','It\'s for my young son'] }
+};
+
+function _simPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function _simDishes(){ return DISHES.filter(d=>!d.archived); }
+function _simAllergenLabel(a, _en){ return _en ? (typeof allergenData_en!=='undefined' ? (allergenData_en[a]||a) : a) : a; }
+function _simDishName(d){ return getDish(d).name; }
+function _simHasIngredient(dish, needle){
+  if(!dish.ingredients) return false;
+  return dish.ingredients.toLowerCase().includes(needle.toLowerCase());
+}
+function _simExtractIngredients(dish){
+  if(!dish.ingredients) return [];
+  // Split on commas, periods, colons; dedupe; filter short
+  return dish.ingredients.split(/[,\.:;]/).map(s=>s.trim()).filter(s=>s.length>2 && s.length<30 && !/^(rebozado|tempura|espuma|salsa|refrito|aderezo|vinagreta|demi glace|polvo de)/i.test(s));
+}
+
+// ── Scenario builders: return {q, options, correctIdx, explain, type} or null
+function _scenarioDeclaredAllergy(dish, dd, _en){
+  const profileKeys = Object.keys(_SIM_PROFILES).filter(k=>_SIM_PROFILES[k].allergen);
+  const key = _simPick(profileKeys);
+  const p = _SIM_PROFILES[key];
+  const hasIt = dish.allergens && dish.allergens.includes(p.allergen);
+  const intro = _simPick(_en?p.intro_en:p.intro_es);
+  const qEs = `Cliente: "${intro}. ¿Puedo pedir ${dd.name}?"`;
+  const qEn = `Guest: "${intro}. Can I order ${dd.name}?"`;
+  // Check notes for modifiable
+  const notes = (dish.notes||'').toLowerCase();
+  const modifiable = hasIt && /(sin |retirab|comandar sin|sin pan|sin aderezo|sin huevo|sin anchoas|sin boquerones)/i.test(notes);
+  let correctIdx, opts;
+  if(modifiable){
+    opts = _en ? ['Yes, exactly as plated','Yes, but we must modify it (flag to kitchen)','No, it\'s not possible for you','I\'ll ask the chef']
+               : ['Sí, tal como se emplata','Sí, pero hay que modificarlo (avisar a cocina)','No, no es posible para usted','Consulto con el chef'];
+    correctIdx = 1;
+  } else if(hasIt){
+    opts = _en ? ['Yes, no problem','No, it contains that allergen','Only half portion','Only with no sauce']
+               : ['Sí, sin problema','No, contiene ese alérgeno','Solo media ración','Solo sin salsa'];
+    correctIdx = 1;
+  } else {
+    opts = _en ? ['Yes, perfectly safe','No, it contains that allergen','Only under supervision','I need to check']
+               : ['Sí, es totalmente seguro','No, contiene ese alérgeno','Solo bajo supervisión','Tengo que consultar'];
+    correctIdx = 0;
+  }
+  const aLbl = _simAllergenLabel(p.allergen, _en);
+  let explain;
+  if(modifiable) explain = _en ? `Contains ${aLbl} but can be modified. Notes: ${dish.notes}` : `Contiene ${aLbl} pero es modificable. Notas: ${dish.notes}`;
+  else if(hasIt) explain = _en ? `${dd.name} contains ${aLbl} — not suitable.` : `${dd.name} contiene ${aLbl} — no es apto.`;
+  else explain = _en ? `${dd.name} is free of ${aLbl}.` : `${dd.name} no contiene ${aLbl}.`;
+  return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'allergen' };
+}
+
+function _scenarioIngredientCheck(dish, dd, _en){
+  const ings = _simExtractIngredients(dish);
+  if(ings.length < 2) return null;
+  // 50% ask for a real ingredient, 50% a fake one
+  const askReal = Math.random() < 0.5;
+  let target, present;
+  if(askReal){
+    target = _simPick(ings);
+    present = true;
+  } else {
+    // Pick an ingredient from another dish that's NOT in this one
+    const others = _simDishes().filter(d=>d.id!==dish.id && d.ingredients);
+    const pool = others.flatMap(d=>_simExtractIngredients(d)).filter(i=>!_simHasIngredient(dish, i));
+    if(pool.length===0) return null;
+    target = _simPick(pool);
+    present = false;
+  }
+  const qEs = `Cliente: "Perdone, ¿${dd.name} lleva ${target.toLowerCase()}?"`;
+  const qEn = `Guest: "Excuse me, does ${dd.name} contain ${target.toLowerCase()}?"`;
+  const opts = _en ? ['Yes, it\'s one of the ingredients','No, it doesn\'t contain that','I\'m not sure, let me check','Only in the garnish']
+                   : ['Sí, forma parte de los ingredientes','No, no lleva ese ingrediente','No estoy seguro, consulto','Solo en la guarnición'];
+  const correctIdx = present ? 0 : 1;
+  const explain = _en
+    ? (present ? `Yes — ${target} is listed in the ingredients.` : `No — ${target} is not in this dish.`)
+    : (present ? `Sí — ${target} está en los ingredientes.` : `No — ${target} no está en este plato.`);
+  return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'ingredient' };
+}
+
+function _scenarioSafeAlternative(dish, dd, _en){
+  if(!dish.allergens || dish.allergens.length===0) return null;
+  const allergen = _simPick(dish.allergens);
+  const alternatives = _simDishes().filter(d=>d.id!==dish.id && d.cat===dish.cat && (!d.allergens || !d.allergens.includes(allergen)));
+  if(alternatives.length===0) return null;
+  const wrongs = _simDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(allergen));
+  if(wrongs.length<2) return null;
+  const correct = _simPick(alternatives);
+  const wrongSample = _djShuffle(wrongs).slice(0,3);
+  const opts = _djShuffle([correct, ...wrongSample]);
+  const aLbl = _simAllergenLabel(allergen, _en);
+  const qEs = `Cliente: "Me gustaba ${dd.name} pero soy alérgico a ${aLbl}. ¿Qué me recomienda de la misma categoría?"`;
+  const qEn = `Guest: "I liked ${dd.name} but I'm allergic to ${aLbl}. What do you recommend from the same category?"`;
+  return {
+    q: _en?qEn:qEs,
+    options: opts.map(d=>_simDishName(d)),
+    correctIdx: opts.indexOf(correct),
+    explain: _en ? `${_simDishName(correct)} is from ${dd.cat} and free of ${aLbl}.` : `${_simDishName(correct)} es de ${dd.cat} y no contiene ${aLbl}.`,
+    type:'category'
+  };
+}
+
+// Removed: _scenarioAllergenCount — real guests never ask for allergen counts.
+function _scenarioAllergenCount(){ return null; }
+
+function _scenarioVegetarian(dish, dd, _en){
+  // Only makes sense if it's arguable. Consider non-meat dishes as candidates.
+  const isVegCat = dish.cat === 'Vegetariano';
+  const hasAnimal = /pollo|ternera|atún|bacalao|cerdo|jamón|chorizo|panceta|morcilla|pulpo|anchoa|boqueron|wagyu|cecina|cordero|pescado|mero|mariscos|crustáceos|caldo de pollo|huesos de pollo|tocineta/i.test((dish.ingredients||'') + ' ' + (dish.notes||'') + ' ' + dish.name);
+  // Special case: parmentier has caldo de pollo => trap
+  const opts = _en ? ['Yes, it\'s vegetarian','No, it contains animal products','Only without sauce','I\'ll ask the kitchen']
+                   : ['Sí, es vegetariano','No, contiene productos de origen animal','Solo sin salsa','Consulto en cocina'];
+  let correctIdx = hasAnimal ? 1 : 0;
+  // If listed in Vegetariano category but has caldo de pollo, answer is still "No"
+  const qEs = `Cliente vegetariano: "¿${dd.name} es apto para mí?"`;
+  const qEn = `Vegetarian guest: "Is ${dd.name} suitable for me?"`;
+  let explain;
+  if(hasAnimal){
+    const flag = /caldo de pollo|huesos de pollo/i.test((dish.ingredients||'')+' '+(dish.notes||'')) ? (_en?' (contains chicken stock)':' (lleva caldo/huesos de pollo)') : '';
+    explain = (_en ? `Not vegetarian${flag}.` : `No es vegetariano${flag}.`);
+  } else {
+    explain = _en ? 'Yes, suitable for vegetarians.' : 'Sí, apto para vegetarianos.';
+  }
+  // Only return for dishes where it's non-trivially informative
+  if(!isVegCat && !hasAnimal) return null; // obvious meat dishes skipped to avoid trivial
+  return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'ingredient' };
+}
+
+function _scenarioCrossContamination(dish, dd, _en){
+  const notes = (dish.notes||'').toLowerCase();
+  const hasCross = /trazas|contaminación cruzada|freidora aparte|freidora común|cross|traces/i.test(notes);
+  if(!hasCross) return null;
+  const qEs = `Cliente celíaco severo: "¿Hay riesgo de contaminación cruzada en ${dd.name}?"`;
+  const qEn = `Severely celiac guest: "Is there cross-contamination risk in ${dd.name}?"`;
+  const opts = _en ? ['No risk at all','Yes, I must inform and advise caution','Only if we reheat it','It\'s impossible to know']
+                   : ['Ningún riesgo','Sí, debo informar y aconsejar precaución','Solo si se recalienta','Es imposible saberlo'];
+  return { q:_en?qEn:qEs, options:opts, correctIdx:1, explain:_en?`Notes indicate cross-contamination risk: ${dish.notes}`:`Las notas indican riesgo de contaminación cruzada: ${dish.notes}`, type:'allergen' };
+}
+
+function _scenarioModification(dish, dd, _en){
+  const notes = dish.notes || '';
+  const m = notes.match(/Comandar\s+SIN\s+([A-ZÁÉÍÓÚÑ\s]+?)(?:[\.\—]|$)/i);
+  if(!m) return null;
+  const mod = m[1].trim().toLowerCase();
+  const qEs = `Cliente: "Me gustaría pedir ${dd.name}, pero tengo que evitar alérgenos. ¿Qué se le quita en cocina?"`;
+  const qEn = `Guest: "I'd like to order ${dd.name}, but I have to avoid allergens. What does the kitchen leave out?"`;
+  const fakes = _en ? ['The salt','The oil','Half portion'] : ['La sal','El aceite','Media ración'];
+  const correct = _en ? `${mod}` : `${mod}`;
+  const opts = _djShuffle([correct, ...fakes]);
+  return {
+    q: _en?qEn:qEs,
+    options: opts,
+    correctIdx: opts.indexOf(correct),
+    explain: _en ? `We order SIN ${mod.toUpperCase()}.` : `Se comanda SIN ${mod.toUpperCase()}.`,
+    type:'ingredient'
+  };
+}
+
+function _scenarioSharedAllergen(dish, dd, _en){
+  if(!dish.allergens || dish.allergens.length===0) return null;
+  const a = _simPick(dish.allergens);
+  const same = _simDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(a));
+  const diff = _simDishes().filter(d=>d.id!==dish.id && d.allergens && !d.allergens.includes(a));
+  if(same.length===0 || diff.length<3) return null;
+  const correct = _simPick(same);
+  const wrongs = _djShuffle(diff).slice(0,3);
+  const opts = _djShuffle([correct, ...wrongs]);
+  const aLbl = _simAllergenLabel(a, _en);
+  const qEs = `Cliente con alergia a ${aLbl}: "Ya sé que ${dd.name} no puedo, ¿qué otro plato de la carta debería evitar?"`;
+  const qEn = `Guest allergic to ${aLbl}: "I know I can't have ${dd.name} — which other menu item should I also avoid?"`;
+  return {
+    q:_en?qEn:qEs,
+    options: opts.map(d=>_simDishName(d)),
+    correctIdx: opts.indexOf(correct),
+    explain: _en?`${_simDishName(correct)} also contains ${aLbl}.`:`${_simDishName(correct)} también contiene ${aLbl}.`,
+    type:'allergen'
+  };
+}
+
+function _scenarioWinePairing(dish, dd, _en){
+  if(typeof WINES==='undefined') return null;
+  const dishNameLow = dish.name.toLowerCase().substring(0,8);
+  const matches = WINES.filter(w=>w.pairings && w.pairings.some(p=>p.toLowerCase().includes(dishNameLow)));
+  const nonMatches = WINES.filter(w=>!w.pairings || !w.pairings.some(p=>p.toLowerCase().includes(dishNameLow)));
+  if(matches.length===0 || nonMatches.length<3) return null;
+  const correct = _simPick(matches);
+  const wrongs = _djShuffle(nonMatches).slice(0,3);
+  const opts = _djShuffle([correct, ...wrongs]);
+  const qEs = `Cliente: "¿Qué vino me recomienda con ${dd.name}?"`;
+  const qEn = `Guest: "Which wine would you recommend with ${dd.name}?"`;
+  return {
+    q:_en?qEn:qEs,
+    options: opts.map(w=>w.name),
+    correctIdx: opts.indexOf(correct),
+    explain: _en?`Recommended pairing: ${correct.name}.`:`Maridaje recomendado: ${correct.name}.`,
+    type:'ingredient'
+  };
+}
+
+function _scenarioMultipleAllergies(dish, dd, _en){
+  if(!dish.allergens || dish.allergens.length===0) return null;
+  // Pick one allergen the dish HAS and one it DOESN'T
+  const keys = Object.keys(_SIM_PROFILES).filter(k=>_SIM_PROFILES[k].allergen);
+  const hasKey = keys.find(k=>dish.allergens.includes(_SIM_PROFILES[k].allergen));
+  const notKey = keys.find(k=>!dish.allergens.includes(_SIM_PROFILES[k].allergen));
+  if(!hasKey || !notKey) return null;
+  const a1 = _SIM_PROFILES[hasKey].allergen;
+  const a2 = _SIM_PROFILES[notKey].allergen;
+  const a1Lbl = _simAllergenLabel(a1,_en);
+  const a2Lbl = _simAllergenLabel(a2,_en);
+  const qEs = `Pareja: "Él es alérgico a ${a1Lbl}, ella a ${a2Lbl}. ¿Pueden compartir ${dd.name}?"`;
+  const qEn = `Couple: "He's allergic to ${a1Lbl}, she's allergic to ${a2Lbl}. Can they share ${dd.name}?"`;
+  const opts = _en ? ['Yes, both can eat it','No — it affects one of them','Only a small taste','Only if prepared separately']
+                   : ['Sí, ambos pueden','No — afecta a uno de ellos','Solo un bocado','Solo si se prepara aparte'];
+  return { q:_en?qEn:qEs, options:opts, correctIdx:1, explain:_en?`Contains ${a1Lbl} — affects him.`:`Contiene ${a1Lbl} — le afecta a él.`, type:'allergen' };
+}
+
+function _scenarioPregnancy(dish, dd, _en){
+  const text = ((dish.ingredients||'')+' '+(dish.notes||'')+' '+dish.name).toLowerCase();
+  const raw = /(crudo|tartar|carpaccio|ceviche|atún crudo|salmón crudo|huevo de codorniz|mahonesa|mayonesa casera|marinado sin cocinar)/i.test(text);
+  const alcohol = /(flamb|brandy|coñac|ron|whisky|vodka|porto|sake|vino(?! de)|cerveza)/i.test(text);
+  const blueCheese = /(cabrales|queso azul|roquefort|gorgonzola)/i.test(text);
+  const risky = raw || alcohol || blueCheese;
+  // Only fire if either risky or we have enough baseline to be informative
+  if(!risky && Math.random()<0.7) return null;
+  const qEs = `Cliente embarazada: "¿${dd.name} es seguro para mí?"`;
+  const qEn = `Pregnant guest: "Is ${dd.name} safe for me?"`;
+  const opts = _en ? ['Yes, fully safe','Not recommended — contains raw/uncooked or alcohol','Only half portion','Ask her doctor first']
+                   : ['Sí, totalmente seguro','No recomendado — lleva crudo o alcohol','Solo media ración','Que consulte con su médico'];
+  let correctIdx, explain;
+  if(raw){ correctIdx=1; explain=_en?'Contains raw/uncooked ingredients — not recommended.':'Contiene ingredientes crudos — no recomendado.'; }
+  else if(alcohol){ correctIdx=1; explain=_en?'Contains alcohol (may not fully evaporate) — caution.':'Contiene alcohol (puede no evaporar del todo) — precaución.'; }
+  else if(blueCheese){ correctIdx=1; explain=_en?'Unpasteurized blue cheese — not recommended.':'Queso azul sin pasteurizar — no recomendado.'; }
+  else { correctIdx=0; explain=_en?'No raw ingredients or alcohol — safe.':'Sin ingredientes crudos ni alcohol — seguro.'; }
+  return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'ingredient' };
+}
+
+function _scenarioChildFriendly(dish, dd, _en){
+  const text = ((dish.ingredients||'')+' '+(dish.notes||'')+' '+dish.name).toLowerCase();
+  const spicy = /(guindilla|picante|cayena|chili|wasabi|jalapeño|pimentón picante)/i.test(text);
+  const alcohol = /(flamb|brandy|coñac|ron|whisky|vodka|porto|sake)/i.test(text);
+  const raw = /(crudo|tartar|carpaccio|ceviche)/i.test(text);
+  const kidsOk = !spicy && !alcohol && !raw;
+  // Dessert and Hamburguesas almost always kid-friendly — skip trivial
+  if(kidsOk && (dish.cat==='Postres' || dish.cat==='Hamburguesas y Bocatas') && Math.random()<0.7) return null;
+  const qEs = `Cliente con un niño de 5 años: "¿${dd.name} es adecuado para él?"`;
+  const qEn = `Guest with a 5-year-old: "Is ${dd.name} suitable for him?"`;
+  const opts = _en ? ['Yes, child-friendly','Not ideal — spicy/raw/alcohol','Only if we remove the sauce','Only in half portion']
+                   : ['Sí, apto para niños','No ideal — picante/crudo/alcohol','Solo si retiramos la salsa','Solo media ración'];
+  let correctIdx, explain;
+  if(spicy){ correctIdx=1; explain=_en?'Contains spicy elements — not ideal.':'Contiene picante — no es ideal.'; }
+  else if(alcohol){ correctIdx=1; explain=_en?'Contains alcohol — not ideal.':'Contiene alcohol — no es ideal.'; }
+  else if(raw){ correctIdx=1; explain=_en?'Raw ingredients — not recommended for children.':'Crudo — no recomendado para niños.'; }
+  else { correctIdx=0; explain=_en?'Safe and child-friendly.':'Seguro y apto para niños.'; }
+  return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'ingredient' };
+}
+
+function _scenarioSpicy(dish, dd, _en){
+  const text = ((dish.ingredients||'')+' '+(dish.notes||'')+' '+dish.name).toLowerCase();
+  const spicy = /(guindilla|picante|cayena|chili|wasabi|jalapeño|pimentón picante|sichuan)/i.test(text);
+  if(!spicy && Math.random()<0.85) return null; // mostly only fire for spicy dishes
+  const qEs = `Cliente: "¿${dd.name} pica? No tolero el picante."`;
+  const qEn = `Guest: "Is ${dd.name} spicy? I can't handle spice."`;
+  const opts = _en ? ['Yes, it has spicy elements','No, it\'s not spicy at all','Only if we add chili','Only the sauce is spicy']
+                   : ['Sí, lleva picante','No, no pica nada','Solo si añadimos guindilla','Solo la salsa pica'];
+  const correctIdx = spicy ? 0 : 1;
+  const explain = spicy
+    ? (_en?'Contains chili/cayenne — yes, spicy.':'Lleva guindilla/cayena — sí, pica.')
+    : (_en?'No spicy ingredients detected.':'Sin ingredientes picantes.');
+  return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'ingredient' };
+}
+
+function _scenarioService(dish, dd, _en){
+  // Lunch/dinner timing
+  const isLunch = dish.servicio === 'almuerzo' || dish.servicio === 'ambos';
+  const isDinner = dish.servicio === 'cena' || dish.servicio === 'ambos';
+  const isBoth = dish.servicio === 'ambos';
+  if(!dish.servicio) return null;
+  const opts = _en ? ['Lunch only','Dinner only','Both services','It\'s off the menu']
+                   : ['Solo almuerzo','Solo cena','Ambos servicios','Fuera de carta'];
+  const correctIdx = isBoth ? 2 : isLunch ? 0 : isDinner ? 1 : 3;
+  const qEs = `Cliente (a las 19:00): "¿Puedo pedir ${dd.name} ahora?"`;
+  const qEn = `Guest (at 7 PM): "Can I order ${dd.name} now?"`;
+  return {
+    q:_en?qEn:qEs,
+    options: opts,
+    correctIdx,
+    explain: _en?`Served at: ${dish.servicio}.`:`Se sirve en: ${dish.servicio}.`,
+    type:'category'
+  };
+}
+
+function _scenarioCategoryPlacement(){ return null; }
+function _scenarioCategoryPlacementDisabled(dish, dd, _en, allDishes){
+  const allCats = [...new Set(allDishes.map(d=>d.cat))];
+  const wrongs = _djShuffle(allCats.filter(c=>c!==dish.cat)).slice(0,3);
+  const opts = _djShuffle([dish.cat, ...wrongs]);
+  const qEs = `Cliente: "¿En qué parte de la carta encuentro ${dd.name}?"`;
+  const qEn = `Guest: "Where on the menu do I find ${dd.name}?"`;
+  return {
+    q:_en?qEn:qEs,
+    options: opts.map(c=>catLocal?catLocal(c):c),
+    correctIdx: opts.indexOf(dish.cat),
+    explain: _en?`Category: ${dish.cat}.`:`Categoría: ${dish.cat}.`,
+    type:'category'
+  };
+}
+
+// ═══ Main generator: picks 3-4 scenarios weighted by available data ═══
 function _srGenerateQuiz(dish, difficulty){
+  const _en = LANG==='en';
+  const dd = getDish(dish);
+  const allDishes = _simDishes();
+  // Build candidate pool (nulls filtered later)
+  const candidates = [];
+  const tryAdd = (fn, weight) => { for(let i=0;i<weight;i++) candidates.push(fn); };
+
+  // Always viable
+  tryAdd(()=>_scenarioDeclaredAllergy(dish, dd, _en), 3);
+  tryAdd(()=>_scenarioIngredientCheck(dish, dd, _en), 3);
+  tryAdd(()=>_scenarioCategoryPlacement(dish, dd, _en, allDishes), 1);
+
+  // Conditional
+  if(dish.allergens && dish.allergens.length>0){
+    tryAdd(()=>_scenarioAllergenCount(dish, dd, _en), 2);
+    tryAdd(()=>_scenarioSafeAlternative(dish, dd, _en), 2);
+    tryAdd(()=>_scenarioSharedAllergen(dish, dd, _en), 2);
+    tryAdd(()=>_scenarioModification(dish, dd, _en), 2);
+    tryAdd(()=>_scenarioCrossContamination(dish, dd, _en), 2);
+  }
+  tryAdd(()=>_scenarioVegetarian(dish, dd, _en), 2);
+  tryAdd(()=>_scenarioWinePairing(dish, dd, _en), 1);
+  tryAdd(()=>_scenarioMultipleAllergies(dish, dd, _en), 2);
+  tryAdd(()=>_scenarioPregnancy(dish, dd, _en), 1);
+  tryAdd(()=>_scenarioChildFriendly(dish, dd, _en), 1);
+  tryAdd(()=>_scenarioSpicy(dish, dd, _en), 1);
+
+  // Shuffle candidates and draw unique scenario types until we have enough
+  const shuffled = _djShuffle([...candidates]);
+  const targetCount = (difficulty==='expert'||difficulty==='advanced') ? 4 : 3;
+  const seenTypes = new Set();
+  const questions = [];
+  for(const fn of shuffled){
+    if(questions.length >= targetCount) break;
+    const result = fn();
+    if(!result) continue;
+    // Dedupe by question text
+    if(questions.some(q=>q.q===result.q)) continue;
+    questions.push(result);
+  }
+  // Guaranteed fallback: if somehow fewer than 2 questions, pad with category
+  while(questions.length < 2){
+    questions.push(_scenarioCategoryPlacement(dish, dd, _en, allDishes));
+  }
+  return questions;
+}
+
+// Legacy wrapper kept for compatibility (original expert path)
+function _srGenerateQuizLegacy(dish, difficulty){
   const _en = LANG==='en';
   const dd = getDish(dish);
   const questions = [];
@@ -7452,151 +8295,150 @@ function _srAddServiceQ(questions, dish, dd, _en){
 }
 
 // ── Dashboard ──
+// ═══════════════════════════════════════════════════════════════════════
+// REPASO INTELIGENTE — futuristic/intelligent landing
+// Light theme, high-contrast, data-forward, neural-grid aesthetic.
+// Anchored in real restaurant vocabulary: turno, mesa, sala, alérgenos.
+// ═══════════════════════════════════════════════════════════════════════
+function _riServiceInfo(_en){
+  const d = new Date();
+  const h = d.getHours();
+  const turno = (h < 16)
+    ? (_en ? 'LUNCH SHIFT' : 'TURNO · ALMUERZO')
+    : (_en ? 'DINNER SHIFT' : 'TURNO · CENA');
+  const fmt = _en
+    ? d.toLocaleDateString('en-US', {weekday:'short', day:'numeric', month:'short'})
+    : d.toLocaleDateString('es-ES', {weekday:'short', day:'numeric', month:'short'});
+  return { turno, fecha: fmt.toUpperCase().replace(/\./g,'') };
+}
+
 function renderSmartReview(){
   const c = document.getElementById('appContent');
   const _en = LANG==='en';
   const emp = getEmp(currentUser);
   const ad = _adaptiveGetData(emp);
-  const dueCount = _srsDueCount(emp);
-  const weaknesses = _adaptiveWeaknesses(emp);
   const accuracy = ad.totalQuizzes > 0 ? Math.round((ad.totalCorrect/ad.totalQuizzes)*100) : 0;
   const diff = _srGetDifficulty(emp);
   const rank = _srGetRank(emp);
+  const sessionSize = 5;
 
-  // Rank + Difficulty header
-  const rankHtml = `
-    <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;margin-bottom:1rem">
-      <div class="sr-rank ${rank.id}">${rank.icon} ${_en?rank.label_en:rank.label_es}</div>
-      <div class="sr-diff-badge ${diff}">${_srDiffIcon(diff)} ${_srDiffLabel(diff,_en)}</div>
-    </div>
-  `;
-
-  // Stats cards (4 now)
-  const statsHtml = `
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:1.2rem">
-      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
-        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:${dueCount>0?'var(--rose)':'var(--sage)'}">${dueCount}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Due':'Pendientes'}</div>
-      </div>
-      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
-        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--gold)">${accuracy}%</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Accuracy':'Precisión'}</div>
-      </div>
-      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
-        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--sage)">${ad.streakBest||0}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Best Streak':'Mejor Racha'}</div>
-      </div>
-      <div style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.5rem .3rem;text-align:center">
-        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#e07b5a">${ad.totalQuizzes||0}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${_en?'Answered':'Respondidas'}</div>
-      </div>
-    </div>
-  `;
-
-  // SRS progress bar
-  const mastered = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps >= 4 && s.ef >= 2.2; }).length;
-  const learning = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps > 0 && (s.reps < 4 || s.ef < 2.2); }).length;
-  const newDishes = DISHES.length - mastered - learning;
-  const total = DISHES.length;
-
-  const progressHtml = `
-    <div style="margin-bottom:1.2rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.4rem">📊 ${_en?'KNOWLEDGE MAP':'MAPA DE CONOCIMIENTO'}</div>
-      <div style="height:10px;border-radius:5px;background:var(--line);overflow:hidden;display:flex">
-        <div style="width:${total>0?(mastered/total)*100:0}%;background:linear-gradient(90deg,#4d8a5e,#6ba872);transition:width .5s"></div>
-        <div style="width:${total>0?(learning/total)*100:0}%;background:linear-gradient(90deg,#c49a3c,#d4a840);transition:width .5s"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:.35rem;font-family:'DM Mono',monospace;font-size:.48rem;color:var(--parch4)">
-        <span style="color:#6ba872">● ${_en?'Mastered':'Dominados'}: ${mastered}</span>
-        <span style="color:#c49a3c">● ${_en?'Learning':'Aprendiendo'}: ${learning}</span>
-        <span style="color:var(--parch4)">● ${_en?'New':'Nuevos'}: ${newDishes}</span>
-      </div>
-    </div>
-  `;
-
-  // Activity calendar (last 28 days)
-  const activityDays = _srGetActivityDays(emp);
-  const today = new Date();
-  let calHtml = '<div style="margin-bottom:1.2rem"><div style="font-family:\'DM Mono\',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.4rem">📅 ' + (_en?'ACTIVITY (28 DAYS)':'ACTIVIDAD (28 DÍAS)') + '</div><div class="sr-cal">';
-  for(let i=27;i>=0;i--){
-    const d = new Date(today);
-    d.setDate(d.getDate()-i);
-    const key = d.toISOString().slice(0,10);
-    const count = activityDays[key]||0;
-    const lvl = count >= 10 ? 'l3' : count >= 5 ? 'l2' : count >= 1 ? 'l1' : '';
-    const isToday = i===0 ? ' today' : '';
-    calHtml += `<div class="sr-cal-day ${lvl}${isToday}" title="${key}: ${count}"></div>`;
+  // Pick 2 distinct realistic scenarios for the hero spread
+  const samples = [];
+  const tried = new Set();
+  for(let i=0;i<12 && samples.length<2;i++){
+    const d = DISHES[Math.floor(Math.random()*DISHES.length)];
+    if(tried.has(d.id)) continue;
+    tried.add(d.id);
+    const qs = _srGenerateQuiz(d, diff);
+    if(qs && qs[0]) samples.push({dish:d, q:qs[0]});
   }
-  calHtml += '</div></div>';
 
-  // Weakness map
-  let weakHtml = '';
-  if(weaknesses.length > 0){
-    weakHtml = `
-      <div style="margin-bottom:1.2rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">🎯 ${_en?'YOUR WEAK SPOTS':'TUS PUNTOS DÉBILES'}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
-          ${weaknesses.slice(0,5).map(w => {
-            const icon = w.type==='allergen'?'⚠️':w.type==='category'?'📂':'🧂';
-            const label = w.type==='allergen'?(_en?(allergenData_en[w.key]||w.key):w.key):w.type==='category'?(catLocal?catLocal(w.key):w.key):(()=>{const d=DISHES.find(x=>x.id===parseInt(w.key));return d?getDish(d).name:'?';})();
-            return `<span style="display:inline-flex;align-items:center;gap:.25rem;padding:.3rem .6rem;border-radius:20px;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.12);font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--rose)">${icon} ${label} <span style="font-family:'DM Mono',monospace;font-size:.45rem;opacity:.6">×${w.count}</span></span>`;
-          }).join('')}
+  const stripQuote = (text) => text
+    .replace(/^(Cliente|Guest|Pareja|Couple|Un cliente|A guest|Cliente con[^:]*|Pregnant guest|Vegetarian guest|Cliente embarazada|Cliente vegetariano|Cliente celíaco severo|Severely celiac guest|Guest allergic[^:]*|Cliente con alergia[^:]*)[^:]*:\s*/i,'')
+    .replace(/^"|"$/g,'')
+    .trim();
+
+  const svc = _riServiceInfo(_en);
+
+  // Allergen chips — real allergens handled in service (bilingual)
+  const allergenList = _en
+    ? ['Gluten','Dairy','Egg','Fish','Shellfish','Mollusks','Nuts','Peanut','Soy','Sulfites','Sesame','Celery','Mustard']
+    : ['Gluten','Lácteos','Huevo','Pescado','Marisco','Moluscos','Frutos secos','Cacahuete','Soja','Sulfitos','Sésamo','Apio','Mostaza'];
+  const allergenStrip = `
+    <div class="ri-allergen-grid">
+      ${allergenList.map(a=>`<span class="ri-allergen-chip">${a}</span>`).join('')}
+    </div>
+  `;
+
+  // Sample conversation preview
+  const preview = samples[0] ? (() => {
+    const quote = stripQuote(samples[0].q.q);
+    const catLbl = (typeof catLocal === 'function') ? catLocal(samples[0].dish.cat) : samples[0].dish.cat;
+    return `
+      <div class="ri-preview">
+        <div class="ri-preview-label">${_en?'SAMPLE · TABLE INTERACTION':'MUESTRA · INTERACCIÓN EN MESA'}</div>
+        <div class="ri-preview-quote">"${quote}"</div>
+        <div class="ri-preview-meta">
+          <span class="ri-preview-dish">${getDish(samples[0].dish).name}</span>
+          <span class="ri-preview-dot">·</span>
+          <span class="ri-preview-cat">${catLbl}</span>
         </div>
       </div>
     `;
-  }
+  })() : '';
 
-  // Next dishes
-  const dueDishes = _srsDueDishes(emp);
-  const sessionSize = Math.min(5, dueDishes.length);
-
-  let nextDishesHtml = '';
-  if(dueDishes.length > 0){
-    const preview = dueDishes.slice(0,5);
-    nextDishesHtml = `
-      <div style="margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-b);margin-bottom:.5rem">📋 ${_en?'NEXT UP':'PRÓXIMOS'}</div>
-        ${preview.map((item,i) => {
-          const dd = getDish(item.dish);
-          const s = (emp.srs||{})[item.dish.id];
-          const reps = s ? s.reps : 0;
-          const typeLabel = item.type === 'new' ? (_en?'NEW':'NUEVO') : (_en?'REVIEW':'REPASO');
-          const typeColor = item.type === 'new' ? 'var(--sage)' : 'var(--gold)';
-          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.45rem .6rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.3rem;animation:fadeInUp .3s ${i*0.05}s both">
-            <div style="flex:1;min-width:0">
-              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}</div>
-              <div style="font-family:'DM Mono',monospace;font-size:.45rem;color:var(--parch4)">${dd.cat} · ${reps} ${_en?'reviews':'repasos'}</div>
-            </div>
-            <span style="font-family:'DM Mono',monospace;font-size:.42rem;padding:.12rem .35rem;border-radius:10px;background:${typeColor}15;color:${typeColor};border:1px solid ${typeColor}30">${typeLabel}</span>
-          </div>`;
-        }).join('')}
-      </div>
-    `;
-  }
+  const stats = [
+    { v: DISHES.length, l: _en?'dishes':'platos' },
+    { v: 13, l: _en?'allergens':'alérgenos' },
+    { v: ad.totalQuizzes>0 ? accuracy+'%' : '—', l: _en?'accuracy':'precisión' }
+  ];
 
   c.innerHTML = `
-    <div class="section-eyebrow">🧠 ${_en?'Smart Review':'Repaso Inteligente'}</div>
-    <div style="text-align:center;margin-bottom:.8rem">
-      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${_en?'AI-powered adaptive learning with spaced repetition, difficulty scaling, and speed challenges.':'Aprendizaje adaptativo con repetición espaciada, dificultad dinámica y desafíos de velocidad.'}</div>
-    </div>
-    ${rankHtml}
-    ${statsHtml}
-    ${progressHtml}
-    ${calHtml}
-    ${weakHtml}
-    ${nextDishesHtml}
-    ${dueDishes.length > 0 ? `
-      <button onclick="_startSmartSession()" style="display:block;width:100%;padding:.85rem;border-radius:var(--r2);background:linear-gradient(135deg,#c49a3c,#d4a840);color:#1c2a22;border:none;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(196,154,60,.3);transition:all .3s;letter-spacing:.02em">
-        🚀 ${_en?`Start Session (${sessionSize} dishes · ${_srDiffLabel(diff,_en)})`:`Iniciar Sesión (${sessionSize} platos · ${_srDiffLabel(diff,_en)})`}
-      </button>
-      <div style="text-align:center;margin-top:.4rem;font-family:'DM Mono',monospace;font-size:.45rem;color:var(--parch4)">${_en?'Timer + Combo + Adaptive AI + Spaced Repetition':'Temporizador + Combo + IA Adaptativa + Repetición Espaciada'}</div>
-    ` : `
-      <div style="text-align:center;padding:1.5rem;background:var(--ink2);border-radius:var(--r2);border:1px solid rgba(77,138,94,.15)">
-        <div style="font-size:2rem;margin-bottom:.4rem">🎉</div>
-        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--sage)">${_en?'All caught up!':'¡Todo al día!'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.3rem">${_en?'Come back later for new reviews':'Vuelve más tarde para nuevos repasos'}</div>
+    <div class="ri-console">
+      <div class="ri-grid-bg"></div>
+
+      <div class="ri-header">
+        <div class="ri-brand">
+          <div class="ri-brand-mark">
+            <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+              <defs>
+                <linearGradient id="riBrandGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#4a8f6f"/>
+                  <stop offset="100%" stop-color="#c49a3c"/>
+                </linearGradient>
+              </defs>
+              <circle cx="16" cy="16" r="13" fill="none" stroke="url(#riBrandGrad)" stroke-width="1.5"/>
+              <circle cx="16" cy="16" r="3" fill="url(#riBrandGrad)"/>
+              <path d="M16 3 L16 8 M16 24 L16 29 M3 16 L8 16 M24 16 L29 16" stroke="url(#riBrandGrad)" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M7 7 L10.5 10.5 M21.5 21.5 L25 25 M25 7 L21.5 10.5 M10.5 21.5 L7 25" stroke="url(#riBrandGrad)" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+            </svg>
+          </div>
+          <div class="ri-brand-text">
+            <div class="ri-brand-title">${_en?'SMART REVIEW':'REPASO INTELIGENTE'}</div>
+            <div class="ri-brand-sub">${_en?'Adaptive engine · Real-case simulation':'Motor adaptativo · Simulación de casos reales'}</div>
+          </div>
+        </div>
+        <div class="ri-status-col">
+          <span class="ri-status-dot"></span>
+          <div class="ri-status-lines">
+            <span class="ri-status-top">${svc.turno}</span>
+            <span class="ri-status-sub">${svc.fecha}</span>
+          </div>
+        </div>
       </div>
-    `}
+
+      <div class="ri-stats-row">
+        ${stats.map(s=>`
+          <div class="ri-stat">
+            <div class="ri-stat-v">${s.v}</div>
+            <div class="ri-stat-l">${s.l}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      ${preview}
+
+      <div class="ri-section-head">
+        <span class="ri-section-title">${_en?'ALLERGENS IN MENU':'ALÉRGENOS EN CARTA'}</span>
+        <span class="ri-section-count">${allergenList.length}</span>
+      </div>
+      ${allergenStrip}
+
+      <div class="ri-cta-wrap">
+        <button onclick="_startSmartSession()" class="ri-cta">
+          <span class="ri-cta-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path d="M5 4 L19 12 L5 20 Z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="ri-cta-text">
+            <span class="ri-cta-top">${_en?'START SIMULATION':'INICIAR SIMULACIÓN'}</span>
+            <span class="ri-cta-sub">${sessionSize} ${_en?'cases':'casos'} · ${_srDiffLabel(diff,_en)} · ${rank.icon} ${_en?rank.label_en:rank.label_es}</span>
+          </span>
+        </button>
+        <button onclick="renderSmartReview()" class="ri-secondary">${_en?'↻ New selection':'↻ Nueva selección'}</button>
+      </div>
+    </div>
   `;
 }
 
@@ -7717,15 +8559,12 @@ function _renderSmartCard(){
           <div class="sr-diff-badge ${diff}">${_srDiffIcon(diff)} ${_srDiffLabel(diff,_en)}</div>
           <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:rgba(196,154,60,.5);letter-spacing:.1em">${state.current+1}/${state.queue.length}</div>
         </div>
-        <div class="sr-timer-ring" id="srTimerRing">
-          <svg viewBox="0 0 52 52"><circle class="sr-ring-bg" cx="26" cy="26" r="22"/><circle class="sr-ring-fg" cx="26" cy="26" r="22" stroke-dasharray="${2*Math.PI*22}" stroke-dashoffset="0"/></svg>
-          <div class="sr-timer-num">${_srTimerSeconds(diff)}</div>
-        </div>
+        <div style="width:52px;height:52px"></div>
       </div>
       <div class="dj-body">
-        <div class="dj-phase-label">🧠 ${_en?'SMART REVIEW':'REPASO INTELIGENTE'}</div>
+        <div class="dj-phase-label">🎭 ${_en?'CONTEXTUAL SIMULATION':'SIMULACIÓN CONTEXTUAL'}</div>
         <div class="dj-phase-title">${dd.name}</div>
-        <div class="dj-dish-name">${dd.cat} · ${dish.allergens?dish.allergens.length:0} ${_en?'allergens':'alérgenos'}</div>
+        <div class="dj-dish-name">${dd.cat} · ${dish.allergens?dish.allergens.length:0} ${_en?'allergens':'alérgenos'} · ${_en?'guest interaction':'interacción con cliente'}</div>
         <div id="smartQuizArea"></div>
       </div>
       <div class="dj-nav">
@@ -7745,24 +8584,43 @@ function _renderSmartCard(){
     document.body.appendChild(overlay);
   }
 
-  _smartQuizState = { qs:qs, answered:0, correct:0, dishId:dishId, qTimes:[] };
+  _smartQuizState = { qs:qs, answered:0, correct:0, dishId:dishId, qTimes:[], timerMax:0, timerLeft:0, currentIdx:0 };
   _renderSmartQuiz();
-  _srStartTimer();
+  // Timer intentionally disabled — Simulación Contextual favors thoughtful, realistic answers over speed.
 }
 
-// ── Render Quiz ──
+// ── Render Quiz — ONE question at a time ──
 function _renderSmartQuiz(){
   const area = document.getElementById('smartQuizArea');
   if(!area) return;
   const _en = LANG==='en';
   const qs = _smartQuizState.qs;
+  const qi = _smartQuizState.currentIdx || 0;
+  const q = qs[qi];
+  if(!q) return;
+  const answered = _smartQuizState['a'+qi] !== undefined;
+  const userAnswer = _smartQuizState['a'+qi];
+  const isTimeout = userAnswer === -1;
+  const isLast = qi >= qs.length - 1;
 
-  area.innerHTML = qs.map((q,qi)=>{
-    const answered = _smartQuizState['a'+qi] !== undefined;
-    const userAnswer = _smartQuizState['a'+qi];
-    const isTimeout = userAnswer === -1;
-    return `<div class="dj-quiz-card" style="--delay:${0.1+qi*0.12}s">
-      <div class="dj-quiz-q">${qi+1}. ${q.q}</div>
+  // Progress dots
+  const progress = qs.map((_, i) => {
+    let cls = 'dj-qprog-dot';
+    if(_smartQuizState['a'+i] !== undefined){
+      cls += (_smartQuizState['a'+i] === qs[i].correctIdx) ? ' ok' : ' fail';
+    } else if(i === qi){
+      cls += ' current';
+    }
+    return `<span class="${cls}"></span>`;
+  }).join('');
+
+  area.innerHTML = `
+    <div class="dj-qprog">
+      <span class="dj-qprog-label">${_en?'Question':'Pregunta'} ${qi+1} / ${qs.length}</span>
+      <span class="dj-qprog-dots">${progress}</span>
+    </div>
+    <div class="dj-quiz-card" style="--delay:.05s" key="q${qi}">
+      <div class="dj-quiz-q">${q.q}</div>
       <div class="dj-quiz-opts">
         ${q.options.map((opt,oi)=>{
           let cls = 'dj-quiz-opt';
@@ -7774,9 +8632,24 @@ function _renderSmartQuiz(){
           return `<div class="${cls}" onclick="_smartAnswer(${qi},${oi})">${opt}</div>`;
         }).join('')}
       </div>
-      ${answered?`<div class="dj-quiz-result ${(userAnswer===q.correctIdx)?'ok':'fail'}">${isTimeout?'⏱️':((userAnswer===q.correctIdx)?'✓':'✗')} ${isTimeout?(_en?'Time\'s up!':'¡Tiempo agotado!'):q.explain}</div>`:''}
-    </div>`;
-  }).join('');
+      ${answered?`
+        <div class="dj-quiz-result ${(userAnswer===q.correctIdx)?'ok':'fail'}">
+          ${isTimeout?'⏱️':((userAnswer===q.correctIdx)?'✓':'✗')} ${isTimeout?(_en?'Time\'s up!':'¡Tiempo agotado!'):q.explain}
+        </div>
+        ${!isLast?`<button class="dj-qnext" onclick="_smartNextQuestion()">${_en?'Next question →':'Siguiente pregunta →'}</button>`:''}
+      `:''}
+    </div>
+  `;
+}
+
+// Advance to next question within same dish
+function _smartNextQuestion(){
+  const qs = _smartQuizState.qs;
+  const cur = _smartQuizState.currentIdx || 0;
+  if(cur < qs.length - 1){
+    _smartQuizState.currentIdx = cur + 1;
+    _renderSmartQuiz();
+  }
 }
 
 // ── Answer Handler ──
@@ -7790,6 +8663,14 @@ function _smartAnswer(qIdx, optIdx){
   const qs = _smartQuizState.qs;
   const isCorrect = optIdx === qs[qIdx].correctIdx;
   if(isCorrect) _smartQuizState.correct++;
+
+  // Universal feedback: sound + pop animation + XP burst
+  try {
+    const clickedEl = document.querySelector(`[onclick*="_smartAnswer(${qIdx},${optIdx})"]`);
+    if(typeof quizFeedback === 'function'){
+      quizFeedback(isCorrect, clickedEl, isCorrect ? 5 : 0);
+    }
+  } catch(e){}
 
   _smartReviewState.sessionTotal++;
   if(isCorrect){
@@ -8509,17 +9390,14 @@ function showStreakToast(days){
 // ═══ RETO SEMANAL ═══
 const WEEKLY_CHALLENGES=[
   {key:'allergens_postres',  topic:'allergens',   cat:'Postres',              es:'Domina los alérgenos de los Postres',          en:'Master allergens in Desserts'},
-  {key:'cutlery_all',        topic:'cutlery',     cat:'all',                  es:'Aprende el marcaje de toda la carta',           en:'Learn the full menu cutlery'},
   {key:'allergens_entrantes',topic:'allergens',   cat:'Entrantes',            es:'Alérgenos de todos los Entrantes',              en:'Allergens of all Starters'},
   {key:'ingredients_main',   topic:'ingredients', cat:'Platos Principales',   es:'Ingredientes de los Platos Principales',        en:'Ingredients of Main Courses'},
   {key:'history_all',        topic:'history',     cat:'all',                  es:'Storytelling de toda la carta',                 en:'Storytelling of the full menu'},
   {key:'allergens_hambur',   topic:'allergens',   cat:'Hamburguesas y Bocatas',es:'Alérgenos de Hamburguesas y Bocatas',          en:'Allergens of Burgers & Sandwiches'},
   {key:'ingredients_guarn',  topic:'ingredients', cat:'Guarniciones y Salsas', es:'Ingredientes de Guarniciones y Salsas',        en:'Ingredients of Sides & Sauces'},
-  {key:'cutlery_postres',    topic:'cutlery',     cat:'Postres',              es:'Marcaje de Postres',                            en:'Cutlery for Desserts'},
   {key:'allergens_veg',      topic:'allergens',   cat:'Vegetariano',          es:'Alérgenos de los platos Vegetarianos',          en:'Allergens of Vegetarian dishes'},
   {key:'ingredients_entrantes',topic:'ingredients',cat:'Entrantes',           es:'Ingredientes de todos los Entrantes',           en:'Ingredients of all Starters'},
   {key:'history_principales',topic:'history',     cat:'Platos Principales',   es:'Historia de los Platos Principales',            en:'History of Main Courses'},
-  {key:'cutlery_principales',topic:'cutlery',     cat:'Platos Principales',   es:'Marcaje de Platos Principales',                 en:'Cutlery for Main Courses'},
 ];
 function getCurrentChallenge(){
   // Week number since a fixed epoch — rotates automatically
@@ -9275,7 +10153,7 @@ try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
 
 // ═══════ TABS ═══════
 // Sub-tab state
-let _subTab = { aprender:'flashcards', protocolo:'protocolo', ranking:'ranking' };
+let _subTab = { aprender:'repaso', protocolo:'protocolo', ranking:'ranking' };
 
 // ═══ KEYBOARD NAVIGATION ═══
 document.addEventListener('keydown', function(e){
@@ -9343,17 +10221,93 @@ function _subTabBar(tabs, activeTab, parentTab){
 
 function renderAprender(){
   const c=document.getElementById('appContent');
-  const sub = _subTab.aprender || 'flashcards';
+  const sub = _subTab.aprender || 'repaso';
   const _en = LANG==='en';
   const _srsCount = _srsDueCount(getEmp(currentUser));
   const bar = _subTabBar([
+    ['repaso',_en?'Explore':'Explorar',''],
     ['smart',_en?'Smart Review':'Repaso Inteligente',_srsCount>0?'🔴':'🧠'],
     ['flashcards','Flashcards',''],
-    ['repaso',_en?'Explore':'Explorar',''],
     ['videos',_en?'Videos':'Videos','']
   ], sub, 'aprender');
   ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos})[sub]();
+  // Global quick search — only on Flashcards & Smart Review (Explore already has its own search, Videos doesn't need it)
+  const _showSearch = (sub === 'flashcards');
+  const searchBar = _showSearch ? `
+    <div class="aprender-quicksearch" style="position:relative;margin-bottom:.85rem;animation:slideUp .25s ease both">
+      <svg style="position:absolute;left:.9rem;top:50%;transform:translateY(-50%);pointer-events:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input
+        id="aprenderGlobalSearch"
+        type="search"
+        placeholder="${_en?'Search dish, ingredient, allergen...':'Buscar plato, ingrediente, alérgeno...'}"
+        oninput="_aprenderGlobalSearch(this.value)"
+        onfocus="_aprenderGlobalSearch(this.value)"
+        onblur="setTimeout(()=>{const r=document.getElementById('aprenderGlobalSearchResults');if(r)r.style.display='none';},200)"
+        autocomplete="off"
+        style="width:100%;padding:.75rem 1rem .75rem 2.65rem;border:1.5px solid var(--ink3);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.9rem;color:var(--parchment);background:linear-gradient(155deg,#faf6ee,#f0e8d8);outline:none;-webkit-appearance:none;box-shadow:0 2px 0 var(--ink4);transition:all .2s"
+        onfocus_=""
+      />
+      <div id="aprenderGlobalSearchResults" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:360px;overflow-y:auto;background:#faf6ee;border:1.5px solid var(--ink3);border-radius:var(--r2);box-shadow:0 8px 24px rgba(28,42,34,.15);z-index:100"></div>
+    </div>
+  ` : '';
+  if(searchBar) c.insertAdjacentHTML('afterbegin', searchBar);
   c.insertAdjacentHTML('afterbegin', bar);
+}
+
+// Global quick search available from any Aprender subtab
+function _aprenderGlobalSearch(query){
+  const results = document.getElementById('aprenderGlobalSearchResults');
+  if(!results) return;
+  const q = (query||'').trim().toLowerCase();
+  if(!q || q.length < 1){ results.style.display='none'; return; }
+  const _en = LANG==='en';
+  const emp = getEmp(currentUser);
+  const known = emp.knownDishes || {};
+
+  const matched = DISHES.filter(d => {
+    const dd = getDish(d);
+    return dd.name.toLowerCase().includes(q)
+      || (dd.ingredients||'').toLowerCase().includes(q)
+      || (dd.allergens||[]).some(a => (typeof allergenLocal==='function'?allergenLocal(a):a).toLowerCase().includes(q))
+      || (dd.cat||'').toLowerCase().includes(q);
+  }).slice(0, 12);
+
+  if(!matched.length){
+    results.innerHTML = `<div style="padding:1.2rem;text-align:center;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--parch3);letter-spacing:.06em">${_en?'No dishes found':'Sin resultados'}</div>`;
+    results.style.display='block';
+    return;
+  }
+
+  results.innerHTML = matched.map(d => {
+    const dd = getDish(d);
+    const isKnown = !!known[d.id];
+    const catCol = (typeof CAT_COLORS!=='undefined' && CAT_COLORS[dd.cat]) || 'var(--gold)';
+    const cat = (typeof catLocal==='function') ? catLocal(dd.cat) : dd.cat;
+    const allergens = (dd.allergens||[]).slice(0,3).map(a => `<span style="display:inline-block;padding:.08rem .35rem;border-radius:8px;background:rgba(196,112,104,.1);color:#a8564c;font-size:.55rem;font-family:'DM Mono',monospace;margin-right:.25rem">${a}</span>`).join('');
+    return `<div onclick="_aprenderOpenDish(${d.id})" style="display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;cursor:pointer;border-bottom:1px solid var(--ink3);transition:background .15s" onmouseover="this.style.background='rgba(196,154,60,.08)'" onmouseout="this.style.background='transparent'">
+      <div style="width:4px;height:32px;background:${catCol};border-radius:2px;flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dd.name}${isKnown?' <span style="color:#4d8a5e;font-size:.7rem">◈</span>':''}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.04em;margin-top:.15rem">${cat} ${allergens?'· '+allergens:''}</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`;
+  }).join('');
+  results.style.display='block';
+}
+
+function _aprenderOpenDish(dishId){
+  repasoDishId = dishId;
+  // Also set the category so the "Volver" button returns to a valid topic view
+  const _d = DISHES.find(x=>x.id===dishId);
+  if(_d && _d.cat) repasoCat = _d.cat;
+  repasoView = 'dish';
+  _subTab.aprender = 'repaso';
+  const r = document.getElementById('aprenderGlobalSearchResults');
+  if(r) r.style.display='none';
+  const s = document.getElementById('aprenderGlobalSearch');
+  if(s) s.value = '';
+  renderAprender();
 }
 
 function renderProtocoloHub(){
@@ -12993,6 +13947,37 @@ const WINE_REGIONS = [
   }
 ];
 
+// English translations for WINE_CONCEPTS (keyed by Spanish title)
+const WINE_CONCEPTS_EN = {
+  '¿Qué es el vino?': {title:'What is wine?', short:'Wine is fermented grape juice. Yeast transforms sugar into alcohol.', detail:'Wine is born from a magical process: grapes are harvested, pressed, and their juice ferments thanks to tiny organisms called yeasts that transform the grape\'s natural sugar into alcohol. Simple and fascinating. The Greeks and Romans were doing it thousands of years ago. Each bottle is the result of climate, soil, grape variety, and the winemaker\'s craft.', tip:'To the guest: "Our wines are like a journey through Spain — each glass tells the story of a place and a tradition."'},
+  'Tinto, Blanco y Rosado': {title:'Red, White and Rosé', short:'The wine\'s color depends on contact with the grape skin.', detail:'Why is one wine red and another white? The key is in the grape skin. Reds ferment WITH the skin (which contains pigments), so they absorb color, tannins and body. Whites are made WITHOUT the skin, so they are lighter and fresher. Rosé is a middle ground: the skin touches the juice for just a few hours, giving it that beautiful pink hue.', tip:'To the guest: "Prefer something lighter and fresher? A white. More body and intensity? A red. Something in between? Our Muga rosé is perfect."'},
+  'Las 4 cosas que notarás al probar': {title:'The 4 things you\'ll notice', short:'Sweetness, acidity, tannins and body: the 4 basic wine sensations.', detail:'You don\'t need to be an expert to enjoy wine. Just pay attention to 4 things: 1) SWEETNESS: is it dry or sweet? 2) ACIDITY: does it make you salivate? Like biting a lemon. Whites usually have more. 3) TANNINS: do you feel dryness in your mouth? Only in reds. Like biting a grape skin. 4) BODY: does it feel light like water or dense like milk? That simple.', tip:'To the guest: "I invite you to notice how this wine feels in your mouth — if you feel freshness, that\'s the grape\'s natural acidity."'},
+  'Cómo catar en 3 pasos': {title:'How to taste in 3 steps', short:'Sight, nose and palate: the ritual to enjoy any wine.', detail:'Tasting wine is easier than it seems: STEP 1 — LOOK: tilt the glass over something white. Is it pale or intense? Young reds are purple, old ones are garnet. STEP 2 — SMELL: put your nose in the glass. First without swirling (gentle aromas), then swirl and smell again (deeper aromas). STEP 3 — TASTE: take a small sip and move it around your mouth. What fruits do you notice? Fresh or warm?', tip:'To the guest: "If you like, I\'ll share a secret: gently swirl the glass before smelling — that way the wine releases all its hidden aromas."'},
+  '¿Por qué importa la uva?': {title:'Why the grape matters', short:'Each grape variety gives completely different flavors.', detail:'Just as there are green apples (tart) and red apples (sweet), there are very different wine grapes. TEMPRANILLO (Spain\'s star) produces elegant reds with notes of red fruit and leather. ALBARIÑO gives crisp whites that smell of peach and flowers. GARNACHA produces powerful, spicy reds. At Txoko we have wines from over 15 different varieties — it\'s like having a flavor map.', tip:'To the guest: "This wine is made with Tempranillo, Spain\'s most famous grape — it will give you notes of cherry, vanilla and a spicy touch."'},
+  '¿Qué vino pido con mi plato?': {title:'What wine with my dish?', short:'The easy rule: white with fish, red with meat, and whatever you want!', detail:'Don\'t overthink it: the basic rule works 80% of the time. FISH and SEAFOOD (tataki, sea bass, grouper) → fresh whites or sparkling. MEATS (sirloin, lamb, burger) → reds. DESSERTS (brownie, mousse) → sweet wines. But the most important rule is: THERE ARE NO RULES. If you like red with fish, go for it! The best pairing is the one you enjoy.', tip:'To the guest: "I\'d recommend a fresh white with your fish, but if you prefer red, we have elegant options that also work very well."'},
+  '¿Copa o botella?': {title:'Glass or bottle?', short:'By the glass is perfect to try and discover without commitment.', detail:'At Txoko we have more than 10 wines available by the glass — the perfect way to try wines without committing to a whole bottle. A glass is ideal if: you\'re dining alone or as a couple, you want to try something new, each person wants a different wine, or you simply want a glass with your dish. Prices range from €10 to €25 per glass, so you can explore without spending much.', tip:'To the guest: "If you\'d like to try without commitment, we have a selection of wines by the glass starting at €10. Perfect for discovering new favorites."'},
+  'Crianza, Reserva y Gran Reserva': {title:'Crianza, Reserva and Gran Reserva', short:'The 3 aging categories of Spanish wine.', detail:'Spain classifies its wines by aging time. CRIANZA: minimum 2 years total, 6 months in barrel (12 in Rioja). Result: notes of vanilla and mild spice. RESERVA: minimum 3 years, 12 months in barrel. More complexity and depth. GRAN RESERVA: minimum 5 years, 18 months in barrel. Only in the best vintages. Gems. Easy summary: more time = more elegant and complex.', tip:'To the guest: "This Crianza has an elegant touch of oak. If you want more complexity, our Reservas have more depth, like Marqués de Murrieta."'},
+  'Denominación de Origen (DO)': {title:'Denominación de Origen (DO)', short:'Seal guaranteeing the wine\'s geographic origin and quality.', detail:'The DO certifies that a wine comes from a specific region and meets controlled quality standards. Each DO has its own rules about permitted grape varieties, production methods and aging time.', tip:'To the guest: "This seal guarantees the wine comes from where it says and has been made following that region\'s tradition."'},
+  'DOCa / DOQ (Calificada)': {title:'DOCa / DOQ (Qualified)', short:'The highest denomination level in Spain. Only Rioja and Priorat.', detail:'Only two regions in Spain hold this top distinction: Rioja (DOCa since 1991) and Priorat (DOQ since 2000). It implies stricter controls throughout the production chain, from vineyard to bottling.', tip:'To the guest: "It\'s the elite of Spanish wines. Only two regions in all of Spain have this recognition."'},
+  'Vinos Canarios': {title:'Canary Island Wines', short:'Unique volcanic vineyards worldwide, with pre-phylloxera native varieties.', detail:'The Canary Islands are a global wine treasure. Their vines were never affected by the phylloxera plague that devastated Europe in the 19th century, so they preserve centuries-old vines on their own roots. The volcanic soil and Atlantic winds create unique mineral and saline wines. Varieties like Listán Negro, Listán Blanco, Malvasía, Marmajuelo and Albillo Criollo are found nowhere else.', tip:'To the guest: "Our Canary wines are unique in the world — born from centuries-old volcanic vineyards that survived the plague that destroyed Europe\'s vineyards. They are literally living history in every glass."'},
+  'Taninos': {title:'Tannins', short:'Compounds that give structure and a drying sensation on the palate.', detail:'Tannins come from grape skin, seeds and oak barrels. They are responsible for that astringent or "drying" sensation in the mouth. With aging, tannins soften and the wine gains elegance.', tip:'To the guest: "If you feel a slight dryness on the palate, those are the tannins — that\'s what gives the wine body and structure."'},
+  'Maridaje': {title:'Food Pairing', short:'The art of combining wine and food to elevate both.', detail:'Pairing aims for wine and dish to complement each other. Basic rules: fresh whites with fish and seafood, reds with meats and stews, sweet wines with desserts. But the most important rule is: the perfect pairing is the one you enjoy.', tip:'To the guest: "I recommend this wine because its freshness/body/acidity perfectly complements the flavors of your dish."'},
+  'Decantación': {title:'Decanting', short:'Aerating the wine so it develops all its aromas.', detail:'To decant a wine means to transfer it from bottle to decanter to oxygenate it. It\'s especially useful with powerful young reds (to soften them) and with old wines (to separate sediments). Decanting time varies: 30 minutes for young wines, just a few minutes for very old ones.', tip:'To the guest: "Allow me to decant this wine — oxygenating it will reveal all its hidden aromas."'},
+  'Temperatura de servicio': {title:'Serving temperature', short:'Every wine has its ideal temperature to be enjoyed at its best.', detail:'Light whites: 7-9°C. Full-bodied whites and rosés: 10-12°C. Young reds: 14-16°C. Oak-aged reds: 16-18°C. Sparkling: 6-8°C. Sweet: 6-8°C. A wine too cold loses aromas, too warm loses freshness.', tip:'To the guest: "I\'m serving this [red/white] at its ideal temperature so you can appreciate every nuance."'},
+  'Variedades autóctonas españolas': {title:'Spanish native varieties', short:'Spain has over 600 grape varieties, many unique in the world.', detail:'Star reds: Tempranillo (Rioja, Ribera del Duero), Garnacha (Aragón, Priorat), Monastrell (Jumilla), Mencía (Bierzo), Listán Negro (Canary Islands). Star whites: Albariño (Rías Baixas), Verdejo (Rueda), Godello (Valdeorras), Viura (Rioja), Malvasía (Canarias, Lanzarote). Each expresses its terroir uniquely.', tip:'To the guest: "Spain has the greatest grape diversity in the world. This wine is made with [variety], which only reaches this expression in [region]."'},
+  'Copa adecuada': {title:'The right glass', short:'The glass shape directly influences how we perceive the wine.', detail:'Large, wide glass for full-bodied reds (allows oxygenation). Narrower glass for whites (preserves freshness). Flute or tulip glass for sparkling (preserves bubbles). Always hold the glass by the stem so you don\'t warm the wine.', tip:'To the guest: "We use this specific glass so you can fully appreciate the aromas and the wine\'s ideal temperature."'}
+};
+
+// English translations for WINE_REGIONS (keyed by Spanish region name)
+const WINE_REGIONS_EN = {
+  'Islas Canarias': {region:'Canary Islands', summary:'Pre-phylloxera volcanic vineyards, grape varieties unique in the world', script:'Our Canary wines are a genuine wine treasure. The vines grow in volcanic soil, sometimes in small pits dug into the lava to protect them from the wind — a landscape UNESCO has recognized as World Heritage. Most special of all: these vines were never affected by phylloxera, so they are centuries-old vines on their original roots. The result: mineral, saline wines that taste of Atlantic and volcano.', keyGrapes:'Listán Blanco, Listán Negro, Malvasía, Marmajuelo, Albillo Criollo'},
+  'La Rioja': {region:'La Rioja', summary:'Cradle of Spanish wine, a century-old tradition of excellence', script:'La Rioja is Spain\'s most prestigious wine region, with DOCa (Qualified) status — the highest distinction. Centuries-old wineries like Marqués de Murrieta (founded in 1852) combine tradition with innovation. The continental climate, moderated by the Sierra de Cantabria, creates perfect conditions for Tempranillo, which here reaches its maximum expression with elegance and longevity.', keyGrapes:'Tempranillo, Garnacha, Graciano, Mazuelo, Viura'},
+  'Ribera del Duero': {region:'Ribera del Duero', summary:'Powerful, elegant reds at high altitude', script:'Ribera del Duero produces some of Spain\'s most powerful reds. Its vineyards are among the highest in Europe (700-1000m), creating an extreme day-night temperature swing. Tempranillo (locally called Tinto Fino or Tinta del País) develops unique concentration and intensity. Vega Sicilia wines, whose Tempos group distributes Alion, are global icons.', keyGrapes:'Tinto Fino (Tempranillo)'},
+  'Galicia': {region:'Galicia', summary:'Atlantic whites of incomparable freshness', script:'Galicia is the land of Albariño and Godello, two of Spain\'s most exciting white grapes. The humid, cool Atlantic climate produces wines of vibrant acidity and a minerality that recalls the sea. Rías Baixas (Albariño) makes wines that pair perfectly with seafood, while Valdeorras (Godello) surprises with whites of great structure and elegance.', keyGrapes:'Albariño, Godello, Mencía'},
+  'Priorat': {region:'Priorat', summary:'Mineral reds from slate terrace vineyards', script:'Priorat is one of only two DOCa regions in Spain. Its vineyards grow on steep licorella (slate) terraces, sometimes with 60% slopes. Old Garnacha and Cariñena vines produce minimal yields but extraordinary concentration. These are wines of great intensity, yet also of a unique mineral elegance.', keyGrapes:'Garnacha, Cariñena'},
+  'Francia': {region:'France', summary:'World references from Burgundy, Bordeaux and the Rhône', script:'Our French selection covers three iconic regions. From Burgundy we have Pinot Noir and Chardonnay of supreme elegance. From the Rhône, Grenache and Syrah wines with body and spice. And from Bordeaux, classic blends of Cabernet and Merlot. We also offer Champagne, the world reference for sparkling wine.', keyGrapes:'Pinot Noir, Chardonnay, Syrah, Grenache, Merlot, Cabernet Sauvignon'}
+};
+
 // Wine flashcard questions
 const WINE_FLASHCARDS = [
   // ═══ PRINCIPIANTE — Lo básico del vino ═══
@@ -14108,7 +15093,7 @@ function _buildNoteDetail(key, _en){
     <div class="sensory-card" onclick="_snsDetail={type:'dish',name:'${d.replace(/'/g,"\\'")}'};renderVinos()">
       <div class="sensory-card-dot" style="background:#6b8f71"></div>
       <div class="sensory-card-info">
-        <div class="sensory-card-name">${d}</div>
+        <div class="sensory-card-name">${_translateDish(d)}</div>
       </div>
       <div class="sensory-intensity">${'<span class="sensory-dot on"></span>'.repeat(int)}${'<span class="sensory-dot"></span>'.repeat(3-int)}</div>
     </div>`).join('');
@@ -14162,14 +15147,14 @@ function _buildSensoryList(mode, _en){
     if(wines.length === 0) searchHTML += `<div style="text-align:center;color:rgba(28,42,34,.4);font-size:.75rem;padding:2rem">${_en?'No wines found':'No se encontraron vinos'}</div>`;
   } else {
     let dishes = Object.keys(DISH_SNS);
-    if(q) dishes = dishes.filter(d=>d.toLowerCase().includes(q));
+    if(q) dishes = dishes.filter(d=>d.toLowerCase().includes(q) || _translateDish(d).toLowerCase().includes(q));
     searchHTML += dishes.map(d=>{
       const profile = DISH_SNS[d] || [];
       const tags = profile.map(([k,int])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
       return `<div class="sensory-card" onclick="_snsDetail={type:'dish',name:'${d.replace(/'/g,"\\'")}'};renderVinos()" style="flex-wrap:wrap">
         <div class="sensory-card-dot" style="background:#6b8f71"></div>
         <div class="sensory-card-info">
-          <div class="sensory-card-name">${d}</div>
+          <div class="sensory-card-name">${_translateDish(d)}</div>
         </div>
         <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
       </div>`;
@@ -14206,13 +15191,13 @@ function _snsRenderList(){
       if(!wines.length) html = `<div style="text-align:center;color:rgba(28,42,34,.4);font-size:.75rem;padding:2rem">${_en?'No wines found':'No se encontraron vinos'}</div>`;
     } else {
       let dishes = Object.keys(DISH_SNS);
-      if(q) dishes = dishes.filter(d=>d.toLowerCase().includes(q));
+      if(q) dishes = dishes.filter(d=>d.toLowerCase().includes(q) || _translateDish(d).toLowerCase().includes(q));
       html = dishes.map(d=>{
         const profile = DISH_SNS[d] || [];
         const tags = profile.map(([k])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
         return `<div class="sensory-card" onclick="_snsDetail={type:'dish',name:'${d.replace(/'/g,"\\'")}'};renderVinos()" style="flex-wrap:wrap">
           <div class="sensory-card-dot" style="background:#6b8f71"></div>
-          <div class="sensory-card-info"><div class="sensory-card-name">${d}</div></div>
+          <div class="sensory-card-info"><div class="sensory-card-name">${_translateDish(d)}</div></div>
           <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
         </div>`;
       }).join('');
@@ -14297,8 +15282,8 @@ function _renderSensoryDetail(c, bar){
       <button class="sensory-back" onclick="_snsDetail=null;renderVinos()">← ${_en?'Back':'Volver'}</button>
       <div class="sensory-fp">
         <div class="sensory-fp-head">
-          <div class="sensory-fp-badge" style="background:#6b8f71;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center">P</div>
-          <div class="sensory-fp-name">${dname}</div>
+          <div class="sensory-fp-badge" style="background:#6b8f71;font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center">${_en?'D':'P'}</div>
+          <div class="sensory-fp-name">${_translateDish(dname)}</div>
         </div>
         <div class="sensory-radar-wrap">${radar}</div>
         <div style="text-align:center;font-size:.6rem;color:rgba(28,42,34,.4);margin-bottom:.5rem">${_en?'Flavor Profile':'Perfil de Sabor'}</div>
@@ -16888,29 +17873,35 @@ function _renderWineLearn(c, bar){
 
     <div class="section-eyebrow">◇ ${_en?'Concepts':'Conceptos'}${_wineLearnLevel!=='all'?' — '+levelLabels[_wineLearnLevel]:''}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem">
-      ${filteredConcepts.map((c,i)=>`
+      ${filteredConcepts.map((c,i)=>{
+        const _t = _en && typeof WINE_CONCEPTS_EN !== 'undefined' ? (WINE_CONCEPTS_EN[c.title]||{}) : {};
+        const _cTitle = _t.title || c.title;
+        const _cShort = _t.short || c.short;
+        const _cDetail = _t.detail || c.detail;
+        const _cTip = _t.tip || c.tip;
+        return `
         <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
           <div style="display:flex;align-items:center;gap:.6rem;position:relative">
             <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold-a),rgba(196,154,60,.2));width:32px;height:32px;font-size:1rem">${c.icon}</div>
             <div style="flex:1">
               <div style="display:flex;align-items:center;gap:.4rem">
-                <span style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${c.title}</span>
+                <span style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${_cTitle}</span>
                 ${c.level?`<span style="font-family:'DM Mono',monospace;font-size:.45rem;padding:.15rem .4rem;border-radius:4px;background:${c.level==='principiante'?'rgba(77,138,94,.1)':c.level==='intermedio'?'rgba(196,154,60,.08)':'rgba(122,106,170,.08)'};color:${levelColors[c.level]||'var(--parch4)'};letter-spacing:.06em;text-transform:uppercase">${levelLabels[c.level]||c.level}</span>`:''}
               </div>
-              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${c.short}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${_cShort}</div>
             </div>
             <svg style="opacity:.3;transition:transform .2s;color:var(--gold)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
           <div class="wc-detail" style="max-height:0;overflow:hidden;transition:max-height .3s ease">
             <div style="margin-top:.8rem;padding-top:.8rem;border-top:1.5px solid rgba(196,154,60,.1)">
-              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.6;margin-bottom:.6rem">${c.detail}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.6;margin-bottom:.6rem">${_cDetail}</div>
               <div class="wine-script-box" style="margin-top:.5rem">
                 <div class="wine-info-label" style="margin-left:.5rem">${_en?'How to explain to the guest':'Cómo explicarlo al huésped'}</div>
-                <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;color:var(--parchment);font-style:italic;line-height:1.4;margin-left:.5rem">${c.tip}</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;color:var(--parchment);font-style:italic;line-height:1.4;margin-left:.5rem">${_cTip}</div>
               </div>
             </div>
           </div>
-        </div>`).join('')}
+        </div>`;}).join('')}
     </div>
 
     <!-- WINE ENCYCLOPEDIA — Deep Technical Knowledge -->
@@ -17046,13 +18037,19 @@ function _renderWineLearn(c, bar){
 
     <div class="section-eyebrow">◇ ${_en?'Our Regions':'Nuestras Regiones'}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem">
-      ${WINE_REGIONS.map((r,i)=>`
+      ${WINE_REGIONS.map((r,i)=>{
+        const _rt = _en && typeof WINE_REGIONS_EN !== 'undefined' ? (WINE_REGIONS_EN[r.region]||{}) : {};
+        const _rRegion = _rt.region || r.region;
+        const _rSummary = _rt.summary || r.summary;
+        const _rScript = _rt.script || r.script;
+        const _rKeyGrapes = _rt.keyGrapes || r.keyGrapes;
+        return `
         <div onclick="this.querySelector('.wr-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
           <div style="display:flex;align-items:center;gap:.6rem;position:relative">
             <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--sage-a),rgba(77,138,94,.2));width:32px;height:32px;font-size:1rem">${r.icon}</div>
             <div style="flex:1">
-              <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${r.region}</div>
-              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${r.summary}</div>
+              <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${_rRegion}</div>
+              <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.15rem">${_rSummary}</div>
             </div>
             <svg style="opacity:.3;color:var(--gold)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
@@ -17060,17 +18057,17 @@ function _renderWineLearn(c, bar){
             <div style="margin-top:.8rem;padding-top:.8rem;border-top:1.5px solid rgba(196,154,60,.1)">
               <div class="wine-script-box" style="margin-bottom:.6rem">
                 <div class="wine-info-label" style="margin-left:.5rem">${_en?'Script for guest':'Script para el huésped'}</div>
-                <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);font-style:italic;line-height:1.5;margin-left:.5rem">"${r.script}"</div>
+                <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);font-style:italic;line-height:1.5;margin-left:.5rem">"${_rScript}"</div>
               </div>
               <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem">
                 <div class="wine-info-label" style="width:100%">◇ ${_en?'Key grapes':'Uvas principales'}</div>
-                ${r.keyGrapes.split(', ').map(g=>`<span class="wine-pairing-pill" style="font-size:.65rem">${g}</span>`).join('')}
+                ${_rKeyGrapes.split(', ').map(g=>`<span class="wine-pairing-pill" style="font-size:.65rem">${g}</span>`).join('')}
               </div>
               <div class="wine-info-label" style="margin-top:.5rem">◇ ${_en?'Our wines':'Nuestros vinos'}</div>
               <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch2);margin-top:.2rem">${r.ourWines}</div>
             </div>
           </div>
-        </div>`).join('')}
+        </div>`;}).join('')}
     </div>
   </div>`;
 }
@@ -17405,9 +18402,16 @@ function _generateWineChoices(q){
 function _wqSelectAnswer(idx){
   if(!_wqState || _wqState.selectedAnswer !== null) return;
   _wqState.selectedAnswer = idx;
-  if(_wqState.currentChoices[idx].correct){
+  const isCorrect = !!_wqState.currentChoices[idx].correct;
+  if(isCorrect){
     _wqState.score++;
+    awardXP(3, LANG==='en'?'Wine answer ✓':'Respuesta vinos ✓');
   }
+  // Universal feedback: sound + XP burst + pop
+  try {
+    const clickedEl = document.querySelector(`[onclick="_wqSelectAnswer(${idx})"]`);
+    if(typeof quizFeedback === 'function') quizFeedback(isCorrect, clickedEl, isCorrect?3:0);
+  } catch(e){}
   renderVinos();
 }
 
@@ -17982,16 +18986,23 @@ function initFlashcards(topic,cat){
   fcIndex=0;fcFlipped=false;
 }
 
+// Allergen emoji map — visual cue for quick recognition on flashcards
+const ALLERGEN_EMOJI = {
+  'Gluten':'🌾','Lácteos':'🥛','Huevos':'🥚','Pescado':'🐟',
+  'Crustáceos':'🦐','Moluscos':'🐚','Frutos secos':'🥜','Cacahuete':'🥜',
+  'Soja':'🫘','Sulfitos':'🍷','Mostaza':'🌭','Apio':'🥬',
+  'Granos de sésamo':'🌰','Altramuces':'🫛','Cereales':'🌾'
+};
+function allergenEmoji(a){ return ALLERGEN_EMOJI[a] || '⚠'; }
+
 function renderFlashcards(){
   if(!fcDishes.length)initFlashcards('allergens','all');
+  const _en = LANG==='en';
   document.getElementById('appContent').innerHTML=`
     <div class="fc-toolbar">
       <select class="select-pill" onchange="changeFcCat(this.value)">
         <option value="all">${t('allDishes')}</option>
         ${getCats().map((c,i)=>`<option value="${CATS_ES[i]}">${c}</option>`).join('')}
-      </select>
-      <select class="select-pill" onchange="changeFcTopic(this.value)">
-        ${TOPICS.map(tp=>`<option value="${tp.key}"${tp.key===fcTopic?' selected':''}>${tp.label}</option>`).join('')}
       </select>
       <span class="fc-counter-badge" id="fcCounter"></span>
     </div>
@@ -18002,9 +19013,21 @@ function renderFlashcards(){
       </div>
     </div>
     <div class="fc-rating" id="fcRating" style="display:none">
-      <button class="fc-rate-btn fc-rate-again" onclick="fcRate(0)">${t('rateAgain')}</button>
-      <button class="fc-rate-btn fc-rate-ok" onclick="fcRate(1)">${t('rateOk')}</button>
-      <button class="fc-rate-btn fc-rate-good" onclick="fcRate(2)">${t('rateGood')}</button>
+      <button class="fc-rate-btn fc-rate-again" onclick="_fcRateFire(this);fcRate(0)">
+        <span class="fc-rate-kbd">◇</span>
+        <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="fc-rate-lbl">${t('rateAgain')}</span>
+      </button>
+      <button class="fc-rate-btn fc-rate-ok" onclick="_fcRateFire(this);fcRate(1)">
+        <span class="fc-rate-kbd">◈</span>
+        <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="fc-rate-lbl">${t('rateOk')}</span>
+      </button>
+      <button class="fc-rate-btn fc-rate-good" onclick="_fcRateFire(this);fcRate(2)">
+        <span class="fc-rate-kbd">✦</span>
+        <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6L20 9.4l-4 3.9 1 5.6L12 16.3l-5 2.6 1-5.6-4-3.9 5.4-.8z" stroke-linejoin="round"/></svg></span>
+        <span class="fc-rate-lbl">${t('rateGood')}</span>
+      </button>
     </div>
   `;
   renderFcCard();
@@ -18012,33 +19035,31 @@ function renderFlashcards(){
 
 function renderFcCard(){
   const d=fcDishes[fcIndex];
-  const topic=TOPICS.find(t=>t.key===fcTopic)||TOPICS[0];
   const pct=((fcIndex+1)/fcDishes.length*100).toFixed(0);
   document.getElementById('fcCounter').textContent=`${fcIndex+1} / ${fcDishes.length}`;
   document.getElementById('fcRibbon').style.width=pct+'%';
   const dd=getDish(d);
+  const _en = LANG==='en';
   const _catColor = getCatColor(dd.cat||'Entrantes');
   const _catAlpha = getCatColorAlpha(dd.cat||'Entrantes', 0.18);
-  const _catIllustration = getCatIllustration(dd.cat||'Entrantes');
   const card=document.getElementById('fcCard');
   card.querySelector('.fc-face').innerHTML=`
     <!-- Top color bar -->
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:var(--r) var(--r) 0 0"></div>
     <!-- Watermark category icon -->
-    <div style="position:absolute;bottom:-8px;right:-8px;width:120px;height:120px;opacity:.05;color:${_catColor};display:flex;align-items:center;justify-content:center;pointer-events:none">
-      <svg width="120" height="120" viewBox="0 0 24 24" fill="${_catColor}" stroke="none">${(CAT_ICONS[dd.cat]||'').replace(/stroke="currentColor"/g,'fill="'+_catColor+'"').replace(/fill="none"/g,'')}</svg>
+    <div style="position:absolute;bottom:-8px;right:-8px;width:140px;height:140px;opacity:.06;color:${_catColor};display:flex;align-items:center;justify-content:center;pointer-events:none">
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="${_catColor}" stroke="none">${(CAT_ICONS[dd.cat]||'').replace(/stroke="currentColor"/g,'fill="'+_catColor+'"').replace(/fill="none"/g,'')}</svg>
     </div>
     <!-- Number badge -->
     <div style="position:absolute;top:16px;right:16px;font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4);letter-spacing:.08em">${fcIndex+1}/${fcDishes.length}</div>
     <!-- Category chip -->
-    <div class="fc-cat-chip" style="color:${_catColor};border:1px solid ${_catColor}20;background:${_catAlpha};display:flex;align-items:center;gap:.4rem">
+    <div class="fc-cat-chip" style="color:${_catColor};border:1px solid ${_catColor}20;background:${_catAlpha};display:flex;align-items:center;gap:.4rem;margin-bottom:1.2rem">
       <span style="display:inline-flex;align-items:center;color:${_catColor}">${CAT_ICONS[dd.cat]||''}</span>
-      <span>${dd.cat||''}</span>
+      <span>${catLocal(dd.cat)||''}</span>
     </div>
-    <div class="fc-topic-chip">${topic.label}</div>
-    <div class="fc-dish">${dd.name}</div>
-    <div class="fc-q">${topic.q(d)}</div>
-    <div class="fc-flip-hint">${t('revealHint')}</div>
+    <!-- Dish name LARGE (primary focus of the card) -->
+    <div class="fc-dish" style="font-size:1.85rem;line-height:1.15;padding:0 .6rem;text-align:center">${dd.name}</div>
+    <div class="fc-flip-hint" style="margin-top:1.3rem">${_en?'Tap to see ingredients & allergens':'Toca para ver ingredientes y alérgenos'}</div>
   `;
 
   card.classList.remove('fc-animating-out','fc-animating-in');
@@ -18054,25 +19075,47 @@ function flipCard(){
   const face=card.querySelector('.fc-face');
   const scene=document.getElementById('fcScene');
   const dd=getDish(fcDishes[fcIndex]);
-  const topic=TOPICS.find(t=>t.key===fcTopic)||TOPICS[0];
+  const _en = LANG==='en';
   const _catColor=getCatColor(dd.cat||'Entrantes');
   const _catAlpha=getCatColorAlpha(dd.cat||'Entrantes',0.18);
+
+  // Ingredients as elegant prose text (pills break on complex entries with ":" or ".")
+  const ingredientsStr = (dd.ingredients || '').trim();
+  const ingredientsHtml = ingredientsStr
+    ? `<div style="padding:.65rem .85rem;background:rgba(196,154,60,.05);border:1px solid rgba(196,154,60,.15);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.6;text-align:left">${ingredientsStr}</div>`
+    : `<div style="color:var(--parch4);font-size:.72rem;text-align:center;font-style:italic">${_en?'Not specified':'Sin especificar'}</div>`;
+
+  // Build allergens with emojis
+  const allergensHtml = (dd.allergens && dd.allergens.length)
+    ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.25rem">${dd.allergens.map(a=>`<span style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(196,112,104,.1);border:1px solid rgba(196,112,104,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:#9a4a42;font-weight:600"><span style="font-size:.95rem;line-height:1">${allergenEmoji(a)}</span><span>${allergenLocal(a)}</span></span>`).join('')}</div>`
+    : `<div style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(77,138,94,.1);border:1px solid rgba(77,138,94,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--sage);font-weight:600"><span>✓</span><span>${_en?'No allergens':'Sin alérgenos'}</span></div>`;
 
   // Phase 1: rotate out
   card.classList.add('fc-animating-out');
   setTimeout(()=>{
-    // At 90deg — swap content
     card.classList.remove('fc-animating-out');
-    // Render back content
     face.innerHTML=`
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:var(--r) var(--r) 0 0"></div>
       <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,${_catColor},transparent);border-radius:0 0 var(--r) var(--r)"></div>
-      <div class="fc-answer-label">${t('answerLabel')}</div>
-      <div class="fc-dish-small" style="border-bottom:1px solid ${_catColor}40;padding-bottom:.5rem;margin-bottom:.8rem;width:100%;max-width:420px">${dd.name}</div>
-      <div class="fc-answer">${topic.a(fcDishes[fcIndex])}</div>
-      ${dd.notes?`<div style="margin-top:.85rem;padding:.65rem .85rem;background:rgba(196,154,60,.05);border-left:2px solid var(--gold-a);border-radius:0 var(--r2) var(--r2) 0;font-size:.7rem;color:var(--parch2);line-height:1.55;text-align:left;width:100%;max-width:420px">${dd.notes}</div>`:''}
+      <div style="width:100%;max-width:460px;display:flex;flex-direction:column;gap:.75rem;padding:.1rem .2rem">
+        <!-- Dish name header -->
+        <div style="text-align:center;border-bottom:1px solid ${_catColor}40;padding-bottom:.55rem">
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.12em;color:${_catColor};text-transform:uppercase;margin-bottom:.2rem">${catLocal(dd.cat)||''}</div>
+          <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment);line-height:1.2">${dd.name}</div>
+        </div>
+        <!-- Ingredients -->
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.4rem;text-align:center">🍴 ${_en?'Ingredients':'Ingredientes'}</div>
+          ${ingredientsHtml}
+        </div>
+        <!-- Allergens -->
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;color:#c47068;text-transform:uppercase;margin-bottom:.4rem;text-align:center">⚠ ${_en?'Allergens':'Alérgenos'}</div>
+          <div style="text-align:center">${allergensHtml}</div>
+        </div>
+        ${dd.notes?`<div style="padding:.55rem .75rem;background:rgba(196,154,60,.05);border-left:2px solid var(--gold-a);border-radius:0 var(--r2) var(--r2) 0;font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${dd.notes}</div>`:''}
+      </div>
     `;
-    // Phase 2: rotate in
     card.classList.add('fc-animating-in');
     setTimeout(()=>{
       card.classList.remove('fc-animating-in');
@@ -18083,9 +19126,29 @@ function flipCard(){
 
   const emp=getEmp(currentUser);
   emp.fcHistory=emp.fcHistory||[];
-  emp.fcHistory.push({topic:fcTopic,dishId:fcDishes[fcIndex].id,ts:Date.now(),date:todayStr()});
+  emp.fcHistory.push({topic:'dish',dishId:fcDishes[fcIndex].id,ts:Date.now(),date:todayStr()});
   saveDB();
 }
+
+// Visual click feedback for rate buttons — Tunic-style burst + sound
+function _fcRateFire(btn){
+  try{ if(typeof playSound==='function') playSound(btn.classList.contains('fc-rate-again')?'wrong':(btn.classList.contains('fc-rate-good')?'correct':'click')); }catch(e){}
+  if(!btn||!btn.classList) return;
+  btn.classList.remove('fc-rate-fire'); void btn.offsetWidth;
+  btn.classList.add('fc-rate-fire');
+  // Spawn a quick sparkle
+  try{
+    const r=btn.getBoundingClientRect();
+    const s=document.createElement('div');
+    const col=btn.classList.contains('fc-rate-again')?'#c97070':(btn.classList.contains('fc-rate-good')?'#4d8a5e':'#7095c8');
+    s.textContent=btn.classList.contains('fc-rate-good')?'✦':(btn.classList.contains('fc-rate-again')?'↻':'✓');
+    s.style.cssText=`position:fixed;left:${r.left+r.width/2}px;top:${r.top+r.height/2}px;color:${col};font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);animation:fcRateSparkle .7s ease-out forwards;text-shadow:0 0 12px ${col}`;
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),750);
+  }catch(e){}
+}
+// Inject sparkle keyframes once
+(function(){ try{ if(!document.getElementById('fcRateSparkleKF')){ const st=document.createElement('style'); st.id='fcRateSparkleKF'; st.textContent='@keyframes fcRateSparkle{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}100%{opacity:0;transform:translate(-50%,-150%) scale(.9)}}'; document.head.appendChild(st); } }catch(e){} })();
 
 function fcRate(score){
   const emp=getEmp(currentUser);
@@ -18446,16 +19509,16 @@ function searchRepaso(query) {
     const isKnown = !!known[d.id];
     const catCol = CAT_COLORS[dd.cat] || 'var(--gold)';
     const allergenHtml = `<div class="repaso-allergen-row">${dd.allergens.length===0?`<span class="allergen-tag">${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">${allergenLocal(a)}</span>`).join('')}</div>`;
-    return `<div class="repaso-row" id="ritem${d.id}">
+    return `<div class="repaso-row" id="ritem${d.id}" onclick="_aprenderOpenDish(${d.id})" style="cursor:pointer">
       <div class="repaso-row-body">
         <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:${catCol};margin-bottom:.2rem">${catLocal(dd.cat)}</div>
-        <div class="repaso-row-name">${dd.name}</div>
+        <div class="repaso-row-name" style="text-decoration:underline;text-decoration-color:var(--gold-a);text-underline-offset:3px">${dd.name}</div>
         ${allergenHtml}
         ${dd.notes?`<div class="repaso-note">${dd.notes}</div>`:''}
       </div>
       <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0">
         <button class="dj-launch-btn${(getEmp(currentUser).journeyMastered||{})[d.id]?' mastered':''}" onclick="event.stopPropagation();launchDishJourney(${d.id})" title="${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}">${(getEmp(currentUser).journeyMastered||{})[d.id]?'✓ ':'▶ '}${LANG==='en'?'Journey':'Viaje'}</button>
-        <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="Marcar como dominado">${isKnown?'✓':'○'}</button>
+        <button class="known-btn${isKnown?' yes':''}" onclick="event.stopPropagation();toggleKnown(${d.id})" title="Marcar como dominado">${isKnown?'✓':'○'}</button>
       </div>
     </div>`;
   }).join('');
@@ -18468,6 +19531,8 @@ function searchRepaso(query) {
 function openRepasoCat(cat){repasoCat=cat;repasoView='topic';renderRepasoTopic();}
 
 function renderRepasoTopic(){
+  // Safety: if no category selected, fall back to category grid
+  if(!repasoCat){ repasoView='cats'; return renderRepasoCats(); }
   const emp=getEmp(currentUser);
   const known=emp.knownDishes||{};
   const dishes=DISHES.filter(d=>d.cat===repasoCat);
@@ -18927,7 +19992,6 @@ function renderVideoAccordion(dishName, videoId) {
   const tabs = [
     {id:'ing', label:LANG==='en'?'Ingredients':'Ingredientes', content:d.ingredients||'—', color:'var(--gold)'},
     {id:'alg', label:LANG==='en'?'Allergens':'Alérgenos', content:allergens, color:allergenColor},
-    {id:'cut', label:LANG==='en'?'Cutlery':'Marcaje', content:d.cutlery||'—', color:'var(--gold)'},
     {id:'str', label:'Storytelling', content:d.history||(LANG==='en'?'Coming soon':'Próximamente'), color:'var(--gold)'},
   ];
   if(d.notes) tabs.push({id:'not', label:LANG==='en'?'Notes':'Notas', content:d.notes, color:'#d4944c'});
@@ -18988,9 +20052,6 @@ function renderVideoDishInfo(dishName, cat) {
     { label: LANG==='en'?'Allergens':'Alérgenos', value: allergenList,
       icon: '<polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".4"/><path d="M12 8v4M12 14v.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>', 
       color: allergenColor },
-    { label: LANG==='en'?'Cutlery':'Marcaje', value: dishData.cutlery||'—',
-      icon: '<polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c49a3c"/><polygon points="12,22 20,17 20,7 12,12" fill="#a47a2c" opacity=".4"/><path d="M9 6v12M7.5 6v4a1.5 1.5 0 003 0V6M15 6v12M13 8c0-1 .5-2 2-2s2 1 2 2-1 1.5-2 1.5h-.5" fill="none" stroke="#fff" stroke-width="1" stroke-linecap="round"/>', 
-      color: 'var(--gold)' },
     { label: 'Storytelling', value: dishData.history||(LANG==='en'?'Coming soon':'Próximamente'),
       icon: '<polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#7a6aaa"/><polygon points="12,22 20,17 20,7 12,12" fill="#5a4a8a" opacity=".4"/><path d="M6 6h4a2 2 0 012 2v8a1.5 1.5 0 00-1.5-1.5H6V6zM18 6h-4a2 2 0 00-2 2v8a1.5 1.5 0 011.5-1.5H18V6z" fill="#fff" opacity=".8"/>', 
       color: 'var(--gold)' },
@@ -19631,24 +20692,54 @@ function renderProtocolo() {
     </div>
 
     <!-- Sections -->
-    <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;color:var(--candy-purple);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem">— ${LANG==='en'?'Browse by section':'Explorar por sección'} —</div>
-    ${PROTOCOLO_SECTIONS.map(s => `
-      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-radius:var(--r);margin-bottom:.6rem;overflow:hidden;box-shadow:0 2px 8px rgba(28,42,34,.04);transition:all .2s;position:relative">
-        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${s.color};border-radius:var(--r) var(--r) 0 0"></div>
-        <div style="display:flex;align-items:center;gap:.85rem;padding:1rem 1.1rem .85rem;cursor:pointer" onclick="renderProtocoloSection('${s.id}')">
-          <div style="width:42px;height:42px;border-radius:12px;background:${s.color}15;border:2px solid ${s.color}30;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:${s.color}">${s.icon}</div>
-          <div style="flex:1">
-            <div style="font-size:.9rem;font-weight:700;color:var(--parchment)">${LANG==='en'?s.title_en:s.title}</div>
-            <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;font-weight:500;color:var(--parch3);margin-top:.15rem">${s.rules.length} ${LANG==='en'?'rules':'reglas'}</div>
+    <div class="pr-section-heading">
+      <span class="pr-section-heading-line"></span>
+      <span class="pr-section-heading-text">${LANG==='en'?'Browse by chapter':'Explorar por capítulo'}</span>
+      <span class="pr-section-heading-line"></span>
+    </div>
+    ${PROTOCOLO_SECTIONS.map((s, idx) => {
+      const roman = ['I','II','III','IV','V','VI','VII','VIII','IX','X'][idx] || String(idx+1);
+      const firstRule = s.rules[0];
+      const preview = firstRule ? (LANG==='en'?firstRule.title_en:firstRule.title) : '';
+      return `
+      <div class="pr-chapter" onclick="renderProtocoloSection('${s.id}')" style="--sc:${s.color}">
+        <div class="pr-chapter-bar"></div>
+        <div class="pr-chapter-body">
+          <div class="pr-chapter-numeral">${roman}</div>
+          <div class="pr-chapter-icon">${s.icon}</div>
+          <div class="pr-chapter-content">
+            <div class="pr-chapter-title">${LANG==='en'?s.title_en:s.title}</div>
+            <div class="pr-chapter-sub">${s.rules.length} ${LANG==='en'?'rules':'reglas'} · ${preview}</div>
           </div>
-          <div style="display:flex;gap:.4rem">
-            <button onclick="event.stopPropagation();startProtocoloFlashcards('${s.id}')" style="background:var(--ink2);border:2px solid var(--ink3);border-radius:var(--r3);padding:.35rem .65rem;font-size:.68rem;font-weight:600;color:var(--parch2);cursor:pointer;transition:all .2s">FC</button>
-            <button onclick="event.stopPropagation();startProtocoloExam('${s.id}')" style="background:linear-gradient(135deg,${s.color}15,${s.color}08);border:2px solid ${s.color}30;border-radius:var(--r3);padding:.35rem .65rem;font-size:.68rem;font-weight:600;color:${s.color};cursor:pointer;transition:all .2s">C</button>
-            <span style="color:var(--parch4);align-self:center;font-size:.8rem">›</span>
+          <div class="pr-chapter-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
           </div>
         </div>
-      </div>`).join('')}
+        <div class="pr-chapter-actions">
+          <button onclick="event.stopPropagation();renderProtocoloSection('${s.id}')" class="pr-act pr-act-primary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            <span>${LANG==='en'?'Read rules':'Leer reglas'}</span>
+          </button>
+          <button onclick="event.stopPropagation();startProtocoloFlashcards('${s.id}')" class="pr-act">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            <span>${LANG==='en'?'Flashcards':'Flashcards'}</span>
+          </button>
+          <button onclick="event.stopPropagation();startProtocoloExam('${s.id}')" class="pr-act">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            <span>${LANG==='en'?'Test':'Test'}</span>
+          </button>
+        </div>
+      </div>`;
+    }).join('')}
   </div>`;
+}
+
+function _prBackBtn(label){
+  const txt = label || (LANG==='en'?'Back to Protocol':'Volver al Protocolo');
+  return `<button class="pr-back" onclick="renderProtocolo()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    <span>${txt}</span>
+  </button>`;
 }
 
 function renderProtocoloSection(sectionId) {
@@ -19656,15 +20747,27 @@ function renderProtocoloSection(sectionId) {
   if (!s) return;
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
-    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderProtocolo()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-size:1.2rem">${s.icon}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?s.title_en:s.title}</div>
+    ${_prBackBtn()}
+    <div class="pr-sec-head" style="--sc:${s.color}">
+      <div class="pr-sec-icon">${s.icon}</div>
+      <div class="pr-sec-head-text">
+        <div class="pr-sec-title">${LANG==='en'?s.title_en:s.title}</div>
+        <div class="pr-sec-meta">${s.rules.length} ${LANG==='en'?'rules':'reglas'}</div>
+      </div>
     </div>
-    <div style="display:flex;gap:.5rem;margin-bottom:1rem">
-      <button onclick="startProtocoloFlashcards('${s.id}')" style="flex:1;padding:.55rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);font-size:.75rem;color:var(--parch2);cursor:pointer">FC <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Flashcards</button>
-      <button onclick="startProtocoloExam('${s.id}')" style="flex:1;padding:.55rem;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:var(--r2);font-size:.75rem;color:var(--gold);cursor:pointer">C ${LANG==='en'?'Exam':'Examen'}</button>
-      <button onclick="startCasosPracticos('${s.id}')" style="flex:1;padding:.55rem;background:var(--ink);border:1px solid #4888a0;border-radius:var(--r2);font-size:.75rem;color:#4888a0;cursor:pointer">RP ${LANG==='en'?'Cases':'Casos'}</button>
+    <div class="pr-sec-actions" style="--sc:${s.color}">
+      <button onclick="startProtocoloFlashcards('${s.id}')" class="pr-sec-act">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        <span>${LANG==='en'?'Flashcards':'Flashcards'}</span>
+      </button>
+      <button onclick="startProtocoloExam('${s.id}')" class="pr-sec-act">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span>${LANG==='en'?'Test':'Test'}</span>
+      </button>
+      <button onclick="startCasosPracticos('${s.id}')" class="pr-sec-act">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>
+        <span>${LANG==='en'?'Cases':'Casos'}</span>
+      </button>
     </div>
     ${s.rules.map((r, i) => `
       <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:.5rem;border-left:3px solid ${s.color}">
@@ -19695,6 +20798,7 @@ function renderProtocoloFcCard() {
   const sectionData = PROTOCOLO_SECTIONS.find(s=>s.id===r.section);
   const sectionTitle = LANG==='en'?(sectionData?.title_en||''):(sectionData?.title||'');
   c.innerHTML = `
+    ${_prBackBtn(LANG==='en'?'Exit flashcards':'Salir de flashcards')}
     <div class="fc-toolbar">
       <span class="fc-cat-chip" style="color:${r.color};border:1px solid ${r.color}20;background:${r.color}18;display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .7rem;font-size:.7rem">
         <span>${r.icon}</span> <span>${sectionTitle}</span>
@@ -19708,9 +20812,21 @@ function renderProtocoloFcCard() {
       </div>
     </div>
     <div class="fc-rating" id="pfcRating" style="display:none">
-      <button class="fc-rate-btn fc-rate-again" onclick="rateProtocoloFc(0)">${LANG==='en'?'↻ Review':'↻ Repasar'}</button>
-      <button class="fc-rate-btn fc-rate-ok" onclick="rateProtocoloFc(1)">✓ ${LANG==='en'?'Got it':'Lo sé'}</button>
-      <button class="fc-rate-btn fc-rate-good" onclick="rateProtocoloFc(2)">${LANG==='en'?'Mastered':'Dominado'}</button>
+      <button class="fc-rate-btn fc-rate-again" onclick="_fcRateFire(this);rateProtocoloFc(0)">
+        <span class="fc-rate-kbd">◇</span>
+        <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="fc-rate-lbl">${LANG==='en'?'Review':'Repasar'}</span>
+      </button>
+      <button class="fc-rate-btn fc-rate-ok" onclick="_fcRateFire(this);rateProtocoloFc(1)">
+        <span class="fc-rate-kbd">◈</span>
+        <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="fc-rate-lbl">${LANG==='en'?'Got it':'Lo sé'}</span>
+      </button>
+      <button class="fc-rate-btn fc-rate-good" onclick="_fcRateFire(this);rateProtocoloFc(2)">
+        <span class="fc-rate-kbd">✦</span>
+        <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6L20 9.4l-4 3.9 1 5.6L12 16.3l-5 2.6 1-5.6-4-3.9 5.4-.8z" stroke-linejoin="round"/></svg></span>
+        <span class="fc-rate-lbl">${LANG==='en'?'Mastered':'Dominado'}</span>
+      </button>
     </div>
   `;
   _renderProtoFcFront();
@@ -19982,6 +21098,7 @@ function renderProtocoloExamQuestion() {
   const letters = ['A','B','C','D'];
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
+    ${_prBackBtn(LANG==='en'?'Exit test':'Salir del test')}
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
       <div style="flex:1"><div class="fc-ribbon"><div class="fc-ribbon-fill" style="width:${((index)/questions.length*100).toFixed(0)}%"></div></div></div>
       <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch3)">${index+1}/${questions.length}</div>
@@ -20006,6 +21123,9 @@ function answerProtocoloExam(idx) {
   const q = questions[index];
   const ok = idx === q.correctIdx;
   if(ok) { protocoloExamState.score++; awardXP(5, LANG==='en'?'Protocol answer ✓':'Respuesta protocolo ✓'); }
+  // Universal feedback: sound + XP burst
+  const clickedBtn = document.getElementById(`pec${idx}`);
+  if(typeof quizFeedback === 'function') quizFeedback(ok, clickedBtn, ok?5:0);
   // Show feedback
   for(let i=0;i<q.choices.length;i++){
     const btn=document.getElementById(`pec${i}`);
@@ -20197,6 +21317,7 @@ function renderCasoQuestion() {
   const letters = ['A','B','C','D'];
   document.getElementById('appContent').innerHTML = `
     <div class="sup-wrap">
+      ${_prBackBtn(LANG==='en'?'Exit cases':'Salir de casos')}
       <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
         <div style="flex:1"><div class="fc-ribbon"><div class="fc-ribbon-fill" style="width:${(index/questions.length*100).toFixed(0)}%"></div></div></div>
         <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch3)">${index+1}/${questions.length}</div>
@@ -20221,6 +21342,8 @@ function answerCaso(idx) {
   const q = questions[index];
   const ok = idx === q.correctIdx;
   if (ok) { protocoloExamState.score++; awardXP(5, LANG==='en'?'Case study ✓':'Caso práctico ✓'); }
+  const clickedBtn = document.getElementById(`cpb${idx}`);
+  if(typeof quizFeedback === 'function') quizFeedback(ok, clickedBtn, ok?5:0);
   for (let i = 0; i < q.choices.length; i++) {
     const btn = document.getElementById(`cpb${i}`);
     if (!btn) continue;
@@ -20442,6 +21565,8 @@ function answerAllergenTest(idx) {
   const q = questions[index];
   const ok = idx === q.correctIdx;
   if (ok) { allergenTestState.score++; awardXP(5, LANG==='en'?'Allergen test ✓':'Test alérgenos ✓'); }
+  const clickedBtn = document.getElementById(`atb${idx}`);
+  if(typeof quizFeedback === 'function') quizFeedback(ok, clickedBtn, ok?5:0);
   for (let i = 0; i < q.choices.length; i++) {
     const btn = document.getElementById(`atb${i}`);
     if (!btn) continue;
@@ -22358,6 +23483,38 @@ function hideSplash() { /* splash removed */ }
 
 try{ soundEnabled=localStorage.getItem('txoko_sound')!=='off'; }catch(e){}
 
+// ═══ UNIVERSAL QUIZ FEEDBACK ═══
+// Plays sound, shows XP burst, animates element on correct/wrong answer
+function quizFeedback(isCorrect, element, xpAmount){
+  try {
+    if(typeof playSound === 'function') playSound(isCorrect ? 'correct' : 'wrong');
+  } catch(e){}
+  if(element && element.classList){
+    if(isCorrect){
+      element.classList.add('correct');
+      setTimeout(()=>element.classList.add('pop'), 10);
+    } else {
+      element.classList.add('wrong');
+      setTimeout(()=>element.classList.add('shake'), 10);
+    }
+  }
+  if(isCorrect && xpAmount && xpAmount > 0 && element && typeof showXpBurst === 'function'){
+    try {
+      const r = element.getBoundingClientRect();
+      showXpBurst(xpAmount, r.left + r.width/2, r.top);
+    } catch(e){}
+  }
+  // Flash the main content area
+  try {
+    const appC = document.getElementById('appContent');
+    if(appC){
+      appC.classList.remove('exam-correct-flash','exam-wrong-flash');
+      void appC.offsetWidth;
+      appC.classList.add(isCorrect ? 'exam-correct-flash' : 'exam-wrong-flash');
+    }
+  } catch(e){}
+}
+
 function playSound(type){
   if(!soundEnabled) return;
   try{
@@ -23572,15 +24729,6 @@ const WAITER_MSGS={
     d=>LANG==='en'?`VIP guest — gluten intolerance. What allergens does <strong>${d}</strong> have?`:`Huésped VIP — intolerancia al gluten. ¿Qué alérgenos lleva <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 3: the guest is celiac. What should we warn about <strong>${d}</strong>?`:`Mesa 3: el cliente es celiaco. ¿Qué debemos avisar sobre <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 6 asks if <strong>${d}</strong> contains shellfish`:`Mesa 6 pregunta si <strong>${d}</strong> contiene crustáceos`,
-  ],
-  cutlery:[
-    d=>LANG==='en'?`How do we set the cutlery for <strong>${d}</strong>?`:`¿Cómo marcamos <strong>${d}</strong>?`,
-    d=>LANG==='en'?`Table 3 ordered <strong>${d}</strong> — what cutlery do we use?`:`Mesa 3 pide <strong>${d}</strong> — ¿qué cubiertos ponemos?`,
-    d=>LANG==='en'?`Floor manager asks: cutlery for <strong>${d}</strong>`:`El supervisor pregunta: marcaje para <strong>${d}</strong>`,
-    d=>LANG==='en'?`What cutlery does <strong>${d}</strong> need?`:`¿Qué cubiertos necesita <strong>${d}</strong>?`,
-    d=>LANG==='en'?`The dish is ready — quickly, what cutlery for <strong>${d}</strong>?`:`El plato ya sale — rápido, ¿qué marcaje para <strong>${d}</strong>?`,
-    d=>LANG==='en'?`New colleague asks: how do we mark the table for <strong>${d}</strong>?`:`Tu compañero nuevo pregunta: ¿cómo se marca la mesa para <strong>${d}</strong>?`,
-    d=>LANG==='en'?`Supervisor check: correct cutlery for <strong>${d}</strong>?`:`El supervisor comprueba: ¿cubiertos correctos para <strong>${d}</strong>?`,
   ],
   ingredients:[
     d=>LANG==='en'?`Table 5 wants to know what's in <strong>${d}</strong>`:`Mesa 5 quiere saber qué lleva <strong>${d}</strong>`,
