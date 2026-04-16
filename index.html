@@ -2799,7 +2799,6 @@ body::after{
 .svc-wine-meta{font-family:'DM Mono',monospace;font-size:.55rem;color:#8b949e;margin-top:.15rem}
 .svc-wine-why{font-size:.68rem;color:#8b949e;line-height:1.4;margin-top:.3rem;font-style:italic}
 .svc-section-title{font-family:'DM Mono',monospace;font-size:.55rem;color:#c49a3c;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;margin-top:.3rem}
-.svc-cutlery{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .5rem;background:rgba(196,154,60,.1);border:1px solid rgba(196,154,60,.2);border-radius:6px;font-size:.65rem;color:#c49a3c;font-family:'DM Mono',monospace;margin-top:.3rem}
 .svc-empty{text-align:center;padding:3rem 1rem;color:#484f58;font-size:.8rem}
 .svc-fab{position:fixed;bottom:72px;right:14px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#c49a3c,#a07828);color:#0d1117;border:none;font-size:1.4rem;cursor:pointer;z-index:9998;box-shadow:0 4px 20px rgba(196,154,60,.4),0 0 0 0 rgba(196,154,60,.3);display:flex;align-items:center;justify-content:center;transition:transform .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;animation:svc-fab-pulse 2.5s ease-in-out infinite}
 .svc-fab::after{content:'';position:absolute;inset:-10px;border-radius:50%}
@@ -4506,11 +4505,9 @@ const T = {
     examSetupTitle: 'Modo Examen',
     examSetupDesc: 'Responde preguntas de opción múltiple. Tu puntuación y progreso por tema quedan registrados.',
     topicAllergens: 'Alérgenos',
-    topicCutlery: 'Marcaje en mesa',
     topicIngredients: 'Ingredientes',
     topicHistory: 'Storytelling',
     qAllergens: (name) => `¿Qué alérgenos contiene ${name}?`,
-    qCutlery: (name) => `¿Cuál es el marcaje en mesa para ${name}?`,
     qIngredients: (name) => `¿Cuáles son los ingredientes principales de ${name}?`,
     qHistory: (name) => `¿Cuál es el storytelling de ${name}?`,
     cats: ['Entrantes','Principales','Guarniciones','Salsas','Postres','Vegetariano'],
@@ -4522,8 +4519,7 @@ const T = {
     pinNoMatch: 'Los PINs no coinciden. Inténtalo de nuevo.',
     pinCancel: 'Cancelar',
     lbTitle: 'Mejores Puntuaciones',
-    lbNoScores: 'Aún no hay puntuaciones',
-  },
+    lbNoScores: 'Aún no hay puntuaciones'},
   en: {
     subtitle: 'by Martín Berasategui · Team Training',
     profileLabel: 'Your profile',
@@ -4603,11 +4599,9 @@ const T = {
     examSetupTitle: 'Exam Mode',
     examSetupDesc: 'Answer multiple choice questions. Your score and topic progress are saved.',
     topicAllergens: 'Allergens',
-    topicCutlery: 'Table setting',
     topicIngredients: 'Ingredients',
     topicHistory: 'Storytelling',
     qAllergens: (name) => `What allergens does ${name} contain?`,
-    qCutlery: (name) => `What is the table setting for ${name}?`,
     qIngredients: (name) => `What are the main ingredients of ${name}?`,
     qHistory: (name) => `What is the storytelling behind ${name}?`,
     cats: ['Starters','Mains','Sides','Sauces','Desserts','Vegetarian'],
@@ -4619,8 +4613,7 @@ const T = {
     pinNoMatch: 'PINs do not match. Please try again.',
     pinCancel: 'Cancel',
     lbTitle: 'Top Scores',
-    lbNoScores: 'No scores yet',
-  }
+    lbNoScores: 'No scores yet'}
 };
 
 function t(key, ...args) {
@@ -5158,7 +5151,7 @@ const CASOS_PRACTICOS = [
     correct: 'Marcho el siguiente plato desde Infrasys, limpio la mesa, marco el siguiente plato, informo al cliente que el plato estará en breve y ofrezco bebidas o pregunto si desea más pan.',
     correct_en: 'I fire the next dish from Infrasys, clear the table, set for the next course, inform the guest the dish will be ready shortly and offer drinks or ask if they would like more bread.',
     traps: [
-      'Retiro el plato vacío y marco la mesa — marcho el plato desde Infrasys cuando cocina avise.',,
+      'Retiro el plato vacío y marco la mesa — marcho el plato desde Infrasys cuando cocina avise.',
       'Informo al cliente y ofrezco más pan, esperando a que cocina saque el plato por su propio ritmo.',
       'Marco desde Infrasys y retiro el plato vacío pero no marco la mesa ni informo al cliente.'
     ],
@@ -5478,8 +5471,7 @@ const ALLERGEN_NORMALIZE = {
   'leche': 'Lácteos',
   'dairy': 'Lácteos',
   'mariscos': 'Crustáceos',
-  'shellfish': 'Crustáceos',
-};
+  'shellfish': 'Crustáceos'};
 
 function normalizeAllergen(a) {
   return ALLERGEN_NORMALIZE[a.toLowerCase()] || a;
@@ -5684,8 +5676,7 @@ function applyLangToApp() {
     navVinos: LANG==='en'?'Wines':'Vinos',
     navTxoko: LANG==='en'?'Games':'Juegos',
     navRanking: 'Ranking',
-    navSupervisor: 'Sup.',
-  };
+    navSupervisor: 'Sup.'};
   Object.entries(navLabels).forEach(([id, label]) => {
     const el = document.getElementById(id);
     if(el) {
@@ -5706,11 +5697,11 @@ const DISHES_EN = [
   {id:3,name:'Andalusian-style Calamari',allergens:['Molluscs','Gluten','Eggs'],ingredients:'Squid, Flour, Yeast, Water, Beer, Salt, Egg, Garlic, Lemon, Squid ink.',history:'A reimagining of battered calamari with an ultra-crispy tempura batter and squid with a wonderful texture — this dish has remained on our menu for 8 years.',notes:' 8 years on the menu. Tempura calamari with citrus aioli and squid ink aioli.'},
   {id:4,name:'Dressed tomatoes',allergens:['Sulphites','Fish'],ingredients:'Tuna belly, Anchovies, Tomatoes, Red onion, Sherry vinegar, Gazpacho granita, Grenadine, Port, Cabernet Sauvignon vinaigrette.',history:'Made with organic tomatoes from the town of Arico, the anchovy and tuna belly enhance the classic Mediterranean salad flavour. The island\'s climate gives us intensely flavoured tomatoes year-round, and combined with the refreshing gazpacho granita, this is a perfect dish to intersperse among shared starters.',notes:'Organic tomatoes with tuna belly, anchovies, pickled spring onions and gazpacho granita. Finished with watercress shoots.'},
   {id:5,name:'Red mojo-marinated Pámpano',allergens:['Sulphites','Fish'],ingredients:'Pámpano fish, Palmar pepper, Red pepper, Garlic, Salmon roe, Tobiko roe, Avocado, Tabasco, Seaweed bread, Candied orange, Coriander, Kale chips.',history:'A blue fish from the Canaries with rich flesh and unmatched texture, marinated for 24 hours in salt and bold flavours like red mojo. Notes of heat, fresh coriander and sweet orange achieve a perfect balance. A Txoko classic.',notes:' Txoko classic. Marinated 24h in Canarian red mojo. Spicy avocado cream, candied orange, seaweed bread, Tobiko and salmon roe, kale chips.'},
-  {id:6,name:'Escalivada pears with goat\'s cheese cream',allergens:['Tree nuts','Gluten','Dairy','Mustard','Sulphites'],cutlery:'Fork, Knife, Soup spoon',ingredients:'Pear, Goat\'s cheese foam (Cream, Milk, Goat\'s cheese, Blue cheese), Ibérico crumbs (Ibérico meats and breadcrumbs), Mustard vinaigrette (Olive oil, Apple vinegar, Honey, Dijon mustard, Wholegrain mustard), Almonds, Mustard shoots and mixed leaves.',history:null,notes:'Pears escalivada in the josper, peeled and quartered. With mustard vinaigrette, toasted sliced almonds, goat\'s cheese foam and Ibérico crumbs. Finished with mustard shoots.'},
-  {id:7,name:'Niçoise salad',allergens:['Mustard','Sulphites','Fish','Eggs'],ingredients:'Tuna tataki, Potato, Lettuce, Tomato, Green beans, Roasted pepper, Quail egg, Citrus sauce, Mustard shoots, Honey, Egg yolk.',history:'Inspired by two Canarian products — black potato and tuna — we reimagined the classic French salad as a carpaccio of confit potato where citrus notes elevate the remaining ingredients. Perfect for sharing.',notes:'⚠ Mustard in the mustard shoots — can be removed. Order WITHOUT MUSTARD SHOOTS. Tuna tataki on confit potato salad, confit peppers, tomato, green beans, dots of citrus mayo and lemon jam.'},
+  {id:6,name:'Escalivada pears with goat\'s cheese cream',allergens:['Tree nuts','Gluten','Dairy','Mustard','Sulphites'],ingredients:'Pear, Goat\'s cheese foam (Cream, Milk, Goat\'s cheese, Blue cheese), Ibérico crumbs (Ibérico meats and breadcrumbs), Mustard vinaigrette (Olive oil, Apple vinegar, Honey, Dijon mustard, Wholegrain mustard), Almonds, Mustard shoots and mixed leaves.',history:null,notes:'Pears escalivada in the josper, peeled and quartered. With mustard vinaigrette, toasted sliced almonds, goat\'s cheese foam and Ibérico crumbs. Finished with mustard shoots.'},
+  {id:7,name:'Niçoise salad',allergens:['Mustard','Sulphites','Fish','Eggs'],ingredients:'Tuna tataki, Potato, Lettuce, Tomato, Green beans, Roasted pepper, Quail egg, Citrus sauce, Mustard shoots, Honey, Egg yolk.',history:'Inspired by two Canarian products — black potato and tuna — we reimagined the classic French salad as a carpaccio of confit potato where citrus notes elevate the remaining ingredients. Perfect for sharing.',notes:'🌿 CAN BE VEGETARIAN: remove the tuna tataki and quail egg. Order WITHOUT TUNA AND WITHOUT EGG → becomes Vegetarian Niçoise (id 46). ⚠ Eggs in the quail egg and citrus mayo (yolk) — can be removed. Order WITHOUT QUAIL EGG AND WITHOUT CITRUS MAYO. ⚠ Mustard in the mustard shoots — can be removed. Order WITHOUT MUSTARD SHOOTS. Tuna tataki on confit potato salad, confit peppers, tomato, green beans, dots of citrus mayo and lemon jam.'},
   {id:8,name:'Vitello tonnato',allergens:['Fish','Gluten','Dairy','Eggs','Sulphites'],ingredients:'Ibérico presa, Water, Sugar, Lemon, Lime, Orange, Ginger, Tonnato sauce, Mayonnaise, Canned tuna belly, Anchovies, Fried caper, Tabasco, Soy, Brioche bread, Potato straw, Nasturtium leaves, Cabernet vinaigrette.',history:'Taking Ibérico pork as the star of Spanish cuisine, we ventured into Italian territory and reimagined this classic veal dish. Its refined texture from slow cooking, the crispy potato and the sweetness of the ultra-soft bread round it off perfectly. Ideal for sharing.',notes:'Ibérico presa marinated in citrus and grilled in the Josper, brioche bread clouds, tonnato sauce and potato straw.'},
   {id:9,name:'Tuna tataki',allergens:['Eggs','Soy','Fish','Mustard','Sulphites','Dairy'],ingredients:'Tuna, Soy, Mirin, Garlic, Ginger, Brown sugar, Butter, Spring onion, Cream, Olive oil, Apple vinegar, Honey, Dijon mustard, Wholegrain mustard, Wasabi mayonnaise, Wakame and daikon.',history:null,notes:'Tuna tataki marinated in soy, mirin, brown sugar, garlic and ginger, on spring onion cream, wakame and daikon salad with vinaigrette and dots of wasabi mayonnaise.'},
-  {id:10,name:'Oyster selection',allergens:['Fish','Gluten','Eggs','Crustaceans','Sulphites','Soy'],ingredients:'No. 2 oysters, Passion fruit pearls, Ponzu, Spring onion, Panko, Egg, Wasabi.',history:'Fresh oysters from Brittany, France, size number 2.',notes:'Selection of 3 fresh oysters: with passion fruit pearls; Ponzu and spring onion; Panko-fried with wasabi mayonnaise. Can be served with lemon and pepper on request.'},
+  {id:10,name:'Oyster selection',allergens:['Fish','Gluten','Eggs','Crustaceans','Sulphites','Soy'],ingredients:'No. 2 oysters, Passion fruit pearls, Ponzu, Spring onion, Panko, Egg, Wasabi.',history:'Fresh oysters from Brittany, France, size number 2.',notes:'Selection of 3 fresh oysters: with passion fruit pearls; Ponzu and spring onion; Panko-fried with wasabi mayonnaise. ⚠ Soy in the Ponzu — can be removed. Order WITHOUT PONZU (substitute with passion fruit or natural oyster). ⚠ Gluten and Eggs in the Panko-fried oyster — can be substituted with passion fruit, Ponzu or natural. Order WITHOUT PANKO. Can be served with lemon and pepper on request.'},
   {id:11,name:'Charcuterie board',allergens:['Sulphites','Gluten'],ingredients:'Ibérico ham, Ibérico salchichón, Ibérico chorizo, Ibérico lomo, Crispy bread and tomato.',history:'Our charcuterie comes from Casalba, based in Burgos, made by hand in the traditional way, where the dry climate and family tradition set the pace of the curing process.',notes:'Ibérico ham, salchichón, lomo and chorizo, served with crispy bread and tomato.'},
   {id:12,name:'Acorn-fed Ibérico ham Gran Reserva',allergens:['Sulphites','Gluten'],ingredients:'Ibérico ham served with crispy bread and tomato.',history:'Our charcuterie comes from Casalba, based in Burgos, made by hand in the traditional way, where the dry climate and family tradition set the pace of the curing process.',notes:null},
   {id:13,name:'Premium Wagyu Beef Jerky',allergens:['Sulphites','Gluten'],ingredients:'Premium Wagyu cecina.',history:'Our charcuterie comes from Casalba, based in Burgos, made by hand in the traditional way, where the dry climate and family tradition set the pace of the curing process.',notes:null},
@@ -5750,7 +5741,7 @@ const DISHES_EN = [
   {id:50,name:'Boletus croquettes',allergens:['Gluten','Dairy','Eggs'],ingredients:null,history:'Born from ingenuity and a love of avoiding waste, croquettes travelled from France to the heart of Spain. In every home, a recipe; in every bite, a memory. Crispy on the outside, soft within — the golden embrace of home cooking, the flavour of a grandmother never forgotten.',notes:'Classic vegetarian ceps croquettes served with candied apple.'},
   {id:52,name:'Grilled pepper stuffed with pisto manchego',allergens:['Sulphites','Dairy'],ingredients:null,history:'The pepper filling is a recipe from the grandmother of José, head chef. Stuffed pepper with vizcaína sauce is a classic Basque dish; we merged the two and created our own version. For a long time this was Martín\'s favourite dish when he visited the restaurant.',notes:'♥ Martín\'s favourite dish. [V] VEGAN adaptable. Pepper stuffed with onion, confit red pepper, aubergine, courgette and tomato sauce.'},
   {id:53,name:'Creamy vegetable rice',allergens:['Dairy','Sulphites'],ingredients:null,history:'Creamy rice with organic mini vegetables from Guía de Isora.',notes:'[V] VEGAN adaptable. Creamy rice with seasonal organic vegetables.'},
-  {id:54,name:'Spinach and Parmesan ravioli',allergens:['Gluten','Dairy'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:null,history:'This ravioli was born at the meeting point between the garden and Italian tradition. Fresh spinach wrapped in fresh pasta. The Parmesan foam adds depth and character.',notes:'Artisan pasta made in-house, filled with spinach, ricotta, Parmesan, nutmeg, oregano, salt and pepper. Finished with Parmesan foam gratinated in the salamander.'},
+  {id:54,name:'Spinach and Parmesan ravioli',allergens:['Gluten','Dairy'],ingredients:null,history:'This ravioli was born at the meeting point between the garden and Italian tradition. Fresh spinach wrapped in fresh pasta. The Parmesan foam adds depth and character.',notes:'Artisan pasta made in-house, filled with spinach, ricotta, Parmesan, nutmeg, oregano, salt and pepper. Finished with Parmesan foam gratinated in the salamander.'},
   {id:55,name:'Green salad (vegetarian)',allergens:['Sulphites'],ingredients:'Lettuce, Red onion.',history:null,notes:'[V] VEGAN adaptable. Fresh lettuce and onion salad with vinaigrette.'},
   {id:56,name:'Padrón peppers (vegetarian)',allergens:[],ingredients:'Padrón peppers, Pepper, Salt.',history:'Our Padrón peppers are organic and sourced from Granadilla.',notes:'[V] VEGAN adaptable.'},
   {id:57,name:'Creamy potato purée',allergens:['Dairy'],ingredients:'Local potatoes, Cream, Milk, Butter, Chicken stock.',history:'Our local potatoes come from Tacoronte.',notes:'⚠ ATTENTION: NOT vegetarian as it contains chicken stock.'},
@@ -5768,7 +5759,7 @@ const DISHES_EN = [
   {id:70,name:'Premium croquettes',allergens:['Eggs','Gluten','Dairy'],ingredients:'ALL: Milk, Flour, Butter, Cream, Gelatine, Egg. Flavours: Ham / Squid ink with citrus aioli and squid ink / King prawn with bisque / Dry Age with pickled pepper jam / Boletus with candied apple / Chicken with Caesar dressing and Demi-glace',history:'Born from ingenuity and a love of avoiding waste, croquettes travelled from France to the heart of Spain. In every home, a recipe; in every bite, a memory. Crispy on the outside, soft within — the golden embrace of home cooking. Our croquettes are premium thanks to the unique topping each one carries to finish.',notes:'Dry Age, King prawn and Chicken contain additional allergens. Check with kitchen.'},
   {id:71,name:'Grilled mussels',allergens:['Sulphites','Molluscs'],ingredients:'Mussels. Sofrito: Garlic, Chilli, Olive oil, Apple vinegar',history:'',notes:null},
   {id:72,name:'Organic tomatoes',allergens:['Sulphites','Fish'],ingredients:'Tomato, Anchovies, Boquerones, Avocado, Spring onion, Kalamata olive powder, Cabernet vinaigrette, Watercress',history:'',notes:null},
-  {id:73,name:'Carpaccio with Parmesan foam',allergens:['Mustard','Dairy','Sulphites'],ingredients:'Picaña beef, Rocket, Parmesan. Vinaigrette: Oil, Mustard, Sherry vinegar, Lemon juice, Ground pepper, Salt, Tomato water. Foam: Grated Parmesan, Milk, Cream, Salt, Pepper. Kalamata olive powder',history:'',notes:null},
+  {id:73,name:'Carpaccio with Parmesan foam',allergens:['Mustard','Dairy','Sulphites'],ingredients:'Picaña beef, Rocket, Parmesan. Vinaigrette: Oil, Mustard, Sherry vinegar, Lemon juice, Ground pepper, Salt, Tomato water. Foam: Grated Parmesan, Milk, Cream, Salt, Pepper. Kalamata olive powder',history:'',notes:'⚠ Mustard in the vinaigrette — can be removed. Order WITHOUT VINAIGRETTE.'},
   {id:74,name:'Octopus tentacle with potato and green mojo',allergens:['Dairy','Molluscs','Fish','Sulphites'],ingredients:'Octopus, Shallot, Parsley, Butter, Fumet (Fish stock). Green mojo: Coriander, Apple vinegar, Lime, Garlic, Sunflower oil, Olive oil, Spring onion, Espelette pepper. Canarian potato',history:'',notes:null},
   {id:75,name:'Grilled chicken with slow-cooked egg',allergens:['Eggs','Dairy'],ingredients:'Egg. Potato foam: Potato, Stock, Cream, Olive oil, Salt. Chicken. Demi-glace: Chicken bones, Shallot, Carrot, Leek, Butter. Potato straw',history:'',notes:null},
   {id:76,name:'Tomato and cheese tartare',allergens:['Eggs','Gluten','Dairy','Mustard','Sulphites','Fish','Celery'],ingredients:'Tomato, Stracciatella, Carasau bread toasts. Dressing: Spring onion, Savora mustard (celery), Gherkin, Worcestershire sauce, Egg yolk, Chives, Tabasco, Dauro oil, Tapenade, Olive powder, Dehydrated tomato powder, Basil leaves, Nasturtium leaves',history:'The tomato tartare was born as a reimagining of the classic beef tartare Martín has served for over 30 years. Using the same dressing, we execute this vegetarian tartare in the same way.',notes:null},
@@ -5827,103 +5818,103 @@ function getDish(d) {
 //  DATA
 // ═══════════════════════════════════════════════════
 const DISHES = [
-  {id:1,cat:'Entrantes',name:'Croquetas Premium',allergens:['Huevos','Gluten','Lácteos','Crustáceos','Apio','Pescado','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Leche, Harina, Mantequilla, Nata, Gelatina, Huevo. Jamón: loncha de jamón. Txipiron: tartar de txipiron. Langostino: americana y tartar de langostino. Dry Age: mermelada de piparra, tartar de Dry y piparra. Boletus: manzana confitada. Pollo: cogollo de lechuga, aderezo césar, lámina de pollo con Demi-glace y crujiente de bacon.',history:'Nacidas del ingenio y el amor por no desperdiciar, las croquetas viajaron desde Francia hasta el alma de España. En cada casa, una receta; en cada bocado, un recuerdo. Crujientes por fuera, suaves por dentro, son el abrazo dorado de la cocina casera, el sabor de la abuela que nunca se olvida. Nuestras croquetas son premium por el Topping que lleva cada una para culminar.',notes:'Todos los sabores llevan en la masa: Huevos, Lácteos y Gluten. Alérgenos adicionales por sabor: · Jamón → Sulfitos integrados en la masa — NO se puede retirar. Si alergia a sulfitos elegir otro sabor. · Langostino → Crustáceos integrados en la masa — NO se puede retirar. Apio en la salsa americana — Comandar SIN AMERICANA para evitar el Apio. · Dry Age → Sulfitos en el tartar — Comandar SIN TARTAR DRY AGE o elegir otro sabor. · Pollo → Pescado y Mostaza en la salsa césar — Comandar SIN SALSA CÉSAR. · Txipiron → Moluscos integrados en la masa — NO se puede retirar. Si alergia a moluscos elegir otro sabor.'},
-  {id:2,cat:'Entrantes',name:'Huevo frito con chistorra',allergens:['Huevos','Lácteos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Papa, Huevo, Nata, Caldo de pollo, Chistorra.',history:'Chistorra de Navarra, uno de los productos de tierra vasca en nuestra carta, acompañada de crema de papa canaria y huevos de caserío, nos dan como resultado un plato redondo en boca por sabor y textura.',notes:'⚠ Huevos son la base del plato — NO se puede retirar. No se puede servir a personas con alergia a huevos. Nuestra versión de los huevos a la estampida: huevo a baja temperatura y frito, espuma de papa, papa paja y chistorra.'},
-  {id:3,cat:'Entrantes',name:'Calamares a la Andaluza',allergens:['Moluscos','Gluten','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Calamar, Harina, Levadura, Agua, Cerveza, Sal, Ajo, Limón, Tinta de Txipiron. Alioli cítrico y alioli de tinta de calamar: Huevo, Aceite, Ajo, Limón.',history:'El Atlántico que rodea Tenerife es uno de los caladeros más ricos del mundo. Estos calamares frescos, capturados en las aguas frías que bañan las costas canarias, se visten con una tempura ligera y crujiente inspirada en la tradición andaluza. Ocho años en nuestra carta avalan un bocado que combina el mar de Canarias con la técnica de la cocina del sur.',notes:' 8 años en la carta. Calamares en tempura con alioli cítrico y alioli de tinta de calamar. ⚠ Huevos en el alioli — Comandar SIN ALIOLI.'},
-  {id:4,cat:'Entrantes',name:'Tomates aliñados',allergens:['Sulfitos','Pescado'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Ventresca, Anchoas, Tomates, Cebolla roja, Vinagre de Jerez, Granizado de gazpacho, Granadina, Oporto, Vinagreta de Cabernet Sauvignon.',history:'Elaborada con tomates ecológicos de la localidad de Arico, la anchoa y la ventresca resaltan el sabor clásico de la ensalada mediterránea. El clima de la isla nos aporta todo el año tomates muy sabrosos que combinados con el granizado de gazpacho refrescante lo hacen un plato perfecto para intercalar en los entrantes para compartir.',notes:'⚠ Sulfitos en la cebolla encurtida y en la ventresca — NO se pueden retirar. No se puede servir a personas con alergia a sulfitos. · ⚠ Pescado en la ventresca y las anchoas — se puede retirar. Comandar SIN VENTRESCA Y SIN ANCHOAS.'},
-  {id:5,cat:'Entrantes',name:'Pámpano marinado al mojo rojo',allergens:['Sulfitos','Pescado'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pámpano, Pimiento palmero, Pimiento rojo, Ajo, Huevas de salmón, Huevas de Tobiko, Aguacate, Tabasco, Pan de algas, Naranja confitada, Cilantro, Chips de kale.',history:'Pescado azul de Canarias, de carne grasa y textura inigualable, marinado 24 horas en sal y sabores intensos como el del mojo rojo. Matices como el picante, el fresco del cilantro y el dulce de la naranja logran un equilibrio perfecto. Un clásico de Txoko.',notes:'★ Clásico de Txoko. Marinado 24h en mojo rojo. Crema de aguacate picante, naranja confitada, pan de algas, huevas de Tobiko y de salmón, chips de kale.'},
-  {id:6,cat:'Entrantes',name:'Peras escalivadas con cremoso de queso de cabra',allergens:['Frutos secos','Gluten','Lácteos','Mostaza','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pera, Espuma de queso de cabra (Nata, Leche, Queso de cabra, Queso azul), Migas de Ibérico (Ibéricos y miga de pan), Vinagreta de mostaza (Aceite de oliva, Vinagre de manzana, Miel, Mostaza Dijon, Mostaza antigua), Almendras, Brotes de mostaza y mézclum.',history:null,notes:'⚠ Mostaza en la vinagreta y en los brotes de mostaza — se puede retirar. Comandar SIN VINAGRETA DE MOSTAZA Y SIN BROTES DE MOSTAZA.'},
-  {id:7,cat:'Entrantes',name:'Ensalada Niçoise',allergens:['Mostaza','Sulfitos','Pescado','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Tataki de atún, Papa, Lechuga, Tomate, Judías, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Inspirados en dos productos canarios, papa negra y atún, reconvertimos la clásica ensalada francesa en un Carpaccio de papa confitada donde los matices cítricos resaltan el resto de ingredientes. Perfecta para compartir.',notes:'⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. Tataki de atún sobre ensalada de papas confitadas, pimientos confitados, tomate, judías verdes, puntos de mayonesa cítrica y mermelada de limón.'},
-  {id:8,cat:'Entrantes',name:'Vitello tonnato',allergens:['Pescado','Gluten','Lácteos','Huevos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Presa Ibérica, Agua, Azúcar, Limón, Lima, Naranja, Jengibre, Salsa tonnata, Mayonesa, Ventresca de lata, Anchoas, Alcaparra frita, Tabasco, Pan brioche, Papa paja, Hojas de capuchina, Vinagreta de cabernet.',history:'Aprovechándonos del cerdo ibérico como producto estrella en el recetario español, nos atrevimos con el recetario italiano y reconducimos este clásico de ternera. Con textura refinada por su cocción a baja temperatura, la papa crujiente y el dulce del pan extra suave nos redondean un plato perfecto. Ideal para compartir.',notes:'⚠ Pescado, Huevos y Sulfitos en la salsa tonnata — Comandar SIN SALSA TONNATA. Gluten en las nubes de pan brioche — Comandar SIN PAN BRIOCHE. Ambos pueden retirarse de forma independiente según la alergia.'},
-  {id:9,cat:'Entrantes',name:'Tataki de atún (Cena)',allergens:['Huevos','Soja','Pescado','Mostaza','Sulfitos','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Atún, Soja, Mirim, Ajo, Jengibre, Azúcar moreno, Mantequilla, Cebolleta, Nata, Aceite de Oliva, Vinagre de manzana, Miel, Mostaza Dijon, Mostaza antigua, Mayonesa de wasabi, Wakame y daikon.',history:null,notes:'⚠ Soja en la marinada — NO se puede retirar. Tataki de atún marinado en Soja, Mirim, Azúcar moreno, Ajo y Jengibre, sobre crema de cebolleta, ensalada de wakame y daikon con vinagreta y puntos de mayonesa de wasabi.'},
-  {id:10,cat:'Entrantes',name:'Selección de ostras',allergens:['Pescado','Gluten','Huevos','Crustáceos','Sulfitos','Soja'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Ostras número 2, Perlas de fruta de la pasión, Ponzu, Cebolleta, Panko, Huevo, Wasabi.',history:'Ostras frescas de la Bretaña Francesa de tamaño número 2.',notes:'Selección de 3 ostras frescas: con perlas de fruta de la pasión; Ponzu y cebolleta; Frita en panko con mayonesa de wasabi. ⚠ Gluten y Huevos en la ostra frita de panko — se puede sustituir por otra de frutos de la pasión, ponzu o natural. Comandar SIN PANKO. Si el huésped lo requiere, se pueden servir con limón y pimienta.'},
-  {id:11,cat:'Entrantes',name:'Tabla de embutidos',allergens:['Sulfitos','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Jamón ibérico, Salchichón ibérico, Chorizo ibérico, Lomo ibérico, Crujiente de pan y Tomata.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el crujiente de pan — Comandar SIN PAN.'},
-  {id:12,cat:'Entrantes',name:'Jamón ibérico de bellota Gran Reserva',allergens:['Sulfitos','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Jamón ibérico, Crujiente de pan, Tomata.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el crujiente de pan — Comandar SIN PAN.'},
-  {id:13,cat:'Entrantes',name:'Cecina de Wagyu Premium',allergens:['Sulfitos','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Cecina de Wagyu Premium, Pan tostado.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el pan tostado — Comandar SIN PAN.'},
-  {id:14,cat:'Entrantes',name:'Tartar de remolacha',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' ÚNICO plato 100% VEGANO en la carta de cena.'},
-  {id:15,cat:'Entrantes',name:'Tartar de tomate y queso',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA.'},
-  {id:16,cat:'Entrantes',name:'Tartar de solomillo',allergens:['Huevos','Gluten','Pescado','Mostaza','Sulfitos','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Solomillo vacuno, Pan carasau, Yema de huevo, Salsa Perrins, Tabasco, Mostaza savora (Apio), Aceite de oliva, Cebolleta, Cebollino, Pepinillo, Pimienta.',history:'Un clásico de Martín con su receta de más de 30 años haciéndose de la misma manera.',notes:'⚠ Mostaza y Apio en la mostaza savora — puede prepararse sin mostaza savora pero requiere preparación desde cero (~30 min). Avisar al cliente antes de confirmar. Comandar SIN MOSTAZA SAVORA e informar al cliente de la espera. Gluten en el pan carasau — Comandar SIN PAN CARASAU.'},
-  {id:17,cat:'Entrantes',name:'Tartar de lomo de atún',allergens:['Sulfitos','Pescado','Soja','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Lomo de atún rojo, Tabasco, Teriyaki, Espuma de tomate (Agua de tomate, claras de huevo y gelatina), Yema de huevo curada en soja, Brotes de cilantro y cebolleta verde, Aceite de girasol y de oliva, Soja, Ponzu, Katsuobusi, Sake.',history:'Para nosotros es un producto emblemático de Canarias. Gerardo, nuestro contacto en la cofradía del Hierro, selecciona las piezas de primera mano. A este tartar coronamos con otros dos productos canarios por excelencia: tomate en textura de espuma y perfume suave del cilantro.',notes:null},
-  {id:18,cat:'Entrantes',name:'Tartar de Wagyu dry',allergens:['Huevos','Pescado','Mostaza','Apio','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Carne de Wagyu madurada dry, Huevo, Cebolleta, Pepinillo, Salsa Perrins, Mostaza savora, Cebollino, Tabasco, Sal, Pimienta, Crujiente de papa, Trufa negra.',history:'La carne Wagyu proviene de una raza de vacas japonesas famosa por su alto marmoleo, lo que la hace muy tierna e ideal para formar parte de uno de nuestros tartares.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. Con aliño clásico, huevo a baja temperatura, crujiente de papa y trufa negra de Teruel laminada.'},
-  {id:19,cat:'Entrantes',name:'Pimiento relleno de ternera',allergens:['Lácteos','Sulfitos','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Pimiento rojo asado, Zanahoria, Cebolla, Morcillo, Ajo, Ají, Licuado de pimiento, Caldo de pollo, Apio.',history:'Relleno del pimiento es receta de la abuela de José, chef del restaurante, que usaba para rellenar las empanadas (procedencia uruguaya). El pimiento relleno con salsa vizcaína es un plato típico vasco; unimos sabores y nació nuestro pimiento. Durante mucho tiempo este fue el plato preferido de Martín al venir al restaurante.',notes:'♥ Plato preferido de Martín. Existe versión vegetariana rellena de pisto manchego.'},
-  {id:20,cat:'Entrantes',name:'Pulpo a la brasa sobre trinxat de papa canaria',allergens:['Moluscos','Huevos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pulpo, Papa, Col blanca y morada, Panceta ibérica, Morcilla, Chorizo, Huevo, Ajo, Aceite de girasol, Sal, Pimentón, Brotes de guisantes.',history:null,notes:'Pulpo a la brasa acompañado con trinxat de col e ibéricos, terminado con puntos de alioli de pimentón, brotes de guisantes y pimentón espolvoreado.'},
-  {id:21,cat:'Platos Principales',name:'Txuleta de atún con tomate en texturas',allergens:['Pescado','Sulfitos','Soja','Huevos'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Atún, Sake, Soja, Azúcar, Tomate, Vinagre de jerez, Sal, Dextrosa, Huevo, Gelatinas, Cebolleta, Pepinillo, Vinagreta de cabernet.',history:null,notes:'Lomo de atún marcado al josper y pincelado con teriyaki. Con guarnición de tomates en texturas: Tartar de tomate, Helado de tomate y Espuma de tomate.'},
-  {id:22,cat:'Platos Principales',name:'Lubina a la brasa con ensalada de papaya',allergens:['Pescado','Sulfitos'],cutlery:'Tenedor de pescado, Cuchillo de pescado',ingredients:'Zanahoria, Cardamomo, Piel de limón, Batata, Pimienta rosa, Aceite girasol, Calabaza, Vainilla, Vinagre de manzana, Azúcar, Guindilla, Papaya verde, Gajos de pomelo, Huevas de aceite oliva, Hojas de cilantro, Láminas de ají Amarillo.',history:null,notes:'Lubina a la brasa con ensalada de papaya verde, batata, zanahoria y calabaza. Terminamos con gajos de pomelo, huevas de aceite de oliva, hojas de cilantro y láminas de ají amarillo.'},
-  {id:23,cat:'Platos Principales',name:'Ravioli de pularda',allergens:['Lácteos','Sulfitos','Gluten','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'1 Pularda, Cebolla, Zanahoria, Puerro, Tomates, Champiñón, Ajo, Coñac, Porto, Lima, Tomillo, Sal y pimienta, Caldo de pollo, Tocineta curada, Boletus, Leche, Mantequilla, Harina, Foie, Huevo.',history:null,notes:'Raviolis rellenos de pularda y boletus, con bechamel de foie.'},
-  {id:24,cat:'Platos Principales',name:'Carrillera de Wagyu',allergens:['Lácteos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Ajo, Puerros, Cebolla, Zanahoria, Vino tinto, Caldo de pollo, Espuma de hongo y papas, Nata, Crudité de espárragos.',history:'Plato emblemático de Martín en el menú de Txoko. Hecha de forma tradicional con cocciones largas que nos aportan una textura muy suave en boca, redondeamos este sabor con espuma de hongos que ayuda a neutralizar la intensidad de la carrillera.',notes:' Plato emblemático de Martín. Carrillera de ternera a baja temperatura en cremoso de papa y hongos, espárrago verde crujiente y trufa (si disponible en temporada).'},
-  {id:25,cat:'Platos Principales',name:'Pluma de cerdo Ibérico',allergens:['Lácteos','Sulfitos','Apio'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Cerdo ibérico, Manzana encurtida, Hinojo encurtido, Puré de apiobola (mantequilla), Vinagre.',history:'Casalba tiene su origen en la sierra de la Demanda. Julio, su dueño, en estrecha relación con nuestros chefs, selecciona las piezas que vienen desde la península a nuestro restaurante. La pluma a la brasa y la presa ibérica destacan por la delicadeza de su sabor suave y textura muy agradable.',notes:'⚠ Apio y Lácteos en el puré de apio bola (mantequilla) — se pueden retirar. Comandar SIN PURÉ DE APIO. Pluma de cerdo ibérico a la brasa, puré de Apio bola y puntos de crema de zanahoria. Terminada con manzana, zanahoria y remolacha encurtidas.'},
-  {id:26,cat:'Platos Principales',name:'Costillas melosas de cordero sobre salsa de curry verde',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Cordero, Cebollas, Puerro, Tomates, Vino tinto, Pimienta y Sal, Demi de jarrete, Vinagre de cabernet, Miel, Azúcar moscovado, Zanahoria, Curry verde, Leche de coco, Caldo de pollo, Naranja, Lima, Limón, Pomelo.',history:null,notes:'⏱ Cocción de 8 horas. Costillas selladas en el josper, envasadas al vacío con marinada. Servidas con demi glace y salsa de curry verde. Terminamos con gajos de cítricos caramelizados.'},
-  {id:27,cat:'Guarniciones y Salsas',name:'Ensalada verde',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Lechuga, Cebolla morada. Aderezo: Vinagre, Aceite de oliva, Sal.',history:'Lechuga de nuestro proveedor ecológico de Granadilla de Abona.',notes:'⚠ Sulfitos en el aderezo — Comandar SIN ADEREZO.'},
-  {id:28,cat:'Guarniciones y Salsas',name:'Coliflor frita',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Coliflor.',history:null,notes:'Coliflor blanqueada dos minutos en agua sal, luego frita.'},
-  {id:29,cat:'Guarniciones y Salsas',name:'Alcachofas a la brasa',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Alcachofas nacionales.',history:null,notes:'Corazones de alcachofa confitados en aceite de oliva y luego fritos.'},
-  {id:30,cat:'Guarniciones y Salsas',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
-  {id:32,cat:'Guarniciones y Salsas',name:'Patatas cerilla fritas',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠ Comandar SIN GLUTEN — freidora aparte. Servir siempre salsas para los niños (Mayonesa, Kéchup, etc.).'},
-  {id:33,cat:'Guarniciones y Salsas',name:'Tomate Cherry al ajillo',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Tomates ecológicos, Aceite, Ajo laminado, Guindilla.',history:null,notes:'Tomates ecológicos de la isla fritos en ajillo. i Contiene ajo (no es alérgeno oficial UE, pero informar si el cliente lo indica).'},
-  {id:34,cat:'Guarniciones y Salsas',name:'Parmentier de papa canaria',allergens:['Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:null,history:null,notes:null},
-  {id:35,cat:'Guarniciones y Salsas',name:'Espárragos blancos',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:null,history:null,notes:'Espárragos a la brasa.'},
-  {id:36,cat:'Guarniciones y Salsas',name:'Salsa de pimienta verde',allergens:['Lácteos','Sulfitos'],cutlery:'Cuchara de té',noMarkaje:true,ingredients:'Chalota, Pimienta verde, Mantequilla, Brandy, Nata, Caldo de pollo.',history:'La salsa de pimienta verde es originaria de Francia. Muy usada para acompañar carnes.',notes:'Se pocha la chalota con mantequilla, se añade la pimienta verde, brandy para flamear y por último nata y caldo de pollo hasta reducir.'},
-  {id:38,cat:'Guarniciones y Salsas',name:'Salsa de hongos',allergens:['Lácteos','Sulfitos'],cutlery:'Cuchara de té',noMarkaje:true,ingredients:'Hongos, Nata, Mantequilla.',history:null,notes:null},
-  {id:39,cat:'Guarniciones y Salsas',name:'Chimichurri',allergens:['Sulfitos'],cutlery:'Cuchara de té',noMarkaje:true,ingredients:'Tomate deshidratado, Cebolleta, Pimiento rojo y verde, Ajo, Aceite de oliva, Vinagre de Jerez, Ají, Limón, Perejil, Cebollino, Sal, Pimienta negra.',history:'El Chimichurri es una salsa o aderezo típico de Argentina y Uruguay empleada sobre todo en carnes asadas. Se sirve en crudo y se deja reposar horas o días para que los sabores se integren. Es una de las salsas más emblemáticas del Asado Rioplatense.',notes:'Mini brunoise de tomate seco, pimiento rojo, verde, cebolleta y ajo. Se añade vinagre de jerez, aceite, orégano y perejil.'},
-  {id:40,cat:'Postres',name:'Flan tradicional con chantilly',allergens:['Lácteos','Huevos'],cutlery:'Cuchara de postre',ingredients:'Leche entera, Huevos, Azúcar, Piel de naranja, Leche condensada, Vainilla, Nata, Mascarpone.',history:'El flan nació en la antigua Roma, donde se preparaba con huevos, leche y miel. Con el tiempo, la receta viajó a Francia y España, donde se convirtió en el postre suave y acaramelado que conocemos hoy. Siglos después nació la crema chantilly, inventada en el castillo de Chantilly. Cuando ambos se unieron formaron un dúo perfecto: símbolo de elegancia y placer en cada cucharada.',notes:null},
-  {id:41,cat:'Postres',name:'Tocinillo de cielo',allergens:['Frutos secos','Gluten','Lácteos','Huevos'],cutlery:'Cuchara de postre',ingredients:'Huevos, Limón, Jengibre, Cacao, Café, Avellanas.',history:'El tocinillo es un postre tradicional español, muy dulce y con una textura suave y brillante, similar al flan pero más denso. Proveniente de Andalucía. Nosotros reversionamos esta receta añadiéndole otras preparaciones para llevarlo al estilo Txoko.',notes:'⚠ Frutos secos en la teja de café y avellanas — se puede retirar. Comandar SIN TEJA DE CAFÉ.'},
-  {id:42,cat:'Postres',name:'Brownie de avellanas con crema de cacao y mandarina',allergens:['Frutos secos','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchara de postre',ingredients:'Claras, Harina de avellanas, Chocolate negro, Cremoso de chocolate blanco, Helado de chocolate, Crema de mandarina.',history:'Este es uno de nuestros postres Gluten-free (aunque siempre aclaramos que puede contener trazas) ya que está hecho a base de harina de avellanas.',notes:'⚠ Gluten-free pero puede contener TRAZAS. Brownie de avellana y chocolate, helado de chocolate, tubo de chocolate relleno con cremoso de cacao y mandarina. Terminamos con ganache de chocolate blanco.'},
-  {id:43,cat:'Postres',name:'Mousse de gofio con helado de plátano canario',allergens:['Frutos secos','Lácteos','Huevos','Sulfitos','Gluten'],cutlery:'Tenedor de postre, Cuchara de postre',ingredients:'Leche, Plátano, Gofio, Huevo, Xantana, Nata, Azúcar, Sal maldon, Mantequilla, Harina, Vinagre de manzana, Almendras tostadas, Glucosa atomizada, Plátano osmotizado, Toffe.',history:null,notes:'Mousse de gofio y plátano canario, con plátano osmotizado y helado del mismo. Feuilletine, almendras tostadas y toffee.'},
-  {id:44,cat:'Postres',name:'Pastel Vasco invertido con tartar de manzana',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchillo de postre, Cuchara de postre',ingredients:'Harina, Azúcar, Mantequilla, Huevo, Levadura, Ron, Sal, Leche, Maizena, Limón, Vainilla, Hinojo, Nata, Glucosa, Cremodan.',history:'Receta centenaria del País Vasco, tierra de origen de Martín Berasategui. Bizcocho recién horneado al momento, relleno de crema pastelera y tartar de manzana. Un postre que viajó desde el País Vasco hasta los acantilados de Abama, donde el Atlántico y la brisa canaria lo convierten en algo único. Treinta minutos de espera que siempre valen la pena.',notes:'⏱ Mínimo 30 minutos de espera (recién horneado). Avisar al huésped al tomar la comanda. Bizcocho con capa de crema pastelera y tartar de manzana. Terminamos con helado artesanal de hinojo.'},
-  {id:45,cat:'Vegetariano',name:'Tomates aliñados con granizado de gazpacho',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Tomate, Aguacate, Cebolleta, Granizado de gazpacho, Granadina, Vinagreta de Cabernet Sauvignon.',history:'Es nuestra versión vegetariana de nuestro plato mítico de tomates, anchoas y ventresca.',notes:'Versión VEGAN adaptable. Tomates ecológicos con cebolletas encurtidas y granizado de gazpacho (sin pan). Terminado con brotes de berros.'},
-  {id:46,cat:'Vegetariano',name:'Ensalada Niçoise vegetariana',allergens:['Mostaza','Sulfitos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Papa, Lechuga, Tomate, Judías verdes, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Carpaccio de papa canaria confitada, acompañada de verduras ecológicas de la isla y aliñada con mayonesa cítrica.',notes:'Versión VEGAN adaptable. ⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. ⚠ Huevos en el huevo de codorniz y en la yema — Comandar SIN HUEVO DE CODORNIZ Y SIN YEMA.'},
-  {id:48,cat:'Vegetariano',name:'Tartar de remolacha, aguacate y manzana ácida',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' 100% VEGANO. Tartar de remolacha y manzana con cremoso de aguacate, remolacha en texturas y sorbete de manzana verde.'},
-  {id:49,cat:'Vegetariano',name:'Tartar de tomate y queso stracciatella',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'Versión VEGAN adaptable. ⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA. ⚠ Huevos en la yema de huevo — Comandar SIN YEMA.'},
-  {id:50,cat:'Vegetariano',name:'Croquetas de boletus',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:null,history:'Nacidas del ingenio y el amor por no desperdiciar, las croquetas viajaron desde Francia hasta el alma de España. En cada casa, una receta; en cada bocado, un recuerdo. Crujientes por fuera, suaves por dentro, son el abrazo dorado de la cocina casera, el sabor de la abuela que nunca se olvida.',notes:'Clásicas croquetas vegetarianas de boletus acompañadas de manzana confitada.'},
-  {id:52,cat:'Vegetariano',name:'Pimiento a la brasa relleno de pisto manchego',allergens:['Sulfitos','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:null,history:'Relleno del pimiento es receta de la abuela de José, chef del restaurante. El pimiento relleno con salsa vizcaína es un plato típico vasco; unimos sabores y nació nuestro pimiento. Durante mucho tiempo este fue el plato preferido de Martín al venir al restaurante.',notes:'♥ Plato preferido de Martín. Versión VEGAN adaptable. Pimiento relleno de cebolla, pimiento rojo confitado, berenjena, calabacín y salsa de tomate.'},
-  {id:53,cat:'Vegetariano',name:'Arroz cremoso de verduras',allergens:['Lácteos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:null,history:'Arroz cremoso con mini verduras ecológicas provenientes de Guía de Isora.',notes:'Versión VEGAN adaptable. Arroz cremoso con verduras ecológicas de temporada.'},
-  {id:54,cat:'Vegetariano',name:'Raviolis de espinaca y queso parmesano',allergens:['Gluten','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:null,history:'Este ravioli nace del encuentro entre la huerta y la tradición italiana. La espinaca fresca se envuelve en una pasta fresca. La espuma de parmesano aporta una profundidad y carácter.',notes:'Pasta artesanal elaborada en casa, rellena de espinaca, ricota, parmesano, nuez moscada, orégano, sal y pimienta. Finalizamos con espuma de parmesano gratinada en salamandra.'},
-  {id:55,cat:'Vegetariano',name:'Ensalada verde',allergens:['Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Lechuga, Cebolla morada. Aderezo: Vinagre, Aceite de oliva, Sal.',history:'Lechuga de nuestro proveedor ecológico de Granadilla de Abona.',notes:'Versión VEGAN adaptable. ⚠ Sulfitos en el aderezo — Comandar SIN ADEREZO.'},
-  {id:56,cat:'Vegetariano',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'Versión VEGAN adaptable. ⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
-  {id:57,cat:'Vegetariano',name:'Puré cremoso de patatas',allergens:['Lácteos'],cutlery:'Cuchara sopera',ingredients:'Patatas locales, Nata, Leche, Mantequilla, Caldo de pollo.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠ ATENCIÓN: NO es vegetariano ya que contiene caldo de pollo.'},
-  {id:58,cat:'Vegetariano',name:'Patatas cerilla fritas',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'Versión VEGAN adaptable. ⚠ Comandar SIN GLUTEN — freidora aparte. Servir siempre salsas para los niños.'},
+  {id:1,cat:'Entrantes',name:'Croquetas Premium',allergens:['Huevos','Gluten','Lácteos','Crustáceos','Apio','Pescado','Sulfitos'],ingredients:'Leche, Harina, Mantequilla, Nata, Gelatina, Huevo. Jamón: loncha de jamón. Txipiron: tartar de txipiron. Langostino: americana y tartar de langostino. Dry Age: mermelada de piparra, tartar de Dry y piparra. Boletus: manzana confitada. Pollo: cogollo de lechuga, aderezo césar, lámina de pollo con Demi-glace y crujiente de bacon.',history:'Nacidas del ingenio y el amor por no desperdiciar, las croquetas viajaron desde Francia hasta el alma de España. En cada casa, una receta; en cada bocado, un recuerdo. Crujientes por fuera, suaves por dentro, son el abrazo dorado de la cocina casera, el sabor de la abuela que nunca se olvida. Nuestras croquetas son premium por el Topping que lleva cada una para culminar.',notes:'Todos los sabores llevan en la masa: Huevos, Lácteos y Gluten. Alérgenos adicionales por sabor: · Jamón → Sulfitos integrados en la masa — NO se puede retirar. Si alergia a sulfitos elegir otro sabor. · Langostino → Crustáceos integrados en la masa — NO se puede retirar. Apio en la salsa americana — Comandar SIN AMERICANA para evitar el Apio. · Dry Age → Sulfitos en el tartar — Comandar SIN TARTAR DRY AGE o elegir otro sabor. · Pollo → Pescado y Mostaza en la salsa césar — Comandar SIN SALSA CÉSAR. · Txipiron → Moluscos integrados en la masa — NO se puede retirar. Si alergia a moluscos elegir otro sabor.'},
+  {id:2,cat:'Entrantes',name:'Huevo frito con chistorra',allergens:['Huevos','Lácteos','Sulfitos'],ingredients:'Papa, Huevo, Nata, Caldo de pollo, Chistorra.',history:'Chistorra de Navarra, uno de los productos de tierra vasca en nuestra carta, acompañada de crema de papa canaria y huevos de caserío, nos dan como resultado un plato redondo en boca por sabor y textura.',notes:'⚠ Huevos son la base del plato — NO se puede retirar. No se puede servir a personas con alergia a huevos. Nuestra versión de los huevos a la estampida: huevo a baja temperatura y frito, espuma de papa, papa paja y chistorra.'},
+  {id:3,cat:'Entrantes',name:'Calamares a la Andaluza',allergens:['Moluscos','Gluten','Huevos'],ingredients:'Calamar, Harina, Levadura, Agua, Cerveza, Sal, Ajo, Limón, Tinta de Txipiron. Alioli cítrico y alioli de tinta de calamar: Huevo, Aceite, Ajo, Limón.',history:'El Atlántico que rodea Tenerife es uno de los caladeros más ricos del mundo. Estos calamares frescos, capturados en las aguas frías que bañan las costas canarias, se visten con una tempura ligera y crujiente inspirada en la tradición andaluza. Ocho años en nuestra carta avalan un bocado que combina el mar de Canarias con la técnica de la cocina del sur.',notes:' 8 años en la carta. Calamares en tempura con alioli cítrico y alioli de tinta de calamar. ⚠ Huevos en el alioli — Comandar SIN ALIOLI.'},
+  {id:4,cat:'Entrantes',name:'Tomates aliñados',allergens:['Sulfitos','Pescado'],ingredients:'Ventresca, Anchoas, Tomates, Cebolla roja, Vinagre de Jerez, Granizado de gazpacho, Granadina, Oporto, Vinagreta de Cabernet Sauvignon.',history:'Elaborada con tomates ecológicos de la localidad de Arico, la anchoa y la ventresca resaltan el sabor clásico de la ensalada mediterránea. El clima de la isla nos aporta todo el año tomates muy sabrosos que combinados con el granizado de gazpacho refrescante lo hacen un plato perfecto para intercalar en los entrantes para compartir.',notes:'⚠ Sulfitos en la cebolla encurtida y en la ventresca — NO se pueden retirar. No se puede servir a personas con alergia a sulfitos. · ⚠ Pescado en la ventresca y las anchoas — se puede retirar. Comandar SIN VENTRESCA Y SIN ANCHOAS.'},
+  {id:5,cat:'Entrantes',name:'Pámpano marinado al mojo rojo',allergens:['Sulfitos','Pescado'],ingredients:'Pámpano, Pimiento palmero, Pimiento rojo, Ajo, Huevas de salmón, Huevas de Tobiko, Aguacate, Tabasco, Pan de algas, Naranja confitada, Cilantro, Chips de kale.',history:'Pescado azul de Canarias, de carne grasa y textura inigualable, marinado 24 horas en sal y sabores intensos como el del mojo rojo. Matices como el picante, el fresco del cilantro y el dulce de la naranja logran un equilibrio perfecto. Un clásico de Txoko.',notes:'★ Clásico de Txoko. Marinado 24h en mojo rojo. Crema de aguacate picante, naranja confitada, pan de algas, huevas de Tobiko y de salmón, chips de kale.'},
+  {id:6,cat:'Entrantes',name:'Peras escalivadas con cremoso de queso de cabra',allergens:['Frutos secos','Gluten','Lácteos','Mostaza','Sulfitos'],ingredients:'Pera, Espuma de queso de cabra (Nata, Leche, Queso de cabra, Queso azul), Migas de Ibérico (Ibéricos y miga de pan), Vinagreta de mostaza (Aceite de oliva, Vinagre de manzana, Miel, Mostaza Dijon, Mostaza antigua), Almendras, Brotes de mostaza y mézclum.',history:null,notes:'⚠ Mostaza en la vinagreta y en los brotes de mostaza — se puede retirar. Comandar SIN VINAGRETA DE MOSTAZA Y SIN BROTES DE MOSTAZA.'},
+  {id:7,cat:'Entrantes',name:'Ensalada Niçoise',allergens:['Mostaza','Sulfitos','Pescado','Huevos'],ingredients:'Tataki de atún, Papa, Lechuga, Tomate, Judías, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Inspirados en dos productos canarios, papa negra y atún, reconvertimos la clásica ensalada francesa en un Carpaccio de papa confitada donde los matices cítricos resaltan el resto de ingredientes. Perfecta para compartir.',notes:'🌿 PUEDE SER VEGETARIANA: retirar el tataki de atún y el huevo. Comandar SIN ATÚN Y SIN HUEVO → se convierte en Ensalada Niçoise vegetariana (id 46). ⚠ Huevos en el huevo de codorniz y en la mayonesa cítrica (yema) — se pueden retirar. Comandar SIN HUEVO DE CODORNIZ Y SIN MAYONESA CÍTRICA. ⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. Tataki de atún sobre ensalada de papas confitadas, pimientos confitados, tomate, judías verdes, puntos de mayonesa cítrica y mermelada de limón.'},
+  {id:8,cat:'Entrantes',name:'Vitello tonnato',allergens:['Pescado','Gluten','Lácteos','Huevos','Sulfitos'],ingredients:'Presa Ibérica, Agua, Azúcar, Limón, Lima, Naranja, Jengibre, Salsa tonnata, Mayonesa, Ventresca de lata, Anchoas, Alcaparra frita, Tabasco, Pan brioche, Papa paja, Hojas de capuchina, Vinagreta de cabernet.',history:'Aprovechándonos del cerdo ibérico como producto estrella en el recetario español, nos atrevimos con el recetario italiano y reconducimos este clásico de ternera. Con textura refinada por su cocción a baja temperatura, la papa crujiente y el dulce del pan extra suave nos redondean un plato perfecto. Ideal para compartir.',notes:'⚠ Pescado, Huevos y Sulfitos en la salsa tonnata — Comandar SIN SALSA TONNATA. Gluten en las nubes de pan brioche — Comandar SIN PAN BRIOCHE. Ambos pueden retirarse de forma independiente según la alergia.'},
+  {id:9,cat:'Entrantes',name:'Tataki de atún (Cena)',allergens:['Huevos','Soja','Pescado','Mostaza','Sulfitos','Lácteos'],ingredients:'Atún, Soja, Mirim, Ajo, Jengibre, Azúcar moreno, Mantequilla, Cebolleta, Nata, Aceite de Oliva, Vinagre de manzana, Miel, Mostaza Dijon, Mostaza antigua, Mayonesa de wasabi, Wakame y daikon.',history:null,notes:'⚠ Soja en la marinada — NO se puede retirar. Tataki de atún marinado en Soja, Mirim, Azúcar moreno, Ajo y Jengibre, sobre crema de cebolleta, ensalada de wakame y daikon con vinagreta y puntos de mayonesa de wasabi.'},
+  {id:10,cat:'Entrantes',name:'Selección de ostras',allergens:['Pescado','Gluten','Huevos','Crustáceos','Sulfitos','Soja'],ingredients:'Ostras número 2, Perlas de fruta de la pasión, Ponzu, Cebolleta, Panko, Huevo, Wasabi.',history:'Ostras frescas de la Bretaña Francesa de tamaño número 2.',notes:'Selección de 3 ostras frescas: con perlas de fruta de la pasión; Ponzu y cebolleta; Frita en panko con mayonesa de wasabi. ⚠ Soja en el Ponzu — se puede retirar. Comandar SIN PONZU (sustituir por ostra natural o de fruta de la pasión). ⚠ Gluten y Huevos en la ostra frita de panko — se puede sustituir por otra de fruta de la pasión, ponzu o natural. Comandar SIN PANKO. Si el huésped lo requiere, se pueden servir con limón y pimienta.'},
+  {id:11,cat:'Entrantes',name:'Tabla de embutidos',allergens:['Sulfitos','Gluten'],ingredients:'Jamón ibérico, Salchichón ibérico, Chorizo ibérico, Lomo ibérico, Crujiente de pan y Tomata.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el crujiente de pan — Comandar SIN PAN.'},
+  {id:12,cat:'Entrantes',name:'Jamón ibérico de bellota Gran Reserva',allergens:['Sulfitos','Gluten'],ingredients:'Jamón ibérico, Crujiente de pan, Tomata.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el crujiente de pan — Comandar SIN PAN.'},
+  {id:13,cat:'Entrantes',name:'Cecina de Wagyu Premium',allergens:['Sulfitos','Gluten'],ingredients:'Cecina de Wagyu Premium, Pan tostado.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el pan tostado — Comandar SIN PAN.'},
+  {id:14,cat:'Entrantes',name:'Tartar de remolacha',allergens:['Sulfitos'],ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' ÚNICO plato 100% VEGANO en la carta de cena.'},
+  {id:15,cat:'Entrantes',name:'Tartar de tomate y queso',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA.'},
+  {id:16,cat:'Entrantes',name:'Tartar de solomillo',allergens:['Huevos','Gluten','Pescado','Mostaza','Sulfitos','Apio'],ingredients:'Solomillo vacuno, Pan carasau, Yema de huevo, Salsa Perrins, Tabasco, Mostaza savora (Apio), Aceite de oliva, Cebolleta, Cebollino, Pepinillo, Pimienta.',history:'Un clásico de Martín con su receta de más de 30 años haciéndose de la misma manera.',notes:'⚠ Mostaza y Apio en la mostaza savora — puede prepararse sin mostaza savora pero requiere preparación desde cero (~30 min). Avisar al cliente antes de confirmar. Comandar SIN MOSTAZA SAVORA e informar al cliente de la espera. Gluten en el pan carasau — Comandar SIN PAN CARASAU.'},
+  {id:17,cat:'Entrantes',name:'Tartar de lomo de atún',allergens:['Sulfitos','Pescado','Soja','Huevos'],ingredients:'Lomo de atún rojo, Tabasco, Teriyaki, Espuma de tomate (Agua de tomate, claras de huevo y gelatina), Yema de huevo curada en soja, Brotes de cilantro y cebolleta verde, Aceite de girasol y de oliva, Soja, Ponzu, Katsuobusi, Sake.',history:'Para nosotros es un producto emblemático de Canarias. Gerardo, nuestro contacto en la cofradía del Hierro, selecciona las piezas de primera mano. A este tartar coronamos con otros dos productos canarios por excelencia: tomate en textura de espuma y perfume suave del cilantro.',notes:null},
+  {id:18,cat:'Entrantes',name:'Tartar de Wagyu dry',allergens:['Huevos','Pescado','Mostaza','Apio','Sulfitos'],ingredients:'Carne de Wagyu madurada dry, Huevo, Cebolleta, Pepinillo, Salsa Perrins, Mostaza savora, Cebollino, Tabasco, Sal, Pimienta, Crujiente de papa, Trufa negra.',history:'La carne Wagyu proviene de una raza de vacas japonesas famosa por su alto marmoleo, lo que la hace muy tierna e ideal para formar parte de uno de nuestros tartares.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. Con aliño clásico, huevo a baja temperatura, crujiente de papa y trufa negra de Teruel laminada.'},
+  {id:19,cat:'Entrantes',name:'Pimiento relleno de ternera',allergens:['Lácteos','Sulfitos','Apio'],ingredients:'Pimiento rojo asado, Zanahoria, Cebolla, Morcillo, Ajo, Ají, Licuado de pimiento, Caldo de pollo, Apio.',history:'Relleno del pimiento es receta de la abuela de José, chef del restaurante, que usaba para rellenar las empanadas (procedencia uruguaya). El pimiento relleno con salsa vizcaína es un plato típico vasco; unimos sabores y nació nuestro pimiento. Durante mucho tiempo este fue el plato preferido de Martín al venir al restaurante.',notes:'♥ Plato preferido de Martín. Existe versión vegetariana rellena de pisto manchego.'},
+  {id:20,cat:'Entrantes',name:'Pulpo a la brasa sobre trinxat de papa canaria',allergens:['Moluscos','Huevos','Sulfitos'],ingredients:'Pulpo, Papa, Col blanca y morada, Panceta ibérica, Morcilla, Chorizo, Huevo, Ajo, Aceite de girasol, Sal, Pimentón, Brotes de guisantes.',history:null,notes:'Pulpo a la brasa acompañado con trinxat de col e ibéricos, terminado con puntos de alioli de pimentón, brotes de guisantes y pimentón espolvoreado.'},
+  {id:21,cat:'Platos Principales',name:'Txuleta de atún con tomate en texturas',allergens:['Pescado','Sulfitos','Soja','Huevos'],ingredients:'Atún, Sake, Soja, Azúcar, Tomate, Vinagre de jerez, Sal, Dextrosa, Huevo, Gelatinas, Cebolleta, Pepinillo, Vinagreta de cabernet.',history:null,notes:'Lomo de atún marcado al josper y pincelado con teriyaki. Con guarnición de tomates en texturas: Tartar de tomate, Helado de tomate y Espuma de tomate.'},
+  {id:22,cat:'Platos Principales',name:'Lubina a la brasa con ensalada de papaya',allergens:['Pescado','Sulfitos'],ingredients:'Zanahoria, Cardamomo, Piel de limón, Batata, Pimienta rosa, Aceite girasol, Calabaza, Vainilla, Vinagre de manzana, Azúcar, Guindilla, Papaya verde, Gajos de pomelo, Huevas de aceite oliva, Hojas de cilantro, Láminas de ají Amarillo.',history:null,notes:'Lubina a la brasa con ensalada de papaya verde, batata, zanahoria y calabaza. Terminamos con gajos de pomelo, huevas de aceite de oliva, hojas de cilantro y láminas de ají amarillo.'},
+  {id:23,cat:'Platos Principales',name:'Ravioli de pularda',allergens:['Lácteos','Sulfitos','Gluten','Huevos'],ingredients:'1 Pularda, Cebolla, Zanahoria, Puerro, Tomates, Champiñón, Ajo, Coñac, Porto, Lima, Tomillo, Sal y pimienta, Caldo de pollo, Tocineta curada, Boletus, Leche, Mantequilla, Harina, Foie, Huevo.',history:null,notes:'Raviolis rellenos de pularda y boletus, con bechamel de foie.'},
+  {id:24,cat:'Platos Principales',name:'Carrillera de Wagyu',allergens:['Lácteos','Sulfitos'],ingredients:'Ajo, Puerros, Cebolla, Zanahoria, Vino tinto, Caldo de pollo, Espuma de hongo y papas, Nata, Crudité de espárragos.',history:'Plato emblemático de Martín en el menú de Txoko. Hecha de forma tradicional con cocciones largas que nos aportan una textura muy suave en boca, redondeamos este sabor con espuma de hongos que ayuda a neutralizar la intensidad de la carrillera.',notes:' Plato emblemático de Martín. Carrillera de ternera a baja temperatura en cremoso de papa y hongos, espárrago verde crujiente y trufa (si disponible en temporada).'},
+  {id:25,cat:'Platos Principales',name:'Pluma de cerdo Ibérico',allergens:['Lácteos','Sulfitos','Apio'],ingredients:'Cerdo ibérico, Manzana encurtida, Hinojo encurtido, Puré de apiobola (mantequilla), Vinagre.',history:'Casalba tiene su origen en la sierra de la Demanda. Julio, su dueño, en estrecha relación con nuestros chefs, selecciona las piezas que vienen desde la península a nuestro restaurante. La pluma a la brasa y la presa ibérica destacan por la delicadeza de su sabor suave y textura muy agradable.',notes:'⚠ Apio y Lácteos en el puré de apio bola (mantequilla) — se pueden retirar. Comandar SIN PURÉ DE APIO. Pluma de cerdo ibérico a la brasa, puré de Apio bola y puntos de crema de zanahoria. Terminada con manzana, zanahoria y remolacha encurtidas.'},
+  {id:26,cat:'Platos Principales',name:'Costillas melosas de cordero sobre salsa de curry verde',allergens:['Sulfitos'],ingredients:'Cordero, Cebollas, Puerro, Tomates, Vino tinto, Pimienta y Sal, Demi de jarrete, Vinagre de cabernet, Miel, Azúcar moscovado, Zanahoria, Curry verde, Leche de coco, Caldo de pollo, Naranja, Lima, Limón, Pomelo.',history:null,notes:'⏱ Cocción de 8 horas. Costillas selladas en el josper, envasadas al vacío con marinada. Servidas con demi glace y salsa de curry verde. Terminamos con gajos de cítricos caramelizados.'},
+  {id:27,cat:'Guarniciones y Salsas',name:'Ensalada verde',allergens:['Sulfitos'],ingredients:'Lechuga, Cebolla morada. Aderezo: Vinagre, Aceite de oliva, Sal.',history:'Lechuga de nuestro proveedor ecológico de Granadilla de Abona.',notes:'⚠ Sulfitos en el aderezo — Comandar SIN ADEREZO.'},
+  {id:28,cat:'Guarniciones y Salsas',name:'Coliflor frita',allergens:[],ingredients:'Coliflor.',history:null,notes:'Coliflor blanqueada dos minutos en agua sal, luego frita.'},
+  {id:29,cat:'Guarniciones y Salsas',name:'Alcachofas a la brasa',allergens:[],ingredients:'Alcachofas nacionales.',history:null,notes:'Corazones de alcachofa confitados en aceite de oliva y luego fritos.'},
+  {id:30,cat:'Guarniciones y Salsas',name:'Pimientos del padrón',allergens:[],ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
+  {id:32,cat:'Guarniciones y Salsas',name:'Patatas cerilla fritas',allergens:[],ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠ Comandar SIN GLUTEN — freidora aparte. Servir siempre salsas para los niños (Mayonesa, Kéchup, etc.).'},
+  {id:33,cat:'Guarniciones y Salsas',name:'Tomate Cherry al ajillo',allergens:[],ingredients:'Tomates ecológicos, Aceite, Ajo laminado, Guindilla.',history:null,notes:'Tomates ecológicos de la isla fritos en ajillo. i Contiene ajo (no es alérgeno oficial UE, pero informar si el cliente lo indica).'},
+  {id:34,cat:'Guarniciones y Salsas',name:'Parmentier de papa canaria',allergens:['Lácteos'],ingredients:null,history:null,notes:null},
+  {id:35,cat:'Guarniciones y Salsas',name:'Espárragos blancos',allergens:[],ingredients:null,history:null,notes:'Espárragos a la brasa.'},
+  {id:36,cat:'Guarniciones y Salsas',name:'Salsa de pimienta verde',allergens:['Lácteos','Sulfitos'],ingredients:'Chalota, Pimienta verde, Mantequilla, Brandy, Nata, Caldo de pollo.',history:'La salsa de pimienta verde es originaria de Francia. Muy usada para acompañar carnes.',notes:'Se pocha la chalota con mantequilla, se añade la pimienta verde, brandy para flamear y por último nata y caldo de pollo hasta reducir.'},
+  {id:38,cat:'Guarniciones y Salsas',name:'Salsa de hongos',allergens:['Lácteos','Sulfitos'],ingredients:'Hongos, Nata, Mantequilla.',history:null,notes:null},
+  {id:39,cat:'Guarniciones y Salsas',name:'Chimichurri',allergens:['Sulfitos'],ingredients:'Tomate deshidratado, Cebolleta, Pimiento rojo y verde, Ajo, Aceite de oliva, Vinagre de Jerez, Ají, Limón, Perejil, Cebollino, Sal, Pimienta negra.',history:'El Chimichurri es una salsa o aderezo típico de Argentina y Uruguay empleada sobre todo en carnes asadas. Se sirve en crudo y se deja reposar horas o días para que los sabores se integren. Es una de las salsas más emblemáticas del Asado Rioplatense.',notes:'Mini brunoise de tomate seco, pimiento rojo, verde, cebolleta y ajo. Se añade vinagre de jerez, aceite, orégano y perejil.'},
+  {id:40,cat:'Postres',name:'Flan tradicional con chantilly',allergens:['Lácteos','Huevos'],ingredients:'Leche entera, Huevos, Azúcar, Piel de naranja, Leche condensada, Vainilla, Nata, Mascarpone.',history:'El flan nació en la antigua Roma, donde se preparaba con huevos, leche y miel. Con el tiempo, la receta viajó a Francia y España, donde se convirtió en el postre suave y acaramelado que conocemos hoy. Siglos después nació la crema chantilly, inventada en el castillo de Chantilly. Cuando ambos se unieron formaron un dúo perfecto: símbolo de elegancia y placer en cada cucharada.',notes:null},
+  {id:41,cat:'Postres',name:'Tocinillo de cielo',allergens:['Frutos secos','Gluten','Lácteos','Huevos'],ingredients:'Huevos, Limón, Jengibre, Cacao, Café, Avellanas.',history:'El tocinillo es un postre tradicional español, muy dulce y con una textura suave y brillante, similar al flan pero más denso. Proveniente de Andalucía. Nosotros reversionamos esta receta añadiéndole otras preparaciones para llevarlo al estilo Txoko.',notes:'⚠ Frutos secos en la teja de café y avellanas — se puede retirar. Comandar SIN TEJA DE CAFÉ.'},
+  {id:42,cat:'Postres',name:'Brownie de avellanas con crema de cacao y mandarina',allergens:['Frutos secos','Lácteos','Huevos'],ingredients:'Claras, Harina de avellanas, Chocolate negro, Cremoso de chocolate blanco, Helado de chocolate, Crema de mandarina.',history:'Este es uno de nuestros postres Gluten-free (aunque siempre aclaramos que puede contener trazas) ya que está hecho a base de harina de avellanas.',notes:'⚠ Gluten-free pero puede contener TRAZAS. Brownie de avellana y chocolate, helado de chocolate, tubo de chocolate relleno con cremoso de cacao y mandarina. Terminamos con ganache de chocolate blanco.'},
+  {id:43,cat:'Postres',name:'Mousse de gofio con helado de plátano canario',allergens:['Frutos secos','Lácteos','Huevos','Sulfitos','Gluten'],ingredients:'Leche, Plátano, Gofio, Huevo, Xantana, Nata, Azúcar, Sal maldon, Mantequilla, Harina, Vinagre de manzana, Almendras tostadas, Glucosa atomizada, Plátano osmotizado, Toffe.',history:null,notes:'Mousse de gofio y plátano canario, con plátano osmotizado y helado del mismo. Feuilletine, almendras tostadas y toffee.'},
+  {id:44,cat:'Postres',name:'Pastel Vasco invertido con tartar de manzana',allergens:['Gluten','Lácteos','Huevos'],ingredients:'Harina, Azúcar, Mantequilla, Huevo, Levadura, Ron, Sal, Leche, Maizena, Limón, Vainilla, Hinojo, Nata, Glucosa, Cremodan.',history:'Receta centenaria del País Vasco, tierra de origen de Martín Berasategui. Bizcocho recién horneado al momento, relleno de crema pastelera y tartar de manzana. Un postre que viajó desde el País Vasco hasta los acantilados de Abama, donde el Atlántico y la brisa canaria lo convierten en algo único. Treinta minutos de espera que siempre valen la pena.',notes:'⏱ Mínimo 30 minutos de espera (recién horneado). Avisar al huésped al tomar la comanda. Bizcocho con capa de crema pastelera y tartar de manzana. Terminamos con helado artesanal de hinojo.'},
+  {id:45,cat:'Vegetariano',name:'Tomates aliñados con granizado de gazpacho',allergens:['Sulfitos'],ingredients:'Tomate, Aguacate, Cebolleta, Granizado de gazpacho, Granadina, Vinagreta de Cabernet Sauvignon.',history:'Es nuestra versión vegetariana de nuestro plato mítico de tomates, anchoas y ventresca.',notes:'Versión VEGAN adaptable. Tomates ecológicos con cebolletas encurtidas y granizado de gazpacho (sin pan). Terminado con brotes de berros.'},
+  {id:46,cat:'Vegetariano',name:'Ensalada Niçoise vegetariana',allergens:['Mostaza','Sulfitos','Huevos'],ingredients:'Papa, Lechuga, Tomate, Judías verdes, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Carpaccio de papa canaria confitada, acompañada de verduras ecológicas de la isla y aliñada con mayonesa cítrica.',notes:'Versión VEGAN adaptable. ⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. ⚠ Huevos en el huevo de codorniz y en la yema — Comandar SIN HUEVO DE CODORNIZ Y SIN YEMA.'},
+  {id:48,cat:'Vegetariano',name:'Tartar de remolacha, aguacate y manzana ácida',allergens:['Sulfitos'],ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' 100% VEGANO. Tartar de remolacha y manzana con cremoso de aguacate, remolacha en texturas y sorbete de manzana verde.'},
+  {id:49,cat:'Vegetariano',name:'Tartar de tomate y queso stracciatella',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'Versión VEGAN adaptable. ⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA. ⚠ Huevos en la yema de huevo — Comandar SIN YEMA.'},
+  {id:50,cat:'Vegetariano',name:'Croquetas de boletus',allergens:['Gluten','Lácteos','Huevos'],ingredients:null,history:'Nacidas del ingenio y el amor por no desperdiciar, las croquetas viajaron desde Francia hasta el alma de España. En cada casa, una receta; en cada bocado, un recuerdo. Crujientes por fuera, suaves por dentro, son el abrazo dorado de la cocina casera, el sabor de la abuela que nunca se olvida.',notes:'Clásicas croquetas vegetarianas de boletus acompañadas de manzana confitada.'},
+  {id:52,cat:'Vegetariano',name:'Pimiento a la brasa relleno de pisto manchego',allergens:['Sulfitos','Lácteos'],ingredients:null,history:'Relleno del pimiento es receta de la abuela de José, chef del restaurante. El pimiento relleno con salsa vizcaína es un plato típico vasco; unimos sabores y nació nuestro pimiento. Durante mucho tiempo este fue el plato preferido de Martín al venir al restaurante.',notes:'♥ Plato preferido de Martín. Versión VEGAN adaptable. Pimiento relleno de cebolla, pimiento rojo confitado, berenjena, calabacín y salsa de tomate.'},
+  {id:53,cat:'Vegetariano',name:'Arroz cremoso de verduras',allergens:['Lácteos','Sulfitos'],ingredients:null,history:'Arroz cremoso con mini verduras ecológicas provenientes de Guía de Isora.',notes:'Versión VEGAN adaptable. Arroz cremoso con verduras ecológicas de temporada.'},
+  {id:54,cat:'Vegetariano',name:'Raviolis de espinaca y queso parmesano',allergens:['Gluten','Lácteos'],ingredients:null,history:'Este ravioli nace del encuentro entre la huerta y la tradición italiana. La espinaca fresca se envuelve en una pasta fresca. La espuma de parmesano aporta una profundidad y carácter.',notes:'Pasta artesanal elaborada en casa, rellena de espinaca, ricota, parmesano, nuez moscada, orégano, sal y pimienta. Finalizamos con espuma de parmesano gratinada en salamandra.'},
+  {id:55,cat:'Vegetariano',name:'Ensalada verde',allergens:['Sulfitos'],ingredients:'Lechuga, Cebolla morada. Aderezo: Vinagre, Aceite de oliva, Sal.',history:'Lechuga de nuestro proveedor ecológico de Granadilla de Abona.',notes:'Versión VEGAN adaptable. ⚠ Sulfitos en el aderezo — Comandar SIN ADEREZO.'},
+  {id:56,cat:'Vegetariano',name:'Pimientos del padrón',allergens:[],ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'Versión VEGAN adaptable. ⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
+  {id:57,cat:'Vegetariano',name:'Puré cremoso de patatas',allergens:['Lácteos'],ingredients:'Patatas locales, Nata, Leche, Mantequilla, Caldo de pollo.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠ ATENCIÓN: NO es vegetariano ya que contiene caldo de pollo.'},
+  {id:58,cat:'Vegetariano',name:'Patatas cerilla fritas',allergens:[],ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'Versión VEGAN adaptable. ⚠ Comandar SIN GLUTEN — freidora aparte. Servir siempre salsas para los niños.'},
   // ===== NUEVOS ENTRANTES =====
-  {id:65,cat:'Entrantes',name:'Pimientos del padrón',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pimientos del padrón, Pimienta, Sal',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de granadilla.',notes:'⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
-  {id:66,cat:'Entrantes',name:'Espárragos a la brasa',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Espárragos, Aceite de oliva, Sal.',history:'',notes:null},
-  {id:67,cat:'Entrantes',name:'Alitas melosas glaseadas',allergens:['Soja'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Toallitas húmedas (Finger balls)',ingredients:'Alitas de pollo, Aceite girasol, Soja, Miel de palma, Jengibre, Caldo de verduras (Cebolla, Puerro, Zanahoria, Calabaza y Garbanzos), Sal',history:'',notes:null},
-  {id:68,cat:'Entrantes',name:'Papas bravas al estilo Txoko',allergens:['Huevos','Sulfitos','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Papa, Queso Parmesano, Caldo de pollo, Cebolla, Tomate, Vinagre de jerez, Cayena, Ajo, Aceite de girasol, Sal. Ali-oli: Huevo, Aceite de girasol, Ajo.',history:'Nuestras papas bravas están hechas con una base de terrina de papa (entre capa y capa colocamos queso parmesano que sirve como pegamento). Terminamos con puntos de salsa brava y puntos de ali-oli.',notes:'⚠ Huevos en el ali-oli — Comandar SIN ALI-OLI.'},
-  {id:69,cat:'Entrantes',name:'Fish and chips (Almuerzo)',allergens:['Pescado','Gluten','Huevos','Mostaza','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Bacalao. Rebozado: Harina floja, Panko, Huevo, Trisol, Levadura prensada, Agua, Cerveza, Sal. Salsa tártara: Mayonesa, Huevo duro, Pepinillo, Mostaza Dijon, Anchoas, Alcaparra, Chalota, Cebollino, Estragón, Perejil. Chips de papa',history:'',notes:'⚠ Mostaza y sulfitos en la salsa tártara — Comandar SIN SALSA TÁRTARA.'},
-  {id:109,cat:'Entrantes',name:'Fish and chips (Cena)',allergens:['Pescado','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Bacalao. Tempura: Harina floja, Trisol, Levadura prensada, Agua, Cerveza, Sal. Chips de papa',history:'',notes:null},
-  {id:71,cat:'Entrantes',name:'Mejillones a la brasa',allergens:['Sulfitos','Moluscos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Mejillones. Refrito: Ajo, Guindilla, Aceite de oliva, Vinagre de manzana',history:'',notes:null},
-  {id:72,cat:'Entrantes',name:'Tomates ecológicos',allergens:['Sulfitos','Pescado'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Tomate, Anchoas, Boquerones, Aguacate, Cebolleta, Polvo de aceituna calamata, Vinagreta de cabernet, Berro',history:'',notes:'⚠ Pescado en las anchoas y los boquerones — Comandar SIN ANCHOAS Y SIN BOQUERONES.'},
-  {id:73,cat:'Entrantes',name:'Carpaccio con espuma de parmesano',allergens:['Mostaza','Lácteos','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Picaña, Rúcula, Parmesano, Piparras. Vinagreta: Aceite, Mostaza, Vinagre de jerez, Zumo de limón, Pimienta molida, Sal, Agua de tomate. Espuma: Parmesano rayado, Leche, Nata, Sal, Pimienta. Polvo de aceituna calamata',history:'',notes:null},
-  {id:74,cat:'Entrantes',name:'Rejo de pulpo con papa y mojo verde',allergens:['Sulfitos','Moluscos','Lácteos','Pescado'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',history:'El rejo — las patas del pulpo — es la parte más valorada por los conocedores. Cocinado a baja temperatura y terminado a la brasa, sobre papa canaria con mojo verde de aguacate. Un plato que rinde homenaje a dos productos que definen las islas: el pulpo del Atlántico y la papa canaria, cultivada en tierras volcánicas.',ingredients:'Pulpo, Chalota, Perejil, Mantequilla, Fumet (Caldo de pescado). Mojo verde: Cilantro, Vinagre de manzana, Lima, Ajo, Aceite de girasol, Aceite de oliva, Cebolleta, Pimienta de Espellet. Papa canaria',history:'',notes:'⚠ Lácteos en la mantequilla — Comandar SIN MANTEQUILLA.'},
-  {id:75,cat:'Entrantes',name:'Pollo brasa con huevo a baja temperatura',allergens:['Huevos','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Huevo. Espuma de papa: Papa, Caldo, Nata, Aceite de oliva, Sal. Pollo. Demi glace: Huesos de pollo, Cebolla, Zanahoria, Puerro, Mantequilla. Papa paja',history:'',notes:null},
-  {id:77,cat:'Entrantes',name:'Ensalada de Mero del Hierro',allergens:['Pescado','Mostaza','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Mero, Huevo de codorniz, Naranja. Tomate Tumaka: Tomate rallado, Sal, Aceite de oliva. Cebolla encurtida: Lima, Cayena. Espuma de pil pil: Caldo/Gelatina de pescado, Aceite de oliva, Guindilla. Polvo de aceituna calamata, Brotes de mostaza',history:'',notes:'⚠ Huevos retirables — Comandar SIN HUEVO DE CODORNIZ.'},
-  {id:78,cat:'Entrantes',name:'Tataki de Atún (Almuerzo)',allergens:['Pescado','Mostaza','Huevos','Gluten'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Atún. Rebozado: Harina, Huevo, Panko. Cebollas encurtidas: Granadina (Vinagre de manzana, Granadina), Porto (Vinagre de jerez, Oporto, Agua), Sake (Vinagre de cabernet, Sake, Agua). Huevas de Tobiko, Huevas de aceite. Mermelada de papaya: Papaya, Azúcar, Agua, Pimienta de Jamaica, Guindilla, Aceite de oliva, Vinagre de manzana. Mayonesa de wasabi, Vinagreta de Mostaza antigua y Miel',history:'',notes:null},
-  {id:80,cat:'Entrantes',name:'Coca de calabacín',allergens:['Frutos secos','Gluten','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Harina, Agua, Levadura, Sal, Aceite, Calabacín, Queso de cabra, Burrata, Piñones',history:'',notes:'⚠ Frutos secos en los piñones — Comandar SIN PIÑONES.'},
-  {id:81,cat:'Entrantes',name:'Coca de tomate',allergens:['Gluten','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Harina, Agua, Levadura, Sal, Aceite. Tomate: Aceto balsámico, Ajo, Azúcar, Romero, Orégano, Tomillo, Aceite de oliva. Jamón ibérico, Queso mozzarella',history:'',notes:null},
-  {id:82,cat:'Entrantes',name:'Tabla de quesos canarios',allergens:['Frutos secos','Gluten','Lácteos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Quesos, Gofio, Pimentón, Batata, Azúcar, Agua, Naranja, Vainilla, Canela, Clavo, Tomate, Higos, Aceituna Kalamata, Almendras, Pan.',history:'Tabla de quesos canarios: queso de vaca y oveja 50/50, queso de cabra curado con pimentón, queso de cabra curado con gofio. Acompañados de relish de higos, aceitunas kalamata y almendras, mermelada de tomate y batata de Lanzarote en almíbar de naranja, vainilla, canela y clavo.',notes:'⚠ Frutos secos en las almendras — Comandar SIN ALMENDRAS y/o SIN PAN según alergia.'},
-  {id:84,cat:'Entrantes',name:'Paletilla Ibérica de bellota',allergens:['Gluten','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Paletilla ibérica de bellota, Pan tostado.',history:'La paletilla ibérica es la pieza obtenida de la extremidad delantera del cerdo ibérico. Es similar al jamón ibérico, pero procede de la pata delantera en lugar de la trasera.',notes:'⚠ Gluten en el pan tostado — Comandar SIN PAN.'},
+  {id:65,cat:'Entrantes',name:'Pimientos del padrón',allergens:[],ingredients:'Pimientos del padrón, Pimienta, Sal',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de granadilla.',notes:'⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
+  {id:66,cat:'Entrantes',name:'Espárragos a la brasa',allergens:[],ingredients:'Espárragos, Aceite de oliva, Sal.',history:'',notes:null},
+  {id:67,cat:'Entrantes',name:'Alitas melosas glaseadas',allergens:['Soja'],ingredients:'Alitas de pollo, Aceite girasol, Soja, Miel de palma, Jengibre, Caldo de verduras (Cebolla, Puerro, Zanahoria, Calabaza y Garbanzos), Sal',history:'',notes:null},
+  {id:68,cat:'Entrantes',name:'Papas bravas al estilo Txoko',allergens:['Huevos','Sulfitos','Lácteos'],ingredients:'Papa, Queso Parmesano, Caldo de pollo, Cebolla, Tomate, Vinagre de jerez, Cayena, Ajo, Aceite de girasol, Sal. Ali-oli: Huevo, Aceite de girasol, Ajo.',history:'Nuestras papas bravas están hechas con una base de terrina de papa (entre capa y capa colocamos queso parmesano que sirve como pegamento). Terminamos con puntos de salsa brava y puntos de ali-oli.',notes:'⚠ Huevos en el ali-oli — Comandar SIN ALI-OLI.'},
+  {id:69,cat:'Entrantes',name:'Fish and chips (Almuerzo)',allergens:['Pescado','Gluten','Huevos','Mostaza','Sulfitos'],ingredients:'Bacalao. Rebozado: Harina floja, Panko, Huevo, Trisol, Levadura prensada, Agua, Cerveza, Sal. Salsa tártara: Mayonesa, Huevo duro, Pepinillo, Mostaza Dijon, Anchoas, Alcaparra, Chalota, Cebollino, Estragón, Perejil. Chips de papa',history:'',notes:'⚠ Mostaza y sulfitos en la salsa tártara — Comandar SIN SALSA TÁRTARA.'},
+  {id:109,cat:'Entrantes',name:'Fish and chips (Cena)',allergens:['Pescado','Gluten'],ingredients:'Bacalao. Tempura: Harina floja, Trisol, Levadura prensada, Agua, Cerveza, Sal. Chips de papa',history:'',notes:null},
+  {id:71,cat:'Entrantes',name:'Mejillones a la brasa',allergens:['Sulfitos','Moluscos'],ingredients:'Mejillones. Refrito: Ajo, Guindilla, Aceite de oliva, Vinagre de manzana',history:'',notes:null},
+  {id:72,cat:'Entrantes',name:'Tomates ecológicos',allergens:['Sulfitos','Pescado'],ingredients:'Tomate, Anchoas, Boquerones, Aguacate, Cebolleta, Polvo de aceituna calamata, Vinagreta de cabernet, Berro',history:'',notes:'⚠ Pescado en las anchoas y los boquerones — Comandar SIN ANCHOAS Y SIN BOQUERONES.'},
+  {id:73,cat:'Entrantes',name:'Carpaccio con espuma de parmesano',allergens:['Mostaza','Lácteos','Sulfitos'],ingredients:'Picaña, Rúcula, Parmesano, Piparras. Vinagreta: Aceite, Mostaza, Vinagre de jerez, Zumo de limón, Pimienta molida, Sal, Agua de tomate. Espuma: Parmesano rayado, Leche, Nata, Sal, Pimienta. Polvo de aceituna calamata',history:'',notes:'⚠ Mostaza en la vinagreta — se puede retirar. Comandar SIN VINAGRETA.'},
+  {id:74,cat:'Entrantes',name:'Rejo de pulpo con papa y mojo verde',allergens:['Sulfitos','Moluscos','Lácteos','Pescado'],history:'El rejo — las patas del pulpo — es la parte más valorada por los conocedores. Cocinado a baja temperatura y terminado a la brasa, sobre papa canaria con mojo verde de aguacate. Un plato que rinde homenaje a dos productos que definen las islas: el pulpo del Atlántico y la papa canaria, cultivada en tierras volcánicas.',ingredients:'Pulpo, Chalota, Perejil, Mantequilla, Fumet (Caldo de pescado). Mojo verde: Cilantro, Vinagre de manzana, Lima, Ajo, Aceite de girasol, Aceite de oliva, Cebolleta, Pimienta de Espellet. Papa canaria',history:'',notes:'⚠ Lácteos en la mantequilla — Comandar SIN MANTEQUILLA.'},
+  {id:75,cat:'Entrantes',name:'Pollo brasa con huevo a baja temperatura',allergens:['Huevos','Lácteos'],ingredients:'Huevo. Espuma de papa: Papa, Caldo, Nata, Aceite de oliva, Sal. Pollo. Demi glace: Huesos de pollo, Cebolla, Zanahoria, Puerro, Mantequilla. Papa paja',history:'',notes:null},
+  {id:77,cat:'Entrantes',name:'Ensalada de Mero del Hierro',allergens:['Pescado','Mostaza','Huevos'],ingredients:'Mero, Huevo de codorniz, Naranja. Tomate Tumaka: Tomate rallado, Sal, Aceite de oliva. Cebolla encurtida: Lima, Cayena. Espuma de pil pil: Caldo/Gelatina de pescado, Aceite de oliva, Guindilla. Polvo de aceituna calamata, Brotes de mostaza',history:'',notes:'⚠ Huevos retirables — Comandar SIN HUEVO DE CODORNIZ.'},
+  {id:78,cat:'Entrantes',name:'Tataki de Atún (Almuerzo)',allergens:['Pescado','Mostaza','Huevos','Gluten'],ingredients:'Atún. Rebozado: Harina, Huevo, Panko. Cebollas encurtidas: Granadina (Vinagre de manzana, Granadina), Porto (Vinagre de jerez, Oporto, Agua), Sake (Vinagre de cabernet, Sake, Agua). Huevas de Tobiko, Huevas de aceite. Mermelada de papaya: Papaya, Azúcar, Agua, Pimienta de Jamaica, Guindilla, Aceite de oliva, Vinagre de manzana. Mayonesa de wasabi, Vinagreta de Mostaza antigua y Miel',history:'',notes:null},
+  {id:80,cat:'Entrantes',name:'Coca de calabacín',allergens:['Frutos secos','Gluten','Lácteos'],ingredients:'Harina, Agua, Levadura, Sal, Aceite, Calabacín, Queso de cabra, Burrata, Piñones',history:'',notes:'⚠ Frutos secos en los piñones — Comandar SIN PIÑONES.'},
+  {id:81,cat:'Entrantes',name:'Coca de tomate',allergens:['Gluten','Lácteos'],ingredients:'Harina, Agua, Levadura, Sal, Aceite. Tomate: Aceto balsámico, Ajo, Azúcar, Romero, Orégano, Tomillo, Aceite de oliva. Jamón ibérico, Queso mozzarella',history:'',notes:null},
+  {id:82,cat:'Entrantes',name:'Tabla de quesos canarios',allergens:['Frutos secos','Gluten','Lácteos'],ingredients:'Quesos, Gofio, Pimentón, Batata, Azúcar, Agua, Naranja, Vainilla, Canela, Clavo, Tomate, Higos, Aceituna Kalamata, Almendras, Pan.',history:'Tabla de quesos canarios: queso de vaca y oveja 50/50, queso de cabra curado con pimentón, queso de cabra curado con gofio. Acompañados de relish de higos, aceitunas kalamata y almendras, mermelada de tomate y batata de Lanzarote en almíbar de naranja, vainilla, canela y clavo.',notes:'⚠ Frutos secos en las almendras — Comandar SIN ALMENDRAS y/o SIN PAN según alergia.'},
+  {id:84,cat:'Entrantes',name:'Paletilla Ibérica de bellota',allergens:['Gluten','Sulfitos'],ingredients:'Paletilla ibérica de bellota, Pan tostado.',history:'La paletilla ibérica es la pieza obtenida de la extremidad delantera del cerdo ibérico. Es similar al jamón ibérico, pero procede de la pata delantera en lugar de la trasera.',notes:'⚠ Gluten en el pan tostado — Comandar SIN PAN.'},
   // ===== HAMBURGUESAS Y BOCATAS =====
-  {id:86,cat:'Hamburguesas y Bocatas',name:'Hamburguesa vegana',allergens:['Gluten','Sulfitos','Soja'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Proteína de soja, Guisantes, Pan de semillas, Cebolla, Panko, Lechuga, Tomate. Chimichurri: Tomate deshidratado, Cebolleta, Pimiento rojo y verde, Ajo, Aceite de oliva, Vinagre de Jerez, Ají, Limón, Perejil, Cebollino, Sal, Pimienta negra',history:'',notes:'⚠ Sulfitos en el chimichurri — Comandar SIN CHIMICHURRI.'},
-  {id:87,cat:'Hamburguesas y Bocatas',name:'Bao de brisket',allergens:['Gluten','Lácteos','Mostaza','Apio','Sulfitos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pan Bao: Harina, Levadura, Leche, Aceite, Sal. Brisket (corte de pechuga delantera). Sazonador: Sal, Pimienta negra, Pimentón ahumado, Ajo, Cebolla, Azúcar, Comino, Mostaza Savora (Contiene Apio). Crema agria: Nata, Zumo de limón, Sal. Perejil, Cilantro, Menta, Guindilla roja',history:'',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA.'},
-  {id:88,cat:'Hamburguesas y Bocatas',name:'Focaccia con vegetales asados',allergens:['Gluten','Lácteos','Frutos secos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Focaccia: Harina, Levadura, Aceite de oliva. Berenjena, Calabacín, Espinaca aliñada, Queso de cabra, Frutos secos, Sal, Pimienta, Aceite de oliva, Menta',history:'',notes:'⚠ Comandar SIN FRUTOS SECOS.'},
-  {id:89,cat:'Hamburguesas y Bocatas',name:'Trifasi club',allergens:['Gluten','Lácteos','Sulfitos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pan brioche: Harina fuerte, Huevo, Levadura, Mantequilla, Azúcar, Sal. Contramuslo de pollo. Mojo rojo: Pimentón rojo, Pimiento palmero, Vinagre. Bacon, Jamón cocido, Queso Emmental, Huevo frito, Lechuga, Tomate. Mayonesa japo (opcional): Aceite de colza, Huevo, Vinagre, Agua, Sal, Azúcar, Mostaza, Antioxidantes, Potenciador de sabor',history:'',notes:'⚠ Sulfitos en los antioxidantes de la mayonesa japonesa — Comandar SIN MAYONESA JAPONESA.'},
-  {id:90,cat:'Hamburguesas y Bocatas',name:'Lobster Roll',allergens:['Gluten','Lácteos','Sulfitos','Crustáceos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Pan Brioche, Bogavante/Langostinos, Col morada, Col blanca, Zanahoria, Cebollino, Mayonesa, Manzana, Vinagre de manzana. Salsa de mantequilla: Mantequilla, Zumo de limón. Cebollino',history:'',notes:'⚠ Sulfitos en el vinagre de la manzana encurtida — no se puede retirar. En ocasiones puede salir con Langostinos en lugar de Bogavante.'},
-  {id:91,cat:'Hamburguesas y Bocatas',name:'Hamburguesa Rossini',allergens:['Gluten','Lácteos','Mostaza','Sulfitos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'180 grs de carne de buey. Pan brioche: Masa madre, Harina fuerte, Huevo, Levadura, Mantequilla, Azúcar, Sal. Queso trufado, Cebolla, Pedro Ximénez. Taco de foie. Aliño de queso azul: Nata, Queso azul, Limón, Mostaza antigua',history:'',notes:'⚠ Gluten en el pan brioche — se puede retirar. Comandar CON PAN SIN GLUTEN e informar a cocina.'},
+  {id:86,cat:'Hamburguesas y Bocatas',name:'Hamburguesa vegana',allergens:['Gluten','Sulfitos','Soja'],ingredients:'Proteína de soja, Guisantes, Pan de semillas, Cebolla, Panko, Lechuga, Tomate. Chimichurri: Tomate deshidratado, Cebolleta, Pimiento rojo y verde, Ajo, Aceite de oliva, Vinagre de Jerez, Ají, Limón, Perejil, Cebollino, Sal, Pimienta negra',history:'',notes:'⚠ Sulfitos en el chimichurri — Comandar SIN CHIMICHURRI.'},
+  {id:87,cat:'Hamburguesas y Bocatas',name:'Bao de brisket',allergens:['Gluten','Lácteos','Mostaza','Apio','Sulfitos'],ingredients:'Pan Bao: Harina, Levadura, Leche, Aceite, Sal. Brisket (corte de pechuga delantera). Sazonador: Sal, Pimienta negra, Pimentón ahumado, Ajo, Cebolla, Azúcar, Comino, Mostaza Savora (Contiene Apio). Crema agria: Nata, Zumo de limón, Sal. Perejil, Cilantro, Menta, Guindilla roja',history:'',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA.'},
+  {id:88,cat:'Hamburguesas y Bocatas',name:'Focaccia con vegetales asados',allergens:['Gluten','Lácteos','Frutos secos'],ingredients:'Focaccia: Harina, Levadura, Aceite de oliva. Berenjena, Calabacín, Espinaca aliñada, Queso de cabra, Frutos secos, Sal, Pimienta, Aceite de oliva, Menta',history:'',notes:'⚠ Comandar SIN FRUTOS SECOS.'},
+  {id:89,cat:'Hamburguesas y Bocatas',name:'Trifasi club',allergens:['Gluten','Lácteos','Sulfitos','Huevos'],ingredients:'Pan brioche: Harina fuerte, Huevo, Levadura, Mantequilla, Azúcar, Sal. Contramuslo de pollo. Mojo rojo: Pimentón rojo, Pimiento palmero, Vinagre. Bacon, Jamón cocido, Queso Emmental, Huevo frito, Lechuga, Tomate. Mayonesa japo (opcional): Aceite de colza, Huevo, Vinagre, Agua, Sal, Azúcar, Mostaza, Antioxidantes, Potenciador de sabor',history:'',notes:'⚠ Sulfitos en los antioxidantes de la mayonesa japonesa — Comandar SIN MAYONESA JAPONESA.'},
+  {id:90,cat:'Hamburguesas y Bocatas',name:'Lobster Roll',allergens:['Gluten','Lácteos','Sulfitos','Crustáceos','Huevos'],ingredients:'Pan Brioche, Bogavante/Langostinos, Col morada, Col blanca, Zanahoria, Cebollino, Mayonesa, Manzana, Vinagre de manzana. Salsa de mantequilla: Mantequilla, Zumo de limón. Cebollino',history:'',notes:'⚠ Sulfitos en el vinagre de la manzana encurtida — no se puede retirar. En ocasiones puede salir con Langostinos en lugar de Bogavante.'},
+  {id:91,cat:'Hamburguesas y Bocatas',name:'Hamburguesa Rossini',allergens:['Gluten','Lácteos','Mostaza','Sulfitos','Huevos'],ingredients:'180 grs de carne de buey. Pan brioche: Masa madre, Harina fuerte, Huevo, Levadura, Mantequilla, Azúcar, Sal. Queso trufado, Cebolla, Pedro Ximénez. Taco de foie. Aliño de queso azul: Nata, Queso azul, Limón, Mostaza antigua',history:'',notes:'⚠ Gluten en el pan brioche — se puede retirar. Comandar CON PAN SIN GLUTEN e informar a cocina.'},
   // ===== PLATOS PRINCIPALES =====
-  {id:92,cat:'Platos Principales',name:'Arroz negro con txipirones asados',allergens:['Sulfitos','Apio','Huevos','Moluscos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Bisque (Caldo de Langostino): Cebolla blanca, Zanahoria, Puerro, Apio, Langostino, Brandy. Fondo: Calamar, Cebolleta, Vino blanco. Arroz bomba, Cebolla, Chalotas, Laurel, Vino blanco. Crujiente de arroz. Ali-oli clásico y con Tinta de calamar',history:'',notes:null},
-  {id:93,cat:'Platos Principales',name:'Pincho Moruno con cous cous',allergens:['Granos de sésamo','Mostaza','Cacahuete','Frutos secos','Apio','Crustáceos','Sulfitos','Soja'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Carne de cordero. Marinada: Aceite de girasol, Pimentón, Cayena, Ajo, Semillas de cilantro, Comino, Orégano, Tomillo, Pimienta negra, Zumo de limón, Clavo, Anís estrellado. Ras al hanout, Lima. Cous Cous: Caldo de verduras, Sal, Pimienta, Almendras, Pasas de uva',history:'',notes:'⚠ Sésamo, Mostaza, Cacahuete, Frutos secos, Apio, Crustáceos y Sulfitos NO se pueden retirar — están integrados en la receta. No se puede servir a personas con estas alergias.'},
-  {id:94,cat:'Platos Principales',name:'Panceta de cochino negro',allergens:['Lácteos','Sulfitos','Apio'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Panceta. Escabeche: Zanahoria, Vinagre de manzana, Azúcar, Agua, Azafrán. Veal jus: Demi de carne (Contiene Apio), Chalotas, Tomillo, Vino tinto. Zanahoria asada: Zanahoria, Vinagre, Azúcar, Jengibre. Crema de escabeche de zanahoria: Zanahoria, Mantequilla, Nata. Mojo verde de Aguacate: Cilantro, Vinagre de manzana, Lima, Ajo, Aceite de girasol, Aceite de oliva, Cebolleta, Pimienta de Espellet, Aguacate',history:'Panceta de cochino negro reposada una semana en el Dry, cocida al horno hasta llegar a su punto, con la piel bien crocante y jugosa por dentro. Sobre crema de escabeche de zanahoria, acompañada con zanahoria asada con puntos de mojo verde de aguacate. Terminamos con Veal jus sobre la panceta.',notes:'⚠ Lácteos en la crema de escabeche de zanahoria — puede prepararse sin ella pero el plato perderá parte de su esencia. Avisar al cliente antes de confirmar. Comandar SIN CREMA DE ZANAHORIA e informar al cliente.'},
-  {id:95,cat:'Platos Principales',name:'Milanesa de pollo al mojo rojo',allergens:['Gluten','Huevos','Lácteos','Mostaza','Sulfitos','Pescado'],cutlery:'Tenedor trinchero, Cuchillo de carne',ingredients:'Pechuga de pollo. Mojo rojo: Pimiento rojo, Pimiento Palmero, Vinagre. Rebozado: Huevo, Harina, Pan rallado, Panko. Lechuga. Aderezo césar: Huevo, Aceite de oliva, Ajo, Anchoas, Mostaza Dijon, Zumo de limón, Queso parmesano, Salsa Perrins. Crujiente de Bacon, Crujiente de Parmesano',history:'',notes:null},
-  {id:96,cat:'Platos Principales',name:'Linguini con tartar de langostino',allergens:['Gluten','Lácteos','Sulfitos','Crustáceos','Huevos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Pasta (contiene huevo). Americana: Ajo, Zanahoria, Cebolla, Puerro, Tomate, Aceite de girasol, Gambas, Brandy, Agua. Mantequilla, Burrata, Lima, Brotes',history:'Pasta emulsionada con Demi de Americana, acompañada con Burrata y tartar de langostinos. Terminamos con ralladura de limón y Brotes.',notes:null},
-  {id:97,cat:'Platos Principales',name:'Lubina crujiente con mayonesa de leche de tigre',allergens:['Gluten','Mostaza','Sulfitos','Apio','Pescado','Huevos'],cutlery:'Tenedor de pescado, Cuchillo de pescado',ingredients:'Lomo de Lubina, Harina, Huevo, Panko. Pico de gallo: Cebolla morada, Tomate, Ají Amarillo, Cilantro, Sal, Pimienta, Zumo de lima. Mayonesa de leche de tigre: Mayonesa (Huevo, Aceite, Vinagre, Mostaza, Limón, Sal), Leche de Tigre (Fumet, Zumo de Lima, Zumo de Limón, Apio, Ajo, Cilantro, Recortes de Lubina, Ají Amarillo, Ají Limo, Sal, Pimienta, Jengibre)',history:'',notes:'⚠ Gluten y Huevos en el rebozado — NO se puede retirar. Apio, Mostaza y Sulfitos en la mayonesa de leche de tigre — se puede retirar. Comandar SIN MAYONESA DE LECHE DE TIGRE.'},
+  {id:92,cat:'Platos Principales',name:'Arroz negro con txipirones asados',allergens:['Sulfitos','Apio','Huevos','Moluscos'],ingredients:'Bisque (Caldo de Langostino): Cebolla blanca, Zanahoria, Puerro, Apio, Langostino, Brandy. Fondo: Calamar, Cebolleta, Vino blanco. Arroz bomba, Cebolla, Chalotas, Laurel, Vino blanco. Crujiente de arroz. Ali-oli clásico y con Tinta de calamar',history:'',notes:null},
+  {id:93,cat:'Platos Principales',name:'Pincho Moruno con cous cous',allergens:['Granos de sésamo','Mostaza','Cacahuete','Frutos secos','Apio','Crustáceos','Sulfitos','Soja'],ingredients:'Carne de cordero. Marinada: Aceite de girasol, Pimentón, Cayena, Ajo, Semillas de cilantro, Comino, Orégano, Tomillo, Pimienta negra, Zumo de limón, Clavo, Anís estrellado. Ras al hanout, Lima. Cous Cous: Caldo de verduras, Sal, Pimienta, Almendras, Pasas de uva',history:'',notes:'⚠ Sésamo, Mostaza, Cacahuete, Frutos secos, Apio, Crustáceos y Sulfitos NO se pueden retirar — están integrados en la receta. No se puede servir a personas con estas alergias.'},
+  {id:94,cat:'Platos Principales',name:'Panceta de cochino negro',allergens:['Lácteos','Sulfitos','Apio'],ingredients:'Panceta. Escabeche: Zanahoria, Vinagre de manzana, Azúcar, Agua, Azafrán. Veal jus: Demi de carne (Contiene Apio), Chalotas, Tomillo, Vino tinto. Zanahoria asada: Zanahoria, Vinagre, Azúcar, Jengibre. Crema de escabeche de zanahoria: Zanahoria, Mantequilla, Nata. Mojo verde de Aguacate: Cilantro, Vinagre de manzana, Lima, Ajo, Aceite de girasol, Aceite de oliva, Cebolleta, Pimienta de Espellet, Aguacate',history:'Panceta de cochino negro reposada una semana en el Dry, cocida al horno hasta llegar a su punto, con la piel bien crocante y jugosa por dentro. Sobre crema de escabeche de zanahoria, acompañada con zanahoria asada con puntos de mojo verde de aguacate. Terminamos con Veal jus sobre la panceta.',notes:'⚠ Lácteos en la crema de escabeche de zanahoria — puede prepararse sin ella pero el plato perderá parte de su esencia. Avisar al cliente antes de confirmar. Comandar SIN CREMA DE ZANAHORIA e informar al cliente.'},
+  {id:95,cat:'Platos Principales',name:'Milanesa de pollo al mojo rojo',allergens:['Gluten','Huevos','Lácteos','Mostaza','Sulfitos','Pescado'],ingredients:'Pechuga de pollo. Mojo rojo: Pimiento rojo, Pimiento Palmero, Vinagre. Rebozado: Huevo, Harina, Pan rallado, Panko. Lechuga. Aderezo césar: Huevo, Aceite de oliva, Ajo, Anchoas, Mostaza Dijon, Zumo de limón, Queso parmesano, Salsa Perrins. Crujiente de Bacon, Crujiente de Parmesano',history:'',notes:null},
+  {id:96,cat:'Platos Principales',name:'Linguini con tartar de langostino',allergens:['Gluten','Lácteos','Sulfitos','Crustáceos','Huevos'],ingredients:'Pasta (contiene huevo). Americana: Ajo, Zanahoria, Cebolla, Puerro, Tomate, Aceite de girasol, Gambas, Brandy, Agua. Mantequilla, Burrata, Lima, Brotes',history:'Pasta emulsionada con Demi de Americana, acompañada con Burrata y tartar de langostinos. Terminamos con ralladura de limón y Brotes.',notes:null},
+  {id:97,cat:'Platos Principales',name:'Lubina crujiente con mayonesa de leche de tigre',allergens:['Gluten','Mostaza','Sulfitos','Apio','Pescado','Huevos'],ingredients:'Lomo de Lubina, Harina, Huevo, Panko. Pico de gallo: Cebolla morada, Tomate, Ají Amarillo, Cilantro, Sal, Pimienta, Zumo de lima. Mayonesa de leche de tigre: Mayonesa (Huevo, Aceite, Vinagre, Mostaza, Limón, Sal), Leche de Tigre (Fumet, Zumo de Lima, Zumo de Limón, Apio, Ajo, Cilantro, Recortes de Lubina, Ají Amarillo, Ají Limo, Sal, Pimienta, Jengibre)',history:'',notes:'⚠ Gluten y Huevos en el rebozado — NO se puede retirar. Apio, Mostaza y Sulfitos en la mayonesa de leche de tigre — se puede retirar. Comandar SIN MAYONESA DE LECHE DE TIGRE.'},
   // ===== GUARNICIONES Y SALSAS =====
-  {id:100,cat:'Guarniciones y Salsas',name:'Verduras al vapor',allergens:[],cutlery:'Tenedor trinchero, Cuchillo trinchero',noMarkaje:true,ingredients:'Brócoli, Zanahoria, Coliflor, Sal, Pimienta',history:'',notes:null},
+  {id:100,cat:'Guarniciones y Salsas',name:'Verduras al vapor',allergens:[],ingredients:'Brócoli, Zanahoria, Coliflor, Sal, Pimienta',history:'',notes:null},
   // ===== NUEVOS POSTRES =====
-  {id:102,cat:'Postres',name:'Goxua',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Cuchara de postre',ingredients:'Bizcocho: Huevo, Azúcar, Vainilla, Polvo para hornear, Harina. Chantilly: Nata, Mascarpone, Azúcar, Vainilla, Gelatina. Baño: Nata, Leche, Azúcar, Ron, Vainilla. Crema Pastelera: Leche, Huevo, Azúcar, Maizena, Ralladura de limón, Vainilla, Mantequilla',history:'Postre típico del País Vasco. Con base de Crema Chantilly, bizcocho empapado con vainilla, ron, nata, azúcar y leche. Terminamos con Crema Pastelera flameada.',notes:null},
-  {id:103,cat:'Postres',name:'Helados Ben and Jerry\'s',allergens:['Gluten','Lácteos','Huevos','Soja'],cutlery:'Cuchara de postre',ingredients:'Sabores disponibles: Cookie Dough, Chocolate Fudge Brownie, Strawberry Tarta de queso, Vainilla Pecan Brittle',history:'Helados premium de origen americano.',notes:'El sabor Vainilla Pecan Brittle contiene además Frutos secos.'},
-  {id:104,cat:'Postres',name:'Flan marmolado de chocolate y plátano',allergens:['Lácteos','Sulfitos','Huevos'],cutlery:'Cuchara de postre',ingredients:'Flan: Leche, Huevo, Azúcar, Naranja, Leche condensada, Vainilla. Flan de Chocolate: Leche, Nata, Sal, Naranja, Canela, Huevo, Azúcar, Mascarpone, Chocolate, Cacao. Crema de Plátano: Plátano, Vinagre de manzana, Azúcar, Jengibre. Almíbar: Vinagre de manzana, Azúcar, Jengibre',history:'',notes:null},
-  {id:105,cat:'Postres',name:'Tarta de queso',allergens:['Gluten','Lácteos','Huevos'],cutlery:'Tenedor de postre, Cuchillo de postre, Cuchara de postre',ingredients:'Tarta de queso: Queso San Millán, Azúcar, Yogurt natural, Huevo, Yema, Ralladura de limón, Vainilla. Sablé: Harina, Mantequilla, Azúcar glass, Flor de sal. Confitura de frutos rojos, Fresa, Brotes',history:'Tarta de queso con base de Sablé, con confitura de frutos rojos, fruta fresca y brotes. La receta se fue refinando y pasó de ser un dulce rural a un símbolo gastronómico vasco. En el siglo XIX empezó a venderse en ferias y mercados locales. Hoy es un clásico en pastelerías tanto del País Vasco francés como del español.',notes:null},
+  {id:102,cat:'Postres',name:'Goxua',allergens:['Gluten','Lácteos','Huevos'],ingredients:'Bizcocho: Huevo, Azúcar, Vainilla, Polvo para hornear, Harina. Chantilly: Nata, Mascarpone, Azúcar, Vainilla, Gelatina. Baño: Nata, Leche, Azúcar, Ron, Vainilla. Crema Pastelera: Leche, Huevo, Azúcar, Maizena, Ralladura de limón, Vainilla, Mantequilla',history:'Postre típico del País Vasco. Con base de Crema Chantilly, bizcocho empapado con vainilla, ron, nata, azúcar y leche. Terminamos con Crema Pastelera flameada.',notes:null},
+  {id:103,cat:'Postres',name:'Helados Ben and Jerry\'s',allergens:['Gluten','Lácteos','Huevos','Soja'],ingredients:'Sabores disponibles: Cookie Dough, Chocolate Fudge Brownie, Strawberry Tarta de queso, Vainilla Pecan Brittle',history:'Helados premium de origen americano.',notes:'El sabor Vainilla Pecan Brittle contiene además Frutos secos.'},
+  {id:104,cat:'Postres',name:'Flan marmolado de chocolate y plátano',allergens:['Lácteos','Sulfitos','Huevos'],ingredients:'Flan: Leche, Huevo, Azúcar, Naranja, Leche condensada, Vainilla. Flan de Chocolate: Leche, Nata, Sal, Naranja, Canela, Huevo, Azúcar, Mascarpone, Chocolate, Cacao. Crema de Plátano: Plátano, Vinagre de manzana, Azúcar, Jengibre. Almíbar: Vinagre de manzana, Azúcar, Jengibre',history:'',notes:null},
+  {id:105,cat:'Postres',name:'Tarta de queso',allergens:['Gluten','Lácteos','Huevos'],ingredients:'Tarta de queso: Queso San Millán, Azúcar, Yogurt natural, Huevo, Yema, Ralladura de limón, Vainilla. Sablé: Harina, Mantequilla, Azúcar glass, Flor de sal. Confitura de frutos rojos, Fresa, Brotes',history:'Tarta de queso con base de Sablé, con confitura de frutos rojos, fruta fresca y brotes. La receta se fue refinando y pasó de ser un dulce rural a un símbolo gastronómico vasco. En el siglo XIX empezó a venderse en ferias y mercados locales. Hoy es un clásico en pastelerías tanto del País Vasco francés como del español.',notes:null},
 
   // ═══ SUGERENCIAS ═══
-  {id:107,cat:'Sugerencias',name:'Langostinos con salsa ligera de calabaza avainillada',allergens:['Frutos secos','Crustáceos'],cutlery:'Tenedor trinchero, Cuchillo trinchero, Cuchara sopera',ingredients:'Langostinos, Crema de calabaza, Vainilla, Salsa americana, Calabaza confitada, Guindillas, Piñones garrapiñados.',history:'Sugerencia del día.',notes:'⚠ Frutos secos en los piñones garrapiñados — se puede retirar. Comandar SIN PIÑONES. Langostinos sobre crema de calabaza avainillada con puntos de salsa americana intensa, calabaza confitada con vainilla y guindillas.'},
-  {id:108,cat:'Sugerencias',name:'Panceta con caldo concentrado de manitas de cerdo',allergens:['Sulfitos','Crustáceos'],cutlery:'Tenedor trinchero, Cuchillo trinchero',ingredients:'Panceta, Caldo concentrado de manitas de cerdo, Manzana encurtida, Langostinos, Zanahorias, Jengibre, Mojo verde de aguacate.',history:'Sugerencia del día.',notes:'Panceta con caldo concentrado de manitas, con manzana encurtida, langostinos, zanahorias cocinadas con jengibre y puntos de mojo verde de aguacate.'},
+  {id:107,cat:'Sugerencias',name:'Langostinos con salsa ligera de calabaza avainillada',allergens:['Frutos secos','Crustáceos'],ingredients:'Langostinos, Crema de calabaza, Vainilla, Salsa americana, Calabaza confitada, Guindillas, Piñones garrapiñados.',history:'Sugerencia del día.',notes:'⚠ Frutos secos en los piñones garrapiñados — se puede retirar. Comandar SIN PIÑONES. Langostinos sobre crema de calabaza avainillada con puntos de salsa americana intensa, calabaza confitada con vainilla y guindillas.'},
+  {id:108,cat:'Sugerencias',name:'Panceta con caldo concentrado de manitas de cerdo',allergens:['Sulfitos','Crustáceos'],ingredients:'Panceta, Caldo concentrado de manitas de cerdo, Manzana encurtida, Langostinos, Zanahorias, Jengibre, Mojo verde de aguacate.',history:'Sugerencia del día.',notes:'Panceta con caldo concentrado de manitas, con manzana encurtida, langostinos, zanahorias cocinadas con jengibre y puntos de mojo verde de aguacate.'},
 ];
 
 const TOPICS=[
@@ -5941,31 +5932,8 @@ const ALLERGEN_MAP={
   'Cacahuete':'Peanut','Altramuces':'Lupins','Cereales':'Cereals'
 };
 function allergenLocal(a){return LANG==='en'?(ALLERGEN_MAP[a]||a):a;}
-const CUTLERY_MAP={
-  'Tenedor trinchero':'Dinner fork',
-  'Cuchillo trinchero':'Dinner knife',
-  'Cuchillo de carne':'Steak knife',
-  'Cuchillo de pescado':'Fish knife',
-  'Tenedor de pescado':'Fish fork',
-  'Tenedor de postre':'Dessert fork',
-  'Cuchillo de postre':'Dessert knife',
-  'Cuchara sopera':'Soup spoon',
-  'Cuchara de postre':'Dessert spoon',
-  'Cuchara de té':'Teaspoon',
-  'Plato extra para las conchas':'Extra plate for shells',
-  'Toallitas húmedas (Finger balls)':'Wet wipes (Finger bowls)',
-};
-function getSalsaNote(d){
-  const dd = typeof d === 'object' ? d : getDish(d);
-  const name = dd.name || '';
-  const isSalsa = /^(salsa|alioli|ali-oli|chimichurri|romesco|tártara|tartara|americana)/i.test(name.trim());
-  if(isSalsa) return LANG==='en' ? 'Served with its corresponding spoon' : 'Se sirve con su cuchara correspondiente';
-  return null;
-}
-function cutleryLocal(c){
-  if(LANG!=='en') return c;
-  return c.split(', ').map(p=>CUTLERY_MAP[p.trim()]||p.trim()).join(', ');
-}
+function getSalsaNote(d){ return null; }
+function cutleryLocal(c){ return ''; }
 
 
 const getCats=()=>{
@@ -6577,7 +6545,6 @@ async function supaFetchCustomDishes() {
       name: r.name,
       cat: r.cat,
       allergens: (() => { try { return JSON.parse(r.allergens||'[]'); } catch(e){ return []; } })(),
-      cutlery: r.cutlery || '',
       ingredients: r.ingredients || '',
       history: r.history || '',
       notes: r.notes || null
@@ -6600,7 +6567,6 @@ async function supaUpsertCustomDish(dish) {
         name: dish.name,
         cat: dish.cat,
         allergens: JSON.stringify(dish.allergens||[]),
-        cutlery: dish.cutlery||'',
         ingredients: dish.ingredients||'',
         history: dish.history||'',
         notes: dish.notes||null,
@@ -6834,7 +6800,7 @@ function saveDB(){
   if(currentUser) supaUpsertEmployee(currentUser);
 }
 function getEmp(name){
-  if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},cutlery:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
+  if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
   return DB.employees[name];
 }
 
@@ -6850,14 +6816,14 @@ const XP_LEVELS = [
   {level:4,  xp:150,   title:'Aprendiz de Bandeja',             title_en:'Tray Apprentice',                  icon:'IV', color:'#9a7340'},
   {level:5,  xp:220,   title:'Sobreviviente del Primer Turno',  title_en:'First Shift Survivor',             icon:'V', color:'#a06c30'},
   // ── TIER 2: CABALLERO (bronce) ──
-  {level:6,  xp:300,   title:'Caballero del Cubierto',          title_en:'Knight of the Cutlery',            icon:'VI', color:'#a8884c'},
+  {level:6,  xp:300,   title:'Caballero de la Servilleta',      title_en:'Knight of the Napkin',             icon:'VI', color:'#a8884c'},
   {level:7,  xp:400,   title:'Domador de Alérgenos',            title_en:'Allergen Tamer',                   icon:'VII', color:'#b08040'},
   {level:8,  xp:520,   title:'Malabarista de Platos',           title_en:'Plate Juggler',                    icon:'VIII', color:'#b8963c'},
   {level:9,  xp:660,   title:'Ninja de la Comanda',             title_en:'Order Ninja',                      icon:'IX', color:'#c0903c'},
   {level:10, xp:820,   title:'Gladiador del Buffet',            title_en:'Buffet Gladiator',                 icon:'X', color:'#d4944c'},
   // ── TIER 3: NOBLEZA (oro) ──
   {level:11, xp:1000,  title:'Barón de la Mise en Place',       title_en:'Baron of Mise en Place',           icon:'XI', color:'#cdb06e'},
-  {level:12, xp:1200,  title:'Vizconde de la Cubertería',       title_en:'Viscount of the Silverware',       icon:'XII', color:'#d0b46e'},
+  {level:12, xp:1200,  title:'Vizconde de la Bandeja',          title_en:'Viscount of the Tray',             icon:'XII', color:'#d0b46e'},
   {level:13, xp:1420,  title:'Conde del Maridaje',              title_en:'Count of Wine Pairing',            icon:'XIII', color:'#d4b87a'},
   {level:14, xp:1660,  title:'Marqués del Timing Perfecto',     title_en:'Marquess of Perfect Timing',       icon:'XIV', color:'#d8bc7a'},
   {level:15, xp:1920,  title:'Duque del Emplatado',             title_en:'Duke of Plating',                  icon:'XV', color:'#dcc07a'},
@@ -6946,8 +6912,7 @@ function getLevelInfo(xp){
   // Return localized title, include icon and color for UI
   return {
     ...info,
-    title: LANG==='en' ? info.title_en : info.title,
-  };
+    title: LANG==='en' ? info.title_en : info.title};
 }
 function getNextLevel(xp){
   const cur = getLevelInfo(xp);
@@ -7264,12 +7229,7 @@ function _djPhaseAllergens(dish, dd, _en){
 
 // ── Phase 4: Service ──
 function _djPhaseService(dish, dd, _en){
-  const cutleryItems = dish.cutlery ? dish.cutlery.split(',').map(c=>c.trim()).filter(Boolean) : [];
   const items = [];
-
-  if(cutleryItems.length){
-    items.push({icon:'🍴', label:_en?'CUTLERY':'CUBERTERÍA', value:cutleryItems.join(', ')});
-  }
   items.push({icon:'📂', label:_en?'CATEGORY':'CATEGORÍA', value:_en?catLocal(dish.cat):dish.cat});
 
   if(dish.allergens && dish.allergens.length){
@@ -7364,11 +7324,14 @@ function _djGenerateQuiz(dish){
       explain: _en ? 'Yes! Every dish at Txoko has a story worth sharing with guests.' : '¡Sí! Cada plato de Txoko tiene una historia que vale la pena compartir con los clientes.'
     });
   } else {
+    // Fallback: allergen count question
+    const nAll = (dish.allergens||[]).length;
+    const nOpts = _djShuffle([String(nAll), String(nAll+1), String(Math.max(0,nAll-1)), String(nAll+2)]);
     questions.push({
-      q: _en ? `What cutlery is recommended for "${dd.name}"?` : `¿Qué cubertería se recomienda para "${dd.name}"?`,
-      options: _djShuffle([dish.cutlery||(_en?'Steak knife and fork':'Tenedor trinchero, Cuchillo trinchero'), _en?'Soup spoon':'Cuchara sopera', _en?'Dessert spoon':'Cuchara de postre', _en?'Fish knife':'Cuchillo de pescado']),
-      correctIdx: 0,
-      explain: _en ? `Recommended: ${dish.cutlery||'Standard cutlery'}` : `Recomendado: ${dish.cutlery||'Cubertería estándar'}`
+      q: _en ? `How many allergens does "${dd.name}" have?` : `¿Cuántos alérgenos tiene "${dd.name}"?`,
+      options: nOpts,
+      correctIdx: nOpts.indexOf(String(nAll)),
+      explain: _en ? `It has ${nAll} allergen(s).` : `Tiene ${nAll} alérgeno(s).`
     });
   }
 
@@ -7756,16 +7719,51 @@ const _SIM_PROFILES = {
 
 function _simPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function _simDishes(){ return DISHES.filter(d=>!d.archived); }
+// Main-course dishes only: exclude sides/sauces (a guest asking for recommendations expects real dishes, not accompaniments)
+function _simMainDishes(){ return DISHES.filter(d=>!d.archived && d.cat!=='Guarniciones y Salsas'); }
 function _simAllergenLabel(a, _en){ return _en ? (typeof allergenData_en!=='undefined' ? (allergenData_en[a]||a) : a) : a; }
 function _simDishName(d){ return getDish(d).name; }
 function _simHasIngredient(dish, needle){
   if(!dish.ingredients) return false;
   return dish.ingredients.toLowerCase().includes(needle.toLowerCase());
 }
+// Detect if allergen is trivially obvious from the dish NAME (e.g. "Tataki de atún" obviously has fish)
+function _simAllergenObviousInName(dish, allergen){
+  const n = dish.name.toLowerCase();
+  const map = {
+    'Pescado':/atún|lubina|mero|bacalao|salmón|anchoa|ventresca|sardina|dorada|rape|fish/i,
+    'Fish':/tuna|bass|grouper|cod|salmon|anchov|sardine|swordfish|fish/i,
+    'Moluscos':/pulpo|calamar|txipiron|chipiron|mejillon|ostras|almejas|berberecho/i,
+    'Molluscs':/octopus|squid|mussel|oyster|clam|cockle/i,
+    'Crustáceos':/langosta|langostino|gamba|cangrejo|lobster|bogavante/i,
+    'Crustaceans':/lobster|prawn|shrimp|crab|crayfish/i,
+    'Lácteos':/queso|parmesano|stracciatella|mozzarella|burrata|cheese/i,
+    'Dairy':/cheese|parmesan|stracciatella|mozzarella|burrata|cream/i,
+    'Gluten':/pan |bread|pasta|linguini|ravioli|brioche|focaccia|pizza/i,
+    'Huevos':/huevo|tortilla/i,'Eggs':/egg|omelette/i
+  };
+  const re = map[allergen];
+  return re ? re.test(n) : false;
+}
+// Deduplicate dish options by name: if two dishes have very similar names, keep only one
+function _simDedupeOptions(dishArr){
+  const seen = {};
+  return dishArr.filter(d => {
+    const name = _simDishName(d);
+    // Normalize: remove parenthetical suffixes like "(Almuerzo)", "(Cena)" and "stracciatella" variants
+    const key = name.replace(/\s*\([^)]*\)\s*/g,'').replace(/\s+stracciatella/i,'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(seen[key]) return false;
+    seen[key] = true;
+    return true;
+  });
+}
 function _simExtractIngredients(dish){
   if(!dish.ingredients) return [];
-  // Split on commas, periods, colons; dedupe; filter short
-  return dish.ingredients.split(/[,\.:;]/).map(s=>s.trim()).filter(s=>s.length>2 && s.length<30 && !/^(rebozado|tempura|espuma|salsa|refrito|aderezo|vinagreta|demi glace|polvo de)/i.test(s));
+  // Split on commas, periods, colons; dedupe; filter short and trivially obvious
+  return dish.ingredients.split(/[,\.:;]/).map(s=>s.trim()).filter(s=>s.length>2 && s.length<30
+    && !/^(rebozado|tempura|espuma|salsa|refrito|aderezo|vinagreta|demi glace|polvo de)/i.test(s)
+    && !/^(agua|water|sal|salt|aceite|oil|azúcar|sugar|pimienta|pepper|hielo|ice)$/i.test(s)
+  );
 }
 
 // ── Scenario builders: return {q, options, correctIdx, explain, type} or null
@@ -7777,17 +7775,17 @@ function _scenarioDeclaredAllergy(dish, dd, _en){
   const intro = _simPick(_en?p.intro_en:p.intro_es);
   const qEs = `Cliente: "${intro}. ¿Puedo pedir ${dd.name}?"`;
   const qEn = `Guest: "${intro}. Can I order ${dd.name}?"`;
-  // Check notes for modifiable
-  const notes = (dish.notes||'').toLowerCase();
-  const modifiable = hasIt && /(sin |retirab|comandar sin|sin pan|sin aderezo|sin huevo|sin anchoas|sin boquerones)/i.test(notes);
+  // Check if this SPECIFIC allergen is removable from the dish
+  const nonRemovable = _simNonRemovableAllergens(dish);
+  const modifiable = hasIt && !nonRemovable.includes(p.allergen);
   let correctIdx, opts;
   if(modifiable){
     opts = _en ? ['Yes, exactly as plated','Yes, but we must modify it (flag to kitchen)','No, it\'s not possible for you','I\'ll ask the chef']
                : ['Sí, tal como se emplata','Sí, pero hay que modificarlo (avisar a cocina)','No, no es posible para usted','Consulto con el chef'];
     correctIdx = 1;
   } else if(hasIt){
-    opts = _en ? ['Yes, no problem','No, it contains that allergen','Only half portion','Only with no sauce']
-               : ['Sí, sin problema','No, contiene ese alérgeno','Solo media ración','Solo sin salsa'];
+    opts = _en ? ['Yes, no problem','No, it contains that allergen','Only without the sauce','I\'ll check with the kitchen']
+               : ['Sí, sin problema','No, contiene ese alérgeno','Solo sin la salsa','Consulto con cocina'];
     correctIdx = 1;
   } else {
     opts = _en ? ['Yes, perfectly safe','No, it contains that allergen','Only under supervision','I need to check']
@@ -7830,24 +7828,61 @@ function _scenarioIngredientCheck(dish, dd, _en){
   return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'ingredient' };
 }
 
+// Helper: returns allergens from a dish that CANNOT be removed via kitchen modification
+function _simNonRemovableAllergens(dish){
+  if(!dish.allergens || dish.allergens.length===0) return [];
+  const notes = dish.notes || '';
+  if(!notes) return [...dish.allergens];
+  return dish.allergens.filter(a => {
+    const aEsc = a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    // Pattern 1: "⚠ Allergen ... se puede retirar / can be removed"
+    if(new RegExp('⚠[^⚠]*?' + aEsc + '[^⚠]*?(?:se puede|can be|retirar|removed|quitar)', 'i').test(notes)) return false;
+    // Pattern 2: "Allergen en ... — Comandar SIN ..."  (e.g. "Gluten en las nubes de pan brioche — Comandar SIN PAN BRIOCHE")
+    if(new RegExp(aEsc + '[^.⚠]*?(?:Comandar SIN|Order WITHOUT)', 'i').test(notes)) return false;
+    // Pattern 3: "PUEDE SER VEGETARIANA" or "CAN BE VEGETARIAN" + removing items that contain this allergen
+    if(/PUEDE SER VEGETARIANA|CAN BE VEGETARIAN/i.test(notes)){
+      // Fish/Eggs are removable via the vegetarian adaptation
+      if(a==='Pescado'||a==='Fish'||a==='Huevos'||a==='Eggs') return false;
+    }
+    return true;
+  });
+}
+
 function _scenarioSafeAlternative(dish, dd, _en){
+  // Skip sides/sauces — a guest wouldn't ask for a "recommendation" of a side dish
+  if(dish.cat==='Guarniciones y Salsas') return null;
   if(!dish.allergens || dish.allergens.length===0) return null;
-  const allergen = _simPick(dish.allergens);
-  const alternatives = _simDishes().filter(d=>d.id!==dish.id && d.cat===dish.cat && (!d.allergens || !d.allergens.includes(allergen)));
+  // Only pick allergens that are NOT removable from the dish
+  const nonRemovable = _simNonRemovableAllergens(dish);
+  if(nonRemovable.length === 0) return null;
+  // Skip allergens that are trivially obvious from the dish name (e.g. "Lubina" + Pescado)
+  const nonObvious = nonRemovable.filter(a => !_simAllergenObviousInName(dish, a));
+  const allergen = nonObvious.length > 0 ? _simPick(nonObvious) : _simPick(nonRemovable);
+  // Alternatives: same category, no sides, free of the allergen
+  const alternatives = _simMainDishes().filter(d=>d.id!==dish.id && d.cat===dish.cat && (!d.allergens || !d.allergens.includes(allergen)));
   if(alternatives.length===0) return null;
-  const wrongs = _simDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(allergen));
+  // Wrong answers: other real dishes (no sides) that DO contain the allergen
+  const wrongs = _simMainDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(allergen));
   if(wrongs.length<2) return null;
   const correct = _simPick(alternatives);
   const wrongSample = _djShuffle(wrongs).slice(0,3);
-  const opts = _djShuffle([correct, ...wrongSample]);
+  // Deduplicate options by name (avoid "Tartar de tomate y queso" + "Tartar de tomate y queso stracciatella")
+  let opts = _simDedupeOptions(_djShuffle([correct, ...wrongSample]));
+  // If dedup removed too many, refill from wrongs pool
+  if(opts.length < 4){
+    const extra = _djShuffle(wrongs.filter(d=>!opts.includes(d))).slice(0, 4 - opts.length);
+    opts = _simDedupeOptions(_djShuffle([...opts, ...extra]));
+  }
+  if(opts.length < 4) return null;
   const aLbl = _simAllergenLabel(allergen, _en);
-  const qEs = `Cliente: "Me gustaba ${dd.name} pero soy alérgico a ${aLbl}. ¿Qué me recomienda de la misma categoría?"`;
-  const qEn = `Guest: "I liked ${dd.name} but I'm allergic to ${aLbl}. What do you recommend from the same category?"`;
+  const catLabel = catLocal ? catLocal(dish.cat) : dish.cat;
+  const qEs = `Cliente: "${dd.name} contiene ${aLbl} y no se puede retirar. ¿Qué me recomienda de ${catLabel}?"`;
+  const qEn = `Guest: "${dd.name} contains ${aLbl} and it can't be removed. What do you recommend from ${catLabel}?"`;
   return {
     q: _en?qEn:qEs,
     options: opts.map(d=>_simDishName(d)),
     correctIdx: opts.indexOf(correct),
-    explain: _en ? `${_simDishName(correct)} is from ${dd.cat} and free of ${aLbl}.` : `${_simDishName(correct)} es de ${dd.cat} y no contiene ${aLbl}.`,
+    explain: _en ? `${_simDishName(correct)} is from ${catLabel} and free of ${aLbl}.` : `${_simDishName(correct)} es de ${catLabel} y no contiene ${aLbl}.`,
     type:'category'
   };
 }
@@ -7856,25 +7891,59 @@ function _scenarioSafeAlternative(dish, dd, _en){
 function _scenarioAllergenCount(){ return null; }
 
 function _scenarioVegetarian(dish, dd, _en){
-  // Only makes sense if it's arguable. Consider non-meat dishes as candidates.
+  // Skip sides — "is Pimientos Padrón vegetarian?" is trivially obvious
+  if(dish.cat==='Guarniciones y Salsas') return null;
   const isVegCat = dish.cat === 'Vegetariano';
-  const hasAnimal = /pollo|ternera|atún|bacalao|cerdo|jamón|chorizo|panceta|morcilla|pulpo|anchoa|boqueron|wagyu|cecina|cordero|pescado|mero|mariscos|crustáceos|caldo de pollo|huesos de pollo|tocineta/i.test((dish.ingredients||'') + ' ' + (dish.notes||'') + ' ' + dish.name);
-  // Special case: parmentier has caldo de pollo => trap
-  const opts = _en ? ['Yes, it\'s vegetarian','No, it contains animal products','Only without sauce','I\'ll ask the kitchen']
-                   : ['Sí, es vegetariano','No, contiene productos de origen animal','Solo sin salsa','Consulto en cocina'];
-  let correctIdx = hasAnimal ? 1 : 0;
-  // If listed in Vegetariano category but has caldo de pollo, answer is still "No"
+  const text = (dish.ingredients||'') + ' ' + (dish.notes||'') + ' ' + dish.name;
+  const nameAnimal = /atún|tuna|pollo|chicken|cerdo|pork|jamón|ham|chorizo|wagyu|cecina|jerky|cordero|lamb|pulpo|octopus|langosta|lobster|salmón|salmon|bacalao|cod|mero|grouper|brisket|ternera|veal|ventresca|anchoa|anchov|ostras|oyster|chistorra|calamares|squid|langostino|prawn|embutido|charcuterie|costillas|ribs|carrillera|pluma|panceta|belly/i.test(dish.name);
+  const hasAnimal = /pollo|ternera|atún|bacalao|cerdo|jamón|chorizo|panceta|morcilla|pulpo|anchoa|boqueron|wagyu|cecina|cordero|pescado|mero|mariscos|crustáceos|caldo de pollo|huesos de pollo|tocineta|bacon|langostino|txipiron/i.test(text);
+  const notes = dish.notes || '';
+
+  // Skip trivially obvious questions: if the dish NAME already contains an animal product,
+  // asking "is Tataki de atún vegetarian?" insults the trainee's intelligence
+  if(nameAnimal && hasAnimal && !isVegCat) return null;
+
+  // Detect if the dish can be ADAPTED to vegetarian (notes mention it)
+  const canBeVeg = /PUEDE SER VEGETARIANA|CAN BE VEGETARIAN|VEGAN adaptable|vegetarian.*adaptab/i.test(notes);
+  // Detect if the dish has a vegetarian VARIANT/flavour (e.g. croquettes with Boletus option)
+  const hasVegVariant = /boletus|vegetarian.*sabor|sabor.*vegetarian|opción vegetariana|vegetarian option/i.test(text)
+    || (/sabores|flavour|flavor/i.test(notes) && /boletus/i.test(text));
+
   const qEs = `Cliente vegetariano: "¿${dd.name} es apto para mí?"`;
   const qEn = `Vegetarian guest: "Is ${dd.name} suitable for me?"`;
-  let explain;
-  if(hasAnimal){
-    const flag = /caldo de pollo|huesos de pollo/i.test((dish.ingredients||'')+' '+(dish.notes||'')) ? (_en?' (contains chicken stock)':' (lleva caldo/huesos de pollo)') : '';
-    explain = (_en ? `Not vegetarian${flag}.` : `No es vegetariano${flag}.`);
-  } else {
+  let opts, correctIdx, explain;
+
+  if(hasVegVariant && hasAnimal){
+    // Has both animal AND vegetarian variants (e.g. Croquetas Premium → Boletus is vegetarian)
+    opts = _en ? ['Yes, all varieties are vegetarian','No, none are suitable','Yes, but only certain flavours (e.g. Boletus)','I\'ll ask the kitchen']
+               : ['Sí, todas las variedades son vegetarianas','No, ninguna es apta','Sí, pero solo ciertos sabores (ej. Boletus)','Consulto en cocina'];
+    correctIdx = 2;
+    explain = _en ? `Not all varieties are vegetarian, but Boletus is. Advise the guest on which flavours are suitable.`
+                  : `No todas las variedades son vegetarianas, pero la de Boletus sí. Aconsejar al cliente los sabores aptos.`;
+  } else if(canBeVeg && hasAnimal){
+    // Can be adapted by removing animal components
+    opts = _en ? ['Yes, exactly as served','No, it contains animal products and cannot be adapted','Yes, but it must be modified — notify the kitchen','I\'ll ask the kitchen']
+               : ['Sí, tal como se sirve','No, contiene productos animales y no se puede adaptar','Sí, pero hay que modificarlo — avisar a cocina','Consulto en cocina'];
+    correctIdx = 2;
+    explain = _en ? `Contains animal products but can be adapted. Notes: ${notes.substring(0,120)}...`
+                  : `Contiene productos animales pero se puede adaptar. Notas: ${notes.substring(0,120)}...`;
+  } else if(hasAnimal){
+    // Straight "No"
+    opts = _en ? ['Yes, it\'s vegetarian','No, it contains animal products','Only without the sauce','I\'ll ask the kitchen']
+               : ['Sí, es vegetariano','No, contiene productos de origen animal','Solo sin la salsa','Consulto en cocina'];
+    correctIdx = 1;
+    const flag = /caldo de pollo|huesos de pollo/i.test(text) ? (_en?' (contains chicken stock)':' (lleva caldo/huesos de pollo)') : '';
+    explain = _en ? `Not vegetarian${flag}.` : `No es vegetariano${flag}.`;
+  } else if(isVegCat){
+    // Listed as vegetarian
+    opts = _en ? ['Yes, it\'s vegetarian','No, it contains animal products','Only without the garnish','I\'ll ask the kitchen']
+               : ['Sí, es vegetariano','No, contiene productos de origen animal','Solo sin la guarnición','Consulto en cocina'];
+    correctIdx = 0;
     explain = _en ? 'Yes, suitable for vegetarians.' : 'Sí, apto para vegetarianos.';
+  } else {
+    // Not vegetarian category and no animal detected — skip trivial
+    return null;
   }
-  // Only return for dishes where it's non-trivially informative
-  if(!isVegCat && !hasAnimal) return null; // obvious meat dishes skipped to avoid trivial
   return { q:_en?qEn:qEs, options:opts, correctIdx, explain, type:'ingredient' };
 }
 
@@ -7891,35 +7960,106 @@ function _scenarioCrossContamination(dish, dd, _en){
 
 function _scenarioModification(dish, dd, _en){
   const notes = dish.notes || '';
-  const m = notes.match(/Comandar\s+SIN\s+([A-ZÁÉÍÓÚÑ\s]+?)(?:[\.\—]|$)/i);
-  if(!m) return null;
-  const mod = m[1].trim().toLowerCase();
-  const qEs = `Cliente: "Me gustaría pedir ${dd.name}, pero tengo que evitar alérgenos. ¿Qué se le quita en cocina?"`;
-  const qEn = `Guest: "I'd like to order ${dd.name}, but I have to avoid allergens. What does the kitchen leave out?"`;
-  const fakes = _en ? ['The salt','The oil','Half portion'] : ['La sal','El aceite','Media ración'];
-  const correct = _en ? `${mod}` : `${mod}`;
-  const opts = _djShuffle([correct, ...fakes]);
+  if(!notes.includes('Comandar SIN') && !notes.includes('Order WITHOUT')) return null;
+
+  // Parse all "Comandar SIN X" / "Order WITHOUT X" with allergen-aware lookback
+  const pairs = [];
+  const cmdRe = /(?:Comandar\s+SIN|Order\s+WITHOUT)\s+([A-ZÁÉÍÓÚÑ\w\s,Y]+?)(?:\s*[\.\(\)—→⚠🌿\[]|\s+(?:para|o\s|e\s|si\s|y\/o|for\s|or\s)|\s*$)/gi;
+  const allergenNames = dish.allergens || [];
+  let cm;
+  while((cm = cmdRe.exec(notes)) !== null){
+    const cmd = cm[1].trim();
+    if(!cmd || cmd.length > 60) continue;
+    // Skip vegetarian adaptations ("→ se convierte en...")
+    const afterText = notes.substring(cm.index, Math.min(notes.length, cm.index + cm[0].length + 80));
+    if(/→\s*se convierte|→\s*becomes/i.test(afterText)) continue;
+    const beforeFull = notes.substring(0, cm.index);
+    const lastVeg = beforeFull.lastIndexOf('🌿');
+    const lastWarn = beforeFull.lastIndexOf('⚠');
+    if(lastVeg >= 0 && lastVeg > lastWarn && /→\s*se convierte|→\s*becomes/i.test(notes.substring(cm.index))) continue;
+    // Find allergen hint via lookback — prefer hint matching a known allergen
+    const lookback = notes.substring(Math.max(0, cm.index - 200), cm.index);
+    const hintRe = _en
+      ? /(?:⚠\s*)?([A-ZÁÉÍÓÚÑa-záéíóúñ][A-ZÁÉÍÓÚÑa-záéíóúñ,\sy]*?)\s+in\s+(?:the\s+)?/gi
+      : /(?:⚠\s*)?([A-ZÁÉÍÓÚÑa-záéíóúñ][A-ZÁÉÍÓÚÑa-záéíóúñ,\sy]*?)\s+en\s+/gi;
+    const allHints = [...lookback.matchAll(hintRe)];
+    let hint = '';
+    for(let i = allHints.length - 1; i >= 0; i--){
+      const candidate = allHints[i][1].trim().replace(/^⚠\s*/, '');
+      if(allergenNames.some(a => candidate.toLowerCase().includes(a.toLowerCase()))){
+        hint = candidate; break;
+      }
+    }
+    if(!hint && allHints.length > 0){
+      hint = allHints[allHints.length - 1][1].trim().replace(/^⚠\s*/, '');
+    }
+    pairs.push({ cmd, hint });
+  }
+  if(pairs.length === 0) return null;
+
+  const chosen = _simPick(pairs);
+  const allergenHint = chosen.hint;
+  const mod = chosen.cmd;
+
+  const qEs = allergenHint
+    ? `Cliente: "Me gustaría pedir ${dd.name}, pero soy alérgico a ${allergenHint.toLowerCase()}. ¿Cómo se comanda la modificación?"`
+    : `Cliente: "Me gustaría pedir ${dd.name} con una modificación. ¿Cómo se comanda?"`;
+  const qEn = allergenHint
+    ? `Guest: "I'd like to order ${dd.name}, but I'm allergic to ${allergenHint.toLowerCase()}. How do I order the modification?"`
+    : `Guest: "I'd like to order ${dd.name} with a modification. How do I order it?"`;
+
+  // Build the correct answer with "Comandar SIN" prefix
+  const _prefix = _en ? 'Order WITHOUT ' : 'Comandar SIN ';
+  const correctLabel = _prefix + mod.toUpperCase();
+
+  // Generate plausible wrong answers: other real ingredients from the dish
+  const ingList = _simExtractIngredients(dish).filter(i=>i.toUpperCase()!==mod.toUpperCase());
+  const fakesPool = [];
+  ingList.forEach(ing => { fakesPool.push(_prefix + ing.toUpperCase()); });
+  // Also add the other "Comandar SIN" from this dish as plausible distractors
+  pairs.filter(p=>p.cmd.toUpperCase()!==mod.toUpperCase()).forEach(p=>{ fakesPool.push(_prefix + p.cmd.toUpperCase()); });
+  // Generic fallbacks
+  (_en ? ['THE SAUCE','THE GARNISH','THE DRESSING','THE BREAD','THE CHEESE','THE CREAM']
+       : ['LA SALSA','LA GUARNICIÓN','EL ADEREZO','EL PAN','EL QUESO','LA CREMA']).forEach(f=>fakesPool.push(_prefix+f));
+  const fakes = _djShuffle(fakesPool.filter(f=>f!==correctLabel)).slice(0,3);
+  if(fakes.length<3) return null;
+
+  const opts = _djShuffle([correctLabel, ...fakes]);
   return {
     q: _en?qEn:qEs,
     options: opts,
-    correctIdx: opts.indexOf(correct),
-    explain: _en ? `We order SIN ${mod.toUpperCase()}.` : `Se comanda SIN ${mod.toUpperCase()}.`,
+    correctIdx: opts.indexOf(correctLabel),
+    explain: _en ? `Correct: Order WITHOUT ${mod.toUpperCase()}.` : `Correcto: Comandar SIN ${mod.toUpperCase()}.`,
     type:'ingredient'
   };
 }
 
 function _scenarioSharedAllergen(dish, dd, _en){
+  // Skip sides — "which other dish to avoid" doesn't make sense for a garnish
+  if(dish.cat==='Guarniciones y Salsas') return null;
   if(!dish.allergens || dish.allergens.length===0) return null;
-  const a = _simPick(dish.allergens);
-  const same = _simDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(a));
-  const diff = _simDishes().filter(d=>d.id!==dish.id && d.allergens && !d.allergens.includes(a));
+  // Only use allergens that are NOT removable from this dish
+  const nonRemovable = _simNonRemovableAllergens(dish);
+  if(nonRemovable.length === 0) return null;
+  // Prefer allergens NOT trivially obvious from the dish name
+  const nonObvious = nonRemovable.filter(al => !_simAllergenObviousInName(dish, al));
+  const a = nonObvious.length > 0 ? _simPick(nonObvious) : _simPick(nonRemovable);
+  // Use only real dishes (no sides) as options
+  const same = _simMainDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(a));
+  const diff = _simMainDishes().filter(d=>d.id!==dish.id && d.allergens && !d.allergens.includes(a));
   if(same.length===0 || diff.length<3) return null;
   const correct = _simPick(same);
   const wrongs = _djShuffle(diff).slice(0,3);
-  const opts = _djShuffle([correct, ...wrongs]);
+  // Deduplicate options by name
+  let opts = _simDedupeOptions(_djShuffle([correct, ...wrongs]));
+  if(opts.length < 4){
+    const extra = _djShuffle(diff.filter(d=>!opts.includes(d))).slice(0, 4 - opts.length);
+    opts = _simDedupeOptions(_djShuffle([...opts, ...extra]));
+  }
+  if(opts.length < 4) return null;
   const aLbl = _simAllergenLabel(a, _en);
-  const qEs = `Cliente con alergia a ${aLbl}: "Ya sé que ${dd.name} no puedo, ¿qué otro plato de la carta debería evitar?"`;
-  const qEn = `Guest allergic to ${aLbl}: "I know I can't have ${dd.name} — which other menu item should I also avoid?"`;
+  const qEs = `Cliente con alergia a ${aLbl}: "${dd.name} contiene ${aLbl} y no se puede retirar. ¿Qué otro plato de la carta también debería evitar?"`;
+  const qEn = `Guest allergic to ${aLbl}: "${dd.name} contains ${aLbl} and it can't be removed. Which other menu item should I also avoid?"`;
   return {
     q:_en?qEn:qEs,
     options: opts.map(d=>_simDishName(d)),
@@ -7931,6 +8071,8 @@ function _scenarioSharedAllergen(dish, dd, _en){
 
 function _scenarioWinePairing(dish, dd, _en){
   if(typeof WINES==='undefined') return null;
+  // Skip sides — guests don't ask for wine pairings with garnishes
+  if(dish.cat==='Guarniciones y Salsas') return null;
   const dishNameLow = dish.name.toLowerCase().substring(0,8);
   const matches = WINES.filter(w=>w.pairings && w.pairings.some(p=>p.toLowerCase().includes(dishNameLow)));
   const nonMatches = WINES.filter(w=>!w.pairings || !w.pairings.some(p=>p.toLowerCase().includes(dishNameLow)));
@@ -7950,10 +8092,14 @@ function _scenarioWinePairing(dish, dd, _en){
 }
 
 function _scenarioMultipleAllergies(dish, dd, _en){
+  // Skip sides — couples wouldn't specifically ask about sharing a garnish
+  if(dish.cat==='Guarniciones y Salsas') return null;
   if(!dish.allergens || dish.allergens.length===0) return null;
-  // Pick one allergen the dish HAS and one it DOESN'T
+  // Pick one allergen the dish HAS (non-removable) and one it DOESN'T
+  const nonRemovable = _simNonRemovableAllergens(dish);
+  if(nonRemovable.length===0) return null;
   const keys = Object.keys(_SIM_PROFILES).filter(k=>_SIM_PROFILES[k].allergen);
-  const hasKey = keys.find(k=>dish.allergens.includes(_SIM_PROFILES[k].allergen));
+  const hasKey = keys.find(k=>nonRemovable.includes(_SIM_PROFILES[k].allergen));
   const notKey = keys.find(k=>!dish.allergens.includes(_SIM_PROFILES[k].allergen));
   if(!hasKey || !notKey) return null;
   const a1 = _SIM_PROFILES[hasKey].allergen;
@@ -7977,8 +8123,8 @@ function _scenarioPregnancy(dish, dd, _en){
   if(!risky && Math.random()<0.7) return null;
   const qEs = `Cliente embarazada: "¿${dd.name} es seguro para mí?"`;
   const qEn = `Pregnant guest: "Is ${dd.name} safe for me?"`;
-  const opts = _en ? ['Yes, fully safe','Not recommended — contains raw/uncooked or alcohol','Only half portion','Ask her doctor first']
-                   : ['Sí, totalmente seguro','No recomendado — lleva crudo o alcohol','Solo media ración','Que consulte con su médico'];
+  const opts = _en ? ['Yes, fully safe','Not recommended — contains raw/uncooked or alcohol','It depends on the trimester','I\'ll check with the kitchen']
+                   : ['Sí, totalmente seguro','No recomendado — lleva crudo o alcohol','Depende del trimestre','Consulto con cocina'];
   let correctIdx, explain;
   if(raw){ correctIdx=1; explain=_en?'Contains raw/uncooked ingredients — not recommended.':'Contiene ingredientes crudos — no recomendado.'; }
   else if(alcohol){ correctIdx=1; explain=_en?'Contains alcohol (may not fully evaporate) — caution.':'Contiene alcohol (puede no evaporar del todo) — precaución.'; }
@@ -7997,8 +8143,8 @@ function _scenarioChildFriendly(dish, dd, _en){
   if(kidsOk && (dish.cat==='Postres' || dish.cat==='Hamburguesas y Bocatas') && Math.random()<0.7) return null;
   const qEs = `Cliente con un niño de 5 años: "¿${dd.name} es adecuado para él?"`;
   const qEn = `Guest with a 5-year-old: "Is ${dd.name} suitable for him?"`;
-  const opts = _en ? ['Yes, child-friendly','Not ideal — spicy/raw/alcohol','Only if we remove the sauce','Only in half portion']
-                   : ['Sí, apto para niños','No ideal — picante/crudo/alcohol','Solo si retiramos la salsa','Solo media ración'];
+  const opts = _en ? ['Yes, child-friendly','Not ideal — spicy/raw/alcohol','Only if we remove the sauce','I\'d recommend a dessert instead']
+                   : ['Sí, apto para niños','No ideal — picante/crudo/alcohol','Solo si retiramos la salsa','Le recomendaría un postre'];
   let correctIdx, explain;
   if(spicy){ correctIdx=1; explain=_en?'Contains spicy elements — not ideal.':'Contiene picante — no es ideal.'; }
   else if(alcohol){ correctIdx=1; explain=_en?'Contains alcohol — not ideal.':'Contiene alcohol — no es ideal.'; }
@@ -8232,8 +8378,8 @@ function _srGenerateQuizLegacy(dish, difficulty){
       _srAddServiceQ(questions, dish, dd, _en);
     }
   } else if(q3Type < 0.8){
-    // Service/cutlery question
-    _srAddServiceQ(questions, dish, dd, _en);
+    // Service question — replaced with "when is it served?"
+    _srAddServiceTimeQ(questions, dish, dd, _en);
   } else {
     // "Is this dish for lunch, dinner, or both?"
     const isLunch = dish.servicio === 'almuerzo' || dish.servicio === 'ambos';
@@ -8285,14 +8431,17 @@ function _srAddCategoryQ(questions, dish, dd, allDishes, _en){
   });
 }
 
-function _srAddServiceQ(questions, dish, dd, _en){
-  const cutlery = dish.cutlery || (_en?'Standard cutlery':'Cubertería estándar');
-  const opts = _djShuffle([cutlery, _en?'Soup spoon':'Cuchara sopera', _en?'Dessert fork':'Tenedor de postre', _en?'Fish knife':'Cuchillo de pescado']);
+function _srAddServiceTimeQ(questions, dish, dd, _en){
+  const isLunch = dish.servicio === 'almuerzo' || dish.servicio === 'ambos';
+  const isDinner = dish.servicio === 'cena' || dish.servicio === 'ambos';
+  const isBoth = dish.servicio === 'ambos';
+  const opts = _en ? ['Lunch only','Dinner only','Both services','Neither'] : ['Solo almuerzo','Solo cena','Ambos servicios','Ninguno'];
+  const correctIdx = isBoth ? 2 : isLunch ? 0 : isDinner ? 1 : 3;
   questions.push({
-    q: _en ? `What cutlery is recommended for "${dd.name}"?` : `¿Qué cubertería se recomienda para "${dd.name}"?`,
+    q: _en ? `When is "${dd.name}" served?` : `¿Cuándo se sirve "${dd.name}"?`,
     options: opts,
-    correctIdx: opts.indexOf(cutlery),
-    explain: _en ? `Recommended: ${cutlery}` : `Recomendado: ${cutlery}`,
+    correctIdx: correctIdx,
+    explain: _en ? `Served at: ${dish.servicio||'both services'}` : `Se sirve en: ${dish.servicio||'ambos servicios'}`,
     type: 'ingredient'
   });
 }
@@ -8942,7 +9091,6 @@ const SF_TABLES = [300,301,302,303,304,305,306,307,308,309,400,401,402,403,404,4
 const SF_SCENARIOS_ES = [
   {type:'alergia', speaker:'MANAGER', text:'"{guest}" en la mesa {mesa} tiene alergia a {allergen}. Ha pedido recomendación de entrantes. ¿Qué le dices?'},
   {type:'maridaje', speaker:'SUPERVISOR', text:'La mesa {mesa} ha pedido un vino para acompañar "{dish}". ¿Qué recomiendas?'},
-  {type:'cubiertos', speaker:'CHEF', text:'La mesa {mesa} ha pedido "{dish}". ¿Con qué cubiertos se sirve?'},
   {type:'ingredientes', speaker:'MANAGER', text:'El comensal de la mesa {mesa} pregunta qué lleva exactamente "{dish}". ¿Cómo se lo explicas?'},
   {type:'protocolo', speaker:'CHEF', text:'La mesa {mesa} es un VIP del hotel. Pregunta por la historia de "{dish}". ¿Qué le cuentas?'},
   {type:'alternativa', speaker:'MANAGER', text:'La mesa {mesa} tiene un niño que no puede comer {allergen}. Han pedido "{dish}" que lleva ese alérgeno. ¿Qué alternativa ofreces?'},
@@ -8952,7 +9100,6 @@ const SF_SCENARIOS_ES = [
 const SF_SCENARIOS_EN = [
   {type:'alergia', speaker:'MANAGER', text:'"{guest}" at table {mesa} has a {allergen} allergy. They asked for starter recommendations. What do you say?'},
   {type:'maridaje', speaker:'SUPERVISOR', text:'Table {mesa} asked for a wine to pair with "{dish}". What do you recommend?'},
-  {type:'cubiertos', speaker:'CHEF', text:'Table {mesa} ordered "{dish}". Which cutlery do you serve it with?'},
   {type:'ingredientes', speaker:'MANAGER', text:'The guest at table {mesa} asks what exactly is in "{dish}". How do you explain it?'},
   {type:'protocolo', speaker:'CHEF', text:'Table {mesa} is a hotel VIP. They ask about the story behind "{dish}". What do you tell them?'},
   {type:'alternativa', speaker:'MANAGER', text:'Table {mesa} has a child who can\'t eat {allergen}. They ordered "{dish}" which contains it. What alternative do you offer?'},
@@ -9033,14 +9180,6 @@ function _sfGenerateQuestions(count){
       ];
       q.correctIdx = 0;
       q.feedback = LANG==='en' ? 'Correct! Always verify allergens and suggest safe alternatives.' : '¡Correcto! Siempre verifica alérgenos y sugiere alternativas seguras.';
-
-    } else if(sc.type==='cubiertos'){
-      var correctCutlery = dish.cutlery || 'Tenedor trinchero, Cuchillo trinchero';
-      var wrongCutleries = ['Cuchara sopera, Tenedor de postre','Pala de pescado, Tenedor de pescado','Tenedor de postre, Cuchara de postre','Cuchillo de carne, Tenedor de marisco'];
-      var wrongs = wrongCutleries.filter(function(c){return c!==correctCutlery;});
-      q.options = [correctCutlery, wrongs[0], wrongs[1]];
-      q.correctIdx = 0;
-      q.feedback = LANG==='en' ? 'Correct! Proper cutlery is key for a luxury dining experience.' : '¡Correcto! Los cubiertos correctos son clave en alta gastronomía.';
 
     } else if(sc.type==='maridaje'){
       if(wine && typeof WINES!=='undefined'){
@@ -10084,7 +10223,7 @@ function closePinAndEnter(){
 // ═══════ TUNIC ONBOARDING GUIDE ═══════
 const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aquí aprenderás cada plato, alérgeno, protocolo y técnica de servicio.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. Here you will learn every dish, allergen, protocol and service technique.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards',title_en:'Flashcards',text_es:'Repasa cada plato con tarjetas interactivas. Verás ingredientes, alérgenos, guarniciones y cubiertos. Desliza para marcar tu nivel de conocimiento.',text_en:'Review each dish with interactive cards. See ingredients, allergens, garnishes and cutlery. Swipe to rate your knowledge level.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards',title_en:'Flashcards',text_es:'Repasa cada plato con tarjetas interactivas. Verás ingredientes, alérgenos, guarniciones e historia. Desliza para marcar tu nivel de conocimiento.',text_en:'Review each dish with interactive cards. See ingredients, allergens, garnishes and story. Swipe to rate your knowledge level.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes',title_en:'Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige el tema, la categoría y la cantidad de preguntas. ¡Intenta superar el 90%!',text_en:'Test your knowledge with multiple-choice exams. Choose topic, category and number of questions. Try to beat 90%!'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 013 3v12a2 2 0 00-2-2H4V4z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M20 4h-6a3 3 0 00-3 3v12a2 2 0 012-2h7V4z" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Explorar',title_en:'Explore',text_es:'Consulta la carta completa organizada por categorías. Cada plato tiene su ficha detallada con foto, ingredientes, alérgenos, preparación y emplatado.',text_en:'Browse the full menu organized by categories. Each dish has its detailed card with photo, ingredients, allergens, preparation and plating.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Logros',title_en:'Games & Achievements',text_es:'Juega al modo supervivencia "Mr. Shoesmith", practica tus errores, desafía a compañeros en duelos y desbloquea gemas cristalinas como logros.',text_en:'Play survival mode "Mr. Shoesmith", practice your mistakes, challenge colleagues in duels and unlock crystal gems as achievements.'},
@@ -12102,8 +12241,7 @@ const WINES = [
     story_en: 'Les Lauriers is kosher certification of Bordeaux excellence. Merlot and Cabernet Franc from Montagne Saint Émilion aged 18 months in French oak; special production control maintains religious integrity without sacrificing complexity.',
     grapeSelection_en: 'Les Lauriers from Montagne Saint-Émilion is a kosher certification blending Merlot (65%) and Cabernet Franc (35%) from appellation vineyards at 100-200 meters. Clay-limestone soils of the Bordeaux rive droite. Vines of 30-50 years. Selective manual harvest in October.',
     winemaking_en: 'Fermentation in stainless steel tanks at 25-27°C for 15-17 days. Maceration of 10-12 days. Aging 18 months in French oak barrels. Natural malolactic fermentation in barrel. Clarification according to kosher regulations. Bottled expressing traditional Bordeaux structure.',
-    notes_en: 'Complex and structured, with red fruit aromas. Ideal with meats.',
-  },
+    notes_en: 'Complex and structured, with red fruit aromas. Ideal with meats.'},
   {
     id: 73,
     name: 'Cotes du Rhone 2021',
@@ -18255,8 +18393,7 @@ function _generateWineChoices(q){
       'syrah': ['Garnacha','Monastrell','Merlot','Malbec'],
       'listán blanco': ['Malvasía Volcánica','Vijariego','Albariño','Verdejo'],
       'listán negro': ['Negramoll','Tintilla','Mencía','Baboso Negro'],
-      'malvasía volcánica': ['Listán Blanco','Vijariego','Albariño','Moscatel'],
-    };
+      'malvasía volcánica': ['Listán Blanco','Vijariego','Albariño','Moscatel']};
     // Find confusion pairs for the correct answer
     for (const [key, pairs] of Object.entries(confusionPairs)) {
       if (aLower.includes(key)) {
@@ -18277,8 +18414,7 @@ function _generateWineChoices(q){
       'canarias': ['DO Ycoden Daute Isora','DO Tacoronte-Acentejo','DO Abona','DO La Orotava','DOP Islas Canarias-Tenerife','DO Gran Canaria','DO Lanzarote','DO Valle de Guimar'],
       'galicia': ['DO Rías Baixas','DO Ribera Sacra','DO Valdeorras','DO Ourense','DO Pontevedra'],
       'francia': ['AOC Champagne','AOC Bourgogne','AOC Médoc','AOC Sancerre','AOC Côtes du Rhône','AOC Côtes du Provence'],
-      'castilla': ['DO Ribera del Duero','DO Rueda','DO Toro','DO Bierzo','DO Ca Rioja'],
-    };
+      'castilla': ['DO Ribera del Duero','DO Rueda','DO Toro','DO Bierzo','DO Ca Rioja']};
     // Find relevant group
     for (const [key, regions] of Object.entries(regionGroups)) {
       const matchesGroup = regions.some(r => aLower.includes(r.toLowerCase().substring(3)));
@@ -18714,11 +18850,11 @@ function renderDashboard(){
   const bestTopic = topicArr.filter(t=>t.pct>0).sort((a,b)=>b.pct-a.pct)[0];
 
   // Progress rings for topics — TUNIC crystalline hex badges
-  const TOPIC_RING_COLORS = { allergens:'#c47068', cutlery:'#c49a3c', ingredients:'#4888a0', history:'#7a6aaa', mixed:'#4d8a5e' };
-  const TOPIC_RING_LIGHT = { allergens:'#f0c8c0', cutlery:'#f0dca0', ingredients:'#b0d8e8', history:'#c8b8e0', mixed:'#b0d8b8' };
+  const TOPIC_RING_COLORS = { allergens:'#c47068',  ingredients:'#4888a0', history:'#7a6aaa', mixed:'#4d8a5e' };
+  const TOPIC_RING_LIGHT = { allergens:'#f0c8c0',  ingredients:'#b0d8e8', history:'#c8b8e0', mixed:'#b0d8b8' };
   const topicRings = topicArr.map((tp,idx) => {
     const col = TOPIC_RING_COLORS[tp.key] || '#c49a3c';
-    const colDark = {allergens:'#a85848',cutlery:'#a47a2c',ingredients:'#36687a',history:'#5a4a8a',mixed:'#3a6a4a'}[tp.key]||'#a47a2c';
+    const colDark = {allergens:'#a85848',ingredients:'#36687a',history:'#5a4a8a',mixed:'#3a6a4a'}[tp.key]||'#a47a2c';
     const colLight = TOPIC_RING_LIGHT[tp.key] || '#f0dca0';
     const pct = tp.pct;
     const uid = 'tr_'+tp.key;
@@ -18983,8 +19119,6 @@ function stopLiveQuizPolling(){
 function initFlashcards(topic,cat){
   fcTopic=topic||'allergens';
   let pool=cat&&cat!=='all'?DISHES.filter(d=>d.cat===cat):[...DISHES];
-  // Exclude Guarniciones from cutlery topic
-  if((topic||'allergens')==='cutlery') pool=pool.filter(d=>!d.noMarkaje);
   fcDishes=pool.sort(()=>Math.random()-.5);
   fcIndex=0;fcFlipped=false;
 }
@@ -19194,7 +19328,6 @@ function renderExam(){
 
 const TOPIC_ICONS={
   allergens: '<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c47068"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a85848" opacity=".4"/><path d="M12 4l7 13H5z" fill="none" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 9v3.5M12 14.5v.5" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>',
-  cutlery: '<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M9 5v14M7 5v5a2 2 0 004 0V5M15 5v14M13 8c0-2 1-3 2-3s2 1 2 3c0 1.5-1 2-2 2h-1" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>',
   ingredients: '<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M12 4C14 4 17 6 17 10c0 5-5 9-5 9s-5-4-5-9c0-4 3-6 5-6z" fill="#fff" opacity=".85"/></svg>',
   history: '<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M4 5h6a3 3 0 013 3v10a2 2 0 00-2-2H4V5zM20 5h-6a3 3 0 00-3 3v10a2 2 0 012-2h7V5z" fill="#fff" opacity=".85"/></svg>'
 };
@@ -19248,16 +19381,12 @@ function selCount(el,n){document.querySelectorAll('#countOpts .opt-tile').forEac
 
 function startExam(){
   let pool=examConfig.cat==='all'?[...DISHES]:DISHES.filter(d=>d.cat===examConfig.cat);
-  // Exclude Guarniciones from cutlery exam
-  if(examConfig.topic==='cutlery') pool=pool.filter(d=>!d.noMarkaje);
   pool=pool.sort(()=>Math.random()-.5).slice(0,examConfig.count*3); // oversample to filter invalids
   const noHist=t('noHistory');
   const validQuestions=[];
   for(const d of pool){
     if(validQuestions.length>=examConfig.count) break;
     let topicKey=examConfig.topic==='mixed'?TOPICS[Math.floor(Math.random()*TOPICS.length)].key:examConfig.topic;
-    // Skip cutlery for Guarniciones in mixed mode
-    if(topicKey==='cutlery' && d.noMarkaje) continue;
     let topic=TOPICS.find(tp=>tp.key===topicKey);
     let correct=(topic.a(d)||'').trim().replace(/\.+$/,'');
     // If answer is empty/dash, try another topic in mixed mode
@@ -19265,13 +19394,12 @@ function startExam(){
     if(isEmpty(correct)){
       if(examConfig.topic==='mixed'){
         const fb=TOPICS.find(tp=>{
-          if(tp.key==='cutlery' && d.noMarkaje) return false;
           const a=tp.a(d);return !isEmpty(a);
         });
         if(fb){topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');}else continue;
       }else continue;
     }
-    const wrongPool=DISHES.filter(x=>x.id!==d.id && !(topic.key==='cutlery' && x.noMarkaje)).sort(()=>Math.random()-.5);
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -19577,7 +19705,6 @@ function renderRepasoDishDetail(dishId){
 
   const emp = getEmp(currentUser);
   const isKnown = emp && emp.knownDishes && emp.knownDishes[dish.id];
-  const cutleryItems = dish.cutlery ? dish.cutlery.split(',').map(c=>c.trim()).filter(Boolean) : [];
   const ingredientList = dish.ingredients ? dish.ingredients.split(',').map(i=>i.trim()).filter(Boolean) : [];
   if(ingredientList.length === 0 && dish.ingredients){
     dish.ingredients.split('.').forEach(s => { if(s.trim()) ingredientList.push(s.trim()); });
@@ -19586,18 +19713,11 @@ function renderRepasoDishDetail(dishId){
   const plateSize = 220;
   const cx = plateSize/2, cy = plateSize/2;
 
-  const cutleryHtml = cutleryItems.map((c,i) => `<div style="display:flex;align-items:center;gap:.4rem;${i>0?'margin-top:.35rem;padding-top:.35rem;border-top:1px solid var(--line)':''}"><div style="width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0"></div><div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parchment)">${c}</div></div>`).join('');
 
   const allergenHtml = dish.allergens.map(a => `<span style="display:inline-block;padding:.18rem .45rem;border-radius:20px;font-family:'DM Mono',monospace;font-size:.55rem;background:${allergenColors[a]||'var(--gold)'}18;color:${allergenColors[a]||'var(--gold)'};border:1px solid ${allergenColors[a]||'var(--gold)'}30">${a}</span>`).join('');
 
   const ingredientHtml = ingredientList.map(ing => `<span style="padding:.2rem .5rem;background:rgba(0,0,0,.03);border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch2)">${ing}</span>`).join('');
 
-  const cutleryCircles = cutleryItems.slice(0,4).map((c,i) => {
-    const angle = (i / Math.min(cutleryItems.length,4)) * Math.PI * 2 - Math.PI/2;
-    const rx = cx + Math.cos(angle) * 60;
-    const ry = cy + Math.sin(angle) * 60;
-    return `<circle cx="${rx}" cy="${ry}" r="3.5" fill="var(--gold-b)" stroke="var(--gold-a)" stroke-width=".5"/>`;
-  }).join('');
 
   document.getElementById('appContent').innerHTML = `
     <button onclick="repasoView='topic';renderRepaso()" class="btn-back">${t('back')}</button>
@@ -19619,15 +19739,10 @@ function renderRepasoDishDetail(dishId){
           ${dish.name.length > 24 ? dish.name.substring(0,22)+'…' : dish.name}
         </text>
         <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6.5" fill="var(--parch4)" letter-spacing=".08em">${dish.cat.toUpperCase()}</text>
-        ${cutleryCircles}
       </svg>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem">
-      <div class="card" style="padding:.9rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◇ ${LANG==='en'?'Table Setting':'Cubertería'}</div>
-        ${cutleryHtml}
-      </div>
+    <div style="margin-bottom:.75rem">
       <div class="card" style="padding:.9rem">
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">⚠ ${LANG==='en'?'Allergens':'Alérgenos'}</div>
         <div style="display:flex;flex-wrap:wrap;gap:.25rem">
@@ -19932,8 +20047,8 @@ function renderVideos(){
           </div>
           <div id="videoHeroFull" style="display:none;font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(228,190,104,.55);line-height:1.7">
             ${LANG==='en'
-              ? 'A visual guide to the plating and preparation of each dish at Txoko by Martín Berasategui. Watch the technique, then study the allergens, cutlery and storytelling of each dish to be fully prepared for service.'
-              : 'Guía visual del emplatado y preparación de cada plato en Txoko by Martín Berasategui. Observa la técnica y después repasa los alérgenos, el marcaje y el storytelling de cada plato para llegar preparado al servicio.'}
+              ? 'A visual guide to the plating and preparation of each dish at Txoko by Martín Berasategui. Watch the technique, then study the allergens, ingredients and storytelling of each dish to be fully prepared for service.'
+              : 'Guía visual del emplatado y preparación de cada plato en Txoko by Martín Berasategui. Observa la técnica y después repasa los alérgenos, ingredientes y el storytelling de cada plato para llegar preparado al servicio.'}
             <span onclick="toggleVideoDesc(false)" style="color:rgba(228,190,104,.85);cursor:pointer;font-weight:500"> ${LANG==='en'?'Show less':'Mostrar menos'}</span>
           </div>
         </div>
@@ -20113,8 +20228,7 @@ function renderRanking(){
         ...e,
         xp: Math.max(allEmps[e.name].xp||0, e.xp||0),
         streak: Math.max(allEmps[e.name].streak||0, e.streak||0),
-        sessions: (e.sessions||[]).length > (allEmps[e.name].sessions||[]).length ? e.sessions : allEmps[e.name].sessions,
-      };
+        sessions: (e.sessions||[]).length > (allEmps[e.name].sessions||[]).length ? e.sessions : allEmps[e.name].sessions};
     });
 
     // Count activity from Supabase scores per employee
@@ -20354,8 +20468,7 @@ function renderSupDashboard(){
         knownDishes: Object.keys(e.knownDishes||{}).length >= Object.keys(local.knownDishes||{}).length
           ? e.knownDishes : (local.knownDishes||{}),
         sessions: (e.sessions||[]).length >= (local.sessions||[]).length
-          ? e.sessions : (local.sessions||[]),
-      };
+          ? e.sessions : (local.sessions||[])};
     });
     const empNames = Object.keys(allEmps).filter(n => n !== '');
     // Expose globally so supervisor action buttons can access them
@@ -20365,7 +20478,7 @@ function renderSupDashboard(){
       document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
       return;
     }
-    const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',cutlery:LANG==='en'?'Cutlery':'Marcaje',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+    const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
     const cards=empNames.sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0)).map(name=>{
       const emp=allEmps[name];
       const sessions=(emp.sessions||[]);
@@ -21063,8 +21176,7 @@ const PROTOCOLO_TRAPS = {
                'Las anotaciones son opcionales y se usan solo cuando hay incidencias especiales.'],
           en: ['CI, CO and TZ annotations go at the beginning of the table number.',
                'TZ is for terraces, CI for check-in guests and CR for regular guests.',
-               'Annotations are optional and used only when there are special incidents.'] },
-};
+               'Annotations are optional and used only when there are special incidents.'] }};
 
 function startProtocoloExam(sectionId) {
   const allRules = sectionId
@@ -22197,10 +22309,6 @@ function renderCartaDishEdit(id){
       <textarea id="editAllergens" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.allergens.join(', ')}</textarea>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Marcaje</div>
-      <textarea id="editCutlery" rows="2" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.cutlery}</textarea>
-    </div>
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Ingredientes</div>
       <textarea id="editIngredients" rows="4" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical">${d.ingredients}</textarea>
     </div>
@@ -22221,14 +22329,13 @@ function saveCartaDish(id){
   const d = DISHES.find(x=>x.id===id);
   if(!d) return;
   d.allergens = document.getElementById('editAllergens').value.split(',').map(s=>s.trim()).filter(Boolean);
-  d.cutlery = document.getElementById('editCutlery').value.trim();
   d.ingredients = document.getElementById('editIngredients').value.trim();
   d.history = document.getElementById('editHistory').value.trim();
   d.notes = document.getElementById('editNotes').value.trim()||null;
   // Save overrides to localStorage
   try {
     const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
-    overrides[id] = {allergens:d.allergens,cutlery:d.cutlery,ingredients:d.ingredients,history:d.history,notes:d.notes};
+    overrides[id] = {allergens:d.allergens,ingredients:d.ingredients,history:d.history,notes:d.notes};
     localStorage.setItem('txoko_carta_overrides', JSON.stringify(overrides));
   } catch(e){}
   // If it's a custom dish (added by supervisor), sync to Supabase
@@ -22266,10 +22373,6 @@ function renderCartaNewDish(){
       <textarea id="newDishAllergens" rows="2" placeholder="Ej: Gluten, Lácteos, Huevo" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical"></textarea>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Marcaje</div>
-      <textarea id="newDishCutlery" rows="2" placeholder="Ej: Cuchara sopera, tenedor de pescado" style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical"></textarea>
-    </div>
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Ingredientes</div>
       <textarea id="newDishIngredients" rows="4" placeholder="Ingredientes principales..." style="width:100%;border:1px solid var(--line);border-radius:var(--r2);padding:.6rem .8rem;font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parchment);resize:vertical"></textarea>
     </div>
@@ -22303,14 +22406,13 @@ function saveNewDish(){
   if(errEl) errEl.style.display='none';
 
   const allergens = (document.getElementById('newDishAllergens')?.value||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const cutlery = (document.getElementById('newDishCutlery')?.value||'').trim();
   const ingredients = (document.getElementById('newDishIngredients')?.value||'').trim();
   const history = (document.getElementById('newDishHistory')?.value||'').trim();
 
   // Generate new unique ID
   const newId = Math.max(0, ...DISHES.map(d=>d.id)) + 1;
 
-  const newDish = { id: newId, name, cat, allergens, cutlery, ingredients, history, notes: null };
+  const newDish = { id: newId, name, cat, allergens, ingredients, history, notes: null };
   DISHES.push(newDish);
 
   // Persist locally
@@ -22425,7 +22527,7 @@ function startPersonalErrorMode(){
       if(!fb) continue;
       correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
-    const wrongPool=DISHES.filter(x=>x.id!==d.id && !(topic.key==='cutlery' && x.noMarkaje)).sort(()=>Math.random()-.5);
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -22483,7 +22585,7 @@ function startErrorMode(){
       if(!fb) continue;
       topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
-    const wrongPool=DISHES.filter(x=>x.id!==d.id && !(topic.key==='cutlery' && x.noMarkaje)).sort(()=>Math.random()-.5);
+    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -24769,8 +24871,7 @@ const WAITER_MSGS={
     d=>LANG==='en'?`VIP table — impress them with the story of <strong>${d}</strong>`:`Mesa VIP — impresionales con la historia de <strong>${d}</strong>`,
     d=>LANG==='en'?`The guest asks: why is <strong>${d}</strong> special?`:`El cliente pregunta: ¿qué hace especial a <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 2 asks about the provenance of <strong>${d}</strong>`:`Mesa 2 pregunta por el origen y proveedores de <strong>${d}</strong>`,
-  ],
-};
+  ]};
 const WAITER_OK_ES=['¡Perfecto, gracias! ','¡Eso es! ','¡Correcto! ▲','¡Excelente! ','¡Muy bien! '];
 const WAITER_OK_EN=['Perfect, thank you! ','Exactly right! ','Correct! ▲','Excellent! ','Well done! '];
 const WAITER_OK=()=>LANG==='en'?WAITER_OK_EN:WAITER_OK_ES;
@@ -24794,10 +24895,6 @@ function txGetAnswer(dish, topicKey){
   if(topicKey==='allergens'){
     if(!dd.allergens||dd.allergens.length===0) return null;
     return dd.allergens.map(allergenLocal).join(' · ');
-  }
-  if(topicKey==='cutlery'){
-    const c = cutleryLocal(dd.cutlery);
-    return (c && c.trim()) ? c : null;
   }
   if(topicKey==='ingredients'){
     const v = dd.ingredients;
@@ -24825,7 +24922,7 @@ function txTruncate(s, n){
 // ── Core: build one question object ────────────────
 // Returns a fully sealed question or null if impossible.
 function txBuildQuestion(){
-  const topicKeys=['allergens','cutlery','ingredients','history'];
+  const topicKeys=['allergens','ingredients','history'];
 
   // Pre-compute all unique answers per topic so we know which are viable
   // A topic is viable for a dish if there are at least 3 OTHER unique answers
@@ -24907,8 +25004,7 @@ function txBuildQuestion(){
     msg:        msgFn(dd.name),
     choices:    choices,
     correctIdx: correctIdx,
-    correctNorm:correctAnswer,
-  };
+    correctNorm:correctAnswer};
 }
 
 // ── Level helpers ───────────────────────────────────
@@ -25214,7 +25310,7 @@ const RULETA_CONTENT = {
       'Recita de memoria la secuencia completa del servicio de mesa desde la bienvenida',
       'Describe las diferencias entre los 3 vinos blancos más vendidos de la carta',
       'Haz una recomendación completa (entrante, principal, postre, vino) para un vegetariano exigente',
-      'Di de memoria qué cubiertos van con cada plato del menú degustación',
+      'Di de memoria los alérgenos de cada plato del menú degustación',
       'El grupo te da un presupuesto. Diseña un menú completo con vinos sin pasarte',
       'Nombra 3 platos de la carta y sus alérgenos sin equivocarte en ninguno',
       'Explica a un "cliente" ficticio qué es la crianza, reserva y gran reserva',
