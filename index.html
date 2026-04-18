@@ -1576,127 +1576,144 @@ body::after{
 }
 
 /* ─────────────────────────────────────────────────
-   SUB-TAB BAR — TUNIC elegant v2 (embossed parchment)
+   SUB-TAB BAR — TUNIC Divine Aura v4 (manuscript panel)
 ───────────────────────────────────────────────── */
 .tunic-subtabs{
-  position:relative;
-  display:flex;gap:.55rem;margin-bottom:1.6rem;overflow-x:auto;
-  padding:.45rem .15rem .6rem;
-  scrollbar-width:none;
+  position:relative;z-index:5;
+  display:flex;gap:.5rem;margin:0 auto 1.6rem;overflow-x:auto;
+  padding:.55rem .7rem;
+  scrollbar-width:none;isolation:isolate;
+  /* manuscript panel — subtle parchment backdrop + hex pattern */
+  background:
+    radial-gradient(ellipse 70% 120% at 50% -20%, rgba(228,196,122,.16) 0%, rgba(228,196,122,.04) 45%, transparent 75%),
+    radial-gradient(circle at 50% 50%, rgba(154,115,64,.05) 1px, transparent 1.5px) 0 0 / 16px 16px,
+    linear-gradient(180deg, rgba(251,246,234,.75) 0%, rgba(243,234,207,.55) 100%);
+  border:1px solid rgba(196,154,60,.22);
+  border-radius:14px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.8) inset,
+    0 -1px 0 rgba(154,115,64,.08) inset,
+    0 2px 10px rgba(154,115,64,.06),
+    0 0 0 1px rgba(255,246,226,.3) inset;
   /* fading edges for scrollable rows */
-  mask-image:linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
-  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+  mask-image:linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
 }
 .tunic-subtabs::-webkit-scrollbar{display:none}
-/* soft decorative rule beneath the bar */
+/* gilded rule beneath the bar */
 .tunic-subtabs::after{
-  content:'';position:absolute;left:8%;right:8%;bottom:0;height:1px;
-  background:linear-gradient(90deg, transparent 0%, rgba(196,154,60,.35) 20%, rgba(196,154,60,.55) 50%, rgba(196,154,60,.35) 80%, transparent 100%);
+  content:'';position:absolute;left:10%;right:10%;bottom:3px;height:1px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(196,154,60,.2) 18%,
+    rgba(228,196,122,.7) 50%,
+    rgba(196,154,60,.2) 82%,
+    transparent 100%);
   pointer-events:none;
+  box-shadow:0 1px 4px rgba(228,196,122,.2);
 }
 
 .tunic-stab{
-  position:relative;
-  display:flex;align-items:center;gap:.45rem;
-  padding:.55rem 1.05rem;
-  border-radius:10px;
-  font-family:'Quicksand',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;
+  position:relative;flex-shrink:0;
+  display:flex;align-items:center;gap:.4rem;
+  padding:.55rem 1rem .6rem;
+  border-radius:9px;
+  font-family:'Cinzel',serif;font-size:.62rem;font-weight:500;cursor:pointer;
   white-space:nowrap;
-  letter-spacing:.08em;text-transform:uppercase;
-  color:rgba(107,90,51,.75);
-  /* ghosted parchment — quieter secondary layer so primary nav commands attention */
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.25) 0%, rgba(255,255,255,0) 60%),
-    linear-gradient(155deg, rgba(251,245,228,.35) 0%, rgba(240,228,200,.25) 100%);
-  border:1px solid rgba(196,154,60,.16);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,.55) inset;
-  transition:transform .25s cubic-bezier(.2,.8,.3,1),
-             color .22s, border-color .22s, box-shadow .28s, background .28s;
-  overflow:hidden;
-  isolation:isolate;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(74,64,42,.75);
+  background:transparent;
+  border:1px solid transparent;
+  transition:transform .28s cubic-bezier(.22,1,.36,1),
+             color .25s, border-color .25s, box-shadow .32s, background .32s;
+  overflow:hidden;isolation:isolate;z-index:1;
 }
-/* decorative corner serifs (top-left & bottom-right) */
+/* divine aura halo backdrop (appears on hover/active) */
 .tunic-stab::before{
-  content:'';position:absolute;top:4px;left:4px;width:8px;height:8px;
-  border-top:1px solid rgba(196,154,60,.3);
-  border-left:1px solid rgba(196,154,60,.3);
-  border-top-left-radius:6px;
-  opacity:.5;transition:opacity .25s, border-color .25s;
-  pointer-events:none;
+  content:'';position:absolute;
+  inset:3px 18%;
+  background:radial-gradient(ellipse 90% 80% at 50% 55%,
+    rgba(228,196,122,.28) 0%,
+    rgba(196,154,60,.12) 40%,
+    transparent 78%);
+  opacity:0;transform:scale(.82);
+  transition:opacity .35s cubic-bezier(.22,1,.36,1), transform .4s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;border-radius:50%;
+  z-index:-1;filter:blur(.4px);
 }
+/* gilded underline indicator (for hover only, active uses its own treatment) */
 .tunic-stab::after{
-  content:'';position:absolute;bottom:4px;right:4px;width:8px;height:8px;
-  border-bottom:1px solid rgba(196,154,60,.3);
-  border-right:1px solid rgba(196,154,60,.3);
-  border-bottom-right-radius:6px;
-  opacity:.5;transition:opacity .25s, border-color .25s;
-  pointer-events:none;
+  content:'';position:absolute;
+  left:50%;bottom:2px;
+  width:0;height:1.2px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(196,154,60,.5) 15%,
+    var(--gold) 50%,
+    rgba(196,154,60,.5) 85%,
+    transparent 100%);
+  transform:translateX(-50%);
+  transition:width .32s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 0 5px rgba(196,154,60,.4);
+  pointer-events:none;border-radius:2px;z-index:0;
 }
-
 .tunic-stab:hover{
-  color:#3a2f18;
-  border-color:rgba(196,154,60,.55);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 55%),
-    linear-gradient(155deg,#fbf5e4 0%,#f0e4c8 100%);
-  transform:translateY(-1px);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,.85) inset,
-    0 -1px 0 rgba(154,115,64,.08) inset,
-    0 2px 0 rgba(154,115,64,.08),
-    0 5px 14px rgba(196,154,60,.14);
+  color:var(--gold);
 }
-.tunic-stab:hover::before,
-.tunic-stab:hover::after{ opacity:1;border-color:#c49a3c }
-.tunic-stab:active{ transform:translateY(0);box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 1px 3px rgba(154,115,64,.15) }
+.tunic-stab:hover::before{ opacity:.65;transform:scale(1) }
+.tunic-stab:hover::after{ width:42% }
 
-/* ── ACTIVE TAB — embossed gold leaf ── */
+/* ── ACTIVE TAB — divine hex medallion with pulsing aura ── */
 .tunic-stab.active{
   color:#fbf1d6;
   background:
-    linear-gradient(180deg, rgba(255,246,226,.35) 0%, rgba(255,246,226,0) 45%),
-    radial-gradient(ellipse 120% 80% at 50% 0%, #e8c275 0%, transparent 70%),
+    linear-gradient(180deg, rgba(255,246,226,.32) 0%, rgba(255,246,226,0) 45%),
+    radial-gradient(ellipse 120% 80% at 50% 0%, #e8c275 0%, transparent 68%),
     linear-gradient(145deg,#c49a3c 0%,#9a7340 55%,#7a5a2c 100%);
-  border:1px solid transparent;
+  border:1px solid rgba(90,60,20,.4);
+  text-shadow:0 1px 2px rgba(0,0,0,.32), 0 0 10px rgba(255,246,226,.28);
   box-shadow:
-    0 1px 0 rgba(255,246,226,.35) inset,
-    0 -1px 0 rgba(0,0,0,.15) inset,
-    0 0 0 1px rgba(154,115,64,.55),
+    0 1px 0 rgba(255,246,226,.45) inset,
+    0 -1px 0 rgba(0,0,0,.18) inset,
     0 2px 0 #5a4020,
-    0 6px 16px rgba(154,115,64,.35),
-    0 10px 28px rgba(154,115,64,.25);
-  text-shadow:0 1px 2px rgba(0,0,0,.28), 0 0 10px rgba(255,246,226,.25);
-  transform:translateY(-1px);
-  animation:tunic-stab-in .4s cubic-bezier(.2,.8,.3,1);
+    0 5px 14px rgba(154,115,64,.4),
+    0 8px 22px rgba(154,115,64,.25),
+    0 0 18px rgba(228,196,122,.35);
+  animation:tunic-stab-in .42s cubic-bezier(.2,.8,.3,1), tunic-stab-aura 3.2s ease-in-out infinite .42s;
 }
-@keyframes tunic-stab-in{
-  from{ transform:translateY(0) scale(.96); box-shadow:0 0 0 rgba(154,115,64,0) }
-  to  { transform:translateY(-1px) scale(1) }
-}
-/* active corner ornaments — brighter gold */
 .tunic-stab.active::before{
-  top:5px;left:5px;width:9px;height:9px;opacity:.9;
-  border-top:1px solid rgba(255,246,226,.75);
-  border-left:1px solid rgba(255,246,226,.75);
+  opacity:1;transform:scale(1.1);
+  background:radial-gradient(ellipse 100% 90% at 50% 50%,
+    rgba(228,196,122,.4) 0%,
+    rgba(196,154,60,.16) 45%,
+    transparent 78%);
+  filter:blur(1.5px);
+  animation:tunic-stab-halo 3.2s ease-in-out infinite;
 }
-.tunic-stab.active::after{
-  bottom:5px;right:5px;width:9px;height:9px;opacity:.9;
-  border-bottom:1px solid rgba(255,246,226,.75);
-  border-right:1px solid rgba(255,246,226,.75);
+.tunic-stab.active::after{ width:0 }
+
+@keyframes tunic-stab-in{
+  from{ transform:translateY(1px) scale(.96); box-shadow:0 0 0 rgba(154,115,64,0) }
+  to  { transform:translateY(0) scale(1) }
 }
-.tunic-stab.active:hover{ color:#fff8e3;transform:translateY(-2px) }
-.tunic-stab.active:hover::before,
-.tunic-stab.active:hover::after{ border-color:#fff8e3 }
+@keyframes tunic-stab-aura{
+  0%,100%{ box-shadow:0 1px 0 rgba(255,246,226,.45) inset, 0 -1px 0 rgba(0,0,0,.18) inset, 0 2px 0 #5a4020, 0 5px 14px rgba(154,115,64,.4), 0 8px 22px rgba(154,115,64,.25), 0 0 18px rgba(228,196,122,.35) }
+  50%{   box-shadow:0 1px 0 rgba(255,246,226,.55) inset, 0 -1px 0 rgba(0,0,0,.18) inset, 0 2px 0 #5a4020, 0 6px 16px rgba(154,115,64,.5), 0 10px 26px rgba(154,115,64,.3), 0 0 28px rgba(228,196,122,.55) }
+}
+@keyframes tunic-stab-halo{
+  0%,100%{ opacity:.85;transform:scale(1.1) }
+  50%{ opacity:1;transform:scale(1.2) }
+}
+.tunic-stab.active:hover{ color:#fff8e3;transform:translateY(-1px) }
 
 /* animated shimmer sweep on active — behind the text */
 .tunic-stab .tunic-icon,
 .tunic-stab .tunic-label{ position:relative;z-index:2 }
 .tunic-stab .tunic-shine{
   position:absolute;top:0;left:-60%;width:45%;height:100%;
-  background:linear-gradient(100deg, transparent 0%, rgba(255,246,226,.28) 50%, transparent 100%);
+  background:linear-gradient(100deg, transparent 0%, rgba(255,246,226,.32) 50%, transparent 100%);
   transform:skewX(-18deg);
-  animation:tunic-shine 4.5s ease-in-out infinite;
+  animation:tunic-shine 4.8s ease-in-out infinite;
   z-index:1;pointer-events:none;
 }
 @keyframes tunic-shine{
@@ -1746,7 +1763,7 @@ body::after{
 
 /* ═══════ CINEMATIC WINE HUB BACKDROP ═══════ */
 .wine-cinematic-backdrop{
-  position:absolute;inset:-20px -8px;z-index:0;pointer-events:none;overflow:hidden;
+  position:absolute;inset:0 -8px;z-index:0;pointer-events:none;overflow:hidden;
   border-radius:var(--r);
 }
 .wine-cinematic-backdrop::before{
@@ -2939,6 +2956,278 @@ body::after{
   .opt-grid{gap:.55rem}
   .opt-tile{padding:.85rem .5rem .78rem}
   .exam-setup-title{font-size:1.7rem}
+}
+
+/* ─────────────────────────────────────────────────
+   EXAM SETUP — Divine Aura v3 (stats panel, medallion, mastery bars)
+───────────────────────────────────────────────── */
+.exam-setup-wrap{isolation:isolate}
+
+/* Aura backdrop — soft radial glow behind the whole panel */
+.exam-aura-backdrop{
+  position:absolute;inset:-8px -14px 40% -14px;
+  z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 18%, rgba(228,196,122,.28) 0%, rgba(228,196,122,.12) 30%, rgba(228,196,122,0) 65%),
+    radial-gradient(ellipse 90% 75% at 50% 45%, rgba(196,154,60,.08) 0%, rgba(196,154,60,0) 60%);
+  filter:blur(.5px);
+  opacity:.9;
+  animation:exam-aura-breathe 7s ease-in-out infinite;
+}
+@keyframes exam-aura-breathe{
+  0%,100%{opacity:.85;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.02)}
+}
+
+/* God-rays conic flare emanating from medallion area */
+.exam-aura-godrays{
+  position:absolute;left:50%;top:30px;
+  width:320px;height:320px;margin-left:-160px;
+  z-index:0;pointer-events:none;
+  background:conic-gradient(from 0deg at 50% 50%,
+    rgba(228,196,122,0) 0deg,
+    rgba(228,196,122,.18) 6deg,
+    rgba(228,196,122,0) 14deg,
+    rgba(228,196,122,0) 40deg,
+    rgba(228,196,122,.14) 48deg,
+    rgba(228,196,122,0) 56deg,
+    rgba(228,196,122,0) 90deg,
+    rgba(228,196,122,.16) 98deg,
+    rgba(228,196,122,0) 106deg,
+    rgba(228,196,122,0) 140deg,
+    rgba(228,196,122,.12) 148deg,
+    rgba(228,196,122,0) 156deg,
+    rgba(228,196,122,0) 200deg,
+    rgba(228,196,122,.15) 208deg,
+    rgba(228,196,122,0) 216deg,
+    rgba(228,196,122,0) 260deg,
+    rgba(228,196,122,.13) 268deg,
+    rgba(228,196,122,0) 276deg,
+    rgba(228,196,122,0) 320deg,
+    rgba(228,196,122,.14) 328deg,
+    rgba(228,196,122,0) 336deg,
+    rgba(228,196,122,0) 360deg);
+  mask-image:radial-gradient(circle at 50% 50%, #000 0%, #000 20%, transparent 68%);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 0%, #000 20%, transparent 68%);
+  opacity:.7;
+  animation:exam-godrays-spin 42s linear infinite;
+}
+@keyframes exam-godrays-spin{to{transform:rotate(360deg)}}
+
+/* ensure interactive content floats above backdrop */
+.exam-setup-crown,
+.exam-medallion-wrap,
+.exam-setup-title,
+.exam-setup-desc,
+.exam-stats-panel,
+.exam-topics-mastery,
+.exam-hero-card,
+.exam-gilded-divider,
+.exam-setup-wrap .section-eyebrow,
+.exam-setup-wrap .opt-grid,
+.exam-setup-wrap .btn-start{position:relative;z-index:2}
+
+/* Hex medallion with quill icon */
+.exam-medallion-wrap{
+  display:flex;justify-content:center;
+  margin:.4rem 0 1rem;
+  position:relative;
+}
+.exam-medallion-wrap::before,
+.exam-medallion-wrap::after{
+  content:'';position:absolute;top:50%;width:90px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.5),transparent);
+  transform:translateY(-50%);
+}
+.exam-medallion-wrap::before{left:calc(50% - 110px)}
+.exam-medallion-wrap::after{right:calc(50% - 110px)}
+.exam-medallion{
+  width:56px;height:56px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:
+    radial-gradient(circle at 35% 30%, #f6e0a0 0%, #d9ad55 45%, #a8802f 100%);
+  display:flex;align-items:center;justify-content:center;
+  color:#3a2a10;
+  box-shadow:
+    0 0 0 1px rgba(196,154,60,.35),
+    0 0 22px rgba(228,196,122,.45),
+    inset 0 1px 0 rgba(255,255,255,.45),
+    inset 0 -2px 4px rgba(80,50,10,.2);
+  position:relative;
+  animation:exam-medallion-pulse 4s ease-in-out infinite;
+}
+.exam-medallion::before{
+  content:'';position:absolute;inset:-10px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:radial-gradient(circle at 50% 50%, rgba(228,196,122,.45) 0%, rgba(228,196,122,0) 70%);
+  z-index:-1;
+  animation:exam-medallion-halo 4s ease-in-out infinite;
+}
+@keyframes exam-medallion-pulse{
+  0%,100%{transform:scale(1);box-shadow:0 0 0 1px rgba(196,154,60,.35),0 0 22px rgba(228,196,122,.45),inset 0 1px 0 rgba(255,255,255,.45),inset 0 -2px 4px rgba(80,50,10,.2)}
+  50%{transform:scale(1.04);box-shadow:0 0 0 1px rgba(196,154,60,.4),0 0 30px rgba(228,196,122,.65),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -2px 4px rgba(80,50,10,.2)}
+}
+@keyframes exam-medallion-halo{
+  0%,100%{opacity:.7;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.15)}
+}
+
+/* ─── Stats panel (Questions · Accuracy · Mastered) ─── */
+.exam-stats-panel{
+  position:relative;
+  margin:1.4rem auto 1.75rem;
+  padding:1.1rem 1.2rem .95rem;
+  background:
+    radial-gradient(ellipse 80% 120% at 50% -10%, rgba(228,196,122,.14) 0%, rgba(228,196,122,0) 55%),
+    radial-gradient(circle at 50% 50%, rgba(154,115,64,.04) 1px, transparent 1.5px) 0 0 / 18px 18px,
+    linear-gradient(155deg, #faf6ee 0%, #f4ecd6 55%, #f7efd9 100%);
+  border:1px solid rgba(196,154,60,.28);
+  border-radius:14px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.75) inset,
+    0 -1px 0 rgba(196,154,60,.12) inset,
+    0 4px 14px rgba(28,42,34,.06),
+    0 0 30px rgba(228,196,122,.1);
+}
+.exam-stats-panel::before{
+  content:'';position:absolute;inset:3px;border-radius:11px;pointer-events:none;
+  border:1px dashed rgba(196,154,60,.18);
+}
+/* Gilded corner serifs */
+.exam-stats-corner{
+  position:absolute;width:14px;height:14px;pointer-events:none;
+}
+.exam-stats-corner-tl{top:-1px;left:-1px;border-top:1.5px solid var(--gold);border-left:1.5px solid var(--gold);border-radius:14px 0 0 0}
+.exam-stats-corner-tr{top:-1px;right:-1px;border-top:1.5px solid var(--gold);border-right:1.5px solid var(--gold);border-radius:0 14px 0 0}
+.exam-stats-corner-bl{bottom:-1px;left:-1px;border-bottom:1.5px solid var(--gold);border-left:1.5px solid var(--gold);border-radius:0 0 0 14px}
+.exam-stats-corner-br{bottom:-1px;right:-1px;border-bottom:1.5px solid var(--gold);border-right:1.5px solid var(--gold);border-radius:0 0 14px 0}
+
+.exam-stats-row{
+  display:flex;align-items:center;justify-content:space-around;gap:.4rem;
+  position:relative;z-index:1;
+}
+.exam-stat{
+  flex:1;text-align:center;padding:.1rem .2rem;
+}
+.exam-stat-num{
+  font-family:'Cinzel',serif;font-size:1.55rem;font-weight:500;
+  color:#3a2a10;letter-spacing:.02em;line-height:1.1;
+  text-shadow:0 1px 0 rgba(255,250,235,.6);
+}
+.exam-stat-lbl{
+  font-family:'DM Mono',monospace;font-size:.54rem;
+  color:var(--parch3);letter-spacing:.22em;text-transform:uppercase;
+  margin-top:.28rem;
+}
+.exam-stat-sep{
+  width:1px;height:34px;
+  background:linear-gradient(180deg,transparent,rgba(196,154,60,.45),transparent);
+  flex-shrink:0;
+}
+
+.exam-stats-known-track{
+  margin-top:.95rem;height:4px;
+  background:linear-gradient(180deg,rgba(154,115,64,.12),rgba(154,115,64,.08));
+  border-radius:2px;overflow:hidden;position:relative;
+  box-shadow:inset 0 1px 2px rgba(80,50,10,.12);
+}
+.exam-stats-known-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));
+  border-radius:2px;
+  box-shadow:0 0 8px rgba(228,196,122,.55);
+  position:relative;
+  transition:width .7s cubic-bezier(.22,1,.36,1);
+}
+.exam-stats-known-fill::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.45),transparent);
+  border-radius:inherit;
+}
+
+/* ─── Per-topic mastery bars ─── */
+.exam-topics-mastery{
+  margin:0 auto 1.75rem;padding:.85rem .95rem;
+  background:
+    linear-gradient(155deg, rgba(251,246,234,.65) 0%, rgba(243,234,207,.45) 100%);
+  border:1px solid rgba(196,154,60,.18);
+  border-radius:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+}
+.exam-topics-mastery-title{
+  font-family:'Cinzel',serif;font-size:.62rem;font-weight:500;
+  color:var(--gold);letter-spacing:.28em;text-align:center;
+  text-transform:uppercase;opacity:.85;
+  margin-bottom:.75rem;
+}
+.exam-topic-bar{margin-bottom:.7rem}
+.exam-topic-bar:last-child{margin-bottom:0}
+.exam-topic-bar-head{
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.28rem;
+}
+.exam-topic-bar-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;flex-shrink:0;opacity:.8;
+}
+.exam-topic-bar-icon svg{width:16px;height:16px}
+.exam-topic-bar-label{
+  font-family:'Cinzel',serif;font-size:.72rem;color:var(--parch2);
+  letter-spacing:.035em;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.exam-topic-bar-pct{
+  font-family:'DM Mono',monospace;font-size:.72rem;font-weight:600;
+  letter-spacing:.04em;flex-shrink:0;
+}
+.exam-topic-bar-track{
+  height:5px;
+  background:linear-gradient(180deg,rgba(154,115,64,.1),rgba(154,115,64,.06));
+  border-radius:3px;overflow:hidden;position:relative;
+  box-shadow:inset 0 1px 2px rgba(80,50,10,.1);
+}
+.exam-topic-bar-fill{
+  height:100%;border-radius:3px;
+  box-shadow:0 0 6px currentColor;
+  position:relative;
+  transition:width .7s cubic-bezier(.22,1,.36,1);
+}
+.exam-topic-bar-fill::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:55%;
+  background:linear-gradient(180deg,rgba(255,255,255,.35),transparent);
+  border-radius:inherit;
+}
+.exam-topic-bar-meta{
+  font-family:'DM Mono',monospace;font-size:.52rem;
+  color:var(--parch4);letter-spacing:.08em;
+  margin-top:.22rem;text-align:right;
+}
+
+/* ─── Gilded divider between exam intro and options ─── */
+.exam-gilded-divider{
+  position:relative;text-align:center;
+  margin:1.8rem 0 1.4rem;
+  font-size:.6rem;color:var(--gold);opacity:.7;
+}
+.exam-gilded-divider::before,
+.exam-gilded-divider::after{
+  content:'';position:absolute;top:50%;width:38%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.55),transparent);
+  transform:translateY(-50%);
+}
+.exam-gilded-divider::before{left:3%}
+.exam-gilded-divider::after{right:3%}
+.exam-gilded-divider span{
+  display:inline-block;padding:0 .55rem;
+  background:var(--parchment,#faf6ee);position:relative;z-index:1;
+}
+
+@media (max-width:380px){
+  .exam-stats-panel{padding:.95rem .7rem .85rem}
+  .exam-stat-num{font-size:1.3rem}
+  .exam-stat-sep{height:28px}
+  .exam-medallion-wrap::before{left:calc(50% - 95px);width:70px}
+  .exam-medallion-wrap::after{right:calc(50% - 95px);width:70px}
+  .exam-aura-godrays{width:240px;height:240px;margin-left:-120px}
 }
 
 /* ─────────────────────────────────────────────────
@@ -22555,11 +22844,82 @@ const TOPIC_ICONS={
 };
 function renderExamSetup(){
   const shine = `<span class="opt-shine"></span>`;
+  const _en = LANG==='en';
+  // ── Gather exam stats for the divine aura panel ──
+  const emp = getEmp(currentUser) || {};
+  const _tops = emp.topicScores || {};
+  let _totalQ = 0, _totalCorrect = 0;
+  TOPICS.forEach(tp => {
+    const s = _tops[tp.key];
+    if(s){ _totalQ += s.total||0; _totalCorrect += s.correct||0; }
+  });
+  const _acc = _totalQ > 0 ? Math.round(_totalCorrect * 100 / _totalQ) : 0;
+  const _known = Object.keys(emp.knownDishes||{}).length;
+  const _knownPct = DISHES.length > 0 ? Math.round(_known * 100 / DISHES.length) : 0;
+  // Per-topic mastery
+  const _topicBars = TOPICS.map(tp => {
+    const s = _tops[tp.key] || {correct:0,total:0};
+    const pct = s.total > 0 ? Math.round(s.correct*100/s.total) : 0;
+    const color = tp.key==='allergens' ? '#c47068' : tp.key==='ingredients' ? '#4888a0' : '#7a6aaa';
+    return `<div class="exam-topic-bar">
+      <div class="exam-topic-bar-head">
+        <span class="exam-topic-bar-icon">${TOPIC_ICONS[tp.key]||''}</span>
+        <span class="exam-topic-bar-label">${tp.label}</span>
+        <span class="exam-topic-bar-pct" style="color:${color}">${pct}%</span>
+      </div>
+      <div class="exam-topic-bar-track"><div class="exam-topic-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${color},${color}cc)"></div></div>
+      <div class="exam-topic-bar-meta">${s.correct}/${s.total} ${_en?'correct':'aciertos'}</div>
+    </div>`;
+  }).join('');
+
   document.getElementById('appContent').innerHTML=`
     <div class="exam-setup-wrap">
-      <div class="exam-setup-crown"><span class="exam-setup-crown-orn">${LANG==='en'?'EVALUATION':'EVALUACIÓN'}</span></div>
+      <!-- Divine aura backdrop -->
+      <div class="exam-aura-backdrop"></div>
+      <div class="exam-aura-godrays"></div>
+
+      <div class="exam-setup-crown"><span class="exam-setup-crown-orn">${_en?'EVALUATION':'EVALUACIÓN'}</span></div>
+
+      <!-- Hex medallion with quill icon -->
+      <div class="exam-medallion-wrap">
+        <div class="exam-medallion">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        </div>
+      </div>
+
       <div class="exam-setup-title">${t('examSetupTitle')}</div>
       <div class="exam-setup-desc">${t('examSetupDesc')}</div>
+
+      <!-- Divine performance panel -->
+      <div class="exam-stats-panel">
+        <div class="exam-stats-corner exam-stats-corner-tl"></div>
+        <div class="exam-stats-corner exam-stats-corner-tr"></div>
+        <div class="exam-stats-corner exam-stats-corner-bl"></div>
+        <div class="exam-stats-corner exam-stats-corner-br"></div>
+        <div class="exam-stats-row">
+          <div class="exam-stat">
+            <div class="exam-stat-num">${_totalQ}</div>
+            <div class="exam-stat-lbl">${_en?'Questions':'Preguntas'}</div>
+          </div>
+          <div class="exam-stat-sep"></div>
+          <div class="exam-stat">
+            <div class="exam-stat-num" style="color:${_acc>=80?'#4d8a5e':_acc>=60?'#c49a3c':'#c47068'}">${_acc}%</div>
+            <div class="exam-stat-lbl">${_en?'Accuracy':'Precisión'}</div>
+          </div>
+          <div class="exam-stat-sep"></div>
+          <div class="exam-stat">
+            <div class="exam-stat-num">${_known}<span style="font-size:.55em;color:var(--parch3);font-weight:400">/${DISHES.length}</span></div>
+            <div class="exam-stat-lbl">${_en?'Mastered':'Dominados'}</div>
+          </div>
+        </div>
+        <div class="exam-stats-known-track"><div class="exam-stats-known-fill" style="width:${_knownPct}%"></div></div>
+      </div>
+
+      <!-- Per-topic mastery bars -->
+      <div class="exam-topics-mastery">
+        <div class="exam-topics-mastery-title">◆ ${_en?'Mastery by Theme':'Dominio por Tema'} ◆</div>
+        ${_topicBars}
+      </div>
 
       <!-- Test de Alérgenos destacado — TUNIC hero card -->
       <div class="exam-hero-card" onclick="startAllergenTest(null)">
@@ -22568,11 +22928,14 @@ function renderExamSetup(){
           <svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.2" opacity=".4"/><path d="M12 8v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="15" r="1.2" fill="#fff"/></svg>
         </div>
         <div class="exam-hero-body">
-          <div class="exam-hero-title">${LANG==='en'?'Allergen Test':'Test de Alérgenos'}</div>
-          <div class="exam-hero-sub">${LANG==='en'?'Real situations · Traps included':'Situaciones reales · Con trampas'}</div>
+          <div class="exam-hero-title">${_en?'Allergen Test':'Test de Alérgenos'}</div>
+          <div class="exam-hero-sub">${_en?'Real situations · Traps included':'Situaciones reales · Con trampas'}</div>
         </div>
         <svg class="exam-hero-arrow" width="22" height="22" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c47068" opacity=".15"/><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="none" stroke="#c47068" stroke-width="1" opacity=".4"/><polyline points="10 8 14 12 10 16" fill="none" stroke="#c47068" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
+
+      <!-- Gilded divider -->
+      <div class="exam-gilded-divider"><span>◆</span></div>
 
       <div class="section-eyebrow">${t('topicTheme')}</div>
       <div class="opt-grid" id="topicOpts">
