@@ -7074,6 +7074,138 @@ body::after{
 
 @keyframes srPulseCombo{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
 @keyframes srShakeWrong{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* ═══════════════════════════════════════════════════════
+   ⚡ MOBILE PERFORMANCE OPTIMIZATION PASS ⚡
+   - content-visibility for off-screen list items
+   - contain: to isolate layout/paint scope
+   - reduce blur intensity on mobile
+   - disable always-on animations on mobile compositor
+   - respect prefers-reduced-motion
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Long repeating lists get content-visibility so browsers can skip
+      off-screen rendering completely. Intrinsic size prevents scroll jumps. ── */
+.wine-card,
+.dish-card,
+.sommelier-match,
+.maridaje-item,
+.exam-topic-bar,
+.sr-next-item,
+.recipe-card,
+.module-card,
+.allergen-card{
+  content-visibility:auto;
+  contain-intrinsic-size:auto 120px;
+  contain:layout paint style;
+}
+
+/* Ensure the cards' own paint layer doesn't escape */
+.wine-card,.dish-card,.module-card{
+  transform:translateZ(0);
+}
+
+/* ── Heavy animated backdrops should only composite, not invalidate layout ── */
+.wine-cinematic-backdrop,
+.wine-godrays,
+.exam-aura-backdrop,
+.exam-aura-godrays,
+.tunic-subtabs::before,
+.wine-shimmer-overlay,
+.wine-hex-medallion::before,
+.wine-hex-medallion::after{
+  contain:strict;
+  will-change:opacity;
+}
+
+/* ── Pause sparkles / god-rays / backdrop-drift entirely when the parent
+      element isn't visible (content-visibility:auto hides offscreen work,
+      but the animation spec still ticks; this short-circuits it). ── */
+@media (max-width:800px){
+  /* Reduce mobile blur cost — blur is the single biggest fps killer on
+     mid-range mobile GPUs. Halve or remove where it's decorative. */
+  .wine-cinematic-backdrop,
+  .wine-godrays{
+    filter:none !important;
+  }
+  .exam-aura-backdrop{filter:none !important}
+  .wine-hub-title{filter:none !important}
+
+  /* Slow the slowest repeat animations — they add compositor load
+     without contributing meaningfully to the aesthetic at 60fps. */
+  .wine-cinematic-backdrop::before,
+  .wine-cinematic-backdrop::after,
+  .wine-godrays,
+  .exam-aura-backdrop,
+  .exam-aura-godrays{
+    animation-duration:30s !important;
+  }
+
+  /* Disable the always-on wine-card glow — it fires on EVERY card in
+     the carta (80+ items) simultaneously, which is the main scroll killer. */
+  .wine-card{animation:none !important}
+
+  /* Sparkles in the wine hero — limit to 3 iterations then stop */
+  .wine-hub-sparkle{animation-iteration-count:3 !important}
+
+  /* Reduce backdrop-filter intensity on mobile — expensive on iOS Safari */
+  .glass-panel,
+  .nav-sticky,
+  .sensory-detail,
+  .wine-map-tooltip,
+  .txk-toast{
+    backdrop-filter:blur(6px) !important;
+    -webkit-backdrop-filter:blur(6px) !important;
+  }
+
+  /* Turn off tunic sub-tab aura pulse — it animates a box-shadow which
+     triggers paint on every frame, expensive when scrolling. */
+  .tunic-stab.active{animation:tunic-stab-in .3s ease both !important}
+
+  /* Medallions stop pulsing; they're decorative. */
+  .wine-hex-medallion,
+  .exam-medallion,
+  .exam-medallion::before{animation:none !important}
+}
+
+/* ── Extra-small / low-power devices: cut even more ── */
+@media (max-width:420px) and (pointer:coarse){
+  /* Remove pattern-drift on wine backdrop — it's barely visible and
+     forces a continuous repaint of a full-viewport layer. */
+  .wine-cinematic-backdrop::after{animation:none !important}
+  /* Godrays on wine hero — reduce to a static look */
+  .wine-godrays{animation:none !important;opacity:.6 !important}
+  /* Corner dot pulsing is eye candy; not worth the cost on small screens */
+  .wine-corner-dot{animation:none !important}
+  /* Shimmer sweeps on wine cards — just animation garbage on scroll */
+  .wine-shimmer-overlay::before{animation:none !important;opacity:0 !important}
+}
+
+/* ── Respect user's reduced-motion preference globally ── */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* ── Scroll-performance: make long scrollables GPU-friendly ── */
+#appContent,
+.scroll-container,
+.exam-setup-wrap{
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Disable hover animations on touch (they never trigger but the
+   compositor still prepares their layers). */
+@media (hover:none){
+  .wine-card:hover,.dish-card:hover,.module-card:hover{
+    transform:none;
+  }
+}
+
 </style>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
