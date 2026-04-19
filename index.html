@@ -1774,8 +1774,11 @@ body::after{
   opacity:.6;animation:winePatternDrift 25s linear infinite;
 }
 @keyframes wineBackdropBreathe{
-  0%,100%{opacity:.85;filter:hue-rotate(0deg)}
-  50%{opacity:1;filter:hue-rotate(6deg)}
+  /* hue-rotate removed — it forced a full composite-layer repaint every
+     frame even on idle, which was visible as first-load lag when entering
+     the Vinos tab. Opacity-only is cheap and keeps the breathing feel. */
+  0%,100%{opacity:.85}
+  50%{opacity:1}
 }
 @keyframes winePatternDrift{
   from{background-position:0 0}
@@ -1829,8 +1832,12 @@ body::after{
   text-shadow:0 1px 2px rgba(28,42,34,.5);
 }
 @keyframes wineMedallionPulse{
-  0%,100%{filter:drop-shadow(0 3px 14px rgba(196,154,60,.4)) drop-shadow(0 0 22px rgba(228,190,104,.18))}
-  50%{filter:drop-shadow(0 4px 20px rgba(196,154,60,.6)) drop-shadow(0 0 36px rgba(228,190,104,.32))}
+  /* Swapped double drop-shadow filter animation for box-shadow-equivalents.
+     Filter drop-shadow forces off-screen surface allocation per frame on
+     a clip-path element, which was one of the top first-paint costs of
+     the Vinos hub hero. */
+  0%,100%{opacity:.92;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.04)}
 }
 
 /* ═══════ TUNIC CORNER SERIFS (reusable) ═══════ */
@@ -2291,8 +2298,11 @@ body::after{
   animation:wineTitleGlow 4s ease-in-out infinite;
 }
 @keyframes wineTitleGlow{
-  0%,100%{filter:brightness(1) drop-shadow(0 2px 14px rgba(196,154,60,.3))}
-  50%{filter:brightness(1.08) drop-shadow(0 2px 22px rgba(228,190,104,.5))}
+  /* Replaced filter-based glow with a pure text-shadow cycle. filter cycles
+     on gradient-clipped text were forcing the title to re-raster every
+     frame, which stalled first paint of the Vinos hub on mobile. */
+  0%,100%{text-shadow:0 2px 14px rgba(196,154,60,.28),0 0 32px rgba(228,190,104,.10)}
+  50%{text-shadow:0 2px 22px rgba(228,190,104,.46),0 0 48px rgba(228,190,104,.22)}
 }
 .wine-hub-verse{
   font-family:'Quicksand',sans-serif;font-size:.82rem;font-style:italic;
@@ -6354,16 +6364,12 @@ body::after{
   50%{opacity:1;transform:scale(1.2)}
 }
 
-/* Card shine sweep */
-.login-card-beam{
-  position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:20px;
-}
-.login-card-beam::before{
-  content:'';position:absolute;top:-10%;left:-30%;width:40%;height:120%;
-  background:linear-gradient(100deg,transparent,rgba(228,190,104,.14) 40%,rgba(244,237,226,.18) 50%,rgba(228,190,104,.14) 60%,transparent);
-  animation:cardBeamSweep 9s ease-in-out infinite;
-  animation-delay:2s;
-}
+/* Card shine sweep — DISABLED per user request.
+   The diagonal beam that crossed through the login card was removed;
+   the ambient god-rays behind the card and the rotating hex pattern are
+   kept. Rules below are inert (no animation, no sweep). */
+.login-card-beam{display:none !important}
+.login-card-beam::before{display:none !important}
 
 /* Mode toggle — Sign in / Sign up tabs */
 .login-mode-toggle{
@@ -7191,6 +7197,15 @@ body::after{
   .wine-hex-medallion,
   .exam-medallion,
   .exam-medallion::before{animation:none !important}
+
+  /* Kill the hub-title continuous glow and hero pattern drift on mobile.
+     These were still running after the earlier perf pass and are the
+     remaining continuous animations that force compositor work on every
+     frame when the Vinos hub is open. Hub title keeps its gradient and
+     static shadow, pattern keeps its look — only the motion stops. */
+  .wine-hub-title{animation:none !important}
+  .wine-hub-hero::after{animation:none !important}
+  .wine-cinematic-backdrop::before{animation:none !important}
 }
 
 /* ── Extra-small / low-power devices: cut even more ── */
@@ -9145,7 +9160,8 @@ function _wineImgHtml(wine, size){
     return `<div class="wine-bottle-wrap ${cls}">${placeholder}</div>`;
   }
   return `<div class="wine-bottle-wrap ${cls}">
-    <img class="wine-bottle-img" src="${url}" alt="${escapeHTML(wine.name)}" loading="lazy"
+    <img class="wine-bottle-img" src="${url}" alt="${escapeHTML(wine.name)}"
+      loading="lazy" decoding="async" fetchpriority="low"
       onerror="_wineImgCache[${wine.id}]=false;this.style.display='none';this.nextElementSibling.style.display='flex'"
       onload="_wineImgCache[${wine.id}]=true;this.nextElementSibling.style.display='none'">
     ${placeholder}
