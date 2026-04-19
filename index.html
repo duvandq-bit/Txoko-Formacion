@@ -7890,13 +7890,13 @@ const PROTOCOLO_SECTIONS = [
     rules: [
       { id:'p1', title:'3 pasos del servicio (Ritz-Carlton)', title_en:'3 Steps of Service', body:'1. Dar una cordial y sincera bienvenida utilizando el nombre del huésped. 2. Anticiparse y satisfacer las necesidades de cada huésped. 3. Dar una cordial y afectuosa despedida utilizando el nombre del huésped.', body_en:'1. Give a warm and sincere greeting using the guest name. 2. Anticipate and fulfil the needs of each guest. 3. Give a fond farewell using the guest name.' },
       { id:'p2', title:'Explicación y storytelling de cada plato', title_en:'Dish explanation & storytelling', body:'Cada plato debe explicarse al llegar a la mesa: nombre, ingredientes principales y su storytelling.', body_en:'Every dish must be explained upon arrival: name, main ingredients and its story.' },
-      { id:'p3', title:'Protocolo para el servicio de carnes', title_en:'Meat service protocol', body:'Mostrar los puntos de cocción, confirmar el punto elegido con el cliente y comandar la carne indicando el punto exacto.', body_en:'Show cooking levels, confirm the chosen point with the guest and order the meat indicating the exact point.' },
+      { id:'p3', title:'Protocolo para el servicio de carnes', title_en:'Meat service protocol', body:'Mostrar los puntos de cocción, confirmar el punto elegido con el huésped y comandar la carne indicando el punto exacto.', body_en:'Show cooking levels, confirm the chosen point with the guest and order the meat indicating the exact point.' },
       { id:'p4', title:'Ofrecer sal y pimienta tras cortar la carne', title_en:'Salt & pepper after carving', body:'Siempre que se corte carne en la mesa, se debe ofrecer sal y pimienta inmediatamente después.', body_en:'Whenever meat is carved at the table, salt and pepper must be offered immediately after.' },
       { id:'p5', title:'Marcaje correcto de la mesa', title_en:'Correct table setting', body:'La mesa debe estar correctamente marcada antes de que llegue cualquier plato. No se permitirá que un plato llegue a la mesa si el marcaje correspondiente no está preparado.', body_en:'The table must be correctly set before any dish arrives. No dish may arrive if the corresponding cutlery is not ready.' },
       { id:'p6', title:'Guarniciones y salsas siempre con cuchara', title_en:'Sides & sauces always with spoon', body:'Todas las guarniciones y salsas deben salir siempre con cuchara. El marcaje debe seguir exactamente el Plating Guide o la aplicación operativa.', body_en:'All sides and sauces must always be served with a spoon, following the Plating Guide exactly.' },
-      { id:'p7', title:'Gestión de copas en mesa', title_en:'Glass management', body:'Si un cliente no desea continuar con una bebida, la copa debe retirarse inmediatamente. No se deben dejar copas vacías en mesa.', body_en:'If a guest no longer wishes to drink, the glass must be removed immediately. No empty glasses on the table.' },
+      { id:'p7', title:'Gestión de copas en mesa', title_en:'Glass management', body:'Si un huésped no desea continuar con una bebida, la copa debe retirarse inmediatamente. No se deben dejar copas vacías en mesa.', body_en:'If a guest no longer wishes to drink, the glass must be removed immediately. No empty glasses on the table.' },
       { id:'p8', title:'Informar tiempos de cocina', title_en:'Inform kitchen timing', body:'Cuando una mesa solicite marcha y pasa o desee pedir por partes, se debe informar que el siguiente paso puede tardar aproximadamente 40 minutos.', body_en:'When a table requests courses or wishes to order in parts, inform them that the next course may take approximately 40 minutes.' },
-      { id:'p9', title:'Igualdad al remontar mesa', title_en:'Equal service when resetting', body:'Cuando una mesa se remonta para un nuevo cliente, debe recibir exactamente las mismas condiciones de servicio, limpieza y preparación que el primer cliente.', body_en:'When a table is reset for a new guest, they must receive exactly the same service conditions as the previous guest.' },
+      { id:'p9', title:'Igualdad al remontar mesa', title_en:'Equal service when resetting', body:'Cuando una mesa se remonta para un nuevo huésped, debe recibir exactamente las mismas condiciones de servicio, limpieza y preparación que el primer huésped.', body_en:'When a table is reset for a new guest, they must receive exactly the same service conditions as the previous guest.' },
       { id:'p10', title:'Limpieza de sillas', title_en:'Chair cleaning', body:'Las sillas deben revisarse y limpiarse antes de cada servicio y durante el mismo si es necesario.', body_en:'Chairs must be checked and cleaned before each service and during service if necessary.' },
     ]
   },
@@ -7925,7 +7925,7 @@ const PROTOCOLO_SECTIONS = [
     color: '#5a9a6e',
     rules: [
       { id:'p19', title:'Gestión de alergias en cada comanda', title_en:'Allergy management per order', body:'Una vez identificada una alergia, debe indicarse en cada plato, guarnición y modificación para evitar contaminación cruzada en cocina.', body_en:'Once an allergy is identified, it must be noted on every dish, side and modification to avoid cross-contamination in the kitchen.' },
-      { id:'p20', title:'Consumo de alérgenos bajo responsabilidad del cliente', title_en:'Allergen consumption at guest’s risk', body:'Si un huésped insiste en consumir un plato que contiene un alérgeno que ha declarado, escribir en la comanda "OK CLIENTE".', body_en:'If a guest insists on consuming a dish containing a declared allergen, write "OK CLIENT" on the order.' },
+      { id:'p20', title:'Consumo de alérgenos bajo responsabilidad del huésped', title_en:'Allergen consumption at guest’s risk', body:'Si un huésped insiste en consumir un plato que contiene un alérgeno que ha declarado, escribir en la comanda "OK HUÉSPED".', body_en:'If a guest insists on consuming a dish containing a declared allergen, write "OK GUEST" on the order.' },
       { id:'p21', title:'Política de comida para llevar', title_en:'Takeaway policy', body:'No está permitido pedir postres para llevar. Solo se pueden llevar restos de comida ya consumida parcialmente.', body_en:'Desserts may not be taken away. Only partially consumed food may be taken.' },
       { id:'p22', title:'Food Waiver para llevar', title_en:'Food Waiver for takeaway', body:'Si el huésped desea llevarse restos, debe firmar el documento Food Waiver disponible en la recepción de la Hostess.', body_en:'If the guest wishes to take leftovers, they must sign the Food Waiver document available at the Hostess reception.' },
       { id:'p23', title:'Gestión de Under 4', title_en:'Under 4 management', body:'Cuando una habitación tenga régimen Full Board o Half Board, los Under 4 deben abrirse en una cuenta separada usando el número de habitación seguido de la letra U.', body_en:'When a room is on Full or Half Board, Under 4 must be opened on a separate account using the room number followed by the letter U.' },
@@ -7966,14 +7966,14 @@ let protocoloExamState = null;
 const CASOS_PRACTICOS = [
 
   { id:'c1', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente pide el chuletón. ¿Qué haces antes de comandarlo?',
+    situation: 'Un huésped pide el chuletón. ¿Qué haces antes de comandarlo?',
     situation_en: 'A guest orders the chuletón. What do you do before ordering it?',
     correct: 'Muestro los puntos de cocción, confirmo el punto elegido y comando indicando el punto exacto.',
     correct_en: 'I show the cooking levels, confirm the chosen point and order specifying the exact doneness.',
     traps: [
       'Comando el chuletón y luego pregunto el punto cuando lo traiga cocina.',
-      'Pregunto el punto de cocción solo si el cliente parece indeciso.',
-      'Muestro los puntos de cocción pero espero a que el cliente elija sin confirmar.'
+      'Pregunto el punto de cocción solo si el huésped parece indeciso.',
+      'Muestro los puntos de cocción pero espero a que el huésped elija sin confirmar.'
     ],
     traps_en: [
       'Order the chuletón and ask about doneness when the kitchen brings it.',
@@ -7983,14 +7983,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c2', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente acaba de recibir su carne en la mesa. ¿Qué debes hacer inmediatamente?',
+    situation: 'Un huésped acaba de recibir su carne en la mesa. ¿Qué debes hacer inmediatamente?',
     situation_en: 'A guest has just received their meat at the table. What must you do immediately?',
-    correct: 'Ofrecer sal y pimienta al cliente sin esperar a que lo pida.',
+    correct: 'Ofrecer sal y pimienta al huésped sin esperar a que lo pida.',
     correct_en: 'Offer salt and pepper to the guest without waiting to be asked.',
     traps: [
-      'Ofrecer sal y pimienta solo si el cliente empieza a buscar algo en la mesa.',
-      'Preguntar al cliente si necesita algo más antes de ofrecer sal y pimienta.',
-      'Esperar a que el cliente pruebe la carne antes de ofrecer sal y pimienta.'
+      'Ofrecer sal y pimienta solo si el huésped empieza a buscar algo en la mesa.',
+      'Preguntar al huésped si necesita algo más antes de ofrecer sal y pimienta.',
+      'Esperar a que el huésped pruebe la carne antes de ofrecer sal y pimienta.'
     ],
     traps_en: [
       'Offer salt and pepper only if the guest starts looking for something on the table.',
@@ -8000,14 +8000,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c3', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente lleva 15 minutos con la copa de vino sin tocar. ¿Qué haces?',
+    situation: 'Un huésped lleva 15 minutos con la copa de vino sin tocar. ¿Qué haces?',
     situation_en: 'A guest has had their wine glass untouched for 15 minutes. What do you do?',
     correct: 'Pregunto con educación si desea que retire la copa. Si confirma, la retiro inmediatamente.',
     correct_en: 'I politely ask if they would like the glass removed. If they confirm, I remove it immediately.',
     traps: [
-      'Retiro la copa sin decir nada para no interrumpir al cliente.',
-      'Espero a que el cliente termine el plato antes de retirar la copa.',
-      'Ofrezco al cliente cambiar el vino por otra bebida antes de retirar la copa.'
+      'Retiro la copa sin decir nada para no interrumpir al huésped.',
+      'Espero a que el huésped termine el plato antes de retirar la copa.',
+      'Ofrezco al huésped cambiar el vino por otra bebida antes de retirar la copa.'
     ],
     traps_en: [
       'Remove the glass without saying anything to avoid interrupting the guest.',
@@ -8039,7 +8039,7 @@ const CASOS_PRACTICOS = [
     correct: 'No permito que el plato llegue a la mesa. La mesa debe estar correctamente marcada antes de que llegue cualquier plato.',
     correct_en: 'I do not allow the dish to arrive at the table. The table must be correctly set before any dish arrives.',
     traps: [
-      'Dejo que salga el plato y marco la mesa mientras el cliente empieza a comer.',
+      'Dejo que salga el plato y marco la mesa mientras el huésped empieza a comer.',
       'Aviso a cocina que espere unos segundos y marco la mesa rápidamente.',
       'Pido a un compañero que lleve el plato mientras yo termino el marcaje.'
     ],
@@ -8057,7 +8057,7 @@ const CASOS_PRACTICOS = [
     correct_en: 'Always with a spoon. All sides and sauces must come with a spoon according to the Plating Guide.',
     traps: [
       'Con los cubiertos del plato principal, ya que es un acompañamiento.',
-      'Sin cubierto específico si el cliente ya tiene cubiertos en mesa.',
+      'Sin cubierto específico si el huésped ya tiene cubiertos en mesa.',
       'Con cuchara solo si la salsa es líquida; si es espesa, con cuchara de postre.'
     ],
     traps_en: [
@@ -8109,7 +8109,7 @@ const CASOS_PRACTICOS = [
     traps: [
       'Termino lo que estoy haciendo, abro la mesa y tomo la comanda lo antes posible.',
       'Tomo la comanda verbalmente y la introduzco en el sistema en cuanto pueda.',
-      'Aviso al supervisor solo si el cliente empieza a mostrar impaciencia.'
+      'Aviso al supervisor solo si el huésped empieza a mostrar impaciencia.'
     ],
     traps_en: [
       'Finish what I am doing, open the table and take the order as soon as possible.',
@@ -8119,13 +8119,13 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c10', section:'comandas', color:'#d4944c', icon:TXKO_ICONS.pComandas,
-    situation: 'Un cliente en cena pide una piña colada que no está en la carta de vinos. ¿Qué le dices?',
+    situation: 'Un huésped en cena pide una piña colada que no está en la carta de vinos. ¿Qué le dices?',
     situation_en: 'A guest at dinner orders a piña colada not on the wine menu. What do you say?',
     correct: 'Le informo que durante la cena ofrecemos nuestra carta de vinos. Queda prohibida la coctelería fuera de carta.',
     correct_en: 'I inform the guest that during dinner only cocktails on the wine menu can be offered. Off-menu cocktails are not permitted.',
     traps: [
       'Consulto con el barman si puede prepararlo de forma excepcional esta noche.',
-      'Ofrezco al cliente un cóctel similar de la carta como alternativa sin explicar la norma.',
+      'Ofrezco al huésped un cóctel similar de la carta como alternativa sin explicar la norma.',
       'Pregunto al supervisor si en este caso se puede hacer una excepción.'
     ],
     traps_en: [
@@ -8172,16 +8172,16 @@ const CASOS_PRACTICOS = [
   { id:'c13', section:'sistema', color:'#5a9a6e', icon:TXKO_ICONS.pSistema,
     situation: 'Un huésped declara alergia al gluten pero insiste en comer el pan de masa madre. ¿Cómo actúas?',
     situation_en: 'A guest declares a gluten allergy but insists on eating the sourdough bread. How do you act?',
-    correct: 'Informo al cliente del riesgo, y si insiste, escribo OK CLIENTE en la comanda. El consumo queda bajo su responsabilidad.',
-    correct_en: 'I inform the guest of the risk, and if they still insist, I write OK CLIENT on the order. Consumption is at their own risk.',
+    correct: 'Informo al huésped del riesgo, y si insiste, escribo OK HUÉSPED en la comanda. El consumo queda bajo su responsabilidad.',
+    correct_en: 'I inform the guest of the risk, and if they still insist, I write OK GUEST on the order. Consumption is at their own risk.',
     traps: [
-      'Informo del riesgo al cliente y llamo al manager para que autorice el servicio.',
-      'Sirvo el pan anotando la alergia en la comanda sin necesidad de OK CLIENTE.',
-      'No sirvo el pan bajo ningún concepto aunque el cliente haya sido informado del riesgo.'
+      'Informo del riesgo al huésped y llamo al manager para que autorice el servicio.',
+      'Sirvo el pan anotando la alergia en la comanda sin necesidad de OK HUÉSPED.',
+      'No sirvo el pan bajo ningún concepto aunque el huésped haya sido informado del riesgo.'
     ],
     traps_en: [
       'Inform the guest of the risk and call the manager to authorise the service.',
-      'Serve the bread noting the allergy in the order without needing OK CLIENT.',
+      'Serve the bread noting the allergy in the order without needing OK GUEST.',
       'Do not serve the bread under any circumstances even if the guest has been informed of the risk.'
     ]
   },
@@ -8192,7 +8192,7 @@ const CASOS_PRACTICOS = [
     correct: 'Le pido que firme el Food Waiver en recepción de la Hostess. Solo se pueden llevar restos de comida, nunca postres.',
     correct_en: 'I ask them to sign the Food Waiver at the Hostess reception. Only food leftovers can be taken, never desserts.',
     traps: [
-      'Le preparo un táper y se lo entrego — es un derecho del cliente llevarse su comida.',
+      'Le preparo un táper y se lo entrego — es un derecho del huésped llevarse su comida.',
       'Le explico que puede llevárselo pero que debe firmar en recepción del hotel.',
       'Consulto con el manager si en este caso se puede hacer una excepción al protocolo.'
     ],
@@ -8238,14 +8238,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c17', section:'sistema', color:'#5a9a6e', icon:TXKO_ICONS.pSistema,
-    situation: 'Un cliente declara alergia al marisco y a los moluscos. Pide el arroz negro con txipirones. ¿Qué haces?',
+    situation: 'Un huésped declara alergia al marisco y a los moluscos. Pide el arroz negro con txipirones. ¿Qué haces?',
     situation_en: 'A guest declares an allergy to shellfish and molluscs. They order black rice with squid. What do you do?',
-    correct: 'El txipiron es un molusco — el plato no es apto. Informo al cliente y le ofrezco alternativas.',
+    correct: 'El txipiron es un molusco — el plato no es apto. Informo al huésped y le ofrezco alternativas.',
     correct_en: 'The txipiron is a mollusc — the dish is not suitable. I inform the guest and offer alternatives.',
     traps: [
       'Indico la alergia en la comanda y aviso a cocina para que extreme las precauciones.',
       'Pregunto a cocina si pueden preparar el arroz negro sin txipirones como excepción.',
-      'Informo al cliente que el plato contiene moluscos pero que puede prepararse sin txipiron.'
+      'Informo al huésped que el plato contiene moluscos pero que puede prepararse sin txipiron.'
     ],
     traps_en: [
       'Note the allergy on the order and warn the kitchen to take extra precautions.',
@@ -8294,9 +8294,9 @@ const CASOS_PRACTICOS = [
     correct: 'Me responsabilizo y resuelvo inmediatamente el incidente con el huésped. A la vez comunico lo ocurrido al supervisor o manager lo antes posible.',
     correct_en: 'I own and immediately resolve the guest problem. At the same time I inform the supervisor or manager as soon as possible.',
     traps: [
-      'Me disculpo con el cliente y gestiono el problema en cuanto localice al supervisor.',
+      'Me disculpo con el huésped y gestiono el problema en cuanto localice al supervisor.',
       'Resuelvo el incidente y lo anoto para comunicárselo al supervisor al final del servicio.',
-      'Me disculpo con el cliente y le explico que el supervisor lo resolverá en breve.'
+      'Me disculpo con el huésped y le explico que el supervisor lo resolverá en breve.'
     ],
     traps_en: [
       'Apologise to the guest and handle the problem as soon as I find the supervisor.',
@@ -8306,7 +8306,7 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c21', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente dice que su carne está demasiado hecha. ¿Qué haces?',
+    situation: 'Un huésped dice que su carne está demasiado hecha. ¿Qué haces?',
     situation_en: 'A guest says their meat is overcooked. What do you do?',
     correct: 'Me disculpo inmediatamente, retiro el plato y lo comunico a cocina para preparar uno nuevo al punto correcto.',
     correct_en: 'I apologise immediately, remove the dish and inform the kitchen to prepare a new one to the correct doneness.',
@@ -8323,14 +8323,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c22', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Sin querer derramas vino sobre la ropa de un cliente. ¿Qué haces?',
+    situation: 'Sin querer derramas vino sobre la ropa de un huésped. ¿Qué haces?',
     situation_en: 'You accidentally spill wine on a guest’s clothing. What do you do?',
     correct: 'Me disculpo inmediatamente, ofrezco servilletas limpias, aviso al manager y ofrezco gestionar la limpieza a través del hotel.',
     correct_en: 'I apologise immediately, offer clean napkins, notify the manager and offer to arrange cleaning through the hotel.',
     traps: [
-      'Me disculpo, ofrezco servilletas y continúo el servicio — el cliente puede reclamar al hotel si lo desea.',
+      'Me disculpo, ofrezco servilletas y continúo el servicio — el huésped puede reclamar al hotel si lo desea.',
       'Me disculpo, ofrezco servilletas y aviso al manager al final del servicio.',
-      'Me disculpo profusamente y ofrezco servilletas, esperando que el cliente indique qué necesita.'
+      'Me disculpo profusamente y ofrezco servilletas, esperando que el huésped indique qué necesita.'
     ],
     traps_en: [
       'Apologise, offer napkins and continue service — the guest can claim to the hotel if they wish.',
@@ -8357,14 +8357,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c24', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente termina su entrante muy rápido y cocina aún no tiene el principal listo. ¿Qué haces?',
+    situation: 'Un huésped termina su entrante muy rápido y cocina aún no tiene el principal listo. ¿Qué haces?',
     situation_en: 'A guest finishes their starter very quickly and the kitchen does not have the main ready. What do you do?',
-    correct: 'Marcho el siguiente plato desde Infrasys, limpio la mesa, marco el siguiente plato, informo al cliente que el plato estará en breve y ofrezco bebidas o pregunto si desea más pan.',
+    correct: 'Marcho el siguiente plato desde Infrasys, limpio la mesa, marco el siguiente plato, informo al huésped que el plato estará en breve y ofrezco bebidas o pregunto si desea más pan.',
     correct_en: 'I fire the next dish from Infrasys, clear the table, set for the next course, inform the guest the dish will be ready shortly and offer drinks or ask if they would like more bread.',
     traps: [
       'Retiro el plato vacío y marco la mesa — marcho el plato desde Infrasys cuando cocina avise.',
-      'Informo al cliente y ofrezco más pan, esperando a que cocina saque el plato por su propio ritmo.',
-      'Marco desde Infrasys y retiro el plato vacío pero no marco la mesa ni informo al cliente.'
+      'Informo al huésped y ofrezco más pan, esperando a que cocina saque el plato por su propio ritmo.',
+      'Marco desde Infrasys y retiro el plato vacío pero no marco la mesa ni informo al huésped.'
     ],
     traps_en: [
       'Remove the empty plate, offer more bread and inform the guest — I fire the dish when the kitchen is ready.',
@@ -8374,14 +8374,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c25', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente pide un plato que ya no está en carta. ¿Qué haces?',
+    situation: 'Un huésped pide un plato que ya no está en carta. ¿Qué haces?',
     situation_en: 'A guest asks for a dish that is no longer on the menu. What do you do?',
     correct: 'Me disculpo, informo que ese plato ya no está disponible y ofrezco alternativas similares de la carta actual.',
     correct_en: 'I apologise, inform the guest that the dish is no longer available and offer similar alternatives from the current menu.',
     traps: [
       'Consulto con cocina si pueden prepararlo de forma excepcional antes de decirle que no.',
       'Informo que no está disponible y ofrezco alternativas sin disculparme.',
-      'Me disculpo e informo que no está disponible, esperando que el cliente pida algo por su cuenta.'
+      'Me disculpo e informo que no está disponible, esperando que el huésped pida algo por su cuenta.'
     ],
     traps_en: [
       'Check with the kitchen if they can prepare it exceptionally before saying no.',
@@ -8391,14 +8391,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c26', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente pide la cuenta pero aún le queda el postre por llegar. ¿Qué haces?',
+    situation: 'Un huésped pide la cuenta pero aún le queda el postre por llegar. ¿Qué haces?',
     situation_en: 'A guest asks for the bill but their dessert has not arrived yet. What do you do?',
     correct: 'Traigo la cuenta para que la revisen mientras esperan el postre. No cobro hasta que terminen de comer.',
     correct_en: 'I bring the bill so they can review it while waiting for dessert. I do not charge until they have finished.',
     traps: [
       'Traigo la cuenta y cobro para agilizar — el postre llegará igualmente.',
-      'Informo al cliente que traeré la cuenta en cuanto llegue el postre.',
-      'Pregunto al cliente si prefiere que cancele el postre para poder cobrar antes.'
+      'Informo al huésped que traeré la cuenta en cuanto llegue el postre.',
+      'Pregunto al huésped si prefiere que cancele el postre para poder cobrar antes.'
     ],
     traps_en: [
       'Bring the bill and charge to speed things up — the dessert will still arrive.',
@@ -8408,14 +8408,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c27', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente pide cambiar de mesa a mitad del servicio porque le molesta el ruido. ¿Qué haces?',
+    situation: 'Un huésped pide cambiar de mesa a mitad del servicio porque le molesta el ruido. ¿Qué haces?',
     situation_en: 'A guest asks to change tables mid-service because of noise. What do you do?',
     correct: 'Consulto inmediatamente con el manager o la Hostess para buscar una mesa disponible y coordino el traslado.',
     correct_en: 'I immediately consult the manager or Hostess to find an available table and coordinate the move.',
     traps: [
       'Busco una mesa disponible yo mismo y hago el traslado sin molestar al manager.',
-      'Explico al cliente que cambiar de mesa a mitad del servicio es complicado y le pido paciencia.',
-      'Consulto con el manager pero pido al cliente que espere a terminar el plato actual antes de moverse.'
+      'Explico al huésped que cambiar de mesa a mitad del servicio es complicado y le pido paciencia.',
+      'Consulto con el manager pero pido al huésped que espere a terminar el plato actual antes de moverse.'
     ],
     traps_en: [
       'Find an available table myself and make the move without bothering the manager.',
@@ -8448,7 +8448,7 @@ const CASOS_PRACTICOS = [
     correct_en: 'I handle it in Infrasys splitting the total between guests. If there is a technical issue I notify the supervisor.',
     traps: [
       'Divido el total manualmente, lo anoto en papel y cobro a cada comensal por separado.',
-      'Informo al cliente que el sistema solo permite una cuenta por mesa y cobro todo junto.',
+      'Informo al huésped que el sistema solo permite una cuenta por mesa y cobro todo junto.',
       'Cobro todo a uno y le indico que puede reclamar el reembolso de las partes en recepción.'
     ],
     traps_en: [
@@ -8459,14 +8459,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c30', section:'sistema', color:'#9a7340', icon:TXKO_ICONS.pSistema,
-    situation: 'Un cliente quiere pagar parte a habitación y parte con tarjeta. ¿Qué haces?',
+    situation: 'Un huésped quiere pagar parte a habitación y parte con tarjeta. ¿Qué haces?',
     situation_en: 'A guest wants to charge part to the room and pay part by card. What do you do?',
     correct: 'Lo gestiono en Infrasys haciendo un split de pago. Si tengo dudas consulto al supervisor.',
     correct_en: 'I handle it in Infrasys with a split payment. If unsure I consult the supervisor.',
     traps: [
-      'Cargo todo a la habitación y le indico al cliente que abone la diferencia en recepción.',
+      'Cargo todo a la habitación y le indico al huésped que abone la diferencia en recepción.',
       'Cobro todo con tarjeta y le indico que solicite el cargo a habitación en recepción.',
-      'Informo al cliente que el sistema solo permite una forma de pago por cuenta.'
+      'Informo al huésped que el sistema solo permite una forma de pago por cuenta.'
     ],
     traps_en: [
       'Charge everything to the room and tell the guest to pay the difference at reception.',
@@ -8482,8 +8482,8 @@ const CASOS_PRACTICOS = [
     correct_en: 'I look up the order in the system to verify the charge. If there is an error I inform the manager immediately without modifying the bill.',
     traps: [
       'Busco la comanda, verifico el cargo y si hay error lo corrijo directamente para agilizar.',
-      'Derivo al cliente a recepción para que gestionen el cargo desde allí.',
-      'Verifico el cargo con el cliente y si no lo recuerda le doy el beneficio de la duda y lo elimino.'
+      'Derivo al huésped a recepción para que gestionen el cargo desde allí.',
+      'Verifico el cargo con el huésped y si no lo recuerda le doy el beneficio de la duda y lo elimino.'
     ],
     traps_en: [
       'Look up the order, verify the charge and if there is an error correct it directly to speed things up.',
@@ -8493,14 +8493,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c32', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente fotografía cada plato antes de comer. ¿Qué haces?',
+    situation: 'Un huésped fotografía cada plato antes de comer. ¿Qué haces?',
     situation_en: 'A guest photographs every dish before eating. What do you do?',
     correct: 'Espero con discreción a que termine de fotografiar antes de hacer la explicación del plato.',
     correct_en: 'I wait discreetly for them to finish photographing before giving the dish explanation.',
     traps: [
       'Inicio la explicación del plato en voz baja para no interrumpir pero sin esperar.',
-      'Sirvo el plato y me retiro sin dar explicación para no interrumpir al cliente.',
-      'Pregunto al cliente si prefiere que le explique el plato antes o después de fotografiar.'
+      'Sirvo el plato y me retiro sin dar explicación para no interrumpir al huésped.',
+      'Pregunto al huésped si prefiere que le explique el plato antes o después de fotografiar.'
     ],
     traps_en: [
       'Start the dish explanation in a low voice so as not to interrupt but without waiting.',
@@ -8510,9 +8510,9 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c33', section:'comandas', color:'#d4944c', icon:TXKO_ICONS.pComandas,
-    situation: 'Un cliente llega 45 minutos tarde a su reserva. ¿Qué haces?',
+    situation: 'Un huésped llega 45 minutos tarde a su reserva. ¿Qué haces?',
     situation_en: 'A guest arrives 45 minutes late for their reservation. What do you do?',
-    correct: 'Le doy la bienvenida con normalidad y consulto con el manager si la mesa sigue disponible. Informo al cliente con discreción si hay limitación de tiempo.',
+    correct: 'Le doy la bienvenida con normalidad y consulto con el manager si la mesa sigue disponible. Informo al huésped con discreción si hay limitación de tiempo.',
     correct_en: 'I welcome them normally and check with the manager if the table is still available. I discreetly inform the guest if there is a time limitation.',
     traps: [
       'Le siento directamente en la mesa — sigue siendo su reserva y hay que respetarla.',
@@ -8533,8 +8533,8 @@ const CASOS_PRACTICOS = [
     correct_en: 'I pass the message to the chef or manager. I do not interrupt the kitchen directly or promise the chef will come without confirming.',
     traps: [
       'Voy a cocina a transmitir el mensaje directamente y vuelvo con la respuesta del chef.',
-      'Transmito el mensaje al manager y prometo al cliente que el chef saldrá en cuanto pueda.',
-      'Agradezco el cumplido al cliente y le indico que lo haré llegar al chef al final del servicio.'
+      'Transmito el mensaje al manager y prometo al huésped que el chef saldrá en cuanto pueda.',
+      'Agradezco el cumplido al huésped y le indico que lo haré llegar al chef al final del servicio.'
     ],
     traps_en: [
       'Go to the kitchen to deliver the message directly and return with the chef’s response.',
@@ -8544,14 +8544,14 @@ const CASOS_PRACTICOS = [
   },
 
   { id:'c35', section:'servicio', color:'#4888a0', icon:TXKO_ICONS.pServicio,
-    situation: 'Un cliente menciona al sentarse que es su cumpleaños pero no hay nada reservado. ¿Qué haces?',
+    situation: 'Un huésped menciona al sentarse que es su cumpleaños pero no hay nada reservado. ¿Qué haces?',
     situation_en: 'A guest mentions as they sit down that it is their birthday but nothing has been arranged. What do you do?',
-    correct: 'Informo discretamente al manager para coordinar un detalle sorpresa. No prometo nada al cliente que no pueda cumplirse.',
+    correct: 'Informo discretamente al manager para coordinar un detalle sorpresa. No prometo nada al huésped que no pueda cumplirse.',
     correct_en: 'I discreetly inform the manager to coordinate a surprise. I do not promise the guest anything that cannot be guaranteed.',
     traps: [
-      'Felicito al cliente y coordino yo mismo un pequeño detalle sin molestar al manager.',
-      'Informo al manager y le digo al cliente que prepararemos algo especial para él.',
-      'Felicito al cliente y continúo el servicio — los detalles de cumpleaños deben reservarse con antelación.'
+      'Felicito al huésped y coordino yo mismo un pequeño detalle sin molestar al manager.',
+      'Informo al manager y le digo al huésped que prepararemos algo especial para él.',
+      'Felicito al huésped y continúo el servicio — los detalles de cumpleaños deben reservarse con antelación.'
     ],
     traps_en: [
       'Congratulate the guest and coordinate a small gesture myself without bothering the manager.',
@@ -8583,8 +8583,8 @@ const CASOS_PRACTICOS = [
     correct: 'Aplico el Valor 2: satisfacer las necesidades no expresadas. Me acerco con discreción y ofrezco ayuda con la selección.',
     correct_en: 'I apply Value 2: fulfil unexpressed needs. I approach discreetly and offer help with the selection.',
     traps: [
-      'Espero a que el cliente pida ayuda — acercarme sin ser llamado puede parecer intrusivo.',
-      'Envío al supervisor directamente para que asesore al cliente con la carta de vinos.',
+      'Espero a que el huésped pida ayuda — acercarme sin ser llamado puede parecer intrusivo.',
+      'Envío al supervisor directamente para que asesore al huésped con la carta de vinos.',
       'Me acerco y pregunto si le traigo la carta de cócteles mientras decide el vino.'
     ],
     traps_en: [
@@ -8601,7 +8601,7 @@ const CASOS_PRACTICOS = [
     correct_en: 'I apply Value 7: lateral service and teamwork. I approach the table and attend to them without waiting for my colleague to ask.',
     traps: [
       'Aviso a mi compañero de que tiene una mesa esperando para que él la atienda.',
-      'Atiendo la mesa pero le explico al cliente que su camarero llega enseguida.',
+      'Atiendo la mesa pero le explico al huésped que su camarero llega enseguida.',
       'Espero un momento más por si mi compañero puede atenderla antes de intervenir.'
     ],
     traps_en: [
@@ -8618,7 +8618,7 @@ const CASOS_PRACTICOS = [
     correct_en: 'I look for the name on the Hostess paper or in the system before they leave. If not possible, I give a warm and fond farewell regardless.',
     traps: [
       'Me despido con calidez sin usar el nombre — es mejor así que arriesgarme a equivocarlo.',
-      'Pregunto el nombre al cliente directamente antes de despedirme.',
+      'Pregunto el nombre al huésped directamente antes de despedirme.',
       'Aplico el Paso 3 solo cuando tengo el nombre confirmado — si no, una despedida estándar.'
     ],
     traps_en: [
@@ -9043,10 +9043,10 @@ const DISHES = [
   {id:12,cat:'Entrantes',name:'Jamón ibérico de bellota Gran Reserva',allergens:['Sulfitos','Gluten'],ingredients:'Jamón ibérico, Crujiente de pan, Tomata.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el crujiente de pan — Comandar SIN PAN.'},
   {id:13,cat:'Entrantes',name:'Cecina de Wagyu Premium',allergens:['Sulfitos','Gluten'],ingredients:'Cecina de Wagyu Premium, Pan tostado.',history:'Nuestros embutidos provienen de Casalba que nacen en Burgos, elaborados de forma artesanal, en donde el clima seco y la tradición familiar marcan el ritmo del curado.',notes:'⚠ Gluten en el pan tostado — Comandar SIN PAN.'},
   {id:14,cat:'Entrantes',name:'Tartar de remolacha',allergens:['Sulfitos'],ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' ÚNICO plato 100% VEGANO en la carta de cena.'},
-  {id:15,cat:'Entrantes',name:'Tartar de tomate y queso',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA.'},
-  {id:16,cat:'Entrantes',name:'Tartar de solomillo',allergens:['Huevos','Gluten','Pescado','Mostaza','Sulfitos','Apio'],ingredients:'Solomillo vacuno, Pan carasau, Yema de huevo, Salsa Perrins, Tabasco, Mostaza savora (Apio), Aceite de oliva, Cebolleta, Cebollino, Pepinillo, Pimienta.',history:'Un clásico de Martín con su receta de más de 30 años haciéndose de la misma manera.',notes:'⚠ Mostaza y Apio en la mostaza savora — puede prepararse sin mostaza savora pero requiere preparación desde cero (~30 min). Avisar al cliente antes de confirmar. Comandar SIN MOSTAZA SAVORA e informar al cliente de la espera. Gluten en el pan carasau — Comandar SIN PAN CARASAU.'},
+  {id:15,cat:'Entrantes',name:'Tartar de tomate y queso',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al huésped). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA.'},
+  {id:16,cat:'Entrantes',name:'Tartar de solomillo',allergens:['Huevos','Gluten','Pescado','Mostaza','Sulfitos','Apio'],ingredients:'Solomillo vacuno, Pan carasau, Yema de huevo, Salsa Perrins, Tabasco, Mostaza savora (Apio), Aceite de oliva, Cebolleta, Cebollino, Pepinillo, Pimienta.',history:'Un clásico de Martín con su receta de más de 30 años haciéndose de la misma manera.',notes:'⚠ Mostaza y Apio en la mostaza savora — puede prepararse sin mostaza savora pero requiere preparación desde cero (~30 min). Avisar al huésped antes de confirmar. Comandar SIN MOSTAZA SAVORA e informar al huésped de la espera. Gluten en el pan carasau — Comandar SIN PAN CARASAU.'},
   {id:17,cat:'Entrantes',name:'Tartar de lomo de atún',allergens:['Sulfitos','Pescado','Soja','Huevos'],ingredients:'Lomo de atún rojo, Tabasco, Teriyaki, Espuma de tomate (Agua de tomate, claras de huevo y gelatina), Yema de huevo curada en soja, Brotes de cilantro y cebolleta verde, Aceite de girasol y de oliva, Soja, Ponzu, Katsuobusi, Sake.',history:'Para nosotros es un producto emblemático de Canarias. Gerardo, nuestro contacto en la cofradía del Hierro, selecciona las piezas de primera mano. A este tartar coronamos con otros dos productos canarios por excelencia: tomate en textura de espuma y perfume suave del cilantro.',notes:null},
-  {id:18,cat:'Entrantes',name:'Tartar de Wagyu dry',allergens:['Huevos','Pescado','Mostaza','Apio','Sulfitos'],ingredients:'Carne de Wagyu madurada dry, Huevo, Cebolleta, Pepinillo, Salsa Perrins, Mostaza savora, Cebollino, Tabasco, Sal, Pimienta, Crujiente de papa, Trufa negra.',history:'La carne Wagyu proviene de una raza de vacas japonesas famosa por su alto marmoleo, lo que la hace muy tierna e ideal para formar parte de uno de nuestros tartares.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. Con aliño clásico, huevo a baja temperatura, crujiente de papa y trufa negra de Teruel laminada.'},
+  {id:18,cat:'Entrantes',name:'Tartar de Wagyu dry',allergens:['Huevos','Pescado','Mostaza','Apio','Sulfitos'],ingredients:'Carne de Wagyu madurada dry, Huevo, Cebolleta, Pepinillo, Salsa Perrins, Mostaza savora, Cebollino, Tabasco, Sal, Pimienta, Crujiente de papa, Trufa negra.',history:'La carne Wagyu proviene de una raza de vacas japonesas famosa por su alto marmoleo, lo que la hace muy tierna e ideal para formar parte de uno de nuestros tartares.',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al huésped). Comandar SIN MOSTAZA SAVORA. Con aliño clásico, huevo a baja temperatura, crujiente de papa y trufa negra de Teruel laminada.'},
   {id:19,cat:'Entrantes',name:'Pimiento relleno de ternera',allergens:['Lácteos','Sulfitos','Apio'],ingredients:'Pimiento rojo asado, Zanahoria, Cebolla, Morcillo, Ajo, Ají, Licuado de pimiento, Caldo de pollo, Apio.',history:'Relleno del pimiento es receta de la abuela de José, chef del restaurante, que usaba para rellenar las empanadas (procedencia uruguaya). El pimiento relleno con salsa vizcaína es un plato típico vasco; unimos sabores y nació nuestro pimiento. Durante mucho tiempo este fue el plato preferido de Martín al venir al restaurante.',notes:'♥ Plato preferido de Martín. Existe versión vegetariana rellena de pisto manchego.'},
   {id:20,cat:'Entrantes',name:'Pulpo a la brasa sobre trinxat de papa canaria',allergens:['Moluscos','Huevos','Sulfitos'],ingredients:'Pulpo, Papa, Col blanca y morada, Panceta ibérica, Morcilla, Chorizo, Huevo, Ajo, Aceite de girasol, Sal, Pimentón, Brotes de guisantes.',history:null,notes:'Pulpo a la brasa acompañado con trinxat de col e ibéricos, terminado con puntos de alioli de pimentón, brotes de guisantes y pimentón espolvoreado.'},
   {id:21,cat:'Platos Principales',name:'Txuleta de atún con tomate en texturas',allergens:['Pescado','Sulfitos','Soja','Huevos'],ingredients:'Atún, Sake, Soja, Azúcar, Tomate, Vinagre de jerez, Sal, Dextrosa, Huevo, Gelatinas, Cebolleta, Pepinillo, Vinagreta de cabernet.',history:null,notes:'Lomo de atún marcado al josper y pincelado con teriyaki. Con guarnición de tomates en texturas: Tartar de tomate, Helado de tomate y Espuma de tomate.'},
@@ -9060,7 +9060,7 @@ const DISHES = [
   {id:29,cat:'Guarniciones y Salsas',name:'Alcachofas a la brasa',allergens:[],ingredients:'Alcachofas nacionales.',history:null,notes:'Corazones de alcachofa confitados en aceite de oliva y luego fritos.'},
   {id:30,cat:'Guarniciones y Salsas',name:'Pimientos del padrón',allergens:[],ingredients:'Pimientos del padrón, Pimienta, Sal.',history:'Nuestros pimientos de Padrón son ecológicos y provenientes de Granadilla.',notes:'⚠ Puede contener trazas de Gluten por contaminación cruzada en cocina.'},
   {id:32,cat:'Guarniciones y Salsas',name:'Patatas cerilla fritas',allergens:[],ingredients:'Patatas locales, Aceite, Sal.',history:'Nuestras patatas locales provienen de Tacoronte.',notes:'⚠ Comandar SIN GLUTEN — freidora aparte. Servir siempre salsas para los niños (Mayonesa, Kéchup, etc.).'},
-  {id:33,cat:'Guarniciones y Salsas',name:'Tomate Cherry al ajillo',allergens:[],ingredients:'Tomates ecológicos, Aceite, Ajo laminado, Guindilla.',history:null,notes:'Tomates ecológicos de la isla fritos en ajillo. i Contiene ajo (no es alérgeno oficial UE, pero informar si el cliente lo indica).'},
+  {id:33,cat:'Guarniciones y Salsas',name:'Tomate Cherry al ajillo',allergens:[],ingredients:'Tomates ecológicos, Aceite, Ajo laminado, Guindilla.',history:null,notes:'Tomates ecológicos de la isla fritos en ajillo. i Contiene ajo (no es alérgeno oficial UE, pero informar si el huésped lo indica).'},
   {id:34,cat:'Guarniciones y Salsas',name:'Parmentier de papa canaria',allergens:['Lácteos'],ingredients:null,history:null,notes:null},
   {id:35,cat:'Guarniciones y Salsas',name:'Espárragos blancos',allergens:[],ingredients:null,history:null,notes:'Espárragos a la brasa.'},
   {id:36,cat:'Guarniciones y Salsas',name:'Salsa de pimienta verde',allergens:['Lácteos','Sulfitos'],ingredients:'Chalota, Pimienta verde, Mantequilla, Brandy, Nata, Caldo de pollo.',history:'La salsa de pimienta verde es originaria de Francia. Muy usada para acompañar carnes.',notes:'Se pocha la chalota con mantequilla, se añade la pimienta verde, brandy para flamear y por último nata y caldo de pollo hasta reducir.'},
@@ -9074,7 +9074,7 @@ const DISHES = [
   {id:45,cat:'Vegetariano',name:'Tomates aliñados con granizado de gazpacho',allergens:['Sulfitos'],ingredients:'Tomate, Aguacate, Cebolleta, Granizado de gazpacho, Granadina, Vinagreta de Cabernet Sauvignon.',history:'Es nuestra versión vegetariana de nuestro plato mítico de tomates, anchoas y ventresca.',notes:'Versión VEGAN adaptable. Tomates ecológicos con cebolletas encurtidas y granizado de gazpacho (sin pan). Terminado con brotes de berros.'},
   {id:46,cat:'Vegetariano',name:'Ensalada Niçoise vegetariana',allergens:['Mostaza','Sulfitos','Huevos'],ingredients:'Papa, Lechuga, Tomate, Judías verdes, Pimiento asado, Huevo de Codorniz, Salsa de cítricos, Brotes de mostaza, Miel, Yema de huevo.',history:'Carpaccio de papa canaria confitada, acompañada de verduras ecológicas de la isla y aliñada con mayonesa cítrica.',notes:'Versión VEGAN adaptable. ⚠ Mostaza en los brotes de mostaza — se puede retirar. Comandar SIN BROTES DE MOSTAZA. ⚠ Huevos en el huevo de codorniz y en la yema — Comandar SIN HUEVO DE CODORNIZ Y SIN YEMA.'},
   {id:48,cat:'Vegetariano',name:'Tartar de remolacha, aguacate y manzana ácida',allergens:['Sulfitos'],ingredients:'Remolacha, Aguacate, Manzana, Sorbete de manzana verde, Láminas de rabanitos encurtidas, Espuma de remolacha.',history:'Utilizamos remolachas orgánicas de productores locales, que al mezclarse con la suave crema de aguacate y el refrescante sorbete de manzana verde nos deja por resultado un plato súper equilibrado, ideal como entrante.',notes:' 100% VEGANO. Tartar de remolacha y manzana con cremoso de aguacate, remolacha en texturas y sorbete de manzana verde.'},
-  {id:49,cat:'Vegetariano',name:'Tartar de tomate y queso stracciatella',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'Versión VEGAN adaptable. ⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA. ⚠ Huevos en la yema de huevo — Comandar SIN YEMA.'},
+  {id:49,cat:'Vegetariano',name:'Tartar de tomate y queso stracciatella',allergens:['Huevos','Gluten','Lácteos','Mostaza','Sulfitos','Pescado','Apio'],ingredients:'Aliño, Cebolleta, Mostaza savora (apio), Pepinillo, Salsa Perrins, Yema de huevo, Cebollino picado, Tabasco, Aceite Dauro, Tapenade, Polvo de aceitunas, Polvo de tomate, Hojas de albahaca, Polvo de tomate deshidratado, Stracciatella, Tostas de pan carasau.',history:'El tartar de tomate surge de una reinterpretación del clásico tartar de solomillo que sirve Martín desde hace más de 30 años, aprovechándonos de su aliño ejecutamos de la misma manera este tartar vegetariano.',notes:'Versión VEGAN adaptable. ⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al huésped). Comandar SIN MOSTAZA SAVORA. ⚠ Lácteos en la stracciatella — se puede retirar. Comandar SIN STRACCIATELLA. ⚠ Huevos en la yema de huevo — Comandar SIN YEMA.'},
   {id:50,cat:'Vegetariano',name:'Croquetas de boletus',allergens:['Gluten','Lácteos','Huevos'],ingredients:null,history:'Nacidas del ingenio y el amor por no desperdiciar, las croquetas viajaron desde Francia hasta el alma de España. En cada casa, una receta; en cada bocado, un recuerdo. Crujientes por fuera, suaves por dentro, son el abrazo dorado de la cocina casera, el sabor de la abuela que nunca se olvida.',notes:'Clásicas croquetas vegetarianas de boletus acompañadas de manzana confitada.'},
   {id:52,cat:'Vegetariano',name:'Pimiento a la brasa relleno de pisto manchego',allergens:['Sulfitos','Lácteos'],ingredients:null,history:'Relleno del pimiento es receta de la abuela de José, chef del restaurante. El pimiento relleno con salsa vizcaína es un plato típico vasco; unimos sabores y nació nuestro pimiento. Durante mucho tiempo este fue el plato preferido de Martín al venir al restaurante.',notes:'♥ Plato preferido de Martín. Versión VEGAN adaptable. Pimiento relleno de cebolla, pimiento rojo confitado, berenjena, calabacín y salsa de tomate.'},
   {id:53,cat:'Vegetariano',name:'Arroz cremoso de verduras',allergens:['Lácteos','Sulfitos'],ingredients:null,history:'Arroz cremoso con mini verduras ecológicas provenientes de Guía de Isora.',notes:'Versión VEGAN adaptable. Arroz cremoso con verduras ecológicas de temporada.'},
@@ -9103,7 +9103,7 @@ const DISHES = [
   {id:84,cat:'Entrantes',name:'Paletilla Ibérica de bellota',allergens:['Gluten','Sulfitos'],ingredients:'Paletilla ibérica de bellota, Pan tostado.',history:'La paletilla ibérica es la pieza obtenida de la extremidad delantera del cerdo ibérico. Es similar al jamón ibérico, pero procede de la pata delantera en lugar de la trasera.',notes:'⚠ Gluten en el pan tostado — Comandar SIN PAN.'},
   // ===== HAMBURGUESAS Y BOCATAS =====
   {id:86,cat:'Hamburguesas y Bocatas',name:'Hamburguesa vegana',allergens:['Gluten','Sulfitos','Soja'],ingredients:'Proteína de soja, Guisantes, Pan de semillas, Cebolla, Panko, Lechuga, Tomate. Chimichurri: Tomate deshidratado, Cebolleta, Pimiento rojo y verde, Ajo, Aceite de oliva, Vinagre de Jerez, Ají, Limón, Perejil, Cebollino, Sal, Pimienta negra',history:'',notes:'⚠ Sulfitos en el chimichurri — Comandar SIN CHIMICHURRI.'},
-  {id:87,cat:'Hamburguesas y Bocatas',name:'Bao de brisket',allergens:['Gluten','Lácteos','Mostaza','Apio','Sulfitos'],ingredients:'Pan Bao: Harina, Levadura, Leche, Aceite, Sal. Brisket (corte de pechuga delantera). Sazonador: Sal, Pimienta negra, Pimentón ahumado, Ajo, Cebolla, Azúcar, Comino, Mostaza Savora (Contiene Apio). Crema agria: Nata, Zumo de limón, Sal. Perejil, Cilantro, Menta, Guindilla roja',history:'',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al cliente). Comandar SIN MOSTAZA SAVORA.'},
+  {id:87,cat:'Hamburguesas y Bocatas',name:'Bao de brisket',allergens:['Gluten','Lácteos','Mostaza','Apio','Sulfitos'],ingredients:'Pan Bao: Harina, Levadura, Leche, Aceite, Sal. Brisket (corte de pechuga delantera). Sazonador: Sal, Pimienta negra, Pimentón ahumado, Ajo, Cebolla, Azúcar, Comino, Mostaza Savora (Contiene Apio). Crema agria: Nata, Zumo de limón, Sal. Perejil, Cilantro, Menta, Guindilla roja',history:'',notes:'⚠ Apio y Mostaza en la mostaza savora — se puede retirar (~30 min de preparación, avisar al huésped). Comandar SIN MOSTAZA SAVORA.'},
   {id:88,cat:'Hamburguesas y Bocatas',name:'Focaccia con vegetales asados',allergens:['Gluten','Lácteos','Frutos secos'],ingredients:'Focaccia: Harina, Levadura, Aceite de oliva. Berenjena, Calabacín, Espinaca aliñada, Queso de cabra, Frutos secos, Sal, Pimienta, Aceite de oliva, Menta',history:'',notes:'⚠ Comandar SIN FRUTOS SECOS.'},
   {id:89,cat:'Hamburguesas y Bocatas',name:'Trifasi club',allergens:['Gluten','Lácteos','Sulfitos','Huevos'],ingredients:'Pan brioche: Harina fuerte, Huevo, Levadura, Mantequilla, Azúcar, Sal. Contramuslo de pollo. Mojo rojo: Pimentón rojo, Pimiento palmero, Vinagre. Bacon, Jamón cocido, Queso Emmental, Huevo frito, Lechuga, Tomate. Mayonesa japo (opcional): Aceite de colza, Huevo, Vinagre, Agua, Sal, Azúcar, Mostaza, Antioxidantes, Potenciador de sabor',history:'',notes:'⚠ Sulfitos en los antioxidantes de la mayonesa japonesa — Comandar SIN MAYONESA JAPONESA.'},
   {id:90,cat:'Hamburguesas y Bocatas',name:'Lobster Roll',allergens:['Gluten','Lácteos','Sulfitos','Crustáceos','Huevos'],ingredients:'Pan Brioche, Bogavante/Langostinos, Col morada, Col blanca, Zanahoria, Cebollino, Mayonesa, Manzana, Vinagre de manzana. Salsa de mantequilla: Mantequilla, Zumo de limón. Cebollino',history:'',notes:'⚠ Sulfitos en el vinagre de la manzana encurtida — no se puede retirar. En ocasiones puede salir con Langostinos en lugar de Bogavante.'},
@@ -9111,7 +9111,7 @@ const DISHES = [
   // ===== PLATOS PRINCIPALES =====
   {id:92,cat:'Platos Principales',name:'Arroz negro con txipirones asados',allergens:['Sulfitos','Apio','Huevos','Moluscos'],ingredients:'Bisque (Caldo de Langostino): Cebolla blanca, Zanahoria, Puerro, Apio, Langostino, Brandy. Fondo: Calamar, Cebolleta, Vino blanco. Arroz bomba, Cebolla, Chalotas, Laurel, Vino blanco. Crujiente de arroz. Ali-oli clásico y con Tinta de calamar',history:'',notes:null},
   {id:93,cat:'Platos Principales',name:'Pincho Moruno con cous cous',allergens:['Granos de sésamo','Mostaza','Cacahuete','Frutos secos','Apio','Crustáceos','Sulfitos','Soja'],ingredients:'Carne de cordero. Marinada: Aceite de girasol, Pimentón, Cayena, Ajo, Semillas de cilantro, Comino, Orégano, Tomillo, Pimienta negra, Zumo de limón, Clavo, Anís estrellado. Ras al hanout, Lima. Cous Cous: Caldo de verduras, Sal, Pimienta, Almendras, Pasas de uva',history:'',notes:'⚠ Sésamo, Mostaza, Cacahuete, Frutos secos, Apio, Crustáceos y Sulfitos NO se pueden retirar — están integrados en la receta. No se puede servir a personas con estas alergias.'},
-  {id:94,cat:'Platos Principales',name:'Panceta de cochino negro',allergens:['Lácteos','Sulfitos','Apio'],ingredients:'Panceta. Escabeche: Zanahoria, Vinagre de manzana, Azúcar, Agua, Azafrán. Veal jus: Demi de carne (Contiene Apio), Chalotas, Tomillo, Vino tinto. Zanahoria asada: Zanahoria, Vinagre, Azúcar, Jengibre. Crema de escabeche de zanahoria: Zanahoria, Mantequilla, Nata. Mojo verde de Aguacate: Cilantro, Vinagre de manzana, Lima, Ajo, Aceite de girasol, Aceite de oliva, Cebolleta, Pimienta de Espellet, Aguacate',history:'Panceta de cochino negro reposada una semana en el Dry, cocida al horno hasta llegar a su punto, con la piel bien crocante y jugosa por dentro. Sobre crema de escabeche de zanahoria, acompañada con zanahoria asada con puntos de mojo verde de aguacate. Terminamos con Veal jus sobre la panceta.',notes:'⚠ Lácteos en la crema de escabeche de zanahoria — puede prepararse sin ella pero el plato perderá parte de su esencia. Avisar al cliente antes de confirmar. Comandar SIN CREMA DE ZANAHORIA e informar al cliente.'},
+  {id:94,cat:'Platos Principales',name:'Panceta de cochino negro',allergens:['Lácteos','Sulfitos','Apio'],ingredients:'Panceta. Escabeche: Zanahoria, Vinagre de manzana, Azúcar, Agua, Azafrán. Veal jus: Demi de carne (Contiene Apio), Chalotas, Tomillo, Vino tinto. Zanahoria asada: Zanahoria, Vinagre, Azúcar, Jengibre. Crema de escabeche de zanahoria: Zanahoria, Mantequilla, Nata. Mojo verde de Aguacate: Cilantro, Vinagre de manzana, Lima, Ajo, Aceite de girasol, Aceite de oliva, Cebolleta, Pimienta de Espellet, Aguacate',history:'Panceta de cochino negro reposada una semana en el Dry, cocida al horno hasta llegar a su punto, con la piel bien crocante y jugosa por dentro. Sobre crema de escabeche de zanahoria, acompañada con zanahoria asada con puntos de mojo verde de aguacate. Terminamos con Veal jus sobre la panceta.',notes:'⚠ Lácteos en la crema de escabeche de zanahoria — puede prepararse sin ella pero el plato perderá parte de su esencia. Avisar al huésped antes de confirmar. Comandar SIN CREMA DE ZANAHORIA e informar al huésped.'},
   {id:95,cat:'Platos Principales',name:'Milanesa de pollo al mojo rojo',allergens:['Gluten','Huevos','Lácteos','Mostaza','Sulfitos','Pescado'],ingredients:'Pechuga de pollo. Mojo rojo: Pimiento rojo, Pimiento Palmero, Vinagre. Rebozado: Huevo, Harina, Pan rallado, Panko. Lechuga. Aderezo césar: Huevo, Aceite de oliva, Ajo, Anchoas, Mostaza Dijon, Zumo de limón, Queso parmesano, Salsa Perrins. Crujiente de Bacon, Crujiente de Parmesano',history:'',notes:null},
   {id:96,cat:'Platos Principales',name:'Linguini con tartar de langostino',allergens:['Gluten','Lácteos','Sulfitos','Crustáceos','Huevos'],ingredients:'Pasta (contiene huevo). Americana: Ajo, Zanahoria, Cebolla, Puerro, Tomate, Aceite de girasol, Gambas, Brandy, Agua. Mantequilla, Burrata, Lima, Brotes',history:'Pasta emulsionada con Demi de Americana, acompañada con Burrata y tartar de langostinos. Terminamos con ralladura de limón y Brotes.',notes:null},
   {id:97,cat:'Platos Principales',name:'Lubina crujiente con mayonesa de leche de tigre',allergens:['Gluten','Mostaza','Sulfitos','Apio','Pescado','Huevos'],ingredients:'Lomo de Lubina, Harina, Huevo, Panko. Pico de gallo: Cebolla morada, Tomate, Ají Amarillo, Cilantro, Sal, Pimienta, Zumo de lima. Mayonesa de leche de tigre: Mayonesa (Huevo, Aceite, Vinagre, Mostaza, Limón, Sal), Leche de Tigre (Fumet, Zumo de Lima, Zumo de Limón, Apio, Ajo, Cilantro, Recortes de Lubina, Ají Amarillo, Ají Limo, Sal, Pimienta, Jengibre)',history:'',notes:'⚠ Gluten y Huevos en el rebozado — NO se puede retirar. Apio, Mostaza y Sulfitos en la mayonesa de leche de tigre — se puede retirar. Comandar SIN MAYONESA DE LECHE DE TIGRE.'},
@@ -10048,13 +10048,13 @@ const XP_LEVELS = [
   // ── TIER 5: LEYENDA (dorado puro) ──
   {level:21, xp:3900,  title:'Lord Comandante del Rango',       title_en:'Lord Commander of the Floor',      icon:'XXI', color:'#f2dc9a'},
   {level:22, xp:4300,  title:'Guardián de los Fogones',         title_en:'Guardian of the Stoves',           icon:'XXII', color:'#f5e0a0'},
-  {level:23, xp:4720,  title:'Domador de Clientes Furiosos',    title_en:'Furious Client Tamer',             icon:'XXIII', color:'#f8e4a0'},
+  {level:23, xp:4720,  title:'Diplomático del Servicio',        title_en:'Service Diplomat',                 icon:'XXIII', color:'#f8e4a0'},
   {level:24, xp:5160,  title:'Canciller de la Cristalería',     title_en:'Chancellor of the Glassware',     icon:'XXIV', color:'#fbe8a0'},
   {level:25, xp:5620,  title:'Gran Maestre del Servicio',       title_en:'Grand Maester of Service',         icon:'XXV', color:'#ffd700'},
   // ── TIER 6: MÍTICO (naranja épico) — XP gaps increase significantly ──
   {level:26, xp:6500,  title:'Fénix del Turno Doble',           title_en:'Double Shift Phoenix',             icon:'XXVI', color:'#ffcc00'},
   {level:27, xp:7500,  title:'Titán del Room Service',          title_en:'Room Service Titan',               icon:'XXVII', color:'#ffc000'},
-  {level:28, xp:8650,  title:'Semidiós de la Sala',             title_en:'Demigod of the Dining Hall',       icon:'XXVIII', color:'#ffb400'},
+  {level:28, xp:8650,  title:'Magíster de Sala',                title_en:'Dining Hall Magister',             icon:'XXVIII', color:'#ffb400'},
   {level:29, xp:9950,  title:'Kraken de las Mesas Grandes',     title_en:'Kraken of the Large Tables',       icon:'XXIX', color:'#ffaa00'},
   {level:30, xp:11400, title:'Leyenda Viviente de Txoko',       title_en:'Living Legend of Txoko',           icon:'XXX', color:'#ff9e00'},
   // ── TIER 7: DIVINO (rojo fuego) — steep curve ──
@@ -10062,12 +10062,12 @@ const XP_LEVELS = [
   {level:32, xp:15100, title:'Inmortal del Protocolo',          title_en:'Protocol Immortal',                icon:'XXXII', color:'#ff8600'},
   {level:33, xp:17400, title:'Forjador de Estrellas Michelin',  title_en:'Michelin Star Forger',             icon:'XXXIII', color:'#ff7a00'},
   {level:34, xp:20000, title:'Titán de las Tres Estrellas',     title_en:'Titan of the Three Stars',         icon:'XXXIV', color:'#ff6e00'},
-  {level:35, xp:23000, title:'Arcángel del Hospitality',        title_en:'Archangel of Hospitality',         icon:'XXXV', color:'#ff6200'},
+  {level:35, xp:23000, title:'Gran Heráldico del Hospitality',  title_en:'Grand Herald of Hospitality',      icon:'XXXV', color:'#ff6200'},
   // ── TIER 8: SUPREMO (rojo intenso → carmesí) — legendary grind ──
   {level:36, xp:26500, title:'Elegido por Berasategui',         title_en:'Chosen by Berasategui',            icon:'XXXVI', color:'#ff5500'},
-  {level:37, xp:30500, title:'Avatar del Ritz-Carlton',         title_en:'Avatar of the Ritz-Carlton',       icon:'XXXVII', color:'#ff4800'},
+  {level:37, xp:30500, title:'Guardián de la Excelencia',       title_en:'Guardian of Excellence',           icon:'XXXVII', color:'#ff4800'},
   {level:38, xp:35500, title:'Entidad Cósmica de Sala',         title_en:'Cosmic Entity of the Floor',       icon:'XXXVIII', color:'#ff3b00'},
-  {level:39, xp:41500, title:'Dios Supremo del Hospitality',    title_en:'Supreme God of Hospitality',       icon:'XXXIX', color:'#ff2200'},
+  {level:39, xp:41500, title:'Gran Maestre Supremo',            title_en:'Supreme Grandmaster',              icon:'XXXIX', color:'#ff2200'},
   {level:40, xp:50000, title:'TXOKO ASCENDIDO ∞',               title_en:'TXOKO ASCENDED ∞',                 icon:'XL', color:'#ff0000'},
 ];
 
@@ -10533,7 +10533,7 @@ function _djGenerateQuiz(dish){
       q: _en ? `Does this dish have a storytelling narrative associated with it?` : `¿Tiene este plato una historia/storytelling asociada?`,
       options: [_en?'Yes':'Sí', _en?'No':'No', _en?'Only in dinner':'Solo en cena', _en?'Only for VIP':'Solo para VIP'],
       correctIdx: 0,
-      explain: _en ? 'Yes! Every dish at Txoko has a story worth sharing with guests.' : '¡Sí! Cada plato de Txoko tiene una historia que vale la pena compartir con los clientes.'
+      explain: _en ? 'Yes! Every dish at Txoko has a story worth sharing with guests.' : '¡Sí! Cada plato de Txoko tiene una historia que vale la pena compartir con los huéspedes.'
     });
   } else {
     // Fallback: allergen count question
@@ -10907,8 +10907,8 @@ function _srGetActivityDays(emp){
 // ── Smart Question Generator v2 (difficulty-aware) ──
 // ═══════════════════════════════════════════════════════════════════════
 // SIMULACIÓN CONTEXTUAL — Scenario-based Smart Review
-// Generates realistic client interactions using dish × allergen × ingredient
-// combinatorics. Each scenario is a "what would you say if a client asks..."
+// Generates realistic guest interactions using dish × allergen × ingredient
+// combinatorics. Each scenario is a "what would you say if a guest asks..."
 // ═══════════════════════════════════════════════════════════════════════
 const _SIM_PROFILES = {
   celiac:       { es:'celíaco/a', en:'celiac', allergen:'Gluten', intro_es:['Soy celíaco','Tengo celiaquía','Me diagnosticaron celiaquía hace poco'], intro_en:['I\'m celiac','I have celiac disease','I was recently diagnosed celiac'] },
@@ -10985,7 +10985,7 @@ function _scenarioDeclaredAllergy(dish, dd, _en){
   const p = _SIM_PROFILES[key];
   const hasIt = dish.allergens && dish.allergens.includes(p.allergen);
   const intro = _simPick(_en?p.intro_en:p.intro_es);
-  const qEs = `Cliente: "${intro}. ¿Puedo pedir ${dd.name}?"`;
+  const qEs = `Huésped: "${intro}. ¿Puedo pedir ${dd.name}?"`;
   const qEn = `Guest: "${intro}. Can I order ${dd.name}?"`;
   // Check if this SPECIFIC allergen is removable from the dish
   const nonRemovable = _simNonRemovableAllergens(dish);
@@ -11029,7 +11029,7 @@ function _scenarioIngredientCheck(dish, dd, _en){
     target = _simPick(pool);
     present = false;
   }
-  const qEs = `Cliente: "Perdone, ¿${dd.name} lleva ${target.toLowerCase()}?"`;
+  const qEs = `Huésped: "Perdone, ¿${dd.name} lleva ${target.toLowerCase()}?"`;
   const qEn = `Guest: "Excuse me, does ${dd.name} contain ${target.toLowerCase()}?"`;
   const opts = _en ? ['Yes, it\'s one of the ingredients','No, it doesn\'t contain that','I\'m not sure, let me check','Only in the garnish']
                    : ['Sí, forma parte de los ingredientes','No, no lleva ese ingrediente','No estoy seguro, consulto','Solo en la guarnición'];
@@ -11111,7 +11111,7 @@ function _scenarioSafeAlternative(dish, dd, _en){
   const catLabel = catLocal ? catLocal(dish.cat) : dish.cat;
   const dishPhrase = _simDishPhraseForAllergen(dish, allergen, _en);
   const dishPhraseCap = dishPhrase.charAt(0).toUpperCase() + dishPhrase.slice(1);
-  const qEs = `Cliente: "${dishPhraseCap} contiene ${aLbl} y no se puede retirar. ¿Qué me recomienda de ${catLabel}?"`;
+  const qEs = `Huésped: "${dishPhraseCap} contiene ${aLbl} y no se puede retirar. ¿Qué me recomienda de ${catLabel}?"`;
   const qEn = `Guest: "${dishPhraseCap} contains ${aLbl} and it can't be removed. What do you recommend from ${catLabel}?"`;
   return {
     q: _en?qEn:qEs,
@@ -11144,7 +11144,7 @@ function _scenarioVegetarian(dish, dd, _en){
   const hasVegVariant = /boletus|vegetarian.*sabor|sabor.*vegetarian|opción vegetariana|vegetarian option/i.test(text)
     || (/sabores|flavour|flavor/i.test(notes) && /boletus/i.test(text));
 
-  const qEs = `Cliente vegetariano: "¿${dd.name} es apto para mí?"`;
+  const qEs = `Huésped vegetariano: "¿${dd.name} es apto para mí?"`;
   const qEn = `Vegetarian guest: "Is ${dd.name} suitable for me?"`;
   let opts, correctIdx, explain;
 
@@ -11154,7 +11154,7 @@ function _scenarioVegetarian(dish, dd, _en){
                : ['Sí, todas las variedades son vegetarianas','No, ninguna es apta','Sí, pero solo ciertos sabores (ej. Boletus)','Consulto en cocina'];
     correctIdx = 2;
     explain = _en ? `Not all varieties are vegetarian, but Boletus is. Advise the guest on which flavours are suitable.`
-                  : `No todas las variedades son vegetarianas, pero la de Boletus sí. Aconsejar al cliente los sabores aptos.`;
+                  : `No todas las variedades son vegetarianas, pero la de Boletus sí. Aconsejar al huésped los sabores aptos.`;
   } else if(canBeVeg && hasAnimal){
     // Can be adapted by removing animal components
     opts = _en ? ['Yes, exactly as served','No, it contains animal products and cannot be adapted','Yes, but it must be modified — notify the kitchen','I\'ll ask the kitchen']
@@ -11186,7 +11186,7 @@ function _scenarioCrossContamination(dish, dd, _en){
   const notes = (dish.notes||'').toLowerCase();
   const hasCross = /trazas|contaminación cruzada|freidora aparte|freidora común|cross|traces/i.test(notes);
   if(!hasCross) return null;
-  const qEs = `Cliente celíaco severo: "¿Hay riesgo de contaminación cruzada en ${dd.name}?"`;
+  const qEs = `Huésped celíaco severo: "¿Hay riesgo de contaminación cruzada en ${dd.name}?"`;
   const qEn = `Severely celiac guest: "Is there cross-contamination risk in ${dd.name}?"`;
   const opts = _en ? ['No risk at all','Yes, I must inform and advise caution','Only if we reheat it','It\'s impossible to know']
                    : ['Ningún riesgo','Sí, debo informar y aconsejar precaución','Solo si se recalienta','Es imposible saberlo'];
@@ -11237,8 +11237,8 @@ function _scenarioModification(dish, dd, _en){
   const mod = chosen.cmd;
 
   const qEs = allergenHint
-    ? `Cliente: "Me gustaría pedir ${dd.name}, pero soy alérgico a ${allergenHint.toLowerCase()}. ¿Cómo se comanda la modificación?"`
-    : `Cliente: "Me gustaría pedir ${dd.name} con una modificación. ¿Cómo se comanda?"`;
+    ? `Huésped: "Me gustaría pedir ${dd.name}, pero soy alérgico a ${allergenHint.toLowerCase()}. ¿Cómo se comanda la modificación?"`
+    : `Huésped: "Me gustaría pedir ${dd.name} con una modificación. ¿Cómo se comanda?"`;
   const qEn = allergenHint
     ? `Guest: "I'd like to order ${dd.name}, but I'm allergic to ${allergenHint.toLowerCase()}. How do I order the modification?"`
     : `Guest: "I'd like to order ${dd.name} with a modification. How do I order it?"`;
@@ -11296,7 +11296,7 @@ function _scenarioSharedAllergen(dish, dd, _en){
   const dishPhrase = _simDishPhraseForAllergen(dish, a, _en);
   // Capitalize first letter if phrase starts a sentence (Spanish/English)
   const dishPhraseCap = dishPhrase.charAt(0).toUpperCase() + dishPhrase.slice(1);
-  const qEs = `Cliente con alergia a ${aLbl}: "${dishPhraseCap} contiene ${aLbl} y no se puede retirar. ¿Qué otro plato de la carta también debería evitar?"`;
+  const qEs = `Huésped con alergia a ${aLbl}: "${dishPhraseCap} contiene ${aLbl} y no se puede retirar. ¿Qué otro plato de la carta también debería evitar?"`;
   const qEn = `Guest allergic to ${aLbl}: "${dishPhraseCap} contains ${aLbl} and it can't be removed. Which other menu item should I also avoid?"`;
   return {
     q:_en?qEn:qEs,
@@ -11318,7 +11318,7 @@ function _scenarioWinePairing(dish, dd, _en){
   const correct = _simPick(matches);
   const wrongs = _djShuffle(nonMatches).slice(0,3);
   const opts = _djShuffle([correct, ...wrongs]);
-  const qEs = `Cliente: "¿Qué vino me recomienda con ${dd.name}?"`;
+  const qEs = `Huésped: "¿Qué vino me recomienda con ${dd.name}?"`;
   const qEn = `Guest: "Which wine would you recommend with ${dd.name}?"`;
   // Build rich explanation: why correct pairs, why wrongs don't
   const cNotes = _en ? (correct.notes_en||correct.notes||'') : (correct.notes||'');
@@ -11375,7 +11375,7 @@ function _scenarioPregnancy(dish, dd, _en){
   const risky = raw || alcohol || blueCheese;
   // Only fire if either risky or we have enough baseline to be informative
   if(!risky && Math.random()<0.7) return null;
-  const qEs = `Cliente embarazada: "¿${dd.name} es seguro para mí?"`;
+  const qEs = `Huésped embarazada: "¿${dd.name} es seguro para mí?"`;
   const qEn = `Pregnant guest: "Is ${dd.name} safe for me?"`;
   const opts = _en ? ['Yes, fully safe','Not recommended — contains raw/uncooked or alcohol','It depends on the trimester','I\'ll check with the kitchen']
                    : ['Sí, totalmente seguro','No recomendado — lleva crudo o alcohol','Depende del trimestre','Consulto con cocina'];
@@ -11395,7 +11395,7 @@ function _scenarioChildFriendly(dish, dd, _en){
   const kidsOk = !spicy && !alcohol && !raw;
   // Dessert and Hamburguesas almost always kid-friendly — skip trivial
   if(kidsOk && (dish.cat==='Postres' || dish.cat==='Hamburguesas y Bocatas') && Math.random()<0.7) return null;
-  const qEs = `Cliente con un niño de 5 años: "¿${dd.name} es adecuado para él?"`;
+  const qEs = `Huésped con un niño de 5 años: "¿${dd.name} es adecuado para él?"`;
   const qEn = `Guest with a 5-year-old: "Is ${dd.name} suitable for him?"`;
   const opts = _en ? ['Yes, child-friendly','Not ideal — spicy/raw/alcohol','Only if we remove the sauce','I\'d recommend a dessert instead']
                    : ['Sí, apto para niños','No ideal — picante/crudo/alcohol','Solo si retiramos la salsa','Le recomendaría un postre'];
@@ -11411,7 +11411,7 @@ function _scenarioSpicy(dish, dd, _en){
   const text = ((dish.ingredients||'')+' '+(dish.notes||'')+' '+dish.name).toLowerCase();
   const spicy = /(guindilla|picante|cayena|chili|wasabi|jalapeño|pimentón picante|sichuan)/i.test(text);
   if(!spicy && Math.random()<0.85) return null; // mostly only fire for spicy dishes
-  const qEs = `Cliente: "¿${dd.name} pica? No tolero el picante."`;
+  const qEs = `Huésped: "¿${dd.name} pica? No tolero el picante."`;
   const qEn = `Guest: "Is ${dd.name} spicy? I can't handle spice."`;
   const opts = _en ? ['Yes, it has spicy elements','No, it\'s not spicy at all','Only if we add chili','Only the sauce is spicy']
                    : ['Sí, lleva picante','No, no pica nada','Solo si añadimos guindilla','Solo la salsa pica'];
@@ -11431,7 +11431,7 @@ function _scenarioService(dish, dd, _en){
   const opts = _en ? ['Lunch only','Dinner only','Both services','It\'s off the menu']
                    : ['Solo almuerzo','Solo cena','Ambos servicios','Fuera de carta'];
   const correctIdx = isBoth ? 2 : isLunch ? 0 : isDinner ? 1 : 3;
-  const qEs = `Cliente (a las 19:00): "¿Puedo pedir ${dd.name} ahora?"`;
+  const qEs = `Huésped (a las 19:00): "¿Puedo pedir ${dd.name} ahora?"`;
   const qEn = `Guest (at 7 PM): "Can I order ${dd.name} now?"`;
   return {
     q:_en?qEn:qEs,
@@ -11447,7 +11447,7 @@ function _scenarioCategoryPlacementDisabled(dish, dd, _en, allDishes){
   const allCats = [...new Set(allDishes.map(d=>d.cat))];
   const wrongs = _djShuffle(allCats.filter(c=>c!==dish.cat)).slice(0,3);
   const opts = _djShuffle([dish.cat, ...wrongs]);
-  const qEs = `Cliente: "¿En qué parte de la carta encuentro ${dd.name}?"`;
+  const qEs = `Huésped: "¿En qué parte de la carta encuentro ${dd.name}?"`;
   const qEn = `Guest: "Where on the menu do I find ${dd.name}?"`;
   return {
     q:_en?qEn:qEs,
@@ -11508,7 +11508,7 @@ function _scenarioVariantRemovable(dish, dd, _en){
   }
   const correctIdx = finalOpts.indexOf(pick.action);
 
-  const qEs = `Cliente con alergia a ${aLbl}: "Me gustaría la variante ${pick.variant} de ${baseName}. ¿Se puede adaptar para mí?" ¿Cómo la debes comandar a cocina?`;
+  const qEs = `Huésped con alergia a ${aLbl}: "Me gustaría la variante ${pick.variant} de ${baseName}. ¿Se puede adaptar para mí?" ¿Cómo la debes comandar a cocina?`;
   const qEn = `Guest allergic to ${aLbl}: "I'd like the ${pick.variant} variant of ${baseName}. Can it be adapted for me?" How do you command it to the kitchen?`;
 
   const explainEs = `${aLbl} está solo en un componente removible de la variante ${pick.variant}. Comandar "${pick.action}" elimina el alérgeno sin cambiar de sabor.`;
@@ -11594,7 +11594,7 @@ function _srGenerateQuizLegacy(dish, difficulty){
     const opts = _en ? ['Yes, it\'s safe','No, it contains this allergen','Only without sauce','Ask the chef first'] : ['Sí, es seguro','No, contiene ese alérgeno','Solo sin salsa','Preguntar al chef primero'];
     const correctIdx = hasIt ? 1 : 0;
     questions.push({
-      q: _en ? `A guest says: "I'm allergic to ${allergenLabel}." Can they eat "${dd.name}"?` : `Un cliente dice: "Soy alérgico a ${allergenLabel}." ¿Puede comer "${dd.name}"?`,
+      q: _en ? `A guest says: "I'm allergic to ${allergenLabel}." Can they eat "${dd.name}"?` : `Un huésped dice: "Soy alérgico a ${allergenLabel}." ¿Puede comer "${dd.name}"?`,
       options: opts,
       correctIdx: correctIdx,
       explain: hasIt ? (_en ? `No! ${dd.name} contains ${allergenLabel}.` : `¡No! ${dd.name} contiene ${allergenLabel}.`) : (_en ? `Yes, ${dd.name} does not contain ${allergenLabel}.` : `Sí, ${dd.name} no contiene ${allergenLabel}.`),
@@ -11823,7 +11823,7 @@ function renderSmartReview(){
     if(qs && qs[0]) samples.push({dish:d, q:qs[0]});
   }
   const stripQuote = (text) => text
-    .replace(/^(Cliente|Guest|Pareja|Couple|Un cliente|A guest|Cliente con[^:]*|Pregnant guest|Vegetarian guest|Cliente embarazada|Cliente vegetariano|Cliente celíaco severo|Severely celiac guest|Guest allergic[^:]*|Cliente con alergia[^:]*)[^:]*:\s*/i,'')
+    .replace(/^(Huésped|Guest|Pareja|Couple|Un huésped|A guest|Huésped con[^:]*|Pregnant guest|Vegetarian guest|Huésped embarazada|Huésped vegetariano|Huésped celíaco severo|Severely celiac guest|Guest allergic[^:]*|Huésped con alergia[^:]*)[^:]*:\s*/i,'')
     .replace(/^"|"$/g,'')
     .trim();
 
@@ -12142,7 +12142,7 @@ function _renderSmartCard(){
       <div class="dj-body">
         <div class="dj-phase-label">🎭 ${_en?'CONTEXTUAL SIMULATION':'SIMULACIÓN CONTEXTUAL'}</div>
         <div class="dj-phase-title">${dd.name}</div>
-        <div class="dj-dish-name">${dd.cat} · ${dish.allergens?dish.allergens.length:0} ${_en?'allergens':'alérgenos'} · ${_en?'guest interaction':'interacción con cliente'}</div>
+        <div class="dj-dish-name">${dd.cat} · ${dish.allergens?dish.allergens.length:0} ${_en?'allergens':'alérgenos'} · ${_en?'guest interaction':'interacción con huésped'}</div>
         <div id="smartQuizArea"></div>
       </div>
       <div class="dj-nav">
@@ -12935,7 +12935,7 @@ function _sfPushText(){
   ] : [
     {title:'Mesa '+mesa+' — 4 comensales',body:'Un comensal tiene alergia a frutos secos y pide recomendación. ¿Puedes atenderle?'},
     {title:'La mesa '+mesa+' te necesita',body:'Han pedido menú degustación y quieren maridaje. ¿Estás listo?'},
-    {title:'Alerta de servicio — Mesa '+mesa,body:'Cliente VIP pregunta por la historia de un plato. ¿Puedes ayudar?'},
+    {title:'Alerta de servicio — Mesa '+mesa,body:'Huésped VIP pregunta por la historia de un plato. ¿Puedes ayudar?'},
     {title:'Mesa '+mesa+' — Petición especial',body:'Comensales sin gluten necesitan alternativas. Tu experiencia es necesaria.'}
   ];
   return messages[Math.floor(Math.random()*messages.length)];
@@ -13837,10 +13837,10 @@ function closePinAndEnter(){
 const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui en el Ritz-Carlton, Abama. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui at the Ritz-Carlton, Abama. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Simulación Contextual',title_en:'Contextual Simulation',text_es:'Situaciones reales de servicio: un cliente te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. Practica exactamente lo que ocurre en sala con respuestas adaptadas a cada escenario.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Practice exactly what happens on the floor with answers adapted to each situation.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Simulación Contextual',title_en:'Contextual Simulation',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. Practica exactamente lo que ocurre en sala con respuestas adaptadas a cada escenario.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Practice exactly what happens on the floor with answers adapted to each situation.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Protocolo de Servicio',title_en:'Service Protocol',text_es:'Consulta las reglas de servicio del restaurante: orden de servicio, manejo de alergias, presentación de platos, atención al cliente VIP y situaciones especiales. Todo lo que necesitas saber para dar un servicio impecable.',text_en:'Browse the restaurant\'s service rules: service order, allergy management, dish presentation, VIP guest service and special situations. Everything you need for impeccable service.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Protocolo de Servicio',title_en:'Service Protocol',text_es:'Consulta las reglas de servicio del restaurante: orden de servicio, manejo de alergias, presentación de platos, atención al huésped VIP y situaciones especiales. Todo lo que necesitas saber para dar un servicio impecable.',text_en:'Browse the restaurant\'s service rules: service order, allergy management, dish presentation, VIP guest service and special situations. Everything you need for impeccable service.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Duelos',title_en:'Games & Duels',text_es:'Modo supervivencia "Mr. Shoesmith" en la mesa 501, repasa tus puntos débiles en Modo Error, reta a compañeros en Duelos 1v1 remotos, y diviértete con la Ruleta Txoko. Compite por el ranking global y desbloquea logros.',text_en:'Survival mode "Mr. Shoesmith" at table 501, review your weak spots in Error Mode, challenge colleagues in remote 1v1 Duels, and have fun with the Txoko Roulette. Compete for the global ranking and unlock achievements.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/><circle cx="12" cy="12" r="2" fill="#fff" opacity=".8"/></svg>`,color:'#5a9ab8',title_es:'Quiz en Vivo y Retos',title_en:'Live Quiz & Challenges',text_es:'El supervisor puede lanzar un Quiz en Vivo para todo el equipo en tiempo real. Cada semana hay un Reto Semanal con un tema diferente. Recibirás notificaciones en tu móvil cuando haya actividad.',text_en:'The supervisor can launch a Live Quiz for the whole team in real time. Each week there\'s a Weekly Challenge with a different topic. You\'ll receive mobile notifications when there\'s activity.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11z" fill="none" stroke="#fff" stroke-width="1.5"/><polygon points="12,7 15,11 12,15 9,11" fill="#fff" opacity=".6"/></svg>`,color:'#c49a3c',title_es:'¡Comienza tu aventura!',title_en:'Start your adventure!',text_es:'Practica todos los días para mantener tu racha, sube de nivel ganando XP y escala en el ranking. Si no te conectas, el Servicio Fantasma te pondrá a prueba cuando vuelvas. ¡Buena suerte!',text_en:'Practice every day to keep your streak, level up by earning XP and climb the ranking. If you don\'t log in, the Ghost Service will test you when you return. Good luck!'}
@@ -17655,7 +17655,7 @@ const WINE_ENCYCLOPEDIA = [
   {
     id:'order-service', category:'servicio', title:'Orden de Servicio de Vinos', title_en:'Wine Service Order',
     icon:'📋', level:'intermedio',
-    body:'El orden en que se sirven los vinos durante una comida importa mucho: REGLA GENERAL: De ligero a intenso, de seco a dulce, de joven a viejo. ORDEN TÍPICO EN TXOKO: 1º Espumoso (aperitivo) → 2º Blanco ligero (entrantes/pescado) → 3º Blanco con cuerpo o Rosado (platos intermedios) → 4º Tinto joven (carnes ligeras) → 5º Tinto con crianza (carnes potentes, wagyu) → 6º Dulce (postre). ¿POR QUÉ? Si empiezas con un tinto potente, tu paladar no apreciará un blanco delicado después. Cada vino "prepara" el paladar para el siguiente. EXCEPCIÓN: Si el cliente solo quiere un tipo de vino, respeta su elección siempre.',
+    body:'El orden en que se sirven los vinos durante una comida importa mucho: REGLA GENERAL: De ligero a intenso, de seco a dulce, de joven a viejo. ORDEN TÍPICO EN TXOKO: 1º Espumoso (aperitivo) → 2º Blanco ligero (entrantes/pescado) → 3º Blanco con cuerpo o Rosado (platos intermedios) → 4º Tinto joven (carnes ligeras) → 5º Tinto con crianza (carnes potentes, wagyu) → 6º Dulce (postre). ¿POR QUÉ? Si empiezas con un tinto potente, tu paladar no apreciará un blanco delicado después. Cada vino "prepara" el paladar para el siguiente. EXCEPCIÓN: Si el huésped solo quiere un tipo de vino, respeta su elección siempre.',
     body_en:'The order wines are served during a meal matters greatly: GENERAL RULE: Light to intense, dry to sweet, young to old. TYPICAL ORDER AT TXOKO: 1st Sparkling (aperitif) → 2nd Light white (starters/fish) → 3rd Full white or Rosé (intermediate courses) → 4th Young red (light meats) → 5th Aged red (powerful meats, wagyu) → 6th Sweet (dessert). WHY? If you start with a powerful red, your palate won\'t appreciate a delicate white afterwards. Each wine "prepares" the palate for the next. EXCEPTION: If the guest only wants one type, always respect their choice.',
     examples:'Aperitivo (Colet) → Entrante (Cepado) → Pescado (Pazo Barrantes) → Carne (Marqués de Murrieta) → Postre (Tamerán)',
     guest:'Al huésped: "Le sugiero empezar con este blanco fresco y luego pasar a un tinto con más cuerpo para las carnes. Así disfrutará la progresión de sabores."'
@@ -24858,21 +24858,21 @@ const PROTOCOLO_TRAPS = {
           en: ['1. Welcome by name. 2. Take the order. 3. Farewell by name.',
                '1. Welcome. 2. Explain the menu. 3. Fond farewell.',
                '1. Welcome by name. 2. Offer aperitif. 3. Farewell by name.'] },
-  p2:  { es: ['El storytelling se ofrece solo si el cliente lo solicita.',
+  p2:  { es: ['El storytelling se ofrece solo si el huésped lo solicita.',
                'El plato se explica al comandarlo, no al servirlo.',
                'Explicar solo los ingredientes principales sin storytelling.'],
           en: ['Storytelling is offered only if the guest requests it.',
                'The dish is explained when ordering, not when serving.',
                'Explain only the main ingredients without storytelling.'] },
   p3:  { es: ['Confirmar el punto de cocción solo en carnes superiores a 500g.',
-               'Mostrar los puntos de cocción y esperar a que el cliente elija sin confirmar.',
+               'Mostrar los puntos de cocción y esperar a que el huésped elija sin confirmar.',
                'Comandar la carne y confirmar el punto cuando la traiga cocina.'],
           en: ['Confirm doneness only for meats over 500g.',
                'Show cooking levels and wait for the guest to choose without confirming.',
                'Order the meat and confirm the doneness when the kitchen brings it.'] },
-  p4:  { es: ['Ofrecer sal y pimienta solo si el cliente la pide tras cortar la carne.',
+  p4:  { es: ['Ofrecer sal y pimienta solo si el huésped la pide tras cortar la carne.',
                'Ofrecer sal y pimienta al terminar de servir todos los platos de la mesa.',
-               'Ofrecer sal solo — la pimienta se ofrece únicamente si el cliente la solicita.'],
+               'Ofrecer sal solo — la pimienta se ofrece únicamente si el huésped la solicita.'],
           en: ['Offer salt and pepper only if the guest asks after carving.',
                'Offer salt and pepper after all dishes at the table have been served.',
                'Offer salt only — pepper is offered only if the guest requests it.'] },
@@ -24889,12 +24889,12 @@ const PROTOCOLO_TRAPS = {
                'The utensil for sides depends on the consistency of the dish.',
                'Sides follow the cutlery of the main dish they accompany.'] },
   p7:  { es: ['Las copas vacías se retiran al finalizar el servicio de cada plato.',
-               'La copa se retira solo si el cliente indica verbalmente que no la desea.',
-               'Si la copa está vacía pero el cliente no ha pedido la cuenta, se deja.'],
+               'La copa se retira solo si el huésped indica verbalmente que no la desea.',
+               'Si la copa está vacía pero el huésped no ha pedido la cuenta, se deja.'],
           en: ['Empty glasses are removed at the end of each course.',
                'The glass is removed only if the guest verbally indicates they do not want it.',
                'If the glass is empty but the guest has not asked for the bill, leave it.'] },
-  p8:  { es: ['El tiempo de 40 minutos se informa solo si el cliente pregunta.',
+  p8:  { es: ['El tiempo de 40 minutos se informa solo si el huésped pregunta.',
                'Se informa del tiempo de espera únicamente si la cocina avisa de retraso.',
                'No es necesario informar del tiempo si la comanda ya está tomada completa.'],
           en: ['The 40-minute time is informed only if the guest asks.',
@@ -24902,7 +24902,7 @@ const PROTOCOLO_TRAPS = {
                'No need to inform of timing if the order has already been taken in full.'] },
   p9:  { es: ['Al remontar la mesa se mantienen las condiciones básicas pero no es necesario igualar al detalle.',
                'La mesa remontada recibe el mismo servicio excepto en decoración y extras.',
-               'Igualar condiciones aplica solo a clientes VIP.'],
+               'Igualar condiciones aplica solo a huéspedes VIP.'],
           en: ['When resetting the table, basic conditions are maintained but exact matching is not required.',
                'The reset table receives the same service except for decoration and extras.',
                'Equal conditions apply only to VIP guests.'] },
@@ -24930,9 +24930,9 @@ const PROTOCOLO_TRAPS = {
           en: ['The table must be opened within 5 minutes of receiving the information.',
                'If the waiter is busy they can open the table when possible with no fixed limit.',
                'The 3-minute limit applies only at dinner service, not at lunch.'] },
-  p14: { es: ['Se puede aceptar la comanda por partes si el cliente insiste, anotando el retraso.',
+  p14: { es: ['Se puede aceptar la comanda por partes si el huésped insiste, anotando el retraso.',
                'Se aceptan comandas parciales en grupos de más de 6 personas.',
-               'La comanda puede tomarse en dos partes si el cliente necesita más tiempo para decidir.'],
+               'La comanda puede tomarse en dos partes si el huésped necesita más tiempo para decidir.'],
           en: ['A partial order can be accepted if the guest insists, noting the delay.',
                'Partial orders are accepted for groups of more than 6 people.',
                'The order can be taken in two parts if the guest needs more time to decide.'] },
@@ -24948,7 +24948,7 @@ const PROTOCOLO_TRAPS = {
           en: ['When ordering wine indicate only the name and whether it is for the whole table or some guests.',
                'The number of glasses is indicated only if the wine is not for the whole table.',
                'Guest and glass information is added only for premium wines.'] },
-  p17: { es: ['Los cócteles fuera de carta pueden prepararse si el cliente lo solicita expresamente.',
+  p17: { es: ['Los cócteles fuera de carta pueden prepararse si el huésped lo solicita expresamente.',
                'Los smoothies están prohibidos en cena pero los batidos pueden ofrecerse.',
                'Se puede ofrecer coctelería fuera de carta si el barman confirma que tiene ingredientes.'],
           en: ['Off-menu cocktails can be prepared if the guest expressly requests them.',
@@ -24956,7 +24956,7 @@ const PROTOCOLO_TRAPS = {
                'Off-menu cocktails can be offered if the barman confirms they have the ingredients.'] },
   p18: { es: ['Las guarniciones del menú infantil pueden venderse a adultos con el consentimiento del manager.',
                'Está prohibido vender guarniciones del menú infantil a adultos sin excepción.',
-               'Las guarniciones del infantil pueden ofrecerse a adultos si el cliente insiste.'],
+               'Las guarniciones del infantil pueden ofrecerse a adultos si el huésped insiste.'],
           en: ['Children’s menu sides can be sold to adults with the manager’s consent.',
                'Children’s menu sides may never be sold to adults under any circumstances.',
                'Children’s menu sides can be offered to adults if the guest insists.'] },
@@ -24966,20 +24966,20 @@ const PROTOCOLO_TRAPS = {
           en: ['The allergy is noted on the first dish and the kitchen is verbally informed of the rest.',
                'The allergy is indicated only on dishes that contain that allergen.',
                'Noting the allergy at the start of the order is sufficient for the whole service.'] },
-  p20: { es: ['Si el cliente insiste en consumir el alérgeno, avisar al manager antes de proceder.',
-               'Se sirve el plato sin anotar nada si el cliente ha sido informado del riesgo.',
-               'OK CLIENTE se escribe solo si el alérgeno puede provocar reacción grave.'],
+  p20: { es: ['Si el huésped insiste en consumir el alérgeno, avisar al manager antes de proceder.',
+               'Se sirve el plato sin anotar nada si el huésped ha sido informado del riesgo.',
+               'OK HUÉSPED se escribe solo si el alérgeno puede provocar reacción grave.'],
           en: ['If the guest insists on consuming the allergen, notify the manager before proceeding.',
                'The dish is served without noting anything if the guest has been informed of the risk.',
-               'OK CLIENT is written only if the allergen can cause a severe reaction.'] },
-  p21: { es: ['Los postres pueden llevarse si el cliente firma el Food Waiver.',
+               'OK GUEST is written only if the allergen can cause a severe reaction.'] },
+  p21: { es: ['Los postres pueden llevarse si el huésped firma el Food Waiver.',
                'Está permitido llevarse postres si están en envase individual cerrado.',
                'Solo se pueden llevar postres fríos como helados, no los calientes.'],
           en: ['Desserts can be taken away if the guest signs the Food Waiver.',
                'Sealed individual-portioned desserts are permitted for takeaway.',
                'Only cold desserts such as ice cream can be taken, not hot ones.'] },
   p22: { es: ['El Food Waiver puede firmarse en la mesa o en recepción del hotel.',
-               'Si el cliente no puede firmar, basta con su consentimiento verbal.',
+               'Si el huésped no puede firmar, basta con su consentimiento verbal.',
                'El Food Waiver solo es necesario para pescados y mariscos.'],
           en: ['The Food Waiver can be signed at the table or at hotel reception.',
                'If the guest cannot sign, verbal consent is sufficient.',
@@ -24997,7 +24997,7 @@ const PROTOCOLO_TRAPS = {
                'NP and N.C. are the only accepted abbreviations for No Post.',
                'NC is the standard hospitality abbreviation — NP is Ritz-specific.'] },
   p25: { es: ['Las anotaciones CI, CO y TZ van al inicio del número de mesa.',
-               'TZ es para terrazas, CI para clientes de check-in y CR para clientes regulares.',
+               'TZ es para terrazas, CI para huéspedes de check-in y CR para huéspedes regulares.',
                'Las anotaciones son opcionales y se usan solo cuando hay incidencias especiales.'],
           en: ['CI, CO and TZ annotations go at the beginning of the table number.',
                'TZ is for terraces, CI for check-in guests and CR for regular guests.',
@@ -25518,7 +25518,7 @@ function buildAllergenQuestions(cat) {
         : `Sí — el ${declaredAllergen} de este plato es mínimo y no supone riesgo.`,
       LANG === 'en'
         ? `Yes, but inform the guest it contains ${enAllergen}.`
-        : `Sí, pero informando al cliente de que contiene ${declaredAllergen}.`,
+        : `Sí, pero informando al huésped de que contiene ${declaredAllergen}.`,
       LANG === 'en'
         ? `Ask the kitchen to remove the ${enAllergen} ingredient before serving.`
         : `Pedir a cocina que retire el ingrediente con ${declaredAllergen} antes de servir.`
@@ -25529,7 +25529,7 @@ function buildAllergenQuestions(cat) {
       dish, dishDisplay, declaredAllergen, enAllergen,
       situation: LANG === 'en'
         ? `A guest declares a ${enAllergen} allergy. They want to order "${dishDisplay}". Can you serve it?`
-        : `Un cliente declara alergia a ${declaredAllergen}. Quiere pedir "${dishDisplay}". ¿Puedes servirlo?`,
+        : `Un huésped declara alergia a ${declaredAllergen}. Quiere pedir "${dishDisplay}". ¿Puedes servirlo?`,
       correct, choices,
       correctIdx: choices.indexOf(correct),
       color: getCatColor(dish.cat),
@@ -25555,14 +25555,14 @@ function buildAllergenQuestions(cat) {
           : `Consultar siempre con cocina antes de servir a cualquier alérgico.`,
         LANG === 'en'
           ? `No — ask the guest to sign a waiver first.`
-          : `No — pedir al cliente que firme una exención antes de servirlo.`
+          : `No — pedir al huésped que firme una exención antes de servirlo.`
       ].sort(() => Math.random() - .5);
       const safeChoices = [safeCorrect, ...safeTraps].sort(() => Math.random() - .5);
       questions.push({
         dish, dishDisplay, declaredAllergen: safeAllergen, enAllergen: safeEn,
         situation: LANG === 'en'
           ? `A guest declares a ${safeEn} allergy. They want to order "${dishDisplay}". Can you serve it?`
-          : `Un cliente declara alergia a ${safeAllergen}. Quiere pedir "${dishDisplay}". ¿Puedes servirlo?`,
+          : `Un huésped declara alergia a ${safeAllergen}. Quiere pedir "${dishDisplay}". ¿Puedes servirlo?`,
         correct: safeCorrect, choices: safeChoices,
         correctIdx: safeChoices.indexOf(safeCorrect),
         color: getCatColor(dish.cat),
@@ -28384,26 +28384,26 @@ const LQA_SITUATIONS = [
   {id:1, cat:'llegada', scn:'Un huésped llega pero la mesa aún no está completamente montada. Tiene sitios para 4 personas pero falta cubertería.', scn_en:'A guest arrives but the table isn\'t fully set up yet. It\'s set for 4 people but cutlery is missing.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Acomodar al huésped y obtener la cubertería rápidamente','Pedir al huésped que espere 10 minutos mientras terminas de montar la mesa','Ofrecerle una bebida de bienvenida y después montar la mesa','Disculparse por el inconveniente sin ofrecer solución'], opts_en:['Seat the guest and quickly obtain the missing cutlery','Ask the guest to wait 10 minutes while you finish setting the table','Offer a welcome drink and then set the table','Apologize for the inconvenience without offering a solution'], corr:0, expl:'El estándar #7 requiere que el huésped sea saludado y sentado en una mesa completamente montada en 1 minuto. Si falta cubertería, la mesa no está completamente lista. Lo correcto es acomodar al huésped y completar el montaje rápidamente.', expl_en:'Standard #7 requires the guest be greeted and seated at a fully laid table within 1 minute. If cutlery is missing, the table is not fully ready. The correct action is to seat the guest and quickly complete the setup.', real:true},
   {id:2, cat:'servicio', scn:'Es la primera vez que unos huéspedes vienen al restaurante. Se sientan y esperan que empieces a hablar.', scn_en:'First-time guests sit down at the restaurant. They settle in and wait for you to speak.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Buscar al manager para que le haga la introducción','Dar una breve introducción calorosa al concepto del restaurante y sus valores','Ofrecer agua e inmediatamente presentar la carta','Preguntar si es su primera vez (aunque es obvio) y pasar directamente a bebidas'], opts_en:['Find the manager to do the introduction','Give a warm brief introduction to the restaurant\'s concept and values','Offer water and immediately present the menu','Ask if it\'s their first time (though it\'s obvious) and move to drinks'], corr:1, expl:'El estándar #15 explícitamente dice que para huéspedes primerizos debe ofrecerse una breve introducción al concepto del restaurante. Este es un momento valioso para EI Behavioral.', expl_en:'Standard #15 explicitly states that first-time guests should be offered a brief introduction to the restaurant concept. This is a valuable EI Behavioral moment.', real:true},
   {id:3, cat:'servicio', scn:'Traes un plato principal a una mesa. El huésped te pregunta: "¿Tiene alérgenos este plato?" y tú no estás seguro de todos los ingredientes exactos.', scn_en:'You bring a main course to a table. The guest asks: "Does this have any allergens?" and you\'re not 100% sure of all ingredients.', q:'¿Cuál es la mejor respuesta?', q_en:'What is the best response?', opts:['Leer la descripción del menú en lugar de saber exactamente qué contiene','Prometer volver en 2 minutos con información precisa del chef','Decir "No creo que tenga alérgenos" y marcharte rápidamente','Sugerir que pruebe un poco primero, ya que verá si le sienta mal'], opts_en:['Read the menu description instead of knowing exact contents','Promise to return within 2 minutes with accurate information from the chef','Say "I don\'t think it has allergens" and leave quickly','Suggest they try a bit first since they\'ll see if it bothers them'], corr:1, expl:'El estándar #21 requiere una comanda COMPLETA con instrucciones claras. El estándar #19 requiere que puedas responder preguntas sobre ingredientes y alérgenos. Si no estás seguro, debes ir al chef para obtener información precisa.', expl_en:'Standard #21 requires a COMPLETE order with clear instructions. Standard #19 requires you to answer questions about menu items, ingredients and allergies. If unsure, go to the chef for accurate information.', real:true},
-  {id:4, cat:'vino', scn:'Observas que los platos principales están vacíos y los vasos de vino también. El cliente está en una conversación importante.', scn_en:'You notice the main course plates are empty and wine glasses are too. The guest is in an important conversation.', q:'¿Cuándo y cómo deberías actuar?', q_en:'When and how should you act?', opts:['Retirar los platos uno por uno con la mano en lugar de bandeja','Inmediatamente retirar los platos sin interrumpir y usar bandeja','Interrumpir delicadamente la conversación para confirmar si han terminado','Esperar a que terminen de hablar, entonces retirar TODO de una vez'], opts_en:['Remove plates one at a time by hand instead of using a tray','Immediately remove plates without interrupting and use a tray','Gently interrupt their conversation to confirm they\'re finished','Wait until they finish talking then clear everything at once'], corr:1, expl:'El estándar #32 requiere retirar platos en 5 minutos de que terminen. El estándar #27 requiere usar bandeja para servir Y retirar bebidas. Ser anticipativo (#73) significa no interrumpir pero estar listo.', expl_en:'Standard #32 requires clearing dishes within 5 minutes of guests finishing. Standard #27 requires using a tray for both serving and clearing beverages. Being anticipatory (#73) means not interrupting but being ready.', real:true},
+  {id:4, cat:'vino', scn:'Observas que los platos principales están vacíos y los vasos de vino también. El huésped está en una conversación importante.', scn_en:'You notice the main course plates are empty and wine glasses are too. The guest is in an important conversation.', q:'¿Cuándo y cómo deberías actuar?', q_en:'When and how should you act?', opts:['Retirar los platos uno por uno con la mano en lugar de bandeja','Inmediatamente retirar los platos sin interrumpir y usar bandeja','Interrumpir delicadamente la conversación para confirmar si han terminado','Esperar a que terminen de hablar, entonces retirar TODO de una vez'], opts_en:['Remove plates one at a time by hand instead of using a tray','Immediately remove plates without interrupting and use a tray','Gently interrupt their conversation to confirm they\'re finished','Wait until they finish talking then clear everything at once'], corr:1, expl:'El estándar #32 requiere retirar platos en 5 minutos de que terminen. El estándar #27 requiere usar bandeja para servir Y retirar bebidas. Ser anticipativo (#73) significa no interrumpir pero estar listo.', expl_en:'Standard #32 requires clearing dishes within 5 minutes of guests finishing. Standard #27 requires using a tray for both serving and clearing beverages. Being anticipatory (#73) means not interrupting but being ready.', real:true},
   {id:5, cat:'vino', scn:'Es hora de llevar la cuenta. Observas que el portacuentas está ligeramente desgastado y decolorado.', scn_en:'It\'s time to bring the bill. You notice the billfold is slightly worn and discolored.', q:'¿Qué deberías haber hecho?', q_en:'What should you have done?', opts:['Traer la cuenta sin portacuentas, directamente en la mesa','Traer la cuenta en una carpeta de plástico en su lugar','Buscar otro portacuentas en mejor estado antes de traer la cuenta','Traer la cuenta en ese portacuentas porque está limpio'], opts_en:['Bring the bill without a billfold directly on the table','Bring the bill in a plastic folder instead','Find another billfold in better condition before bringing the bill','Bring the bill in that billfold because it\'s clean'], corr:2, expl:'El estándar #41 especifica que la cuenta debe presentarse "en un portacuentas LIMPIO Y EN BUEN ESTADO". Un portacuenta desgastado o decolorado no cumple este estándar. La presentación final es crítica.', expl_en:'Standard #41 specifies the bill must be presented "in a clean billfold in good condition". A worn or discolored billfold doesn\'t meet this standard. The final presentation is critical.', real:true},
-  {id:6, cat:'carta', scn:'Observas que la cubierta exterior de la carta tiene una mancha de vino vieja. La página interior está limpia.', scn_en:'You notice the menu cover has an old wine stain on it. The inside pages are clean.', q:'¿Qué significaría esto según los estándares LQA?', q_en:'What would this mean according to LQA standards?', opts:['Es un problema menor que no afecta la calidad de servicio','Solo incumple si el cliente se queja directamente','Incumple el estándar #50 - la carta debe estar limpia y en buen estado','Es aceptable porque el interior está limpio'], opts_en:['It\'s a minor issue that doesn\'t affect service quality','It only violates the standard if the guest complains','It violates standard #50 - the menu must be clean and in good condition','It\'s acceptable because the inside is clean'], corr:2, expl:'El estándar #50 requiere que la carta esté "LIMPIA, EN BUEN ESTADO, gramaticalmente correcta y fácil de leer". Una mancha visible en la cubierta incumple este requisito, sin importar lo que haya dentro.', expl_en:'Standard #50 requires the menu to be "CLEAN, in good repair, grammatically correct and easy to read". A visible stain on the cover violates this requirement, regardless of what\'s inside.', real:true},
-  {id:7, cat:'montaje', scn:'Observas que dos mesas en el mismo comedor están montadas de formas diferentes: una tiene copas pequeñas y la otra grandes; una tiene platos de pan y la otra no.', scn_en:'You notice two tables in the same dining room are set up differently: one has small glasses and the other large ones; one has bread plates and the other doesn\'t.', q:'¿Cuál es el problema?', q_en:'What is the problem?', opts:['Habría que revisar con los clientes qué prefieren','Es un detalle menor mientras se mantenga la limpieza','Incumple el estándar #61 - todas las mesas deben estar montadas de forma consistente','No hay problema - cada mesa debe ser personalizada según los huéspedes'], opts_en:['You should ask the clients what they prefer','It\'s a minor detail as long as cleanliness is maintained','It violates standard #61 - all tables must be consistently laid up','There\'s no problem - each table should be personalized per guest'], corr:2, expl:'El estándar #61 exige que "TODAS LAS MESAS estén consistentemente montadas". Esto es parte del estándar de Producto y experiencia de marca. La inconsistencia comunica falta de control.', expl_en:'Standard #61 requires "ALL TABLES be consistently laid up". This is part of the Product standard and brand experience. Inconsistency communicates lack of control.', real:true},
-  {id:8, cat:'montaje', scn:'Necesitas servirle agua a 6 huéspedes pero te faltan 2 copas de agua que coincidan con el resto. Hay 2 copas diferentes de otro juego de cristalería.', scn_en:'You need to serve water to 6 guests but you\'re missing 2 matching water glasses. There are 2 different glasses from another set available.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Decir al cliente que no hay suficientes vasos de agua del mismo tipo','Servir a 4 personas primero y después a las otras 2 con los vasos correctos','Buscar o preparar 2 vasos que coincidan antes de servir','Servir con los 2 vasos diferentes - son solo vasos de agua'], opts_en:['Tell the guest there aren\'t enough matching water glasses','Serve 4 guests first then the other 2 with matching glasses later','Find or prepare 2 matching glasses before serving','Serve with the 2 different glasses - they\'re just water glasses'], corr:2, expl:'El estándar #63 requiere que la cubertería, vajilla y cristalería sean CORRECTAS, LIMPIAS Y EN BUEN ESTADO. Mezclar juegos de cristalería incumple el requisito de ser "correcto". La consistencia visual es parte del estándar de Producto.', expl_en:'Standard #63 requires cutlery, crockery and glassware be CORRECT, CLEAN and in good repair. Mixing glassware sets violates the "correct" requirement. Visual consistency is part of the Product standard.', real:true},
-  {id:9, cat:'montaje', scn:'Acabas de limpiar una mesa para nuevos clientes. Las servilletas están en la copa, la cubertería está colocada. Pero observas que no hay ni saleros ni pimenteros en la mesa.', scn_en:'You\'ve just cleared a table for new guests. Napkins are in the glass, cutlery is placed. But you notice there are no salt or pepper shakers on the table.', q:'¿Es importante ofrecerlos o dejarlos en la mesa?', q_en:'Is it important to offer them or leave them on the table?', opts:['Es solo un detalle menor de confort','Solo necesarios si el plato lo requiere específicamente','Sí - el estándar #67 requiere que estén disponibles u ofrecidos, limpios y llenos','No es necesario - los huéspedes los pedirán si los necesitan'], opts_en:['It\'s just a minor comfort detail','Only necessary if the specific dish requires them','Yes - standard #67 requires they be available or offered, clean and full','Not necessary - guests will ask if they need them'], corr:2, expl:'El estándar #67 es explícito: "¿Había saleros y pimenteros disponibles u ofrecidos, y estaban limpios y llenos?" No es opcional. O están en la mesa u ofrecen verbalmente al momento.', expl_en:'Standard #67 is explicit: "Were salt and pepper cruets available or offered, and were they clean and full?" It\'s not optional. They must either be on the table or offered verbally at seating.', real:true},
+  {id:6, cat:'carta', scn:'Observas que la cubierta exterior de la carta tiene una mancha de vino vieja. La página interior está limpia.', scn_en:'You notice the menu cover has an old wine stain on it. The inside pages are clean.', q:'¿Qué significaría esto según los estándares LQA?', q_en:'What would this mean according to LQA standards?', opts:['Es un problema menor que no afecta la calidad de servicio','Solo incumple si el huésped se queja directamente','Incumple el estándar #50 - la carta debe estar limpia y en buen estado','Es aceptable porque el interior está limpio'], opts_en:['It\'s a minor issue that doesn\'t affect service quality','It only violates the standard if the guest complains','It violates standard #50 - the menu must be clean and in good condition','It\'s acceptable because the inside is clean'], corr:2, expl:'El estándar #50 requiere que la carta esté "LIMPIA, EN BUEN ESTADO, gramaticalmente correcta y fácil de leer". Una mancha visible en la cubierta incumple este requisito, sin importar lo que haya dentro.', expl_en:'Standard #50 requires the menu to be "CLEAN, in good repair, grammatically correct and easy to read". A visible stain on the cover violates this requirement, regardless of what\'s inside.', real:true},
+  {id:7, cat:'montaje', scn:'Observas que dos mesas en el mismo comedor están montadas de formas diferentes: una tiene copas pequeñas y la otra grandes; una tiene platos de pan y la otra no.', scn_en:'You notice two tables in the same dining room are set up differently: one has small glasses and the other large ones; one has bread plates and the other doesn\'t.', q:'¿Cuál es el problema?', q_en:'What is the problem?', opts:['Habría que revisar con los huéspedes qué prefieren','Es un detalle menor mientras se mantenga la limpieza','Incumple el estándar #61 - todas las mesas deben estar montadas de forma consistente','No hay problema - cada mesa debe ser personalizada según los huéspedes'], opts_en:['You should ask the guests what they prefer','It\'s a minor detail as long as cleanliness is maintained','It violates standard #61 - all tables must be consistently laid up','There\'s no problem - each table should be personalized per guest'], corr:2, expl:'El estándar #61 exige que "TODAS LAS MESAS estén consistentemente montadas". Esto es parte del estándar de Producto y experiencia de marca. La inconsistencia comunica falta de control.', expl_en:'Standard #61 requires "ALL TABLES be consistently laid up". This is part of the Product standard and brand experience. Inconsistency communicates lack of control.', real:true},
+  {id:8, cat:'montaje', scn:'Necesitas servirle agua a 6 huéspedes pero te faltan 2 copas de agua que coincidan con el resto. Hay 2 copas diferentes de otro juego de cristalería.', scn_en:'You need to serve water to 6 guests but you\'re missing 2 matching water glasses. There are 2 different glasses from another set available.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Decir al huésped que no hay suficientes vasos de agua del mismo tipo','Servir a 4 personas primero y después a las otras 2 con los vasos correctos','Buscar o preparar 2 vasos que coincidan antes de servir','Servir con los 2 vasos diferentes - son solo vasos de agua'], opts_en:['Tell the guest there aren\'t enough matching water glasses','Serve 4 guests first then the other 2 with matching glasses later','Find or prepare 2 matching glasses before serving','Serve with the 2 different glasses - they\'re just water glasses'], corr:2, expl:'El estándar #63 requiere que la cubertería, vajilla y cristalería sean CORRECTAS, LIMPIAS Y EN BUEN ESTADO. Mezclar juegos de cristalería incumple el requisito de ser "correcto". La consistencia visual es parte del estándar de Producto.', expl_en:'Standard #63 requires cutlery, crockery and glassware be CORRECT, CLEAN and in good repair. Mixing glassware sets violates the "correct" requirement. Visual consistency is part of the Product standard.', real:true},
+  {id:9, cat:'montaje', scn:'Acabas de limpiar una mesa para nuevos huéspedes. Las servilletas están en la copa, la cubertería está colocada. Pero observas que no hay ni saleros ni pimenteros en la mesa.', scn_en:'You\'ve just cleared a table for new guests. Napkins are in the glass, cutlery is placed. But you notice there are no salt or pepper shakers on the table.', q:'¿Es importante ofrecerlos o dejarlos en la mesa?', q_en:'Is it important to offer them or leave them on the table?', opts:['Es solo un detalle menor de confort','Solo necesarios si el plato lo requiere específicamente','Sí - el estándar #67 requiere que estén disponibles u ofrecidos, limpios y llenos','No es necesario - los huéspedes los pedirán si los necesitan'], opts_en:['It\'s just a minor comfort detail','Only necessary if the specific dish requires them','Yes - standard #67 requires they be available or offered, clean and full','Not necessary - guests will ask if they need them'], corr:2, expl:'El estándar #67 es explícito: "¿Había saleros y pimenteros disponibles u ofrecidos, y estaban limpios y llenos?" No es opcional. O están en la mesa u ofrecen verbalmente al momento.', expl_en:'Standard #67 is explicit: "Were salt and pepper cruets available or offered, and were they clean and full?" It\'s not optional. They must either be on the table or offered verbally at seating.', real:true},
   {id:10, cat:'comportamiento', scn:'Es hora de servir a la mesa y observas que tienes una mancha de vino en tu camisa, claramente visible.', scn_en:'It\'s time to serve the table and you realize you have a wine stain on your shirt, clearly visible.', q:'¿Deberías continuar sirviendo o cambiar de uniforme?', q_en:'Should you continue serving or change uniforms?', opts:['Disculparse por la mancha ante los huéspedes','Servir rápidamente y alejarse para que no lo vean','Cambiar de uniforme antes de servir a la mesa','Continuar sirviendo - es solo una mancha pequeña'], opts_en:['Apologize to the guests for the stain','Serve quickly and leave so they don\'t see it','Change uniforms before serving the table','Continue serving - it\'s just a small stain'], corr:2, expl:'El estándar #68 requiere "empleados bien arreglados y con uniformes LIMPIOS, bien ajustados, con identificación visible". Una mancha visible incumple este requisito. La presentación personal es un estándar EI Behavioral crítico para la primera impresión.', expl_en:'Standard #68 requires "employees well groomed and neatly presented in CLEAN, well fitted uniforms". A visible stain violates this. Personal presentation is a critical EI Behavioral standard for first impression.', real:true},
-  {id:11, cat:'vino', scn:'Un huésped pide vino blanco. La botella llega muy fría. El huésped dice: "Prefiero que esté menos frío."', scn_en:'A guest orders a white wine. The bottle arrives chilled. The guest says "I prefer it less cold."', q:'¿Cuál es la mejor acción?', q_en:'What is the best action?', opts:['Traer una cubeta con hielo para que se enfríe aún más lentamente','Decir que el vino blanco debe servirse frío y que ya está correcto','Dejar la botella en la mesa a temperatura ambiente gradualmente','Ofrecer inmediatamente colocar la botella en agua tibia para temperarla'], opts_en:['Bring an ice bucket so it cools more slowly','Say that white wine must be served cold and it\'s already correct','Leave the bottle on the table to gradually reach room temperature','Immediately offer to place the bottle in warm water to temper it'], corr:3, expl:'El estándar #47 requiere anticipar y resolver preferencias del huésped. Aunque el estándar #45 especifica temperaturas correctas, la preferencia del cliente es prioritaria. La solución correcta es ofrecer temperarla de manera controlada.', expl_en:'Standard #47 requires anticipating and resolving guest preferences. Although standard #45 specifies correct temperatures, guest preference takes priority. The correct solution is to offer controlled tempering.', real:false},
-  {id:12, cat:'comportamiento', scn:'Es una mesa en una terraza exterior. Observas que un huésped se está frotando los brazos pero no ha dicho nada sobre el frío.', scn_en:'It\'s an outdoor table on a terrace. You notice a guest rubbing their arms but hasn\'t mentioned being cold.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Ofrecerle una manta o calefactor antes de que lo pida','Esperar a que el huésped se queje del frío','Preguntar si tiene frío en tono casual','Ignorar el comportamiento y continuar con el servicio normal'], opts_en:['Offer them a blanket or heater before they ask','Wait until the guest complains about being cold','Casually ask if they\'re feeling cold','Ignore the behavior and continue normal service'], corr:0, expl:'El estándar #73 requiere servicio ANTICIPATORIO. Detectar signos no verbales y ofrecer soluciones sin esperar a que el cliente pida es EI Behavioral crítico. Esta es una oportunidad para demostrar excelencia.', expl_en:'Standard #73 requires ANTICIPATORY service. Detecting non-verbal signs and offering solutions without waiting for the client to ask is critical EI Behavioral. This is an opportunity to demonstrate excellence.', real:false},
+  {id:11, cat:'vino', scn:'Un huésped pide vino blanco. La botella llega muy fría. El huésped dice: "Prefiero que esté menos frío."', scn_en:'A guest orders a white wine. The bottle arrives chilled. The guest says "I prefer it less cold."', q:'¿Cuál es la mejor acción?', q_en:'What is the best action?', opts:['Traer una cubeta con hielo para que se enfríe aún más lentamente','Decir que el vino blanco debe servirse frío y que ya está correcto','Dejar la botella en la mesa a temperatura ambiente gradualmente','Ofrecer inmediatamente colocar la botella en agua tibia para temperarla'], opts_en:['Bring an ice bucket so it cools more slowly','Say that white wine must be served cold and it\'s already correct','Leave the bottle on the table to gradually reach room temperature','Immediately offer to place the bottle in warm water to temper it'], corr:3, expl:'El estándar #47 requiere anticipar y resolver preferencias del huésped. Aunque el estándar #45 especifica temperaturas correctas, la preferencia del huésped es prioritaria. La solución correcta es ofrecer temperarla de manera controlada.', expl_en:'Standard #47 requires anticipating and resolving guest preferences. Although standard #45 specifies correct temperatures, guest preference takes priority. The correct solution is to offer controlled tempering.', real:false},
+  {id:12, cat:'comportamiento', scn:'Es una mesa en una terraza exterior. Observas que un huésped se está frotando los brazos pero no ha dicho nada sobre el frío.', scn_en:'It\'s an outdoor table on a terrace. You notice a guest rubbing their arms but hasn\'t mentioned being cold.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Ofrecerle una manta o calefactor antes de que lo pida','Esperar a que el huésped se queje del frío','Preguntar si tiene frío en tono casual','Ignorar el comportamiento y continuar con el servicio normal'], opts_en:['Offer them a blanket or heater before they ask','Wait until the guest complains about being cold','Casually ask if they\'re feeling cold','Ignore the behavior and continue normal service'], corr:0, expl:'El estándar #73 requiere servicio ANTICIPATORIO. Detectar signos no verbales y ofrecer soluciones sin esperar a que el huésped pida es EI Behavioral crítico. Esta es una oportunidad para demostrar excelencia.', expl_en:'Standard #73 requires ANTICIPATORY service. Detecting non-verbal signs and offering solutions without waiting for the guest to ask is critical EI Behavioral. This is an opportunity to demonstrate excellence.', real:false},
   {id:13, cat:'vino', scn:'Estás sirviendo a una mesa de 8 personas. Un huésped pide una recomendación de vino para su plato de pescado. El supervisor está ocupado en otra sección.', scn_en:'You\'re serving a table of 8 people. A guest asks for a wine recommendation for their fish dish. The supervisor is busy in another section.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Dar una recomendación básica (vino blanco seco o espumante) o buscar al supervisor','Decir: "No sé de vinos, debe esperar al supervisor"','Cambiar de tema y sugerir agua en su lugar','Buscar cualquier botella de vino blanco y presentarla como la mejor opción'], opts_en:['Give a basic recommendation (dry white or sparkling) or find the supervisor','Say: "I don\'t know about wine, you\'ll have to wait for the supervisor"','Change the subject and suggest water instead','Find any white wine bottle and present it as the best option'], corr:0, expl:'El estándar #54 requiere que el personal conozca opciones de vino básicas. El estándar #72 requiere confianza. Si no estás seguro, puedes dar una opción básica o traer al supervisor. Nunca digas que no sabes.', expl_en:'Standard #54 requires staff to know basic wine options. Standard #72 requires confidence. If unsure, you can give a basic option or bring the supervisor. Never say you don\'t know.', real:false},
   {id:14, cat:'servicio', scn:'Un huésped dice: "Este es el mejor filete que he comido en mi vida."', scn_en:'A guest says: "This is the best steak I\'ve ever had."', q:'¿Cuál es la respuesta ideal según LQA?', q_en:'What is the ideal response according to LQA?', opts:['Preguntarle si quiere hablar directamente con el chef','Simplemente decir: "Gracias, le diremos al chef"','Aceptar el cumplido y continuar con el servicio','Usar el cumplido como oportunidad para ofrecer postre o digestivo'], opts_en:['Ask if they want to speak directly with the chef','Simply say: "Thank you, we\'ll tell the chef"','Accept the compliment and continue service','Use the compliment as an opportunity to offer dessert or digestif'], corr:3, expl:'El estándar #75 (EI Behavioral - Service Recovery and Upsell) requiere aprovechar momentos positivos para mejorar la experiencia. Un cumplido es una puerta abierta para ofrecer más. Esto demuestra servicio consultivo.', expl_en:'Standard #75 (EI Behavioral - Service Recovery and Upsell) requires leveraging positive moments to enhance the experience. A compliment is an open door to offer more. This demonstrates consultative service.', real:false},
-  {id:15, cat:'comportamiento', scn:'Ves a un compañero cargando demasiados platos y está luchando. Tus mesas están servidas y todos están cómodos.', scn_en:'You see a colleague carrying too many plates and struggling. Your tables are all served and comfortable.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Enfocarte en tus propias responsabilidades y tareas','Esperar a ver si el compañero pide ayuda específicamente','Llamar la atención del gerente para que ayude','Ayudar al compañero de forma discreta sin que los clientes lo noten'], opts_en:['Focus on your own responsibilities and tasks','Wait to see if the colleague asks for specific help','Call the manager to help','Help your colleague discreetly without guests noticing'], corr:3, expl:'El estándar #73 (Anticipatory Service) también aplica al trabajo en equipo. El estándar #70 requiere apoyo entre empleados y teamwork. Ayudar de forma discreta es parte de la excelencia operacional y demuestra liderazgo.', expl_en:'Standard #73 (Anticipatory Service) also applies to teamwork. Standard #70 requires employee support and teamwork. Helping discreetly is part of operational excellence and demonstrates leadership.', real:false},
-  {id:16, cat:'vino', scn:'Son las 10:35 PM. Un huésped ya terminó el plato principal hace 12 minutos. El postre aún no ha salido de la cocina. El cliente no ha reclamado.', scn_en:'It\'s 10:35 PM. A guest finished their main course 12 minutes ago. The dessert hasn\'t come out yet. The guest hasn\'t complained.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Esperar a que el cliente pida el postre','Informar al cliente proactivamente que el postre está en preparación','Preguntar si desean el postre','Cambiar automáticamente el postre por un digestivo rápido'], opts_en:['Wait until the guest asks for dessert','Proactively inform the guest that dessert is being prepared','Ask if they want dessert','Automatically switch the dessert for a quick digestif'], corr:1, expl:'El estándar #35 dice que el postre debe llegar en 10 minutos máximo. A los 12 minutos, ya es tardío. El estándar #73 (Anticipatory Service) requiere comunicar proactivamente cuando hay un delay. Debes informar al cliente y ofrecer opciones.', expl_en:'Standard #35 says dessert must arrive within 10 minutes maximum. At 12 minutes, it\'s late. Standard #73 (Anticipatory Service) requires proactively communicating delays. You must inform the guest and offer options.', real:false},
-  {id:17, cat:'llegada', scn:'Un cliente VIP habitual llega sin reserva en una noche completamente llena. No hay mesas disponibles.', scn_en:'A regular VIP guest arrives without a reservation on a fully booked night. There are no tables available.', q:'¿Cuál es la mejor acción?', q_en:'What is the best action?', opts:['Sugerir que regresen otro día cuando haya disponibilidad','Disculparse pero informar que está imposible sentarlos','Preguntar al gerente si es posible crear una mesa o dar un tiempo de espera','Ofrecerles una bebida en la barra mientras se busca solución creativa'], opts_en:['Suggest they return another day when there\'s availability','Apologize but inform them it\'s impossible to seat them','Ask the manager if it\'s possible to create a table or offer a wait time','Offer them a drink at the bar while seeking a creative solution'], corr:3, expl:'El estándar #6 y #11 requieren que clientes VIP reciban trato diferenciado. El estándar #73 (Anticipatory) requiere pensar creativo. La acción correcta es no dejarlos ir: ofrece bebida de bienvenida y busca soluciones (mover mesa, crear espacio, ofrecerles la mejor opción disponible).', expl_en:'Standard #6 and #11 require VIP customers receive differentiated treatment. Standard #73 (Anticipatory) requires creative thinking. The correct action is not to let them leave: offer a welcome drink and seek solutions (relocate a table, create space, offer the best available option).', real:false},
-  {id:18, cat:'comportamiento', scn:'Una familia con un niño pequeño (6 años) se sienta en tu sección. El niño parece aburrido e inquieto durante la conversación de los adultos.', scn_en:'A family with a young child (6 years old) sits in your section. The child seems bored and restless during adult conversation.', q:'¿Cuál es la mejor acción de servicio?', q_en:'What is the best service action?', opts:['Ofrecer al niño un pequeño ajetreo (colores, juego simple, pan) sin que afecte la experiencia de los adultos','Ignorar al niño y enfocarse en los adultos','Preguntar si el niño necesita algo específico','Sugerir a los padres que ordenen rápido para que el niño no se aburra'], opts_en:['Offer the child a small distraction (colors, simple game, bread) without affecting the adults\' experience','Ignore the child and focus on the adults','Ask if the child needs anything specific','Suggest to the parents to order quickly so the child doesn\'t get bored'], corr:0, expl:'El estándar #73 (Anticipatory Service) y #75 (EI Behavioral) requieren personalizar la experiencia para TODOS los clientes. Un niño entrettenido = padres felices. Esta es una oportunidad para brillar en servicio centrado en la familia.', expl_en:'Standard #73 (Anticipatory Service) and #75 (EI Behavioral) require personalizing the experience for ALL guests. A happy child = happy parents. This is an opportunity to shine in family-focused service.', real:false},
+  {id:15, cat:'comportamiento', scn:'Ves a un compañero cargando demasiados platos y está luchando. Tus mesas están servidas y todos están cómodos.', scn_en:'You see a colleague carrying too many plates and struggling. Your tables are all served and comfortable.', q:'¿Qué deberías hacer?', q_en:'What should you do?', opts:['Enfocarte en tus propias responsabilidades y tareas','Esperar a ver si el compañero pide ayuda específicamente','Llamar la atención del gerente para que ayude','Ayudar al compañero de forma discreta sin que los huéspedes lo noten'], opts_en:['Focus on your own responsibilities and tasks','Wait to see if the colleague asks for specific help','Call the manager to help','Help your colleague discreetly without guests noticing'], corr:3, expl:'El estándar #73 (Anticipatory Service) también aplica al trabajo en equipo. El estándar #70 requiere apoyo entre empleados y teamwork. Ayudar de forma discreta es parte de la excelencia operacional y demuestra liderazgo.', expl_en:'Standard #73 (Anticipatory Service) also applies to teamwork. Standard #70 requires employee support and teamwork. Helping discreetly is part of operational excellence and demonstrates leadership.', real:false},
+  {id:16, cat:'vino', scn:'Son las 10:35 PM. Un huésped ya terminó el plato principal hace 12 minutos. El postre aún no ha salido de la cocina. El huésped no ha reclamado.', scn_en:'It\'s 10:35 PM. A guest finished their main course 12 minutes ago. The dessert hasn\'t come out yet. The guest hasn\'t complained.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Esperar a que el huésped pida el postre','Informar al huésped proactivamente que el postre está en preparación','Preguntar si desean el postre','Cambiar automáticamente el postre por un digestivo rápido'], opts_en:['Wait until the guest asks for dessert','Proactively inform the guest that dessert is being prepared','Ask if they want dessert','Automatically switch the dessert for a quick digestif'], corr:1, expl:'El estándar #35 dice que el postre debe llegar en 10 minutos máximo. A los 12 minutos, ya es tardío. El estándar #73 (Anticipatory Service) requiere comunicar proactivamente cuando hay un delay. Debes informar al huésped y ofrecer opciones.', expl_en:'Standard #35 says dessert must arrive within 10 minutes maximum. At 12 minutes, it\'s late. Standard #73 (Anticipatory Service) requires proactively communicating delays. You must inform the guest and offer options.', real:false},
+  {id:17, cat:'llegada', scn:'Un huésped VIP habitual llega sin reserva en una noche completamente llena. No hay mesas disponibles.', scn_en:'A regular VIP guest arrives without a reservation on a fully booked night. There are no tables available.', q:'¿Cuál es la mejor acción?', q_en:'What is the best action?', opts:['Sugerir que regresen otro día cuando haya disponibilidad','Disculparse pero informar que está imposible sentarlos','Preguntar al gerente si es posible crear una mesa o dar un tiempo de espera','Ofrecerles una bebida en la barra mientras se busca solución creativa'], opts_en:['Suggest they return another day when there\'s availability','Apologize but inform them it\'s impossible to seat them','Ask the manager if it\'s possible to create a table or offer a wait time','Offer them a drink at the bar while seeking a creative solution'], corr:3, expl:'El estándar #6 y #11 requieren que huéspedes VIP reciban trato diferenciado. El estándar #73 (Anticipatory) requiere pensar creativo. La acción correcta es no dejarlos ir: ofrece bebida de bienvenida y busca soluciones (mover mesa, crear espacio, ofrecerles la mejor opción disponible).', expl_en:'Standard #6 and #11 require VIP customers receive differentiated treatment. Standard #73 (Anticipatory) requires creative thinking. The correct action is not to let them leave: offer a welcome drink and seek solutions (relocate a table, create space, offer the best available option).', real:false},
+  {id:18, cat:'comportamiento', scn:'Una familia con un niño pequeño (6 años) se sienta en tu sección. El niño parece aburrido e inquieto durante la conversación de los adultos.', scn_en:'A family with a young child (6 years old) sits in your section. The child seems bored and restless during adult conversation.', q:'¿Cuál es la mejor acción de servicio?', q_en:'What is the best service action?', opts:['Ofrecer al niño un pequeño ajetreo (colores, juego simple, pan) sin que afecte la experiencia de los adultos','Ignorar al niño y enfocarse en los adultos','Preguntar si el niño necesita algo específico','Sugerir a los padres que ordenen rápido para que el niño no se aburra'], opts_en:['Offer the child a small distraction (colors, simple game, bread) without affecting the adults\' experience','Ignore the child and focus on the adults','Ask if the child needs anything specific','Suggest to the parents to order quickly so the child doesn\'t get bored'], corr:0, expl:'El estándar #73 (Anticipatory Service) y #75 (EI Behavioral) requieren personalizar la experiencia para TODOS los huéspedes. Un niño entrettenido = padres felices. Esta es una oportunidad para brillar en servicio centrado en la familia.', expl_en:'Standard #73 (Anticipatory Service) and #75 (EI Behavioral) require personalizing the experience for ALL guests. A happy child = happy parents. This is an opportunity to shine in family-focused service.', real:false},
   {id:19, cat:'carta', scn:'Un huésped pregunta: "¿Su pescado es de fuente sostenible?"', scn_en:'A guest asks: "Is your fish from a sustainable source?"', q:'¿Cuál es la respuesta correcta según LQA?', q_en:'What is the correct answer according to LQA?', opts:['Responder con confianza: "Sí, nuestros pescados provienen de fuentes certificadas y sostenibles"','Responder vagamente: "Creemos que sí"','Decir: "No estoy seguro, déjame preguntar"','Cambiar de tema diciendo que todo nuestro menú es de calidad'], opts_en:['Respond confidently: "Yes, our fish comes from certified sustainable sources"','Respond vaguely: "I think so"','Say: "I\'m not sure, let me ask"','Change the subject by saying our entire menu is quality'], corr:0, expl:'El estándar #54 requiere que el personal conozca detalles del menú, origen e ingredientes. El estándar #19 requiere precisión en información. Una respuesta vaga o evasiva incumple estos estándares. La confianza y precisión son críticas.', expl_en:'Standard #54 requires staff to know menu details, origins and ingredients. Standard #19 requires precision in information. A vague or evasive response violates these standards. Confidence and precision are critical.', real:false},
-  {id:20, cat:'vino', scn:'Acabas de retirar los platos principales. Hay migas en la mesa, el plato de pan está vacío pero aún en la mesa, y una servilleta está en el piso.', scn_en:'You\'ve just cleared the main course plates. There are crumbs on the table, the bread plate is empty but still on the table, and a napkin is on the floor.', q:'¿Cuál es el siguiente paso ANTES de servir postre?', q_en:'What is the NEXT step before serving dessert?', opts:['Ir directamente a servir el postre','Simplemente retirar el plato de pan y continuar','Preguntar al cliente si desea el postre','Recoger las migas, retirar el plato de pan, y limpiar el piso sin que lo noten'], opts_en:['Go directly to serve the dessert','Simply remove the bread plate and continue','Ask the guest if they want dessert','Crumb down the table, remove the bread plate, and clean the floor without being noticed'], corr:3, expl:'El estándar #33 requiere: "¿Retiró el camarero plato lateral, cuchillo, mantequilla y cruets y después recogió las migas al completar el plato principal?" Este paso DEBE completarse antes del postre. Es un estándar de Producto crítico.', expl_en:'Standard #33 requires: "Did the waiter remove side plate, side knife, butter and cruets and then crumb down the table on completion of the main course?" This step MUST be completed before dessert. It\'s a critical Product standard.', real:false},
-  {id:21, cat:'vino', scn:'Notas que el vaso de agua de un huésped ha estado vacío durante aproximadamente 3 minutos. El huésped no ha dicho nada.', scn_en:'You notice a guest\'s water glass has been empty for about 3 minutes. The guest hasn\'t said anything.', q:'¿Cuál es el estándar LQA para el servicio de agua?', q_en:'What is the LQA standard for water service?', opts:['Llenar el vaso solo si es durante la comida principal','Esperar a que el vaso esté completamente vacío por 5 minutos','Esperar a que el cliente pida agua','Rellenar proactivamente cuando el vaso está a media capacidad'], opts_en:['Fill the glass only if it\'s during the main course','Wait until the glass is completely empty for 5 minutes','Wait until the guest asks for water','Proactively refill when the glass is half full'], corr:3, expl:'El estándar #48 requiere que el agua se ofrezca regularmente y se mantenga disponible. El estándar #73 (Anticipatory Service) dice que el personal debe anticipar necesidades. Agua es un elemento crítico: nunca debe estar vacía. Rellena proactivamente.', expl_en:'Standard #48 requires water to be offered regularly and kept available. Standard #73 (Anticipatory Service) says staff must anticipate needs. Water is a critical element: it should never be empty. Refill proactively.', real:false},
-  {id:22, cat:'comportamiento', scn:'Un huésped dice: "Este carne está muy cocida, la quería más roja." El steak en realidad está perfectamente hecho a término medio (medium).', scn_en:'A guest says: "This meat is too cooked, I wanted it rarer." The steak is actually perfectly cooked to medium.', q:'¿Cómo responder según LQA?', q_en:'How to respond according to LQA?', opts:['Mostrar empatía, ofrecer inmediatamente cambiarla sin discusión, y resolver','Decir: "Este es el término que pediste"','Explicar científicamente por qué el término es correcto','Insistir en que está bien cocinada'], opts_en:['Show empathy, immediately offer to change it without discussion, and resolve','Say: "This is the temperature you ordered"','Explain scientifically why the temperature is correct','Insist that it\'s cooked correctly'], corr:0, expl:'El estándar #75 (Service Recovery y EI Behavioral) y #76 (Conflict Resolution) requieren que SIEMPRE empatices con la percepción del cliente. Si el cliente dice que no le gusta, es su verdad. La acción correcta es resolver sin discutir: "Permíteme cambiarla de inmediato."', expl_en:'Standard #75 (Service Recovery and EI Behavioral) and #76 (Conflict Resolution) require you to ALWAYS empathize with the guest\'s perception. If the guest says they don\'t like it, that\'s their truth. The correct action is to resolve without arguing: "Let me change that right away."', real:false},
-  {id:23, cat:'vino', scn:'Es una noche muy ocupada. Para ahorrar tiempo, viertes agua con gas en las copas en el área de servicio antes de llevarlas a la mesa.', scn_en:'It\'s a very busy night. To save time, you pour sparkling water into glasses in the service area before bringing them to the table.', q:'¿Es esto correcto según los estándares?', q_en:'Is this correct according to the standards?', opts:['Sí, ahorras tiempo y eficiencia','No, el estándar #48 requiere que el agua se sirva frente al cliente','Es aceptable solo si el agua ya está fría','Depende si el cliente está mirando o no'], opts_en:['Yes, you save time and efficiency','No, standard #48 requires water to be served in front of the guest','It\'s acceptable only if the water is already cold','It depends on whether the guest is watching or not'], corr:1, expl:'El estándar #48 es CLARO: el agua debe ofrecerse y servirse FRENTE al cliente. Servir pre-llenado en el área de servicio viola este estándar. La PRESENTACIÓN y CONTROL son críticos. No hay excepciones por eficiencia.', expl_en:'Standard #48 is CLEAR: water must be offered and served IN FRONT of the guest. Serving pre-filled in the service area violates this standard. PRESENTATION and CONTROL are critical. There are no exceptions for efficiency.', real:false},
+  {id:20, cat:'vino', scn:'Acabas de retirar los platos principales. Hay migas en la mesa, el plato de pan está vacío pero aún en la mesa, y una servilleta está en el piso.', scn_en:'You\'ve just cleared the main course plates. There are crumbs on the table, the bread plate is empty but still on the table, and a napkin is on the floor.', q:'¿Cuál es el siguiente paso ANTES de servir postre?', q_en:'What is the NEXT step before serving dessert?', opts:['Ir directamente a servir el postre','Simplemente retirar el plato de pan y continuar','Preguntar al huésped si desea el postre','Recoger las migas, retirar el plato de pan, y limpiar el piso sin que lo noten'], opts_en:['Go directly to serve the dessert','Simply remove the bread plate and continue','Ask the guest if they want dessert','Crumb down the table, remove the bread plate, and clean the floor without being noticed'], corr:3, expl:'El estándar #33 requiere: "¿Retiró el camarero plato lateral, cuchillo, mantequilla y cruets y después recogió las migas al completar el plato principal?" Este paso DEBE completarse antes del postre. Es un estándar de Producto crítico.', expl_en:'Standard #33 requires: "Did the waiter remove side plate, side knife, butter and cruets and then crumb down the table on completion of the main course?" This step MUST be completed before dessert. It\'s a critical Product standard.', real:false},
+  {id:21, cat:'vino', scn:'Notas que el vaso de agua de un huésped ha estado vacío durante aproximadamente 3 minutos. El huésped no ha dicho nada.', scn_en:'You notice a guest\'s water glass has been empty for about 3 minutes. The guest hasn\'t said anything.', q:'¿Cuál es el estándar LQA para el servicio de agua?', q_en:'What is the LQA standard for water service?', opts:['Llenar el vaso solo si es durante la comida principal','Esperar a que el vaso esté completamente vacío por 5 minutos','Esperar a que el huésped pida agua','Rellenar proactivamente cuando el vaso está a media capacidad'], opts_en:['Fill the glass only if it\'s during the main course','Wait until the glass is completely empty for 5 minutes','Wait until the guest asks for water','Proactively refill when the glass is half full'], corr:3, expl:'El estándar #48 requiere que el agua se ofrezca regularmente y se mantenga disponible. El estándar #73 (Anticipatory Service) dice que el personal debe anticipar necesidades. Agua es un elemento crítico: nunca debe estar vacía. Rellena proactivamente.', expl_en:'Standard #48 requires water to be offered regularly and kept available. Standard #73 (Anticipatory Service) says staff must anticipate needs. Water is a critical element: it should never be empty. Refill proactively.', real:false},
+  {id:22, cat:'comportamiento', scn:'Un huésped dice: "Este carne está muy cocida, la quería más roja." El steak en realidad está perfectamente hecho a término medio (medium).', scn_en:'A guest says: "This meat is too cooked, I wanted it rarer." The steak is actually perfectly cooked to medium.', q:'¿Cómo responder según LQA?', q_en:'How to respond according to LQA?', opts:['Mostrar empatía, ofrecer inmediatamente cambiarla sin discusión, y resolver','Decir: "Este es el término que pediste"','Explicar científicamente por qué el término es correcto','Insistir en que está bien cocinada'], opts_en:['Show empathy, immediately offer to change it without discussion, and resolve','Say: "This is the temperature you ordered"','Explain scientifically why the temperature is correct','Insist that it\'s cooked correctly'], corr:0, expl:'El estándar #75 (Service Recovery y EI Behavioral) y #76 (Conflict Resolution) requieren que SIEMPRE empatices con la percepción del huésped. Si el huésped dice que no le gusta, es su verdad. La acción correcta es resolver sin discutir: "Permíteme cambiarla de inmediato."', expl_en:'Standard #75 (Service Recovery and EI Behavioral) and #76 (Conflict Resolution) require you to ALWAYS empathize with the guest\'s perception. If the guest says they don\'t like it, that\'s their truth. The correct action is to resolve without arguing: "Let me change that right away."', real:false},
+  {id:23, cat:'vino', scn:'Es una noche muy ocupada. Para ahorrar tiempo, viertes agua con gas en las copas en el área de servicio antes de llevarlas a la mesa.', scn_en:'It\'s a very busy night. To save time, you pour sparkling water into glasses in the service area before bringing them to the table.', q:'¿Es esto correcto según los estándares?', q_en:'Is this correct according to the standards?', opts:['Sí, ahorras tiempo y eficiencia','No, el estándar #48 requiere que el agua se sirva frente al huésped','Es aceptable solo si el agua ya está fría','Depende si el huésped está mirando o no'], opts_en:['Yes, you save time and efficiency','No, standard #48 requires water to be served in front of the guest','It\'s acceptable only if the water is already cold','It depends on whether the guest is watching or not'], corr:1, expl:'El estándar #48 es CLARO: el agua debe ofrecerse y servirse FRENTE al huésped. Servir pre-llenado en el área de servicio viola este estándar. La PRESENTACIÓN y CONTROL son críticos. No hay excepciones por eficiencia.', expl_en:'Standard #48 is CLEAR: water must be offered and served IN FRONT of the guest. Serving pre-filled in the service area violates this standard. PRESENTATION and CONTROL are critical. There are no exceptions for efficiency.', real:false},
   {id:24, cat:'llegada', scn:'La iluminación ambiente del restaurante es tenue para crear atmósfera. Un huésped está entrecérrando los ojos intentando leer el menú. No ha pedido ayuda.', scn_en:'The restaurant\'s ambient lighting is dim for atmosphere. A guest is squinting trying to read the menu. They haven\'t asked for help.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Esperar a que el huésped pida una luz','Ofrecer proactivamente una luz de lectura o lámpara de mesa','Cambiar la iluminación general del restaurante','Sugerir un menú en letra grande'], opts_en:['Wait until the guest asks for light','Proactively offer a reading light or table lamp','Change the restaurant\'s overall lighting','Suggest a large-print menu'], corr:1, expl:'El estándar #50 requiere que la carta esté "clara y fácil de leer". El estándar #73 (Anticipatory Service) requiere detectar dificultades. Si la atmósfera crea un problema, la acción correcta es ofrecer soluciones sin que pidan: "¿Puedo traerle una luz para leer cómodo?"', expl_en:'Standard #50 requires the menu to be "clear and easy to read". Standard #73 (Anticipatory Service) requires detecting difficulties. If the atmosphere creates a problem, the correct action is to offer solutions without asking: "Can I bring you a light to read comfortably?"', real:false},
   {id:25, cat:'vino', scn:'Los huéspedes están poniéndose los abrigos y listos para irse. Ya has dado la cuenta. Han pagado y se despiden.', scn_en:'The guests are putting on their coats and getting ready to leave. You\'ve already given the bill. They\'ve paid and are saying goodbye.', q:'¿Cuál es la acción requerida por LQA en la despedida?', q_en:'What is the LQA-required action at the farewell?', opts:['Solo decir "Gracias por venir"','Despedida sincera, expresando aprecio por su visita y invitándoles a volver','Ayudar con los abrigos sin decir nada','Simplemente agitar la mano mientras se van'], opts_en:['Just say "Thank you for coming"','Sincere farewell expressing appreciation for their visit and inviting them back','Help with coats without saying anything','Simply wave as they leave'], corr:1, expl:'El estándar #77 (Despedida/Farewell) requiere una despedida SINCERA, cálida, y que exprese aprecio genuino. Debes hacer que se sientan valorados. La última impresión es tan importante como la primera. Esta es tu última oportunidad de crear memoria positiva.', expl_en:'Standard #77 (Farewell) requires a SINCERE, warm farewell that expresses genuine appreciation. You must make them feel valued. The last impression is as important as the first. This is your last chance to create a positive memory.', real:false},
 ];
@@ -28424,10 +28424,10 @@ const LQA_AUDIT_SCENARIOS = [
   {id:13, scn:'Después del plato principal, el camarero retiró nuestros platos, removió los platos laterales y mantequilla, recogió las migas de la mesa, y luego presentó la carta de postres.', scn_en:'After the main course, the waiter cleared our plates, removed the side plates and butter, crumbed down the table, and then presented the dessert menu.', std:33, verd:'meet', expl:'El estándar #33 requiere completar todos estos pasos al terminar el plato principal: retirar plato lateral, cuchillo, mantequilla, cruets, y recoger migas. Todo fue hecho correctamente en este escenario.', expl_en:'Standard #33 requires completing all these steps when finishing the main course: removing side plate, knife, butter, cruets, and crumbing. Everything was done correctly in this scenario.'},
   {id:14, scn:'Después del postre, el camarero nos ofreció café, preguntó si preferíamos capuchino o espresso, y el café llegó en 7 minutos.', scn_en:'After dessert, the waiter offered us coffee, asked cappuccino or espresso, and the coffee arrived in 7 minutes.', std:37, verd:'below', expl:'El estándar #37 requiere que el café se sirva en 5 MINUTOS máximo después de tomar la comanda, no 7 minutos. Aunque el camarero hizo lo correcto ofreciendo y preguntando preferencias, el tiempo es un incumplimiento.', expl_en:'Standard #37 requires coffee be served within 5 MINUTES maximum after ordering, not 7 minutes. Although the waiter correctly offered and asked preferences, the timing is non-compliant.'},
   {id:15, scn:'Notamos que teníamos frío durante la cena en la terraza exterior. El camarero se dio cuenta por nuestro lenguaje corporal y proactivamente nos ofreció mantas sin que las pidiéramos.', scn_en:'We felt cold during dinner on the outdoor terrace. The waiter noticed from our body language and proactively offered us blankets without us asking.', std:73, verd:'meet', expl:'El estándar #73 requiere servicio ANTICIPATORIO detectando necesidades no expresadas. El camarero detectó signos no verbales y ofreció soluciones sin que pidieran. Este es un ejemplo perfecto de excelencia en EI Behavioral.', expl_en:'Standard #73 requires ANTICIPATORY service by detecting unexpressed needs. The waiter detected non-verbal signs and offered solutions without being asked. This is a perfect example of EI Behavioral excellence.'},
-  {id:16, scn:'El camarero sirvió el agua con gas en copas antes de llegar a la mesa. Las copas estaban pre-llenadas en el área de servicio.', scn_en:'The waiter served the sparkling water in glasses before arriving at the table. The glasses were pre-filled in the service area.', std:48, verd:'below', expl:'El estándar #48 requiere que el agua se sirva FRENTE al cliente, no pre-llenada en el área de servicio. Aunque el agua se sirvió, la forma de presentación viola el estándar de servicio correcto.', expl_en:'Standard #48 requires water be served IN FRONT of the guest, not pre-filled in the service area. Although water was served, the presentation method violates the correct service standard.'},
+  {id:16, scn:'El camarero sirvió el agua con gas en copas antes de llegar a la mesa. Las copas estaban pre-llenadas en el área de servicio.', scn_en:'The waiter served the sparkling water in glasses before arriving at the table. The glasses were pre-filled in the service area.', std:48, verd:'below', expl:'El estándar #48 requiere que el agua se sirva FRENTE al huésped, no pre-llenada en el área de servicio. Aunque el agua se sirvió, la forma de presentación viola el estándar de servicio correcto.', expl_en:'Standard #48 requires water be served IN FRONT of the guest, not pre-filled in the service area. Although water was served, the presentation method violates the correct service standard.'},
   {id:17, scn:'Pedimos una botella de vino tinto con la cena. Cuando la botella estaba casi vacía, pasaron 5 minutos antes de que el camarero se acercara a preguntar si deseábamos otra.', scn_en:'We ordered a bottle of red wine with dinner. When the bottle was almost empty, 5 minutes passed before the waiter came over to ask if we wanted another one.', std:47, verd:'below', expl:'El estándar #47 requiere que cuando la botella de vino se completa, el camarero AUTOMÁTICAMENTE ofrezca otra sin esperar. Esperar 5 minutos después de terminar es incorrecto. Debe ser inmediato cuando se detecta que está casi vacía.', expl_en:'Standard #47 requires that when the wine bottle is finished, the waiter AUTOMATICALLY offers another without waiting. Waiting 5 minutes after finishing is incorrect. It should be immediate when it\'s nearly empty.'},
   {id:18, scn:'El postre llegó 9 minutos después de ordenarlo. Estaba bellamente presentado y coincidía perfectamente con la descripción del menú.', scn_en:'The dessert arrived 9 minutes after ordering. It was beautifully presented and perfectly matched the menu description.', std:35, verd:'meet', expl:'El estándar #35 requiere que el postre se sirva en 10 minutos máximo (9 minutos está dentro del límite). El estándar #52 requiere que la presentación y descripción sean correctas. Ambos se cumplieron perfectamente.', expl_en:'Standard #35 requires dessert be served within 10 minutes maximum (9 minutes is within the limit). Standard #52 requires correct presentation and description. Both were perfectly met.'},
-  {id:19, scn:'Un camarero tenía un pequeño rasguño cerca del bolsillo de su camisa. De lejos no era muy notorio, pero de cerca era visible cuando se inclinaba a servir.', scn_en:'A waiter had a small tear near the pocket of their shirt. From across the room it wasn\'t very noticeable, but up close it was visible when they leaned to serve.', std:68, verd:'below', expl:'El estándar #68 requiere uniformes "LIMPIOS, bien ajustados" en buen estado. Una rasguño o defecto visible de cerca, especialmente durante el servicio cercano al cliente, incumple el requisito de estar en buen estado. La presentación personal debe ser impecable.', expl_en:'Standard #68 requires uniforms "CLEAN, well fitted" in good condition. A tear or defect visible up close, especially during close service to the guest, violates the good condition requirement. Personal presentation must be impeccable.'},
+  {id:19, scn:'Un camarero tenía un pequeño rasguño cerca del bolsillo de su camisa. De lejos no era muy notorio, pero de cerca era visible cuando se inclinaba a servir.', scn_en:'A waiter had a small tear near the pocket of their shirt. From across the room it wasn\'t very noticeable, but up close it was visible when they leaned to serve.', std:68, verd:'below', expl:'El estándar #68 requiere uniformes "LIMPIOS, bien ajustados" en buen estado. Una rasguño o defecto visible de cerca, especialmente durante el servicio cercano al huésped, incumple el requisito de estar en buen estado. La presentación personal debe ser impecable.', expl_en:'Standard #68 requires uniforms "CLEAN, well fitted" in good condition. A tear or defect visible up close, especially during close service to the guest, violates the good condition requirement. Personal presentation must be impeccable.'},
   {id:20, scn:'El huésped preguntó sobre el horario del spa del hotel. El camarero respondió con seguridad con la hora correcta y se ofreció a hacer una reserva.', scn_en:'The guest asked about the hotel spa hours. The waiter confidently replied with the correct hours and offered to make a reservation.', std:72, verd:'meet', expl:'El estándar #72 requiere que el personal demuestre confianza y conocimiento sobre instalaciones del hotel. El camarero proporcionó información correcta de forma confiada y ofreció servicio adicional (reserva). Esto cumple perfectamente con el estándar.', expl_en:'Standard #72 requires staff demonstrate confidence and knowledge about hotel facilities. The waiter provided correct information confidently and offered additional service (reservation). This perfectly meets the standard.'},
 ];
 
@@ -28490,7 +28490,7 @@ function renderLqa(){
         </div>
         <div class="hub-banner-body">
           <div class="hub-banner-title">${LANG==='en'?'Ghost Inspection':'Inspección Fantasma'}</div>
-          <div class="hub-banner-sub">${LANG==='en'?'Play the auditor · Full-service simulation':'Juega al inspector · Simulación completa'}</div>
+          <div class="hub-banner-sub">${LANG==='en'?'Under the auditor\'s eye · Full-service simulation':'Bajo la mirada del auditor · Simulación completa'}</div>
         </div>
         <div class="hub-banner-arrow">›</div>
       </div>
@@ -28959,7 +28959,7 @@ const GHOST_SCENARIOS = [
     title_en:'Executive Lunch',
     role:'Hostess + Camarero',
     role_en:'Hostess + Server',
-    tagline:'Un cliente entra en tu turno. Lo que no sabes: es un inspector Forbes encubierto.',
+    tagline:'Un huésped entra en tu turno. Lo que no sabes: es un inspector Forbes encubierto.',
     tagline_en:'A guest enters during your shift. What you don\u2019t know: he is an undercover Forbes inspector.',
     icon:'\ud83d\udcbc',
     ctx:'Sr. Rivas, reserva 13:30 para 1. Un ejecutivo con prisa. El inspector LQA est\u00e1 observando cada decisi\u00f3n que tomes. El resultado determina tu puntuaci\u00f3n.',
@@ -29140,7 +29140,7 @@ const GHOST_SCENARIOS = [
           {label:'"Veo aqu\u00ed que tiene usted alergia al marisco, \u00bfverdad?" en voz alta frente a todos.',
            label_en:'"I see you have a shellfish allergy, correct?" out loud in front of everyone.',
            effects:[{std:53,met:false},{std:54,met:false}],
-           feedback:'Gesti\u00f3n p\u00fablica e inc\u00f3moda para la clienta. El inspector: "Fallo grave de discreci\u00f3n \u00b7 gesti\u00f3n inadecuada de informaci\u00f3n sensible".',
+           feedback:'Gesti\u00f3n p\u00fablica e inc\u00f3moda para la huésped. El inspector: "Fallo grave de discreci\u00f3n \u00b7 gesti\u00f3n inadecuada de informaci\u00f3n sensible".',
            feedback_en:'Public and uncomfortable for the guest. The inspector: "Serious discretion failure \u00b7 inadequate handling of sensitive information".'},
           {label:'Me acerco por el lado del Sr. Okonkwo, bajo la voz: "El 4\u00ba plato lleva langostinos. Tenemos preparada una alternativa id\u00e9ntica en presentaci\u00f3n. \u00bfEs severa la alergia?"',
            label_en:'Approach from Mr. Okonkwo\u2019s side, lower voice: "The 4th course has langoustines. We have an identical-looking alternative. Is the allergy severe?"',
@@ -29200,7 +29200,7 @@ const GHOST_SCENARIOS = [
           {label:'Pregunto: "\u00bfPuedo retirar?" antes de tocar nada.',
            label_en:'Ask: "May I clear?" before touching anything.',
            effects:[{std:20,met:true},{std:19,met:true}],
-           feedback:'Preguntaste y esperaste el gesto del cliente. El inspector: "Cuidado ejemplar \u00b7 cliente como protagonista del ritmo".',
+           feedback:'Preguntaste y esperaste el gesto del huésped. El inspector: "Cuidado ejemplar \u00b7 huésped como protagonista del ritmo".',
            feedback_en:'You asked and waited for the guest\u2019s cue. The inspector: "Exemplary care \u00b7 guest drives the pacing".'}
         ]
       },
@@ -29220,7 +29220,7 @@ const GHOST_SCENARIOS = [
           {label:'Les acompa\u00f1o a la puerta, les entrego una polaroid del momento y les digo: "Sr. y Sra. Okonkwo, gracias por elegirnos. Les reservo para el 26 aniversario."',
            label_en:'Walk them to the door, hand them a polaroid of the moment, say: "Mr. and Mrs. Okonkwo, thank you for choosing us. I\u2019ll book the 26th anniversary."',
            effects:[{std:74,met:true},{std:77,met:true},{std:73,met:true}],
-           feedback:'Detalle memorable, nombre, invitaci\u00f3n espec\u00edfica. El inspector: "Cierre digno de una est\u00e1ncia 5 estrellas \u00b7 crea un cliente de por vida".',
+           feedback:'Detalle memorable, nombre, invitaci\u00f3n espec\u00edfica. El inspector: "Cierre digno de una est\u00e1ncia 5 estrellas \u00b7 crea un huésped de por vida".',
            feedback_en:'Memorable detail, name, specific invitation. The inspector: "5-star-worthy close \u00b7 creates a lifetime guest".'},
           {label:'"Feliz aniversario, Sr. y Sra. Okonkwo, les esperamos pronto."',
            label_en:'"Happy anniversary, Mr. and Mrs. Okonkwo, see you soon."',
@@ -29254,7 +29254,7 @@ const GHOST_SCENARIOS = [
           {label:'Mesa central, m\u00e1s c\u00f3moda para el equipo.',
            label_en:'Central table, easier for the team.',
            effects:[{std:11,met:false},{std:78,met:false}],
-           feedback:'Ruido excesivo para una familia con ni\u00f1os. El inspector: "Ubicaci\u00f3n incorrecta \u00b7 sin consideraci\u00f3n del perfil del cliente".',
+           feedback:'Ruido excesivo para una familia con ni\u00f1os. El inspector: "Ubicaci\u00f3n incorrecta \u00b7 sin consideraci\u00f3n del perfil del huésped".',
            feedback_en:'Excessive noise for a family with kids. The inspector: "Incorrect placement \u00b7 no consideration of guest profile".'},
           {label:'Mesa al fondo, m\u00e1s tranquila. Al sentarles, me agacho a la altura de los ni\u00f1os y les saludo.',
            label_en:'Back table, quieter. On seating, kneel to the children\u2019s eye level to greet them.',
@@ -29359,7 +29359,7 @@ const GHOST_SCENARIOS = [
           {label:'Me acerco, disculpa formal escrita, postre cortes\u00eda de la casa, y ofrezco llamada del director ma\u00f1ana. Libro infantil de regalo para los ni\u00f1os.',
            label_en:'Approach with written apology, complimentary dessert, offer a director\u2019s call tomorrow. Children\u2019s book gift for the kids.',
            effects:[{std:68,met:true},{std:71,met:true},{std:74,met:true},{std:77,met:true}],
-           feedback:'Recuperaci\u00f3n completa y escrita, gesto para los ni\u00f1os. El inspector: "Recuperaci\u00f3n 5 estrellas \u00b7 cliente convertido en embajador".',
+           feedback:'Recuperaci\u00f3n completa y escrita, gesto para los ni\u00f1os. El inspector: "Recuperaci\u00f3n 5 estrellas \u00b7 huésped convertido en embajador".',
            feedback_en:'Complete written recovery, gesture for the children. The inspector: "5-star recovery \u00b7 guest turned into ambassador".'},
           {label:'Compenso con un postre gratis y una disculpa verbal.',
            label_en:'Compensate with a free dessert and verbal apology.',
@@ -29584,17 +29584,17 @@ const GHOST_SCENARIOS = [
           {label:'"Es que yo soy el camarero, d\u00edgame a m\u00ed." Intento contener.',
            label_en:'"I\u2019m the server, tell me." Try to contain.',
            effects:[{std:20,met:false},{std:68,met:false}],
-           feedback:'Cliente pide escalar, t\u00fa bloqueas. El inspector: "Obstrucci\u00f3n \u00b7 el hu\u00e9sped tiene derecho al responsable sin filtro".',
+           feedback:'Huésped pide escalar, t\u00fa bloqueas. El inspector: "Obstrucci\u00f3n \u00b7 el hu\u00e9sped tiene derecho al responsable sin filtro".',
            feedback_en:'Guest asks to escalate, you block. The inspector: "Obstruction \u00b7 guest has the right to the manager without filter".'},
           {label:'"Por supuesto. Aviso al supervisor ahora mismo, estar\u00e1 aqu\u00ed en 2 minutos. Mientras, \u00bfpuedo traerles algo?"',
            label_en:'"Of course. I\u2019ll call the supervisor now, he\u2019ll be here in 2 minutes. Meanwhile, may I bring you something?"',
            effects:[{std:20,met:true},{std:68,met:true}],
            feedback:'Escalado inmediato + propuesta de valor durante la espera. El inspector: "Gesti\u00f3n correcta \u00b7 hu\u00e9sped se siente escuchado en la cadena completa".',
            feedback_en:'Immediate escalation + value proposition during wait. The inspector: "Correct handling \u00b7 guest heard through the full chain".'},
-          {label:'Aviso al supervisor por radio sin decirle al cliente.',
+          {label:'Aviso al supervisor por radio sin decirle al huésped.',
            label_en:'Radio the supervisor without telling the guest.',
            effects:[{std:20,met:false},{std:68,met:false}],
-           feedback:'Transparencia rota. El cliente no sabe qu\u00e9 pasa. El inspector: "Comunicaci\u00f3n opaca \u00b7 hu\u00e9sped en la oscuridad".',
+           feedback:'Transparencia rota. El huésped no sabe qu\u00e9 pasa. El inspector: "Comunicaci\u00f3n opaca \u00b7 hu\u00e9sped en la oscuridad".',
            feedback_en:'Broken transparency. Guest doesn\u2019t know what\u2019s happening. The inspector: "Opaque comms \u00b7 guest left in the dark".'}
         ]
       },
@@ -29619,7 +29619,7 @@ const GHOST_SCENARIOS = [
           {label:'"Lo siento mucho, \u00bfqu\u00e9 puedo hacer para compensarles?"',
            label_en:'"I\u2019m very sorry, what can I do to compensate?"',
            effects:[{std:20,met:false},{std:68,met:false}],
-           feedback:'Pusiste la carga de la soluci\u00f3n en el cliente. El inspector: "Delegaci\u00f3n de la recuperaci\u00f3n \u00b7 el supervisor debe proponer, no preguntar".',
+           feedback:'Pusiste la carga de la soluci\u00f3n en el huésped. El inspector: "Delegaci\u00f3n de la recuperaci\u00f3n \u00b7 el supervisor debe proponer, no preguntar".',
            feedback_en:'Put the solution on the guest. The inspector: "Delegated recovery \u00b7 manager should propose, not ask".'}
         ]
       },
@@ -29656,7 +29656,7 @@ const GHOST_SCENARIOS = [
     title_en:'Business Group',
     role:'Hostess + Camarero',
     role_en:'Hostess + Server',
-    tagline:'Ocho ejecutivos, una firma importante. Alguien en la mesa es el cliente Forbes.',
+    tagline:'Ocho ejecutivos, una firma importante. Alguien en la mesa es el huésped Forbes.',
     tagline_en:'Eight executives, a big contract signing. Someone at the table is the Forbes guest.',
     icon:'\ud83d\udcbc',
     ctx:'Reserva 21:00, 8 pax, Mesa 506 (privada), empresa tecnol\u00f3gica firmando una alianza. El anfitri\u00f3n es el Sr. Okafor. Servicio coordinado cr\u00edtico: comanda compleja, maridaje por plato, timing de brindis.',
@@ -29795,7 +29795,7 @@ const GHOST_SCENARIOS = [
     title_en:'Marriage Proposal',
     role:'Camarero + Sumiller + Maître',
     role_en:'Server + Sommelier + Maître',
-    tagline:'Un cliente pide tu ayuda para proponer matrimonio esta noche. Un momento de vida, y Forbes lo ve.',
+    tagline:'Un huésped pide tu ayuda para proponer matrimonio esta noche. Un momento de vida, y Forbes lo ve.',
     tagline_en:'A guest asks for your help to propose tonight. A life moment, and Forbes sees it.',
     icon:'\ud83d\udc8d',
     ctx:'Mesa 504, Sr. Martín y Srta. López. Él llamó ayer: esta noche le va a pedir matrimonio, tiene anillo, quiere que llegue con el postre. Sorpresa total para ella. El inspector observa la orquestación del momento.',
@@ -29862,7 +29862,7 @@ const GHOST_SCENARIOS = [
           {label:'Sirvo los platos al ritmo normal del servicio y llego antes de las 22:30.',
            label_en:'Serve courses at normal pace, arriving before 22:30.',
            effects:[{std:18,met:false},{std:78,met:false}],
-           feedback:'Romper\u00edas la hora objetivo. El inspector: "No anticipaste el timing cr\u00edtico del cliente".',
+           feedback:'Romper\u00edas la hora objetivo. El inspector: "No anticipaste el timing cr\u00edtico del huésped".',
            feedback_en:'You\u2019d break the target hour. The inspector: "Didn\u2019t anticipate the guest\u2019s critical timing".'},
           {label:'Ajusto el ritmo: espaciar aperitivo extra, pausa de 10 min antes del plato principal, avisar a cocina para clavar el postre a 22:30.',
            label_en:'Adjust pace: add amuse-bouche, 10-min pause before main, inform kitchen to hit 22:30 dessert.',
@@ -29917,7 +29917,7 @@ const GHOST_SCENARIOS = [
           {label:'Me acerco discretamente, apret\u00f3n de manos al Sr. Mart\u00edn, reverencia a la Srta. L\u00f3pez, "Felicidades. Ser\u00e1 un honor verles volver cada aniversario." Y les dejo.',
            label_en:'Approach discreetly, handshake to Mr. Martín, nod to Miss López, "Congratulations. It would be an honor to welcome you on every anniversary." Then step away.',
            effects:[{std:80,met:true},{std:78,met:true},{std:68,met:true}],
-           feedback:'Cierre perfecto con compromiso futuro. El inspector: "De memoria por d\u00e9cadas \u00b7 servicio que crea clientes de por vida".',
+           feedback:'Cierre perfecto con compromiso futuro. El inspector: "De memoria por d\u00e9cadas \u00b7 servicio que crea huéspedes de por vida".',
            feedback_en:'Perfect close with a future commitment. The inspector: "Memory for decades \u00b7 service that creates lifetime guests".'},
           {label:'Les dejo solos, mejor no interrumpir.',
            label_en:'Leave them alone, better not to interrupt.',
@@ -29930,7 +29930,7 @@ const GHOST_SCENARIOS = [
   },
   {
     id:'g_regular',
-    title:'Cliente Habitual',
+    title:'Huésped Habitual',
     title_en:'Regular Guest',
     role:'Hostess + Camarero',
     role_en:'Hostess + Server',
@@ -29951,7 +29951,7 @@ const GHOST_SCENARIOS = [
           {label:'"Buenas tardes, \u00bftiene reserva?" con sonrisa profesional.',
            label_en:'"Good afternoon, do you have a reservation?" with a professional smile.',
            effects:[{std:7,met:true},{std:10,met:false},{std:78,met:false}],
-           feedback:'Te perdiste el nombre de un cliente de 3 a\u00f1os. El inspector: "Falla de reconocimiento \u00b7 no consultaste el libro antes del turno".',
+           feedback:'Te perdiste el nombre de un huésped de 3 a\u00f1os. El inspector: "Falla de reconocimiento \u00b7 no consultaste el libro antes del turno".',
            feedback_en:'Missed the name of a 3-year guest. The inspector: "Recognition failure \u00b7 didn\u2019t check the book before shift".'},
           {label:'Antes del turno revis\u00e9 el libro y la ficha de habituales. "Sr. Keller, buenas tardes, su mesa 303 est\u00e1 lista."',
            label_en:'Before shift I reviewed the book and regulars\u2019 profiles. "Mr. Keller, good afternoon, your Table 303 is ready."',
@@ -30312,7 +30312,7 @@ const WAITER_MSGS={
     d=>LANG==='en'?`Table 409 asks: does <strong>${d}</strong> have allergens?`:`Mesa 409 pregunta: ¿tiene alérgenos <strong>${d}</strong>?`,
     d=>LANG==='en'?`Mr. Shoesmith declares a nut allergy. Does <strong>${d}</strong> contain nuts?`:`Mr. Shoesmith declara alergia a los frutos de cáscara. ¿Los tiene <strong>${d}</strong>?`,
     d=>LANG==='en'?`VIP guest — gluten intolerance. What allergens does <strong>${d}</strong> have?`:`Huésped VIP — intolerancia al gluten. ¿Qué alérgenos lleva <strong>${d}</strong>?`,
-    d=>LANG==='en'?`Table 303: the guest is celiac. What should we warn about <strong>${d}</strong>?`:`Mesa 303: el cliente es celiaco. ¿Qué debemos avisar sobre <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Table 303: the guest is celiac. What should we warn about <strong>${d}</strong>?`:`Mesa 303: el huésped es celiaco. ¿Qué debemos avisar sobre <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 406 asks if <strong>${d}</strong> contains shellfish`:`Mesa 406 pregunta si <strong>${d}</strong> contiene crustáceos`,
   ],
   ingredients:[
@@ -30320,23 +30320,23 @@ const WAITER_MSGS={
     d=>LANG==='en'?`Mr. Shoesmith is asking for the ingredients of <strong>${d}</strong>`:`Mr. Shoesmith pregunta los ingredientes de <strong>${d}</strong>`,
     d=>LANG==='en'?`What ingredients does <strong>${d}</strong> have?`:`¿Qué ingredientes tiene <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 301: exactly what goes into <strong>${d}</strong>?`:`Mesa 301: ¿Qué lleva exactamente <strong>${d}</strong>?`,
-    d=>LANG==='en'?`A vegetarian guest asks what is in <strong>${d}</strong>`:`Un cliente vegetariano pregunta qué lleva <strong>${d}</strong>`,
-    d=>LANG==='en'?`Table 408: the guest wants to know the main ingredients of <strong>${d}</strong>`:`Mesa 408: el cliente quiere saber los ingredientes principales de <strong>${d}</strong>`,
+    d=>LANG==='en'?`A vegetarian guest asks what is in <strong>${d}</strong>`:`Un huésped vegetariano pregunta qué lleva <strong>${d}</strong>`,
+    d=>LANG==='en'?`Table 408: the guest wants to know the main ingredients of <strong>${d}</strong>`:`Mesa 408: el huésped quiere saber los ingredientes principales de <strong>${d}</strong>`,
     d=>LANG==='en'?`Kitchen calls: can you describe the components of <strong>${d}</strong>?`:`Cocina llama: ¿puedes describir los componentes de <strong>${d}</strong>?`,
   ],
   history:[
     d=>LANG==='en'?`Table 408 wants to know the story behind <strong>${d}</strong>`:`Mesa 408 quiere saber la historia de <strong>${d}</strong>`,
     d=>LANG==='en'?`Mr. Shoesmith is asking about the origin of <strong>${d}</strong>`:`Mr. Shoesmith pregunta por el origen de <strong>${d}</strong>`,
-    d=>LANG==='en'?`What do we tell the guest about <strong>${d}</strong>?`:`¿Qué le contamos al cliente sobre <strong>${d}</strong>?`,
+    d=>LANG==='en'?`What do we tell the guest about <strong>${d}</strong>?`:`¿Qué le contamos al huésped sobre <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 306 wants the storytelling for <strong>${d}</strong>`:`Mesa 306 quiere saber el storytelling de <strong>${d}</strong>`,
     d=>LANG==='en'?`VIP table — impress them with the story of <strong>${d}</strong>`:`Mesa VIP — impresionales con la historia de <strong>${d}</strong>`,
-    d=>LANG==='en'?`The guest asks: why is <strong>${d}</strong> special?`:`El cliente pregunta: ¿qué hace especial a <strong>${d}</strong>?`,
+    d=>LANG==='en'?`The guest asks: why is <strong>${d}</strong> special?`:`El huésped pregunta: ¿qué hace especial a <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 402 asks about the provenance of <strong>${d}</strong>`:`Mesa 402 pregunta por el origen y proveedores de <strong>${d}</strong>`,
   ]};
 const WAITER_OK_ES=['¡Perfecto, gracias! ','¡Eso es! ','¡Correcto! ▲','¡Excelente! ','¡Muy bien! '];
 const WAITER_OK_EN=['Perfect, thank you! ','Exactly right! ','Correct! ▲','Excellent! ','Well done! '];
 const WAITER_OK=()=>LANG==='en'?WAITER_OK_EN:WAITER_OK_ES;
-const WAITER_KO_ES=['¡Eso no es correcto! ','¡El cliente no está contento! ','¡Fallo! ','Error... el cliente llama al manager '];
+const WAITER_KO_ES=['¡Eso no es correcto! ','¡El huésped no está contento! ','¡Fallo! ','Error... el huésped llama al manager '];
 const WAITER_KO_EN=["Not correct! ","The guest is unhappy! ","Wrong! ","Oops... the guest is calling the manager "];
 const WAITER_KO=()=>LANG==='en'?WAITER_KO_EN:WAITER_KO_ES;
 
@@ -30498,28 +30498,28 @@ const RULETA_CATS = [
 
 const RULETA_CONTENT = {
   impro: {
-    es:['Imita cómo un cliente pide vino como si fuera un experto pero no tiene ni idea',
+    es:['Imita cómo un huésped pide vino como si fuera un experto pero no tiene ni idea',
       'Actúa como un sommelier describiendo un vaso de agua del grifo como si fuera un gran vino',
-      'Haz de cliente que intenta pronunciar "Crozes-Hermitage" por primera vez',
-      'Imita al cliente más simpático que hayas tenido esta semana',
+      'Haz de huésped que intenta pronunciar "Crozes-Hermitage" por primera vez',
+      'Imita al huésped más simpático que hayas tenido esta semana',
       'Presenta el Castillo Ygay Gran Reserva como si fuera un anuncio de televisión de los 90',
       'Actúa como un crítico gastronómico exagerado probando unas patatas fritas',
-      'Imita cómo reaccionaría un cliente si le dices que el vino más barato es el mejor',
+      'Imita cómo reaccionaría un huésped si le dices que el vino más barato es el mejor',
       'Haz de camarero/a novato en su primer día describiendo un plato que no conoce',
       'Narra un maridaje como si fuera un partido de fútbol emocionante',
       'Imita al compañero/a que está a tu derecha pidiendo en un restaurante',
       'Actúa como Martín Berasategui presentando su nueva creación con emoción extrema',
-      'Imita a un cliente indeciso que cambia de opinión cada 5 segundos',
+      'Imita a un huésped indeciso que cambia de opinión cada 5 segundos',
       'Haz de locutor de radio anunciando las tapas del día con máxima emoción',
       'Dramatiza el momento en que abres una botella de vino como si fuera una ceremonia épica',
       'Imita cómo sería un servicio si todo el personal hablara cantando ópera',
       'Actúa como un turista que intenta pedir en español usando solo gestos',
       'Haz de chef explicando un plato sencillo como si fuera una obra de arte en un museo',
-      'Imita a un cliente intentando hacer una foto perfecta del plato durante 5 minutos',
+      'Imita a un huésped intentando hacer una foto perfecta del plato durante 5 minutos',
       'Presenta el postre como si fuera un anuncio de perfume francés',
       'Haz de árbitro de fútbol pero evaluando el emplatado de un plato',
-      'Imita al maitre más exagerado del mundo recibiendo a los clientes',
-      'Actúa el momento en que un sommelier descubre que un vino está pasado... pero el cliente dice que le encanta'],
+      'Imita al maitre más exagerado del mundo recibiendo a los huéspedes',
+      'Actúa el momento en que un sommelier descubre que un vino está pasado... pero el huésped dice que le encanta'],
     en:['Imitate a customer ordering wine as if they were an expert but have no clue',
       'Act as a sommelier describing a glass of tap water as if it were a grand wine',
       'Pretend to be a customer trying to pronounce "Crozes-Hermitage" for the first time',
@@ -30590,26 +30590,26 @@ const RULETA_CONTENT = {
       'Name the 14 major allergens in 30 seconds']
   },
   queHarias: {
-    es:['Un cliente dice que su Remelluri sabe a corcho. Tú lo pruebas y está perfecto. ¿Qué haces?',
+    es:['Un huésped dice que su Remelluri sabe a corcho. Tú lo pruebas y está perfecto. ¿Qué haces?',
       'Una madre te dice que su hijo tiene alergia severa a los frutos secos. ¿Cuál es tu protocolo?',
       'Llega un grupo de 8 sin reserva a las 21:45. ¿Cómo lo gestionas?',
-      'Un cliente dice que no le gusta el plato que pidió, pero se lo ha comido casi entero. ¿Qué haces?',
+      'Un huésped dice que no le gusta el plato que pidió, pero se lo ha comido casi entero. ¿Qué haces?',
       'Dos mesas te piden la cuenta al mismo tiempo y una tercera quiere pedir. ¿Priorización?',
-      'Un cliente te pide que le recomiendes un vino pero dice que todos le parecen caros. ¿Qué dices?',
+      'Un huésped te pide que le recomiendes un vino pero dice que todos le parecen caros. ¿Qué dices?',
       'Se te cae una copa vacía al suelo junto a una mesa VIP. ¿Cómo reaccionas?',
-      'Un cliente quiere tomar una foto contigo y con el plato para Instagram. ¿Es apropiado?',
+      'Un huésped quiere tomar una foto contigo y con el plato para Instagram. ¿Es apropiado?',
       'La cocina te avisa de 25 minutos de retraso en los principales. Tienes 4 mesas esperando. ¿Qué haces?',
-      'Un cliente insiste en un maridaje que tú sabes que no funcionará bien. ¿Le dices algo?',
+      'Un huésped insiste en un maridaje que tú sabes que no funcionará bien. ¿Le dices algo?',
       'Una pareja te dice que es su aniversario y quieren algo especial. ¿Cómo sorprendes?',
-      'Un cliente famoso pide que no le molesten pero otros clientes quieren fotos. ¿Qué haces?',
+      'Un huésped famoso pide que no le molesten pero otros huéspedes quieren fotos. ¿Qué haces?',
       'Se va la luz durante el servicio principal. ¿Cuáles son tus primeros 3 pasos?',
-      'Un cliente descubre que el plato contiene un alérgeno que no se le informó. ¿Protocolo?',
+      'Un huésped descubre que el plato contiene un alérgeno que no se le informó. ¿Protocolo?',
       'Una mesa de 12 personas quiere dividir la cuenta de 12 formas diferentes. ¿Cómo gestionas?',
-      'Un cliente te dice que quiere proponer matrimonio durante la cena. ¿Cómo ayudas?',
-      'El sommelier no está y un cliente experto te pide una recomendación técnica. ¿Qué haces?',
+      'Un huésped te dice que quiere proponer matrimonio durante la cena. ¿Cómo ayudas?',
+      'El sommelier no está y un huésped experto te pide una recomendación técnica. ¿Qué haces?',
       'Un niño pequeño está llorando y molestando a las mesas de alrededor. ¿Cómo actúas?',
       'Te das cuenta de que te has equivocado de plato en una mesa. Ya han empezado a comer. ¿Qué haces?',
-      'Un cliente habitual pide un plato que ya no está en la carta. ¿Cómo lo manejas?'],
+      'Un huésped habitual pide un plato que ya no está en la carta. ¿Cómo lo manejas?'],
     en:['A customer says their Remelluri tastes corked. You try it and it\'s perfect. What do you do?',
       'A mother tells you her child has a severe nut allergy. What\'s your protocol?',
       'A group of 8 arrives without a reservation at 9:45 PM. How do you handle it?',
@@ -30765,7 +30765,7 @@ const RULETA_CONTENT = {
       'El grupo elige un plato. Tienes que decir TODOS sus alérgenos en 10 segundos.',
       'Cuenta de memoria 5 uvas diferentes que se usen en los vinos de la carta.',
       'Describe la diferencia entre un Tempranillo de Rioja y uno de Ribera del Duero.',
-      'El grupo dice un tipo de cliente. Tienes que hacer la recomendación perfecta en 15 segundos.',
+      'El grupo dice un tipo de huésped. Tienes que hacer la recomendación perfecta en 15 segundos.',
       'Con los ojos cerrados, describe paso a paso cómo se prepara tu plato favorito del menú',
       'El grupo elige un vino: tienes que decir región, uva, y temperatura de servicio',
       'Recita de memoria la secuencia completa del servicio de mesa desde la bienvenida',
@@ -30774,10 +30774,10 @@ const RULETA_CONTENT = {
       'Di de memoria los alérgenos de cada plato del menú degustación',
       'El grupo te da un presupuesto. Diseña un menú completo con vinos sin pasarte',
       'Nombra 3 platos de la carta y sus alérgenos sin equivocarte en ninguno',
-      'Explica a un "cliente" ficticio qué es la crianza, reserva y gran reserva',
+      'Explica a un "huésped" ficticio qué es la crianza, reserva y gran reserva',
       'Demuestra sin materiales cómo se decanta un vino correctamente',
       'Di los maridajes ideales para 3 platos que el grupo elija al azar',
-      'Resuelve esta situación: un cliente dice que es alérgico al sulfito, ¿qué vinos le puedes ofrecer?'],
+      'Resuelve esta situación: un huésped dice que es alérgico al sulfito, ¿qué vinos le puedes ofrecer?'],
     en:['Name a dish and its ideal pairing without thinking for more than 3 seconds. The group judges.',
       'Describe a wine from our list ONLY with gestures, no talking. Others guess.',
       'Close your eyes and point at the wine list. You have to describe that wine.',
@@ -30807,7 +30807,7 @@ const RULETA_CONTENT = {
       '¡Comodín! La persona a tu izquierda tiene que bailar 10 segundos. Tú eliges la canción imaginaria.',
       '¡Comodín! Todo el equipo tiene que decir su momento favorito de la semana, uno por uno.',
       '¡Comodín! Inventa una regla nueva para las próximas 3 rondas (ej: hay que contestar en rima).',
-      '¡Comodín! Elige a dos personas del grupo para que hagan una escena de "cliente difícil" improvisada.',
+      '¡Comodín! Elige a dos personas del grupo para que hagan una escena de "huésped difícil" improvisada.',
       '¡Comodín! Cuenta un secreto inofensivo o algo que nadie del equipo sepa de ti.',
       '¡Comodín! El grupo vota: ¿quién del equipo sobreviviría más tiempo en una isla desierta?',
       '¡Comodín! Elige a alguien y hazle 3 preguntas rápidas que tenga que responder en 2 segundos cada una.',
@@ -32093,7 +32093,7 @@ function txRender(){
       </div>
       <div class="txoko-patience-wrap">
         <div class="txoko-patience-label">
-          <span>⏱ ${LANG==='en'?"Guest's patience":'Paciencia del cliente'}</span>
+          <span>⏱ ${LANG==='en'?"Guest's patience":'Paciencia del huésped'}</span>
           <span id="txokoTimeLeft">${Math.ceil(patienceLeft)}s</span>
         </div>
         <div class="txoko-patience-track">
