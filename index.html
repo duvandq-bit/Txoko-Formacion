@@ -2371,9 +2371,14 @@ body::after{
   flex-shrink:0;border:1px solid rgba(196,154,60,.15);
 }
 
-.wine-card{animation:wineGlow 4s ease-in-out infinite}
-.wine-card:nth-child(odd){animation-delay:.5s}
-.wine-card:nth-child(even){animation-delay:1.5s}
+/* wineGlow scoped to featured (wine-enchanted) hero cards only.
+   Previously applied to every .wine-card — with 120 cards in Carta, 120
+   simultaneous box-shadow transitions per frame was the single biggest
+   driver of the "vinos tarda en cargar" lag, especially on the first paint
+   when the browser must also build the 120-img DOM. */
+.wine-card.wine-enchanted{animation:wineGlow 4s ease-in-out infinite}
+.wine-card.wine-enchanted:nth-child(odd){animation-delay:.5s}
+.wine-card.wine-enchanted:nth-child(even){animation-delay:1.5s}
 
 .wine-flashcard{animation:wineFloat 6s ease-in-out infinite}
 
@@ -7101,6 +7106,16 @@ body::after{
 .dish-card{
   content-visibility:auto;
   contain-intrinsic-size:auto 220px;
+  contain:layout paint style;
+}
+
+/* Carta-mode wine cards (120 items, class "card-animate") skip off-screen
+   paint. The sommelier-hub "Descubre Hoy" cards use class "wine-enchanted"
+   instead of "card-animate" so the intrinsic-size mismatch bug noted above
+   does not apply to this selector. */
+.wine-card.card-animate{
+  content-visibility:auto;
+  contain-intrinsic-size:auto 280px;
   contain:layout paint style;
 }
 
