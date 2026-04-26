@@ -4832,7 +4832,8 @@ body::after{
 .wine-similar-title{font-family:'Cinzel',serif;font-size:.95rem;color:#5b461c;letter-spacing:.06em;margin-bottom:.2rem;display:flex;align-items:center;gap:.5rem}
 .wine-similar-title::before{content:'⚯';color:#c49a3c;font-size:1.1rem}
 .wine-similar-sub{font-family:'Cormorant Garamond','Georgia',serif;font-style:italic;font-size:.78rem;color:#7a6638;margin-bottom:.85rem;line-height:1.4}
-.wine-similar-list{display:flex;flex-direction:column;gap:.55rem}
+.wine-similar-list{display:grid;grid-template-columns:1fr;gap:.55rem}
+@media(min-width:600px){.wine-similar-list{grid-template-columns:1fr 1fr}}
 .wine-similar-card{position:relative;display:grid;grid-template-columns:54px 1fr;gap:.7rem;align-items:center;padding:.65rem .75rem;background:linear-gradient(155deg,#faf6ee,#f7efdc);border:1px solid rgba(196,154,60,.2);border-radius:10px;cursor:pointer;transition:all .2s;text-align:left;font:inherit;color:inherit;width:100%}
 .wine-similar-card:hover{border-color:rgba(196,154,60,.5);transform:translateX(3px);box-shadow:0 3px 10px rgba(196,154,60,.15)}
 .wine-similar-pct-ring{position:relative;width:54px;height:54px;display:flex;align-items:center;justify-content:center}
@@ -22334,6 +22335,23 @@ function _wineGrapes(w){
 }
 
 /**
+ * Normaliza el nombre del vino para detectar variantes del mismo vino base.
+ * Quita: año (4 dígitos), formato (1.5L, 12L, 75cl), magnum/jeroboam/etc.
+ * Permite colapsar "Murrieta Reserva", "Murrieta Reserva 2017 1.5L" y
+ * "Murrieta Reserva 2016 12L" al mismo nombre base "murrieta reserva".
+ */
+function _wineNameBase(name){
+  let n = _wineNorm(name);
+  n = n.replace(/\b(19|20)\d{2}\b/g, '');                                    // años
+  n = n.replace(/\b\d+(?:[.,]\d+)?\s*l\b/g, '');                             // 1.5L, 3L, 12L
+  n = n.replace(/\b\d+(?:[.,]\d+)?\s*cl\b/g, '');                            // 75cl
+  n = n.replace(/\b\d+\s*ml\b/g, '');                                        // ml
+  n = n.replace(/\b(doble magnum|magnum|jeroboam|imperial|salmanazar|nabucodonosor|mathusalem|botella|copa)\b/g, '');
+  n = n.replace(/\s+/g, ' ').trim();
+  return n;
+}
+
+/**
  * Extrae perfil enológico estructurado del texto winemaking + grapeSelection + story + notes.
  * Devuelve un objeto con atributos booleanos / categóricos comparables entre vinos.
  * Cache lazy en el propio objeto wine vía _profileCache.
@@ -22455,7 +22473,7 @@ function _wineProfile(w){
  *   Maceración carbónica match                                 +3
  */
 function findSimilarWines(wineId, count){
-  count = count || 3;
+  count = count || 6;
   if(typeof WINES === 'undefined') return [];
   const target = WINES.find(w => w.id === wineId);
   if(!target) return [];
@@ -22463,11 +22481,15 @@ function findSimilarWines(wineId, count){
   const targetPairings = new Set(target.pairings || []);
   const targetOrigin = _wineNorm(target.origin);
   const targetRegion = _wineNorm(target.region);
+  const targetBase = _wineNameBase(target.name);
   const tProfile = _wineProfile(target);
 
   const scored = [];
   for(const w of WINES){
     if(w.id === wineId) continue;
+    // Filtro anti-duplicados: descartar variantes del mismo vino base
+    // (ej: si target es "Murrieta Reserva", no recomendar "Murrieta Reserva 1.5L")
+    if(_wineNameBase(w.name) === targetBase) continue;
 
     let score = 0;
     let typeMatch = 'none';
@@ -22553,7 +22575,20 @@ function findSimilarWines(wineId, count){
   }
 
   scored.sort((a,b) => b.score - a.score);
-  return scored.slice(0, count);
+
+  // Dedup secundario: si dos candidatos comparten nombre base entre ellos
+  // (ej: "Pazo Barrantes Gran Vino 2021" + "Pazo Barrantes Magnum Gran Vino 2021"),
+  // mantener sólo el de mayor score (que ya está primero por el sort).
+  const seenBases = new Set();
+  const deduped = [];
+  for(const m of scored){
+    const base = _wineNameBase(m.wine.name);
+    if(seenBases.has(base)) continue;
+    seenBases.add(base);
+    deduped.push(m);
+  }
+
+  return deduped.slice(0, count);
 }
 
 /**
@@ -22634,7 +22669,7 @@ function _wineSimilarityChips(match, _en){
  * Usa SVG ring para el porcentaje + chips de razones de similitud.
  */
 function _renderSimilarWinesSection(target, _en){
-  const matches = findSimilarWines(target.id, 3);
+  const matches = findSimilarWines(target.id, 6);
   if(!matches.length){
     return `<div class="wine-similar-wrap">
       <div class="wine-similar-title">${_en?'Similar Wines':'Vinos Similares'}</div>
@@ -34096,7 +34131,7 @@ function _svcToggleSimilar(wineId){
     return;
   }
   if(btn) btn.classList.add('active');
-  const matches = findSimilarWines(wineId, 3);
+  const matches = findSimilarWines(wineId, 6);
   if(!matches.length){
     slot.innerHTML = `<div class="svc-similar-panel">
       <div class="svc-similar-empty">${_en?'No comparable wines available.':'Sin alternativas comparables.'}</div>
