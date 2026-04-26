@@ -4823,33 +4823,95 @@ body::after{
 .svc-similar-chip{font-family:'DM Mono',monospace;font-size:.48rem;padding:.12rem .4rem;border-radius:8px;background:rgba(196,154,60,.1);border:1px solid rgba(196,154,60,.25);color:#e8c275;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
 .svc-similar-chip.cheaper{color:#a8d8b0;border-color:rgba(122,178,132,.3);background:rgba(122,178,132,.1)}
 .svc-similar-chip.pricier{color:#e88070;border-color:rgba(193,74,58,.3);background:rgba(193,74,58,.1)}
+.svc-similar-chip.gold{color:#f4c962;border-color:rgba(196,154,60,.55);background:linear-gradient(165deg,rgba(196,154,60,.25),rgba(196,154,60,.08));font-weight:600}
+/* Out of stock — visualmente atenuado y con marca */
+.svc-similar-item.svc-oos{opacity:.58;border-color:rgba(193,74,58,.4);background:linear-gradient(165deg,rgba(60,30,20,.7),rgba(40,20,12,.55))}
+.svc-similar-item.svc-oos::before{content:'';position:absolute;top:8px;right:8px;width:18px;height:18px;background:linear-gradient(135deg,rgba(232,128,112,.9),rgba(193,74,58,.7));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 0 8px rgba(232,128,112,.5);z-index:3}
+.svc-similar-item.svc-oos::after{content:'⊘';position:absolute;top:8px;right:8px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.65rem;color:#fff;font-weight:700;z-index:4;line-height:1}
+/* Ya sugerido hoy — marca de check verde */
+.svc-similar-item.svc-already-rec{border-color:rgba(122,178,132,.4);background:linear-gradient(165deg,rgba(40,55,40,.7),rgba(28,40,28,.55))}
+.svc-similar-item.svc-already-rec .svc-similar-pct{box-shadow:0 0 0 2px rgba(122,178,132,.45)}
+.wine-similar-card.wsl-oos{opacity:.55;border-color:rgba(193,74,58,.35) !important}
+.wine-similar-card.wsl-oos::after{background:linear-gradient(90deg,transparent,rgba(193,74,58,.4),transparent)}
+.wine-similar-card-oos-stamp{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:.25rem;padding:.18rem .45rem;background:linear-gradient(155deg,rgba(193,74,58,.85),rgba(168,86,76,.7));color:#fff;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:700;letter-spacing:.1em;border-radius:6px;text-transform:uppercase;box-shadow:0 2px 6px rgba(193,74,58,.35);z-index:3;transform:rotate(3deg)}
 .svc-similar-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(244,237,226,.4);font-size:.75rem;text-align:center;padding:.6rem}
-/* ── Wine Detail (estudio) · sección "Vinos similares" parchment ── */
-.wine-similar-wrap{margin-top:1rem;margin-bottom:1.2rem;padding:1rem 1.1rem;background:linear-gradient(155deg,rgba(244,237,226,.7),rgba(240,232,216,.6));border:1.5px solid rgba(196,154,60,.22);border-radius:14px;position:relative;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 2px 8px rgba(91,70,28,.06)}
-.wine-similar-wrap::before,.wine-similar-wrap::after{content:'';position:absolute;width:14px;height:14px;border:1.5px solid rgba(196,154,60,.4);pointer-events:none}
-.wine-similar-wrap::before{top:6px;left:6px;border-right:none;border-bottom:none}
-.wine-similar-wrap::after{bottom:6px;right:6px;border-left:none;border-top:none}
-.wine-similar-title{font-family:'Cinzel',serif;font-size:.95rem;color:#5b461c;letter-spacing:.06em;margin-bottom:.2rem;display:flex;align-items:center;gap:.5rem}
-.wine-similar-title::before{content:'⚯';color:#c49a3c;font-size:1.1rem}
-.wine-similar-sub{font-family:'Cormorant Garamond','Georgia',serif;font-style:italic;font-size:.78rem;color:#7a6638;margin-bottom:.85rem;line-height:1.4}
-.wine-similar-list{display:grid;grid-template-columns:1fr;gap:.55rem}
-@media(min-width:600px){.wine-similar-list{grid-template-columns:1fr 1fr}}
-.wine-similar-card{position:relative;display:grid;grid-template-columns:54px 1fr;gap:.7rem;align-items:center;padding:.65rem .75rem;background:linear-gradient(155deg,#faf6ee,#f7efdc);border:1px solid rgba(196,154,60,.2);border-radius:10px;cursor:pointer;transition:all .2s;text-align:left;font:inherit;color:inherit;width:100%}
-.wine-similar-card:hover{border-color:rgba(196,154,60,.5);transform:translateX(3px);box-shadow:0 3px 10px rgba(196,154,60,.15)}
-.wine-similar-pct-ring{position:relative;width:54px;height:54px;display:flex;align-items:center;justify-content:center}
+/* ═══ Wine Detail (estudio) · sección "Vinos similares" v2 ═══ */
+.wine-similar-wrap{margin-top:1.2rem;margin-bottom:1.4rem;padding:1.1rem 1rem 1rem;background:linear-gradient(155deg,rgba(244,237,226,.85),rgba(240,232,216,.7));border:1.5px solid rgba(196,154,60,.25);border-radius:16px;position:relative;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 4px 14px rgba(91,70,28,.08)}
+.wine-similar-wrap::before,.wine-similar-wrap::after{content:'';position:absolute;width:16px;height:16px;border:1.5px solid rgba(196,154,60,.45);pointer-events:none}
+.wine-similar-wrap::before{top:7px;left:7px;border-right:none;border-bottom:none}
+.wine-similar-wrap::after{bottom:7px;right:7px;border-left:none;border-top:none}
+.wine-similar-title{font-family:'Cinzel',serif;font-size:1rem;color:#5b461c;letter-spacing:.08em;margin-bottom:.25rem;display:flex;align-items:center;gap:.55rem;text-transform:uppercase}
+.wine-similar-title::before{content:'';width:24px;height:24px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#e8c275,#c49a3c);display:inline-block}
+.wine-similar-sub{font-family:'Cormorant Garamond','Georgia',serif;font-style:italic;font-size:.82rem;color:#7a6638;margin-bottom:1rem;line-height:1.45;padding-left:.1rem}
+/* Grid responsive: 1 col mobile, 2 cols ≥640px */
+.wine-similar-list{display:grid;grid-template-columns:1fr;gap:.7rem}
+@media(min-width:640px){.wine-similar-list{grid-template-columns:1fr 1fr;gap:.8rem}}
+
+/* ── Card individual ── */
+.wine-similar-card{position:relative;display:grid;grid-template-columns:64px 1fr;gap:.85rem;align-items:flex-start;padding:.85rem .9rem .85rem .85rem;background:linear-gradient(155deg,#faf6ee,#f7efdc);border:1px solid rgba(196,154,60,.22);border-left:4px solid var(--wsl-accent,rgba(196,154,60,.5));border-radius:12px;cursor:pointer;transition:all .25s cubic-bezier(.22,1,.36,1);text-align:left;font:inherit;color:inherit;width:100%;overflow:hidden}
+.wine-similar-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent);opacity:.7}
+.wine-similar-card:hover{border-color:rgba(196,154,60,.6);transform:translateY(-2px);box-shadow:0 6px 18px rgba(196,154,60,.18),0 1px 0 rgba(255,255,255,.7) inset}
+.wine-similar-card:active{transform:translateY(0)}
+/* Color por tipo de vino — border-left + accent del ring */
+.wine-similar-card.wt-tinto{--wsl-accent:#a8564c;--wsl-accent-soft:rgba(168,86,76,.12)}
+.wine-similar-card.wt-blanco{--wsl-accent:#c4a854;--wsl-accent-soft:rgba(196,168,84,.15)}
+.wine-similar-card.wt-rosado{--wsl-accent:#d49aa8;--wsl-accent-soft:rgba(212,154,168,.18)}
+.wine-similar-card.wt-espumoso{--wsl-accent:#7ec8e3;--wsl-accent-soft:rgba(126,200,227,.15)}
+.wine-similar-card.wt-dulce{--wsl-accent:#d4944c;--wsl-accent-soft:rgba(212,148,76,.15)}
+
+/* ── Ring de % grande y prominente ── */
+.wine-similar-pct-ring{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .wine-similar-pct-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
-.wine-similar-pct-ring .ring-bg{fill:none;stroke:rgba(196,154,60,.15);stroke-width:4}
-.wine-similar-pct-ring .ring-fg{fill:none;stroke:url(#wineRingGrad);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
-.wine-similar-pct-num{position:relative;z-index:2;font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;color:#5b461c;line-height:1}
-.wine-similar-pct-lbl{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:.4rem;color:#a08b56;letter-spacing:.06em;z-index:2}
-.wine-similar-info{min-width:0;display:flex;flex-direction:column;gap:.18rem}
-.wine-similar-card-name{font-family:'Cinzel',serif;font-size:.85rem;font-weight:600;color:#3a2a1a;letter-spacing:.02em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wine-similar-card-meta{font-family:'DM Mono',monospace;font-size:.55rem;color:#7a6638;letter-spacing:.08em;text-transform:uppercase}
-.wine-similar-card-chips{display:flex;flex-wrap:wrap;gap:.22rem;margin-top:.25rem}
-.wine-similar-card-chip{font-family:'DM Mono',monospace;font-size:.48rem;padding:.1rem .35rem;border-radius:8px;background:rgba(196,154,60,.1);border:1px solid rgba(196,154,60,.22);color:#7a6638;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
-.wine-similar-card-chip.cheaper{color:#3d7a4e;background:rgba(122,178,132,.12);border-color:rgba(122,178,132,.3)}
-.wine-similar-card-chip.pricier{color:#a8564c;background:rgba(193,74,58,.1);border-color:rgba(193,74,58,.28)}
-.wine-similar-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:#a08b56;font-size:.8rem;text-align:center;padding:.7rem}
+.wine-similar-pct-ring .ring-bg{fill:none;stroke:var(--wsl-accent-soft,rgba(196,154,60,.12));stroke-width:5}
+.wine-similar-pct-ring .ring-fg{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.22,1,.36,1)}
+.wine-similar-pct-ring.score-high .ring-fg{stroke:#4d8a5e}
+.wine-similar-pct-ring.score-mid .ring-fg{stroke:#c49a3c}
+.wine-similar-pct-ring.score-low .ring-fg{stroke:#b8745c}
+.wine-similar-pct-num{position:relative;z-index:2;font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:#3a2a1a;line-height:1;letter-spacing:-.02em}
+.wine-similar-pct-num sub{font-family:'DM Mono',monospace;font-size:.5rem;color:#a08b56;font-weight:500;vertical-align:baseline;margin-left:1px}
+
+/* ── Info principal ── */
+.wine-similar-info{min-width:0;display:flex;flex-direction:column;gap:.32rem}
+.wine-similar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem}
+.wine-similar-card-name{font-family:'Cinzel',serif;font-size:.92rem;font-weight:600;color:#2a1a0d;letter-spacing:.02em;line-height:1.18;flex:1;min-width:0;word-wrap:break-word;overflow-wrap:break-word}
+.wine-similar-card-price{font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--wsl-accent,#c49a3c);white-space:nowrap;line-height:1;padding-top:.1rem}
+.wine-similar-card-meta{font-family:'DM Mono',monospace;font-size:.58rem;color:#7a6638;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem;flex-wrap:wrap}
+.wine-similar-card-meta .meta-dot{color:rgba(122,102,56,.4)}
+.wine-similar-card-meta .meta-type{color:var(--wsl-accent,#7a6638);font-weight:600}
+.wine-similar-card-meta .meta-type-icon{color:var(--wsl-accent,#7a6638);font-size:.85rem;line-height:1;margin-right:-.05rem}
+/* Ripple gold al tap (micro-feedback) */
+.wine-similar-card{position:relative;overflow:hidden}
+.wine-similar-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(196,154,60,.25),transparent 40%);opacity:0;transition:opacity .35s;pointer-events:none}
+.wine-similar-card:active::before{opacity:1;transition:opacity .05s}
+
+/* ── Chips agrupados (v3 — legibles, accesibles, con separador visual) ── */
+.wine-similar-card-chips{display:flex;flex-wrap:wrap;gap:.32rem;margin-top:.2rem;align-items:center}
+.wine-similar-card-chip{display:inline-flex;align-items:center;gap:.28rem;font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:500;padding:.25rem .55rem;border-radius:10px;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.22);color:#4a3a18;letter-spacing:.01em;white-space:nowrap;line-height:1.2;transition:all .15s}
+.wine-similar-card-chip .chip-ico{font-size:.78rem;opacity:.85;line-height:1}
+/* Separador entre categorías de chips (uva/geo → enología) */
+.wine-similar-card-chips .chip-sep{display:inline-block;width:1px;height:14px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.35),transparent);margin:0 .12rem;flex-shrink:0}
+/* Variantes por categoría — legibles + buen contraste WCAG */
+.wine-similar-card-chip.c-gold-strong{background:linear-gradient(155deg,rgba(196,154,60,.28),rgba(196,154,60,.12));border-color:rgba(196,154,60,.55);color:#4a3712;font-weight:700;font-size:.7rem}
+.wine-similar-card-chip.c-grape{background:rgba(122,68,108,.1);border-color:rgba(122,68,108,.3);color:#6d3c5f;font-weight:600;font-size:.7rem}
+.wine-similar-card-chip.c-geo{background:rgba(77,138,94,.1);border-color:rgba(77,138,94,.28);color:#356b44}
+.wine-similar-card-chip.c-cheaper{background:rgba(122,178,132,.16);border-color:rgba(122,178,132,.4);color:#2d6b3e;font-weight:700}
+.wine-similar-card-chip.c-pricier{background:rgba(193,74,58,.12);border-color:rgba(193,74,58,.34);color:#8e3e30;font-weight:700}
+.wine-similar-card-chip.c-neutral{background:rgba(122,102,56,.08);border-color:rgba(122,102,56,.24);color:#5b461c}
+.wine-similar-card-chip.c-eno{background:rgba(91,70,28,.08);border-color:rgba(91,70,28,.24);color:#4a3a18}
+.wine-similar-card-chip.c-tier{background:linear-gradient(155deg,rgba(170,140,80,.18),rgba(170,140,80,.08));border-color:rgba(170,140,80,.4);color:#5b461c;text-transform:uppercase;font-size:.6rem;letter-spacing:.1em;font-weight:700}
+.wine-similar-card-chip.c-artisan{background:rgba(122,106,170,.08);border-color:rgba(122,106,170,.26);color:#4d3a78;font-style:italic}
+.wine-similar-card-chip.c-sensorial{background:rgba(196,112,104,.08);border-color:rgba(196,112,104,.26);color:#8e3e30}
+.wine-similar-card-chip.c-pairing{background:rgba(196,154,60,.08);border-color:rgba(196,154,60,.22);color:#5b461c}
+.wine-similar-card-chip.c-star{background:linear-gradient(155deg,rgba(232,194,117,.4),rgba(196,154,60,.2));border-color:rgba(196,154,60,.6);color:#5b461c;font-weight:700}
+.wine-similar-card-chip.c-adjacent{background:rgba(126,200,227,.1);border-color:rgba(126,200,227,.3);color:#3d6b80;font-style:italic;font-weight:600}
+.wine-similar-card-chip.c-partial{background:rgba(150,140,120,.08);border-color:rgba(150,140,120,.28);color:#6e5e3e;font-style:italic;font-size:.6rem}
+
+/* Botón "+N más" — tap target 44px WCAG mobile */
+.wine-similar-more{display:inline-flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;padding:.45rem .8rem;min-height:32px;border-radius:10px;background:linear-gradient(155deg,rgba(196,154,60,.06),rgba(196,154,60,.02));border:1px dashed rgba(196,154,60,.45);color:#7a6638;letter-spacing:.1em;cursor:pointer;transition:all .15s;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.wine-similar-more:hover,.wine-similar-more:active{background:linear-gradient(155deg,rgba(196,154,60,.18),rgba(196,154,60,.08));border-color:rgba(196,154,60,.7);color:#5b461c;border-style:solid}
+
+/* Estado vacío */
+.wine-similar-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:#a08b56;font-size:.85rem;text-align:center;padding:1rem}
 .svc-fab::after{content:'';position:absolute;inset:-10px;border-radius:50%}
 .svc-fab:active{transform:scale(.88)}
 @keyframes svc-fab-pulse{0%,100%{box-shadow:0 4px 20px rgba(196,154,60,.4),0 0 0 0 rgba(196,154,60,.25)}50%{box-shadow:0 4px 20px rgba(196,154,60,.5),0 0 0 8px rgba(196,154,60,0)}}
@@ -22328,10 +22390,65 @@ function _wineNorm(s){
   return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
 }
 
-// Splittea uvas: "Listán Blanco/Albillo, Gual" → ['listan blanco','albillo','gual']
+/**
+ * Diccionario de sinónimos de uva.
+ * Clave: nombre normalizado tal como aparece en la carta.
+ * Valor: nombre canónico (representante del clúster).
+ * Permite que "Tempranillo", "Tinto Fino" y "Cencíbel" matcheen como la misma uva.
+ */
+const GRAPE_SYNONYMS = {
+  // Tempranillo y aliases regionales
+  'tempranillo':       'tempranillo',
+  'tinto fino':        'tempranillo',
+  'cencibel':          'tempranillo',
+  'tinta de toro':     'tempranillo',
+  'ull de llebre':     'tempranillo',
+  // Cariñena (Mazuelo / Carignan) — uva DIFERENTE de Garnacha Tintorera
+  'cariñena':          'cariñena',
+  'carinena':          'cariñena',
+  'mazuelo':           'cariñena',
+  'carignan':          'cariñena',
+  // Garnacha Tintorera (= Alicante Bouschet) — distinta de Garnacha
+  'garnacha tintorera':'garnacha tintorera',
+  'alicante bouschet': 'garnacha tintorera',
+  // Garnacha (= Grenache)
+  'garnacha':          'garnacha',
+  'grenache':          'garnacha',
+  'garnacha negra':    'garnacha',
+  'garnacha blanca':   'garnacha blanca',
+  // Syrah
+  'syrah':             'syrah',
+  'shiraz':            'syrah',
+  // Macabeo / Viura
+  'macabeo':           'macabeo',
+  'macabeu':           'macabeo',
+  'viura':             'macabeo',
+  // Listán Blanco (capitalización inconsistente en la carta)
+  'listan blanco':     'listan blanco',
+  'listán blanco':     'listan blanco',
+  // Mouratón
+  'mouraton':          'mouraton',
+  'mouratoni':         'mouraton',
+  // Pinot Noir
+  'pinot noir':        'pinot noir',
+  'spätburgunder':     'pinot noir',
+  'spatburgunder':     'pinot noir',
+  // Mourvèdre / Monastrell
+  'mourvedre':         'monastrell',
+  'mourvèdre':         'monastrell',
+  'monastrell':        'monastrell',
+  // Tintilla
+  'tintilla':          'tintilla',
+  'tintilla de rota':  'tintilla',
+};
+
+// Splittea uvas y normaliza vía sinónimos: "Tempranillo/Tinto Fino" → ['tempranillo','tempranillo']
 function _wineGrapes(w){
   if(!w || !w.grapes) return [];
-  return w.grapes.split(/[\/,]/).map(g => _wineNorm(g)).filter(Boolean);
+  return w.grapes.split(/[\/,]/)
+    .map(g => _wineNorm(g))
+    .map(g => GRAPE_SYNONYMS[g] || g)
+    .filter(Boolean);
 }
 
 /**
@@ -22349,6 +22466,65 @@ function _wineNameBase(name){
   n = n.replace(/\b(doble magnum|magnum|jeroboam|imperial|salmanazar|nabucodonosor|mathusalem|botella|copa)\b/g, '');
   n = n.replace(/\s+/g, ' ').trim();
   return n;
+}
+
+/**
+ * Familias aromáticas — keywords ES + EN para extracción del campo notes/winemaking.
+ * v2: cobertura ampliada para alcanzar ≥80% de vinos con 3+ familias detectadas.
+ */
+const AROMA_KW = {
+  fr_red:   /fresa|frambuesa|cereza|grosella|ciruela roja|granad|cherry|raspberry|red fruit|strawberry|red berr|currant|pomegranate/i,
+  fr_black: /\bmora\b|arándan|cassis|ciruela negra|endrina|blackberry|blueberry|black fruit|black berr|sloe/i,
+  citrus:   /lim[oó]n|naranja|lima|toronja|c[ií]tric|pomelo|mandarina|citrus|lemon|orange|grapefruit|lime|tangerine/i,
+  floral:   /floral|jazm[ií]n|violeta|rosa|flor blanca|azahar|magnolia|white flower|jasmine|violet|elder/i,
+  mineral:  /mineral|pizarra|s[ií]lex|salin|tiza|granito|esquisto|chalk|slate|flint|saline|granite/i,
+  spice:    /especi|pimienta|clavo|canela|nuez moscada|cardamomo|jengibre|spic|pepper|clove|cinnamon|nutmeg|cardamom|ginger/i,
+  toast:    /tostad|vainilla|caf[eé]|chocolate|cacao|brioche|tofé|toffee|toast|vanilla|coffee|cocoa|caramel/i,
+  smoke:    /ahumad|humo|hoguera|smok|incense|incienso|brea|tar/i,
+  balsamic: /bals[aá]m|romero|eucalipto|menta|laurel|tomillo|balsamic|rosemary|eucalyptus|mint|thyme|bay leaf/i,
+  earthy:   /terros|cuero|tabaco|sotobosque|trufa|hojarasca seca|leather|tobacco|earthy|musk|truffle|forest floor|undergrowth/i,
+  honey:    /miel\b|albaricoque|membrillo|orejones|honey|apricot|botrytis|noble rot|quince/i,
+  herbal:   /hierba fresca|hierba|hojarasca|monte bajo|hinojo|garrigue|grass|herbal|fennel/i,
+  nuts:     /almendra|avellana|nuez|frutos secos|pistach|almond|hazelnut|walnut|pistachio|nuts/i,
+  licorice: /regaliz|anís|hinojo|licorice|liquorice|anise|fennel seed/i,
+  tropical: /piña|mango|maracuy|guayaba|lichi|fruta tropical|tropical|pineapple|passion fruit|guava|lychee/i,
+  stone_fruit: /melocot[oó]n|nectarina|albaricoq|durazno|ciruela amarilla|peach|nectarine|yellow plum|stone fruit/i,
+  red_meat: /carne|carne roja|sangre|red meat|game|venison|caza/i
+};
+
+/**
+ * Extrae grado alcohólico (% vol) si aparece en notes/winemaking.
+ * Devuelve número decimal o null.
+ */
+function _wineAlcohol(w){
+  if(!w) return null;
+  const txt = (w.winemaking||'') + ' ' + (w.notes||'') + ' ' + (w.story||'');
+  const m = txt.match(/(\d{1,2}(?:[.,]\d)?)\s*%\s*(?:vol|alc|abv)?/i);
+  if(m){
+    const v = parseFloat(m[1].replace(',','.'));
+    if(v >= 8 && v <= 18) return v; // rango razonable para vinos
+  }
+  return null;
+}
+
+/**
+ * Extrae la "bodega" (productor) del nombre del vino.
+ * Estrategia: cortar antes de la primera palabra-producto (Reserva, Crianza, etc.).
+ * Permite que "Marqués de Murrieta Reserva", "Marqués de Murrieta Reserva 1.5L"
+ * y "Marqués de Murrieta Castillo Ygay" colapsen a "marques de murrieta".
+ */
+function _wineWinery(w){
+  if(!w) return '';
+  if(w.vegaSicilia) return 'vega sicilia';
+  let n = _wineNorm(w.name);
+  n = n.replace(/\b(19|20)\d{2}\b/g, '');
+  n = n.replace(/\b\d+(?:[.,]\d+)?\s*[lc]l?\b/g, '');
+  n = n.replace(/\b(magnum|doble magnum|jeroboam|imperial|salmanazar|nabucodonosor|botella|copa)\b/g, '');
+  // Cortar antes de palabras de producto/categoría
+  n = n.split(/\s(?=(?:reserva|gran reserva|crianza|joven|brut|extra brut|nature|ros[eé]|blanco|tinto|seco|dulce|cuv[eé]e|barrica|gran vino|edici[oó]n|añada|premium|special|sin crianza|late harvest|vidueño|magnum|aszu|aszú|puttonyus|botella|botellin)\b)/i)[0];
+  // Limpiar prefijo genérico al inicio
+  n = n.replace(/^(bodegas?|vi[ñn]edos?|vinos?|finca|pago|domaine|chateau|château|maison|cellars?)\s+/i, '');
+  return n.replace(/\s+/g, ' ').trim();
 }
 
 /**
@@ -22435,42 +22611,138 @@ function _wineProfile(w){
   else if(/clarificaci[oó]n suave|gentle clarification|m[ií]nima/.test(txt)) filtration = 'suave';
   else if(/filtraci[oó]n|filtered/.test(txt) && !unfiltered) filtration = 'estandar';
 
+  // ── NUEVO: Cuerpo del vino (ligero/medio/cuerpo/potente) ──
+  // 1) Detección explícita por keywords
+  let body = null;
+  if(/\bpotente|intens[oa]|concentrad|powerful|intense|robust|full[- ]bodied|cuerpo robusto/.test(txt)) body = 'potente';
+  else if(/\bestructurad|firme|cuerpo|full body|structured/.test(txt)) body = 'cuerpo';
+  else if(/\bligero|fresc[oa] y suave|delicate|light(?:[- ]bodied)?|sutil/.test(txt)) body = 'ligero';
+  else if(/medio|equilibrad|medium[- ]?bod|balanced/.test(txt)) body = 'medio';
+  // 2) Inferencia por tipo + tier si no se detectó
+  if(!body){
+    if(w.type === 'espumoso' || w.type === 'rosado') body = 'ligero';
+    else if(w.type === 'blanco') body = 'medio';
+    else if(w.type === 'tinto'){
+      if(tier === 'gran reserva') body = 'potente';
+      else if(tier === 'reserva') body = 'cuerpo';
+      else body = 'medio';
+    } else if(w.type === 'dulce') body = 'cuerpo';
+  }
+
+  // ── NUEVO: Bodega/productor ──
+  const winery = _wineWinery(w);
+
+  // ── NUEVO: Familias aromáticas presentes (subset de AROMA_KW) ──
+  const aromas = [];
+  for(const fam in AROMA_KW){
+    if(AROMA_KW[fam].test(txt)) aromas.push(fam);
+  }
+
+  // ── NUEVO: Estilo clásico vs moderno ──
+  let style = null;
+  if(/\bcl[aá]sic|tradicion|tradition/.test(txt)) style = 'clasico';
+  else if(/\bmodern/.test(txt)) style = 'moderno';
+
+  // ── NUEVO: Alcohol % ──
+  const alcohol = _wineAlcohol(w);
+
+  // ── NUEVO: Cobertura del perfil (para chip "datos parciales") ──
+  // Cuenta cuántos campos enológicos clave se detectaron
+  const profileCoverage = [vessel, oak, agingMonths, tier, body].filter(x => x != null && x !== '').length;
+  const isPartial = profileCoverage < 3; // <3 de 5 = parcial
+
   const profile = {
     vessel, oak, oakType, agingMonths, agingBucket, tier,
     malolactic, lees, battonage, wildYeast, unfiltered, noSulfites,
-    champenoise, carbonicMaceration, filtration
+    champenoise, carbonicMaceration, filtration,
+    body, winery, aromas, style, alcohol, isPartial
   };
   _wineProfileCache[w.id] = profile;
   return profile;
 }
 
 /**
- * findSimilarWines(wineId, count=3)
- * Devuelve top N vinos similares con score 0-100 (porcentaje).
+ * Mapa de adyacencia geográfica/cultural — vinos de regiones vecinas.
+ * Permite dar puntos cuando un vino agotado puede sustituirse por uno de
+ * región limítrofe o estilísticamente cercana.
+ */
+const GEO_NEIGHBORS = {
+  'la rioja-alava':     ['castilla y leon'],
+  'castilla y leon':    ['la rioja-alava'],
+  'galicia':            ['castilla y leon'],
+  'cataluña':           ['francia','islas baleares'],
+  'francia':            ['cataluña'],
+  'islas baleares':     ['cataluña'],
+  'andalucia':          ['murcia'],
+  'murcia':             ['andalucia','castilla la mancha'],
+  'castilla la mancha': ['murcia','la rioja-alava'],
+  'argentina':          ['australia','sur africa'],
+  'australia':          ['argentina','sur africa'],
+  'sur africa':         ['argentina','australia'],
+  'austria':            ['hungria','alemania'],
+  'hungria':            ['austria','alemania'],
+  'alemania':           ['austria','hungria','francia'],
+  'italia':             ['francia']
+};
+
+// Distancia ordinal entre tiers (joven < crianza < reserva < gran reserva)
+const TIER_RANK = {'joven': 0, 'crianza': 1, 'reserva': 2, 'gran reserva': 3};
+
+/**
+ * Estado runtime: vinos sustitutos ya sugeridos en la sesión actual.
+ * Se reinicia al cerrar/abrir Service Mode (vida del servicio).
+ * Estructura: { [wineId]: timestamp }
+ */
+let _wineRecommendedToday = {};
+
+/**
+ * Marca un vino como "ya sugerido hoy". Llamado desde la UI de Service Mode
+ * cuando el camarero hace tap en una alternativa (gesto de aceptación).
+ */
+function markWineRecommended(wineId){
+  _wineRecommendedToday[wineId] = Date.now();
+}
+
+/**
+ * Reinicia el registro (al cerrar Service Mode, cambio de turno, etc.)
+ */
+function resetWineRecommended(){
+  _wineRecommendedToday = {};
+}
+
+/**
+ * findSimilarWines(wineId, count=6)
+ * Devuelve top N vinos similares con score 0-100% normalizado dinámicamente.
  *
- * Puntuación (max ≈ 110, cap a 100%):
+ * Señales (max teórico realista ≈ 130, normalizado /120 con cap 100%):
  *   ── Identidad ──
- *   Mismo tipo               +30   (descalifica si no, salvo tipo adyacente +8)
- *   Uva compartida           +20 c/u
- *   Mismo origen             +10
- *   Misma DO (región)        +8
- *   Precio ±30%              +6    (±60% +3)
- *   ≥2 maridajes en común    +4
- *   Recomendado de casa      +2
+ *   Mismo tipo                                    +30 (adyacente +8, lejano descarta)
+ *   Uva canónica compartida (vía sinónimos)       +20 c/u (max 4 uvas)
+ *   Mismo origen (región)                         +10
+ *   Misma DO                                      +8
+ *   Vecino geográfico (Rioja↔Castilla, etc.)      +5
+ *   Misma bodega/productor                        +6
+ *   Ambos Vega Sicilia                            +4
+ *   Precio ±30%                                   +6 (±60% +3)
+ *   Precio ratio >2.0 (PENALIZACIÓN)              −5
+ *   Maridajes compartidos (graduado)              min(5, n)
+ *   Recomendado de casa                           +2
  *   ── Enología ──
- *   Mismo vessel fermentación (acero/cemento/ánfora/barrica)  +5
- *   Misma decisión barrica (ambos sí o ambos no)              +5
- *   Mismo tipo de roble (francés/americano/húngaro)            +4
- *   Crianza similar (mismo bucket ±6m)                         +5
- *   Mismo tier (joven/crianza/reserva/gran reserva)            +4
- *   Maloláctica match                                          +2
- *   Lías match                                                 +2
- *   Bâtonnage match                                            +2
- *   Levaduras autóctonas match                                 +3
- *   Sin filtración match                                       +2
- *   Sin sulfitos añadidos match                                +3
- *   Méthode champenoise match                                  +3
- *   Maceración carbónica match                                 +3
+ *   Vessel fermentación                           +5
+ *   Decisión barrica (sí/no)                      +5
+ *   Tipo de roble                                 +4
+ *   Crianza bucket (±6 meses)                     +5
+ *   Tier exacto (joven/crianza/reserva/GR)        +4 (tier diff 1: +1; diff ≥2: 0)
+ *   Maloláctica · lías · bâtonnage                +2 c/u
+ *   Levaduras autóctonas                          +3
+ *   Sin filtración                                +2
+ *   Sin sulfitos añadidos                         +3
+ *   Méthode champenoise                           +3
+ *   Maceración carbónica                          +3
+ *   ── Sensorial ──
+ *   Mismo cuerpo (ligero/medio/cuerpo/potente)    +4 (diff 1 step: +1)
+ *   Familias aromáticas compartidas (graduado)    min(6, n*2)
+ *   Mismo estilo (clásico/moderno)                +2
  */
 function findSimilarWines(wineId, count){
   count = count || 6;
@@ -22483,12 +22755,12 @@ function findSimilarWines(wineId, count){
   const targetRegion = _wineNorm(target.region);
   const targetBase = _wineNameBase(target.name);
   const tProfile = _wineProfile(target);
+  const targetGeoNeighbors = GEO_NEIGHBORS[targetOrigin] || [];
 
   const scored = [];
   for(const w of WINES){
     if(w.id === wineId) continue;
     // Filtro anti-duplicados: descartar variantes del mismo vino base
-    // (ej: si target es "Murrieta Reserva", no recomendar "Murrieta Reserva 1.5L")
     if(_wineNameBase(w.name) === targetBase) continue;
 
     let score = 0;
@@ -22506,33 +22778,49 @@ function findSimilarWines(wineId, count){
       }
     }
 
-    // ── Identidad varietal/geográfica/comercial ──
+    // ── Identidad varietal ──
     const wGrapes = _wineGrapes(w);
     const sharedGrapes = wGrapes.filter(g => targetGrapes.indexOf(g) >= 0);
-    score += sharedGrapes.length * 20;
+    score += Math.min(sharedGrapes.length, 4) * 20;
 
-    const sameOrigin = targetOrigin && _wineNorm(w.origin) === targetOrigin;
+    // ── Geografía ──
+    const wOrigin = _wineNorm(w.origin);
+    const sameOrigin = targetOrigin && wOrigin === targetOrigin;
     if(sameOrigin) score += 10;
 
     const sameRegion = targetRegion && _wineNorm(w.region) === targetRegion;
     if(sameRegion) score += 8;
 
+    const geoNeighbor = !sameOrigin && targetGeoNeighbors.indexOf(wOrigin) >= 0;
+    if(geoNeighbor) score += 5;
+
+    // ── Productor ──
+    const wProfile = _wineProfile(w);
+    const sameWinery = tProfile.winery && wProfile.winery && tProfile.winery === wProfile.winery;
+    if(sameWinery) score += 6;
+    const bothVegaSicilia = target.vegaSicilia && w.vegaSicilia && !sameWinery;
+    if(bothVegaSicilia) score += 4;
+
+    // ── Precio ──
     let priceDiff = null;
+    let pricePenalty = false;
     if(target.price && w.price){
       priceDiff = w.price - target.price;
       const ratio = Math.abs(priceDiff) / target.price;
       if(ratio <= 0.30) score += 6;
       else if(ratio <= 0.60) score += 3;
+      // Penalización extrema: >200% diferencia
+      if(ratio > 2.0){ score -= 5; pricePenalty = true; }
     }
 
+    // ── Maridajes graduado ──
     const sharedPairings = (w.pairings || []).filter(p => targetPairings.has(p));
-    if(sharedPairings.length >= 2) score += 4;
+    score += Math.min(5, sharedPairings.length);
 
     if(w.recommended) score += 2;
 
     // ── Perfil enológico ──
-    const wProfile = _wineProfile(w);
-    const enoMatches = []; // para chips ("misma barrica", "sin filtrar", etc.)
+    const enoMatches = [];
 
     if(tProfile.vessel && wProfile.vessel && tProfile.vessel === wProfile.vessel){
       score += 5; enoMatches.push({k:'vessel', v:tProfile.vessel});
@@ -22546,8 +22834,15 @@ function findSimilarWines(wineId, count){
     if(tProfile.agingBucket && wProfile.agingBucket && tProfile.agingBucket === wProfile.agingBucket){
       score += 5; enoMatches.push({k:'aging', v:tProfile.agingBucket});
     }
-    if(tProfile.tier && wProfile.tier && tProfile.tier === wProfile.tier){
-      score += 4; enoMatches.push({k:'tier', v:tProfile.tier});
+    // Tier asimétrico — diff exact +4, diff 1 step +1, diff ≥2 = 0
+    if(tProfile.tier && wProfile.tier){
+      const tt = TIER_RANK[tProfile.tier];
+      const wt = TIER_RANK[wProfile.tier];
+      if(tt != null && wt != null){
+        const diff = Math.abs(tt - wt);
+        if(diff === 0){ score += 4; enoMatches.push({k:'tier', v:tProfile.tier}); }
+        else if(diff === 1){ score += 1; }
+      }
     }
     if(tProfile.malolactic && wProfile.malolactic){ score += 2; enoMatches.push({k:'malo'}); }
     if(tProfile.lees && wProfile.lees){ score += 2; enoMatches.push({k:'lees'}); }
@@ -22558,7 +22853,59 @@ function findSimilarWines(wineId, count){
     if(tProfile.champenoise && wProfile.champenoise){ score += 3; enoMatches.push({k:'champ'}); }
     if(tProfile.carbonicMaceration && wProfile.carbonicMaceration){ score += 3; enoMatches.push({k:'carbonic'}); }
 
-    const scorePct = Math.min(100, Math.round(score));
+    // ── Sensorial ──
+    const BODY_RANK = {'ligero':0,'medio':1,'cuerpo':2,'potente':3};
+    let bodyMatch = false;
+    if(tProfile.body && wProfile.body){
+      if(tProfile.body === wProfile.body){
+        score += 4; bodyMatch = true;
+        enoMatches.push({k:'body', v:tProfile.body});
+      } else {
+        const diff = Math.abs(BODY_RANK[tProfile.body] - BODY_RANK[wProfile.body]);
+        if(diff === 1) score += 1;
+      }
+    }
+    // Familias aromáticas (graduado)
+    let sharedAromas = 0;
+    if(tProfile.aromas && wProfile.aromas){
+      const tSet = new Set(tProfile.aromas);
+      sharedAromas = wProfile.aromas.filter(a => tSet.has(a)).length;
+      score += Math.min(6, sharedAromas * 2);
+      if(sharedAromas >= 3) enoMatches.push({k:'aromas', v:sharedAromas});
+    }
+    // Estilo
+    if(tProfile.style && wProfile.style && tProfile.style === wProfile.style){
+      score += 2; enoMatches.push({k:'style', v:tProfile.style});
+    }
+
+    // ── NUEVO: Alcohol % ──
+    let alcDiff = null;
+    if(tProfile.alcohol != null && wProfile.alcohol != null){
+      alcDiff = wProfile.alcohol - tProfile.alcohol;
+      const alcAbs = Math.abs(alcDiff);
+      if(alcAbs <= 0.5){ score += 3; enoMatches.push({k:'alcohol', v:tProfile.alcohol+'%'}); }
+      else if(alcAbs <= 1.0) score += 1;
+      else if(alcAbs >= 2.0) score -= 2; // penalizar diferencia grande
+    }
+
+    // ── NUEVO: Vintage / añada — desempate y match ──
+    let yearDiff = null;
+    if(target.year && w.year){
+      yearDiff = w.year - target.year;
+      const yearAbs = Math.abs(yearDiff);
+      if(yearAbs === 0){ score += 3; enoMatches.push({k:'sameYear', v:target.year}); }
+      else if(yearAbs <= 2) score += 1; // misma "ventana" de añada
+      else if(yearAbs >= 5) score -= 1;
+    }
+
+    // ── NUEVO: Stock disponible (campo opcional) ──
+    // Si target o candidato declaran inStock=false, marcamos con flag
+    const candidateOutOfStock = w.inStock === false;
+    if(candidateOutOfStock) score -= 12; // penaliza fuerte (queda al final, casi se descarta)
+
+    // ── Normalización dinámica: divide por 120 (max teórico realista) ──
+    // Vinos casi-clónicos saturan a 100%, el resto se gradúa naturalmente.
+    const scorePct = Math.max(0, Math.min(100, Math.round((score / 120) * 100)));
 
     scored.push({
       wine: w,
@@ -22569,8 +22916,19 @@ function findSimilarWines(wineId, count){
       sharedPairings: sharedPairings,
       sameOrigin: sameOrigin,
       sameRegion: sameRegion,
+      geoNeighbor: geoNeighbor,
+      sameWinery: sameWinery,
+      bothVegaSicilia: bothVegaSicilia,
       priceDiff: priceDiff,
-      enoMatches: enoMatches
+      pricePenalty: pricePenalty,
+      priceRatio: target.price ? Math.round(Math.abs(priceDiff||0) / target.price * 100) : null,
+      enoMatches: enoMatches,
+      sharedAromas: sharedAromas,
+      bodyMatch: bodyMatch,
+      alcDiff: alcDiff,
+      yearDiff: yearDiff,
+      outOfStock: candidateOutOfStock,
+      isPartial: wProfile.isPartial
     });
   }
 
@@ -22592,8 +22950,192 @@ function findSimilarWines(wineId, count){
 }
 
 /**
- * Genera chips bilingües que explican por qué dos vinos son similares.
- * Devuelve array de strings cortos (≤4-5 palabras c/u).
+ * Consolida chips de similitud agrupando información redundante.
+ * Devuelve un array de objetos {text, group, icon, priority}.
+ *
+ * Agrupaciones:
+ *   - oak:yes + oakType + aging → "🪵 Roble francés · 7-12m"
+ *   - oak:no + vessel:acero → "🛢 Acero inoxidable, sin barrica"
+ *   - vessel:cemento + oak:yes → "🛢 Cemento + roble"
+ *   - malo + lees + battonage → "técnicas blanco"
+ *
+ * priority: 1=crítico (bodega/uva), 2=geo, 3=precio, 4=enología, 5=sensorial
+ */
+function _consolidateChips(match, _en){
+  const out = [];
+  const eno = match.enoMatches || [];
+  const enoMap = {};
+  for(const m of eno) enoMap[m.k] = m.v || true;
+
+  // ── Prioridad 1: BODEGA/PRODUCTOR (crítico) ──
+  if(match.sameWinery){
+    out.push({text: _en?'same winery':'misma bodega', icon:'⌂', priority:1, color:'gold-strong'});
+  } else if(match.bothVegaSicilia){
+    out.push({text: _en?'Vega Sicilia family':'familia Vega Sicilia', icon:'◆', priority:1, color:'gold-strong'});
+  }
+
+  // ── Prioridad 1: UVAS ──
+  if(match.sharedGrapes && match.sharedGrapes.length){
+    if(match.sharedGrapes.length === 1){
+      const g = match.sharedGrapes[0].replace(/\b\w/g, c => c.toUpperCase());
+      out.push({text: g, icon:'🍇', priority:1, color:'grape'});
+    } else {
+      out.push({text: (_en?'shared grapes: ':'uvas: ') + match.sharedGrapes.length, icon:'🍇', priority:1, color:'grape'});
+    }
+  }
+
+  // ── Prioridad 2: GEOGRAFÍA ──
+  if(match.sameRegion){
+    out.push({text: _en?'same DO':'misma DO', icon:'◇', priority:2, color:'geo'});
+  } else if(match.sameOrigin){
+    out.push({text: _en?'same region':'misma región', icon:'◇', priority:2, color:'geo'});
+  } else if(match.geoNeighbor){
+    out.push({text: _en?'neighboring region':'región vecina', icon:'◇', priority:2, color:'geo'});
+  }
+
+  // ── Prioridad 3: PRECIO (con delta + % cuando ratio ≥20%) ──
+  if(match.priceDiff !== null){
+    const showPct = match.priceRatio != null && match.priceRatio >= 20;
+    const pctSuffix = showPct ? ' ('+(match.priceDiff>0?'+':'−')+match.priceRatio+'%)' : '';
+    const deltaText = match.priceDiff < 0
+      ? '−' + Math.abs(match.priceDiff) + '€' + pctSuffix
+      : match.priceDiff > 0 ? '+' + match.priceDiff + '€' + pctSuffix : (_en?'same €':'mismo €');
+    if(match.pricePenalty){
+      out.push({text: deltaText + ' ⚠', icon:'€', priority:3, color:'pricier'});
+    } else if(match.priceDiff < 0){
+      out.push({text: deltaText, icon:'€', priority:3, color:'cheaper'});
+    } else if(match.priceDiff > 0){
+      out.push({text: deltaText, icon:'€', priority:3, color:'pricier'});
+    } else {
+      out.push({text: deltaText, icon:'€', priority:3, color:'neutral'});
+    }
+  }
+  // ── NUEVO: Vintage / añada ──
+  if(enoMap.sameYear){
+    out.push({text: (_en?'vintage ':'añada ')+enoMap.sameYear, icon:'⏲', priority:3, color:'eno'});
+  } else if(match.yearDiff != null && Math.abs(match.yearDiff) >= 3){
+    out.push({text: (match.yearDiff>0?'+':'−')+Math.abs(match.yearDiff)+(_en?' yrs':' años'), icon:'⏲', priority:5, color:'eno'});
+  }
+  // ── NUEVO: Alcohol % ──
+  if(enoMap.alcohol){
+    out.push({text: enoMap.alcohol+(_en?' alc.':' alc.'), icon:'%', priority:4, color:'eno'});
+  }
+
+  // ── Prioridad 4: ENOLOGÍA AGRUPADA — "🪵 Roble francés · 7-12m" ──
+  // Caso A: con barrica + tipo de roble + crianza
+  const AGING_SHORT_ES = {'0':'sin','1-6':'1-6m','7-12':'7-12m','13-18':'13-18m','19-24':'19-24m','25-36':'25-36m','37+':'37m+'};
+  const AGING_SHORT_EN = {'0':'no','1-6':'1-6m','7-12':'7-12m','13-18':'13-18m','19-24':'19-24m','25-36':'25-36m','37+':'37m+'};
+  const TIER_ES = {'joven':'joven','crianza':'crianza','reserva':'reserva','gran reserva':'gran reserva'};
+  const TIER_EN = {'joven':'young','crianza':'aged','reserva':'reserva','gran reserva':'gran reserva'};
+
+  if(enoMap.oak === 'yes'){
+    // Construir string compacto: "Roble francés · 13-18m" o "Roble · 7-12m"
+    const parts = [];
+    if(enoMap.oakType){ parts.push((_en?'':'Roble ') + enoMap.oakType.replace(/\+/g,'/')); }
+    else { parts.push(_en?'oak':'roble'); }
+    if(enoMap.aging){ parts.push(_en ? AGING_SHORT_EN[enoMap.aging] : AGING_SHORT_ES[enoMap.aging]); }
+    out.push({text: parts.join(' · '), icon:'🪵', priority:4, color:'eno'});
+  } else if(enoMap.oak === 'no'){
+    // Sin barrica + vessel
+    let txt = _en?'no oak':'sin barrica';
+    if(enoMap.vessel === 'acero') txt += _en?' · steel':' · acero';
+    else if(enoMap.vessel === 'cemento') txt += _en?' · concrete':' · cemento';
+    else if(enoMap.vessel === 'anfora') txt += ' · ánfora';
+    out.push({text: txt, icon:'🛢', priority:4, color:'eno'});
+  } else if(enoMap.vessel){
+    // Solo vessel sin oak detectado
+    const VESSEL_LBL = {acero:_en?'steel':'acero', cemento:_en?'concrete':'cemento', anfora:'ánfora', barrica:_en?'barrel ferm.':'barrica'};
+    out.push({text: VESSEL_LBL[enoMap.vessel] || enoMap.vessel, icon:'🛢', priority:4, color:'eno'});
+  } else if(enoMap.aging){
+    // Solo crianza sin oak detectado (vino joven sobre lías por ejemplo)
+    out.push({text: (_en ? AGING_SHORT_EN[enoMap.aging] : AGING_SHORT_ES[enoMap.aging]) + (_en?' aging':' crianza'), icon:'⏳', priority:4, color:'eno'});
+  }
+
+  // Tier (independiente de barrica — categoría comercial)
+  if(enoMap.tier){
+    out.push({text: _en ? TIER_EN[enoMap.tier] : TIER_ES[enoMap.tier], icon:'🏆', priority:4, color:'tier'});
+  }
+
+  // Técnicas de blanco/elaboración (agrupadas en 1 chip si hay 2+)
+  const techniques = [];
+  if(enoMap.malo) techniques.push(_en?'MLF':'malo');
+  if(enoMap.lees) techniques.push(_en?'lees':'lías');
+  if(enoMap.batt) techniques.push(_en?'bâtonn.':'bâtonn.');
+  if(enoMap.wild) techniques.push(_en?'wild':'autóc.');
+  if(techniques.length === 1){
+    const FULL_ES = {malo:'maloláctica',lías:'sobre lías','bâtonn.':'bâtonnage',autóc:'lev. autóctonas'};
+    const FULL_EN = {MLF:'malolactic',lees:'on lees','bâtonn.':'bâtonnage',wild:'wild yeast'};
+    const map = _en ? FULL_EN : FULL_ES;
+    out.push({text: map[techniques[0]] || techniques[0], icon:'⚗', priority:4, color:'eno'});
+  } else if(techniques.length >= 2){
+    out.push({text: techniques.join(' · '), icon:'⚗', priority:4, color:'eno'});
+  }
+
+  // Producción artesanal (sin filtración / sin sulfitos / mac. carbónica / champenoise)
+  const artisan = [];
+  if(enoMap.unfilt) artisan.push(_en?'unfiltered':'sin filtrar');
+  if(enoMap.noSO2) artisan.push(_en?'no SO₂':'sin sulfitos');
+  if(enoMap.carbonic) artisan.push(_en?'carbonic':'mac. carbónica');
+  if(enoMap.champ) artisan.push(_en?'méthode trad.':'método tradicional');
+  for(const a of artisan){
+    out.push({text: a, icon:'✦', priority:4, color:'artisan'});
+  }
+
+  // ── Prioridad 5: SENSORIAL ──
+  if(enoMap.body){
+    const BODY_LBL_ES = {ligero:'ligero',medio:'medio',cuerpo:'estructurado',potente:'potente'};
+    const BODY_LBL_EN = {ligero:'light',medio:'medium',cuerpo:'structured',potente:'powerful'};
+    out.push({text: _en ? BODY_LBL_EN[enoMap.body] : BODY_LBL_ES[enoMap.body], icon:'◐', priority:5, color:'sensorial'});
+  }
+  if(enoMap.aromas){
+    out.push({text: enoMap.aromas + (_en?' aroma fams.':' aromas'), icon:'❀', priority:5, color:'sensorial'});
+  }
+  if(enoMap.style){
+    const STYLE = {clasico:_en?'classic':'clásico',moderno:_en?'modern':'moderno'};
+    out.push({text: STYLE[enoMap.style], icon:'⌬', priority:5, color:'sensorial'});
+  }
+
+  // ── Maridajes (graduado, con top 3 en tooltip) ──
+  if(match.sharedPairings && match.sharedPairings.length >= 2){
+    const top3 = match.sharedPairings.slice(0, 3).join(', ');
+    out.push({text: (_en?'shares ':'') + match.sharedPairings.length + (_en?' pairings':' maridajes'), icon:'⊕', priority:5, color:'pairing', tooltip: top3});
+  }
+
+  // Recomendado (chip especial al final)
+  if(match.wine && match.wine.recommended){
+    out.push({text: _en?'house pick':'recomendado', icon:'★', priority:6, color:'star'});
+  }
+
+  // Datos parciales — chip neutro cuando cobertura incompleta
+  if(match.isPartial){
+    out.push({text: _en?'partial profile':'perfil parcial', icon:'◌', priority:6, color:'partial', tooltip: _en?'Some enology fields not detected from wine notes':'Algunos campos enológicos no se detectaron en las notas'});
+  }
+
+  // Out of stock — bandera crítica
+  if(match.outOfStock){
+    out.unshift({text: _en?'out of stock':'sin stock', icon:'⊘', priority:1, color:'pricier', tooltip: _en?'This wine is also marked as unavailable':'Este vino también está marcado sin stock'});
+  }
+
+  // Ya recomendado hoy (estado local de la sesión)
+  if(typeof _wineRecommendedToday === 'object' && _wineRecommendedToday[match.wine.id]){
+    out.push({text: _en?'already suggested today':'ya sugerido hoy', icon:'✓', priority:6, color:'neutral', tooltip:_en?'You recommended this earlier today':'Lo recomendaste antes hoy'});
+  }
+
+  // Estilo similar (cross-type) — específico por tipo
+  if(match.typeMatch === 'adjacent'){
+    const ADJ_LBL_ES = {blanco:'sustituto blanco',tinto:'sustituto tinto',rosado:'sustituto rosado',espumoso:'sustituto espumoso',dulce:'sustituto dulce'};
+    const ADJ_LBL_EN = {blanco:'white alt.',tinto:'red alt.',rosado:'rosé alt.',espumoso:'sparkling alt.',dulce:'sweet alt.'};
+    const wType = match.wine && match.wine.type;
+    const lbl = (_en ? ADJ_LBL_EN : ADJ_LBL_ES)[wType] || (_en?'similar style':'estilo similar');
+    out.unshift({text: lbl, icon:'~', priority:1, color:'adjacent'});
+  }
+
+  return out;
+}
+
+/**
+ * Genera chips bilingües (compatibilidad legacy).
+ * Devuelve array de strings cortos.
  */
 function _wineSimilarityChips(match, _en){
   const chips = [];
@@ -22601,7 +23143,13 @@ function _wineSimilarityChips(match, _en){
   if(match.typeMatch === 'adjacent'){
     chips.push(_en ? 'similar style' : 'estilo similar');
   }
-  // Uvas
+  // Bodega/productor (alta prioridad — chip gold)
+  if(match.sameWinery){
+    chips.push(_en ? '⌂ same winery' : '⌂ misma bodega');
+  } else if(match.bothVegaSicilia){
+    chips.push(_en ? '◆ Vega Sicilia family' : '◆ familia Vega Sicilia');
+  }
+  // Uvas (canónicas)
   if(match.sharedGrapes.length){
     if(match.sharedGrapes.length === 1){
       const g = match.sharedGrapes[0].replace(/\b\w/g, c => c.toUpperCase());
@@ -22610,15 +23158,20 @@ function _wineSimilarityChips(match, _en){
       chips.push((_en ? 'shared grapes: ' : 'uvas comunes: ') + match.sharedGrapes.length);
     }
   }
-  // Región / Origen
+  // Región / Origen / Geo neighbor
   if(match.sameRegion){
     chips.push(_en ? 'same DO' : 'misma DO');
   } else if(match.sameOrigin){
     chips.push(_en ? 'same region' : 'misma región');
+  } else if(match.geoNeighbor){
+    chips.push(_en ? 'neighboring region' : 'región vecina');
   }
   // Precio
   if(match.priceDiff !== null){
-    if(match.priceDiff < 0){
+    if(match.pricePenalty){
+      // Aviso visual — fuera de rango razonable
+      chips.push((match.priceDiff > 0 ? '+' : '−') + Math.abs(match.priceDiff) + '€ ⚠');
+    } else if(match.priceDiff < 0){
       chips.push('−' + Math.abs(match.priceDiff) + '€');
     } else if(match.priceDiff > 0){
       chips.push('+' + match.priceDiff + '€');
@@ -22626,7 +23179,7 @@ function _wineSimilarityChips(match, _en){
       chips.push(_en ? 'same price' : 'mismo precio');
     }
   }
-  // Maridajes
+  // Maridajes (graduado)
   if(match.sharedPairings.length >= 2){
     chips.push((_en ? 'shares ' : 'comparte ') + match.sharedPairings.length + (_en ? ' pairings' : ' maridajes'));
   }
@@ -22642,6 +23195,9 @@ function _wineSimilarityChips(match, _en){
     '19-24':_en?'19-24m':'19-24m crianza','25-36':_en?'25-36m':'25-36m crianza',
     '37+':_en?'37m+ aging':'37m+ crianza'
   };
+  const BODY_LBL_ES = {ligero:'cuerpo ligero',medio:'cuerpo medio',cuerpo:'estructurado',potente:'potente'};
+  const BODY_LBL_EN = {ligero:'light body',medio:'medium body',cuerpo:'structured',potente:'powerful'};
+  const STYLE_LBL = {clasico:_en?'classic style':'estilo clásico',moderno:_en?'modern style':'estilo moderno'};
   for(const m of eno){
     if(m.k === 'vessel') chips.push(VESSEL_LBL[m.v] || m.v);
     else if(m.k === 'oak') chips.push(OAK_LBL[m.v] || m.v);
@@ -22656,6 +23212,9 @@ function _wineSimilarityChips(match, _en){
     else if(m.k === 'noSO2') chips.push(_en?'no added SO₂':'sin sulfitos');
     else if(m.k === 'champ') chips.push(_en?'méthode trad.':'método tradicional');
     else if(m.k === 'carbonic') chips.push(_en?'carbonic mac.':'mac. carbónica');
+    else if(m.k === 'body') chips.push(_en ? BODY_LBL_EN[m.v] : BODY_LBL_ES[m.v]);
+    else if(m.k === 'aromas') chips.push((_en?'shares ':'comparte ') + m.v + (_en?' aroma fams.':' familias arom.'));
+    else if(m.k === 'style') chips.push(STYLE_LBL[m.v] || m.v);
   }
   // Recomendado al final
   if(match.wine.recommended){
@@ -22665,8 +23224,8 @@ function _wineSimilarityChips(match, _en){
 }
 
 /**
- * Renderiza la sección "Vinos similares" para la ficha de estudio (parchment).
- * Usa SVG ring para el porcentaje + chips de razones de similitud.
+ * Renderiza la sección "Vinos similares" v2 para la ficha de estudio.
+ * Mejor jerarquía visual, chips agrupados, mobile-first.
  */
 function _renderSimilarWinesSection(target, _en){
   const matches = findSimilarWines(target.id, 6);
@@ -22677,45 +23236,85 @@ function _renderSimilarWinesSection(target, _en){
     </div>`;
   }
   const subtitle = _en
-    ? 'If this wine is unavailable, recommend one of these alternatives.'
-    : 'Si este vino se acaba, sugiere una de estas alternativas.';
+    ? 'Ranked alternatives — if this wine runs out, suggest these in order.'
+    : 'Alternativas ordenadas — si se acaba, sugiérelas en este orden.';
 
-  // Colores del ring por % (verde alto, ámbar medio, rojo bajo)
-  const ringColor = pct => pct >= 70 ? '#4d8a5e' : pct >= 45 ? '#c49a3c' : '#a8564c';
+  const TYPE_LBL_ES = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
+  const TYPE_LBL_EN = {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'};
+  const MAX_VISIBLE_CHIPS = 6;
 
   const cards = matches.map((m, i) => {
     const w = m.wine;
-    const chips = _wineSimilarityChips(m, _en);
-    const typeLabel = _en
-      ? ({blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'}[w.type]||w.type)
-      : ({blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'}[w.type]||w.type);
-    const meta = `${typeLabel} · ${escapeHTML(w.origin||'')} · ${w.price?w.price+'€':''}`;
-    const circ = 2 * Math.PI * 24; // radius 24
+    const allChips = _consolidateChips(m, _en);
+    // Ordenar por prioridad (1=más importante)
+    allChips.sort((a,b) => a.priority - b.priority);
+
+    const typeLabel = (_en ? TYPE_LBL_EN : TYPE_LBL_ES)[w.type] || w.type;
+
+    // Ring SVG — radius 27 dentro de 64px box
+    const circ = 2 * Math.PI * 27;
     const offset = circ * (1 - m.scorePct / 100);
-    const color = ringColor(m.scorePct);
+    const scoreClass = m.scorePct >= 75 ? 'score-high' : m.scorePct >= 50 ? 'score-mid' : 'score-low';
 
-    const chipHtml = chips.map(c => {
-      let cls = '';
-      if(/−\d+€/.test(c) || /^-\d+€/.test(c)) cls = ' cheaper';
-      else if(/^\+\d+€/.test(c)) cls = ' pricier';
-      return `<span class="wine-similar-card-chip${cls}">${escapeHTML(c)}</span>`;
-    }).join('');
+    // Chips: top N visibles + "+N más" si hay más
+    // Insertar separador después del chip de precio (entre identidad/geo/precio y enología/sensorial)
+    const renderChip = c => {
+      const tip = c.tooltip ? c.tooltip : c.text;
+      return `<span class="wine-similar-card-chip c-${c.color}" title="${escapeHTML(tip)}"><span class="chip-ico">${c.icon}</span>${escapeHTML(c.text)}</span>`;
+    };
+    // Subdivide chips por prioridad para insertar separador visual
+    const buildChipBlock = (chips) => {
+      let html = '';
+      let lastPriority = 0;
+      chips.forEach(c => {
+        if(lastPriority > 0 && lastPriority <= 3 && c.priority >= 4){
+          html += '<span class="chip-sep" aria-hidden="true"></span>';
+        }
+        html += renderChip(c);
+        lastPriority = c.priority;
+      });
+      return html;
+    };
 
-    return `<button class="wine-similar-card" type="button" onclick="_showWineDetail(${w.id})">
-      <div class="wine-similar-pct-ring">
-        <svg width="54" height="54" viewBox="0 0 54 54">
-          <circle class="ring-bg" cx="27" cy="27" r="24"/>
-          <circle class="ring-fg" cx="27" cy="27" r="24"
-            stroke="${color}"
+    const visibleChips = allChips.slice(0, MAX_VISIBLE_CHIPS);
+    const hiddenChips = allChips.slice(MAX_VISIBLE_CHIPS);
+    const visibleHtml = buildChipBlock(visibleChips);
+    const cardId = 'wsc_' + w.id + '_' + i;
+    const hiddenHtml = hiddenChips.length
+      ? `<span id="${cardId}_extra" style="display:none">${buildChipBlock(hiddenChips)}</span>
+         <button class="wine-similar-more" type="button" onclick="event.stopPropagation();var e=document.getElementById('${cardId}_extra');var b=this;if(e.style.display==='none'){e.style.display='inline';b.textContent='✕ ${_en?'hide':'ocultar'}'}else{e.style.display='none';b.textContent='+${hiddenChips.length} ${_en?'more':'más'}'}">+${hiddenChips.length} ${_en?'more':'más'}</button>`
+      : '';
+
+    // Ícono de tipo de vino (hex)
+    const TYPE_ICON = {blanco:'◇',tinto:'◆',rosado:'◈',espumoso:'⌬',dulce:'◉'};
+    const typeIcon = TYPE_ICON[w.type] || '◇';
+
+    const oosStamp = m.outOfStock ? `<div class="wine-similar-card-oos-stamp" aria-label="${_en?'out of stock':'sin stock'}">⊘ ${_en?'no stock':'sin stock'}</div>` : '';
+    const oosClass = m.outOfStock ? ' wsl-oos' : '';
+    return `<button class="wine-similar-card wt-${w.type}${oosClass}" type="button" onclick="_showWineDetail(${w.id})" aria-label="${escapeHTML(w.name)} — ${m.scorePct}% ${_en?'similar':'similar'}${m.outOfStock?(_en?' (out of stock)':' (sin stock)'):''}">
+      ${oosStamp}
+      <div class="wine-similar-pct-ring ${scoreClass}">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"/>
+          <circle class="ring-fg" cx="32" cy="32" r="27"
             stroke-dasharray="${circ.toFixed(2)}"
             stroke-dashoffset="${offset.toFixed(2)}"/>
         </svg>
-        <div class="wine-similar-pct-num">${m.scorePct}%</div>
+        <div class="wine-similar-pct-num">${m.scorePct}<sub>%</sub></div>
       </div>
       <div class="wine-similar-info">
-        <div class="wine-similar-card-name">${escapeHTML(w.name)}</div>
-        <div class="wine-similar-card-meta">${meta}</div>
-        ${chipHtml ? `<div class="wine-similar-card-chips">${chipHtml}</div>` : ''}
+        <div class="wine-similar-head">
+          <div class="wine-similar-card-name">${escapeHTML(w.name)}</div>
+          ${w.price?`<div class="wine-similar-card-price">${w.price}€</div>`:''}
+        </div>
+        <div class="wine-similar-card-meta">
+          <span class="meta-type-icon" aria-hidden="true">${typeIcon}</span>
+          <span class="meta-type">${typeLabel}</span>
+          <span class="meta-dot">·</span>
+          <span>${escapeHTML(w.origin||'')}</span>
+          ${w.year?`<span class="meta-dot">·</span><span>${w.year}</span>`:''}
+        </div>
+        <div class="wine-similar-card-chips">${visibleHtml}${hiddenHtml}</div>
       </div>
     </button>`;
   }).join('');
@@ -34138,21 +34737,27 @@ function _svcToggleSimilar(wineId){
     </div>`;
     return;
   }
+  const TYPE_LBL_ES = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
+  const TYPE_LBL_EN = {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'};
   const items = matches.map(m => {
     const w = m.wine;
-    const chips = _wineSimilarityChips(m, _en);
-    const typeLabel = _en
-      ? ({blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'}[w.type]||w.type)
-      : ({blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'}[w.type]||w.type);
+    const allChips = _consolidateChips(m, _en);
+    allChips.sort((a,b) => a.priority - b.priority);
+    // En sala mostramos compacto: top 5 chips esenciales
+    const topChips = allChips.slice(0, 5);
+    const typeLabel = (_en ? TYPE_LBL_EN : TYPE_LBL_ES)[w.type] || w.type;
     const meta = `${typeLabel} · ${escapeHTML(w.origin||'')}${w.price?' · '+w.price+'€':''}`;
-    const pctColor = m.scorePct >= 70 ? '#a8d8b0' : m.scorePct >= 45 ? '#e8c275' : '#e88070';
-    const chipHtml = chips.map(c => {
+    const pctColor = m.scorePct >= 75 ? '#a8d8b0' : m.scorePct >= 50 ? '#e8c275' : '#e88070';
+    const chipHtml = topChips.map(c => {
       let cls = '';
-      if(/^−\d+€/.test(c) || /^-\d+€/.test(c)) cls = ' cheaper';
-      else if(/^\+\d+€/.test(c)) cls = ' pricier';
-      return `<span class="svc-similar-chip${cls}">${escapeHTML(c)}</span>`;
+      if(c.color === 'cheaper') cls = ' cheaper';
+      else if(c.color === 'pricier') cls = ' pricier';
+      else if(c.color === 'gold-strong' || c.color === 'star') cls = ' gold';
+      return `<span class="svc-similar-chip${cls}">${escapeHTML(c.text)}</span>`;
     }).join('');
-    return `<div class="svc-similar-item" style="--svc-pct:${m.scorePct};--svc-pct-color:${pctColor}">
+    const oosClass = m.outOfStock ? ' svc-oos' : '';
+    const recClass = (_wineRecommendedToday[w.id]) ? ' svc-already-rec' : '';
+    return `<div class="svc-similar-item${oosClass}${recClass}" style="--svc-pct:${m.scorePct};--svc-pct-color:${pctColor}" onclick="markWineRecommended(${w.id});this.classList.add('svc-already-rec');">
       <div class="svc-similar-pct" data-pct="${m.scorePct}"><span class="svc-similar-pct-inner">${m.scorePct}%</span></div>
       <div class="svc-similar-name">${escapeHTML(w.name)}</div>
       <div class="svc-similar-meta">${meta}</div>
