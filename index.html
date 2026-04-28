@@ -1473,73 +1473,229 @@ body::after{
   box-shadow:0 3px 10px rgba(28,42,34,.08);
 }
 
-/* ── CTA ── */
+/* ═══════════════════════════════════════════════════════════
+   ── CTA Matrix × NieR:Automata · "ENTRAR EN SIMULACIÓN" ──
+   Concepto: terminal CRT verde fosforescente con brackets NieR,
+   scanlines, glitch sutil, lluvia de glifos en fondo, glow neon.
+   ═══════════════════════════════════════════════════════════ */
 .ri-cta-wrap{
-  display:flex;flex-direction:column;gap:.6rem;
+  display:flex;flex-direction:column;gap:.65rem;
   padding-top:1.2rem;border-top:1px solid rgba(28,42,34,.08);
 }
 .ri-cta{
-  position:relative;display:flex;align-items:center;justify-content:center;gap:.95rem;
-  padding:1.1rem 1.3rem;width:100%;
+  position:relative;display:flex;align-items:center;justify-content:flex-start;gap:1.1rem;
+  padding:1.2rem 1.4rem 1.2rem 1.6rem;width:100%;
+  /* Fondo: negro profundo con gradient verde-cyber */
   background:
-    linear-gradient(135deg,#2d5c44 0%,#4a8f6f 50%,#2d5c44 100%);
-  background-size:200% 100%;background-position:0% 50%;
-  border:none;border-radius:14px;color:#fff6e2;cursor:pointer;
-  font-family:'Cinzel',serif;font-weight:600;
+    radial-gradient(ellipse at 30% 50%,rgba(0,255,65,.08),transparent 60%),
+    radial-gradient(ellipse at 70% 50%,rgba(0,200,90,.04),transparent 60%),
+    linear-gradient(135deg,#020a06 0%,#04140a 50%,#020a06 100%);
+  /* NieR brackets — clip-path corner cuts */
+  clip-path:polygon(
+    14px 0%, calc(100% - 14px) 0%, 100% 14px,
+    100% calc(100% - 14px), calc(100% - 14px) 100%,
+    14px 100%, 0% calc(100% - 14px), 0% 14px);
+  border:none;
+  color:#7fff9f;cursor:pointer;
+  font-family:'DM Mono',monospace;
   box-shadow:
-    0 1px 0 rgba(255,255,255,.2) inset,
-    0 2px 0 #1f4431,
-    0 8px 22px rgba(45,92,68,.32),
-    0 0 0 1px rgba(196,154,60,.2);
-  transition:all .35s cubic-bezier(.2,.8,.3,1);
+    inset 0 0 0 1px rgba(0,255,90,.35),
+    inset 0 0 30px rgba(0,255,65,.05),
+    0 0 0 1px rgba(0,180,80,.18),
+    0 4px 16px rgba(0,255,65,.18),
+    0 0 40px rgba(0,255,90,.08);
+  transition:all .25s cubic-bezier(.2,.8,.3,1);
   overflow:hidden;
+  isolation:isolate;
+  letter-spacing:.05em;
+  -webkit-tap-highlight-color:transparent;
 }
+
+/* Scanlines CRT — líneas horizontales sutiles */
 .ri-cta::before{
-  content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,246,226,.22),transparent);
-  transform:skewX(-25deg);
-  animation:ri-sweep 3.5s ease-in-out infinite;
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    rgba(0,255,90,.03) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode:screen;
+  animation:ri-scanlines 6s linear infinite;
 }
-@keyframes ri-sweep{
-  0%,60%{ left:-80% }
-  100%{ left:180% }
+@keyframes ri-scanlines{
+  0%   { transform:translateY(0) }
+  100% { transform:translateY(8px) }
 }
+
+/* Lluvia de glifos Matrix en background — usa pseudo data-codes */
+.ri-cta::after{
+  content:'01001011 11010001 00110101 0XF42A 11001001';
+  position:absolute;top:50%;right:1rem;transform:translateY(-50%);
+  font-family:'DM Mono',monospace;font-size:.42rem;
+  color:rgba(0,255,90,.18);letter-spacing:.15em;line-height:1.3;
+  white-space:nowrap;pointer-events:none;z-index:1;
+  text-shadow:0 0 6px rgba(0,255,90,.4);
+  animation:ri-cta-drip 4s linear infinite;
+}
+@keyframes ri-cta-drip{
+  0%,100% { opacity:.18 }
+  50%     { opacity:.42 }
+}
+
+/* Glow flicker — parpadeo CRT muy sutil */
+.ri-cta{ animation:ri-cta-flicker 7s infinite }
+@keyframes ri-cta-flicker{
+  0%,98%,100% { box-shadow:
+    inset 0 0 0 1px rgba(0,255,90,.35),
+    inset 0 0 30px rgba(0,255,65,.05),
+    0 0 0 1px rgba(0,180,80,.18),
+    0 4px 16px rgba(0,255,65,.18),
+    0 0 40px rgba(0,255,90,.08) }
+  98.5% { box-shadow:
+    inset 0 0 0 1px rgba(0,255,90,.55),
+    inset 0 0 35px rgba(0,255,65,.12),
+    0 0 0 1px rgba(0,200,90,.3),
+    0 4px 22px rgba(0,255,65,.3),
+    0 0 60px rgba(0,255,90,.18) }
+}
+
 .ri-cta:hover{
-  background-position:100% 50%;transform:translateY(-2px);
+  transform:translateY(-1px);
+  color:#aeffc4;
   box-shadow:
-    0 1px 0 rgba(255,255,255,.28) inset,
-    0 3px 0 #1f4431,
-    0 14px 30px rgba(45,92,68,.42),
-    0 0 0 1px rgba(196,154,60,.4);
+    inset 0 0 0 1px rgba(0,255,120,.7),
+    inset 0 0 40px rgba(0,255,90,.15),
+    0 0 0 1px rgba(0,200,100,.4),
+    0 6px 24px rgba(0,255,90,.32),
+    0 0 60px rgba(0,255,90,.22);
 }
-.ri-cta:active{ transform:translateY(1px);box-shadow:0 1px 0 #1f4431 }
+.ri-cta:active{
+  transform:translateY(0);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,255,140,.85),
+    inset 0 0 20px rgba(0,255,90,.2),
+    0 0 30px rgba(0,255,90,.4);
+}
+
+/* Bracket corners — overlay decorativo NieR */
+.ri-cta-bracket{
+  position:absolute;width:20px;height:20px;pointer-events:none;z-index:3;
+  border:1.5px solid rgba(0,255,120,.7);
+  filter:drop-shadow(0 0 4px rgba(0,255,90,.6));
+}
+.ri-cta-bracket.tl{ top:6px;left:6px;border-right:none;border-bottom:none }
+.ri-cta-bracket.tr{ top:6px;right:6px;border-left:none;border-bottom:none }
+.ri-cta-bracket.bl{ bottom:6px;left:6px;border-right:none;border-top:none }
+.ri-cta-bracket.br{ bottom:6px;right:6px;border-left:none;border-top:none }
+
+/* Icon — círculo neón con triángulo play vibrante */
 .ri-cta-icon{
+  position:relative;z-index:2;
   display:flex;align-items:center;justify-content:center;
-  width:38px;height:38px;border-radius:50%;
-  background:linear-gradient(145deg,rgba(255,246,226,.22),rgba(255,246,226,.08));
-  border:1px solid rgba(255,246,226,.2);
-  color:#fff6e2;flex-shrink:0;
-  box-shadow:0 1px 0 rgba(255,255,255,.15) inset;
+  width:42px;height:42px;
+  /* Hex shape NieR */
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(165deg,rgba(0,255,90,.18),rgba(0,255,90,.04));
+  color:#bbffce;flex-shrink:0;
+  filter:drop-shadow(0 0 8px rgba(0,255,90,.6));
+  animation:ri-cta-icon-pulse 2.4s ease-in-out infinite;
 }
-.ri-cta-text{ display:flex;flex-direction:column;align-items:flex-start;gap:.2rem }
+.ri-cta-icon::before{
+  content:'';position:absolute;inset:2px;
+  clip-path:inherit;
+  background:radial-gradient(circle,rgba(0,255,90,.14),transparent 70%);
+}
+@keyframes ri-cta-icon-pulse{
+  0%,100% { filter:drop-shadow(0 0 8px rgba(0,255,90,.6)) }
+  50%     { filter:drop-shadow(0 0 14px rgba(0,255,140,.85)) }
+}
+
+.ri-cta-text{ display:flex;flex-direction:column;align-items:flex-start;gap:.32rem;position:relative;z-index:2;flex:1 }
+
+/* Texto principal — NieR style elegante con glow */
 .ri-cta-top{
-  font-size:.95rem;font-weight:700;letter-spacing:.22em;
-  color:#fff6e2;
+  font-family:'Cinzel',serif;font-size:1rem;font-weight:600;
+  letter-spacing:.28em;
+  color:#dffff0;
+  text-shadow:
+    0 0 4px rgba(0,255,90,.7),
+    0 0 12px rgba(0,255,90,.45),
+    0 0 24px rgba(0,255,90,.2);
+  position:relative;
 }
+/* Cursor parpadeante terminal */
+.ri-cta-top::after{
+  content:'_';
+  display:inline-block;margin-left:.18em;
+  color:#7fff9f;font-weight:400;
+  animation:ri-cta-caret 1.1s step-end infinite;
+  text-shadow:0 0 6px rgba(0,255,90,.9);
+}
+@keyframes ri-cta-caret{ 50%{ opacity:0 } }
+
+/* Glitch ligero en texto principal — solo en hover */
+.ri-cta:hover .ri-cta-top{
+  animation:ri-cta-glitch .35s steps(2,end) 1;
+}
+@keyframes ri-cta-glitch{
+  0%   { transform:translate(0);text-shadow:0 0 4px rgba(0,255,90,.7),0 0 12px rgba(0,255,90,.45) }
+  20%  { transform:translate(-1px,1px);text-shadow:1.5px 0 #ff0080,-1.5px 0 #00fff5,0 0 12px rgba(0,255,90,.6) }
+  40%  { transform:translate(1px,-1px);text-shadow:-1.5px 0 #ff0080,1.5px 0 #00fff5,0 0 12px rgba(0,255,90,.6) }
+  60%  { transform:translate(-1px,0);text-shadow:1px 0 #ff0080,-1px 0 #00fff5,0 0 14px rgba(0,255,90,.7) }
+  100% { transform:translate(0);text-shadow:0 0 4px rgba(0,255,90,.7),0 0 12px rgba(0,255,90,.45) }
+}
+
+/* Subtítulo — terminal style con brackets */
 .ri-cta-sub{
-  font-family:'DM Mono',monospace;font-size:.56rem;font-weight:400;
-  color:rgba(255,246,226,.82);letter-spacing:.08em;text-transform:uppercase;
+  font-family:'DM Mono',monospace;font-size:.55rem;font-weight:500;
+  color:rgba(127,255,159,.78);letter-spacing:.18em;text-transform:uppercase;
+  display:flex;align-items:center;gap:.45rem;
+  text-shadow:0 0 5px rgba(0,255,90,.4);
 }
+.ri-cta-sub::before{
+  content:'>';
+  color:#7fff9f;
+  margin-right:.1rem;
+  text-shadow:0 0 5px rgba(0,255,90,.7);
+  animation:ri-cta-caret 1.4s step-end infinite;
+}
+
+/* Status indicator — pequeño chip terminal a la derecha */
+.ri-cta-status{
+  position:relative;z-index:2;
+  display:inline-flex;align-items:center;gap:.4rem;
+  margin-left:auto;
+  font-family:'DM Mono',monospace;font-size:.5rem;
+  color:rgba(127,255,159,.7);letter-spacing:.18em;
+  white-space:nowrap;
+}
+.ri-cta-status::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:#00ff5a;
+  box-shadow:0 0 8px rgba(0,255,90,.95),0 0 16px rgba(0,255,90,.5);
+  animation:ri-cta-pulse-dot 1.3s ease-in-out infinite;
+}
+@keyframes ri-cta-pulse-dot{
+  0%,100%{ opacity:.55;transform:scale(.85) }
+  50%    { opacity:1;   transform:scale(1.05) }
+}
+
+/* Secondary button — terminal-style discreto */
 .ri-secondary{
-  background:transparent;border:1px solid rgba(28,42,34,.15);
-  color:#6b7e73;cursor:pointer;
+  background:transparent;border:1px solid rgba(0,180,80,.18);
+  color:#7a8b80;cursor:pointer;
   font-family:'DM Mono',monospace;font-size:.6rem;font-weight:500;
-  letter-spacing:.12em;padding:.65rem 1rem;border-radius:10px;
+  letter-spacing:.16em;padding:.7rem 1rem;border-radius:8px;
   transition:all .22s;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:.4rem;
 }
 .ri-secondary:hover{
-  border-color:#c49a3c;color:#1c2a22;
-  background:rgba(196,154,60,.06);
+  border-color:rgba(0,255,90,.45);color:#aeffc4;
+  background:rgba(0,255,90,.04);
+  text-shadow:0 0 6px rgba(0,255,90,.4);
+  box-shadow:0 0 12px rgba(0,255,90,.12);
 }
 
 @media(max-width:640px){
@@ -1579,9 +1735,14 @@ body::after{
 ───────────────────────────────────────────────── */
 .tunic-subtabs{
   position:relative;z-index:5;
-  display:flex;gap:.5rem;margin:0 auto 1.6rem;overflow-x:auto;
+  display:flex;gap:.5rem;margin:0 auto 1.6rem;overflow-x:auto;overflow-y:hidden;
   padding:.55rem .7rem;
   scrollbar-width:none;isolation:isolate;
+  flex-wrap:nowrap;
+  -webkit-overflow-scrolling:touch;
+  scroll-padding:0 1rem;
+  scroll-snap-type:x proximity;
+  max-width:100%;
   /* manuscript panel — subtle parchment backdrop + hex pattern */
   background:
     radial-gradient(ellipse 70% 120% at 50% -20%, rgba(228,196,122,.16) 0%, rgba(228,196,122,.04) 45%, transparent 75%),
@@ -1613,13 +1774,15 @@ body::after{
 }
 
 .tunic-stab{
-  position:relative;flex-shrink:0;
+  position:relative;flex:0 0 auto;flex-shrink:0;
   display:flex;align-items:center;gap:.4rem;
-  padding:.55rem 1rem .6rem;
+  padding:.55rem .85rem .6rem;
   border-radius:9px;
   font-family:'Cinzel',serif;font-size:.62rem;font-weight:500;cursor:pointer;
   white-space:nowrap;
-  letter-spacing:.16em;text-transform:uppercase;
+  letter-spacing:.14em;text-transform:uppercase;
+  scroll-snap-align:center;
+  min-width:max-content;
   color:rgba(74,64,42,.75);
   background:transparent;
   border:1px solid transparent;
@@ -4843,72 +5006,200 @@ body::after{
 .wine-similar-title{font-family:'Cinzel',serif;font-size:1rem;color:#5b461c;letter-spacing:.08em;margin-bottom:.25rem;display:flex;align-items:center;gap:.55rem;text-transform:uppercase}
 .wine-similar-title::before{content:'';width:24px;height:24px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#e8c275,#c49a3c);display:inline-block}
 .wine-similar-sub{font-family:'Cormorant Garamond','Georgia',serif;font-style:italic;font-size:.82rem;color:#7a6638;margin-bottom:1rem;line-height:1.45;padding-left:.1rem}
-/* Grid responsive: 1 col mobile, 2 cols ≥640px */
-.wine-similar-list{display:grid;grid-template-columns:1fr;gap:.7rem}
-@media(min-width:640px){.wine-similar-list{grid-template-columns:1fr 1fr;gap:.8rem}}
+/* ════════════════════════════════════════════════════════════
+   Vinos Similares v5 — HERO + COMPACT con jerarquía narrativa
+   ════════════════════════════════════════════════════════════ */
+@keyframes wsim-fade-up{
+  from{opacity:0;transform:translateY(12px)}
+  to  {opacity:1;transform:translateY(0)}
+}
 
-/* ── Card individual ── */
-.wine-similar-card{position:relative;display:grid;grid-template-columns:64px 1fr;gap:.85rem;align-items:flex-start;padding:.85rem .9rem .85rem .85rem;background:linear-gradient(155deg,#faf6ee,#f7efdc);border:1px solid rgba(196,154,60,.22);border-left:4px solid var(--wsl-accent,rgba(196,154,60,.5));border-radius:12px;cursor:pointer;transition:all .25s cubic-bezier(.22,1,.36,1);text-align:left;font:inherit;color:inherit;width:100%;overflow:hidden}
-.wine-similar-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent);opacity:.7}
-.wine-similar-card:hover{border-color:rgba(196,154,60,.6);transform:translateY(-2px);box-shadow:0 6px 18px rgba(196,154,60,.18),0 1px 0 rgba(255,255,255,.7) inset}
-.wine-similar-card:active{transform:translateY(0)}
-/* Color por tipo de vino — border-left + accent del ring */
-.wine-similar-card.wt-tinto{--wsl-accent:#a8564c;--wsl-accent-soft:rgba(168,86,76,.12)}
-.wine-similar-card.wt-blanco{--wsl-accent:#c4a854;--wsl-accent-soft:rgba(196,168,84,.15)}
-.wine-similar-card.wt-rosado{--wsl-accent:#d49aa8;--wsl-accent-soft:rgba(212,154,168,.18)}
-.wine-similar-card.wt-espumoso{--wsl-accent:#7ec8e3;--wsl-accent-soft:rgba(126,200,227,.15)}
-.wine-similar-card.wt-dulce{--wsl-accent:#d4944c;--wsl-accent-soft:rgba(212,148,76,.15)}
+/* ── HERO CARD (sustituto #1 — mejor alternativa) ── */
+.wine-similar-hero{
+  position:relative;display:flex;flex-direction:column;width:100%;text-align:left;
+  padding:0;margin-bottom:1.1rem;
+  background:linear-gradient(155deg,#faf6ee,#f7efdc);
+  border:1.5px solid rgba(196,154,60,.4);
+  border-left:4px solid var(--wsl-accent,#c49a3c);
+  border-radius:16px;cursor:pointer;font:inherit;color:inherit;
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 4px 18px rgba(196,154,60,.15), 0 0 0 1px rgba(196,154,60,.08);
+  overflow:hidden;
+  transition:all .3s cubic-bezier(.22,1,.36,1);
+  animation:wsim-fade-up .55s cubic-bezier(.22,1,.36,1) both;
+}
+.wine-similar-hero:hover{
+  border-color:rgba(196,154,60,.65);transform:translateY(-2px);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 8px 26px rgba(196,154,60,.22), 0 0 0 1px rgba(196,154,60,.18);
+}
+.wine-similar-hero:active{transform:translateY(0)}
+.wine-similar-hero.wt-tinto    {--wsl-accent:#a8564c}
+.wine-similar-hero.wt-blanco   {--wsl-accent:#c4a854}
+.wine-similar-hero.wt-rosado   {--wsl-accent:#d49aa8}
+.wine-similar-hero.wt-espumoso {--wsl-accent:#7ec8e3}
+.wine-similar-hero.wt-dulce    {--wsl-accent:#d4944c}
+.wine-similar-hero.wt-generoso {--wsl-accent:#c49a3c}
 
-/* ── Ring de % grande y prominente ── */
-.wine-similar-pct-ring{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.wine-similar-pct-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
-.wine-similar-pct-ring .ring-bg{fill:none;stroke:var(--wsl-accent-soft,rgba(196,154,60,.12));stroke-width:5}
-.wine-similar-pct-ring .ring-fg{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.22,1,.36,1)}
-.wine-similar-pct-ring.score-high .ring-fg{stroke:#4d8a5e}
-.wine-similar-pct-ring.score-mid .ring-fg{stroke:#c49a3c}
-.wine-similar-pct-ring.score-low .ring-fg{stroke:#b8745c}
-.wine-similar-pct-num{position:relative;z-index:2;font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:#3a2a1a;line-height:1;letter-spacing:-.02em}
-.wine-similar-pct-num sub{font-family:'DM Mono',monospace;font-size:.5rem;color:#a08b56;font-weight:500;vertical-align:baseline;margin-left:1px}
+.wine-similar-hero-crown{
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  padding:.45rem 1rem;
+  background:linear-gradient(180deg,rgba(196,154,60,.18),rgba(196,154,60,.08));
+  border-bottom:1px solid rgba(196,154,60,.22);
+  font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;
+  letter-spacing:.22em;color:#7a5e1c;text-transform:uppercase;
+}
+.wsh-crown-mark{color:#c49a3c;font-size:.85rem;line-height:1}
+.wsh-crown-text{position:relative;text-shadow:0 1px 0 rgba(255,255,255,.5)}
 
-/* ── Info principal ── */
-.wine-similar-info{min-width:0;display:flex;flex-direction:column;gap:.32rem}
-.wine-similar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem}
-.wine-similar-card-name{font-family:'Cinzel',serif;font-size:.92rem;font-weight:600;color:#2a1a0d;letter-spacing:.02em;line-height:1.18;flex:1;min-width:0;word-wrap:break-word;overflow-wrap:break-word}
-.wine-similar-card-price{font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--wsl-accent,#c49a3c);white-space:nowrap;line-height:1;padding-top:.1rem}
-.wine-similar-card-meta{font-family:'DM Mono',monospace;font-size:.58rem;color:#7a6638;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem;flex-wrap:wrap}
-.wine-similar-card-meta .meta-dot{color:rgba(122,102,56,.4)}
-.wine-similar-card-meta .meta-type{color:var(--wsl-accent,#7a6638);font-weight:600}
-.wine-similar-card-meta .meta-type-icon{color:var(--wsl-accent,#7a6638);font-size:.85rem;line-height:1;margin-right:-.05rem}
-/* Ripple gold al tap (micro-feedback) */
-.wine-similar-card{position:relative;overflow:hidden}
-.wine-similar-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(196,154,60,.25),transparent 40%);opacity:0;transition:opacity .35s;pointer-events:none}
-.wine-similar-card:active::before{opacity:1;transition:opacity .05s}
+.wine-similar-hero-body{
+  display:grid;grid-template-columns:auto 1fr;gap:1rem;
+  padding:1rem 1.1rem 1.1rem;align-items:flex-start;
+}
+.wine-similar-hero-ring{position:relative;width:92px;height:92px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wine-similar-hero-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
+.wine-similar-hero-ring .ring-bg{fill:none;stroke:rgba(196,154,60,.15);stroke-width:4.5}
+.wine-similar-hero-ring .ring-fg{fill:none;stroke-width:4.5;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1)}
+.wine-similar-hero-ring.score-high .ring-fg{stroke:#9a7a4c}
+.wine-similar-hero-ring.score-mid  .ring-fg{stroke:#c49a3c}
+.wine-similar-hero-ring.score-low  .ring-fg{stroke:#d8b878}
+.wine-similar-hero-pct{position:relative;z-index:2;font-family:'Cinzel',serif;font-size:1.55rem;font-weight:700;color:#3a2a1a;line-height:1;letter-spacing:-.02em}
+.wine-similar-hero-pct sub{font-family:'DM Mono',monospace;font-size:.55rem;color:#a08b56;font-weight:400;vertical-align:baseline;margin-left:1px}
 
-/* ── Chips agrupados (v3 — legibles, accesibles, con separador visual) ── */
-.wine-similar-card-chips{display:flex;flex-wrap:wrap;gap:.32rem;margin-top:.2rem;align-items:center}
-.wine-similar-card-chip{display:inline-flex;align-items:center;gap:.28rem;font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:500;padding:.25rem .55rem;border-radius:10px;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.22);color:#4a3a18;letter-spacing:.01em;white-space:nowrap;line-height:1.2;transition:all .15s}
-.wine-similar-card-chip .chip-ico{font-size:.78rem;opacity:.85;line-height:1}
-/* Separador entre categorías de chips (uva/geo → enología) */
-.wine-similar-card-chips .chip-sep{display:inline-block;width:1px;height:14px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.35),transparent);margin:0 .12rem;flex-shrink:0}
-/* Variantes por categoría — legibles + buen contraste WCAG */
-.wine-similar-card-chip.c-gold-strong{background:linear-gradient(155deg,rgba(196,154,60,.28),rgba(196,154,60,.12));border-color:rgba(196,154,60,.55);color:#4a3712;font-weight:700;font-size:.7rem}
-.wine-similar-card-chip.c-grape{background:rgba(122,68,108,.1);border-color:rgba(122,68,108,.3);color:#6d3c5f;font-weight:600;font-size:.7rem}
-.wine-similar-card-chip.c-geo{background:rgba(77,138,94,.1);border-color:rgba(77,138,94,.28);color:#356b44}
-.wine-similar-card-chip.c-cheaper{background:rgba(122,178,132,.16);border-color:rgba(122,178,132,.4);color:#2d6b3e;font-weight:700}
-.wine-similar-card-chip.c-pricier{background:rgba(193,74,58,.12);border-color:rgba(193,74,58,.34);color:#8e3e30;font-weight:700}
-.wine-similar-card-chip.c-neutral{background:rgba(122,102,56,.08);border-color:rgba(122,102,56,.24);color:#5b461c}
-.wine-similar-card-chip.c-eno{background:rgba(91,70,28,.08);border-color:rgba(91,70,28,.24);color:#4a3a18}
-.wine-similar-card-chip.c-tier{background:linear-gradient(155deg,rgba(170,140,80,.18),rgba(170,140,80,.08));border-color:rgba(170,140,80,.4);color:#5b461c;text-transform:uppercase;font-size:.6rem;letter-spacing:.1em;font-weight:700}
-.wine-similar-card-chip.c-artisan{background:rgba(122,106,170,.08);border-color:rgba(122,106,170,.26);color:#4d3a78;font-style:italic}
-.wine-similar-card-chip.c-sensorial{background:rgba(196,112,104,.08);border-color:rgba(196,112,104,.26);color:#8e3e30}
-.wine-similar-card-chip.c-pairing{background:rgba(196,154,60,.08);border-color:rgba(196,154,60,.22);color:#5b461c}
-.wine-similar-card-chip.c-star{background:linear-gradient(155deg,rgba(232,194,117,.4),rgba(196,154,60,.2));border-color:rgba(196,154,60,.6);color:#5b461c;font-weight:700}
-.wine-similar-card-chip.c-adjacent{background:rgba(126,200,227,.1);border-color:rgba(126,200,227,.3);color:#3d6b80;font-style:italic;font-weight:600}
-.wine-similar-card-chip.c-partial{background:rgba(150,140,120,.08);border-color:rgba(150,140,120,.28);color:#6e5e3e;font-style:italic;font-size:.6rem}
+.wine-similar-hero-info{min-width:0;display:flex;flex-direction:column;gap:.4rem}
+.wine-similar-hero-pctlbl{
+  font-family:'DM Mono',monospace;font-size:.55rem;font-weight:700;
+  color:#7a5e1c;letter-spacing:.18em;
+  display:inline-flex;align-self:flex-start;
+  padding:.18rem .55rem;border-radius:6px;
+  background:linear-gradient(155deg,rgba(196,154,60,.18),rgba(196,154,60,.06));
+  border:1px solid rgba(196,154,60,.32);
+}
+.wine-similar-hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem}
+.wine-similar-hero-name{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:600;color:#2a1a0d;letter-spacing:.02em;line-height:1.18;flex:1;min-width:0;word-wrap:break-word}
+.wine-similar-hero-price{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--wsl-accent,#c49a3c);white-space:nowrap;line-height:1;padding-top:.1rem}
+.wine-similar-hero-meta{font-family:'DM Mono',monospace;font-size:.6rem;color:#7a6638;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem;flex-wrap:wrap}
+.wine-similar-hero-meta .wsh-dot{color:rgba(122,102,56,.4)}
+.wine-similar-hero-meta .wsh-type{color:var(--wsl-accent,#7a6638);font-weight:600}
+.wine-similar-hero-meta .wsh-type-icon{color:var(--wsl-accent,#7a6638);font-size:.9rem;line-height:1}
 
-/* Botón "+N más" — tap target 44px WCAG mobile */
-.wine-similar-more{display:inline-flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.62rem;font-weight:600;padding:.45rem .8rem;min-height:32px;border-radius:10px;background:linear-gradient(155deg,rgba(196,154,60,.06),rgba(196,154,60,.02));border:1px dashed rgba(196,154,60,.45);color:#7a6638;letter-spacing:.1em;cursor:pointer;transition:all .15s;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.wine-similar-more:hover,.wine-similar-more:active{background:linear-gradient(155deg,rgba(196,154,60,.18),rgba(196,154,60,.08));border-color:rgba(196,154,60,.7);color:#5b461c;border-style:solid}
+.wine-similar-hero-narrative{
+  font-family:'Cormorant Garamond','Georgia',serif;font-style:italic;
+  font-size:.92rem;color:#5b461c;line-height:1.45;
+  margin:.15rem 0;padding:.45rem .65rem;
+  background:rgba(196,154,60,.05);border-left:2px solid rgba(196,154,60,.4);
+  border-radius:0 6px 6px 0;
+}
+.wine-similar-hero-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.1rem}
+
+/* ── COMPACT CARDS (sustitutos #2-#6) ── */
+.wine-similar-compact-grid{display:grid;grid-template-columns:1fr;gap:.65rem}
+@media(min-width:580px){.wine-similar-compact-grid{grid-template-columns:1fr 1fr;gap:.7rem}}
+
+.wine-similar-compact{
+  position:relative;display:grid;grid-template-columns:62px 1fr;gap:.7rem;
+  align-items:flex-start;padding:.7rem .8rem;
+  background:linear-gradient(155deg,#faf6ee,#f7efdc);
+  border:1px solid rgba(196,154,60,.22);
+  border-left:3px solid var(--wsl-accent,#c49a3c);
+  border-radius:11px;cursor:pointer;
+  text-align:left;font:inherit;color:inherit;width:100%;overflow:hidden;
+  transition:all .25s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset;
+  animation:wsim-fade-up .5s cubic-bezier(.22,1,.36,1) both;
+  --wsl-accent:#c49a3c;
+}
+.wine-similar-compact:hover{
+  border-color:rgba(196,154,60,.5);transform:translateY(-1px);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 5px 14px rgba(196,154,60,.15);
+}
+.wine-similar-compact:active{transform:translateY(0)}
+.wine-similar-compact.wt-tinto    {--wsl-accent:#a8564c}
+.wine-similar-compact.wt-blanco   {--wsl-accent:#c4a854}
+.wine-similar-compact.wt-rosado   {--wsl-accent:#d49aa8}
+.wine-similar-compact.wt-espumoso {--wsl-accent:#7ec8e3}
+.wine-similar-compact.wt-dulce    {--wsl-accent:#d4944c}
+.wine-similar-compact.wt-generoso {--wsl-accent:#c49a3c}
+
+.wsc-pct-block{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:.32rem .25rem;
+  background:linear-gradient(155deg,rgba(196,154,60,.1),rgba(196,154,60,.03));
+  border:1px solid rgba(196,154,60,.22);border-radius:8px;
+  flex-shrink:0;min-height:62px;
+}
+.wsc-pct-num{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:#3a2a1a;line-height:1;letter-spacing:-.02em}
+.wsc-pct-num sub{font-family:'DM Mono',monospace;font-size:.48rem;color:#a08b56;font-weight:400;vertical-align:baseline;margin-left:1px}
+.wsc-pct-lbl{font-family:'DM Mono',monospace;font-size:.46rem;font-weight:600;color:#7a6638;letter-spacing:.08em;text-transform:uppercase;margin-top:.18rem;text-align:center;line-height:1.2}
+.wine-similar-compact.score-high .wsc-pct-block{background:linear-gradient(155deg,rgba(154,122,76,.15),rgba(154,122,76,.05));border-color:rgba(154,122,76,.35)}
+.wine-similar-compact.score-low  .wsc-pct-block{background:linear-gradient(155deg,rgba(216,184,120,.12),rgba(216,184,120,.04));border-color:rgba(216,184,120,.3)}
+
+.wsc-info{min-width:0;display:flex;flex-direction:column;gap:.22rem}
+.wsc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.35rem}
+.wsc-name{font-family:'Cinzel',serif;font-size:.78rem;font-weight:600;color:#2a1a0d;letter-spacing:.02em;line-height:1.18;flex:1;min-width:0;word-wrap:break-word}
+.wsc-price{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--wsl-accent,#c49a3c);white-space:nowrap;line-height:1;padding-top:.05rem}
+.wsc-meta{font-family:'DM Mono',monospace;font-size:.5rem;color:#7a6638;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap}
+.wsc-meta .wsc-dot{color:rgba(122,102,56,.35)}
+.wsc-meta .wsc-type{color:var(--wsl-accent,#7a6638);font-weight:600}
+.wsc-meta .wsc-type-icon{color:var(--wsl-accent,#7a6638);font-size:.78rem;line-height:1}
+.wsc-chips{display:flex;flex-wrap:wrap;gap:.28rem;margin-top:.15rem}
+.wsc-chips .wine-similar-card-chip{font-size:.6rem;padding:.18rem .42rem}
+
+/* ═══ Perfil Estructural del Vino — bloque dedicado en ficha individual ═══ */
+.wpb-block{position:relative}
+.wpb-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem .9rem;margin-top:.6rem}
+@media(min-width:480px){.wpb-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:720px){.wpb-grid{grid-template-columns:repeat(4,1fr)}}
+.wpb-stat{display:flex;flex-direction:column;gap:.2rem;padding:.55rem .65rem;background:linear-gradient(155deg,rgba(196,154,60,.04),rgba(196,154,60,.01));border:1px solid rgba(196,154,60,.14);border-radius:8px}
+.wpb-stat-label{font-family:'DM Mono',monospace;font-size:.5rem;color:#a08b56;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.wpb-stat-row{display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;line-height:1.1}
+.wpb-stat-value{font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment);font-weight:600;letter-spacing:.02em}
+.wpb-dots{display:inline-flex;align-items:center;gap:3px}
+.wpb-dot{width:7px;height:7px;border-radius:50%;background:rgba(196,154,60,.12);border:1px solid rgba(196,154,60,.22);display:inline-block}
+.wpb-dot.on{background:linear-gradient(135deg,#e8c275,#c49a3c);border-color:#a07828;box-shadow:0 0 6px rgba(196,154,60,.45)}
+
+/* ─── Mini stat-strip en cards de la lista de vinos ─── */
+.wine-card-mini-stats{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed rgba(196,154,60,.15)}
+.wcms-stat{display:inline-flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.06em;text-transform:uppercase}
+.wcms-stat-label{color:var(--parch4);font-weight:500}
+.wcms-stat-dots{display:inline-flex;gap:1.5px}
+.wcms-stat-dot{width:4.5px;height:4.5px;border-radius:50%;background:rgba(196,154,60,.18);display:inline-block}
+.wcms-stat-dot.on{background:#c49a3c;box-shadow:0 0 3px rgba(196,154,60,.35)}
+.wcms-stat-value{color:var(--parch2);font-weight:600;font-size:.58rem}
+.wcms-sep{color:rgba(196,154,60,.3)}
+
+/* (stat-strip y ripple antiguos eliminados — el cuerpo/taninos/etc se muestra ahora
+   en el bloque "Perfil Estructural" de la ficha individual y en la frase narrativa
+   del hero card de Vinos Similares) */
+
+/* ── Chips TUNIC v4 — paleta restringida, solo gold + parchment ── */
+.wine-similar-card-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.35rem;align-items:center}
+.wine-similar-card-chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:500;padding:.22rem .55rem;border-radius:10px;background:transparent;border:1px solid rgba(196,154,60,.28);color:#5b461c;letter-spacing:.01em;white-space:nowrap;line-height:1.2;transition:all .15s}
+.wine-similar-card-chip .chip-ico{font-size:.72rem;opacity:.7;line-height:1;color:#a08b56}
+/* Tres niveles de jerarquía gold — sin colores divergentes */
+.wine-similar-card-chip.c-gold-strong{border-color:rgba(196,154,60,.55);background:rgba(196,154,60,.07);color:#4a3712;font-weight:600}
+.wine-similar-card-chip.c-grape{border-color:rgba(196,154,60,.45);color:#5b461c;font-weight:600}
+.wine-similar-card-chip.c-grape .chip-ico{opacity:.85;color:#9a7a4c}
+.wine-similar-card-chip.c-geo{border-color:rgba(196,154,60,.32);color:#5b461c}
+.wine-similar-card-chip.c-eno,.wine-similar-card-chip.c-pairing,.wine-similar-card-chip.c-tier,.wine-similar-card-chip.c-sensorial{border-color:rgba(196,154,60,.22);color:#6b5736}
+.wine-similar-card-chip.c-artisan{border-color:rgba(196,154,60,.22);color:#6b5736;font-style:italic}
+.wine-similar-card-chip.c-tier{text-transform:uppercase;font-size:.6rem;letter-spacing:.1em;font-weight:600}
+.wine-similar-card-chip.c-partial{border-color:rgba(196,154,60,.18);border-style:dashed;color:#8b7a52;font-style:italic;font-size:.62rem}
+.wine-similar-card-chip.c-neutral{border-color:rgba(196,154,60,.22);color:#6b5736}
+/* Precio — solo el elemento que necesita color, mantenido sutil */
+.wine-similar-card-chip.c-cheaper{border-color:rgba(140,160,120,.45);color:#4a6a3a;font-weight:600}
+.wine-similar-card-chip.c-pricier{border-color:rgba(180,120,90,.4);color:#7a4a2c;font-weight:600}
+/* Recomendado — único chip dorado destacado */
+.wine-similar-card-chip.c-star{border-color:rgba(196,154,60,.6);background:linear-gradient(155deg,rgba(232,194,117,.18),rgba(196,154,60,.06));color:#7a5e1c;font-weight:700}
+.wine-similar-card-chip.c-star .chip-ico{color:#c49a3c;opacity:1}
+/* Adyacente cross-type — italic discreto */
+.wine-similar-card-chip.c-adjacent{border-color:rgba(196,154,60,.32);color:#6b5736;font-style:italic}
+
+/* Divisor manuscrito para expandir/ocultar — TUNIC sutil */
+.wine-similar-more-row{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-top:.5rem;padding-top:.2rem}
+.wine-similar-more-row::before,.wine-similar-more-row::after{content:'';flex:1;max-width:50px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent)}
+.wine-similar-more{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;font-family:'Cinzel',serif;font-size:.62rem;font-weight:500;padding:.35rem .8rem;min-height:30px;border-radius:14px;background:transparent;border:none;color:#a08b56;letter-spacing:.16em;cursor:pointer;transition:all .15s;text-transform:uppercase;-webkit-tap-highlight-color:transparent;touch-action:manipulation;font-style:italic}
+.wine-similar-more::before{content:'·';opacity:.5}
+.wine-similar-more::after{content:'·';opacity:.5}
+.wine-similar-more:hover,.wine-similar-more:active{color:#7a6638}
 
 /* Estado vacío */
 .wine-similar-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:#a08b56;font-size:.85rem;text-align:center;padding:1rem}
@@ -6846,6 +7137,40 @@ body::after{
 .wine-nav-arrow.disabled{opacity:.2;pointer-events:none}
 .wine-nav-counter{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);letter-spacing:.06em}
 .wine-swipe-hint{font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.3rem;letter-spacing:.05em;opacity:.6}
+
+/* ── Pill flotante de swipe — visible mientras se hace scroll ── */
+.wine-swipe-pill{
+  position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%) translateY(0);
+  display:inline-flex;align-items:center;gap:.55rem;
+  padding:.5rem .9rem;
+  background:linear-gradient(155deg,rgba(28,20,14,.92),rgba(20,14,8,.88));
+  border:1px solid rgba(196,154,60,.45);
+  border-radius:24px;
+  font-family:'DM Mono',monospace;font-size:.58rem;color:#e8c275;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+  box-shadow:0 4px 18px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.04) inset,0 0 14px rgba(196,154,60,.18);
+  z-index:10001;pointer-events:none;
+  opacity:0;animation:wine-swipe-pill-fade-in .6s ease-out .8s forwards;
+  white-space:nowrap;
+}
+@keyframes wine-swipe-pill-fade-in{
+  to{opacity:.94;transform:translateX(-50%) translateY(0)}
+}
+.wine-swipe-pill .wsp-arrow{font-size:.7rem;color:#c49a3c;animation:wsp-bounce 1.6s ease-in-out infinite}
+.wine-swipe-pill .wsp-arrow.right{animation-delay:.3s}
+@keyframes wsp-bounce{
+  0%,100%{transform:translateX(0);opacity:.6}
+  50%   {transform:translateX(2px);opacity:1}
+}
+.wine-swipe-pill .wsp-arrow.left{animation-name:wsp-bounce-l}
+@keyframes wsp-bounce-l{
+  0%,100%{transform:translateX(0);opacity:.6}
+  50%   {transform:translateX(-2px);opacity:1}
+}
+.wine-swipe-pill .wsp-counter{
+  font-family:'Cinzel',serif;font-size:.6rem;color:#fff6e2;
+  margin:0 .25rem;letter-spacing:.08em;
+}
 
 
 /* ═══ WINE MAP ═══ */
@@ -12764,16 +13089,21 @@ function renderSmartReview(){
         ${allergenHTML}
 
         <div class="ri-cta-wrap">
-          <button onclick="_startSmartSession()" class="ri-cta">
-            <span class="ri-cta-icon">
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <button onclick="_startSmartSession()" class="ri-cta" aria-label="${_en?'Enter simulation':'Entrar en simulación'}">
+            <span class="ri-cta-bracket tl" aria-hidden="true"></span>
+            <span class="ri-cta-bracket tr" aria-hidden="true"></span>
+            <span class="ri-cta-bracket bl" aria-hidden="true"></span>
+            <span class="ri-cta-bracket br" aria-hidden="true"></span>
+            <span class="ri-cta-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" style="position:relative;z-index:2">
                 <path d="M5 4 L19 12 L5 20 Z" fill="currentColor"/>
               </svg>
             </span>
             <span class="ri-cta-text">
-              <span class="ri-cta-top">${_en?'START SIMULATION':'INICIAR SIMULACIÓN'}</span>
+              <span class="ri-cta-top">${_en?'ENTER SIMULATION':'ENTRAR EN SIMULACIÓN'}</span>
               <span class="ri-cta-sub">${sessionSize} ${_en?'cases':'casos'} · ${_srDiffLabel(pickedDiff,_en)} · ≈ ${Math.round(sessionSize * _srTimerSeconds(pickedDiff) / 60)} ${_en?'min':'min'}</span>
             </span>
+            <span class="ri-cta-status">${_en?'READY':'READY'}</span>
           </button>
           <button onclick="renderSmartReview()" class="ri-secondary">↻ ${_en?'Reshuffle selection':'Regenerar selección'}</button>
         </div>
@@ -13392,7 +13722,180 @@ const SF_SCENARIOS_EN = [
 ];
 
 const SF_GUEST_NAMES = ['Sr. Martínez','Sra. Takahashi','Sr. Anderson','Sra. García','Sr. Weber','Sra. Dupont','Sr. Al-Rashid','Sra. O\'Brien','Sr. Rossi','Sra. Kim','Sr. Johansen','Sra. Fernández'];
-const SF_WINE_TEMPS = {tinto:{correct:'16-18°C',wrong:['8-10°C','4-6°C','22-24°C']},blanco:{correct:'8-10°C',wrong:['16-18°C','4-6°C','20°C']},rosado:{correct:'8-12°C',wrong:['18°C','4°C','22°C']},espumoso:{correct:'6-8°C',wrong:['14°C','18°C','Room temp']}};
+const SF_WINE_TEMPS = {tinto:{correct:'16-18°C',wrong:['8-10°C','4-6°C','22-24°C']},blanco:{correct:'8-10°C',wrong:['16-18°C','4-6°C','20°C']},rosado:{correct:'8-12°C',wrong:['18°C','4°C','22°C']},espumoso:{correct:'6-8°C',wrong:['14°C','18°C','Room temp']},generoso:{correct:'12-14°C',wrong:['18°C','4°C','22°C']},dulce:{correct:'8-12°C',wrong:['18°C','4°C','22°C']}};
+
+/* ═══════════════════════════════════════════════════════════
+   TEMPERATURAS DE SERVICIO POR ESTILO ESPECÍFICO (sommelier)
+   Más fino que la genérica por tipo. Usado en la ficha de detalle.
+   ═══════════════════════════════════════════════════════════ */
+const WINE_SERVING_TEMP_BY_STYLE = {
+  // Espumosos
+  'espumoso-joven':       {temp:'6-8°C',  rationale:'Burbujas más finas y vivas en frío extremo'},
+  'champagne-vintage':    {temp:'10-12°C',rationale:'Más cálido para liberar aromas terciarios complejos'},
+  // Blancos
+  'blanco-aromatico-joven':{temp:'8-10°C',rationale:'Frío preserva aromas frutales y florales primarios'},
+  'blanco-mineral':       {temp:'10-12°C',rationale:'Equilibrio frío-cuerpo para mineralidad'},
+  'blanco-barrica':       {temp:'12-14°C',rationale:'Más cálido revela complejidad de crianza'},
+  'riesling-mosela':      {temp:'8-10°C', rationale:'Acidez vibrante se aprecia mejor frío'},
+  // Rosados
+  'rosado':               {temp:'8-10°C', rationale:'Frío resalta frescura y aromas frutales'},
+  // Tintos
+  'tinto-joven':          {temp:'14-15°C',rationale:'Frío modera el alcohol y resalta fruta'},
+  'tinto-crianza':        {temp:'15-16°C',rationale:'Equilibrio cuerpo-frescura'},
+  'tinto-reserva':        {temp:'16-17°C',rationale:'Más cálido revela aromas terciarios sin enfatizar alcohol'},
+  'tinto-gran-reserva':   {temp:'17-18°C',rationale:'Cálido para complejidad terciaria total'},
+  'pinot-noir':           {temp:'14-16°C',rationale:'Más frío que tintos sólidos: preserva delicadeza'},
+  // Generosos / fortificados
+  'manzanilla-fino':      {temp:'5-7°C',  rationale:'MUY frío como aperitivo, en catavinos'},
+  'amontillado':          {temp:'12-14°C',rationale:'Templado para apreciar complejidad terciaria'},
+  'oloroso-px':           {temp:'14-16°C',rationale:'Templado para liberar aromas oxidativos'},
+  'oporto':               {temp:'16-18°C',rationale:'Templado, decantar Vintage 1-2h'},
+  'madeira':              {temp:'14-16°C',rationale:'Único: imposible de oxidar, dura meses abierto'},
+  // Dulces
+  'sauternes-tokaji':     {temp:'8-10°C', rationale:'Frío equilibra el dulzor, evita empalago'},
+  'porto-vintage':        {temp:'16-18°C',rationale:'Templado para máxima expresión'}
+};
+
+/* ═══════════════════════════════════════════════════════════
+   TIPOS DE COPA POR ESTILO (sommelier formal)
+   ═══════════════════════════════════════════════════════════ */
+const GLASS_TYPES = {
+  'flute':           {name_es:'Flûte',                name_en:'Flute',              use:'Espumosos jóvenes, cavas básicos', size:'180-220ml'},
+  'tulipan':         {name_es:'Tulipán/Coupette',     name_en:'Tulip',              use:'Champagne, Cava Reserva (preserva aromas)', size:'200-280ml'},
+  'borgona':         {name_es:'Copa Borgoñona',       name_en:'Burgundy bowl',      use:'Pinot Noir, Tempranillo Reserva, Sangiovese', size:'700-1000ml'},
+  'bordelesa':       {name_es:'Copa Bordelesa',       name_en:'Bordeaux glass',     use:'Cabernet Sauvignon, Merlot, Syrah, Tempranillo joven', size:'600-800ml'},
+  'blanco-grande':   {name_es:'Copa blanco con cuerpo',name_en:'Full white glass',  use:'Chardonnay con barrica, Riesling Grand Cru', size:'400-500ml'},
+  'blanco-pequena':  {name_es:'Copa blanco aromático',name_en:'Aromatic white glass',use:'Albariño, Sauvignon Blanc, Riesling joven', size:'300-400ml'},
+  'riesling':        {name_es:'Copa Riesling',        name_en:'Riesling glass',     use:'Riesling alemán/austriaco — más alta y estrecha', size:'350-450ml'},
+  'catavinos':       {name_es:'Catavinos (Jerez)',    name_en:'Sherry copita',      use:'Manzanilla, Fino, Amontillado, Oloroso', size:'120-180ml'},
+  'oporto':          {name_es:'Copa Oporto',          name_en:'Port glass',         use:'Oporto, PX, Madeira, Sauternes', size:'120-180ml'},
+  'universal':       {name_es:'Copa universal',       name_en:'Universal glass',    use:'Cuando no hay copa específica disponible', size:'400-500ml'}
+};
+
+/**
+ * Devuelve copa óptima para un vino según tipo + estilo
+ */
+function _wineGlassType(w){
+  if(!w) return 'universal';
+  const t = w.type;
+  const tier = (w.notes||'').toLowerCase();
+  const grapes = (w.grapes||'').toLowerCase();
+  if(t === 'espumoso'){
+    if(/champagne|grand cru|gatinois|clouet|gramona/i.test(w.name+w.region)) return 'tulipan';
+    return 'flute';
+  }
+  if(t === 'generoso') return 'catavinos';
+  if(t === 'dulce'){
+    if(/oporto|porto|px|pedro xim/i.test(w.name)) return 'oporto';
+    return 'oporto'; // Sauternes/Tokaji también en copa más pequeña
+  }
+  if(t === 'rosado') return 'blanco-pequena';
+  if(t === 'blanco'){
+    if(/riesling/.test(grapes)) return 'riesling';
+    if(/chardonnay|barrica|crianza|reserva/.test(grapes+tier)) return 'blanco-grande';
+    return 'blanco-pequena';
+  }
+  if(t === 'tinto'){
+    if(/pinot noir/.test(grapes)) return 'borgona';
+    if(/tempranillo|sangiovese|nebbiolo/.test(grapes) && /reserva|gran reserva/.test(tier)) return 'borgona';
+    if(/cabernet|merlot|syrah|burdeos|bordeaux|p[oô]merol|m[eé]doc/i.test(grapes+w.region)) return 'bordelesa';
+    return 'borgona'; // default tintos
+  }
+  return 'universal';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AÑADAS POR REGIÓN — Carácter climático de cada vintage
+   Datos de fuentes especializadas: Wine Spectator, Robert Parker,
+   Decanter, Tim Atkin Rioja Report, Burghound.
+   Escala 1-5 estrellas: 1=débil, 3=buena, 5=excepcional
+   Carácter: 'fresca', 'cálida', 'equilibrada', 'irregular'
+   ═══════════════════════════════════════════════════════════ */
+const VINTAGE_RATINGS = {
+  'rioja': {
+    2010:{rating:5, character:'fresca',     desc_es:'Excepcional — añada de 5 estrellas, vinos de gran guarda', desc_en:'Exceptional — 5-star vintage, great aging potential'},
+    2011:{rating:4, character:'cálida',     desc_es:'Muy buena — vinos potentes y maduros', desc_en:'Very good — powerful ripe wines'},
+    2012:{rating:3, character:'irregular',  desc_es:'Buena — calidad variable según subzona', desc_en:'Good — quality varies by sub-zone'},
+    2013:{rating:3, character:'fresca',     desc_es:'Buena — vinos frescos pero menos concentrados', desc_en:'Good — fresh but less concentrated'},
+    2014:{rating:4, character:'equilibrada',desc_es:'Muy buena — equilibrio fruta-acidez', desc_en:'Very good — fruit-acidity balance'},
+    2015:{rating:4, character:'cálida',     desc_es:'Muy buena — vinos generosos y aromáticos', desc_en:'Very good — generous aromatic wines'},
+    2016:{rating:5, character:'equilibrada',desc_es:'Excepcional — añada de 5 estrellas, equilibrio perfecto', desc_en:'Exceptional — 5-star vintage, perfect balance'},
+    2017:{rating:3, character:'cálida',     desc_es:'Buena — añada cálida con vinos potentes para beber pronto', desc_en:'Good — warm vintage, drink soon'},
+    2018:{rating:4, character:'fresca',     desc_es:'Muy buena — vinos clásicos y elegantes', desc_en:'Very good — classic elegant wines'},
+    2019:{rating:5, character:'equilibrada',desc_es:'Excepcional — gran añada con potencial de guarda', desc_en:'Exceptional — great vintage with aging potential'},
+    2020:{rating:4, character:'fresca',     desc_es:'Muy buena — vinos frescos y equilibrados', desc_en:'Very good — fresh balanced wines'},
+    2021:{rating:5, character:'equilibrada',desc_es:'Excepcional — añada histórica, vinos de gran calidad', desc_en:'Exceptional — historic vintage, top quality'},
+    2022:{rating:3, character:'cálida',     desc_es:'Buena — añada muy cálida, vinos para beber jóvenes', desc_en:'Good — very warm, drink young'}
+  },
+  'ribera': {
+    2010:{rating:5, character:'fresca',     desc_es:'Excepcional', desc_en:'Exceptional'},
+    2014:{rating:4, character:'equilibrada',desc_es:'Muy buena', desc_en:'Very good'},
+    2015:{rating:5, character:'cálida',     desc_es:'Excepcional', desc_en:'Exceptional'},
+    2016:{rating:5, character:'equilibrada',desc_es:'Excepcional', desc_en:'Exceptional'},
+    2017:{rating:3, character:'cálida',     desc_es:'Buena — añada extrema, vinos potentes', desc_en:'Good — extreme vintage, powerful wines'},
+    2018:{rating:4, character:'fresca',     desc_es:'Muy buena — clásica', desc_en:'Very good — classic'},
+    2019:{rating:5, character:'equilibrada',desc_es:'Excepcional', desc_en:'Exceptional'},
+    2020:{rating:4, character:'equilibrada',desc_es:'Muy buena', desc_en:'Very good'},
+    2021:{rating:4, character:'equilibrada',desc_es:'Muy buena', desc_en:'Very good'}
+  },
+  'burdeos': {
+    2010:{rating:5, character:'equilibrada',desc_es:'Legendaria — una de las mejores añadas modernas', desc_en:'Legendary — one of best modern vintages'},
+    2015:{rating:5, character:'cálida',     desc_es:'Excepcional, especialmente Rive Droite', desc_en:'Exceptional, especially Right Bank'},
+    2016:{rating:5, character:'equilibrada',desc_es:'Excepcional — gran clasicismo bordelés', desc_en:'Exceptional — great Bordeaux classicism'},
+    2017:{rating:3, character:'irregular',  desc_es:'Heladas dañaron parte de la cosecha', desc_en:'Frost damaged part of harvest'},
+    2018:{rating:5, character:'cálida',     desc_es:'Excepcional — gran añada de Rive Droite', desc_en:'Exceptional — great Right Bank vintage'},
+    2019:{rating:5, character:'equilibrada',desc_es:'Excepcional', desc_en:'Exceptional'},
+    2020:{rating:5, character:'cálida',     desc_es:'Excepcional', desc_en:'Exceptional'},
+    2021:{rating:3, character:'fresca',     desc_es:'Buena — añada clásica de baja madurez', desc_en:'Good — classic lower-ripeness vintage'},
+    2022:{rating:4, character:'cálida',     desc_es:'Muy buena — cálida e intensa', desc_en:'Very good — warm and intense'}
+  },
+  'borgoña': {
+    2014:{rating:4, character:'fresca',     desc_es:'Muy buena para blancos, irregular para tintos', desc_en:'Very good whites, irregular reds'},
+    2015:{rating:5, character:'cálida',     desc_es:'Excepcional para tintos', desc_en:'Exceptional for reds'},
+    2017:{rating:4, character:'equilibrada',desc_es:'Muy buena para blancos especialmente', desc_en:'Very good especially whites'},
+    2018:{rating:4, character:'cálida',     desc_es:'Muy buena, generosa', desc_en:'Very good, generous'},
+    2019:{rating:5, character:'equilibrada',desc_es:'Excepcional — equilibrio perfecto', desc_en:'Exceptional — perfect balance'},
+    2020:{rating:5, character:'cálida',     desc_es:'Excepcional — concentración rara', desc_en:'Exceptional — rare concentration'},
+    2022:{rating:5, character:'equilibrada',desc_es:'Excepcional — gran añada moderna', desc_en:'Exceptional — great modern vintage'}
+  },
+  'champagne': {
+    2008:{rating:5, character:'fresca',     desc_es:'Legendaria — cosecha histórica', desc_en:'Legendary — historic harvest'},
+    2012:{rating:5, character:'equilibrada',desc_es:'Excepcional', desc_en:'Exceptional'},
+    2015:{rating:4, character:'cálida',     desc_es:'Muy buena', desc_en:'Very good'},
+    2018:{rating:4, character:'cálida',     desc_es:'Muy buena, declarada Vintage', desc_en:'Very good, declared Vintage'}
+  },
+  'mosela': {
+    2015:{rating:4, character:'cálida',     desc_es:'Muy buena', desc_en:'Very good'},
+    2017:{rating:4, character:'fresca',     desc_es:'Muy buena, clásica', desc_en:'Very good, classic'},
+    2018:{rating:4, character:'cálida',     desc_es:'Muy buena, generosa', desc_en:'Very good, generous'},
+    2019:{rating:5, character:'equilibrada',desc_es:'Excepcional', desc_en:'Exceptional'},
+    2020:{rating:5, character:'fresca',     desc_es:'Excepcional', desc_en:'Exceptional'},
+    2022:{rating:5, character:'cálida',     desc_es:'Excepcional, madura', desc_en:'Exceptional, ripe'}
+  },
+  'tokaj': {
+    2017:{rating:4, character:'cálida',     desc_es:'Muy buena para Aszú', desc_en:'Very good for Aszú'},
+    2019:{rating:5, character:'equilibrada',desc_es:'Excepcional', desc_en:'Exceptional'},
+    2021:{rating:4, character:'fresca',     desc_es:'Muy buena', desc_en:'Very good'}
+  }
+};
+
+/**
+ * Devuelve el rating de añada para un vino, si su región y año coinciden con la tabla
+ */
+function _wineVintageRating(w){
+  if(!w || !w.year) return null;
+  const region = (w.region||'').toLowerCase() + ' ' + (w.origin||'').toLowerCase();
+  let key = null;
+  if(/rioja/i.test(region)) key = 'rioja';
+  else if(/ribera|castilla y leon/i.test(region)) key = 'ribera';
+  else if(/burdeos|bordeaux|m[eé]doc|p[oô]merol|saint-?[eé]milion|sauternes/i.test(region)) key = 'burdeos';
+  else if(/borgo[ñn]a|bourgogne|chablis|c[oô]te d.or/i.test(region)) key = 'borgoña';
+  else if(/champagne/i.test(region)) key = 'champagne';
+  else if(/mosel|saar/i.test(region)) key = 'mosela';
+  else if(/tokaj/i.test(region)) key = 'tokaj';
+  if(!key) return null;
+  return (VINTAGE_RATINGS[key] && VINTAGE_RATINGS[key][w.year]) || null;
+}
 
 function _sfDaysInactive(emp){
   var last = emp.lastStudyDay || '';
@@ -15225,7 +15728,7 @@ const WINES = [
     id: 9,
     name: 'Amaren Blanco',
     type: 'blanco',
-    grapes: 'Viura/Garnacha',
+    grapes: 'Viura/Garnacha Blanca',
     region: 'DO Ca Rioja',
     origin: 'La Rioja-Álava',
     price: 110,
@@ -15249,7 +15752,7 @@ const WINES = [
     id: 10,
     name: 'Predicador Blanco',
     type: 'blanco',
-    grapes: 'Malvasía/Viura/Garnacha',
+    grapes: 'Malvasía/Viura/Garnacha Blanca',
     region: 'DO Ca Rioja',
     origin: 'La Rioja-Álava',
     price: 110,
@@ -16695,10 +17198,10 @@ const WINES = [
   },
   {
     id: 69,
-    name: 'Vallgarcía',
+    name: 'Vallegarcía',
     type: 'tinto',
     grapes: 'Syrah',
-    region: 'DO Pago ValleGarcía',
+    region: 'VT Castilla — Pago de Vallegarcía',
     origin: 'Castilla La Mancha',
     price: 70,
     glass: null,
@@ -16707,8 +17210,8 @@ const WINES = [
     recommended: false,
     vegaSicilia: false,
     kosher: false,
-    story: 'Vallgarcía es oasis de excelencia manchego. Syrah en clima continental extremo crían 12 meses en roble francés; soles abrasadores otorgan concentración exceptual mientras altitud preserva acidez, creando equilibrio y potencial futuro.',
-    grapeSelection: 'Vallgarcía es oasis manchego de Syrah a 750-900 metros de altitud extrema en DO Pago Vallgarcía. Suelos calcáreo-arcillosos. Cepas de 25-45 años adaptadas a clima continental. Vendimia selectiva manual a finales de septiembre-octubre en sobremadurez controlada.',
+    story: 'Pago de Vallegarcía, en los Montes de Toledo, es uno de los proyectos más singulares de la Mancha. Familia Sanz cultiva Syrah y Petit Verdot a 800m de altitud en suelos calcáreo-arcillosos. El clima continental extremo (días muy cálidos, noches frescas) genera concentración aromática y acidez vibrante simultáneamente — un rasgo poco común que define el estilo Vallegarcía.',
+    grapeSelection: 'Syrah 100% del Pago de Vallegarcía en Montes de Toledo, a 750-900 metros de altitud. Suelos calcáreo-arcillosos sobre roca caliza. Cepas de 25-45 años adaptadas al clima continental extremo. Vendimia selectiva manual a finales de septiembre-octubre, buscando madurez fenólica completa con frescura preservada por la altitud.',
     winemaking: 'Fermentación en depósitos de acero inoxidable a 26-28°C durante 14-16 días. Maceración de 8-10 días. Envejecimiento 12 meses en barrica de roble francés nuevo. Fermentación maloláctica natural. Clarificación mínima. Embotellado expresando intensidad del Syrah manchego de altitud.',
     pairings: ['T-bone de Wagyu 1.1kg', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'Entrecot de Angus 300g', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes especiadas.',
@@ -17971,7 +18474,7 @@ const WINES = [
 let _wineFilter = 'all';
 let _wineSearch = '';
 let _wineView = 'grid';
-let _vinoSubTab = 'sommelier';
+let _vinoSubTab = 'carta';
 
 // ═══ SENSORY MAP DATA ═══
 let _snsMode = 'wheel'; // wheel | wines | dishes
@@ -18581,6 +19084,127 @@ const WINE_ENCYCLOPEDIA = [
     body_en:'Listán varieties are Canarias\' vinicultural treasure, unique in the world for being PRE-PHYLLOXERA (own-rooted). LISTÁN BLANCO: Most planted in Canarias. Versatile grape that on volcanic soil produces wines with saline minerality, citrus notes, and unmistakable Atlantic freshness. Our Viñatigo and Artifice are references. LISTÁN NEGRO: Canarian red par excellence. Produces wines with soft tannins, vibrant acidity, red fruit aromas with volcanic/smoky notes. Our Crater and Titerok work with it. Both varieties grow in extreme conditions: volcanic soil, Atlantic winds, 200-1,500m altitude. Vines are grown in HOLES dug in lava (Lanzarote) or in BRAIDED CORDONS (Tenerife) hugging the ground for wind protection.',
     examples:'Viñatigo (Listán Blanco), Artifice (Listán Blanco), Crater (Listán Negro), Titerok (Listán Negro)',
     guest:'Al huésped: "Esta uva solo existe en Canarias — crece en suelo volcánico y sus viñas tienen más de 100 años. Es literalmente un tesoro único en el planeta."'
+  },
+  // ═══════════════════════════════════════════════════════════
+  // DEFECTOS DEL VINO — sommelier debe identificar
+  // ═══════════════════════════════════════════════════════════
+  {
+    id:'tca-cork-taint', category:'tecnicas', title:'TCA / Vino con Corcho', title_en:'TCA / Cork Taint',
+    icon:'🦠', level:'avanzado',
+    body:'El TCA (2,4,6-tricloroanisol) es el defecto más común del vino, presente en 3-5% de botellas con tapón de corcho natural. Identificación: NARIZ — olor a cartón húmedo, sótano húmedo, periódico mojado, perro mojado. BOCA — el vino pierde aromas, sabores se aplastan. La fruta desaparece. SOLUCIÓN — devolver al cliente discretamente, abrir nueva botella. Nunca discutir si el cliente lo identifica. CAUSA — moho Trichoderma en corcho que reacciona con cloro residual. Botellas con tapón sintético o screwcap NO tienen TCA.',
+    body_en:'TCA (2,4,6-trichloroanisole) is the most common wine fault, present in 3-5% of natural-cork bottles. Identification: NOSE — wet cardboard, damp basement, wet newspaper, wet dog. PALATE — wine loses aromas, flavors flatten. Fruit disappears. SOLUTION — discreetly replace, open new bottle. Never argue if client identifies it. CAUSE — Trichoderma mold in cork reacting with residual chlorine. Synthetic-cork or screwcap bottles do NOT have TCA.',
+    examples:'Test rápido: si una botella huele extraña, comparar con la próxima abierta. Si el problema persiste = TCA confirmado.',
+    guest:'Al huésped: "Tiene toda la razón, esta botella tiene un toque de corcho. Permítame traerle una nueva inmediatamente, sin coste."'
+  },
+  {
+    id:'oxidation-fault', category:'tecnicas', title:'Oxidación', title_en:'Oxidation',
+    icon:'🍂', level:'avanzado',
+    body:'La oxidación es el deterioro del vino por exposición prolongada al oxígeno. NO confundir con vinos oxidativos intencionales (Jerez, Madeira, Vin Jaune). Identificación: VISTA — color marrón/teja en blancos jóvenes, naranja-rojizo en tintos jóvenes. NARIZ — manzana podrida, hojarasca seca, frutos secos rancios, vinagre suave. BOCA — pierde frescura, sabores planos, sensación oxidada. CAUSAS — corcho deficiente, almacenamiento mal (calor, vertical mucho tiempo), botella vieja. ¿Devolver? SÍ si es vino joven, NO si es Reserva con cierta evolución esperada.',
+    body_en:'Oxidation is wine deterioration from prolonged oxygen exposure. NOT to confuse with intentional oxidative wines (Sherry, Madeira, Vin Jaune). Identification: SIGHT — brown/tile color in young whites, orange-red in young reds. NOSE — rotten apple, dry leaves, rancid nuts, mild vinegar. PALATE — loss of freshness, flat flavors. CAUSES — defective cork, poor storage (heat, vertical too long), old bottle. Return? YES for young wine, NO for Reserva with expected evolution.',
+    examples:'Distinguir oxidación-defecto vs oxidación-buscada (Sherry): el contexto y el tipo de vino determinan.',
+    guest:'Al huésped: "Esta botella ha sufrido oxidación, eso explica los aromas. Le traemos otra inmediatamente."'
+  },
+  {
+    id:'reduction-fault', category:'tecnicas', title:'Reducción', title_en:'Reduction',
+    icon:'🔻', level:'avanzado',
+    body:'La reducción es el opuesto a oxidación — falta de oxígeno durante crianza/embotellado, generando compuestos sulfurados desagradables. Identificación: NARIZ — huevo podrido, cebolla, ajo, goma quemada, fósforo. BOCA — sabores apagados, metálico. SOLUCIÓN — DECANTAR vigorosamente (15-30 min). En 80% de casos, los aromas reductivos se disipan con aireación. Si persisten tras decantar, devolver botella. CAUSAS — fermentación con poco oxígeno, levaduras estresadas, screwcap muy hermético. Algunos vinos modernos son ligeramente reductivos por estilo.',
+    body_en:'Reduction is opposite of oxidation — lack of oxygen during aging/bottling, generating unpleasant sulfur compounds. Identification: NOSE — rotten egg, onion, garlic, burnt rubber, struck match. PALATE — flat metallic flavors. SOLUTION — DECANT vigorously (15-30 min). 80% of cases, reductive aromas dissipate with aeration. If persists, return bottle. CAUSES — fermentation with little oxygen, stressed yeast, very tight screwcap.',
+    examples:'Burgundy joven a veces presenta reducción inicial — decantar 30 min suele resolverlo.',
+    guest:'Al huésped: "Permítame decantar este vino — necesita un poco de aire para mostrarse mejor. En 15-20 minutos estará perfecto."'
+  },
+  {
+    id:'brett-fault', category:'tecnicas', title:'Brettanomyces', title_en:'Brettanomyces',
+    icon:'🐎', level:'avanzado',
+    body:'Brettanomyces (o "Brett") es una levadura salvaje que puede infectar vinos durante crianza. Identificación: NARIZ — sudor de caballo, establo, cuero curtido, clavo medicinal, plástico quemado. BOCA — pierde fruta, sabores metálicos. CONTROVERSIA — algunos sommeliers consideran el Brett en pequeñas cantidades como "complejidad" en tintos viejos del Ródano y Burdeos. En grandes cantidades = defecto. UMBRAL — varía por persona, generalmente >0.5 mg/L se nota. SOLUCIÓN — si extremo, devolver. Si moderado y vino añejo, puede ser carácter del estilo.',
+    body_en:'Brettanomyces ("Brett") is a wild yeast that can infect wines during aging. Identification: NOSE — horse sweat, stable, cured leather, medicinal clove, burnt plastic. PALATE — loses fruit, metallic flavors. CONTROVERSY — some sommeliers consider small amounts of Brett as "complexity" in old Rhône/Bordeaux reds. Large amounts = fault. THRESHOLD — varies by person, generally >0.5 mg/L noticeable.',
+    examples:'Brett en pequeñas dosis: complejidad apreciada. En grandes: defecto que arruina el vino.',
+    guest:'Al huésped: "Este vino tiene aromas más rústicos de lo esperado. Si lo prefiere, podemos abrirle otra botella sin coste."'
+  },
+  {
+    id:'volatile-acidity', category:'tecnicas', title:'Volatilidad Acética', title_en:'Volatile Acidity (VA)',
+    icon:'🧪', level:'avanzado',
+    body:'La volatilidad acética es la presencia de ácido acético (vinagre) y acetato de etilo (esmalte de uñas) en el vino. Pequeñas cantidades naturales aportan complejidad. En exceso = defecto grave. Identificación: NARIZ — vinagre, esmalte de uñas, pegamento. BOCA — sabor ácido punzante, vinagre. CAUSAS — bacterias acéticas durante fermentación o crianza con falta de protección de SO₂. NIVELES LEGALES — la UE permite hasta 1.2 g/L (tintos) y 1.0 g/L (blancos). Por encima = no comercializable. ¿Devolver? SÍ si supera el umbral perceptible.',
+    body_en:'Volatile acidity is presence of acetic acid (vinegar) and ethyl acetate (nail polish) in wine. Small natural amounts add complexity. Excess = serious fault. Identification: NOSE — vinegar, nail polish, glue. PALATE — sharp acid taste, vinegar. CAUSES — acetic bacteria during fermentation or aging without SO₂ protection. LEGAL LIMITS — EU permits up to 1.2 g/L (reds) and 1.0 g/L (whites).',
+    examples:'Algunos vinos naturales tienen VA elevada como parte de su estilo — debe declararse al cliente.',
+    guest:'Al huésped: "Este vino tiene un nivel de acidez volátil más marcado de lo habitual. ¿Prefiere otra opción?"'
+  },
+  {
+    id:'heat-damage', category:'tecnicas', title:'Daño por Calor', title_en:'Heat Damage',
+    icon:'🌡️', level:'avanzado',
+    body:'El vino almacenado o transportado a temperaturas >25°C sufre daño irreversible. Identificación: VISTA — color cocido, capsule abombada, vino salido del corcho, líquido entre corcho y cápsula. NARIZ — fruta cocida, ciruela seca, mermelada quemada. BOCA — sabores planos, pérdida total de frescura. NO TIENE SOLUCIÓN — devolver siempre. PREVENCIÓN — almacenar entre 10-15°C, alejado de luz, con humedad 70%. Especialmente sensible: blancos jóvenes y rosados.',
+    body_en:'Wine stored or transported at >25°C suffers irreversible damage. Identification: SIGHT — cooked color, bulged capsule, wine pushed past cork, liquid between cork and capsule. NOSE — cooked fruit, dried plum, burnt jam. PALATE — flat flavors, total loss of freshness. NO SOLUTION — always return. PREVENTION — store at 10-15°C.',
+    examples:'Verano sin climatización en estanterías cerca de ventana = riesgo alto.',
+    guest:'Al huésped: "Esta botella ha sufrido daño por temperatura. La cambiamos inmediatamente."'
+  },
+  // ═══════════════════════════════════════════════════════════
+  // CATA SISTEMÁTICA WSET / Court of Master Sommeliers
+  // ═══════════════════════════════════════════════════════════
+  {
+    id:'cata-vista', category:'servicio', title:'Cata Sistemática · Vista', title_en:'Systematic Tasting · Sight',
+    icon:'👁️', level:'avanzado',
+    body:'La VISTA es el primer paso de cata. Inclinar la copa 45° sobre fondo blanco. Evaluar: 1) LIMPIDEZ — limpio, brillante, opaco, turbio. 2) INTENSIDAD — pálido, medio, intenso, profundo. 3) COLOR — Blancos: limón pálido (joven), oro (con crianza), oro intenso (oxidativo), ámbar (muy evolucionado). Tintos: púrpura (muy joven), rubí (joven-crianza), granate (reserva), teja-marrón (muy evolucionado). 4) RIBETE — el borde de la copa indica edad: violeta = juventud, granate = madurez, teja = muy evolucionado. 5) LÁGRIMA — gotas que descienden = indicación de alcohol y glicerina (lentas y oleosas = alto alcohol/azúcar).',
+    body_en:'SIGHT is the first tasting step. Tilt glass 45° over white background. Evaluate: 1) CLARITY — clear, bright, opaque, hazy. 2) INTENSITY — pale, medium, intense, deep. 3) COLOR — Whites: pale lemon (young), gold (aged), intense gold (oxidative), amber (very evolved). Reds: purple (very young), ruby (young-aged), garnet (reserva), tile-brown (very evolved). 4) RIM — glass border indicates age. 5) LEGS — drops descending indicate alcohol and glycerin.',
+    examples:'Tinto joven: ribete violeta intenso. Reserva 2017: ribete granate. Gran Reserva 2010: ribete teja con orla anaranjada.',
+    guest:'Al huésped: "¿Ve el color del vino? El ribete violeta nos dice que es joven y vibrante."'
+  },
+  {
+    id:'cata-nariz', category:'servicio', title:'Cata Sistemática · Nariz', title_en:'Systematic Tasting · Nose',
+    icon:'👃', level:'avanzado',
+    body:'La NARIZ es el paso más complejo. PRIMERO: oler sin agitar (aromas primarios — fruta, flores). SEGUNDO: agitar la copa y oler (libera aromas secundarios y terciarios). EVALUAR: 1) LIMPIEZA — limpia o con defectos. 2) INTENSIDAD — débil, media, marcada, muy marcada. 3) COMPLEJIDAD — primarios (de la uva), secundarios (de fermentación), terciarios (de crianza/evolución). PRIMARIOS — fruta fresca (cítricos, frutos rojos/negros), flores, hierbas, especias varietales. SECUNDARIOS — pan, lías, mantequilla (FML), levadura (espumosos). TERCIARIOS — vainilla, especias dulces, tostado (barrica), cuero, tabaco, sotobosque, trufa, fruta confitada (oxidación noble).',
+    body_en:'NOSE is most complex step. FIRST: smell without swirling (primary aromas — fruit, flowers). SECOND: swirl and smell (releases secondary and tertiary aromas). EVALUATE: 1) CLEANLINESS — clean or faulty. 2) INTENSITY — weak, medium, marked, very marked. 3) COMPLEXITY — primary (from grape), secondary (from fermentation), tertiary (from aging/evolution).',
+    examples:'Vino joven: solo primarios (fruta fresca). Reserva: primarios + terciarios (cuero, vainilla). Gran Reserva: terciarios dominantes (sotobosque, trufa, balsámico).',
+    guest:'Al huésped: "Le invito a oler primero sin mover la copa, luego mueva suavemente y huela de nuevo — los aromas se transforman."'
+  },
+  {
+    id:'cata-boca', category:'servicio', title:'Cata Sistemática · Boca', title_en:'Systematic Tasting · Palate',
+    icon:'👅', level:'avanzado',
+    body:'La BOCA evalúa estructura y sabor. Tomar un sorbo pequeño, moverlo por toda la boca. EVALUAR 5 ELEMENTOS: 1) DULZOR — seco (<4 g/L), off-dry (4-12 g/L), semi-dulce (12-45 g/L), dulce (>45 g/L). 2) ACIDEZ — baja, media, alta. Salivación = alta acidez. 3) TANINOS (solo tintos) — suaves, medios, firmes. Sequedad/astringencia. 4) ALCOHOL — bajo (<11.5%), medio (11.5-13.5%), alto (>13.5%). Calor en garganta = alto. 5) CUERPO — ligero (como agua), medio, completo (como crema). 6) SABOR — confirmar/expandir aromas. 7) FINAL — corto (<5s), medio (5-15s), largo (>15s).',
+    body_en:'PALATE evaluates structure and flavor. Take small sip, move through mouth. EVALUATE 5 ELEMENTS: 1) SWEETNESS — dry (<4 g/L), off-dry (4-12 g/L), semi-sweet (12-45 g/L), sweet (>45 g/L). 2) ACIDITY — low, medium, high. Salivation = high acid. 3) TANNINS (reds only) — soft, medium, firm. 4) ALCOHOL — low (<11.5%), medium (11.5-13.5%), high (>13.5%). Heat in throat = high. 5) BODY — light, medium, full. 6) FLAVOR — confirm/expand aromas. 7) FINISH — short (<5s), medium (5-15s), long (>15s).',
+    examples:'Vino estructurado: alta acidez + taninos firmes + cuerpo medio + final largo = vino de guarda.',
+    guest:'Al huésped: "Note la sensación al tragar — si la persistencia dura más de 15 segundos, estamos ante un gran vino."'
+  },
+  {
+    id:'wine-faults-summary', category:'tecnicas', title:'Resumen Defectos del Vino', title_en:'Wine Faults Summary',
+    icon:'⚠️', level:'avanzado',
+    body:'Los 6 defectos críticos que un sommelier DEBE identificar en segundos: 1) TCA (corcho) — cartón húmedo, 3-5% incidencia. 2) OXIDACIÓN — manzana podrida, color amarronado. 3) REDUCCIÓN — huevo podrido, decantar resuelve 80%. 4) BRETT — sudor de caballo, controvertido en pequeñas dosis. 5) VOLATILIDAD ACÉTICA — vinagre, esmalte. 6) DAÑO POR CALOR — fruta cocida, capsule abombada. PROTOCOLO si cliente se queja: NUNCA discutir, abrir nueva botella inmediatamente, llevarse la "defectuosa" a cocina para verificar (nunca delante del cliente). El cliente siempre tiene la razón en cuestiones de defectos. Los clientes informados aprecian el servicio impecable.',
+    body_en:'The 6 critical faults a sommelier MUST identify in seconds: 1) TCA (cork) — wet cardboard, 3-5% incidence. 2) OXIDATION — rotten apple, browning. 3) REDUCTION — rotten egg, decant solves 80%. 4) BRETT — horse sweat, controversial small doses. 5) VOLATILE ACIDITY — vinegar, polish. 6) HEAT DAMAGE — cooked fruit, bulged capsule. PROTOCOL if client complains: NEVER argue, open new bottle immediately, take "faulty" to kitchen to verify (never in front of client).',
+    examples:'Botella TCA: olerla discretamente. Si confirmamos, traer nueva. Nunca decir al cliente "no le encuentro defecto".',
+    guest:'Al huésped: "Tiene toda la razón. Le traigo una botella nueva inmediatamente, sin coste alguno."'
+  },
+  // ═══════════════════════════════════════════════════════════
+  // SERVICIO FORMAL DEL VINO
+  // ═══════════════════════════════════════════════════════════
+  {
+    id:'presentation-bottle', category:'servicio', title:'Presentación de la Botella', title_en:'Bottle Presentation',
+    icon:'🍾', level:'intermedio',
+    body:'PROTOCOLO clásico de servicio: 1) Llevar botella a la mesa con etiqueta visible al ANFITRIÓN (quien pidió). 2) Anunciar: "Permítame presentarle el [nombre completo + añada]". 3) Esperar la confirmación del cliente. 4) Cortar la cápsula 2mm bajo el cuello (fácil, limpio, no rasga). 5) Limpiar el labio con servilleta. 6) Sacar el corcho con sacacorchos profesional, sin balanceo. 7) Limpiar el labio de nuevo. 8) DEPOSITAR EL CORCHO en plato pequeño junto al anfitrión (puede inspeccionarlo si desea). 9) SERVIR ~30ml al anfitrión para CATAR. 10) Esperar aprobación. 11) SERVIR a los demás (señoras primero, anfitrión al final). 12) Llenar máximo 1/3 de copa.',
+    body_en:'CLASSIC service protocol: 1) Bring bottle to table with label visible to HOST (who ordered). 2) Announce: "Allow me to present [full name + vintage]". 3) Wait client confirmation. 4) Cut capsule 2mm below neck (easy, clean). 5) Wipe lip with napkin. 6) Remove cork with professional opener, no swinging. 7) Wipe lip again. 8) PLACE CORK on small plate next to host. 9) SERVE ~30ml to host to TASTE. 10) Await approval. 11) SERVE others (women first, host last). 12) Fill maximum 1/3 of glass.',
+    examples:'Cliente Asia: doble check del nombre del vino. Cliente Francia: probable que rechace una catada y pida directamente servicio.',
+    guest:'Al anfitrión: "Permítame presentarle el Marqués de Murrieta Reserva 2017. Le serviré una pequeña medida para que lo cate."'
+  },
+  {
+    id:'service-order', category:'servicio', title:'Orden de Servicio en Menú Degustación', title_en:'Tasting Menu Service Order',
+    icon:'🍷', level:'avanzado',
+    body:'En menús con 5-7 vinos, el ORDEN es crítico. REGLA DE ORO: de menor a mayor intensidad/cuerpo/dulzor. ORDEN STANDARD: 1) APERITIVO — Manzanilla/Fino, Champagne joven. 2) BLANCO LIGERO — Albariño, Riesling joven. 3) BLANCO CON CRIANZA — Chardonnay con barrica, Borgoña Premier Cru. 4) ROSADO o ESPUMOSO ROSADO. 5) TINTO LIGERO — Pinot Noir, Crianza. 6) TINTO ESTRUCTURADO — Reserva. 7) GRAN RESERVA. 8) DULCE/GENEROSO — PX, Sauternes, Vintage Port (final). EXCEPCIONES — Sherry Oloroso/Amontillado pueden ir antes de tintos pesados. Si el menú incluye varios platos del mismo grupo, intercalar agua y pan entre cambios.',
+    body_en:'In 5-7 wine menus, ORDER is critical. GOLDEN RULE: from lightest to most intense/full/sweet. STANDARD ORDER: 1) APERITIF — Manzanilla/Fino, young Champagne. 2) LIGHT WHITE — Albariño, young Riesling. 3) AGED WHITE — Chardonnay barrel, Burgundy Premier Cru. 4) ROSÉ or sparkling rosé. 5) LIGHT RED — Pinot Noir, Crianza. 6) STRUCTURED RED — Reserva. 7) GRAN RESERVA. 8) SWEET/FORTIFIED — PX, Sauternes, Vintage Port (final).',
+    examples:'Menú degustación 6 platos: 1.Manzanilla con jamón, 2.Albariño con marisco, 3.Chardonnay con pescado, 4.Pinot con caza menor, 5.Reserva con carne, 6.PX con postre.',
+    guest:'Al huésped: "He diseñado el orden para acompañar su menú — empezaremos con un Fino y subiremos en intensidad hasta el postre."'
+  },
+  {
+    id:'decanting-when', category:'servicio', title:'Cuándo Decantar', title_en:'When to Decant',
+    icon:'🫗', level:'avanzado',
+    body:'DECANTAR tiene dos propósitos: 1) AIREAR (despertar el vino joven). 2) SEPARAR SEDIMENTO (vinos viejos). DECISIÓN POR EDAD: VINO JOVEN (1-3 años) — NO decantar, perdería frescura primaria. CRIANZA (3-7 años) — Aireación 15-30 min en copa o decanter abierto. RESERVA (7-15 años) — Decantar 30-60 min, abre el bouquet completo. GRAN RESERVA / VINO ANTIGUO (>15 años) — Decantar CON CUIDADO de sedimentos (vela bajo el cuello), MÁXIMO 30 min, riesgo de oxidación rápida tras tantos años. ESPUMOSOS — JAMÁS decantar (perdería burbuja). VINOS DULCES — En general no decantar. TINTOS NATURALES — pueden necesitar decantado para resolver reducción.',
+    body_en:'DECANTING has two purposes: 1) AERATE (wake young wine). 2) SEPARATE SEDIMENT (old wines). DECISION BY AGE: YOUNG (1-3 years) — DO NOT decant. CRIANZA (3-7 years) — Aerate 15-30 min. RESERVA (7-15 years) — Decant 30-60 min. GRAN RESERVA / OLD WINE (>15 years) — Decant CAREFULLY for sediment, MAX 30 min. SPARKLING — NEVER decant. SWEET WINES — generally not.',
+    examples:'Vega Sicilia Único 2010: decantar con vela 20-25 min máx. Riesling joven: nunca. Pinot Noir reduco: 30 min en copa amplia.',
+    guest:'Al huésped: "Este vino tiene 12 años — voy a decantarlo unos 30 minutos para que se exprese plenamente."'
+  },
+  {
+    id:'glass-types-guide', category:'servicio', title:'Tipos de Copa por Estilo', title_en:'Glass Types by Style',
+    icon:'🥂', level:'intermedio',
+    body:'La COPA correcta cambia la percepción del vino — no es estética, es química. ESPUMOSOS: Flûte para cavas básicos (preserva burbuja). TULIPÁN/COUPETTE para Champagne y Cava Reserva (preserva burbuja PERO permite aromas). BLANCOS: Copa pequeña para aromáticos jóvenes (Albariño, Sauv. Blanc). Copa más amplia para blancos con barrica (Chardonnay). Copa Riesling (alta y estrecha) para Riesling alemán. TINTOS: BORGOÑONA (boca ancha) para Pinot Noir, Tempranillo Reserva, Sangiovese — concentra aromas delicados. BORDELESA (cuerpo más alto) para Cabernet, Merlot, Syrah, Tempranillo joven — dirige el vino al fondo de la boca, modera taninos. JEREZ: Catavinos (copita) para Manzanilla, Fino, Amontillado. POSTRE: Copa Oporto (pequeña) para PX, Sauternes, Vintage Port. UNIVERSAL: si no hay específica, copa universal medida 400-500ml.',
+    body_en:'The correct GLASS changes wine perception — not aesthetics, chemistry. SPARKLING: Flute for basic cavas. TULIP/COUPETTE for Champagne and Reserva Cava. WHITES: Small glass for aromatic whites. Wider for barrel-aged whites. Riesling glass (tall narrow) for German Riesling. REDS: BURGUNDY (wide bowl) for Pinot Noir, Tempranillo Reserva, Sangiovese. BORDEAUX (taller body) for Cabernet, Merlot, Syrah. SHERRY: Copita for Manzanilla/Fino. DESSERT: Port glass for PX, Sauternes.',
+    examples:'Pinot Noir en copa Bordelesa = error. Cabernet en copa Borgoñona = aromas dispersos.',
+    guest:'Al huésped: "Le sirvo en copa Borgoñona porque es la ideal para Pinot Noir — su forma concentra los aromas delicados."'
   }
 ];
 
@@ -20051,11 +20675,11 @@ function _buildRadarSVG(profileMap, r){
 
 function renderVinos(){
   const c = document.getElementById('appContent');
-  const sub = _vinoSubTab || 'sommelier';
+  const sub = _vinoSubTab || 'carta';
   const _en = LANG==='en';
   const tabs = [
-    ['sommelier','Vinos',''],
     ['carta',_en?'Menu':'Carta',''],
+    ['sommelier','Sommelier',''],
     ['sensorial',_en?'Sensory':'Sensorial',''],
     ['mapa',_en?'Map':'Mapa',''],
     ['aprende',_en?'Learn':'Aprende',''],
@@ -20310,6 +20934,49 @@ function renderVinosCarta(){
   if(si && _wineSearch){ si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
 }
 
+/**
+ * Mini stat-strip para card de la lista de vinos: muestra 2-3 dimensiones
+ * estructurales relevantes según el tipo (cuerpo+taninos para tintos,
+ * cuerpo+acidez para blancos/espumosos).
+ */
+function _wineCardMiniStats(w, _en){
+  const p = (typeof _wineProfile === 'function') ? _wineProfile(w) : {};
+  const stats = [];
+  const renderDots = (level, total) => {
+    let h = '<span class="wcms-stat-dots">';
+    for(let i = 0; i < total; i++) h += `<span class="wcms-stat-dot${i < level ? ' on' : ''}"></span>`;
+    h += '</span>';
+    return h;
+  };
+
+  // Cuerpo (todos)
+  if(p.body){
+    const BODY_RANK = {ligero:1, medio:2, cuerpo:3, potente:4};
+    const ES = {ligero:'Ligero', medio:'Medio', cuerpo:'Estruct.', potente:'Potente'};
+    const EN = {ligero:'Light', medio:'Medium', cuerpo:'Struct.', potente:'Powerful'};
+    stats.push(`<span class="wcms-stat" title="${_en?'Body':'Cuerpo'}"><span class="wcms-stat-label">${_en?'B':'C'}</span>${renderDots(BODY_RANK[p.body],4)}<span class="wcms-stat-value">${(_en?EN:ES)[p.body]}</span></span>`);
+  }
+
+  // Taninos (tintos/rosados)
+  if(p.tannin && (w.type === 'tinto' || w.type === 'rosado')){
+    const TANNIN_RANK = {soft:1, medium:2, firm:3};
+    const ES = {soft:'Sedosos', medium:'Medios', firm:'Firmes'};
+    const EN = {soft:'Silky', medium:'Med.', firm:'Firm'};
+    stats.push(`<span class="wcms-stat" title="${_en?'Tannins':'Taninos'}"><span class="wcms-stat-label">${_en?'T':'T'}</span>${renderDots(TANNIN_RANK[p.tannin],3)}<span class="wcms-stat-value">${(_en?EN:ES)[p.tannin]}</span></span>`);
+  }
+
+  // Acidez (blancos/espumosos/dulces)
+  if(p.acidity && (w.type === 'blanco' || w.type === 'espumoso' || w.type === 'rosado' || w.type === 'dulce' || w.type === 'generoso')){
+    const ACID_RANK = {low:1, medium:2, high:3};
+    const ES = {low:'Suave', medium:'Media', high:'Vibrante'};
+    const EN = {low:'Soft', medium:'Med.', high:'Vibrant'};
+    stats.push(`<span class="wcms-stat" title="${_en?'Acidity':'Acidez'}"><span class="wcms-stat-label">${_en?'A':'A'}</span>${renderDots(ACID_RANK[p.acidity],3)}<span class="wcms-stat-value">${(_en?EN:ES)[p.acidity]}</span></span>`);
+  }
+
+  if(!stats.length) return '';
+  return `<div class="wine-card-mini-stats">${stats.join('<span class="wcms-sep">·</span>')}</div>`;
+}
+
 function _renderWineCard(w, idx, filteredList){
   const _en = LANG==='en';
   const typeLabels = _en ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'} : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
@@ -20344,6 +21011,7 @@ function _renderWineCard(w, idx, filteredList){
       </div>
     </div>
     <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);margin-top:.5rem;font-style:italic;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;position:relative">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
+    ${isWine ? _wineCardMiniStats(w, _en) : ''}
   </div>`;
 }
 
@@ -22368,6 +23036,63 @@ function _wineNotesExpanded(w) {
   html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--candy-purple);letter-spacing:.08em;margin-bottom:.25rem">◇ ' + (_en?'PALATE':'BOCA') + '</div>';
   html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4">' + escapeHTML(boca) + '</div>';
   html += '</div>';
+
+  // ── FINAL / PERSISTENCIA — inferido del tier y el cuerpo ──
+  let finalNote = '';
+  const profile = (typeof _wineProfile === 'function') ? _wineProfile(w) : {};
+  if(profile.tier === 'gran reserva') finalNote = _en ? 'Very long and persistent (>30s), tertiary notes (leather, undergrowth)' : 'Muy largo y persistente (>30s), notas terciarias (cuero, sotobosque)';
+  else if(profile.tier === 'reserva') finalNote = _en ? 'Long finish (15-30s), elegant evolution' : 'Final largo (15-30s), evolución elegante';
+  else if(profile.tier === 'crianza') finalNote = _en ? 'Medium finish (10-20s), oak integrated' : 'Final medio (10-20s), barrica integrada';
+  else if(w.type === 'espumoso') finalNote = _en ? 'Crisp finish, fresh citrus aftertaste' : 'Final crujiente, regusto cítrico fresco';
+  else if(w.type === 'dulce' || w.type === 'generoso') finalNote = _en ? 'Very long finish, complex aftertaste' : 'Final muy largo, regusto complejo';
+  else finalNote = _en ? 'Medium finish (10-15s), pure expression' : 'Final medio (10-15s), expresión pura';
+  html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(196,112,104,.25)">';
+  html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--candy-red);letter-spacing:.08em;margin-bottom:.25rem">◇ ' + (_en?'FINISH':'FINAL') + '</div>';
+  html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4">' + escapeHTML(finalNote) + '</div>';
+  html += '</div>';
+
+  // ── AÑADA / VINTAGE — solo si hay rating disponible ──
+  const vintage = (typeof _wineVintageRating === 'function') ? _wineVintageRating(w) : null;
+  if(vintage){
+    const stars = '★'.repeat(vintage.rating) + '☆'.repeat(5 - vintage.rating);
+    const charLabel = _en ? {'fresca':'fresh','cálida':'warm','equilibrada':'balanced','irregular':'irregular'}[vintage.character] : vintage.character;
+    const desc = _en ? vintage.desc_en : vintage.desc_es;
+    html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(196,154,60,.35)">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">';
+    html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.08em">◇ ' + (_en?'VINTAGE '+w.year:'AÑADA '+w.year) + ' · ' + charLabel.toUpperCase() + '</div>';
+    html += '<div style="font-family:\'Cinzel\',serif;font-size:.7rem;color:var(--gold);letter-spacing:.1em">' + stars + '</div>';
+    html += '</div>';
+    html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.76rem;color:var(--parch2);line-height:1.4;font-style:italic">' + escapeHTML(desc) + '</div>';
+    html += '</div>';
+  }
+
+  // ── GUARDA / DRINK WINDOW — inferido del tier ──
+  if(w.year){
+    const tier = profile.tier || 'crianza';
+    let guardaText = '';
+    if(tier === 'gran reserva') guardaText = (w.year + 5) + '–' + (w.year + 30);
+    else if(tier === 'reserva') guardaText = (w.year + 3) + '–' + (w.year + 15);
+    else if(tier === 'crianza') guardaText = (w.year + 1) + '–' + (w.year + 8);
+    else guardaText = (w.year) + '–' + (w.year + 4);
+    html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(170,140,80,.3)">';
+    html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:#a08b56;letter-spacing:.08em;margin-bottom:.25rem">◇ ' + (_en?'DRINK WINDOW':'VENTANA DE CONSUMO') + '</div>';
+    html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4">' + guardaText + '</div>';
+    html += '</div>';
+  }
+
+  // ── COPA RECOMENDADA — basado en el estilo del vino ──
+  if(typeof _wineGlassType === 'function' && typeof GLASS_TYPES !== 'undefined'){
+    const glassKey = _wineGlassType(w);
+    const glass = GLASS_TYPES[glassKey];
+    if(glass){
+      const glassName = _en ? glass.name_en : glass.name_es;
+      html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(126,200,227,.3)">';
+      html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:#7ec8e3;letter-spacing:.08em;margin-bottom:.25rem">◇ ' + (_en?'RECOMMENDED GLASS':'COPA RECOMENDADA') + '</div>';
+      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4"><strong>' + escapeHTML(glassName) + '</strong> — ' + escapeHTML(glass.use) + ' (' + glass.size + ')</div>';
+      html += '</div>';
+    }
+  }
+
   return html;
 }
 
@@ -22528,6 +23253,27 @@ function _wineWinery(w){
 }
 
 /**
+ * Clasificación enológica Old World vs New World.
+ * Criterio sommelier crítico: dos vinos de la misma uva pero distinto hemisferio
+ * enológico tienen estilos muy diferentes (estructura, fruta, acidez, alcohol).
+ */
+const NEW_WORLD = new Set([
+  'argentina','australia','chile','sur africa','sudafrica','south africa',
+  'estados unidos','usa','nueva zelanda','new zealand','uruguay'
+]);
+const OLD_WORLD = new Set([
+  'francia','france','cataluña','la rioja-alava','galicia','castilla y leon',
+  'andalucia','murcia','castilla la mancha','islas baleares','canarias','rueda',
+  'austria','hungria','alemania','germany','italia','italy','portugal','grecia','greece'
+]);
+function _wineWorld(origin){
+  const o = (origin||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+  if(NEW_WORLD.has(o)) return 'new';
+  if(OLD_WORLD.has(o)) return 'old';
+  return null;
+}
+
+/**
  * Extrae perfil enológico estructurado del texto winemaking + grapeSelection + story + notes.
  * Devuelve un objeto con atributos booleanos / categóricos comparables entre vinos.
  * Cache lazy en el propio objeto wine vía _profileCache.
@@ -22646,16 +23392,59 @@ function _wineProfile(w){
   // ── NUEVO: Alcohol % ──
   const alcohol = _wineAlcohol(w);
 
+  // ── NUEVO: Acidez (criterio sommelier crítico) ──
+  // Extracción por keywords ES + EN — high/medium/low
+  let acidity = null;
+  if(/acidez (?:alta|vibrante|marcada|tensa|punzante|c[ií]trica|tens|vivaz|brillante)|alta acidez|alta frescura|fresco y vivo|fresc[ao] y vibrante|vibrant acidity|high acid|racy|crisp|zesty|punzante|marcada acidez/.test(txt)){
+    acidity = 'high';
+  } else if(/(?:acidez |tanino |textura )?(?:redonda|untuosa|grasa|amable|fluida|blanda|sin estridencia|baja acidez|low acid|soft acid|round|fluid|smooth)|untuoso/.test(txt)){
+    acidity = 'low';
+  } else if(/acidez equilibrada|equilibri|balanced|balanced acid|medium acid/.test(txt)){
+    acidity = 'medium';
+  }
+  // Inferencia por tipo si nada se detectó (defaults conservadores)
+  if(!acidity){
+    if(w.type === 'espumoso') acidity = 'high';
+    else if(w.type === 'dulce') acidity = 'medium';
+  }
+
+  // ── NUEVO: Taninos (criterio sommelier crítico para tintos) ──
+  // Solo aplicable a tintos
+  let tannin = null;
+  if(w.type === 'tinto' || w.type === 'rosado'){
+    if(/taninos? (?:firmes|potentes|poderosos|robustos|estructur|t[aá]nicos|marcados)|estructura (?:fuerte|firme|robusta)|tan[ií]nico|firm tannins?|robust tannins?|powerful tannins?|gripping/.test(txt)){
+      tannin = 'firm';
+    } else if(/taninos? (?:sedosos|finos|delicados|suaves|amables|aterciopelados|domado|integrad|pulid)|silky tannins?|soft tannins?|delicate tannins?|velvet|elegant tannins?/.test(txt)){
+      tannin = 'soft';
+    } else if(/taninos? (?:redondos|equilibrados|medios|elegantes)|tanin[oa]s? (?:elegantes|integrad)|medium tannins?|round tannins?|balanced tannins?/.test(txt)){
+      tannin = 'medium';
+    }
+    // Inferencia por tier si no hay extracción explícita
+    if(!tannin && w.type === 'tinto'){
+      if(tier === 'gran reserva') tannin = 'firm';
+      else if(tier === 'reserva') tannin = 'medium';
+      else if(tier === 'crianza') tannin = 'medium';
+      else tannin = 'soft';
+    }
+    if(!tannin && w.type === 'rosado') tannin = 'soft';
+  }
+
+  // ── NUEVO: Old World vs New World (criterio estilístico sommelier) ──
+  const world = _wineWorld(w.origin);
+
   // ── NUEVO: Cobertura del perfil (para chip "datos parciales") ──
   // Cuenta cuántos campos enológicos clave se detectaron
-  const profileCoverage = [vessel, oak, agingMonths, tier, body].filter(x => x != null && x !== '').length;
-  const isPartial = profileCoverage < 3; // <3 de 5 = parcial
+  const profileCoverage = [vessel, oak, agingMonths, tier, body, acidity].filter(x => x != null && x !== '').length;
+  const isPartial = profileCoverage < 4; // <4 de 6 = parcial
 
   const profile = {
     vessel, oak, oakType, agingMonths, agingBucket, tier,
     malolactic, lees, battonage, wildYeast, unfiltered, noSulfites,
     champenoise, carbonicMaceration, filtration,
-    body, winery, aromas, style, alcohol, isPartial
+    body, winery, aromas, style, alcohol,
+    // criterios sommelier
+    acidity, tannin, world,
+    isPartial
   };
   _wineProfileCache[w.id] = profile;
   return profile;
@@ -22903,6 +23692,41 @@ function findSimilarWines(wineId, count){
     const candidateOutOfStock = w.inStock === false;
     if(candidateOutOfStock) score -= 12; // penaliza fuerte (queda al final, casi se descarta)
 
+    // ── SOMMELIER #1: Acidez (criterio crítico estructural) ──
+    const ACIDITY_RANK = {'low':0,'medium':1,'high':2};
+    if(tProfile.acidity && wProfile.acidity){
+      if(tProfile.acidity === wProfile.acidity){
+        score += 4; enoMatches.push({k:'acidity', v:tProfile.acidity});
+      } else {
+        const diff = Math.abs(ACIDITY_RANK[tProfile.acidity] - ACIDITY_RANK[wProfile.acidity]);
+        if(diff === 1) score += 1;
+        else if(diff === 2) score -= 3; // diferencia extrema = mala sustitución
+      }
+    }
+
+    // ── SOMMELIER #2: Taninos (estructura crítica para tintos/rosados) ──
+    const TANNIN_RANK = {'soft':0,'medium':1,'firm':2};
+    if(tProfile.tannin && wProfile.tannin){
+      if(tProfile.tannin === wProfile.tannin){
+        score += 4; enoMatches.push({k:'tannin', v:tProfile.tannin});
+      } else {
+        const diff = Math.abs(TANNIN_RANK[tProfile.tannin] - TANNIN_RANK[wProfile.tannin]);
+        if(diff === 1) score += 1;
+        else if(diff === 2) score -= 3;
+      }
+    }
+
+    // ── SOMMELIER #3: Old World vs New World (estilo enológico) ──
+    let crossWorld = false;
+    if(tProfile.world && wProfile.world){
+      if(tProfile.world === wProfile.world){
+        score += 3; // mismo hemisferio = estilo afín
+      } else {
+        score -= 3; // cross-world = estilísticamente distinto
+        crossWorld = true;
+      }
+    }
+
     // ── Normalización dinámica: divide por 120 (max teórico realista) ──
     // Vinos casi-clónicos saturan a 100%, el resto se gradúa naturalmente.
     const scorePct = Math.max(0, Math.min(100, Math.round((score / 120) * 100)));
@@ -22928,7 +23752,11 @@ function findSimilarWines(wineId, count){
       alcDiff: alcDiff,
       yearDiff: yearDiff,
       outOfStock: candidateOutOfStock,
-      isPartial: wProfile.isPartial
+      isPartial: wProfile.isPartial,
+      // sommelier
+      crossWorld: crossWorld,
+      tWorld: tProfile.world,
+      wWorld: wProfile.world
     });
   }
 
@@ -23087,6 +23915,23 @@ function _consolidateChips(match, _en){
     const BODY_LBL_EN = {ligero:'light',medio:'medium',cuerpo:'structured',potente:'powerful'};
     out.push({text: _en ? BODY_LBL_EN[enoMap.body] : BODY_LBL_ES[enoMap.body], icon:'◐', priority:5, color:'sensorial'});
   }
+  // Acidez (sommelier crítico — siempre que match exacto)
+  if(enoMap.acidity){
+    const ACID_ES = {high:'acidez alta',medium:'acidez media',low:'acidez suave'};
+    const ACID_EN = {high:'high acidity',medium:'med. acidity',low:'soft acidity'};
+    out.push({text: _en ? ACID_EN[enoMap.acidity] : ACID_ES[enoMap.acidity], icon:'⚯', priority:4, color:'sensorial'});
+  }
+  // Taninos (sommelier crítico para tintos)
+  if(enoMap.tannin){
+    const TAN_ES = {firm:'taninos firmes',medium:'taninos medios',soft:'taninos sedosos'};
+    const TAN_EN = {firm:'firm tannins',medium:'med. tannins',soft:'silky tannins'};
+    out.push({text: _en ? TAN_EN[enoMap.tannin] : TAN_ES[enoMap.tannin], icon:'❖', priority:4, color:'sensorial'});
+  }
+  // Cross-world warning (estilísticamente distinto)
+  if(match.crossWorld){
+    const cross = match.tWorld === 'old' ? (_en?'New World style':'estilo Nuevo Mundo') : (_en?'Old World style':'estilo Viejo Mundo');
+    out.push({text: cross, icon:'◈', priority:5, color:'adjacent'});
+  }
   if(enoMap.aromas){
     out.push({text: enoMap.aromas + (_en?' aroma fams.':' aromas'), icon:'❀', priority:5, color:'sensorial'});
   }
@@ -23224,8 +24069,280 @@ function _wineSimilarityChips(match, _en){
 }
 
 /**
- * Renderiza la sección "Vinos similares" v2 para la ficha de estudio.
- * Mejor jerarquía visual, chips agrupados, mobile-first.
+ * Renderiza el "Perfil Estructural" del vino para la ficha individual.
+ * Muestra cuerpo, taninos (tintos), acidez y barrica como dots-strip,
+ * sin contexto de comparación (sin colores match/diff).
+ * Diseño TUNIC parchment dark — para detalle del vino solo.
+ */
+function _wineProfileBlock(w, _en){
+  const p = _wineProfile(w);
+  if(!p.body && !p.tannin && !p.acidity && !p.oak) return '';
+
+  const BODY_RANK = {ligero:1, medio:2, cuerpo:3, potente:4};
+  const BODY_LBL_ES = {ligero:'Ligero', medio:'Medio', cuerpo:'Estructurado', potente:'Potente'};
+  const BODY_LBL_EN = {ligero:'Light', medio:'Medium', cuerpo:'Structured', potente:'Powerful'};
+  const TANNIN_RANK = {soft:1, medium:2, firm:3};
+  const TAN_ES = {soft:'Sedosos', medium:'Medios', firm:'Firmes'};
+  const TAN_EN = {soft:'Silky', medium:'Medium', firm:'Firm'};
+  const ACID_RANK = {low:1, medium:2, high:3};
+  const ACID_ES = {low:'Suave', medium:'Media', high:'Vibrante'};
+  const ACID_EN = {low:'Soft', medium:'Medium', high:'Vibrant'};
+
+  const renderDots = (level, total) => {
+    let h = '<div class="wpb-dots">';
+    for(let i = 0; i < total; i++){
+      h += `<span class="wpb-dot${i < level ? ' on' : ''}"></span>`;
+    }
+    h += '</div>';
+    return h;
+  };
+
+  const stats = [];
+
+  // CUERPO
+  if(p.body){
+    const lvl = BODY_RANK[p.body];
+    const lbl = (_en ? BODY_LBL_EN : BODY_LBL_ES)[p.body];
+    stats.push(`
+      <div class="wpb-stat">
+        <div class="wpb-stat-label">${_en?'BODY':'CUERPO'}</div>
+        <div class="wpb-stat-row">${renderDots(lvl,4)}<span class="wpb-stat-value">${lbl}</span></div>
+      </div>`);
+  }
+
+  // TANINOS (solo tintos y rosados)
+  if(p.tannin && (w.type === 'tinto' || w.type === 'rosado')){
+    const lvl = TANNIN_RANK[p.tannin];
+    const lbl = (_en ? TAN_EN : TAN_ES)[p.tannin];
+    stats.push(`
+      <div class="wpb-stat">
+        <div class="wpb-stat-label">${_en?'TANNINS':'TANINOS'}</div>
+        <div class="wpb-stat-row">${renderDots(lvl,3)}<span class="wpb-stat-value">${lbl}</span></div>
+      </div>`);
+  }
+
+  // ACIDEZ
+  if(p.acidity){
+    const lvl = ACID_RANK[p.acidity];
+    const lbl = (_en ? ACID_EN : ACID_ES)[p.acidity];
+    stats.push(`
+      <div class="wpb-stat">
+        <div class="wpb-stat-label">${_en?'ACIDITY':'ACIDEZ'}</div>
+        <div class="wpb-stat-row">${renderDots(lvl,3)}<span class="wpb-stat-value">${lbl}</span></div>
+      </div>`);
+  }
+
+  // ALCOHOL (si extraíble)
+  if(p.alcohol != null){
+    const alcLvl = p.alcohol < 12 ? 1 : p.alcohol < 14 ? 2 : p.alcohol < 15 ? 3 : 4;
+    const alcLbl = p.alcohol + '% ABV';
+    stats.push(`
+      <div class="wpb-stat">
+        <div class="wpb-stat-label">${_en?'ALCOHOL':'ALCOHOL'}</div>
+        <div class="wpb-stat-row">${renderDots(alcLvl,4)}<span class="wpb-stat-value">${alcLbl}</span></div>
+      </div>`);
+  }
+
+  // BARRICA / CRIANZA
+  if(p.oak === 'yes' || p.oak === 'no'){
+    let lbl, lvl;
+    if(p.oak === 'yes'){
+      const oakName = p.oakType ? p.oakType.replace(/^./, c => c.toUpperCase()).replace(/\+/g,'/') : (_en?'Oak':'Roble');
+      const aging = p.agingMonths ? p.agingMonths + 'm' : '';
+      lbl = oakName + (aging ? ' · ' + aging : '');
+      lvl = p.agingMonths >= 18 ? 3 : p.agingMonths >= 6 ? 2 : 1;
+    } else {
+      lbl = _en ? 'No oak (steel)' : 'Sin barrica (acero)';
+      lvl = 0;
+    }
+    stats.push(`
+      <div class="wpb-stat">
+        <div class="wpb-stat-label">${_en?'BARREL':'BARRICA'}</div>
+        <div class="wpb-stat-row">${renderDots(lvl,3)}<span class="wpb-stat-value" style="font-size:.68rem">${escapeHTML(lbl)}</span></div>
+      </div>`);
+  }
+
+  if(!stats.length) return '';
+
+  return `<div class="wine-info-box wpb-block" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
+    <div class="wine-info-label">⚯ ${_en?'Structural Profile':'Perfil Estructural'}</div>
+    <div class="wpb-grid">${stats.join('')}</div>
+  </div>`;
+}
+
+/**
+ * Helper: genera HTML de una stat sommelier (dots + label + valor).
+ * matchClass: 'match-exact' (verde), 'match-close' (ámbar), 'match-far' (arcilla)
+ */
+function _wineSommelierStat(label, value, level, total, matchClass){
+  if(!value) return '';
+  const dots = [];
+  for(let i = 0; i < total; i++){
+    dots.push('<span class="ws-dot' + (i < level ? ' on' : '') + '"></span>');
+  }
+  return `<div class="ws-stat ${matchClass||''}">
+    <div class="ws-stat-label">${label}</div>
+    <div class="ws-stat-row">
+      <div class="ws-stat-dots">${dots.join('')}</div>
+      <div class="ws-stat-value">${value}</div>
+    </div>
+  </div>`;
+}
+
+/**
+ * Genera la stat-strip sommelier para una card de similitud.
+ * Compara perfil del candidato con el target: cuerpo, taninos, acidez, barrica.
+ */
+function _wineSommelierStrip(targetWine, match, _en){
+  const tp = _wineProfile(targetWine);
+  const wp = _wineProfile(match.wine);
+  const stats = [];
+
+  // CUERPO (todos los tipos)
+  const BODY_RANK = {ligero:1, medio:2, cuerpo:3, potente:4};
+  const BODY_LBL_ES = {ligero:'Ligero', medio:'Medio', cuerpo:'Estructurado', potente:'Potente'};
+  const BODY_LBL_EN = {ligero:'Light', medio:'Medium', cuerpo:'Structured', potente:'Powerful'};
+  if(wp.body){
+    const wLevel = BODY_RANK[wp.body] || 2;
+    const tLevel = BODY_RANK[tp.body] || 2;
+    const diff = Math.abs(wLevel - tLevel);
+    const cls = diff === 0 ? 'match-exact' : diff === 1 ? 'match-close' : 'match-far';
+    const lbl = (_en ? BODY_LBL_EN : BODY_LBL_ES)[wp.body];
+    stats.push(_wineSommelierStat(_en?'BODY':'CUERPO', lbl, wLevel, 4, cls));
+  }
+
+  // TANINOS (solo tintos y rosados)
+  if(wp.tannin && (match.wine.type === 'tinto' || match.wine.type === 'rosado')){
+    const TANNIN_RANK = {soft:1, medium:2, firm:3};
+    const TAN_ES = {soft:'Sedosos', medium:'Medios', firm:'Firmes'};
+    const TAN_EN = {soft:'Silky', medium:'Medium', firm:'Firm'};
+    const wLevel = TANNIN_RANK[wp.tannin] || 2;
+    const tLevel = tp.tannin ? TANNIN_RANK[tp.tannin] : null;
+    let cls = 'match-close';
+    if(tLevel != null){
+      const diff = Math.abs(wLevel - tLevel);
+      cls = diff === 0 ? 'match-exact' : diff === 1 ? 'match-close' : 'match-far';
+    }
+    const lbl = (_en ? TAN_EN : TAN_ES)[wp.tannin];
+    stats.push(_wineSommelierStat(_en?'TANNINS':'TANINOS', lbl, wLevel, 3, cls));
+  }
+
+  // ACIDEZ
+  if(wp.acidity){
+    const ACID_RANK = {low:1, medium:2, high:3};
+    const ACID_ES = {low:'Suave', medium:'Media', high:'Vibrante'};
+    const ACID_EN = {low:'Soft', medium:'Medium', high:'Vibrant'};
+    const wLevel = ACID_RANK[wp.acidity] || 2;
+    const tLevel = tp.acidity ? ACID_RANK[tp.acidity] : null;
+    let cls = 'match-close';
+    if(tLevel != null){
+      const diff = Math.abs(wLevel - tLevel);
+      cls = diff === 0 ? 'match-exact' : diff === 1 ? 'match-close' : 'match-far';
+    }
+    const lbl = (_en ? ACID_EN : ACID_ES)[wp.acidity];
+    stats.push(_wineSommelierStat(_en?'ACIDITY':'ACIDEZ', lbl, wLevel, 3, cls));
+  }
+
+  // BARRICA / CRIANZA
+  if(wp.oak === 'yes'){
+    const oakName = wp.oakType ? wp.oakType.charAt(0).toUpperCase() + wp.oakType.slice(1).replace(/\+/g,'/') : (_en?'Oak':'Roble');
+    const aging = wp.agingMonths ? wp.agingMonths + 'm' : '';
+    const txt = (oakName + (aging ? ' · ' + aging : '')).substring(0,18);
+    let cls = '';
+    if(tp.oak === wp.oak && tp.oakType === wp.oakType) cls = 'match-exact';
+    else if(tp.oak === wp.oak) cls = 'match-close';
+    else cls = 'match-far';
+    stats.push(_wineSommelierStat(_en?'BARREL':'BARRICA', txt, 1, 1, cls));
+  } else if(wp.oak === 'no'){
+    let cls = (tp.oak === 'no') ? 'match-exact' : (tp.oak === 'yes') ? 'match-far' : 'match-close';
+    stats.push(_wineSommelierStat(_en?'BARREL':'BARRICA', _en?'No oak':'Sin barrica', 0, 1, cls));
+  }
+
+  if(!stats.length) return '';
+  return `<div class="wine-similar-stats">${stats.join('')}</div>`;
+}
+
+/**
+ * Etiqueta narrativa sommelier según el porcentaje de similitud.
+ * "85%" → "MUY SIMILAR" — más útil que solo el número.
+ */
+function _wineMatchLabel(pct, _en){
+  if(pct >= 90) return _en ? 'Nearly identical' : 'Casi idéntico';
+  if(pct >= 75) return _en ? 'Very similar'     : 'Muy similar';
+  if(pct >= 60) return _en ? 'Good alternative' : 'Buena alternativa';
+  if(pct >= 45) return _en ? 'Comparable'       : 'Comparable';
+  return _en ? 'Wider alternative' : 'Alternativa amplia';
+}
+
+/**
+ * Frase narrativa que explica POR QUÉ dos vinos son similares.
+ * Estilo italic Cormorant — voz de sommelier, no técnica.
+ */
+function _wineNarrativeReason(match, _en){
+  const eno = match.enoMatches || [];
+  const findEno = k => eno.find(e => e.k === k);
+  const fragments = [];
+
+  // Bodega / familia
+  if(match.sameWinery)         fragments.push(_en ? 'same producer' : 'misma bodega');
+  else if(match.bothVegaSicilia) fragments.push(_en ? 'Vega Sicilia family' : 'familia Vega Sicilia');
+
+  // Uvas (texto natural)
+  if(match.sharedGrapes && match.sharedGrapes.length){
+    const grapes = match.sharedGrapes
+      .map(g => g.replace(/\b\w/g, c => c.toUpperCase()))
+      .slice(0, 2)
+      .join('/');
+    fragments.push((_en ? 'same ' : 'mismo ') + grapes);
+  }
+
+  // Geografía
+  if(match.sameRegion)        fragments.push(_en ? 'same DO' : 'misma DO');
+  else if(match.sameOrigin)   fragments.push(_en ? 'same region' : 'misma región');
+  else if(match.geoNeighbor)  fragments.push(_en ? 'neighboring region' : 'región vecina');
+
+  // Roble (la decisión enológica más visible)
+  const oakYes  = findEno('oak') && findEno('oak').v === 'yes';
+  const oakNo   = findEno('oak') && findEno('oak').v === 'no';
+  const oakType = findEno('oakType');
+  if(oakYes && oakType){
+    fragments.push((_en ? 'oak: ' : 'roble ') + oakType.v.replace(/\+/g, '/'));
+  } else if(oakNo){
+    fragments.push(_en ? 'unoaked' : 'sin barrica');
+  }
+
+  // Cuerpo / estructura
+  const bodyMatch = findEno('body');
+  if(bodyMatch){
+    const ES = {ligero:'cuerpo ligero', medio:'cuerpo medio', cuerpo:'estructurado', potente:'potente'};
+    const EN = {ligero:'light bodied', medio:'medium bodied', cuerpo:'structured', potente:'powerful'};
+    fragments.push((_en ? EN : ES)[bodyMatch.v]);
+  }
+
+  // Tier si nada estructural
+  const tierMatch = findEno('tier');
+  if(fragments.length < 3 && tierMatch){
+    fragments.push(tierMatch.v);
+  }
+
+  // Cross-world warning (afecta tono)
+  if(match.crossWorld){
+    fragments.push(_en ? 'different style' : 'estilo distinto');
+  }
+
+  if(fragments.length === 0){
+    return _en ? 'Broadly comparable in style.' : 'Comparable en líneas generales.';
+  }
+
+  // Construir frase con tope de 4 fragmentos
+  const reasonText = fragments.slice(0, 4).join(', ');
+  return reasonText.charAt(0).toUpperCase() + reasonText.slice(1) + '.';
+}
+
+/**
+ * Renderiza la sección "Vinos similares" v3 — diseño hero+compact.
+ * El #1 sustituto destaca como hero card con corona y narrativa expandida.
+ * Los siguientes 5 son cards compactas en grid 2-col.
  */
 function _renderSimilarWinesSection(target, _en){
   const matches = findSimilarWines(target.id, 6);
@@ -23241,80 +24358,102 @@ function _renderSimilarWinesSection(target, _en){
 
   const TYPE_LBL_ES = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
   const TYPE_LBL_EN = {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'};
-  const MAX_VISIBLE_CHIPS = 6;
+  const TYPE_ICON = {blanco:'◇',tinto:'◆',rosado:'◈',espumoso:'⌬',dulce:'◉'};
+  const MAX_HERO_CHIPS = 4;
+  const MAX_COMPACT_CHIPS = 2;
 
-  const cards = matches.map((m, i) => {
-    const w = m.wine;
-    const allChips = _consolidateChips(m, _en);
-    // Ordenar por prioridad (1=más importante)
-    allChips.sort((a,b) => a.priority - b.priority);
+  // Helper: chip render
+  const renderChip = c => {
+    const tip = c.tooltip ? c.tooltip : c.text;
+    return `<span class="wine-similar-card-chip c-${c.color}" title="${escapeHTML(tip)}"><span class="chip-ico">${c.icon}</span>${escapeHTML(c.text)}</span>`;
+  };
 
+  // ════ HERO CARD — sustituto #1 (mejor alternativa) ════
+  const hero = matches[0];
+  const hHero = (() => {
+    const w = hero.wine;
+    const chips = _consolidateChips(hero, _en);
+    chips.sort((a,b) => a.priority - b.priority);
+    const visibleChips = chips.slice(0, MAX_HERO_CHIPS);
     const typeLabel = (_en ? TYPE_LBL_EN : TYPE_LBL_ES)[w.type] || w.type;
-
-    // Ring SVG — radius 27 dentro de 64px box
-    const circ = 2 * Math.PI * 27;
-    const offset = circ * (1 - m.scorePct / 100);
-    const scoreClass = m.scorePct >= 75 ? 'score-high' : m.scorePct >= 50 ? 'score-mid' : 'score-low';
-
-    // Chips: top N visibles + "+N más" si hay más
-    // Insertar separador después del chip de precio (entre identidad/geo/precio y enología/sensorial)
-    const renderChip = c => {
-      const tip = c.tooltip ? c.tooltip : c.text;
-      return `<span class="wine-similar-card-chip c-${c.color}" title="${escapeHTML(tip)}"><span class="chip-ico">${c.icon}</span>${escapeHTML(c.text)}</span>`;
-    };
-    // Subdivide chips por prioridad para insertar separador visual
-    const buildChipBlock = (chips) => {
-      let html = '';
-      let lastPriority = 0;
-      chips.forEach(c => {
-        if(lastPriority > 0 && lastPriority <= 3 && c.priority >= 4){
-          html += '<span class="chip-sep" aria-hidden="true"></span>';
-        }
-        html += renderChip(c);
-        lastPriority = c.priority;
-      });
-      return html;
-    };
-
-    const visibleChips = allChips.slice(0, MAX_VISIBLE_CHIPS);
-    const hiddenChips = allChips.slice(MAX_VISIBLE_CHIPS);
-    const visibleHtml = buildChipBlock(visibleChips);
-    const cardId = 'wsc_' + w.id + '_' + i;
-    const hiddenHtml = hiddenChips.length
-      ? `<span id="${cardId}_extra" style="display:none">${buildChipBlock(hiddenChips)}</span>
-         <button class="wine-similar-more" type="button" onclick="event.stopPropagation();var e=document.getElementById('${cardId}_extra');var b=this;if(e.style.display==='none'){e.style.display='inline';b.textContent='✕ ${_en?'hide':'ocultar'}'}else{e.style.display='none';b.textContent='+${hiddenChips.length} ${_en?'more':'más'}'}">+${hiddenChips.length} ${_en?'more':'más'}</button>`
-      : '';
-
-    // Ícono de tipo de vino (hex)
-    const TYPE_ICON = {blanco:'◇',tinto:'◆',rosado:'◈',espumoso:'⌬',dulce:'◉'};
     const typeIcon = TYPE_ICON[w.type] || '◇';
+    const matchLabel = _wineMatchLabel(hero.scorePct, _en);
+    const narrative = _wineNarrativeReason(hero, _en);
+    const circ = 2 * Math.PI * 36;
+    const offset = circ * (1 - hero.scorePct / 100);
+    const scoreClass = hero.scorePct >= 75 ? 'score-high' : hero.scorePct >= 50 ? 'score-mid' : 'score-low';
+    const oosStamp = hero.outOfStock ? `<div class="wine-similar-card-oos-stamp">⊘ ${_en?'no stock':'sin stock'}</div>` : '';
+    const oosClass = hero.outOfStock ? ' wsl-oos' : '';
 
-    const oosStamp = m.outOfStock ? `<div class="wine-similar-card-oos-stamp" aria-label="${_en?'out of stock':'sin stock'}">⊘ ${_en?'no stock':'sin stock'}</div>` : '';
-    const oosClass = m.outOfStock ? ' wsl-oos' : '';
-    return `<button class="wine-similar-card wt-${w.type}${oosClass}" type="button" onclick="_showWineDetail(${w.id})" aria-label="${escapeHTML(w.name)} — ${m.scorePct}% ${_en?'similar':'similar'}${m.outOfStock?(_en?' (out of stock)':' (sin stock)'):''}">
-      ${oosStamp}
-      <div class="wine-similar-pct-ring ${scoreClass}">
-        <svg width="64" height="64" viewBox="0 0 64 64">
-          <circle class="ring-bg" cx="32" cy="32" r="27"/>
-          <circle class="ring-fg" cx="32" cy="32" r="27"
-            stroke-dasharray="${circ.toFixed(2)}"
-            stroke-dashoffset="${offset.toFixed(2)}"/>
-        </svg>
-        <div class="wine-similar-pct-num">${m.scorePct}<sub>%</sub></div>
+    return `<button class="wine-similar-hero wt-${w.type}${oosClass}" type="button" onclick="_showWineDetail(${w.id})" aria-label="${escapeHTML(w.name)} — ${hero.scorePct}% ${_en?'similar':'similar'}" style="animation-delay:0s">
+      <div class="wine-similar-hero-crown">
+        <span class="wsh-crown-mark">✦</span>
+        <span class="wsh-crown-text">${_en?'BEST ALTERNATIVE':'MEJOR ALTERNATIVA'}</span>
+        <span class="wsh-crown-mark">✦</span>
       </div>
-      <div class="wine-similar-info">
-        <div class="wine-similar-head">
-          <div class="wine-similar-card-name">${escapeHTML(w.name)}</div>
-          ${w.price?`<div class="wine-similar-card-price">${w.price}€</div>`:''}
+      ${oosStamp}
+      <div class="wine-similar-hero-body">
+        <div class="wine-similar-hero-ring ${scoreClass}">
+          <svg width="92" height="92" viewBox="0 0 92 92">
+            <circle class="ring-bg" cx="46" cy="46" r="36"/>
+            <circle class="ring-fg" cx="46" cy="46" r="36"
+              stroke-dasharray="${circ.toFixed(2)}"
+              stroke-dashoffset="${offset.toFixed(2)}"/>
+          </svg>
+          <div class="wine-similar-hero-pct">${hero.scorePct}<sub>%</sub></div>
         </div>
-        <div class="wine-similar-card-meta">
-          <span class="meta-type-icon" aria-hidden="true">${typeIcon}</span>
-          <span class="meta-type">${typeLabel}</span>
-          <span class="meta-dot">·</span>
+        <div class="wine-similar-hero-info">
+          <div class="wine-similar-hero-pctlbl">${matchLabel.toUpperCase()}</div>
+          <div class="wine-similar-hero-head">
+            <div class="wine-similar-hero-name">${escapeHTML(w.name)}</div>
+            ${w.price?`<div class="wine-similar-hero-price">${w.price}€</div>`:''}
+          </div>
+          <div class="wine-similar-hero-meta">
+            <span class="wsh-type-icon">${typeIcon}</span>
+            <span class="wsh-type">${typeLabel}</span>
+            <span class="wsh-dot">·</span>
+            <span>${escapeHTML(w.origin||'')}</span>
+            ${w.year?`<span class="wsh-dot">·</span><span>${w.year}</span>`:''}
+          </div>
+          <div class="wine-similar-hero-narrative">"${escapeHTML(narrative)}"</div>
+          <div class="wine-similar-hero-chips">${visibleChips.map(renderChip).join('')}</div>
+        </div>
+      </div>
+    </button>`;
+  })();
+
+  // ════ COMPACT CARDS — sustitutos #2-#6 ════
+  const compactCards = matches.slice(1).map((m, i) => {
+    const w = m.wine;
+    const chips = _consolidateChips(m, _en);
+    chips.sort((a,b) => a.priority - b.priority);
+    const visibleChips = chips.slice(0, MAX_COMPACT_CHIPS);
+    const typeLabel = (_en ? TYPE_LBL_EN : TYPE_LBL_ES)[w.type] || w.type;
+    const typeIcon = TYPE_ICON[w.type] || '◇';
+    const matchLabel = _wineMatchLabel(m.scorePct, _en);
+    const scoreClass = m.scorePct >= 75 ? 'score-high' : m.scorePct >= 50 ? 'score-mid' : 'score-low';
+    const oosStamp = m.outOfStock ? `<div class="wine-similar-card-oos-stamp" style="font-size:.5rem;padding:.12rem .35rem;top:6px;right:6px">⊘</div>` : '';
+    const oosClass = m.outOfStock ? ' wsl-oos' : '';
+    const delay = ((i+1) * 0.08).toFixed(2);
+
+    return `<button class="wine-similar-compact wt-${w.type}${oosClass} ${scoreClass}" type="button" onclick="_showWineDetail(${w.id})" aria-label="${escapeHTML(w.name)} — ${m.scorePct}% ${_en?'similar':'similar'}" style="animation-delay:${delay}s">
+      ${oosStamp}
+      <div class="wsc-pct-block">
+        <div class="wsc-pct-num">${m.scorePct}<sub>%</sub></div>
+        <div class="wsc-pct-lbl">${matchLabel}</div>
+      </div>
+      <div class="wsc-info">
+        <div class="wsc-head">
+          <div class="wsc-name">${escapeHTML(w.name)}</div>
+          ${w.price?`<div class="wsc-price">${w.price}€</div>`:''}
+        </div>
+        <div class="wsc-meta">
+          <span class="wsc-type-icon">${typeIcon}</span>
+          <span class="wsc-type">${typeLabel}</span>
+          <span class="wsc-dot">·</span>
           <span>${escapeHTML(w.origin||'')}</span>
-          ${w.year?`<span class="meta-dot">·</span><span>${w.year}</span>`:''}
         </div>
-        <div class="wine-similar-card-chips">${visibleHtml}${hiddenHtml}</div>
+        ${visibleChips.length ? `<div class="wsc-chips">${visibleChips.map(renderChip).join('')}</div>` : ''}
       </div>
     </button>`;
   }).join('');
@@ -23322,7 +24461,8 @@ function _renderSimilarWinesSection(target, _en){
   return `<div class="wine-similar-wrap">
     <div class="wine-similar-title">${_en?'Similar Wines':'Vinos Similares'}</div>
     <div class="wine-similar-sub">${subtitle}</div>
-    <div class="wine-similar-list">${cards}</div>
+    ${hHero}
+    ${compactCards ? `<div class="wine-similar-compact-grid">${compactCards}</div>` : ''}
   </div>`;
 }
 
@@ -23351,7 +24491,13 @@ function _showWineDetail(id, list, direction){
       <span class="wine-nav-counter">${navCounter}</span>
       <button onclick="_navigateWine(1)" class="wine-nav-arrow${hasNext?'':' disabled'}">▷</button>
     </div>
-    <div class="wine-swipe-hint">${_en?'← swipe to change →':'← desliza para cambiar →'}</div>` : ''}
+    <div class="wine-swipe-hint">${_en?'← swipe to change →':'← desliza para cambiar →'}</div>
+    <div class="wine-swipe-pill" aria-hidden="true">
+      ${hasPrev ? '<span class="wsp-arrow left">◁</span>' : '<span style="width:.6rem;display:inline-block"></span>'}
+      <span>${_en?'swipe':'desliza'}</span>
+      <span class="wsp-counter">${_wineDetailIdx+1}/${_wineDetailList.length}</span>
+      ${hasNext ? '<span class="wsp-arrow right">▷</span>' : '<span style="width:.6rem;display:inline-block"></span>'}
+    </div>` : ''}
 
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem">
       <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.3rem">${typeIconsSvg[w.type]||TXKO_ICONS.wTinto}</div>
@@ -23435,6 +24581,8 @@ function _showWineDetail(id, list, direction){
       </div>` : ''}
     </div>` : ''}
 
+    ${isWine ? _wineProfileBlock(w, _en) : ''}
+
     ${isWine ? _renderRadarChart(w) : ''}
 
     ${isWine&&w.notes?`
@@ -23474,21 +24622,61 @@ function _showWineDetail(id, list, direction){
     });
   } else {
     document.body.appendChild(overlay);
-    // Swipe touch handlers
-    let _swStartX = 0, _swStartY = 0, _swiping = false;
+    // ── Swipe touch handlers (v2) ──
+    // Funciona desde cualquier parte del scroll, con feedback visual ligero
+    // y thresholds más permisivos para que un swipe ligeramente diagonal navegue.
+    let _swStartX = 0, _swStartY = 0, _swStartT = 0, _swiping = false, _swDir = null;
+    const innerEl = overlay.querySelector('.wine-detail-inner');
     overlay.addEventListener('touchstart', e => {
       _swStartX = e.touches[0].clientX;
       _swStartY = e.touches[0].clientY;
+      _swStartT = Date.now();
       _swiping = true;
+      _swDir = null;
+    }, {passive:true});
+    overlay.addEventListener('touchmove', e => {
+      if(!_swiping) return;
+      const dx = e.touches[0].clientX - _swStartX;
+      const dy = e.touches[0].clientY - _swStartY;
+      // Determinar dirección dominante una vez (evita conflicto con scroll vertical)
+      if(_swDir === null && (Math.abs(dx) > 12 || Math.abs(dy) > 12)){
+        _swDir = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+      }
+      // Solo aplicar feedback visual si es swipe horizontal claro
+      if(_swDir === 'h' && innerEl){
+        const damped = dx * 0.35; // resistencia, no follow-through completo
+        innerEl.style.transform = 'translateX(' + damped.toFixed(1) + 'px)';
+        innerEl.style.transition = 'none';
+      }
     }, {passive:true});
     overlay.addEventListener('touchend', e => {
       if(!_swiping) return;
       _swiping = false;
       const dx = e.changedTouches[0].clientX - _swStartX;
       const dy = e.changedTouches[0].clientY - _swStartY;
-      if(Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.7) return;
+      const dt = Date.now() - _swStartT;
+      const velocity = Math.abs(dx) / Math.max(dt, 1); // px/ms
+      // Reset feedback visual
+      if(innerEl){
+        innerEl.style.transition = 'transform .25s ease';
+        innerEl.style.transform = '';
+      }
+      // Validar swipe: distancia ≥45px O velocidad ≥0.4 px/ms (flick rápido)
+      // Ratio dy/dx hasta 1.0 (permisivo para diagonales naturales)
+      if(_swDir !== 'h') return;
+      const isLongSwipe = Math.abs(dx) >= 45;
+      const isFastFlick = velocity >= 0.4 && Math.abs(dx) >= 25;
+      if(!isLongSwipe && !isFastFlick) return;
+      if(Math.abs(dy) > Math.abs(dx) * 1.0) return; // sólo cancelar si es claramente vertical
       if(dx > 0 && _wineDetailIdx > 0) _navigateWine(-1);
       else if(dx < 0 && _wineDetailIdx < _wineDetailList.length - 1) _navigateWine(1);
+    }, {passive:true});
+    overlay.addEventListener('touchcancel', () => {
+      _swiping = false;
+      if(innerEl){
+        innerEl.style.transition = 'transform .25s ease';
+        innerEl.style.transform = '';
+      }
     }, {passive:true});
     overlay.addEventListener('click', e => { if(e.target === overlay) overlay.remove(); });
   }
