@@ -1,0 +1,21 @@
+{
+  "name": "TXOKO Formación",
+  "short_name": "TXOKO",
+  "description": "Formación del equipo de sala — TXOKO by Martín Berasategui · Ritz-Carlton Abama",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1c2a22",
+  "theme_color": "#0e0c09",
+  "lang": "es",
+  "categories": ["education", "food", "lifestyle"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

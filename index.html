@@ -17,7 +17,7 @@
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
   ║  Fecha de creación: 2024                                       ║
-  ║  Versión: 4.6 · March 2026                          ║
+  ║  Versión: 5.6 · May 2026                            ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
 <!DOCTYPE html>
@@ -28,9 +28,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
 <meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
-<meta name="app-version" content="4.6">
-<meta name="app-build" content="March 2026">
+<meta name="app-version" content="5.6">
+<meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#0e0c09">
+<!-- ═══ PWA ═══ -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TXOKO">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
@@ -8043,10 +8050,15 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 }
 
 </style>
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
-<script defer src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-<script defer src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- ═══ EXTERNAL DEPS (versions pinned for reproducibility) ═══
+     SRI hashes intentionally NOT inlined here — compute them at deploy time:
+       curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A
+     Then add  integrity="sha384-…"  to each tag below.
+     `crossorigin="anonymous"` is required for SRI verification to work. -->
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="anonymous"/>
+<script defer src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin="anonymous"></script>
+<script defer src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -8650,7 +8662,32 @@ const CERT_THRESHOLD = 0.80; // 80% of dishes in category known = certified
 // ═══ RANKING (visible to all) ═══
 
 // ═══ SUPERVISOR PANEL ═══
-const SUP_PIN_HASH = 'b3b4e87f15d85199ddc51683559221f8375b5cb7074da6d69409cc1ed64b0a98'; // hashed supervisor PIN
+// SERVER-SIDE PIN VERIFICATION — when true, supervisor PIN is checked via Supabase RPC
+// instead of compared against the local SUP_PIN_HASH constant. This removes the brute-force
+// vector (a 4-digit PIN client-side hash is exhaustible in ms even with salt+iterations).
+// To enable: deploy `supabase/supervisor_pin.sql` then flip this to true.
+const USE_SERVER_PIN_VERIFY = false;
+const SUP_PIN_HASH = 'b3b4e87f15d85199ddc51683559221f8375b5cb7074da6d69409cc1ed64b0a98'; // hashed supervisor PIN (LEGACY: remove from bundle once RPC is deployed)
+
+// Unified entry point — checks server-side if available, falls back to local hash compare.
+// Returns true/false (Promise).
+async function verifySupervisorPin(pin){
+  if(USE_SERVER_PIN_VERIFY){
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/rpc/verify_supervisor_pin`, {
+        method: 'POST',
+        headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin_input: String(pin) })
+      });
+      if(!res.ok){ dbgw('[supPin] RPC failed:', res.status); return false; }
+      const ok = await res.json();
+      return ok === true;
+    } catch(e){ dbgw('[supPin] RPC error:', e.message); return false; }
+  }
+  // Legacy client-side compare (rate-limited by checkPinRateLimit/recordPinFail)
+  const h = await hashPin(String(pin));
+  return h === SUP_PIN_HASH;
+}
 
 let supAuthenticated = false;
 
@@ -10101,11 +10138,88 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='4.6';
-const APP_BUILD='March 2026';
+const APP_VERSION='5.6';
+const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
+// DEBUG flag: only log when running locally or with ?debug=1
+const DEBUG = (location.hostname==='localhost' || location.hostname==='127.0.0.1' || location.search.includes('debug=1'));
+window.DEBUG = DEBUG;
 console.info(`%cTXOKO Formación · v${APP_VERSION} · ${APP_BUILD}`,'background:#1c2a22;color:#f4ede2;padding:4px 10px;border-radius:4px;font-weight:600');
+
+// HTML escape helper — used wherever we interpolate untrusted strings into innerHTML
+function escapeHtml(str){
+  return String(str==null?'':str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+window.escapeHtml = escapeHtml;
+
+// Gated debug logger — silent in production, verbose for ?debug=1 / localhost
+const dbg  = (...a)=>{ if(DEBUG) console.log(...a); };
+const dbgw = (...a)=>{ if(DEBUG) console.warn(...a); };
+const dbge = (...a)=>{ console.error(...a); }; // errors always shown
+window.dbg = dbg; window.dbgw = dbgw; window.dbge = dbge;
+
+// ═══════ MODAL ACCESSIBILITY HELPER ═══════
+// Wires ESC-to-close and focus trap onto a modal overlay element.
+// Call AFTER appending the overlay to the DOM. Pass the close callback so ESC can dismiss.
+// Usage:
+//   const overlay = document.createElement('div'); ...
+//   document.body.appendChild(overlay);
+//   setupModalA11y(overlay, () => overlay.remove());
+function setupModalA11y(overlay, onClose){
+  if(!overlay) return;
+  const previouslyFocused = document.activeElement;
+  overlay.setAttribute('role', overlay.getAttribute('role') || 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+
+  function getFocusable(){
+    return Array.from(overlay.querySelectorAll(
+      'button:not([disabled]):not([tabindex="-1"]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(el => el.offsetParent !== null);
+  }
+
+  // Move focus into the modal (first focusable, or the modal itself)
+  const firstFocusable = getFocusable()[0];
+  if(firstFocusable) firstFocusable.focus(); else overlay.setAttribute('tabindex','-1'), overlay.focus();
+
+  function onKey(e){
+    if(e.key === 'Escape'){
+      e.preventDefault();
+      cleanup();
+      if(typeof onClose === 'function') onClose();
+      return;
+    }
+    if(e.key === 'Tab'){
+      const focusable = getFocusable();
+      if(!focusable.length){ e.preventDefault(); return; }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  }
+
+  function cleanup(){
+    document.removeEventListener('keydown', onKey, true);
+    if(previouslyFocused && typeof previouslyFocused.focus === 'function'){
+      try { previouslyFocused.focus(); } catch(_){}
+    }
+  }
+
+  document.addEventListener('keydown', onKey, true);
+
+  // Auto-cleanup if the overlay is removed from the DOM externally
+  const mo = new MutationObserver(() => {
+    if(!document.body.contains(overlay)){ mo.disconnect(); cleanup(); }
+  });
+  mo.observe(document.body, { childList: true, subtree: false });
+}
+window.setupModalA11y = setupModalA11y;
 
 // ═══════ STORAGE ═══════
 const STORAGE_KEY='txoko_data_v4';
@@ -10273,39 +10387,35 @@ async function supaUpsertEmployee(name, retries=2) {
     });
     if(!res.ok) {
       const errText = await res.text().catch(()=>'');
-      console.warn(`[Txoko] Supabase upsert failed (${res.status}) for ${name}:`, errText);
+      dbgw(`[Txoko] Supabase upsert failed (${res.status}) for ${name}:`, errText);
       if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
     }
   } catch(e) {
-    console.warn(`[Txoko] Supabase upsert error for ${name}:`, e.message);
+    dbgw(`[Txoko] Supabase upsert error for ${name}:`, e.message);
     if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
   }
 }
 
+// Short-lived cache for restore lookups — dedupes rapid-fire logins (typing/retries)
+const _restoreCache = new Map(); // key: lowercased name -> { ts, result }
+const _RESTORE_CACHE_MS = 5000;
 async function supaRestoreEmployee(name) {
+  const cacheKey = (name||'').toLowerCase();
+  const cached = _restoreCache.get(cacheKey);
+  if(cached && (Date.now() - cached.ts) < _RESTORE_CACHE_MS) return cached.result;
   try {
-    // First try exact match, then case-insensitive
-    let res = await fetch(
-      `${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}&select=*`,
+    // ilike does both exact and case-insensitive matching in one round-trip — no need for two queries
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
-    if(!res.ok) { console.warn('[Txoko] Supabase restore failed:', res.status); return false; }
-    let rows = await res.json();
+    if(!res.ok) { dbgw('[Txoko] Supabase restore failed:', res.status); return false; }
+    const rows = await res.json();
 
-    // If no exact match, try case-insensitive search
-    if(!Array.isArray(rows) || !rows.length) {
-      res = await fetch(
-        `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
-        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
-      );
-      if(!res.ok) return false;
-      rows = await res.json();
-    }
-
-    if(!Array.isArray(rows) || !rows.length) return false;
+    if(!Array.isArray(rows) || !rows.length) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
     const r = rows[0];
     // If remote has no XP and no pin, nothing to restore
-    if((!r.xp || r.xp === 0) && !r.pin) return false;
+    if((!r.xp || r.xp === 0) && !r.pin) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
 
     // Use the name exactly as stored in Supabase (correct casing)
     const cloudName = r.name;
@@ -10320,16 +10430,17 @@ async function supaRestoreEmployee(name) {
     emp.lastStudyDay = r.last_study_day || emp.lastStudyDay;
     emp.txokoRecord = Math.max(emp.txokoRecord || 0, r.txoko_record || 0);
     emp.duelWins = Math.max(emp.duelWins || 0, r.duel_wins || 0);
-    try { const ts = JSON.parse(r.topic_scores||'{}'); if(Object.keys(ts).length) emp.topicScores = ts; } catch(e){}
+    try { const ts = JSON.parse(r.topic_scores||'{}'); if(Object.keys(ts).length) emp.topicScores = ts; } catch(e){ dbgw('[restore] bad topic_scores JSON for', cloudName, e.message); }
     if(r.avatar) emp.avatar = r.avatar;
-    try { const kd = JSON.parse(r.known_dishes||'{}'); if(Object.keys(kd).length) emp.knownDishes = kd; } catch(e){}
-    try { const ec = JSON.parse(r.exam_correct||'{}'); if(Object.keys(ec).length) emp.examCorrect = ec; } catch(e){}
-    try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){}
+    try { const kd = JSON.parse(r.known_dishes||'{}'); if(Object.keys(kd).length) emp.knownDishes = kd; } catch(e){ dbgw('[restore] bad known_dishes JSON for', cloudName, e.message); }
+    try { const ec = JSON.parse(r.exam_correct||'{}'); if(Object.keys(ec).length) emp.examCorrect = ec; } catch(e){ dbgw('[restore] bad exam_correct JSON for', cloudName, e.message); }
+    try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){ dbgw('[restore] bad sessions_data JSON for', cloudName, e.message); }
     saveDB();
     // Do NOT sync back during restore — avoid overwriting cloud with stale local data
     // supaUpsertEmployee will be called after successful login instead
+    _restoreCache.set(cacheKey, {ts:Date.now(), result:cloudName});
     return cloudName; // Return the correct name from cloud
-  } catch(e) { console.warn('[Txoko] Supabase restore error:', e.message); return false; }
+  } catch(e) { dbgw('[Txoko] Supabase restore error:', e.message); return false; }
 }
 
 async function supaFetchAllEmployees() {
@@ -10346,10 +10457,10 @@ async function supaFetchAllEmployees() {
       xp: r.xp || 0,
       streak: r.streak || 0,
       lastStudyDay: r.last_study_day || '',
-      topicScores: (() => { try { return JSON.parse(r.topic_scores||'{}'); } catch(e){ return {}; } })(),
-      knownDishes: (() => { try { return JSON.parse(r.known_dishes||'{}'); } catch(e){ return {}; } })(),
-      examCorrect: (() => { try { return JSON.parse(r.exam_correct||'{}'); } catch(e){ return {}; } })(),
-      sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ return Array(r.sessions_count||0).fill({}); } })(),
+      topicScores: (() => { try { return JSON.parse(r.topic_scores||'{}'); } catch(e){ dbgw('[fetchAll] bad topic_scores for', r.name, e.message); return {}; } })(),
+      knownDishes: (() => { try { return JSON.parse(r.known_dishes||'{}'); } catch(e){ dbgw('[fetchAll] bad known_dishes for', r.name, e.message); return {}; } })(),
+      examCorrect: (() => { try { return JSON.parse(r.exam_correct||'{}'); } catch(e){ dbgw('[fetchAll] bad exam_correct for', r.name, e.message); return {}; } })(),
+      sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ dbgw('[fetchAll] bad sessions_data for', r.name, e.message); return Array(r.sessions_count||0).fill({}); } })(),
       txokoRecord: r.txoko_record || 0,
       duelWins: r.duel_wins || 0,
       lastLoginTs: r.last_login || null
@@ -10438,36 +10549,36 @@ async function registerServiceWorker() {
     const reg = await navigator.serviceWorker.register('./sw.js');
     await navigator.serviceWorker.ready;
     return reg;
-  } catch(e) { console.warn('[Txoko] SW register failed:', e); return null; }
+  } catch(e) { dbgw('[Txoko] SW register failed:', e); return null; }
 }
 
 async function subscribeToPush(employeeName) {
   try {
     // Step 1: Check if Notification API is available
     if (!('Notification' in window)) {
-      console.warn('[Txoko Push] Notification API not available');
+      dbgw('[Txoko Push] Notification API not available');
       return;
     }
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      console.warn('[Txoko Push] ServiceWorker or PushManager not available');
+      dbgw('[Txoko Push] ServiceWorker or PushManager not available');
       return;
     }
 
     // Step 2: Request permission
     const permission = await Notification.requestPermission();
-    console.log('[Txoko Push] Permission:', permission);
+    dbg('[Txoko Push] Permission:', permission);
     if (permission !== 'granted') {
-      console.warn('[Txoko Push] Permission denied or dismissed');
+      dbgw('[Txoko Push] Permission denied or dismissed');
       return;
     }
 
     // Step 3: Register service worker
     const reg = await registerServiceWorker();
     if (!reg) {
-      console.warn('[Txoko Push] Service worker registration failed');
+      dbgw('[Txoko Push] Service worker registration failed');
       return;
     }
-    console.log('[Txoko Push] SW registered, scope:', reg.scope);
+    dbg('[Txoko Push] SW registered, scope:', reg.scope);
 
     // Step 4: Get or create push subscription
     let sub = await reg.pushManager.getSubscription();
@@ -10479,7 +10590,7 @@ async function subscribeToPush(employeeName) {
       });
       isNew = true;
     }
-    console.log('[Txoko Push] Subscription ' + (isNew ? 'created' : 'exists') + ':', sub.endpoint.substring(0, 50) + '...');
+    dbg('[Txoko Push] Subscription ' + (isNew ? 'created' : 'exists') + ':', sub.endpoint.substring(0, 50) + '...');
 
     // Step 5: Save subscription to Supabase
     const subJSON = sub.toJSON();
@@ -10498,7 +10609,7 @@ async function subscribeToPush(employeeName) {
         keys_auth: subJSON.keys.auth
       })
     });
-    console.log('[Txoko Push] Saved to Supabase:', saveRes.status, saveRes.ok ? 'OK' : 'FAIL');
+    dbg('[Txoko Push] Saved to Supabase:', saveRes.status, saveRes.ok ? 'OK' : 'FAIL');
 
     // Step 6: Send a silent self-test push to verify end-to-end
     if (isNew) {
@@ -10518,7 +10629,7 @@ async function subscribeToPush(employeeName) {
     // Hide the enable button since push is now active
     var pushBtn = document.getElementById('pushEnableBtn');
     if(pushBtn) pushBtn.style.display = 'none';
-  } catch(e) { console.warn('[Txoko Push] Subscribe error:', e); }
+  } catch(e) { dbgw('[Txoko Push] Subscribe error:', e); }
 }
 
 // Check push status and show enable button if needed
@@ -10706,7 +10817,7 @@ async function supaFetchCustomDishes() {
       id: r.dish_id,
       name: r.name,
       cat: r.cat,
-      allergens: (() => { try { return JSON.parse(r.allergens||'[]'); } catch(e){ return []; } })(),
+      allergens: (() => { try { return JSON.parse(r.allergens||'[]'); } catch(e){ dbgw('[customDishes] bad allergens for', r.name, e.message); return []; } })(),
       ingredients: r.ingredients || '',
       history: r.history || '',
       notes: r.notes || null
@@ -11025,7 +11136,7 @@ function saveDB(){
         showToast(LANG==='en'?'⚠ Could not save locally. Your session may not persist.':'⚠ No se pudo guardar localmente. Tu sesión puede no persistir.', 'warning', 6000);
       }
     }
-    if(window.console && console.warn) console.warn('[saveDB] localStorage failed:', e);
+    dbgw('[saveDB] localStorage failed:', e);
   }
   // Sync current user to Supabase in background (also a durability safeguard)
   if(currentUser) supaUpsertEmployee(currentUser);
@@ -14574,7 +14685,7 @@ async function loginWithPassword(){
       }
     }
   } catch(e) {
-    console.warn('[Txoko] Cloud sync failed:', e);
+    dbgw('[Txoko] Cloud sync failed:', e);
     // If cloud fails but local exists, continue with local data
     if(!localExists) {
       errEl.textContent = (LANG==='en' ? 'Cloud error: ' : 'Error nube: ') + e.message;
@@ -14911,33 +15022,41 @@ function deleteProfilePrompt(name){
   let entered='';
   const overlay=document.createElement('div');
   overlay.id='delOverlay';
+  overlay.setAttribute('role','dialog');
+  overlay.setAttribute('aria-modal','true');
+  overlay.setAttribute('aria-label','Eliminar perfil — introducir PIN de supervisor');
   overlay.style.cssText='position:fixed;inset:0;background:rgba(28,42,34,.72);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
   function draw(){
     overlay.innerHTML=`
       <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:2rem;width:280px;text-align:center;box-shadow:var(--shadow2)">
-        <div style="font-size:1.4rem;margin-bottom:.4rem">○</div>
+        <div style="font-size:1.4rem;margin-bottom:.4rem" aria-hidden="true">○</div>
         <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);margin-bottom:.2rem">Eliminar perfil</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);margin-bottom:1.2rem;letter-spacing:.1em">${name}</div>
-        <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">
-          ${[0,1,2,3].map(i=>`<div style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold-a);background:${i<entered.length?'var(--gold)':'transparent'}"></div>`).join('')}
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);margin-bottom:1.2rem;letter-spacing:.1em">${escapeHtml(name)}</div>
+        <div role="status" aria-live="polite" aria-label="${entered.length} de 4 dígitos introducidos" style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">
+          ${[0,1,2,3].map(i=>`<div aria-hidden="true" style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold-a);background:${i<entered.length?'var(--gold)':'transparent'}"></div>`).join('')}
         </div>
         <div id="delPinErr"></div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:180px;margin:0 auto .9rem">
-          ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`
-            <button id="delk_${k}" style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;font-size:.95rem;font-weight:500;color:var(--parchment);cursor:pointer;${k===''?'visibility:hidden;':''}">${k}</button>`).join('')}
+        <div role="group" aria-label="Teclado PIN" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:180px;margin:0 auto .9rem">
+          ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>{
+            const isErase = k==='⌫';
+            const isEmpty = k==='';
+            const aria = isErase ? 'Borrar último dígito' : isEmpty ? '' : `Dígito ${k}`;
+            return `<button id="delk_${k}" ${isEmpty?'aria-hidden="true" tabindex="-1"':`aria-label="${aria}"`} style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;font-size:.95rem;font-weight:500;color:var(--parchment);cursor:pointer;${k===''?'visibility:hidden;':''}">${k}</button>`;
+          }).join('')}
         </div>
-        <button onclick="document.getElementById('delOverlay').remove()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem 1rem;font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);cursor:pointer">Cancelar</button>
+        <button onclick="document.getElementById('delOverlay').remove()" aria-label="Cancelar y cerrar" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem 1rem;font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);cursor:pointer">Cancelar</button>
       </div>`;
     // Attach key listeners
     [1,2,3,4,5,6,7,8,9,0].forEach(k=>{
       const btn=overlay.querySelector('#delk_'+k);
-      if(btn) btn.onclick=()=>{ if(entered.length<4){entered+=k; if(entered.length===4){ hashPin(entered).then(h=>{ if(h===SUP_PIN_HASH){ overlay.remove(); deleteProfileConfirmed(name); } else { const err=document.getElementById('delPinErr'); if(err) err.innerHTML='<div style="color:var(--rose);font-size:.72rem;margin-bottom:.6rem">✗ PIN incorrecto</div>'; entered=''; draw(); } }); } else draw(); } };
+      if(btn) btn.onclick=()=>{ if(entered.length<4){entered+=k; if(entered.length===4){ verifySupervisorPin(entered).then(ok=>{ if(ok){ overlay.remove(); deleteProfileConfirmed(name); } else { const err=document.getElementById('delPinErr'); if(err) err.innerHTML='<div style="color:var(--rose);font-size:.72rem;margin-bottom:.6rem">✗ PIN incorrecto</div>'; entered=''; draw(); } }); } else draw(); } };
     });
     const del=overlay.querySelector('#delk_⌫');
     if(del) del.onclick=()=>{ entered=entered.slice(0,-1); draw(); };
   }
   draw();
   document.body.appendChild(overlay);
+  setupModalA11y(overlay, () => overlay.remove());
 }
 
 function deleteProfileConfirmed(name){
@@ -15401,7 +15520,8 @@ function showTab(tab){
       const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderAprender,lqa:renderProtocoloHub,vinos:renderVinos};
       renderMap[tab]();
     } catch(e) {
-      c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+tab+':</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
+      const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+escapeHtml(e.stack)+'</pre>' : '';
+      c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+escapeHtml(tab)+':</b><br>'+escapeHtml(e.message)+_stackHtml+'</div>';
       console.error('showTab error:', e);
     }
     c.classList.remove('tab-entering');
@@ -20714,7 +20834,8 @@ function renderVinos(){
     else if(sub === 'wineQuiz'){ _renderWineQuiz(c, bar); }
     else if(sub === 'servicio'){ _renderWineService(c, bar); }
   } catch(e) {
-    c.innerHTML = bar + '<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en vinos ('+sub+'):</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
+    const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+escapeHtml(e.stack)+'</pre>' : '';
+    c.innerHTML = bar + '<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en vinos ('+escapeHtml(sub)+'):</b><br>'+escapeHtml(e.message)+_stackHtml+'</div>';
     console.error('renderVinos error:', e);
   }
   // Keep sub-tab bar scrolled to the active tab
@@ -22089,7 +22210,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   });
 
   // Error handler — log map errors to console
-  _wineLeafletMap.on('error', function(e) { console.warn('[Txoko Map] Error:', e.error || e); });
+  _wineLeafletMap.on('error', function(e) { dbgw('[Txoko Map] Error:', e.error || e); });
 
   // Navigation controls (zoom, compass, pitch)
   _wineLeafletMap.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'top-right');
@@ -22134,7 +22255,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
 
   // ── Map load event — add all data layers ──
   _wineLeafletMap.on('load', async function() {
-    console.log('[Txoko Map] MapLibre GL JS loaded (WebGL GPU-accelerated)');
+    dbg('[Txoko Map] MapLibre GL JS loaded (WebGL GPU-accelerated)');
 
     // ── Try to add 3D terrain (non-blocking — map works without it) ──
     try {
@@ -22155,9 +22276,9 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         }
       });
       _wineLeafletMap.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
-      console.log('[Txoko Map] 3D terrain enabled');
+      dbg('[Txoko Map] 3D terrain enabled');
     } catch(e) {
-      console.warn('[Txoko Map] 3D terrain not available:', e.message);
+      dbgw('[Txoko Map] 3D terrain not available:', e.message);
       // Map still works fine without terrain — just flat
     }
 
@@ -22173,7 +22294,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         var provData = await results[0].json();
         var provObjKey = Object.keys(provData.objects)[0];
         var provGeojson = topojson.feature(provData, provData.objects[provObjKey]);
-        console.log('[Txoko Map] Provinces loaded: ' + provGeojson.features.length);
+        dbg('[Txoko Map] Provinces loaded: ' + provGeojson.features.length);
 
         // Enrich features with computed style properties
         provGeojson.features.forEach(function(f) {
@@ -22210,7 +22331,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         var countryData = await results[1].json();
         var countryObjKey = Object.keys(countryData.objects)[0];
         var countryGeojson = topojson.feature(countryData, countryData.objects[countryObjKey]);
-        console.log('[Txoko Map] Countries loaded: ' + countryGeojson.features.length);
+        dbg('[Txoko Map] Countries loaded: ' + countryGeojson.features.length);
 
         var wineCountries = Object.keys(_mlCountryToOrigin);
         var neighborCountries = ['France', 'Portugal', 'Andorra', 'Morocco', 'Algeria'];
@@ -22252,7 +22373,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
       }
 
     } catch(e) {
-      console.warn('[Txoko Map] Failed to load TopoJSON:', e);
+      dbgw('[Txoko Map] Failed to load TopoJSON:', e);
     }
 
     // ── DO POLYGONS ──
@@ -27333,8 +27454,8 @@ function renderSupPinEntry(){
         pinError=true; entered=''; draw();
         return;
       }
-      hashPin(entered).then(h=>{
-        if(h===SUP_PIN_HASH){ recordPinSuccess(); supAuthenticated=true; renderSupDashboard(); }
+      verifySupervisorPin(entered).then(ok=>{
+        if(ok){ recordPinSuccess(); supAuthenticated=true; renderSupDashboard(); }
         else { recordPinFail(); pinError=true; entered=''; draw(); }
       });
     } else { draw(); }
@@ -29040,7 +29161,7 @@ async function sendNotification(){
         tag: type
       })
     });
-  } catch(e) { console.warn('[Txoko] Push send error:', e); }
+  } catch(e) { dbgw('[Txoko] Push send error:', e); }
   const el = document.getElementById('notifSendMsg');
   if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
   document.getElementById('notifMsg').value = '';
