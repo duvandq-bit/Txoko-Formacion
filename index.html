@@ -17,7 +17,7 @@
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
   ║  Fecha de creación: 2024                                       ║
-  ║  Versión: 5.6 · May 2026                            ║
+  ║  Versión: 5.7 · May 2026                            ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
 <!DOCTYPE html>
@@ -28,7 +28,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
 <meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
-<meta name="app-version" content="5.6">
+<meta name="app-version" content="5.7">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#0e0c09">
 <!-- ═══ PWA ═══ -->
@@ -8382,8 +8382,11 @@ function hideLoginLoading(){
 }
 
 // ═══ RIPPLE EFFECT — add to all interactive elements ═══
-function addRipple(e){
-  const target = e.currentTarget;
+function addRipple(e, explicitTarget){
+  // Accepts an explicit target so the delegated listener can pass the matched
+  // element instead of relying on e.currentTarget (which is document under delegation).
+  const target = explicitTarget || e.currentTarget;
+  if(!target) return;
   const rect = target.getBoundingClientRect();
   const circle = document.createElement('span');
   circle.className = 'ripple-circle';
@@ -8397,22 +8400,17 @@ function addRipple(e){
   setTimeout(() => circle.remove(), 600);
 }
 
-// Attach ripple to buttons on click/touch
-function attachRipples(){
-  const selectors = '.employee-btn, .nav-btn, .btn-primary, .module-card, .wine-card, .dish-card, .quiz-option';
-  document.querySelectorAll(selectors).forEach(el => {
-    if(el._rippleAttached) return;
-    el._rippleAttached = true;
-    el.addEventListener('pointerdown', addRipple, {passive:true});
-  });
-}
-// Attach on load and periodically (dynamic content)
-document.addEventListener('DOMContentLoaded', attachRipples);
-// Re-attach on DOM changes via MutationObserver (lightweight)
-const _rippleObs = new MutationObserver(() => { requestAnimationFrame(attachRipples); });
-document.addEventListener('DOMContentLoaded', () => {
-  _rippleObs.observe(document.body, {childList:true, subtree:true});
-});
+// Ripple effect via event delegation — no per-element listener attach
+// and no MutationObserver. Previously a `subtree:true` observer on document.body
+// fired on every render of large `innerHTML` blocks (continuous CPU drain on
+// low-end devices). One delegated listener on the document handles all ripples.
+const _RIPPLE_SELECTOR = '.employee-btn, .nav-btn, .btn-primary, .module-card, .wine-card, .dish-card, .quiz-option';
+document.addEventListener('pointerdown', (ev) => {
+  const t = ev.target;
+  if(!t || !t.closest) return;
+  const matched = t.closest(_RIPPLE_SELECTOR);
+  if(matched) addRipple(ev, matched);
+}, {passive:true, capture:true});
 
 // ═══ PARALLAX — CSS-only, no JS scroll handler needed ═══
 
@@ -10138,7 +10136,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='5.6';
+const APP_VERSION='5.7';
 const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10399,15 +10397,29 @@ async function supaUpsertEmployee(name, retries=2) {
 // Short-lived cache for restore lookups — dedupes rapid-fire logins (typing/retries)
 const _restoreCache = new Map(); // key: lowercased name -> { ts, result }
 const _RESTORE_CACHE_MS = 5000;
+const _RESTORE_CACHE_MAX = 50;
+// Prune cache periodically so it can't grow unbounded over a long session.
+setInterval(() => {
+  const cutoff = Date.now() - _RESTORE_CACHE_MS;
+  for (const [k, v] of _restoreCache) if (v.ts < cutoff) _restoreCache.delete(k);
+  // Hard cap as a belt-and-braces measure: drop oldest entries if we're over the limit.
+  if (_restoreCache.size > _RESTORE_CACHE_MAX) {
+    const drop = _restoreCache.size - _RESTORE_CACHE_MAX;
+    let n = 0;
+    for (const k of _restoreCache.keys()) { if (n++ >= drop) break; _restoreCache.delete(k); }
+  }
+}, 60000);
 async function supaRestoreEmployee(name) {
   const cacheKey = (name||'').toLowerCase();
   const cached = _restoreCache.get(cacheKey);
   if(cached && (Date.now() - cached.ts) < _RESTORE_CACHE_MS) return cached.result;
   try {
     // ilike does both exact and case-insensitive matching in one round-trip — no need for two queries
-    const res = await fetch(
+    // 8s timeout: on bad WiFi, fail fast so the login UI can fall back to local data.
+    const res = await fetchT(
       `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } },
+      8000
     );
     if(!res.ok) { dbgw('[Txoko] Supabase restore failed:', res.status); return false; }
     const rows = await res.json();
@@ -10527,7 +10539,7 @@ async function requestNotifPermission() {
 function showBrowserNotif(title, body, icon='✦') {
   if(!('Notification' in window) || Notification.permission !== 'granted') return;
   try {
-    new Notification(title, { body, icon: '/favicon.ico', badge: '/favicon.ico', tag: 'txoko' });
+    new Notification(title, { body, icon: 'icon.svg', badge: 'icon.svg', tag: 'txoko' });
   } catch(e) {}
 }
 
@@ -10879,10 +10891,13 @@ async function syncCustomDishesFromCloud() {
 let DB={employees:{}};
 
 // ═══════ SECURITY HELPERS (OWASP) ═══════
-function escapeHTML(str){
-  if(!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
+// Alias of escapeHtml() defined earlier — kept for legacy call sites.
+// `if(!str)` was buggy: it dropped 0 and false. Use null-safe coercion instead.
+const escapeHTML = (typeof escapeHtml === 'function') ? escapeHtml : function(str){
+  return String(str==null?'':str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+};
 
 // ═══ DISH NAME TRANSLATION (for wine pairings in English) ═══
 const _DISH_EN_MAP = {
@@ -10974,6 +10989,19 @@ function dismissToast(t){
   setTimeout(function(){ if(t.parentNode) t.remove(); }, 300);
 }
 
+// ═══ FETCH WITH TIMEOUT ═══
+// Plain fetch() never times out — on flaky hotel WiFi a hung request can lock
+// the login flow forever. fetchT() aborts after `ms` (default 10s) so callers'
+// catch blocks fire and the UI can surface the failure.
+function fetchT(url, opts, ms){
+  ms = ms == null ? 10000 : ms;
+  const ctl = new AbortController();
+  const t = setTimeout(()=>ctl.abort(), ms);
+  const merged = Object.assign({}, opts || {}, { signal: ctl.signal });
+  return fetch(url, merged).finally(()=>clearTimeout(t));
+}
+window.fetchT = fetchT;
+
 // ═══ SUPABASE FETCH WRAPPER — error feedback + retry ═══
 async function supaFetch(path, options, opts){
   opts = opts || {};
@@ -11021,17 +11049,30 @@ function showSkeleton(container, count){
   if(container) container.innerHTML = html;
 }
 async function hashPin(pin){
+  // crypto.subtle is undefined on insecure origins (HTTP, raw IPs) — common
+  // when devices in the kitchen access the app via a local IP. Fail loud
+  // instead of throwing a cryptic TypeError so the user knows the cause.
+  if(!self.crypto || !self.crypto.subtle){
+    throw new Error('crypto.subtle no disponible — accede vía HTTPS o localhost');
+  }
   const enc = new TextEncoder().encode(pin+'txoko_salt_2026');
-  const buf = await crypto.subtle.digest('SHA-256', enc);
+  const buf = await self.crypto.subtle.digest('SHA-256', enc);
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 // ═══ PIN RATE LIMITING — persistent across page reloads ═══
+// IMPORTANT: do NOT auto-reset state on lockout expiry — the `streak` field
+// drives exponential backoff (30s → 60s → 5min → 15min) and must persist
+// across reloads even after a previous lockout has elapsed. Otherwise an
+// attacker can refresh and burn through 3-attempt windows indefinitely at
+// the lowest 30s lockout. `recordPinSuccess` is the only legitimate reset path.
 const _pinAttempts = (function() {
   try {
     const saved = JSON.parse(localStorage.getItem('txoko_pin_rl') || '{}');
-    // Validate structure and expiry
-    if(saved.lockedUntil && Date.now() >= saved.lockedUntil) return {count:0,lockedUntil:0,streak:0};
-    return {count: saved.count||0, lockedUntil: saved.lockedUntil||0, streak: saved.streak||0};
+    return {
+      count:       saved.count       || 0,
+      lockedUntil: saved.lockedUntil || 0,
+      streak:      saved.streak      || 0
+    };
   } catch(e) { return {count:0,lockedUntil:0,streak:0}; }
 })();
 function _savePinRL() {
@@ -11066,7 +11107,34 @@ function resetSessionTimer(){
 }
 ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{ if(currentUser) resetSessionTimer(); },{passive:true}));
 
-function loadDB(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){}}
+// Loads DB from localStorage with one-shot migration from any prior schema
+// version (txoko_data_v1 / v2 / v3). On a fresh browser update the user
+// would otherwise start empty — cloud sync rescues most data, but only if
+// the PIN survived. Migration preserves XP, streaks and sessions locally
+// even when the cloud round-trip fails.
+function loadDB(){
+  try{
+    const cur = localStorage.getItem(STORAGE_KEY);
+    if(cur){ DB = JSON.parse(cur); return; }
+    // No v4 data — try older schemas, newest first
+    for(const ver of ['v3','v2','v1']){
+      const oldKey = 'txoko_data_' + ver;
+      const old = localStorage.getItem(oldKey);
+      if(!old) continue;
+      try{
+        const parsed = JSON.parse(old);
+        if(parsed && typeof parsed === 'object'){
+          DB = parsed;
+          // Promote to current schema and drop the legacy key.
+          try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }catch(_){}
+          try{ localStorage.removeItem(oldKey); }catch(_){}
+          dbg('[loadDB] migrated from', oldKey);
+          return;
+        }
+      }catch(_){ /* try next */ }
+    }
+  }catch(e){}
+}
 // Offline/sync status indicator — mobile-first, non-blocking, respects reduced motion.
 // Persistent pill when offline; brief "Synced" confirmation when back online.
 let _syncPillTimer = null;
@@ -11097,17 +11165,45 @@ window.addEventListener('offline', _updateOnlineStatus);
 // Initial read (deferred so DOM is ready)
 setTimeout(function(){ if(navigator.onLine === false) _setSyncPill('offline'); }, 500);
 
-// Cross-tab sync: when DB changes in another tab (same user on multiple devices/browser windows),
-// reload the in-memory copy and notify UI layers. This prevents stale state and lost writes.
+// Cross-tab sync: when DB changes in another tab, merge instead of overwriting.
+// Previous behaviour (`DB = next`) clobbered in-flight writes — e.g. mid-exam
+// the user has incremented examScore in `emp` but the other tab's stale snapshot
+// (without those increments) would replace it on next save. We now merge per
+// employee, keeping max-of-counters and union-of-sets, so concurrent activity
+// across tabs never regresses the active user's progress.
+function _mergeEmployees(local, remote){
+  if(!local || typeof local !== 'object') return remote;
+  if(!remote || typeof remote !== 'object') return local;
+  const out = Object.assign({}, local, remote);
+  // Counters: keep max
+  out.xp           = Math.max(local.xp||0,           remote.xp||0);
+  out.streak       = Math.max(local.streak||0,       remote.streak||0);
+  out.txokoRecord  = Math.max(local.txokoRecord||0,  remote.txokoRecord||0);
+  out.duelWins     = Math.max(local.duelWins||0,     remote.duelWins||0);
+  // Sessions: take whichever array is longer (presumes append-only)
+  const ls = local.sessions || [], rs = remote.sessions || [];
+  out.sessions = (rs.length > ls.length) ? rs : ls;
+  // Maps: union, with remote winning on conflict for current-action coherence
+  out.knownDishes = Object.assign({}, local.knownDishes||{}, remote.knownDishes||{});
+  out.examCorrect = Object.assign({}, local.examCorrect||{}, remote.examCorrect||{});
+  out.streakMilestones = Object.assign({}, local.streakMilestones||{}, remote.streakMilestones||{});
+  return out;
+}
 window.addEventListener('storage', function(ev){
   if(ev.key !== STORAGE_KEY || !ev.newValue) return;
   try{
     const next = JSON.parse(ev.newValue);
-    if(next && typeof next === 'object'){
-      DB = next;
-      // Let active views refresh themselves without forcing a full nav.
-      try{ window.dispatchEvent(new CustomEvent('txk:dbsync', {detail:{source:'storage'}})); }catch(_){}
+    if(!next || typeof next !== 'object') return;
+    const localEmps  = (DB && DB.employees) || {};
+    const remoteEmps = next.employees || {};
+    const merged = {};
+    const allNames = new Set(Object.keys(localEmps).concat(Object.keys(remoteEmps)));
+    for(const n of allNames){
+      merged[n] = _mergeEmployees(localEmps[n], remoteEmps[n]);
     }
+    DB = Object.assign({}, next, { employees: merged });
+    // Let active views refresh themselves without forcing a full nav.
+    try{ window.dispatchEvent(new CustomEvent('txk:dbsync', {detail:{source:'storage'}})); }catch(_){}
   }catch(e){ /* ignore malformed cross-tab write */ }
 });
 // Safe JSON.parse: returns fallback on error rather than crashing.
@@ -11333,7 +11429,7 @@ function showXPToast(amount, reason){
   if(existing) existing.remove();
   const toast = document.createElement('div');
   toast.id = 'xpToast';
-  toast.innerHTML = `<span style="font-size:1rem"></span> <strong>+${amount} XP</strong> <span style="opacity:.7;font-size:.75rem">${reason}</span>`;
+  toast.innerHTML = `<span style="font-size:1rem"></span> <strong>+${amount} XP</strong> <span style="opacity:.7;font-size:.75rem">${escapeHTML(reason)}</span>`;
   toast.style.cssText = `
     position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
     background:var(--parchment);color:var(--ink);
@@ -13807,11 +13903,22 @@ function checkStreak(){
   const _nH = (_nh.getUTCHours()+((_nh>=_nDstS&&_nh<_nDstE)?1:0))%24;
   if(_nH >= 23 || _nH < 5){ emp.nightStudy = true; }
   saveDB();
-  // XP bonus for streak milestones
-  if(emp.streak===3)  awardXP(25, LANG==='en'?'3-day streak ◈':'Racha de 3 días ◈');
-  if(emp.streak===7)  awardXP(75, LANG==='en'?'1-week streak! ◈':'¡Racha de 1 semana! ◈');
-  if(emp.streak===14) awardXP(150,LANG==='en'?'2-week streak! ◈◈':'¡Racha de 2 semanas! ◈◈');
-  if(emp.streak===30) awardXP(500,LANG==='en'?'1-month streak! ':'¡Racha de 1 mes! ');
+  // XP bonus for streak milestones — uses claimedMilestones map so users who
+  // jump past a milestone via cloud sync (Math.max(local, remote)) still get
+  // the bonus retroactively, and the same milestone never pays twice.
+  emp.streakMilestones = emp.streakMilestones || {};
+  const _streakRewards = [
+    {at:3,  xp:25,  txt_en:'3-day streak ◈',         txt_es:'Racha de 3 días ◈'},
+    {at:7,  xp:75,  txt_en:'1-week streak! ◈',       txt_es:'¡Racha de 1 semana! ◈'},
+    {at:14, xp:150, txt_en:'2-week streak! ◈◈',      txt_es:'¡Racha de 2 semanas! ◈◈'},
+    {at:30, xp:500, txt_en:'1-month streak! ',       txt_es:'¡Racha de 1 mes! '}
+  ];
+  for(const r of _streakRewards){
+    if(emp.streak >= r.at && !emp.streakMilestones[r.at]){
+      emp.streakMilestones[r.at] = true;
+      awardXP(r.xp, LANG==='en' ? r.txt_en : r.txt_es);
+    }
+  }
   // Show streak notification in dashboard
   if(emp.streak>1) showStreakToast(emp.streak);
 }
@@ -14511,7 +14618,7 @@ function renderLeaderboard(){
   renderLeaderboardData(el, getLocalLeaderboard());
   // Add loading indicator
   const title=el.querySelector('.leaderboard-title');
-  if(title) title.insertAdjacentHTML('beforeend','<span id="lb-loading" style="font-size:.7rem;opacity:.5;margin-left:.5rem">↻ actualizando...</span>');
+  if(title) title.insertAdjacentHTML('beforeend','<span id="lb-loading" style="font-size:.7rem;opacity:.5;margin-left:.5rem">'+(LANG==='en'?'↻ updating…':'↻ actualizando…')+'</span>');
   supaFetchLeaderboard().then(remote=>{
     const loader=document.getElementById('lb-loading');
     if(loader) loader.remove();
@@ -14548,8 +14655,8 @@ function renderLeaderboardData(el, scores){
         const isTop=i<3;
         return `<div class="lb-row${isTop?' lb-top':''}">
           <span class="lb-rank${i<3?' '+rankClass[i]:''}">${i<3?medals[i]:i+1}</span>
-          <div class="lb-avatar">${s.name[0].toUpperCase()}</div>
-          <span class="lb-name">${s.name}</span>
+          <div class="lb-avatar">${escapeHTML((s.name||'?')[0]).toUpperCase()}</div>
+          <span class="lb-name">${escapeHTML(s.name)}</span>
           <span class="lb-score ${cls}">${s.best}%</span>
         </div>`;
       }).join('')}
@@ -15405,8 +15512,34 @@ function pinCancel(){
   if(overlay) overlay.remove();
   pinTarget=null; pinBuffer=''; pinStep='enter'; pinFirst='';
 }
+// Unsubscribe push + delete the row in Supabase. Fire-and-forget — logout
+// doesn't await this so the UI can flip back to the login screen instantly.
+async function _cleanupPushOnLogout(employeeName){
+  if(!employeeName || !('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  try {
+    const reg = await navigator.serviceWorker.getRegistration();
+    if(!reg) return;
+    const sub = await reg.pushManager.getSubscription();
+    if(!sub) return;
+    const endpoint = sub.endpoint;
+    // Local unsubscribe first so the OS stops delivering pushes to this device
+    try { await sub.unsubscribe(); } catch(_) {}
+    // Best-effort delete in Supabase. keepalive lets it complete during navigation.
+    try {
+      await fetch(`${SUPA_URL}/rest/v1/push_subscriptions?endpoint=eq.${encodeURIComponent(endpoint)}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` },
+        keepalive: true
+      });
+    } catch(_) {}
+  } catch(e) { dbgw('[Txoko] push cleanup failed:', e && e.message); }
+}
+
 function logout(){
-  if(currentUser) supaUpsertEmployee(currentUser);
+  if(currentUser){
+    supaUpsertEmployee(currentUser);
+    _cleanupPushOnLogout(currentUser); // fire-and-forget
+  }
   stopLiveQuizPolling();
   // ── Clear ALL active timers/intervals to prevent memory leaks ──
   clearTimeout(_sessionTimer); _sessionTimer = null;
@@ -26569,6 +26702,10 @@ function nextExamQ(){
     const emp=getEmp(currentUser);
     const session={score:examScore,total:examDishes.length,topic:examConfig.topic,cat:examConfig.cat,time,date:todayStr(),ts:Date.now()};
     emp.sessions=emp.sessions||[];emp.sessions.push(session);
+    // Cap local history at 50 entries — cloud upload trims to 20 anyway.
+    // Without this, sessions[] grows unbounded and eventually busts the
+    // localStorage 5-10 MB quota on long-time users.
+    if(emp.sessions.length > 50) emp.sessions = emp.sessions.slice(-50);
     saveDB();examResults=session;
     supaInsertScore(session, currentUser).catch(function(){ if(typeof showToast==='function') showToast(LANG==='en'?'Error saving score':'Error guardando puntuación','warning',3000); });
     // Award XP for exam
@@ -27342,7 +27479,7 @@ function renderRanking(){
 
     const sorted = Object.values(allEmps)
       .filter(e => e.name)
-      .sort((a,b) => (b.xp||0) - (a.xp||0));
+      .sort((a,b) => (b.xp||0) - (a.xp||0) || a.name.localeCompare(b.name));
 
     if(!sorted.length){
       document.getElementById('rankingContent').innerHTML = `<div style="color:var(--parch3);font-size:.85rem">${LANG==='en'?'No data yet':'Sin datos todavía'}</div>`;
@@ -30531,7 +30668,7 @@ async function submitDefense() {
   const duelObj = remoteDuelState.duelObj || {};
   const cTimings = jParse(duelObj.challenger_timings, []);
   const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions, cTimings, remoteDuelState.timings || []);
-  if (!result) { alert('Error'); renderDuel(); return; }
+  if (!result) { alert(LANG==='en'?'Error submitting duel — try again':'Error al enviar duelo — inténtalo de nuevo'); renderDuel(); return; }
   const { cScore, dScore, cWins, dWins, tiebreak } = result;
   const iWon = dWins;
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;
@@ -30687,8 +30824,15 @@ function duelGameOver(){
   const {p1,p2,scores}=duelState;
   const s1=scores[p1]||0, s2=scores[p2]||0;
   const winner=s1>s2?p1:s2>s1?p2:null;
-  // Award XP
-  if(winner){ const emp=getEmp(currentUser); emp.duelWins=(emp.duelWins||0)+1; saveDB(); awardXP(40, LANG==='en'?`Duel victory! »`:`¡Victoria en duelo! »`); }
+  // Credit duelWins to whoever actually won the local duel (not always currentUser);
+  // award XP only when the logged-in user is the winner — otherwise we'd be granting
+  // XP to a player who passed the device for their turn.
+  if(winner){
+    const winEmp=getEmp(winner);
+    winEmp.duelWins=(winEmp.duelWins||0)+1;
+    saveDB();
+    if(winner===currentUser) awardXP(40, LANG==='en'?`Duel victory! »`:`¡Victoria en duelo! »`);
+  }
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
       <div style="text-align:center;padding:2rem 1rem">
@@ -35731,18 +35875,24 @@ function _beaconSync(name){
     duel_wins: emp.duelWins || 0,
     updated_at: new Date().toISOString()
   });
-  // sendBeacon is fire-and-forget — browser guarantees delivery even during unload
-  if(navigator.sendBeacon){
-    var blob = new Blob([payload], {type:'application/json'});
-    // sendBeacon doesn't support custom headers, so use Supabase REST with apikey in URL
-    var sent = navigator.sendBeacon(
-      SUPA_URL+'/rest/v1/employees?on_conflict=name&apikey='+SUPA_KEY,
-      blob
-    );
-    if(sent) return; // beacon queued successfully
+  // fetch with keepalive: lets the request complete during page unload AND
+  // supports custom headers — keeps the Supabase apikey out of the URL
+  // (URL would otherwise leak into proxy logs, history, Referer, etc.).
+  try {
+    fetch(`${SUPA_URL}/rest/v1/employees?on_conflict=name`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=minimal'
+      },
+      body: payload,
+      keepalive: true
+    }).catch(()=>{});
+  } catch(e){
+    try { supaUpsertEmployee(name); } catch(_){}
   }
-  // Fallback: try regular fetch (may be aborted by browser)
-  try { supaUpsertEmployee(name); } catch(e){}
 }
 
 
@@ -35775,24 +35925,9 @@ async function txokoDiag() {
     console.log('Sync completado');
   }
 }
-window.txokoDiag = txokoDiag;
-
-// ═══════════════════════════════════════════════════════
-// RP UNA NOCHE EN TXOKO — RPG
-// ═══════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════
-// RP UNA NOCHE EN TXOKO — RPG Engine
-// ═══════════════════════════════════════════════════════════════
-
-
-// ═══════════════════════════════════════════════════════════════════
-// RP LA LEYENDA DE TXOKO — Motor Generativo v2.0
-// Arquitectura basada en sistemas interactivos (Dwarf Fortress style)
-// ═══════════════════════════════════════════════════════════════════
-
-
-
+// Only expose the diagnostic helper in dev contexts (localhost / ?debug=1).
+// Avoids leaking user data via global function on production deploys.
+if(DEBUG) window.txokoDiag = txokoDiag;
 
 
 
