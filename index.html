@@ -17,7 +17,7 @@
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
   ║  Fecha de creación: 2024                                       ║
-  ║  Versión: 4.6 · March 2026                          ║
+  ║  Versión: 5.7 · May 2026                            ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
 <!DOCTYPE html>
@@ -28,9 +28,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
 <meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
-<meta name="app-version" content="4.6">
-<meta name="app-build" content="March 2026">
+<meta name="app-version" content="5.7">
+<meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#0e0c09">
+<!-- ═══ PWA ═══ -->
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TXOKO">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
@@ -8043,10 +8050,15 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 }
 
 </style>
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
-<script defer src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-<script defer src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- ═══ EXTERNAL DEPS (versions pinned for reproducibility) ═══
+     SRI hashes intentionally NOT inlined here — compute them at deploy time:
+       curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A
+     Then add  integrity="sha384-…"  to each tag below.
+     `crossorigin="anonymous"` is required for SRI verification to work. -->
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="anonymous"/>
+<script defer src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin="anonymous"></script>
+<script defer src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -8370,8 +8382,11 @@ function hideLoginLoading(){
 }
 
 // ═══ RIPPLE EFFECT — add to all interactive elements ═══
-function addRipple(e){
-  const target = e.currentTarget;
+function addRipple(e, explicitTarget){
+  // Accepts an explicit target so the delegated listener can pass the matched
+  // element instead of relying on e.currentTarget (which is document under delegation).
+  const target = explicitTarget || e.currentTarget;
+  if(!target) return;
   const rect = target.getBoundingClientRect();
   const circle = document.createElement('span');
   circle.className = 'ripple-circle';
@@ -8385,22 +8400,17 @@ function addRipple(e){
   setTimeout(() => circle.remove(), 600);
 }
 
-// Attach ripple to buttons on click/touch
-function attachRipples(){
-  const selectors = '.employee-btn, .nav-btn, .btn-primary, .module-card, .wine-card, .dish-card, .quiz-option';
-  document.querySelectorAll(selectors).forEach(el => {
-    if(el._rippleAttached) return;
-    el._rippleAttached = true;
-    el.addEventListener('pointerdown', addRipple, {passive:true});
-  });
-}
-// Attach on load and periodically (dynamic content)
-document.addEventListener('DOMContentLoaded', attachRipples);
-// Re-attach on DOM changes via MutationObserver (lightweight)
-const _rippleObs = new MutationObserver(() => { requestAnimationFrame(attachRipples); });
-document.addEventListener('DOMContentLoaded', () => {
-  _rippleObs.observe(document.body, {childList:true, subtree:true});
-});
+// Ripple effect via event delegation — no per-element listener attach
+// and no MutationObserver. Previously a `subtree:true` observer on document.body
+// fired on every render of large `innerHTML` blocks (continuous CPU drain on
+// low-end devices). One delegated listener on the document handles all ripples.
+const _RIPPLE_SELECTOR = '.employee-btn, .nav-btn, .btn-primary, .module-card, .wine-card, .dish-card, .quiz-option';
+document.addEventListener('pointerdown', (ev) => {
+  const t = ev.target;
+  if(!t || !t.closest) return;
+  const matched = t.closest(_RIPPLE_SELECTOR);
+  if(matched) addRipple(ev, matched);
+}, {passive:true, capture:true});
 
 // ═══ PARALLAX — CSS-only, no JS scroll handler needed ═══
 
@@ -8650,7 +8660,32 @@ const CERT_THRESHOLD = 0.80; // 80% of dishes in category known = certified
 // ═══ RANKING (visible to all) ═══
 
 // ═══ SUPERVISOR PANEL ═══
-const SUP_PIN_HASH = 'b3b4e87f15d85199ddc51683559221f8375b5cb7074da6d69409cc1ed64b0a98'; // hashed supervisor PIN
+// SERVER-SIDE PIN VERIFICATION — when true, supervisor PIN is checked via Supabase RPC
+// instead of compared against the local SUP_PIN_HASH constant. This removes the brute-force
+// vector (a 4-digit PIN client-side hash is exhaustible in ms even with salt+iterations).
+// To enable: deploy `supabase/supervisor_pin.sql` then flip this to true.
+const USE_SERVER_PIN_VERIFY = false;
+const SUP_PIN_HASH = 'b3b4e87f15d85199ddc51683559221f8375b5cb7074da6d69409cc1ed64b0a98'; // hashed supervisor PIN (LEGACY: remove from bundle once RPC is deployed)
+
+// Unified entry point — checks server-side if available, falls back to local hash compare.
+// Returns true/false (Promise).
+async function verifySupervisorPin(pin){
+  if(USE_SERVER_PIN_VERIFY){
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/rpc/verify_supervisor_pin`, {
+        method: 'POST',
+        headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin_input: String(pin) })
+      });
+      if(!res.ok){ dbgw('[supPin] RPC failed:', res.status); return false; }
+      const ok = await res.json();
+      return ok === true;
+    } catch(e){ dbgw('[supPin] RPC error:', e.message); return false; }
+  }
+  // Legacy client-side compare (rate-limited by checkPinRateLimit/recordPinFail)
+  const h = await hashPin(String(pin));
+  return h === SUP_PIN_HASH;
+}
 
 let supAuthenticated = false;
 
@@ -10101,11 +10136,88 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='4.6';
-const APP_BUILD='March 2026';
+const APP_VERSION='5.7';
+const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
+// DEBUG flag: only log when running locally or with ?debug=1
+const DEBUG = (location.hostname==='localhost' || location.hostname==='127.0.0.1' || location.search.includes('debug=1'));
+window.DEBUG = DEBUG;
 console.info(`%cTXOKO Formación · v${APP_VERSION} · ${APP_BUILD}`,'background:#1c2a22;color:#f4ede2;padding:4px 10px;border-radius:4px;font-weight:600');
+
+// HTML escape helper — used wherever we interpolate untrusted strings into innerHTML
+function escapeHtml(str){
+  return String(str==null?'':str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+window.escapeHtml = escapeHtml;
+
+// Gated debug logger — silent in production, verbose for ?debug=1 / localhost
+const dbg  = (...a)=>{ if(DEBUG) console.log(...a); };
+const dbgw = (...a)=>{ if(DEBUG) console.warn(...a); };
+const dbge = (...a)=>{ console.error(...a); }; // errors always shown
+window.dbg = dbg; window.dbgw = dbgw; window.dbge = dbge;
+
+// ═══════ MODAL ACCESSIBILITY HELPER ═══════
+// Wires ESC-to-close and focus trap onto a modal overlay element.
+// Call AFTER appending the overlay to the DOM. Pass the close callback so ESC can dismiss.
+// Usage:
+//   const overlay = document.createElement('div'); ...
+//   document.body.appendChild(overlay);
+//   setupModalA11y(overlay, () => overlay.remove());
+function setupModalA11y(overlay, onClose){
+  if(!overlay) return;
+  const previouslyFocused = document.activeElement;
+  overlay.setAttribute('role', overlay.getAttribute('role') || 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+
+  function getFocusable(){
+    return Array.from(overlay.querySelectorAll(
+      'button:not([disabled]):not([tabindex="-1"]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(el => el.offsetParent !== null);
+  }
+
+  // Move focus into the modal (first focusable, or the modal itself)
+  const firstFocusable = getFocusable()[0];
+  if(firstFocusable) firstFocusable.focus(); else overlay.setAttribute('tabindex','-1'), overlay.focus();
+
+  function onKey(e){
+    if(e.key === 'Escape'){
+      e.preventDefault();
+      cleanup();
+      if(typeof onClose === 'function') onClose();
+      return;
+    }
+    if(e.key === 'Tab'){
+      const focusable = getFocusable();
+      if(!focusable.length){ e.preventDefault(); return; }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  }
+
+  function cleanup(){
+    document.removeEventListener('keydown', onKey, true);
+    if(previouslyFocused && typeof previouslyFocused.focus === 'function'){
+      try { previouslyFocused.focus(); } catch(_){}
+    }
+  }
+
+  document.addEventListener('keydown', onKey, true);
+
+  // Auto-cleanup if the overlay is removed from the DOM externally
+  const mo = new MutationObserver(() => {
+    if(!document.body.contains(overlay)){ mo.disconnect(); cleanup(); }
+  });
+  mo.observe(document.body, { childList: true, subtree: false });
+}
+window.setupModalA11y = setupModalA11y;
 
 // ═══════ STORAGE ═══════
 const STORAGE_KEY='txoko_data_v4';
@@ -10273,39 +10385,49 @@ async function supaUpsertEmployee(name, retries=2) {
     });
     if(!res.ok) {
       const errText = await res.text().catch(()=>'');
-      console.warn(`[Txoko] Supabase upsert failed (${res.status}) for ${name}:`, errText);
+      dbgw(`[Txoko] Supabase upsert failed (${res.status}) for ${name}:`, errText);
       if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
     }
   } catch(e) {
-    console.warn(`[Txoko] Supabase upsert error for ${name}:`, e.message);
+    dbgw(`[Txoko] Supabase upsert error for ${name}:`, e.message);
     if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
   }
 }
 
+// Short-lived cache for restore lookups — dedupes rapid-fire logins (typing/retries)
+const _restoreCache = new Map(); // key: lowercased name -> { ts, result }
+const _RESTORE_CACHE_MS = 5000;
+const _RESTORE_CACHE_MAX = 50;
+// Prune cache periodically so it can't grow unbounded over a long session.
+setInterval(() => {
+  const cutoff = Date.now() - _RESTORE_CACHE_MS;
+  for (const [k, v] of _restoreCache) if (v.ts < cutoff) _restoreCache.delete(k);
+  // Hard cap as a belt-and-braces measure: drop oldest entries if we're over the limit.
+  if (_restoreCache.size > _RESTORE_CACHE_MAX) {
+    const drop = _restoreCache.size - _RESTORE_CACHE_MAX;
+    let n = 0;
+    for (const k of _restoreCache.keys()) { if (n++ >= drop) break; _restoreCache.delete(k); }
+  }
+}, 60000);
 async function supaRestoreEmployee(name) {
+  const cacheKey = (name||'').toLowerCase();
+  const cached = _restoreCache.get(cacheKey);
+  if(cached && (Date.now() - cached.ts) < _RESTORE_CACHE_MS) return cached.result;
   try {
-    // First try exact match, then case-insensitive
-    let res = await fetch(
-      `${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}&select=*`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    // ilike does both exact and case-insensitive matching in one round-trip — no need for two queries
+    // 8s timeout: on bad WiFi, fail fast so the login UI can fall back to local data.
+    const res = await fetchT(
+      `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } },
+      8000
     );
-    if(!res.ok) { console.warn('[Txoko] Supabase restore failed:', res.status); return false; }
-    let rows = await res.json();
+    if(!res.ok) { dbgw('[Txoko] Supabase restore failed:', res.status); return false; }
+    const rows = await res.json();
 
-    // If no exact match, try case-insensitive search
-    if(!Array.isArray(rows) || !rows.length) {
-      res = await fetch(
-        `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
-        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
-      );
-      if(!res.ok) return false;
-      rows = await res.json();
-    }
-
-    if(!Array.isArray(rows) || !rows.length) return false;
+    if(!Array.isArray(rows) || !rows.length) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
     const r = rows[0];
     // If remote has no XP and no pin, nothing to restore
-    if((!r.xp || r.xp === 0) && !r.pin) return false;
+    if((!r.xp || r.xp === 0) && !r.pin) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
 
     // Use the name exactly as stored in Supabase (correct casing)
     const cloudName = r.name;
@@ -10320,16 +10442,17 @@ async function supaRestoreEmployee(name) {
     emp.lastStudyDay = r.last_study_day || emp.lastStudyDay;
     emp.txokoRecord = Math.max(emp.txokoRecord || 0, r.txoko_record || 0);
     emp.duelWins = Math.max(emp.duelWins || 0, r.duel_wins || 0);
-    try { const ts = JSON.parse(r.topic_scores||'{}'); if(Object.keys(ts).length) emp.topicScores = ts; } catch(e){}
+    try { const ts = JSON.parse(r.topic_scores||'{}'); if(Object.keys(ts).length) emp.topicScores = ts; } catch(e){ dbgw('[restore] bad topic_scores JSON for', cloudName, e.message); }
     if(r.avatar) emp.avatar = r.avatar;
-    try { const kd = JSON.parse(r.known_dishes||'{}'); if(Object.keys(kd).length) emp.knownDishes = kd; } catch(e){}
-    try { const ec = JSON.parse(r.exam_correct||'{}'); if(Object.keys(ec).length) emp.examCorrect = ec; } catch(e){}
-    try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){}
+    try { const kd = JSON.parse(r.known_dishes||'{}'); if(Object.keys(kd).length) emp.knownDishes = kd; } catch(e){ dbgw('[restore] bad known_dishes JSON for', cloudName, e.message); }
+    try { const ec = JSON.parse(r.exam_correct||'{}'); if(Object.keys(ec).length) emp.examCorrect = ec; } catch(e){ dbgw('[restore] bad exam_correct JSON for', cloudName, e.message); }
+    try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){ dbgw('[restore] bad sessions_data JSON for', cloudName, e.message); }
     saveDB();
     // Do NOT sync back during restore — avoid overwriting cloud with stale local data
     // supaUpsertEmployee will be called after successful login instead
+    _restoreCache.set(cacheKey, {ts:Date.now(), result:cloudName});
     return cloudName; // Return the correct name from cloud
-  } catch(e) { console.warn('[Txoko] Supabase restore error:', e.message); return false; }
+  } catch(e) { dbgw('[Txoko] Supabase restore error:', e.message); return false; }
 }
 
 async function supaFetchAllEmployees() {
@@ -10346,10 +10469,10 @@ async function supaFetchAllEmployees() {
       xp: r.xp || 0,
       streak: r.streak || 0,
       lastStudyDay: r.last_study_day || '',
-      topicScores: (() => { try { return JSON.parse(r.topic_scores||'{}'); } catch(e){ return {}; } })(),
-      knownDishes: (() => { try { return JSON.parse(r.known_dishes||'{}'); } catch(e){ return {}; } })(),
-      examCorrect: (() => { try { return JSON.parse(r.exam_correct||'{}'); } catch(e){ return {}; } })(),
-      sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ return Array(r.sessions_count||0).fill({}); } })(),
+      topicScores: (() => { try { return JSON.parse(r.topic_scores||'{}'); } catch(e){ dbgw('[fetchAll] bad topic_scores for', r.name, e.message); return {}; } })(),
+      knownDishes: (() => { try { return JSON.parse(r.known_dishes||'{}'); } catch(e){ dbgw('[fetchAll] bad known_dishes for', r.name, e.message); return {}; } })(),
+      examCorrect: (() => { try { return JSON.parse(r.exam_correct||'{}'); } catch(e){ dbgw('[fetchAll] bad exam_correct for', r.name, e.message); return {}; } })(),
+      sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ dbgw('[fetchAll] bad sessions_data for', r.name, e.message); return Array(r.sessions_count||0).fill({}); } })(),
       txokoRecord: r.txoko_record || 0,
       duelWins: r.duel_wins || 0,
       lastLoginTs: r.last_login || null
@@ -10416,7 +10539,7 @@ async function requestNotifPermission() {
 function showBrowserNotif(title, body, icon='✦') {
   if(!('Notification' in window) || Notification.permission !== 'granted') return;
   try {
-    new Notification(title, { body, icon: '/favicon.ico', badge: '/favicon.ico', tag: 'txoko' });
+    new Notification(title, { body, icon: 'icon.svg', badge: 'icon.svg', tag: 'txoko' });
   } catch(e) {}
 }
 
@@ -10438,36 +10561,36 @@ async function registerServiceWorker() {
     const reg = await navigator.serviceWorker.register('./sw.js');
     await navigator.serviceWorker.ready;
     return reg;
-  } catch(e) { console.warn('[Txoko] SW register failed:', e); return null; }
+  } catch(e) { dbgw('[Txoko] SW register failed:', e); return null; }
 }
 
 async function subscribeToPush(employeeName) {
   try {
     // Step 1: Check if Notification API is available
     if (!('Notification' in window)) {
-      console.warn('[Txoko Push] Notification API not available');
+      dbgw('[Txoko Push] Notification API not available');
       return;
     }
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      console.warn('[Txoko Push] ServiceWorker or PushManager not available');
+      dbgw('[Txoko Push] ServiceWorker or PushManager not available');
       return;
     }
 
     // Step 2: Request permission
     const permission = await Notification.requestPermission();
-    console.log('[Txoko Push] Permission:', permission);
+    dbg('[Txoko Push] Permission:', permission);
     if (permission !== 'granted') {
-      console.warn('[Txoko Push] Permission denied or dismissed');
+      dbgw('[Txoko Push] Permission denied or dismissed');
       return;
     }
 
     // Step 3: Register service worker
     const reg = await registerServiceWorker();
     if (!reg) {
-      console.warn('[Txoko Push] Service worker registration failed');
+      dbgw('[Txoko Push] Service worker registration failed');
       return;
     }
-    console.log('[Txoko Push] SW registered, scope:', reg.scope);
+    dbg('[Txoko Push] SW registered, scope:', reg.scope);
 
     // Step 4: Get or create push subscription
     let sub = await reg.pushManager.getSubscription();
@@ -10479,7 +10602,7 @@ async function subscribeToPush(employeeName) {
       });
       isNew = true;
     }
-    console.log('[Txoko Push] Subscription ' + (isNew ? 'created' : 'exists') + ':', sub.endpoint.substring(0, 50) + '...');
+    dbg('[Txoko Push] Subscription ' + (isNew ? 'created' : 'exists') + ':', sub.endpoint.substring(0, 50) + '...');
 
     // Step 5: Save subscription to Supabase
     const subJSON = sub.toJSON();
@@ -10498,7 +10621,7 @@ async function subscribeToPush(employeeName) {
         keys_auth: subJSON.keys.auth
       })
     });
-    console.log('[Txoko Push] Saved to Supabase:', saveRes.status, saveRes.ok ? 'OK' : 'FAIL');
+    dbg('[Txoko Push] Saved to Supabase:', saveRes.status, saveRes.ok ? 'OK' : 'FAIL');
 
     // Step 6: Send a silent self-test push to verify end-to-end
     if (isNew) {
@@ -10518,7 +10641,7 @@ async function subscribeToPush(employeeName) {
     // Hide the enable button since push is now active
     var pushBtn = document.getElementById('pushEnableBtn');
     if(pushBtn) pushBtn.style.display = 'none';
-  } catch(e) { console.warn('[Txoko Push] Subscribe error:', e); }
+  } catch(e) { dbgw('[Txoko Push] Subscribe error:', e); }
 }
 
 // Check push status and show enable button if needed
@@ -10706,7 +10829,7 @@ async function supaFetchCustomDishes() {
       id: r.dish_id,
       name: r.name,
       cat: r.cat,
-      allergens: (() => { try { return JSON.parse(r.allergens||'[]'); } catch(e){ return []; } })(),
+      allergens: (() => { try { return JSON.parse(r.allergens||'[]'); } catch(e){ dbgw('[customDishes] bad allergens for', r.name, e.message); return []; } })(),
       ingredients: r.ingredients || '',
       history: r.history || '',
       notes: r.notes || null
@@ -10768,10 +10891,13 @@ async function syncCustomDishesFromCloud() {
 let DB={employees:{}};
 
 // ═══════ SECURITY HELPERS (OWASP) ═══════
-function escapeHTML(str){
-  if(!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
+// Alias of escapeHtml() defined earlier — kept for legacy call sites.
+// `if(!str)` was buggy: it dropped 0 and false. Use null-safe coercion instead.
+const escapeHTML = (typeof escapeHtml === 'function') ? escapeHtml : function(str){
+  return String(str==null?'':str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+};
 
 // ═══ DISH NAME TRANSLATION (for wine pairings in English) ═══
 const _DISH_EN_MAP = {
@@ -10863,6 +10989,19 @@ function dismissToast(t){
   setTimeout(function(){ if(t.parentNode) t.remove(); }, 300);
 }
 
+// ═══ FETCH WITH TIMEOUT ═══
+// Plain fetch() never times out — on flaky hotel WiFi a hung request can lock
+// the login flow forever. fetchT() aborts after `ms` (default 10s) so callers'
+// catch blocks fire and the UI can surface the failure.
+function fetchT(url, opts, ms){
+  ms = ms == null ? 10000 : ms;
+  const ctl = new AbortController();
+  const t = setTimeout(()=>ctl.abort(), ms);
+  const merged = Object.assign({}, opts || {}, { signal: ctl.signal });
+  return fetch(url, merged).finally(()=>clearTimeout(t));
+}
+window.fetchT = fetchT;
+
 // ═══ SUPABASE FETCH WRAPPER — error feedback + retry ═══
 async function supaFetch(path, options, opts){
   opts = opts || {};
@@ -10910,17 +11049,30 @@ function showSkeleton(container, count){
   if(container) container.innerHTML = html;
 }
 async function hashPin(pin){
+  // crypto.subtle is undefined on insecure origins (HTTP, raw IPs) — common
+  // when devices in the kitchen access the app via a local IP. Fail loud
+  // instead of throwing a cryptic TypeError so the user knows the cause.
+  if(!self.crypto || !self.crypto.subtle){
+    throw new Error('crypto.subtle no disponible — accede vía HTTPS o localhost');
+  }
   const enc = new TextEncoder().encode(pin+'txoko_salt_2026');
-  const buf = await crypto.subtle.digest('SHA-256', enc);
+  const buf = await self.crypto.subtle.digest('SHA-256', enc);
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 // ═══ PIN RATE LIMITING — persistent across page reloads ═══
+// IMPORTANT: do NOT auto-reset state on lockout expiry — the `streak` field
+// drives exponential backoff (30s → 60s → 5min → 15min) and must persist
+// across reloads even after a previous lockout has elapsed. Otherwise an
+// attacker can refresh and burn through 3-attempt windows indefinitely at
+// the lowest 30s lockout. `recordPinSuccess` is the only legitimate reset path.
 const _pinAttempts = (function() {
   try {
     const saved = JSON.parse(localStorage.getItem('txoko_pin_rl') || '{}');
-    // Validate structure and expiry
-    if(saved.lockedUntil && Date.now() >= saved.lockedUntil) return {count:0,lockedUntil:0,streak:0};
-    return {count: saved.count||0, lockedUntil: saved.lockedUntil||0, streak: saved.streak||0};
+    return {
+      count:       saved.count       || 0,
+      lockedUntil: saved.lockedUntil || 0,
+      streak:      saved.streak      || 0
+    };
   } catch(e) { return {count:0,lockedUntil:0,streak:0}; }
 })();
 function _savePinRL() {
@@ -10955,7 +11107,34 @@ function resetSessionTimer(){
 }
 ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{ if(currentUser) resetSessionTimer(); },{passive:true}));
 
-function loadDB(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)DB=JSON.parse(s);}catch(e){}}
+// Loads DB from localStorage with one-shot migration from any prior schema
+// version (txoko_data_v1 / v2 / v3). On a fresh browser update the user
+// would otherwise start empty — cloud sync rescues most data, but only if
+// the PIN survived. Migration preserves XP, streaks and sessions locally
+// even when the cloud round-trip fails.
+function loadDB(){
+  try{
+    const cur = localStorage.getItem(STORAGE_KEY);
+    if(cur){ DB = JSON.parse(cur); return; }
+    // No v4 data — try older schemas, newest first
+    for(const ver of ['v3','v2','v1']){
+      const oldKey = 'txoko_data_' + ver;
+      const old = localStorage.getItem(oldKey);
+      if(!old) continue;
+      try{
+        const parsed = JSON.parse(old);
+        if(parsed && typeof parsed === 'object'){
+          DB = parsed;
+          // Promote to current schema and drop the legacy key.
+          try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }catch(_){}
+          try{ localStorage.removeItem(oldKey); }catch(_){}
+          dbg('[loadDB] migrated from', oldKey);
+          return;
+        }
+      }catch(_){ /* try next */ }
+    }
+  }catch(e){}
+}
 // Offline/sync status indicator — mobile-first, non-blocking, respects reduced motion.
 // Persistent pill when offline; brief "Synced" confirmation when back online.
 let _syncPillTimer = null;
@@ -10986,17 +11165,45 @@ window.addEventListener('offline', _updateOnlineStatus);
 // Initial read (deferred so DOM is ready)
 setTimeout(function(){ if(navigator.onLine === false) _setSyncPill('offline'); }, 500);
 
-// Cross-tab sync: when DB changes in another tab (same user on multiple devices/browser windows),
-// reload the in-memory copy and notify UI layers. This prevents stale state and lost writes.
+// Cross-tab sync: when DB changes in another tab, merge instead of overwriting.
+// Previous behaviour (`DB = next`) clobbered in-flight writes — e.g. mid-exam
+// the user has incremented examScore in `emp` but the other tab's stale snapshot
+// (without those increments) would replace it on next save. We now merge per
+// employee, keeping max-of-counters and union-of-sets, so concurrent activity
+// across tabs never regresses the active user's progress.
+function _mergeEmployees(local, remote){
+  if(!local || typeof local !== 'object') return remote;
+  if(!remote || typeof remote !== 'object') return local;
+  const out = Object.assign({}, local, remote);
+  // Counters: keep max
+  out.xp           = Math.max(local.xp||0,           remote.xp||0);
+  out.streak       = Math.max(local.streak||0,       remote.streak||0);
+  out.txokoRecord  = Math.max(local.txokoRecord||0,  remote.txokoRecord||0);
+  out.duelWins     = Math.max(local.duelWins||0,     remote.duelWins||0);
+  // Sessions: take whichever array is longer (presumes append-only)
+  const ls = local.sessions || [], rs = remote.sessions || [];
+  out.sessions = (rs.length > ls.length) ? rs : ls;
+  // Maps: union, with remote winning on conflict for current-action coherence
+  out.knownDishes = Object.assign({}, local.knownDishes||{}, remote.knownDishes||{});
+  out.examCorrect = Object.assign({}, local.examCorrect||{}, remote.examCorrect||{});
+  out.streakMilestones = Object.assign({}, local.streakMilestones||{}, remote.streakMilestones||{});
+  return out;
+}
 window.addEventListener('storage', function(ev){
   if(ev.key !== STORAGE_KEY || !ev.newValue) return;
   try{
     const next = JSON.parse(ev.newValue);
-    if(next && typeof next === 'object'){
-      DB = next;
-      // Let active views refresh themselves without forcing a full nav.
-      try{ window.dispatchEvent(new CustomEvent('txk:dbsync', {detail:{source:'storage'}})); }catch(_){}
+    if(!next || typeof next !== 'object') return;
+    const localEmps  = (DB && DB.employees) || {};
+    const remoteEmps = next.employees || {};
+    const merged = {};
+    const allNames = new Set(Object.keys(localEmps).concat(Object.keys(remoteEmps)));
+    for(const n of allNames){
+      merged[n] = _mergeEmployees(localEmps[n], remoteEmps[n]);
     }
+    DB = Object.assign({}, next, { employees: merged });
+    // Let active views refresh themselves without forcing a full nav.
+    try{ window.dispatchEvent(new CustomEvent('txk:dbsync', {detail:{source:'storage'}})); }catch(_){}
   }catch(e){ /* ignore malformed cross-tab write */ }
 });
 // Safe JSON.parse: returns fallback on error rather than crashing.
@@ -11025,7 +11232,7 @@ function saveDB(){
         showToast(LANG==='en'?'⚠ Could not save locally. Your session may not persist.':'⚠ No se pudo guardar localmente. Tu sesión puede no persistir.', 'warning', 6000);
       }
     }
-    if(window.console && console.warn) console.warn('[saveDB] localStorage failed:', e);
+    dbgw('[saveDB] localStorage failed:', e);
   }
   // Sync current user to Supabase in background (also a durability safeguard)
   if(currentUser) supaUpsertEmployee(currentUser);
@@ -11222,7 +11429,7 @@ function showXPToast(amount, reason){
   if(existing) existing.remove();
   const toast = document.createElement('div');
   toast.id = 'xpToast';
-  toast.innerHTML = `<span style="font-size:1rem"></span> <strong>+${amount} XP</strong> <span style="opacity:.7;font-size:.75rem">${reason}</span>`;
+  toast.innerHTML = `<span style="font-size:1rem"></span> <strong>+${amount} XP</strong> <span style="opacity:.7;font-size:.75rem">${escapeHTML(reason)}</span>`;
   toast.style.cssText = `
     position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
     background:var(--parchment);color:var(--ink);
@@ -13696,11 +13903,22 @@ function checkStreak(){
   const _nH = (_nh.getUTCHours()+((_nh>=_nDstS&&_nh<_nDstE)?1:0))%24;
   if(_nH >= 23 || _nH < 5){ emp.nightStudy = true; }
   saveDB();
-  // XP bonus for streak milestones
-  if(emp.streak===3)  awardXP(25, LANG==='en'?'3-day streak ◈':'Racha de 3 días ◈');
-  if(emp.streak===7)  awardXP(75, LANG==='en'?'1-week streak! ◈':'¡Racha de 1 semana! ◈');
-  if(emp.streak===14) awardXP(150,LANG==='en'?'2-week streak! ◈◈':'¡Racha de 2 semanas! ◈◈');
-  if(emp.streak===30) awardXP(500,LANG==='en'?'1-month streak! ':'¡Racha de 1 mes! ');
+  // XP bonus for streak milestones — uses claimedMilestones map so users who
+  // jump past a milestone via cloud sync (Math.max(local, remote)) still get
+  // the bonus retroactively, and the same milestone never pays twice.
+  emp.streakMilestones = emp.streakMilestones || {};
+  const _streakRewards = [
+    {at:3,  xp:25,  txt_en:'3-day streak ◈',         txt_es:'Racha de 3 días ◈'},
+    {at:7,  xp:75,  txt_en:'1-week streak! ◈',       txt_es:'¡Racha de 1 semana! ◈'},
+    {at:14, xp:150, txt_en:'2-week streak! ◈◈',      txt_es:'¡Racha de 2 semanas! ◈◈'},
+    {at:30, xp:500, txt_en:'1-month streak! ',       txt_es:'¡Racha de 1 mes! '}
+  ];
+  for(const r of _streakRewards){
+    if(emp.streak >= r.at && !emp.streakMilestones[r.at]){
+      emp.streakMilestones[r.at] = true;
+      awardXP(r.xp, LANG==='en' ? r.txt_en : r.txt_es);
+    }
+  }
   // Show streak notification in dashboard
   if(emp.streak>1) showStreakToast(emp.streak);
 }
@@ -14400,7 +14618,7 @@ function renderLeaderboard(){
   renderLeaderboardData(el, getLocalLeaderboard());
   // Add loading indicator
   const title=el.querySelector('.leaderboard-title');
-  if(title) title.insertAdjacentHTML('beforeend','<span id="lb-loading" style="font-size:.7rem;opacity:.5;margin-left:.5rem">↻ actualizando...</span>');
+  if(title) title.insertAdjacentHTML('beforeend','<span id="lb-loading" style="font-size:.7rem;opacity:.5;margin-left:.5rem">'+(LANG==='en'?'↻ updating…':'↻ actualizando…')+'</span>');
   supaFetchLeaderboard().then(remote=>{
     const loader=document.getElementById('lb-loading');
     if(loader) loader.remove();
@@ -14437,8 +14655,8 @@ function renderLeaderboardData(el, scores){
         const isTop=i<3;
         return `<div class="lb-row${isTop?' lb-top':''}">
           <span class="lb-rank${i<3?' '+rankClass[i]:''}">${i<3?medals[i]:i+1}</span>
-          <div class="lb-avatar">${s.name[0].toUpperCase()}</div>
-          <span class="lb-name">${s.name}</span>
+          <div class="lb-avatar">${escapeHTML((s.name||'?')[0]).toUpperCase()}</div>
+          <span class="lb-name">${escapeHTML(s.name)}</span>
           <span class="lb-score ${cls}">${s.best}%</span>
         </div>`;
       }).join('')}
@@ -14574,7 +14792,7 @@ async function loginWithPassword(){
       }
     }
   } catch(e) {
-    console.warn('[Txoko] Cloud sync failed:', e);
+    dbgw('[Txoko] Cloud sync failed:', e);
     // If cloud fails but local exists, continue with local data
     if(!localExists) {
       errEl.textContent = (LANG==='en' ? 'Cloud error: ' : 'Error nube: ') + e.message;
@@ -14911,33 +15129,41 @@ function deleteProfilePrompt(name){
   let entered='';
   const overlay=document.createElement('div');
   overlay.id='delOverlay';
+  overlay.setAttribute('role','dialog');
+  overlay.setAttribute('aria-modal','true');
+  overlay.setAttribute('aria-label','Eliminar perfil — introducir PIN de supervisor');
   overlay.style.cssText='position:fixed;inset:0;background:rgba(28,42,34,.72);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
   function draw(){
     overlay.innerHTML=`
       <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:2rem;width:280px;text-align:center;box-shadow:var(--shadow2)">
-        <div style="font-size:1.4rem;margin-bottom:.4rem">○</div>
+        <div style="font-size:1.4rem;margin-bottom:.4rem" aria-hidden="true">○</div>
         <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);margin-bottom:.2rem">Eliminar perfil</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);margin-bottom:1.2rem;letter-spacing:.1em">${name}</div>
-        <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">
-          ${[0,1,2,3].map(i=>`<div style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold-a);background:${i<entered.length?'var(--gold)':'transparent'}"></div>`).join('')}
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);margin-bottom:1.2rem;letter-spacing:.1em">${escapeHtml(name)}</div>
+        <div role="status" aria-live="polite" aria-label="${entered.length} de 4 dígitos introducidos" style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">
+          ${[0,1,2,3].map(i=>`<div aria-hidden="true" style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold-a);background:${i<entered.length?'var(--gold)':'transparent'}"></div>`).join('')}
         </div>
         <div id="delPinErr"></div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:180px;margin:0 auto .9rem">
-          ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`
-            <button id="delk_${k}" style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;font-size:.95rem;font-weight:500;color:var(--parchment);cursor:pointer;${k===''?'visibility:hidden;':''}">${k}</button>`).join('')}
+        <div role="group" aria-label="Teclado PIN" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:180px;margin:0 auto .9rem">
+          ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>{
+            const isErase = k==='⌫';
+            const isEmpty = k==='';
+            const aria = isErase ? 'Borrar último dígito' : isEmpty ? '' : `Dígito ${k}`;
+            return `<button id="delk_${k}" ${isEmpty?'aria-hidden="true" tabindex="-1"':`aria-label="${aria}"`} style="background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:.6rem;font-size:.95rem;font-weight:500;color:var(--parchment);cursor:pointer;${k===''?'visibility:hidden;':''}">${k}</button>`;
+          }).join('')}
         </div>
-        <button onclick="document.getElementById('delOverlay').remove()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem 1rem;font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);cursor:pointer">Cancelar</button>
+        <button onclick="document.getElementById('delOverlay').remove()" aria-label="Cancelar y cerrar" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem 1rem;font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch3);cursor:pointer">Cancelar</button>
       </div>`;
     // Attach key listeners
     [1,2,3,4,5,6,7,8,9,0].forEach(k=>{
       const btn=overlay.querySelector('#delk_'+k);
-      if(btn) btn.onclick=()=>{ if(entered.length<4){entered+=k; if(entered.length===4){ hashPin(entered).then(h=>{ if(h===SUP_PIN_HASH){ overlay.remove(); deleteProfileConfirmed(name); } else { const err=document.getElementById('delPinErr'); if(err) err.innerHTML='<div style="color:var(--rose);font-size:.72rem;margin-bottom:.6rem">✗ PIN incorrecto</div>'; entered=''; draw(); } }); } else draw(); } };
+      if(btn) btn.onclick=()=>{ if(entered.length<4){entered+=k; if(entered.length===4){ verifySupervisorPin(entered).then(ok=>{ if(ok){ overlay.remove(); deleteProfileConfirmed(name); } else { const err=document.getElementById('delPinErr'); if(err) err.innerHTML='<div style="color:var(--rose);font-size:.72rem;margin-bottom:.6rem">✗ PIN incorrecto</div>'; entered=''; draw(); } }); } else draw(); } };
     });
     const del=overlay.querySelector('#delk_⌫');
     if(del) del.onclick=()=>{ entered=entered.slice(0,-1); draw(); };
   }
   draw();
   document.body.appendChild(overlay);
+  setupModalA11y(overlay, () => overlay.remove());
 }
 
 function deleteProfileConfirmed(name){
@@ -15286,8 +15512,34 @@ function pinCancel(){
   if(overlay) overlay.remove();
   pinTarget=null; pinBuffer=''; pinStep='enter'; pinFirst='';
 }
+// Unsubscribe push + delete the row in Supabase. Fire-and-forget — logout
+// doesn't await this so the UI can flip back to the login screen instantly.
+async function _cleanupPushOnLogout(employeeName){
+  if(!employeeName || !('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  try {
+    const reg = await navigator.serviceWorker.getRegistration();
+    if(!reg) return;
+    const sub = await reg.pushManager.getSubscription();
+    if(!sub) return;
+    const endpoint = sub.endpoint;
+    // Local unsubscribe first so the OS stops delivering pushes to this device
+    try { await sub.unsubscribe(); } catch(_) {}
+    // Best-effort delete in Supabase. keepalive lets it complete during navigation.
+    try {
+      await fetch(`${SUPA_URL}/rest/v1/push_subscriptions?endpoint=eq.${encodeURIComponent(endpoint)}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` },
+        keepalive: true
+      });
+    } catch(_) {}
+  } catch(e) { dbgw('[Txoko] push cleanup failed:', e && e.message); }
+}
+
 function logout(){
-  if(currentUser) supaUpsertEmployee(currentUser);
+  if(currentUser){
+    supaUpsertEmployee(currentUser);
+    _cleanupPushOnLogout(currentUser); // fire-and-forget
+  }
   stopLiveQuizPolling();
   // ── Clear ALL active timers/intervals to prevent memory leaks ──
   clearTimeout(_sessionTimer); _sessionTimer = null;
@@ -15401,7 +15653,8 @@ function showTab(tab){
       const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderProtocoloHub,videos:renderAprender,lqa:renderProtocoloHub,vinos:renderVinos};
       renderMap[tab]();
     } catch(e) {
-      c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+tab+':</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
+      const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+escapeHtml(e.stack)+'</pre>' : '';
+      c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+escapeHtml(tab)+':</b><br>'+escapeHtml(e.message)+_stackHtml+'</div>';
       console.error('showTab error:', e);
     }
     c.classList.remove('tab-entering');
@@ -16539,7 +16792,7 @@ const WINES = [
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Costillas melosas de cordero sobre salsa de curry verde', 'Entrecot de Angus 300g', 'Bao de brisket'],
     notes: 'Frutal y vibrante, con aromas frescos de cerezas. Ideal para beber con alegría.',
     story_en: 'Predicador 2022 by Bodega Contador under the direction of Benjamín Romeo is a young Tempranillo from Rioja with great character. Fermentation in concrete tanks and aging in barrel for 12 months develop fresh fruity aromas with significant body.',
-    grapeSelection_en: 'Predicador by Bodega Contador uses young Tempranillo from historic Rioja vineyards between 550-650 meters altitude. Deep limestone-clay soils favor aromatic expression. Vines of 40-50 years balance yield and concentration. Selective hand harvest in September captures lively acidity and healthy phenols.',
+    grapeSelection_en: 'Predicador by Bodega Contador uses young Tempranillo from historic Rioja vineyards between 550-650 meters altitude. Deep limestone-clay soils favor aromatic expression. 40-50-year-old Vines balance yield and concentration. Selective hand harvest in September captures lively acidity and healthy phenols.',
     winemaking_en: 'Fermentation in stainless steel tanks at 26-28°C for 14 days. Post-fermentative maceration for 5 days to maintain freshness. Aging in French oak barrel for 12 months. Natural malolactic fermentation. Clarification with albumin to refine aromatic profiles. Bottled in spring.',
     notes_en: 'Fruity and vibrant, with fresh cherry aromas. Ideal for drinking with joy.'
   },
@@ -17517,10 +17770,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 27-29°C durante 10-12 días. Maceración controlada de 12-14 días. Envejecimiento en roble francés y americano mezclados durante 12-14 meses. Crianza malolàctica parcial. Remontajes suaves para preservar aromas frescos. Filtración ligera antes del embotellado.',
     pairings: ['Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Tartar de Wagyu dry', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg', 'Carrillera de Wagyu'],
     notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente envejecimiento.',
-    story_en: 'Brazos de los Andes 2023 es promise argentina de Mendoza. Malbec de Valle de Uco en altitud fermentan en depósitos hormigón; crianza 10 meses en roble francés develops fruta concentrated con estructura y potential future excepcional.',
-    grapeSelection_en: 'Malbec de viñas young en Valle de Uco between 1.050-1.150m. Suelos aluviales con composición de grava y arena. Vendimia mecanizada efficient en march. Selección de bayas completas evitando estrujamiento. Clima semiárido genera concentration natural. less estrés térmico that zonas low.',
-    winemaking_en: 'Fermentación en acero inoxidable a 27-29°C durante 10-12 días. Maceración controlada de 12-14 días. aging en roble francés y american blended durante 12-14 meses. Crianza malolàctica parcial. Remontajes suaves para preserve aromas frescos. filtration ligera before del embotellado.',
-    notes_en: 'Complejo y estructurado, con aromas de frutos negros. Excelente aging.'
+    story_en: 'Brazos de los Andes 2023 es promise Argentine de Mendoza. Malbec de Valle de Uco en altitud fermentan en depósitos hormigón; aging 10 months en French oak develops fruit concentrated with estructura and potential future excepcional.',
+    grapeSelection_en: 'Malbec de young vines en Valle de Uco between 1.050-1.150m. Suelos alluvial with composición de grava and arena. Harvest mecanizada efficient en march. Selection de berries completas evitando estrujamiento. Clima semiárido genera concentration natural. less estrés térmico that zonas low.',
+    winemaking_en: 'Fermentation en stainless steel a 27-29°C durante 10-12 days. controlled maceration de 12-14 days. aging en French oak and american blended durante 12-14 months. Malolactic fermentation parcial. Remontajes suaves for preserve aromas frescos. filtration ligera before del embotellado.',
+    notes_en: 'Complejo and estructurado, with aromas de fruits negros. Excelente aging.'
   },
 
   // TINTOS - Cataluña/Otras regiones españolas
@@ -17543,10 +17796,10 @@ const WINES = [
     winemaking: 'Fermentación espontánea en depósitos de madera vieja a 22-24°C durante 14-16 días. Envejecimiento en barrica grande de roble francés durante 8-10 meses. Crianza malolàctica lenta y natural. Batonaje ocasional. Sin sulfitos añadidos. Embotellado rústico preservando carácter autóctono.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Entrecot de Angus 300g', 'Bao de brisket'],
     notes: 'Frutal y aromático, con notas de frutos rojos. Ideal con carnes asadas.',
-    story_en: 'En el Penedés catalán, La Fita preserva el Sumoll, variedad autóctona relegada al olvido durante décadas. Con suelos calizos that aportan mineralidad distintiva, la winery cultiva este tinto con técnicas traditional that respetan el carácter fruity del Sumoll. El aging en madera permite that aromas de frutos rojos y especias se desarrollen en perfecta armonía.',
-    grapeSelection_en: 'Sumoll autóctono de Penedés, variedad ancestral catalán en resurgimiento. Viñedos de 25-40 años en suelos calcáreo-aluviales. Vendimia manual tardía en october. Selección meticulosa de racimos maduros oscuros. Eliminación de verdes y podredumbre. Fermentación con levaduras indígenas.',
-    winemaking_en: 'Fermentación espontánea en depósitos de madera vieja a 22-24°C durante 14-16 días. aging en barrica great de roble francés durante 8-10 meses. Crianza malolàctica lenta y natural. Batonaje ocasional. Sin sulfitos añadidos. Embotellado rústico preservando carácter autóctono.',
-    notes_en: 'fruity y aromatic, con notas de frutos rojos. Ideal con grilled meats.'
+    story_en: 'En el Penedés Catalan, La Fita preserva el Sumoll, variety indigenous relegada al olvido durante décadas. With soils calizos that aportan minerality distintiva, la winery cultiva this red with técnicas traditional that respetan el carácter fruity del Sumoll. El aging en wood permite that aromas de fruits rojos and especias se desarrollen en perfecta armonía.',
+    grapeSelection_en: 'Sumoll indigenous de Penedés, variety ancestral Catalan en resurgimiento. 25-40-year-old Vineyards en soils limestone-alluvial. Manual harvest tardía en october. Selection meticulosa de clusters ripe oscuros. Eliminación de green and podredumbre. Fermentation with indigenous yeasts.',
+    winemaking_en: 'Fermentation espontánea en depósitos de wood vieja a 22-24°C durante 14-16 days. aging en large barrel de French oak durante 8-10 months. Malolactic fermentation slow and natural. Batonaje ocasional. Without sulfitos añadidos. Embotellado rústico preservando carácter indigenous.',
+    notes_en: 'fruity and aromatic, with notas de fruits rojos. Ideal with grilled meats.'
   },
   {
     id: 83,
@@ -17567,10 +17820,10 @@ const WINES = [
     winemaking: 'Fermentación separada de cada variedad en cemento a 25-27°C durante 12-14 días. Envejecimiento conjunto en roble francés y americano durante 16 meses. Crianza malolàctica completa. Batonaje bi-semanal. Mezcla final optimizada después de crianza. Embotellado sin filtración.',
     pairings: ['T-bone de Wagyu 1.1kg', 'Entrecot de Wagyu 300g', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg', 'Carrillera de Wagyu'],
     notes: 'Joven y vibrante, con aromas complejos. Buen potencial de envejecimiento.',
-    story_en: 'En el corazón de Priorat, Les Cousins elabora esta tetrada explosiva de Cariñena, Merlot, Garnacha y Cabernet Sauvignon en pizarras historic. Viñas young con enorme vitality producen un tinto vibrante donde cada variedad aporta su propia expresión. El resultado es un wine contemporáneo con aromas complejos, taninos frescos y considerable cellaring potential.',
-    grapeSelection_en: 'Cariñena, Merlot, Garnacha y Cabernet Sauvignon de pizarras escarpadas de Priorat. Viñedos de 35-50 años en terrazas milenarias sobre pizarra negra. Vendimia manual selective en october. Cada variedad harvested en su momento optimal. Selección racimo por racimo. Transporte inmediato al lagar.',
-    winemaking_en: 'Fermentación separada de cada variedad en cemento a 25-27°C durante 12-14 días. aging conjunto en roble francés y american durante 16 meses. Crianza malolàctica completa. Batonaje bi-semanal. Mezcla final optimizada after de crianza. Embotellado sin filtration.',
-    notes_en: 'young y vibrante, con aromas complejos. Buen potential de aging.'
+    story_en: 'En el corazón de Priorat, Les Cousins elabora esta quartet explosiva de Cariñena, Merlot, Garnacha and Cabernet Sauvignon en slates historic. young vines with enorme vitality producen un tinto vibrante donde each variety aporta su own expresión. El resultado es un wine contemporáneo with aromas complejos, taninos frescos and considerable cellaring potential.',
+    grapeSelection_en: 'Cariñena, Merlot, Garnacha and Cabernet Sauvignon de slates steep de Priorat. 35-50-year-old Vineyards en terraces ancient sobre slate negra. Manual harvest selective en october. Each variety harvested en su momento optimal. Selection cluster by cluster. Transporte inmediato al lagar.',
+    winemaking_en: 'Fermentation separada de each variety en cemento a 25-27°C durante 12-14 days. aging conjunto en French oak and american durante 16 months. Malolactic fermentation completa. Batonaje bi-semanal. Mezcla final optimizada after de aging. Embotellado without filtration.',
+    notes_en: 'young and vibrante, with aromas complejos. Buen potential de aging.'
   },
   {
     id: 84,
@@ -17591,10 +17844,10 @@ const WINES = [
     winemaking: 'Fermentación en tinas de madera a 24-26°C durante 12-15 días. Envejecimiento en roble francés de Allier durante 14 meses con crianza malolàctica. Batonaje semanal los primeros 6 meses. Remontajes suaves sin bombeo agresivo. Embotellado natural sin clarificación para preservar pizarra mineral.',
     pairings: ['T-bone de Wagyu 1.1kg', 'Entrecot de Wagyu 300g', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg', 'Carrillera de Wagyu'],
     notes: 'Evolucionado y complejo, con aromas de frutos rojos. En su punto óptimo.',
-    story_en: 'Desde las pizarras escarpadas de Priorat, Porrera cultiva Cariñena y Garnacha en terrazas milenarias that erosionan el perfil mineral del terroir. La vendimia manual preserva la integridad de cada baya en este vintage 2019 that ha evolved magistralmente. today, tras años de crianza, exhibe aromas concentrated de frutos rojos y one estructura equilibrada that lo maintains en su optimal point.',
-    grapeSelection_en: 'Cariñena y Garnacha de terrazas milenarias en pizarras escarpadas de Priorat. Viñedos antiguos de 40-50+ años con yields low. Vendimia manual selective en october cuando maduración es optimal. Selección rigurosa de racimos healthy. Eliminación de verdes y podredumbre por botrytis.',
-    winemaking_en: 'Fermentación en vats de madera a 24-26°C durante 12-15 días. aging en roble francés de Allier durante 14 meses con crianza malolàctica. Batonaje semanal los primeros 6 meses. Remontajes suaves sin bombeo agresivo. Embotellado natural sin clarification para preserve pizarra mineral.',
-    notes_en: 'evolved y complejo, con aromas de frutos rojos. En su optimal point.'
+    story_en: 'From las slates steep de Priorat, Porrera cultiva Cariñena and Garnacha en terraces ancient that erosionan el perfil mineral del terroir. La manual harvest preserva la integridad de each berry en este vintage 2019 that ha evolved magistralmente. today, tras years de aging, exhibe aromas concentrated de fruits rojos and one estructura equilibrada that lo maintains en su optimal point.',
+    grapeSelection_en: 'Cariñena and Garnacha de terraces ancient en slates steep de Priorat. Vineyards antiguos de 40-50+ years with yields low. Manual harvest selective en october cuando maduración es optimal. Selection rigurosa de clusters healthy. Eliminación de green and podredumbre by botrytis.',
+    winemaking_en: 'Fermentation en wooden vats a 24-26°C durante 12-15 days. aging en French oak de Allier durante 14 months with malolactic fermentation. Batonaje semanal los primeros 6 months. Remontajes suaves without bombeo agresivo. Embotellado natural without clarification for preserve slate mineral.',
+    notes_en: 'evolved and complejo, with aromas de fruits rojos. En su optimal point.'
   },
   {
     id: 85,
@@ -17615,10 +17868,10 @@ const WINES = [
     winemaking: 'Fermentación en depósitos de acero inoxidable a 26-28°C durante 14-16 días. Maceración extendida de 18-20 días. Envejecimiento en roble bordelés nuevo al 70% durante 16-18 meses. Crianza malolàctica en barrica. Batonaje regular. Mezcla final ensamblada antes del embotellado sin filtración.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Hamburguesa Rossini', 'Pimiento relleno de ternera', 'Pincho Moruno con cous cous', 'Tartar de solomillo', 'Entrecot de Angus 300g'],
     notes: 'Elegante y estructurado, con aromas de frutos negros. Buen envejecimiento.',
-    story_en: 'En el Penedés, great Caus importa la filosofía bordelesa mediante su triada clásica de Cabernet Sauvignon, Cabernet Franc y Merlot en suelos calizos de vocación vinífera. Cada variedad se vinifica por separado para maintain su identity before de la perfecta conjunción. La crianza en roble francés pulimenta la estructura, creando un tinto elegant con aromas de frutos negros maduros y potential de aging.',
-    grapeSelection_en: 'Cabernet Sauvignon, Cabernet Franc y Merlot de terroirs mediterráneos Penedés. Viñedos de 30-45 años en suelos calcáreo-clayey con drenaje excelente. Vendimia manual en october. Selección exhaustiva descartando verde y sobremaduro. Fermentación separada por parcelario. Racimos whole.',
-    winemaking_en: 'Fermentación en depósitos de acero inoxidable a 26-28°C durante 14-16 días. Maceración extended de 18-20 días. aging en roble bordelés nuevo al 70% durante 16-18 meses. Crianza malolàctica en barrica. Batonaje regular. Mezcla final ensamblada before del embotellado sin filtration.',
-    notes_en: 'elegant y estructurado, con aromas de frutos negros. Buen aging.'
+    story_en: 'En el Penedés, Gran Caus importa la filosofía bordelesa mediante su trio classic de Cabernet Sauvignon, Cabernet Franc and Merlot en soils calizos de vocación vinífera. Each variety se vinifica by separado for maintain su identity before de la perfecta conjunción. La aging en French oak pulimenta la estructura, creando un tinto elegant with aromas de fruits negros ripe and potential de aging.',
+    grapeSelection_en: 'Cabernet Sauvignon, Cabernet Franc and Merlot de terroirs mediterráneos Penedés. 30-45-year-old Vineyards en soils limestone-clayey with drenaje excelente. Manual harvest en october. Selection exhaustive descartando verde and overripe. Fermentation separada by parcelario. Clusters whole.',
+    winemaking_en: 'Fermentation en stainless steel tanks a 26-28°C durante 14-16 days. Maceration extended de 18-20 days. aging en roble bordelés nuevo al 70% durante 16-18 months. Malolactic fermentation en barrel. Batonaje regular. Mezcla final ensamblada before del embotellado without filtration.',
+    notes_en: 'elegant and estructurado, with aromas de fruits negros. Buen aging.'
   },
   {
     id: 86,
@@ -17639,10 +17892,10 @@ const WINES = [
     winemaking: 'Fermentación en cemento a 24-26°C durante 12-14 días. Envejecimiento en barriles de roble francés y americano durante 12 meses. Crianza malolàctica completa. Remontajes suaves diarios. Mezcla en barrica los últimos 4 meses. Embotellado sin filtración para preservar mineralidad del Empordá.',
     pairings: ['T-bone de Wagyu 1.1kg', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'Entrecot de Angus 300g', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg'],
     notes: 'Aromático y equilibrado, con notas de frutos rojos. Ideal con carnes asadas.',
-    story_en: 'Desde el Empordá catalán, Amic Tinto expresa la amistad between tres variedades hermanas: Garnacha, Cariñena y Syrah en suelos mediterráneos batidos por la Tramontana. La vendimia manual y la fermentación controlada permiten that cada uva desarrolle su maximum expresión aromatic. El resultado es un tinto equilibrado y aromatic that juega between los frutos rojos y especias, perfecto para grilled meats.',
-    grapeSelection_en: 'Garnacha, Cariñena y Syrah del Empordá costero catalán. Viñedos de 25-40 años en suelos graníticos con estrés hídrico moderado. Vendimia manual en september-october según phenology de cada variedad. Selección de racimos maduros. destemming parcial para taninos equilibrados.',
-    winemaking_en: 'Fermentación en cemento a 24-26°C durante 12-14 días. aging en barriles de roble francés y american durante 12 meses. Crianza malolàctica completa. Remontajes suaves diarios. Mezcla en barrica los últimos 4 meses. Embotellado sin filtration para preserve mineralidad del Empordá.',
-    notes_en: 'aromatic y equilibrado, con notas de frutos rojos. Ideal con grilled meats.'
+    story_en: 'From el Empordá Catalan, Amic Tinto expresa la amistad between tres varieties hermanas: Garnacha, Cariñena and Syrah en soils mediterráneos batidos by la Tramontana. La manual harvest and la fermentation controlled permiten that each uva desarrolle su maximum expresión aromatic. El resultado es un tinto equilibrado and aromatic that juega between los fruits rojos and especias, perfecto for grilled meats.',
+    grapeSelection_en: 'Garnacha, Cariñena and Syrah del Empordá coastal Catalan. 25-40-year-old Vineyards en soils graníticos with estrés hídrico moderado. Manual harvest en september-october según phenology de each variety. Selection de clusters ripe. destemming parcial for taninos equilibrados.',
+    winemaking_en: 'Fermentation en cemento a 24-26°C durante 12-14 days. aging en barriles de French oak and american durante 12 months. Malolactic fermentation completa. Remontajes suaves diarios. Mezcla en barrel los últimos 4 months. Embotellado without filtration for preserve minerality del Empordá.',
+    notes_en: 'aromatic and equilibrado, with notas de fruits rojos. Ideal with grilled meats.'
   },
   {
     id: 87,
@@ -17663,10 +17916,10 @@ const WINES = [
     winemaking: 'Fermentación en depósitos de acero a 25-27°C durante 14-16 días. Envejecimiento en roble francés e imperiales durante 14 meses. Crianza malolàctica en barrica. Batonaje bi-semanal. Remontajes suaves preservando frescura. Embotellado sin clarificación para máxima expresión frutal.',
     pairings: ['Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Tartar de Wagyu dry', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg', 'Hamburguesa Rossini'],
     notes: 'Complejo y estructurado, con aromas de frutos negros. Excelente estructura.',
-    story_en: 'Finca Malaveina, ubicada en el Empordá de la Costa Brava, cultiva la triada bordelesa de Merlot, Syrah y Cabernet Sauvignon en suelos mediterráneos con influencia marina. El clima continental con noches frías concentra intensidad aromatic en las uvas. La crianza en roble francés develops complejidad y estructura, creando un tinto powerful that refleja la naturaleza salvaje de la Costa Brava.',
-    grapeSelection_en: 'Merlot, Syrah y Cabernet Sauvignon de Finca Malaveina, Empordá Costa Brava. Viñedos de 20-35 años en suelos franco-clayey con grava superficial. Vendimia manual tardía en october. Selección meticulosa de racimos healthy. Enfriamiento nocturno before del destemming.',
-    winemaking_en: 'Fermentación en depósitos de acero a 25-27°C durante 14-16 días. aging en roble francés e imperiales durante 14 meses. Crianza malolàctica en barrica. Batonaje bi-semanal. Remontajes suaves preservando frescura. Embotellado sin clarification para maximum expresión fruity.',
-    notes_en: 'Complejo y estructurado, con aromas de frutos negros. Excelente estructura.'
+    story_en: 'Finca Malaveina, ubicada en el Empordá de la Costa Brava, cultiva la trio bordelesa de Merlot, Syrah and Cabernet Sauvignon en soils mediterráneos with influencia marina. El clima continental with noches frías concentra intensidad aromatic en las uvas. La aging en French oak develops complexity and estructura, creando un tinto powerful that refleja la naturaleza salvaje de la Costa Brava.',
+    grapeSelection_en: 'Merlot, Syrah and Cabernet Sauvignon de Finca Malaveina, Empordá Costa Brava. 20-35-year-old Vineyards en soils franco-clayey with grava superficial. Manual harvest tardía en october. Selection meticulosa de clusters healthy. Enfriamiento nocturno before del destemming.',
+    winemaking_en: 'Fermentation en stainless steel tanks a 25-27°C durante 14-16 days. aging en French oak e imperiales durante 14 months. Malolactic fermentation en barrel. Batonaje bi-semanal. Remontajes suaves preservando frescura. Embotellado without clarification for maximum expresión fruity.',
+    notes_en: 'Complejo and estructurado, with aromas de fruits negros. Excelente estructura.'
   },
   {
     id: 88,
@@ -17687,10 +17940,10 @@ const WINES = [
     winemaking: 'Fermentación en tinas de madera pequeñas a 24-25°C durante 14-16 días. Envejecimiento en roble francés durante 12-14 meses. Crianza malolàctica lenta y natural. Batonaje ocasional. Sin intervención química. Embotellado rústico preservando carácter puro de pizarra mineral.',
     pairings: ['Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Tartar de Wagyu dry', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg', 'Carrillera de Wagyu'],
     notes: 'Sofisticado y mineral, con aromas complejos. Excelente envejecimiento.',
-    story_en: 'Las icónicas terrazas de pizarra de Priorat dan nombre a este tinto de Garnacha y Cariñena cultivados en laderas escarpadas. La winery respeta las antiguas técnicas de viticultura en terrazas, preservando la biodiversidad y concentrando la madurez. La pizarra aporta mineralidad distintiva that envuelve los aromas complejos de esta pareja de variedades. Un wine sofisticado con largo aging por delante.',
-    grapeSelection_en: 'Garnacha y Cariñena de icónicas terrazas pizarrosas de Priorat. Viñedos de 35-50 años con yields muy low. Vendimia manual selective en october. Racimos elegidos individualmente. Selección post-vendimia en mesa de clasificación. Eliminación exhaustiva de material defectuoso.',
-    winemaking_en: 'Fermentación en vats de madera pequeñas a 24-25°C durante 14-16 días. aging en roble francés durante 12-14 meses. Crianza malolàctica lenta y natural. Batonaje ocasional. Sin intervención química. Embotellado rústico preservando carácter puro de pizarra mineral.',
-    notes_en: 'Sofisticado y mineral, con aromas complejos. Excelente aging.'
+    story_en: 'Las iconic terraces de slate de Priorat dan nombre a this red de Garnacha and Cariñena cultivados en laderas steep. La winery respeta las antiguas técnicas de viticultura en terraces, preservando la biodiversidad and concentrando la ripeness. La slate aporta minerality distintiva that envuelve los aromas complejos de esta pareja de varieties. Un wine sofisticado with largo aging by delante.',
+    grapeSelection_en: 'Garnacha and Cariñena de iconic terraces pizarrosas de Priorat. 35-50-year-old Vineyards with yields muy low. Manual harvest selective en october. Clusters elegidos individualmente. Selection post-harvest en mesa de clasificación. Eliminación exhaustive de material defectuoso.',
+    winemaking_en: 'Fermentation en wooden vats pequeñas a 24-25°C durante 14-16 days. aging en French oak durante 12-14 months. Malolactic fermentation slow and natural. Batonaje ocasional. Without intervención química. Embotellado rústico preservando carácter pure de slate mineral.',
+    notes_en: 'Sofisticado and mineral, with aromas complejos. Excelente aging.'
   },
   {
     id: 89,
@@ -17711,10 +17964,10 @@ const WINES = [
     winemaking: 'Fermentación espontánea con levaduras indígenas en cemento a 22-24°C durante 14-16 días. Envejecimiento en roble francés nuevo durante 16-18 meses. Crianza malolàctica lenta. Batonaje semanal. Sin clarificación ni filtración. Embotellado natural representando pureza de Gratallops.',
     pairings: ['T-bone de Wagyu 1.1kg', 'Entrecot de Wagyu 300g', 'Txuleta de Rubia Gallega 1.2kg', 'Tomahawk de Hereford 1.2-1.4kg', 'Tartar de Wagyu dry', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g', 'Carrillera de Wagyu', 'Paletilla Ibérica de bellota', 'Chateaubriand de vaca Holstein 500g'],
     notes: 'Vino de colección, complejo y mineral. Ideal para ocasiones memorables.',
-    story_en: 'Álvaro Palacios, maestro visionario de Priorat, cultiva Garnacha en Gratallops, paraje históricamente consagrado de pizarras milenarias. El vintage 2018 en formato magnum ha evolved magistralmente, desarrollando complejidad soberbia. Aromas minerales entrelazados con frutos negros maduros y especias delicadas crean un wine de colección memorable con evolución future garantizada.',
-    grapeSelection_en: 'Garnacha pura de Gratallops, paraje historic Priorat cultivado por Álvaro Palacios. Viñedos de 40-50+ años en pizarras profundas. Vendimia manual selective tardía en october. Clasificación exhaustiva racimo a racimo. destemming total. concentration extrema por baja producción.',
-    winemaking_en: 'Fermentación espontánea con levaduras indígenas en cemento a 22-24°C durante 14-16 días. aging en roble francés nuevo durante 16-18 meses. Crianza malolàctica lenta. Batonaje semanal. Sin clarification ni filtration. Embotellado natural representando pureza de Gratallops.',
-    notes_en: 'wine de colección, complejo y mineral. Ideal para ocasiones memorables.'
+    story_en: 'Álvaro Palacios, maestro visionario de Priorat, cultiva Garnacha en Gratallops, site históricamente consagrado de slates ancient. El vintage 2018 en formato magnum ha evolved magistralmente, desarrollando complexity soberbia. Aromas minerales entrelazados with fruits negros ripe and especias delicadas crean un wine de colección memorable with evolución future garantizada.',
+    grapeSelection_en: 'Garnacha pure de Gratallops, site historic Priorat cultivado by Álvaro Palacios. 40-50+-year-old Vineyards en slates profundas. Manual harvest selective tardía en october. Clasificación exhaustive cluster a cluster. destemming total. concentration extrema by baja producción.',
+    winemaking_en: 'Fermentation espontánea with indigenous yeasts en cemento a 22-24°C durante 14-16 days. aging en French oak nuevo durante 16-18 months. Malolactic fermentation slow. Batonaje semanal. Without clarification ni filtration. Embotellado natural representando pureza de Gratallops.',
+    notes_en: 'wine de colección, complejo and mineral. Ideal for ocasiones memorables.'
   },
   {
     id: 90,
@@ -17735,10 +17988,10 @@ const WINES = [
     winemaking: 'Fermentación en tinas de madera a 24-26°C durante 8-10 días para taninos suavizados. Maceración corta característica del Dolcetto. Envejecimiento en barrica grande 5-6 meses. Crianza malolàctica natural. Embotellado temprano preservando frescura frutal. Sin barrica nueva manteniendo identidad regional.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Entrecot de Angus 300g', 'Bao de brisket'],
     notes: 'Frutal y elegante, con aromas de cerezas. Ideal con carnes ligeras.',
-    story_en: 'Oddero, producer historic piedmontese, elabora este dolcetto desde alba, cradle of la variedad that shares su nombre. En suelos clay-calcáreos, la winery harvest dolcetto de aromas intensos that fermentan con respect a la tradition. El wine young maintains vitality fruity y elegance characteristic, demonstrating por qué dolcetto deserves consideration de noble en italy.',
-    grapeSelection_en: 'dolcetto de alba, piedmont, cradle historic de la variedad. Viñedos de 25-40 años en suelos marl-calcáreos. Vendimia manual en september cuando phenology optimal. Selección de racimos healthy. Racimos whole para expresión aromatic maximum. destemming minimal.',
-    winemaking_en: 'Fermentación en vats de madera a 24-26°C durante 8-10 días para taninos softened. Maceración corta characteristic del dolcetto. aging en barrica great 5-6 meses. Crianza malolàctica natural. Embotellado early preservando frescura fruity. Sin barrica nueva manteniendo identity regional.',
-    notes_en: 'fruity y elegant, con aromas de cerezas. Ideal con meats ligeras.'
+    story_en: 'Oddero, historic producer Piedmontese, elabora this dolcetto from alba, cradle of la variety that shares su nombre. En soils clay-limestone, la winery harvest dolcetto de aromas intensos that fermentan with respect a la tradition. El wine young maintains vitality fruity and elegance characteristic, demonstrating by qué dolcetto deserves consideration de noble en italy.',
+    grapeSelection_en: 'Dolcetto di Alba, piedmont, cradle historic de la variety. 25-40-year-old Vineyards en soils marl-limestone. Manual harvest en september cuando phenology optimal. Selection de clusters healthy. Clusters whole for expresión aromatic maximum. destemming minimal.',
+    winemaking_en: 'Fermentation en wooden vats a 24-26°C durante 8-10 days for taninos softened. Maceration corta characteristic del dolcetto. aging en large barrel 5-6 months. Malolactic fermentation natural. Embotellado early preservando frescura fruity. Without barrel nueva manteniendo identity regional.',
+    notes_en: 'fruity and elegant, with aromas de cerezas. Ideal with meats ligeras.'
   },
   {
     id: 91,
@@ -17759,10 +18012,10 @@ const WINES = [
     winemaking: 'Fermentación separada en acero inoxidable a 28-30°C durante 10-12 días. Envejecimiento en barril americano nuevo durante 12-14 meses. Crianza malolàctica completa. Mezcla final ensamblada post-crianza. Filtración tangencial. Estabilización tartárica. Embotellado para envejecimiento medio plazo.',
     pairings: ['T-bone de Wagyu 1.1kg', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'Hamburguesa Rossini', 'Entrecot de Angus 300g', 'Cowboy de Black Angus 700g', 'Lomo bajo de Simmental 900g'],
     notes: 'Potente y aromático, con notas de frutos negros. Ideal con carnes asadas.',
-    story_en: 'Penfolds, icónica winery australiana con siglos de experiencia, mezcla Shiraz y Cabernet Sauvignon en su emblemática línea Koonunga Hill. Los suelos australianos concentran intensidad en ambas variedades that fermentan juntas en búsqueda de equilibrio. El resultado es un tinto powerful con aromas de frutos negros maduros, estructura firme y la generosidad characteristic del nuevo world.',
-    grapeSelection_en: 'Shiraz y Cabernet Sauvignon de distintos viñedos australianos compilados por Penfolds. Shiraz de Barossa Valley (30-50 años) y Cabernet de Margaret River (25-40 años). Vendimia mecánica efficient. Selección por grado de maduración. Mezcla de parcelas para complejidad.',
-    winemaking_en: 'Fermentación separada en acero inoxidable a 28-30°C durante 10-12 días. aging en barril american nuevo durante 12-14 meses. Crianza malolàctica completa. Mezcla final ensamblada post-crianza. filtration tangencial. Estabilización tartárica. Embotellado para aging medio plazo.',
-    notes_en: 'powerful y aromatic, con notas de frutos negros. Ideal con grilled meats.'
+    story_en: 'Penfolds, iconic winery australiana with siglos de experiencia, mezcla Shiraz and Cabernet Sauvignon en su emblemática línea Koonunga Hill. Los soils australianos concentran intensidad en ambas varieties that fermentan juntas en búsqueda de equilibrio. El resultado es un tinto powerful with aromas de fruits negros ripe, estructura firme and la generosidad characteristic del nuevo world.',
+    grapeSelection_en: 'Shiraz and Cabernet Sauvignon de distintos vineyards australianos compilados by Penfolds. Shiraz de Barossa Valley (30-50 years) and Cabernet de Margaret River (25-40 years). Harvest mecánica efficient. Selection by grado de maduración. Mezcla de parcelas for complexity.',
+    winemaking_en: 'Fermentation separada en stainless steel a 28-30°C durante 10-12 days. aging en American barrel nuevo durante 12-14 months. Malolactic fermentation completa. Mezcla final ensamblada post-aging. filtration tangencial. Tartaric stabilization. Embotellado for aging medio plazo.',
+    notes_en: 'powerful and aromatic, with notas de fruits negros. Ideal with grilled meats.'
   },
 
   // ROSADOS
@@ -17785,10 +18038,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 16-18°C durante 15-18 días para color y complejidad. Sin maceración prolongada. Crianza malolàctica parcial controlada. Envejecimiento en barrica de roble durante 4-5 meses. Embotellado fresco manteniendo carácter rosado sofisticado.',
     pairings: ['Calamares a la Andaluza', 'Croquetas Premium', 'Fish and chips', 'Papas bravas al estilo Txoko', 'Milanesa de pollo al mojo rojo', 'Tataki de atún', 'Tartar de lomo de atún', 'Hamburguesa vegana', 'Lobster Roll', 'Tabla de quesos canarios', 'Alitas melosas glaseadas', 'Ravioli de pularda', 'Fish and chips (Almuerzo)', 'Fish and chips (Cena)', 'Tomates aliñados', 'Tomates aliñados con granizado de gazpacho', 'Tomates ecológicos', 'Ensalada Niçoise', 'Ensalada Niçoise vegetariana', 'Ensalada verde', 'Tataki de atún (Cena)', 'Tataki de Atún (Almuerzo)', 'Trifasi club', 'Tartar de remolacha', 'Tartar de remolacha, aguacate y manzana ácida', 'Tartar de tomate y queso', 'Coliflor frita', 'Patatas cerilla fritas', 'Tomate Cherry al ajillo', 'Verduras al vapor', 'Coca de calabacín', 'Coca de tomate', 'Focaccia con vegetales asados', 'Pimiento a la brasa relleno de pisto manchego'],
     notes: 'Fresco y aromático, con aromas de frutos rojos. Ideal como aperitivo o con ensaladas.',
-    story_en: 'Muga, winery historic riojana, elabora este rosado como testamento a su filosofía de maximum calidad. La triada de Garnacha, Viura y Tempranillo se cultiva en suelos calcáreos de Rioja Alavesa. El contacto controlado con hollejos aporta ese color coral distintivo mientras se preserva la frescura. El resultado es un rosado de personalidad egg white, aromatic y versátil para cualquier ocasión.',
-    grapeSelection_en: 'Garnacha, Viura y Tempranillo de do (designation of origin) Rioja para rosado historic Muga. Garnacha de suelos calcáreos Rioja Alavesa (25-40 años). Vendimia manual en september. Selección de bayas más maduras. Prensado directo inmediato. Contacto minimal con hollejos, 4-6 horas maximum.',
-    winemaking_en: 'Fermentación en acero inoxidable a 16-18°C durante 15-18 días para color y complejidad. Sin maceración prolongada. Crianza malolàctica parcial controlada. aging en barrica de roble durante 4-5 meses. Embotellado fresco manteniendo carácter rosado sofisticado.',
-    notes_en: 'Fresco y aromatic, con aromas de frutos rojos. Ideal como aperitivo o con ensaladas.'
+    story_en: 'Muga, historic winery Riojan, elabora this rosé como testamento a su filosofía de maximum calidad. La trio de Garnacha, Viura and Tempranillo se cultiva en soils limestone de Rioja Alavesa. El contacto controlled with hollejos aporta ese color coral distintivo mientras se preserva la frescura. El resultado es un rosado de personalidad egg white, aromatic and versátil for cualquier ocasión.',
+    grapeSelection_en: 'Garnacha, Viura and Tempranillo de DO Rioja for rosado historic Muga. Garnacha de soils limestone Rioja Alavesa (25-40 years). Manual harvest en september. Selection de berries más ripe. Pressing directo inmediato. Contacto minimal with hollejos, 4-6 horas maximum.',
+    winemaking_en: 'Fermentation en stainless steel a 16-18°C durante 15-18 days for color and complexity. Without extended maceration. Malolactic fermentation parcial controlled. aging en barrel de roble durante 4-5 months. Embotellado fresco manteniendo carácter rosado sofisticado.',
+    notes_en: 'Fresco and aromatic, with aromas de fruits rojos. Ideal como aperitivo o with ensaladas.'
   },
   {
     id: 93,
@@ -17809,10 +18062,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 14-16°C durante 18-20 días para máximo color y aroma. Envejecimiento en depósitos de acero durante 2-3 meses. Sin roble. Crianza malolàctica parcial controlada. Embotellado joven y fresco preservando aromas provenzales delicados.',
     pairings: ['Calamares a la Andaluza', 'Croquetas Premium', 'Fish and chips', 'Papas bravas al estilo Txoko', 'Milanesa de pollo al mojo rojo', 'Tataki de atún', 'Tartar de lomo de atún', 'Hamburguesa vegana', 'Lobster Roll', 'Tabla de quesos canarios', 'Alitas melosas glaseadas', 'Ravioli de pularda'],
     notes: 'Vino de colección, perfecto para celebraciones. Aromático con aromas provenzales.',
-    story_en: 'Miraval, legendario rosado provenzal de Côtes de Provence, congrega cinco variedades en armonía magistral: Cinsault, Grenache, Syrah, Rolle y Tibouren en suelos calcáreos battus por el mistral. Este vintage 2021 en majestuoso formato 6L permite celebraciones memorables con un rosado de profundidad aromatic excepcional. Aromas provenzales de frutas rojas y hierbas aromatic caracterizan este wine de colección.',
-    grapeSelection_en: 'Cinsault, Grenache, Syrah, Rolle y Tibouren de Côtes de Provence. Viñedos de 20-40 años en suelos calizos mediterráneos. Vendimia manual en august-september. Cada variedad en su optimal phenological. Selección de bayas sanas. Enfriamiento nocturno de la fruta.',
-    winemaking_en: 'Fermentación en acero inoxidable a 14-16°C durante 18-20 días para maximum color y aroma. aging en depósitos de acero durante 2-3 meses. Sin roble. Crianza malolàctica parcial controlada. Embotellado young y fresco preservando aromas provenzales delicados.',
-    notes_en: 'wine de colección, perfecto para celebraciones. aromatic con aromas provenzales.'
+    story_en: 'Miraval, legendario rosado provenzal de Côtes de Provence, congrega cinco varieties en armonía magistral: Cinsault, Grenache, Syrah, Rolle and Tibouren en soils limestone battus by el mistral. Este vintage 2021 en majestuoso formato 6L permite celebraciones memorables with un rosado de profundidad aromatic excepcional. Aromas provenzales de fruits rojas and hierbas aromatic caracterizan este wine de colección.',
+    grapeSelection_en: 'Cinsault, Grenache, Syrah, Rolle and Tibouren de Côtes de Provence. 20-40-year-old Vineyards en soils calizos mediterráneos. Manual harvest en august-september. Each variety en su optimal phenological. Selection de berries sanas. Enfriamiento nocturno de la fruit.',
+    winemaking_en: 'Fermentation en stainless steel a 14-16°C durante 18-20 days for maximum color and aroma. aging en stainless steel tanks durante 2-3 months. Without roble. Malolactic fermentation parcial controlled. Embotellado young and fresco preservando aromas provenzales delicados.',
+    notes_en: 'wine de colección, perfecto for celebraciones. aromatic with aromas provenzales.'
   },
 
   // DULCES
@@ -17835,10 +18088,10 @@ const WINES = [
     winemaking: 'Fermentación lenta con levaduras autóctonas a 12-14°C durante 30-40 días. Envejecimiento en barriles de roble húngaro durante 24 meses. Crianza oxidativa controlada. Clarificación natural por sedimentación. Embotellado como Late Harvest con azúcar residual controlado.',
     pairings: ['Goxua', 'Brownie de avellanas con crema de cacao y mandarina', 'Tarta de queso', 'Tocinillo de cielo', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Tabla de quesos canarios', 'Helados Ben and Jerry\'s'],
     notes: 'Dulce y aromático, con notas de miel y frutas secas. Ideal para postres.',
-    story_en: 'Oremus, winery venerada de Tokaji, cultiva Furmint y Hárselevelü en laderas volcánicas húngaras donde se hacen néctar. La harvest tardía 2022 concentra azúcares sin sacrificar acidez elegant that equilibra dulzura. Cada baya se selecciona respetando tradition tokaji de maximum calidad. Aromas de frutas secas, miel y flores delicadas crean un wine perfecto para finales memorables.',
-    grapeSelection_en: 'Furmint y Hárselevelü de laderas volcánicas Tokaji, Hungría. Viñedos de 25-40 años en suelos basálticos con ceniza volcánica. Vendimia tardía manual en october-november. Selección de uvas botrytizadas. concentration natural por podredumbre noble. Prensado suave.',
-    winemaking_en: 'Fermentación lenta con levaduras autóctonas a 12-14°C durante 30-40 días. aging en barriles de roble húngaro durante 24 meses. Crianza oxidativa controlada. clarification natural por sedimentación. Embotellado como Late Harvest con azúcar residual controlado.',
-    notes_en: 'Dulce y aromatic, con notas de miel y frutas secas. Ideal para postres.'
+    story_en: 'Oremus, winery venerada de Tokaji, cultiva Furmint and Hárselevelü en laderas volcánicas húngaras donde se hacen néctar. La harvest tardía 2022 concentra azúcares without sacrificar acidez elegant that equilibra dulzura. Each berry se selecciona respetando tradition tokaji de maximum calidad. Aromas de fruits secas, miel and flores delicadas crean un wine perfecto for finales memorables.',
+    grapeSelection_en: 'Furmint and Hárselevelü de laderas volcánicas Tokaji, Hungría. 25-40-year-old Vineyards en soils basálticos with ceniza volcánica. Harvest tardía manual en october-november. Selection de uvas botrytizadas. concentration natural by podredumbre noble. Gentle pressing.',
+    winemaking_en: 'Fermentation slow with indigenous yeasts a 12-14°C durante 30-40 days. aging en barriles de Hungarian oak durante 24 months. Aging oxidativa controlled. clarification natural by sedimentación. Embotellado como Late Harvest with azúcar residual controlled.',
+    notes_en: 'Dulce and aromatic, with notas de miel and fruits secas. Ideal for postres.'
   },
   {
     id: 95,
@@ -17859,10 +18112,10 @@ const WINES = [
     winemaking: 'Fermentación en barriles de roble con levaduras tokajis autóctonas a 10-12°C durante 45-60 días. Envejecimiento en barril de roble húngaro durante 36-40 meses. Crianza oxidativa lenta característica Aszú. Embotellado con azúcar residual 90-120 g/L. Envejecimiento adicional en botella.',
     pairings: ['Goxua', 'Brownie de avellanas con crema de cacao y mandarina', 'Tarta de queso', 'Tocinillo de cielo', 'Mousse de gofio con helado de plátano canario', 'Pastel Vasco invertido con tartar de manzana', 'Flan marmolado de chocolate y plátano', 'Flan tradicional con chantilly', 'Tabla de quesos canarios', 'Helados Ben and Jerry\'s'],
     notes: 'Complejo y sofisticado, con notas de miel, frutos secos y especias. Vino de colección.',
-    story_en: 'La legendaria clasificación Aszú de Tokaji define este wine monumental de Oremus vintage 2017. Cuatro variedades nobles (Furmint, Hárselevelü, Sargamuskotaly y Zéta) afectadas por botrytis (podredumbre noble) concentran esencias extraordinary. Los 3 puttonyos indican maximum intensidad sin exceso. El resultado es un wine complejo, sofisticado, con minerales volcánicos y honguitos de pastelería that declaran su estatus de wine de colección inmortal.',
-    grapeSelection_en: 'Furmint, Hárselevelü, Sargamuskotaly y Zéta de viñedos volcánicos Tokaji clasificados Aszú. Viñedos de 35-50+ años en laderas sureñas. Vendimia selective en november de uvas sobremaduras botrytizadas. Selección racimo por racimo. concentration maximum 3 puttonyus (botes).',
-    winemaking_en: 'Fermentación en barriles de roble con levaduras tokajis autóctonas a 10-12°C durante 45-60 días. aging en barril de roble húngaro durante 36-40 meses. Crianza oxidativa lenta characteristic Aszú. Embotellado con azúcar residual 90-120 g/L. aging adicional en botella.',
-    notes_en: 'Complejo y sofisticado, con notas de miel, frutos secos y especias. wine de colección.'
+    story_en: 'La legendaria clasificación Aszú de Tokaji define este wine monumental de Oremus vintage 2017. Cuatro varieties nobles (Furmint, Hárselevelü, Sargamuskotaly and Zéta) afectadas by botrytis (podredumbre noble) concentran esencias extraordinary. Los 3 puttonyos indican maximum intensidad without exceso. El resultado es un wine complejo, sofisticado, with minerales volcánicos and honguitos de pastelería that declaran su estatus de wine de colección inmortal.',
+    grapeSelection_en: 'Furmint, Hárselevelü, Sargamuskotaly and Zéta de vineyards volcánicos Tokaji clasificados Aszú. 35-50+-year-old Vineyards en laderas sureñas. Harvest selective en november de uvas sobremaduras botrytizadas. Selection cluster by cluster. concentration maximum 3 puttonyus (botes).',
+    winemaking_en: 'Fermentation en barriles de roble with yeasts tokajis indigenous a 10-12°C durante 45-60 days. aging en barril de Hungarian oak durante 36-40 months. Aging oxidativa slow characteristic Aszú. Embotellado with azúcar residual 90-120 g/L. aging adicional en botella.',
+    notes_en: 'Complejo and sofisticado, with notas de miel, fruits secos and especias. wine de colección.'
   },
 
   // ESPUMOSOS - COPA
@@ -17885,10 +18138,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 15-16°C durante 20-25 días con levaduras seleccionadas. Tiraje con licor de tirage tradicional. Crianza en botella sobre lías durante 24-30 meses. Removido manual progresivo. Degüelle tradicional. Embotellado con dosaje moderado (8-10 g/L).',
     pairings: ['Calamares a la Andaluza', 'Selección de ostras', 'Fish and chips', 'Croquetas Premium', 'Papas bravas al estilo Txoko', 'Lobster Roll', 'Tataki de atún', 'Tartar de lomo de atún', 'Tabla de quesos canarios', 'Carpaccio con espuma de parmesano', 'Mejillones a la brasa', 'Langostinos con salsa ligera de calabaza avainillada', 'Fish and chips (Almuerzo)', 'Fish and chips (Cena)', 'Tartar de remolacha', 'Tartar de remolacha, aguacate y manzana ácida', 'Croquetas de boletus'],
     notes: 'Fresco y aromático, con buen perlage. Ideal como aperitivo.',
-    story_en: 'Colet, winery penedésana de referencia, elabora este espumoso clásico mediante método traditional con one tetrada de Macabeu, Chardonnay, Riesling y Muscat en suelos calcáreos. La fermentación lenta y el reposo en botella develop complejidad aromatic distintiva. Burbujas finas y persistentes acompañan aromas florales y fruity that hacen de este wine un aperitivo versátil y elegant.',
-    grapeSelection_en: 'Macabeu, Chardonnay, Riesling y Muscat de do (designation of origin) Clàssic Penedès. Viñedos de 25-40 años en suelos calcáreo-aluviales mediterráneos. Vendimia manual en august-september. Cada variedad en su madurez optimal. Enfriamiento inmediato de la uva. Prensado suave conservador.',
-    winemaking_en: 'Fermentación en acero inoxidable a 15-16°C durante 20-25 días con levaduras seleccionadas. Tiraje con licor de tirage traditional. Crianza en botella sobre lías durante 24-30 meses. Removido manual progresivo. Degüelle traditional. Embotellado con dosaje moderado (8-10 g/L).',
-    notes_en: 'Fresco y aromatic, con buen perlage. Ideal como aperitivo.'
+    story_en: 'Colet, winery Penedés de referencia, elabora this sparkling classic mediante método traditional with one quartet de Macabeu, Chardonnay, Riesling and Muscat en soils limestone. La fermentation slow and el reposo en botella develop complexity aromatic distintiva. Burbujas finas and persistentes acompañan aromas florales and fruity that hacen de este wine un aperitivo versátil and elegant.',
+    grapeSelection_en: 'Macabeu, Chardonnay, Riesling and Muscat de DO Clàssic Penedès. 25-40-year-old Vineyards en soils limestone-alluvial mediterráneos. Manual harvest en august-september. Each variety en su ripeness optimal. Enfriamiento inmediato de la uva. Gentle pressing conservador.',
+    winemaking_en: 'Fermentation en stainless steel a 15-16°C durante 20-25 days with selected yeasts. Tirage with licor de tirage traditional. Aging en botella sobre lías durante 24-30 months. Manual riddling progresivo. Degüelle traditional. Embotellado with dosaje moderado (8-10 g/L).',
+    notes_en: 'Fresco and aromatic, with buen perlage. Ideal como aperitivo.'
   },
   {
     id: 97,
@@ -17909,10 +18162,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 16-17°C durante 15-18 días. Acidez natural preservada. Tiraje con levaduras seleccionadas. Crianza en botella durante 36-40 meses. Removido manual tradicional. Degüelle con fruición. Embotellado sin dosaje o dosaje mínimo (0-3 g/L).',
     pairings: ['Jamón ibérico de bellota Gran Reserva', 'Calamares a la Andaluza', 'Selección de ostras', 'Lobster Roll', 'Milanesa de pollo al mojo rojo', 'Tabla de embutidos', 'Arroz negro con txipirones asados', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Fish and chips', 'Croquetas Premium'],
     notes: 'Elegante y complejo, con aromas florales. Ideal como aperitivo o celebración.',
-    story_en: 'André Clouet, visionario champenoise, cultiva Chardonnay en Grand Cru Bouzy donde calizas blancas aportan mineralidad legendaría. Método traditional con larga crianza develops complejidad insospechada en este wine de pureza absoluta. La burbuja es fina y persistente, envolviendo aromas florales y tostados that declaran elegance en estado puro. Champagne de celebración inequívoca.',
-    grapeSelection_en: 'Pinot Noir de Grand Cru Bouzy, Champagne, low filosofía de André Clouet. Viñedos de 30-50 años en suelos cretáceos calizos blancos. Vendimia manual selective en september. destemming inmediato. Selección de bayas whole. Prensado lento en prensa traditional.',
-    winemaking_en: 'Fermentación en acero inoxidable a 16-17°C durante 15-18 días. Acidez natural preserved. Tiraje con levaduras seleccionadas. Crianza en botella durante 36-40 meses. Removido manual traditional. Degüelle con fruición. Embotellado sin dosaje o dosaje minimal (0-3 g/L).',
-    notes_en: 'elegant y complejo, con aromas florales. Ideal como aperitivo o celebración.'
+    story_en: 'André Clouet, visionario champenoise, cultiva Chardonnay en Grand Cru Bouzy donde calizas blancas aportan minerality legendaría. Método traditional with larga aging develops complexity insospechada en este wine de pureza absoluta. La burbuja es fina and persistente, envolviendo aromas florales and tostados that declaran elegance en estado pure. Champagne de celebración inequívoca.',
+    grapeSelection_en: 'Pinot Noir de Grand Cru Bouzy, Champagne, low filosofía de André Clouet. 30-50-year-old Vineyards en soils cretáceos calizos blancos. Manual harvest selective en september. destemming inmediato. Selection de berries whole. Pressing slow en prensa traditional.',
+    winemaking_en: 'Fermentation en stainless steel a 16-17°C durante 15-18 days. Acidez natural preserved. Tirage with selected yeasts. Aging en botella durante 36-40 months. Manual riddling traditional. Degüelle with fruición. Embotellado without dosaje o dosaje minimal (0-3 g/L).',
+    notes_en: 'elegant and complejo, with aromas florales. Ideal como aperitivo o celebración.'
   },
 
   // ESPUMOSOS - BOTELLA
@@ -17935,10 +18188,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 14-15°C durante 18-22 días. Estabilización proteica suave. Tiraje con licor de tirage. Crianza en botella durante 18-24 meses. Removido mecánico moderado. Degüelle tradicional. Embotellado con dosaje moderado (10-12 g/L).',
     pairings: ['Calamares a la Andaluza', 'Selección de ostras', 'Fish and chips', 'Croquetas Premium', 'Papas bravas al estilo Txoko', 'Lobster Roll', 'Tataki de atún', 'Tartar de lomo de atún', 'Tabla de quesos canarios', 'Carpaccio con espuma de parmesano', 'Mejillones a la brasa', 'Langostinos con salsa ligera de calabaza avainillada'],
     notes: 'Fresco y frutal, con buen perlage. Ideal como aperitivo.',
-    story_en: 'Foresta captura la esencia selvática del Penedès mediante Macabeo cultivado en suelos boscosos de vocación espumantista. La variedad muestra su maximum frescura en este ecosistema singular donde influencias oceánicas templan la maduración. Método clásico de largo reposo develops burbujas finas that liberan aromas de frutas blancas y notas forestales. Un espumoso distintivo that canta a la naturaleza catalana.',
-    grapeSelection_en: 'Macabeo de suelos boscosos volcánicos Penedès. Viñedos de 20-35 años con influencia selvática. Vendimia manual en august. Uvas con less acidez por suelos volcánicos. Selección de racimos whole. Prensado directo conservador. Enfriamiento nocturno previo.',
-    winemaking_en: 'Fermentación en acero inoxidable a 14-15°C durante 18-22 días. Estabilización proteica suave. Tiraje con licor de tirage. Crianza en botella durante 18-24 meses. Removido mecánico moderado. Degüelle traditional. Embotellado con dosaje moderado (10-12 g/L).',
-    notes_en: 'Fresco y fruity, con buen perlage. Ideal como aperitivo.'
+    story_en: 'Foresta captura la esencia forest del Penedès mediante Macabeo cultivado en soils forested de vocación espumantista. La variety muestra su maximum frescura en este ecosistema singular donde influencias oceánicas templan la maduración. Método classic de largo reposo develops burbujas finas that liberan aromas de fruits blancas and notas forestales. Un espumoso distintivo that canta a la naturaleza Catalan.',
+    grapeSelection_en: 'Macabeo de soils forested volcánicos Penedès. 20-35-year-old Vineyards with influencia forest. Manual harvest en august. Uvas with less acidez by soils volcánicos. Selection de clusters whole. Pressing directo conservador. Enfriamiento nocturno previo.',
+    winemaking_en: 'Fermentation en stainless steel a 14-15°C durante 18-22 days. Protein stabilization suave. Tirage with licor de tirage. Aging en botella durante 18-24 months. Removido mecánico moderado. Degüelle traditional. Embotellado with dosaje moderado (10-12 g/L).',
+    notes_en: 'Fresco and fruity, with buen perlage. Ideal como aperitivo.'
   },
   {
     id: 99,
@@ -17959,10 +18212,10 @@ const WINES = [
     winemaking: 'Fermentación separada en acero inoxidable a 15-16°C durante 20-25 días. Tiraje de licor balanceado. Crianza prolongada en botella grande durante 30-36 meses aumentando complejidad. Removido manual. Degüelle cuidadoso. Embotellado con dosaje medido (8-10 g/L). Mayor capacidad de envejecimiento.',
     pairings: ['Calamares a la Andaluza', 'Selección de ostras', 'Fish and chips', 'Croquetas Premium', 'Papas bravas al estilo Txoko', 'Lobster Roll', 'Tataki de atún', 'Tartar de lomo de atún', 'Tabla de quesos canarios', 'Carpaccio con espuma de parmesano', 'Mejillones a la brasa', 'Langostinos con salsa ligera de calabaza avainillada'],
     notes: 'Fresco y aromático, con buen perlage. Ideal para celebraciones.',
-    story_en: 'Colet A Priori en formato botella despliega toda la complejidad de su tetrada penedésana en volumen amplificado. Macabeu, Chardonnay, Riesling y Muscat se complementan en método traditional con crianza prolongada en rimas. Burbujas de carácter franco acompañan aromas multidimensionales donde fruity y florales coexisten en danza perpetua. Espumoso de celebración por excelencia, con cuerpo y presencia notorios.',
-    grapeSelection_en: 'Macabeu, Chardonnay, Riesling y Muscat de Penedès en formato great botella. Viñedos de 25-40 años en suelos mediterráneos. Vendimia manual cuidadosa. Selección por madurez equilibrada. Prensado suave de racimo entero. Maceración pelicular minimal.',
-    winemaking_en: 'Fermentación separada en acero inoxidable a 15-16°C durante 20-25 días. Tiraje de licor balanceado. Crianza prolongada en botella great durante 30-36 meses aumentando complejidad. Removido manual. Degüelle cuidadoso. Embotellado con dosaje medido (8-10 g/L). Mayor capacidad de aging.',
-    notes_en: 'Fresco y aromatic, con buen perlage. Ideal para celebraciones.'
+    story_en: 'Colet A Priori en formato botella despliega toda la complexity de su quartet Penedés en volumen amplificado. Macabeu, Chardonnay, Riesling and Muscat se complementan en método traditional with aging prolongada en rimas. Burbujas de carácter franco acompañan aromas multidimensionales donde fruity and florales coexisten en danza perpetua. Espumoso de celebración by excelencia, with cuerpo and presencia notorios.',
+    grapeSelection_en: 'Macabeu, Chardonnay, Riesling and Muscat de Penedès en formato large bottle. 25-40-year-old Vineyards en soils mediterráneos. Manual harvest cuidadosa. Selection by ripeness equilibrada. Gentle pressing de cluster entero. Maceration pelicular minimal.',
+    winemaking_en: 'Fermentation separada en stainless steel a 15-16°C durante 20-25 days. Tirage de licor balanced. Aging prolongada en botella great durante 30-36 months aumentando complexity. Manual riddling. Degüelle cuidadoso. Embotellado with dosaje medido (8-10 g/L). Mayor capacidad de aging.',
+    notes_en: 'Fresco and aromatic, with buen perlage. Ideal for celebraciones.'
   },
   {
     id: 100,
@@ -17983,10 +18236,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 15-16°C durante 20-25 días preservando aromas. Tiraje balanceado. Crianza en botella durante 84 meses (siete años). Removido manual metódico. Degüelle preciso. Embotellado con dosaje tradicional (10-12 g/L). Homenaje a maduración lenta.',
     pairings: ['Calamares a la Andaluza', 'Selección de ostras', 'Fish and chips', 'Jamón ibérico de bellota Gran Reserva', 'Croquetas Premium', 'Papas bravas al estilo Txoko', 'Lobster Roll', 'Tataki de atún', 'Tartar de lomo de atún', 'Tabla de quesos canarios', 'Carpaccio con espuma de parmesano', 'Mejillones a la brasa'],
     notes: 'Complejo y sofisticado, con aromas evolucionados. Ideal para ocasiones especiales.',
-    story_en: 'Gramona, winery historic penedésana, elabora III Lustros como homenaje a siete años de crianza that transforman la triada clásica de Xarel-lo, Macabeo y Parellada. El método traditional prolongado develops tostados y miel that envuelven los aromas originales. El vintage 2017 today manifiesta complejidad evolved, sofisticación insospechada y frescura persistent. Espumoso monumental para ocasiones verdaderamente especiales.',
-    grapeSelection_en: 'Xarel-lo, Macabeo y Parellada de Penedès para III Lustros clásico Gramona. Viñedos de 30-50 años en suelos calcáreo-aluviales. Vendimia manual en august-september. Cada variedad en optimal phenological. Selección exhaustiva. Prensado en prensa neumática suave.',
-    winemaking_en: 'Fermentación en acero inoxidable a 15-16°C durante 20-25 días preservando aromas. Tiraje balanceado. Crianza en botella durante 84 meses (siete años). Removido manual metódico. Degüelle preciso. Embotellado con dosaje traditional (10-12 g/L). Homenaje a maduración lenta.',
-    notes_en: 'Complejo y sofisticado, con aromas evolved. Ideal para ocasiones especiales.'
+    story_en: 'Gramona, historic winery Penedés, elabora III Lustros como homenaje a seven years de aging that transforman la trio classic de Xarel-lo, Macabeo and Parellada. El método traditional prolongado develops tostados and miel that envuelven los aromas originales. El vintage 2017 today manifiesta complexity evolved, sofisticación insospechada and frescura persistent. Espumoso monumental for ocasiones verdaderamente especiales.',
+    grapeSelection_en: 'Xarel-lo, Macabeo and Parellada de Penedès for III Lustros classic Gramona. 30-50-year-old Vineyards en soils limestone-alluvial. Manual harvest en august-september. Each variety en optimal phenological. Selection exhaustive. Pressing en prensa neumática suave.',
+    winemaking_en: 'Fermentation en stainless steel a 15-16°C durante 20-25 days preservando aromas. Tirage balanced. Aging en botella durante 84 months (seven years). Manual riddling metódico. Degüelle preciso. Embotellado with dosaje traditional (10-12 g/L). Homenaje a maduración slow.',
+    notes_en: 'Complejo and sofisticado, with aromas evolved. Ideal for ocasiones especiales.'
   },
   {
     id: 101,
@@ -18007,10 +18260,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 16-17°C durante 15-20 días. Crianza en botella durante 36-48 meses mínimo. Removido manual tradicional metódico. Degüelle con técnica ancestral. Embotellado con dosaje muy bajo (3-6 g/L) destacando mineralidad de tiza. Envejecimiento potencial 15+ años.',
     pairings: ['Jamón ibérico de bellota Gran Reserva', 'Calamares a la Andaluza', 'Selección de ostras', 'Lobster Roll', 'Milanesa de pollo al mojo rojo', 'Tabla de embutidos', 'Arroz negro con txipirones asados', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Fish and chips', 'Croquetas Premium'],
     notes: 'Elegante y complejo, con aromas florales y cítricos. Perfecto para celebraciones.',
-    story_en: 'Gatinois, winery historic del Grand Cru Aÿ, cultiva Chardonnay en suelos calizos that otorgan mineralidad señorial. El Pinot Noir circundante influye la maduración creando wines de Chardonnay con cuerpo insospechado. Método traditional con crianza prolongada develops burbujas finas y aromas florales complejos. Un champagne de elegance clásica that celebra la pureza del Chardonnay en maximum expresión.',
-    grapeSelection_en: 'Pinot Noir y Chardonnay de Grand Cru Aÿ, Champagne historic. Chardonnay de suelos calizos blancos that otorgan mineralidad. Viñedos de 35-50 años. Vendimia manual selective en september. destemming total. Selección post-harvest rigurosa. Prensado muy lento.',
-    winemaking_en: 'Fermentación en acero inoxidable a 16-17°C durante 15-20 días. Crianza en botella durante 36-48 meses minimal. Removido manual traditional metódico. Degüelle con técnica ancestral. Embotellado con dosaje muy low (3-6 g/L) destacando mineralidad de tiza. aging potential 15+ años.',
-    notes_en: 'elegant y complejo, con aromas florales y cítricos. Perfecto para celebraciones.'
+    story_en: 'Gatinois, historic winery del Grand Cru Aÿ, cultiva Chardonnay en soils calizos that otorgan minerality señorial. El Pinot Noir circundante influye la maduración creando wines de Chardonnay with cuerpo insospechado. Método traditional with aging prolongada develops burbujas finas and aromas florales complejos. Un champagne de elegance classic that celebra la pureza del Chardonnay en maximum expresión.',
+    grapeSelection_en: 'Pinot Noir and Chardonnay de Grand Cru Aÿ, Champagne historic. Chardonnay de soils calizos blancos that otorgan minerality. 35-50-year-old Vineyards. Manual harvest selective en september. destemming total. Selection post-harvest rigurosa. Pressing muy slow.',
+    winemaking_en: 'Fermentation en stainless steel a 16-17°C durante 15-20 days. Aging en botella durante 36-48 months minimal. Manual riddling traditional metódico. Degüelle with técnica ancestral. Embotellado with dosaje muy low (3-6 g/L) destacando minerality de tiza. aging potential 15+ years.',
+    notes_en: 'elegant and complejo, with aromas florales and cítricos. Perfecto for celebraciones.'
   },
   {
     id: 102,
@@ -18031,10 +18284,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 15-16°C durante 18-22 días. Crianza en botella durante 48-60 meses. Removido manual cuidadoso diario. Degüelle preciso. Embotellado sin dosaje (Brut Nature 0 g/L). Expresión pura de tiza de Bouzy. Envejecimiento adicional en botella recomendado.',
     pairings: ['Jamón ibérico de bellota Gran Reserva', 'Calamares a la Andaluza', 'Selección de ostras', 'Lobster Roll', 'Milanesa de pollo al mojo rojo', 'Tabla de embutidos', 'Arroz negro con txipirones asados', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Fish and chips', 'Croquetas Premium'],
     notes: 'Mineral y elegante, con aromas complejos. Ideal para apreciadores.',
-    story_en: 'André Clouet elabora Chalky como expresión del terroir cretáceo de Bouzy, donde calizas blancas dominan cada aspecto. El Chardonnay respira estos minerales that se transmutan en complejidad insospechada mediante crianza traditional prolongada. Cada burbuja carga mineralidad pura, salinidad delicada y aromas tostados evolved. Un champagne para apreciadores that entienden profundidad geológica en copas.',
-    grapeSelection_en: 'Chardonnay puro de terroir cretáceo Bouzy por André Clouet. Viñedos de 30-50 años en suelos ricos en creta blanca (chalk). Vendimia manual en september. Selección exhaustiva de bayas sanas. destemming total. Prensado muy lento preservando delicadeza.',
-    winemaking_en: 'Fermentación en acero inoxidable a 15-16°C durante 18-22 días. Crianza en botella durante 48-60 meses. Removido manual cuidadoso diario. Degüelle preciso. Embotellado sin dosaje (Brut Nature 0 g/L). Expresión pura de tiza de Bouzy. aging adicional en botella recomendado.',
-    notes_en: 'Mineral y elegant, con aromas complejos. Ideal para apreciadores.'
+    story_en: 'André Clouet elabora Chalky como expresión del terroir cretáceo de Bouzy, donde calizas blancas dominan each aspecto. El Chardonnay respira estos minerales that se transmutan en complexity insospechada mediante aging traditional prolongada. Each burbuja carga minerality pure, salinidad delicada and aromas tostados evolved. Un champagne for apreciadores that entienden profundidad geológica en copas.',
+    grapeSelection_en: 'Chardonnay pure de terroir cretáceo Bouzy by André Clouet. 30-50-year-old Vineyards en soils ricos en creta blanca (chalk). Manual harvest en september. Selection exhaustive de berries sanas. destemming total. Pressing muy slow preservando delicadeza.',
+    winemaking_en: 'Fermentation en stainless steel a 15-16°C durante 18-22 days. Aging en botella durante 48-60 months. Manual riddling cuidadoso diario. Degüelle preciso. Embotellado without dosaje (Brut Nature 0 g/L). Expresión pure de tiza de Bouzy. aging adicional en botella recomendado.',
+    notes_en: 'Mineral and elegant, with aromas complejos. Ideal for apreciadores.'
   },
   {
     id: 103,
@@ -18055,10 +18308,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 15-16°C durante 20-25 días. Crianza en botella durante 60+ meses permitiendo máxima evolución. Removido manual tradicional diario. Degüelle meticuloso. Embotellado con dosaje muy bajo (3-5 g/L). Complejidad máxima. Envejecimiento potencial 20+ años.',
     pairings: ['Jamón ibérico de bellota Gran Reserva', 'Calamares a la Andaluza', 'Selección de ostras', 'Lobster Roll', 'Milanesa de pollo al mojo rojo', 'Tabla de embutidos', 'Arroz negro con txipirones asados', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Fish and chips', 'Croquetas Premium'],
     notes: 'Vino de colección, complejo y mineral. Perfecto para ocasiones memorables.',
-    story_en: 'Calsac, pequeña winery de Grand Cru, cultiva Chardonnay en Clos du Malandries, viñedo historic consagrado en las best laderas calcáreas. Cada cepa trae siglos de selección viticultora that concentran esencias excepcionales. Método traditional con crianza prolongada develops complejidad monumental. Este champagne de colección manifiesta la nobility absoluta del Chardonnay en su apogeo maximum.',
-    grapeSelection_en: 'Chardonnay de Clos du Malandries, viñedo historic Grand Cru Calsac. Viñedos de 40-60+ años con maximum madurez. Suelos calizos profundos de creta blanca. Vendimia manual tardía en september. Selección racimo por racimo de maximum madurez. Prensado traditional lentísimo.',
-    winemaking_en: 'Fermentación en acero inoxidable a 15-16°C durante 20-25 días. Crianza en botella durante 60+ meses permitiendo maximum evolución. Removido manual traditional diario. Degüelle meticuloso. Embotellado con dosaje muy low (3-5 g/L). Complejidad maximum. aging potential 20+ años.',
-    notes_en: 'wine de colección, complejo y mineral. Perfecto para ocasiones memorables.'
+    story_en: 'Calsac, pequeña winery de Grand Cru, cultiva Chardonnay en Clos du Malandries, vineyard historic consagrado en las best laderas limestone. Each cepa trae siglos de selection viticultora that concentran esencias excepcionales. Método traditional with aging prolongada develops complexity monumental. Este champagne de colección manifiesta la nobility absoluta del Chardonnay en su apogeo maximum.',
+    grapeSelection_en: 'Chardonnay de Clos du Malandries, vineyard historic Grand Cru Calsac. 40-60+-year-old Vineyards with maximum ripeness. Suelos calizos profundos de creta blanca. Manual harvest tardía en september. Selection cluster by cluster de maximum ripeness. Pressing traditional lentísimo.',
+    winemaking_en: 'Fermentation en stainless steel a 15-16°C durante 20-25 days. Aging en botella durante 60+ months permitiendo maximum evolución. Manual riddling traditional diario. Degüelle meticuloso. Embotellado with dosaje muy low (3-5 g/L). Complexity maximum. aging potential 20+ years.',
+    notes_en: 'wine de colección, complejo and mineral. Perfecto for ocasiones memorables.'
   },
   {
     id: 104,
@@ -18079,10 +18332,10 @@ const WINES = [
     winemaking: 'Fermentación separada en acero a 14-15°C durante 18-22 días. Tiraje con levaduras seleccionadas. Crianza en botella durante 24-30 meses. Removido mecánico. Degüelle tradicional. Embotellado con dosaje moderado (10-12 g/L). Equilibrio entre color rosado y complejidad espumosa.',
     pairings: ['Calamares a la Andaluza', 'Croquetas Premium', 'Fish and chips', 'Papas bravas al estilo Txoko', 'Milanesa de pollo al mojo rojo', 'Tataki de atún', 'Tartar de lomo de atún', 'Hamburguesa vegana', 'Lobster Roll', 'Tabla de quesos canarios', 'Alitas melosas glaseadas', 'Ravioli de pularda', 'Ensalada Niçoise', 'Ensalada Niçoise vegetariana', 'Tartar de remolacha', 'Tartar de remolacha, aguacate y manzana ácida'],
     notes: 'Fresco y aromático, con notas de frutos rojos. Ideal como aperitivo.',
-    story_en: 'AT Roca Rosat, winery penedésana innovadora, crea este rosado espumoso mediante método clásico con Garnacha Negra y Macabeo cultivados en suelos calizos. La fermentación controlada preserva los aromas frescos de frutas rojas characteristics de Garnacha mientras Macabeo aporta estructura. Burbujas finas y delicadas declaran un wine rosado espumante versátil, perfecto para apertivos memorables.',
-    grapeSelection_en: 'Garnacha Negra y Macabeo de do (designation of origin) Clàssic Penedès para rosado espumoso. Garnacha de suelos mediterráneos (25-40 años). Macabeo de suelos calcáreos. Vendimia manual en august. Garnacha con contacto corto 2-4 horas. Macabeo prensado directo. Mezcla de jumos.',
-    winemaking_en: 'Fermentación separada en acero a 14-15°C durante 18-22 días. Tiraje con levaduras seleccionadas. Crianza en botella durante 24-30 meses. Removido mecánico. Degüelle traditional. Embotellado con dosaje moderado (10-12 g/L). Equilibrio between color rosado y complejidad espumosa.',
-    notes_en: 'Fresco y aromatic, con notas de frutos rojos. Ideal como aperitivo.'
+    story_en: 'AT Roca Rosat, winery Penedés innovative, crea this rosé espumoso mediante método classic with Garnacha Negra and Macabeo cultivados en soils calizos. La fermentation controlled preserva los aromas frescos de fruits rojas characteristics de Garnacha mientras Macabeo aporta estructura. Burbujas finas and delicadas declaran un wine rosado espumante versátil, perfecto for apertivos memorables.',
+    grapeSelection_en: 'Garnacha Negra and Macabeo de DO Clàssic Penedès for rosado espumoso. Garnacha de soils mediterráneos (25-40 years). Macabeo de soils limestone. Manual harvest en august. Garnacha with contacto corto 2-4 horas. Macabeo pressing directo. Mezcla de jumos.',
+    winemaking_en: 'Fermentation separada en acero a 14-15°C durante 18-22 days. Tirage with selected yeasts. Aging en botella durante 24-30 months. Removido mecánico. Degüelle traditional. Embotellado with dosaje moderado (10-12 g/L). Equilibrio between color rosado and complexity espumosa.',
+    notes_en: 'Fresco and aromatic, with notas de fruits rojos. Ideal como aperitivo.'
   },
   {
     id: 105,
@@ -18103,10 +18356,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 15-16°C durante 18-25 días. Crianza en botella durante 36-48 meses desarrollando complejidad. Removido manual tradicional. Degüelle cuidadoso. Embotellado con dosaje moderado (8-10 g/L). Sofisticación en tono rosado. Envejecimiento potencial 10+ años.',
     pairings: ['Calamares a la Andaluza', 'Croquetas Premium', 'Fish and chips', 'Papas bravas al estilo Txoko', 'Milanesa de pollo al mojo rojo', 'Tataki de atún', 'Tartar de lomo de atún', 'Hamburguesa vegana', 'Lobster Roll', 'Tabla de quesos canarios', 'Alitas melosas glaseadas', 'Ravioli de pularda'],
     notes: 'Elegante y fresco, con aromas florales. Perfecto para celebraciones con carácter.',
-    story_en: 'Gatinois, winery historic de Aÿ, elabora su Brut Rosé como testamento a la sofisticación en tono rosado. Chardonnay del Grand Cru Aÿ trae notas del Pinot Noir local creando ese tinte coral distintivo. Método traditional con crianza prolongada develops aromas florales finos that abrazan la frescura equilibrada. Un champagne rosado de celebración elegant that shares nobility con sus pares tintos.',
-    grapeSelection_en: 'Pinot Noir y Chardonnay de Grand Cru Aÿ para Brut Rosé Gatinois. Pinot Noir de suelos calizos (25-40 años). Chardonnay de creta blanca. Vendimia manual selective. Pinot con contacto 8-12 horas para color rosado sofisticado. Chardonnay prensado directo.',
-    winemaking_en: 'Fermentación en acero inoxidable a 15-16°C durante 18-25 días. Crianza en botella durante 36-48 meses desarrollando complejidad. Removido manual traditional. Degüelle cuidadoso. Embotellado con dosaje moderado (8-10 g/L). Sofisticación en tono rosado. aging potential 10+ años.',
-    notes_en: 'elegant y fresco, con aromas florales. Perfecto para celebraciones con carácter.'
+    story_en: 'Gatinois, historic winery de Aÿ, elabora su Brut Rosé como testamento a la sofisticación en tono rosado. Chardonnay del Grand Cru Aÿ trae notas del Pinot Noir local creando ese tinte coral distintivo. Método traditional with aging prolongada develops aromas florales finos that abrazan la frescura equilibrada. Un champagne rosado de celebración elegant that shares nobility with sus pares tintos.',
+    grapeSelection_en: 'Pinot Noir and Chardonnay de Grand Cru Aÿ for Brut Rosé Gatinois. Pinot Noir de soils calizos (25-40 years). Chardonnay de creta blanca. Manual harvest selective. Pinot with contacto 8-12 horas for color rosado sofisticado. Chardonnay pressing directo.',
+    winemaking_en: 'Fermentation en stainless steel a 15-16°C durante 18-25 days. Aging en botella durante 36-48 months desarrollando complexity. Manual riddling traditional. Degüelle cuidadoso. Embotellado with dosaje moderado (8-10 g/L). Sofisticación en tono rosado. aging potential 10+ years.',
+    notes_en: 'elegant and fresco, with aromas florales. Perfecto for celebraciones with carácter.'
   },
 
   // BEBIDAS POR COPA - BLANCO
@@ -18129,10 +18382,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 14-16°C durante 15-18 días. Estabilización proteica suave. Envejecimiento en acero sobre lías finas durante 3-4 meses. Batonaje semanal preservando aromas. Embotellado fresco sin barrica. Presencia mineral y herbácea característica Verdejo.',
     pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Tataki de atún', 'Tartar de lomo de atún', 'Ensalada de Mero del Hierro', 'Lobster Roll', 'Carpaccio con espuma de parmesano', 'Fish and chips (Almuerzo)', 'Fish and chips (Cena)', 'Tomates aliñados', 'Tomates aliñados con granizado de gazpacho', 'Tomates ecológicos', 'Ensalada Niçoise', 'Ensalada Niçoise vegetariana', 'Ensalada verde', 'Pimientos del padrón', 'Tomate Cherry al ajillo', 'Alcachofas a la brasa', 'Puré cremoso de patatas', 'Parmentier de papa canaria', 'Espárragos blancos', 'Espárragos a la brasa', 'Verduras al vapor', 'Coca de calabacín', 'Coca de tomate', 'Arroz cremoso de verduras', 'Raviolis de espinaca y queso parmesano'],
     notes: 'Fresco y mineral, con aromas cítricos. Perfecto como aperitivo.',
-    story_en: 'Verdejo puro de Rueda en suelos calcáreos con clima continental. Fermentación en acero inoxidable a temperatura controlada preserva aromaticidad cítrica y salinidad that define frescura characteristic de este blanco castellano.',
-    grapeSelection_en: 'Verdejo puro de do (designation of origin) Rueda, Castilla y León, en suelos calcáreos. Viñedos de 20-35 años con clima continental frío. Vendimia manual en september en madrugada. Selección de bayas maduras verdes. Prensado directo inmediato. Enfriamiento a 4°C de mosto.',
-    winemaking_en: 'Fermentación en acero inoxidable a 14-16°C durante 15-18 días. Estabilización proteica suave. aging en acero sobre lías finas durante 3-4 meses. Batonaje semanal preservando aromas. Embotellado fresco sin barrica. Presencia mineral y herbácea characteristic Verdejo.',
-    notes_en: 'Fresco y mineral, con aromas cítricos. Perfecto como aperitivo.'
+    story_en: 'Verdejo pure de Rueda en soils limestone with clima continental. Fermentation en stainless steel a temperatura controlled preserva aromaticidad cítrica and salinidad that define frescura characteristic de this white castellano.',
+    grapeSelection_en: 'Verdejo pure de DO Rueda, Castilla and León, en soils limestone. 20-35-year-old Vineyards with clima continental frío. Manual harvest en september en madrugada. Selection de berries ripe green. Pressing directo inmediato. Enfriamiento a 4°C de mosto.',
+    winemaking_en: 'Fermentation en stainless steel a 14-16°C durante 15-18 days. Protein stabilization suave. aging en acero sobre lías finas durante 3-4 months. Batonaje semanal preservando aromas. Embotellado fresco without barrel. Presencia mineral and herbácea characteristic Verdejo.',
+    notes_en: 'Fresco and mineral, with aromas cítricos. Perfecto como aperitivo.'
   },
   {
     id: 107,
@@ -18153,10 +18406,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 13-15°C durante 18-22 días desarrollando aromaticidad. Estabilización tartárica fría. Envejecimiento en acero durante 2-3 meses. Lías gruesas removidas, finas mantenidas. Embotellado conservador preservando frescura. Potencial envejecimiento 3-5 años.',
     pairings: ['Calamares a la Andaluza', 'Fish and chips', 'Tataki de atún', 'Tartar de lomo de atún', 'Ensalada de Mero del Hierro', 'Lobster Roll', 'Carpaccio con espuma de parmesano', 'Lubina crujiente con mayonesa de leche de tigre', 'Fish and chips (Almuerzo)', 'Fish and chips (Cena)', 'Tomates aliñados', 'Tomates aliñados con granizado de gazpacho', 'Ensalada Niçoise', 'Ensalada verde', 'Pimientos del padrón', 'Espárragos blancos', 'Espárragos a la brasa', 'Verduras al vapor', 'Tartar de tomate y queso stracciatella'],
     notes: 'Fresco y herbáceo, con aromas de cítricos. Ideal como aperitivo.',
-    story_en: 'Sauvignon Blanc en suelos calcáreos de Rueda, Castilla y León, con clima atlántico. Fermentación en acero inoxidable a baja temperatura captura aromaticidad herbácea y salinidad mineral that define este blanco ruedeño fresco y expresivo.',
-    grapeSelection_en: 'Sauvignon Blanc de Rueda en suelos calcáreos Castilla y León. Viñedos de 20-30 años con clima atlántico moderado. Vendimia manual en september en frío. Selección de uvas con acidez optimal. Prensado directo suave. Mosto enfriado a 5°C before de fermentación.',
-    winemaking_en: 'Fermentación en acero inoxidable a 13-15°C durante 18-22 días desarrollando aromaticidad. Estabilización tartárica fría. aging en acero durante 2-3 meses. Lías gruesas removidas, finas maintained. Embotellado conservador preservando frescura. potential aging 3-5 años.',
-    notes_en: 'Fresco y herbáceo, con aromas de cítricos. Ideal como aperitivo.'
+    story_en: 'Sauvignon Blanc en soils limestone de Rueda, Castilla and León, with clima atlántico. Fermentation en stainless steel a baja temperatura captura aromaticidad herbácea and salinidad mineral that define this white ruedeño fresco and expresivo.',
+    grapeSelection_en: 'Sauvignon Blanc de Rueda en soils limestone Castilla and León. 20-30-year-old Vineyards with clima atlántico moderado. Manual harvest en september en frío. Selection de uvas with acidez optimal. Pressing directo suave. Mosto enfriado a 5°C before de fermentation.',
+    winemaking_en: 'Fermentation en stainless steel a 13-15°C durante 18-22 days desarrollando aromaticidad. Tartaric stabilization fría. aging en acero durante 2-3 months. Lías gruesas removidas, finas maintained. Embotellado conservador preservando frescura. potential aging 3-5 years.',
+    notes_en: 'Fresco and herbáceo, with aromas de cítricos. Ideal como aperitivo.'
   },
   {
     id: 108,
@@ -18177,10 +18430,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 16-18°C durante 20-25 días. Envejecimiento oxidativo controlado en barrica grande de roble durante 8-12 meses. Crianza parcialmente aeróbica característica Malvasía. Embotellado con carácter madeirizante controlado. Potencial envejecimiento 10+ años.',
     pairings: ['Ensalada de Mero del Hierro', 'Tabla de quesos canarios', 'Calamares a la Andaluza', 'Fish and chips', 'Rejo de pulpo con papa y mojo verde', 'Lubina a la brasa con ensalada de papaya', 'Tataki de atún', 'Lubina crujiente con mayonesa de leche de tigre', 'Tataki de atún (Cena)', 'Tataki de Atún (Almuerzo)'],
     notes: 'Aromático y complejo, con notas de miel y flores. Ideal con mariscos.',
-    story_en: 'Malvasía de Lanzarote en suelos volcánicos y hoyos de lava con influencia atlántica. aging prolongado sur lie en barrica revela aromaticidad compleja con notas mieladas y salinidad volcánica that caracteriza este blanco canario singular.',
-    grapeSelection_en: 'Malvasía de Lanzarote, Canarias, en suelos volcánicos únicos y hoyos de lava (zocos). Viñedos de 30-50+ años con influencia atlántica moderada. Vendimia manual en september-october. Uvas concentrated por estrés hídrico volcánico. Selección de bayas maduras.',
-    winemaking_en: 'Fermentación en acero inoxidable a 16-18°C durante 20-25 días. aging oxidativo controlado en barrica great de roble durante 8-12 meses. Crianza parcialmente aeróbica characteristic Malvasía. Embotellado con carácter madeirizante controlado. potential aging 10+ años.',
-    notes_en: 'aromatic y complejo, con notas de miel y flores. Ideal con mariscos.'
+    story_en: 'Malvasía de Lanzarote en soils volcánicos and hoyos de lava with influencia atlántica. aging prolongado sur lie en barrel revela aromaticidad compleja with notas mieladas and salinidad volcánica that caracteriza this white canario singular.',
+    grapeSelection_en: 'Malvasía de Lanzarote, Canarias, en soils volcánicos únicos and hoyos de lava (zocos). 30-50+-year-old Vineyards with influencia atlántica moderada. Manual harvest en september-october. Uvas concentrated by estrés hídrico volcánico. Selection de berries ripe.',
+    winemaking_en: 'Fermentation en stainless steel a 16-18°C durante 20-25 days. aging oxidativo controlled en large barrel de roble durante 8-12 months. Aging parcialmente aeróbica characteristic Malvasía. Embotellado with carácter madeirizante controlled. potential aging 10+ years.',
+    notes_en: 'aromatic and complejo, with notas de miel and flores. Ideal with mariscos.'
   },
 
   // BEBIDAS POR COPA - TINTO
@@ -18203,10 +18456,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 25-27°C durante 8-10 días extracción moderada. Envejecimiento en roble francés durante 6 meses según tradición Rioja. Crianza malolàctica en barrica. Embotellado joven fresco preservando frutalidad. Estilo moderno Rioja accesible.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Costillas melosas de cordero sobre salsa de curry verde', 'Entrecot de Angus 300g', 'Pluma de cerdo Ibérico', 'Trifasi club', 'Coliflor frita', 'Pimientos del padrón', 'Patatas cerilla fritas', 'Puré cremoso de patatas', 'Croquetas de boletus', 'Focaccia con vegetales asados', 'Chimichurri'],
     notes: 'Frutal y fresco, con aromas de cerezas. Ideal para beber sin pretensiones.',
-    story_en: 'Rioja Alavesa suelos calcareous-clayey. Tempranillo young 6 meses roble. winery Marqués Riscal arquitectura Gehry diseño icónico. Introducción accesible casa prestigiosa 160+ años, fruity elegance asequible.',
-    grapeSelection_en: 'Tempranillo de Rioja Alavesa suelos calcáreo-clayey por Marqués Riscal. Viñedos young de 15-25 años con baja producción. Vendimia manual en october. Selección de racimos healthy. destemming total. Bayas de concentration moderada characteristic uvas young.',
-    winemaking_en: 'Fermentación en acero inoxidable a 25-27°C durante 8-10 días extracción moderada. aging en roble francés durante 6 meses según tradition Rioja. Crianza malolàctica en barrica. Embotellado young fresco preservando frutalidad. Estilo moderno Rioja accesible.',
-    notes_en: 'fruity y fresco, con aromas de cerezas. Ideal para beber sin pretensiones.'
+    story_en: 'Rioja Alavesa soils calcareous-clayey. Tempranillo young 6 months roble. winery Marqués Riscal architecture Gehry design iconic. Introducción accesible casa prestigiosa 160+ years, fruity elegance asequible.',
+    grapeSelection_en: 'Tempranillo de Rioja Alavesa soils limestone-clayey by Marqués Riscal. young vineyards de 15-25 years with baja producción. Manual harvest en october. Selection de clusters healthy. destemming total. Berries de concentration moderada characteristic uvas young.',
+    winemaking_en: 'Fermentation en stainless steel a 25-27°C durante 8-10 days extracción moderada. aging en French oak durante 6 months según tradition Rioja. Malolactic fermentation en barrel. Embotellado young fresco preservando frutalidad. Style modern Rioja accesible.',
+    notes_en: 'fruity and fresco, with aromas de cerezas. Ideal for beber without pretensiones.'
   },
   {
     id: 110,
@@ -18227,10 +18480,10 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 26-28°C durante 10-12 días. Envejecimiento en roble francés durante 6 meses según estilo moderno Ribera. Crianza malolàctica en barrica. Batonaje semanal primeros meses. Embotellado sin filtración preservando textura. Potencial envejecimiento 5-8 años.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Entrecot de Angus 300g', 'Bao de brisket', 'Cecina de Wagyu Premium', 'Trifasi club', 'Patatas cerilla fritas'],
     notes: 'Equilibrado y frutal, con aromas de frutos rojos. Ideal con carnes.',
-    story_en: 'Ribiera Duero do (designation of origin), Tinta País viñas young. 6 meses roble francés. Estilo moderno Ribera, busca valor acceso entrada región. Excelente relación calidad-precio, fruity carácter mineral.',
-    grapeSelection_en: 'Tempranillo (Tinta País) de viñas young do (designation of origin) Ribera del Duero, Castilla y León. Viñedos de 15-20 años en suelos clayey con altitud 800-900m. Vendimia manual en october-november. Selección de bayas maduras concentrated. Clima continental genera estructura.',
-    winemaking_en: 'Fermentación en acero inoxidable a 26-28°C durante 10-12 días. aging en roble francés durante 6 meses según estilo moderno Ribera. Crianza malolàctica en barrica. Batonaje semanal primeros meses. Embotellado sin filtration preservando textura. potential aging 5-8 años.',
-    notes_en: 'Equilibrado y fruity, con aromas de frutos rojos. Ideal con meats.'
+    story_en: 'Ribiera Duero DO, Tinta País young vines. 6 months French oak. Style modern Ribera, busca valor acceso entrada región. Excelente relación calidad-precio, fruity carácter mineral.',
+    grapeSelection_en: 'Tempranillo (Tinta País) de young vines DO Ribera del Duero, Castilla and León. 15-20-year-old Vineyards en soils clayey with altitud 800-900m. Manual harvest en october-november. Selection de berries ripe concentrated. Clima continental genera estructura.',
+    winemaking_en: 'Fermentation en stainless steel a 26-28°C durante 10-12 days. aging en French oak durante 6 months según style modern Ribera. Malolactic fermentation en barrel. Batonaje semanal primeros months. Embotellado without filtration preservando textura. potential aging 5-8 years.',
+    notes_en: 'Equilibrado and fruity, with aromas de fruits rojos. Ideal with meats.'
   },
 
   // ═══ NUEVOS VINOS — ABRIL 2026 ═══
@@ -18256,9 +18509,9 @@ const WINES = [
     winemaking: 'Prensado neumático suave. Fermentación en acero inoxidable a temperatura controlada (14-16°C) durante 20-25 días. Crianza sobre lías finas 3-4 meses con bâtonage semanal. Clarificación natural. Embotellado con sulfuroso mínimo para preservar frescura atlántica y aromas varietales de Albariño.',
     pairings: ['Selección de ostras', 'Calamares a la Andaluza', 'Fish and chips', 'Lobster Roll', 'Mejillones a la brasa', 'Rejo de pulpo con papa y mojo verde', 'Lubina crujiente con mayonesa de leche de tigre', 'Tataki de atún', 'Langostinos con salsa ligera de calabaza avainillada'],
     notes: 'Fresco y atlántico, con aromas de fruta blanca, cítricos y notas salinas. Perfecto como aperitivo o con mariscos frescos.',
-    grapeSelection_en: 'Albariño 100% cultivado en emparrado traditional gallego en suelos graníticos de Rías Baixas. Viñas de 25-40 años con orientación atlántica. Vendimia manual en september, selección rigurosa de racimos con madurez optimal y acidez natural preserved. yield controlado (60 hl/ha).',
-    winemaking_en: 'Prensado neumático suave. Fermentación en acero inoxidable a temperatura controlada (14-16°C) durante 20-25 días. Crianza sobre lías finas 3-4 meses con bâtonage semanal. clarification natural. Embotellado con sulfuroso minimal para preserve frescura atlántica y aromas varietales de Albariño.',
-    notes_en: 'Fresco y atlántico, con aromas de fruta blanca, cítricos y notas salinas. Perfecto como aperitivo o con mariscos frescos.'
+    grapeSelection_en: 'Albariño 100% cultivado en emparrado traditional gallego en soils graníticos de Rías Baixas. 25-40-year-old Vines with orientación atlántica. Manual harvest en september, selection rigurosa de clusters with ripeness optimal and acidez natural preserved. yield controlled (60 hl/ha).',
+    winemaking_en: 'Gentle pneumatic pressing. Fermentation en stainless steel a temperatura controlled (14-16°C) durante 20-25 days. Aging sobre lías finas 3-4 months with bâtonage semanal. clarification natural. Embotellado with sulfuroso minimal for preserve frescura atlántica and aromas varietales de Albariño.',
+    notes_en: 'Fresco and atlántico, with aromas de fruit blanca, cítricos and notas salinas. Perfecto como aperitivo o with mariscos frescos.'
   },
   {
     id: 112,
@@ -18280,9 +18533,9 @@ const WINES = [
     winemaking: 'Maceración pelicular en frío 6-8 horas. Fermentación en acero inoxidable a 15-17°C durante 15-18 días. Reposo sobre lías 2 meses. Clarificación y filtración suave. Embotellado temprano para máxima frescura.',
     pairings: ['Ensalada de Mero del Hierro', 'Tomates aliñados', 'Calamares a la Andaluza', 'Fish and chips', 'Coca de calabacín', 'Tomate Cherry al ajillo', 'Tartar de remolacha', 'Tartar de tomate y queso'],
     notes: 'Ligero y refrescante, con aromas de hierba fresca y frutas cítricas. Excelente relación calidad-precio para aperitivos.',
-    grapeSelection_en: 'Verdejo 100% de viñedos en la do (designation of origin) Rueda sobre suelos de cascajo y piedra caliza. Viñas de 20-35 años. Vendimia nocturna mecánica para preserve aromas. Selección de uva con madurez equilibrada y acidez natural.',
-    winemaking_en: 'Maceración pelicular en frío 6-8 horas. Fermentación en acero inoxidable a 15-17°C durante 15-18 días. Reposo sobre lías 2 meses. clarification y filtration suave. Embotellado early para maximum frescura.',
-    notes_en: 'Ligero y refrescante, con aromas de hierba fresca y frutas cítricas. Excelente relación calidad-precio para aperitivos.'
+    grapeSelection_en: 'Verdejo 100% de vineyards en la DO Rueda sobre soils de cascajo and piedra caliza. 20-35-year-old Vines. Harvest nocturna mecánica for preserve aromas. Selection de uva with ripeness equilibrada and acidez natural.',
+    winemaking_en: 'Maceration pelicular en frío 6-8 horas. Fermentation en stainless steel a 15-17°C durante 15-18 days. Reposo sobre lías 2 months. clarification and filtration suave. Embotellado early for maximum frescura.',
+    notes_en: 'Ligero and refrescante, with aromas de hierba fresca and fruits cítricas. Excelente relación calidad-precio for aperitivos.'
   },
   {
     id: 113,
@@ -18304,9 +18557,9 @@ const WINES = [
     winemaking: 'Prensado suave de uva entera. Fermentación separada por variedad en acero inoxidable a 14-16°C durante 20-25 días. Ensamblaje tras fermentación. Crianza sobre lías 3 meses. Embotellado sin filtración para preservar complejidad aromática y mineralidad volcánica.',
     pairings: ['Ensalada de Mero del Hierro', 'Tabla de quesos canarios', 'Rejo de pulpo con papa y mojo verde', 'Tataki de atún', 'Tartar de lomo de atún', 'Tomates aliñados', 'Lubina crujiente con mayonesa de leche de tigre', 'Parmentier de papa canaria'],
     notes: 'Aromático y floral, con notas de azahar, frutas tropicales y mineralidad volcánica. Versátil con pescados y mariscos.',
-    grapeSelection_en: 'Listán Blanco (85%) y Moscatel (15%) cultivados en laderas volcánicas de Tenerife a 400-600 metros. Viñas de 40-70 años en suelos volcánicos negros. Vendimia manual selective en september. Criterio: madurez aromatic optimal, equilibrio de azúcares y acidez.',
-    winemaking_en: 'Prensado suave de uva entera. Fermentación separada por variedad en acero inoxidable a 14-16°C durante 20-25 días. Ensamblaje tras fermentación. Crianza sobre lías 3 meses. Embotellado sin filtration para preserve complejidad aromatic y mineralidad volcánica.',
-    notes_en: 'aromatic y floral, con notas de azahar, frutas tropicales y mineralidad volcánica. Versátil con pescados y mariscos.'
+    grapeSelection_en: 'Listán Blanco (85%) and Moscatel (15%) cultivados en laderas volcánicas de Tenerife a 400-600 metros. 40-70-year-old Vines en soils volcánicos negros. Manual harvest selective en september. Criterio: ripeness aromatic optimal, equilibrio de azúcares and acidez.',
+    winemaking_en: 'Gentle pressing de uva entera. Fermentation separada by variety en stainless steel a 14-16°C durante 20-25 days. Blending tras fermentation. Aging sobre lías 3 months. Embotellado without filtration for preserve complexity aromatic and minerality volcánica.',
+    notes_en: 'aromatic and floral, with notas de azahar, fruits tropicales and minerality volcánica. Versátil with pescados and mariscos.'
   },
 
   // TINTOS NUEVOS
@@ -18330,9 +18583,9 @@ const WINES = [
     winemaking: 'Fermentación en depósitos de acero inoxidable a 26-28°C durante 14-18 días con remontados diarios. Crianza 12-14 meses en barricas de roble francés (30% nuevas). Clarificación con clara de huevo. Embotellado sin filtración. Potencial de guarda 8-12 años.',
     pairings: ['Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Entrecot de Angus 300g', 'Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Cordero asado', 'Tartar de Wagyu dry', 'Bao de brisket', 'Cecina de Wagyu Premium'],
     notes: 'Potente y estructurado, con aromas de frutos negros maduros, especias y notas balsámicas. Gran vino de guarda.',
-    grapeSelection_en: 'Tempranillo (Tinto Fino) 100% de viñedos propios en do (designation of origin) Ribera del Duero a 850-950 metros. Viñas de 30-50 años en suelos calizos-clayey. Vendimia manual en october con selección en mesa de vibradora. yield controlado (35-40 hl/ha).',
-    winemaking_en: 'Fermentación en depósitos de acero inoxidable a 26-28°C durante 14-18 días con remontados diarios. Crianza 12-14 meses en barricas de roble francés (30% nuevas). clarification con egg white. Embotellado sin filtration. cellaring potential 8-12 años.',
-    notes_en: 'powerful y estructurado, con aromas de frutos negros maduros, especias y notas balsámicas. great wine de keeping.'
+    grapeSelection_en: 'Tempranillo (Tinto Fino) 100% de vineyards own en DO Ribera del Duero a 850-950 metros. 30-50-year-old Vines en soils calizos-clayey. Manual harvest en october with selection en mesa de vibradora. yield controlled (35-40 hl/ha).',
+    winemaking_en: 'Fermentation en stainless steel tanks a 26-28°C durante 14-18 days with daily pump-overs. Aging 12-14 months en barrels de French oak (30% nuevas). clarification with egg white. Embotellado without filtration. cellaring potential 8-12 years.',
+    notes_en: 'powerful and estructurado, with aromas de fruits negros ripe, especias and notas balsámicas. great wine de keeping.'
   },
   {
     id: 115,
@@ -18354,9 +18607,9 @@ const WINES = [
     winemaking: 'Fermentación en acero inoxidable a 24-26°C durante 10-14 días con remontados suaves. Maceración post-fermentativa breve. Sin crianza en barrica o breve paso (3-4 meses). Embotellado temprano para preservar carácter frutal y frescura juvenil.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Croquetas', 'Patatas cerilla fritas', 'Bao de brisket', 'Huevo frito con chistorra', 'Milanesa de pollo al mojo rojo', 'Trifasi club'],
     notes: 'Frutal y fresco, con aromas de cereza y frambuesa. Vino versátil y fácil de disfrutar.',
-    grapeSelection_en: 'Tempranillo 100% de viñedos en Rioja Alta a 500-600 metros sobre suelo clay-calcáreo. Viñas de 20-35 años. Vendimia manual en october. Selección de racimos con madurez equilibrada para preserve frescura y fruta.',
-    winemaking_en: 'Fermentación en acero inoxidable a 24-26°C durante 10-14 días con remontados suaves. Maceración post-fermentativa breve. Sin crianza en barrica o breve paso (3-4 meses). Embotellado early para preserve carácter fruity y frescura juvenil.',
-    notes_en: 'fruity y fresco, con aromas de cereza y frambuesa. wine versátil y fácil de disfrutar.'
+    grapeSelection_en: 'Tempranillo 100% de vineyards en Rioja Alta a 500-600 metros sobre soil clay-limestone. 20-35-year-old Vines. Manual harvest en october. Selection de clusters with ripeness equilibrada for preserve frescura and fruit.',
+    winemaking_en: 'Fermentation en stainless steel a 24-26°C durante 10-14 days with gentle pump-overs. Maceration post-fermentativa breve. Without aging en barrel o breve paso (3-4 months). Embotellado early for preserve carácter fruity and frescura juvenil.',
+    notes_en: 'fruity and fresco, with aromas de cereza and frambuesa. wine versátil and fácil de disfrutar.'
   },
   {
     id: 116,
@@ -18373,14 +18626,14 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Paco García, viñador de tradición riojana, combina Tempranillo y Mazuelo en este crianza que rinde homenaje al terroir de la Rioja Alta. El Mazuelo aporta acidez y color, complementando la elegancia del Tempranillo con una estructura firme y persistente.',
-    story_en: 'Paco García, a traditional Riojan winemaker, blends Tempranillo and Mazuelo in this crianza that pays tribute to the Rioja Alta terroir. The Mazuelo contributes acidity and color, complementing the elegance of Tempranillo with a firm, persistent structure.',
+    story_en: 'Paco García, a traditional Riojan winemaker, blends Tempranillo and Mazuelo in this aging that pays tribute to the Rioja Alta terroir. The Mazuelo contributes acidity and color, complementing the elegance of Tempranillo with a firm, persistent structure.',
     grapeSelection: 'Tempranillo (85%) y Mazuelo (15%) de viñedos en Rioja Alta a 550-650 metros. Tempranillo de viñas 40-60 años, Mazuelo de parcelas centenarias. Vendimia manual selectiva en octubre. Criterio: madurez fenólica completa, taninos sedosos, acidez natural preservada.',
     winemaking: 'Fermentación separada por variedad en acero a 26-28°C durante 14-18 días. Crianza 14-16 meses en barricas de roble francés y americano (25% nuevas). Ensamblaje en primavera. Clarificación con clara de huevo. Embotellado sin filtración.',
     pairings: ['Entrecot de Wagyu 300g', 'Entrecot de Angus 300g', 'T-bone de Wagyu 1.1kg', 'Cordero asado', 'Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Cecina de Wagyu Premium'],
     notes: 'Elegante y estructurado, con aromas de frutos rojos maduros, vainilla y especias dulces. Buen potencial de guarda.',
-    grapeSelection_en: 'Tempranillo (85%) y Mazuelo (15%) de viñedos en Rioja Alta a 550-650 metros. Tempranillo de viñas 40-60 años, Mazuelo de parcelas centenary. Vendimia manual selective en october. Criterio: madurez fenólica completa, taninos sedosos, acidez natural preserved.',
-    winemaking_en: 'Fermentación separada por variedad en acero a 26-28°C durante 14-18 días. Crianza 14-16 meses en barricas de roble francés y american (25% nuevas). Ensamblaje en primavera. clarification con egg white. Embotellado sin filtration.',
-    notes_en: 'elegant y estructurado, con aromas de frutos rojos maduros, vainilla y especias dulces. Buen cellaring potential.'
+    grapeSelection_en: 'Tempranillo (85%) and Mazuelo (15%) de vineyards en Rioja Alta a 550-650 metros. Tempranillo de vines 40-60 years, Mazuelo de parcelas centenary. Manual harvest selective en october. Criterio: ripeness fenólica completa, taninos sedosos, acidez natural preserved.',
+    winemaking_en: 'Fermentation separada by variety en acero a 26-28°C durante 14-18 days. Aging 14-16 months en barrels de French oak and american (25% nuevas). Blending en primavera. clarification with egg white. Embotellado without filtration.',
+    notes_en: 'elegant and estructurado, with aromas de fruits rojos ripe, vainilla and especias dulces. Buen cellaring potential.'
   },
   {
     id: 117,
@@ -18402,9 +18655,9 @@ const WINES = [
     winemaking: 'Despalillado parcial. Fermentación en depósitos de hormigón a 28-30°C durante 18-21 días con remontados y bazuqueos. Crianza 12-14 meses en barricas de roble francés (20% nuevas). Ensamblaje y reposo 3 meses antes de embotellado. Sin filtración.',
     pairings: ['Entrecot de Wagyu 300g', 'T-bone de Wagyu 1.1kg', 'Cordero asado', 'Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Ravioli de pularda', 'Peras escalivadas con cremoso de queso de cabra'],
     notes: 'Intenso y especiado, con aromas de pimienta negra, violetas y frutos negros. Elegancia del norte del Ródano.',
-    grapeSelection_en: 'Syrah 100% de viñedos en la denominación Crozes-Hermitage, norte del Valle del Ródano. Suelos de granito y aluviales. Viñas de 25-40 años. Vendimia manual selective. Criterio: madurez fenólica completa, concentration aromatic, taninos firmes pero sedosos.',
-    winemaking_en: 'destemming parcial. Fermentación en depósitos de hormigón a 28-30°C durante 18-21 días con remontados y punch downs. Crianza 12-14 meses en barricas de roble francés (20% nuevas). Ensamblaje y reposo 3 meses before de embotellado. Sin filtration.',
-    notes_en: 'Intenso y especiado, con aromas de pimienta negra, violetas y frutos negros. elegance del norte del Ródano.'
+    grapeSelection_en: 'Syrah 100% de vineyards en la designation Crozes-Hermitage, norte del Valle del Ródano. Suelos de granito and alluvial. 25-40-year-old Vines. Manual harvest selective. Criterio: ripeness fenólica completa, concentration aromatic, taninos firmes pero sedosos.',
+    winemaking_en: 'destemming parcial. Fermentation en concrete tanks a 28-30°C durante 18-21 days with remontados and punch downs. Aging 12-14 months en barrels de French oak (20% nuevas). Blending and reposo 3 months before de embotellado. Without filtration.',
+    notes_en: 'Intenso and especiado, with aromas de pimienta negra, violetas and fruits negros. elegance del norte del Ródano.'
   },
   {
     id: 118,
@@ -18426,9 +18679,9 @@ const WINES = [
     winemaking: 'Despalillado parcial. Fermentación con levaduras autóctonas en acero inoxidable a 22-24°C durante 12-15 días. Maceración post-fermentativa 5 días. Crianza 6 meses en barricas de roble francés usadas. Embotellado sin filtración. Sulfitación mínima.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Rejo de pulpo con papa y mojo verde', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Bao de brisket', 'Milanesa de pollo al mojo rojo', 'Tabla de quesos canarios'],
     notes: 'Fresco y volcánico, con aromas de frutos rojos, pimienta y notas ahumadas. Un tinto atlántico único.',
-    grapeSelection_en: 'Listán Negro 100% de viñedos prefiloxéricos en Tenerife a 450-700 metros sobre suelo volcánico negro. Viñas centenary (80-120 años) en own roots. Vendimia manual en september-october. Criterio: viñas de maximum edad, low yield (30-35 hl/ha), madurez fenólica completa.',
-    winemaking_en: 'destemming parcial. Fermentación con levaduras autóctonas en acero inoxidable a 22-24°C durante 12-15 días. Maceración post-fermentativa 5 días. Crianza 6 meses en barricas de roble francés usadas. Embotellado sin filtration. Sulfitación minimal.',
-    notes_en: 'Fresco y volcánico, con aromas de frutos rojos, pimienta y notas ahumadas. Un tinto atlántico único.'
+    grapeSelection_en: 'Listán Negro 100% de vineyards prefiloxéricos en Tenerife a 450-700 metros sobre soil volcánico negro. Century-old vines (80-120 years) en own roots. Manual harvest en september-october. Criterio: vines de maximum edad, low yield (30-35 hl/ha), ripeness fenólica completa.',
+    winemaking_en: 'destemming parcial. Fermentation with indigenous yeasts en stainless steel a 22-24°C durante 12-15 days. Maceration post-fermentativa 5 days. Aging 6 months en barrels de French oak usadas. Embotellado without filtration. Sulfitación minimal.',
+    notes_en: 'Fresco and volcánico, with aromas de fruits rojos, pimienta and notas ahumadas. Un tinto atlántico único.'
   },
   {
     id: 119,
@@ -18450,9 +18703,9 @@ const WINES = [
     winemaking: 'Fermentación con levaduras salvajes en depósitos abiertos a 22-26°C durante 14-18 días con bazuqueos manuales. Maceración extendida 7 días. Crianza 8-10 meses en barricas de roble francés usadas. Embotellado sin filtración ni clarificación. Sulfitación mínima.',
     pairings: ['Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Rejo de pulpo con papa y mojo verde', 'Pulpo a la brasa sobre trinxat de papa canaria', 'Tabla de quesos canarios', 'Tartar de Wagyu dry', 'Bao de brisket'],
     notes: 'Complejo y atlántico, con aromas de frutos negros, hierbas aromáticas y mineralidad volcánica. Expresión auténtica del terroir canario.',
-    grapeSelection_en: 'Listán Negro (75%) y Tintilla (25%) de viñedos centenary en el Valle de la Orotava a 500-800 metros. Suelos volcánicos oscuros con excelente drenaje. Viñas de 80-100+ años en own roots. Vendimia manual selective en october. yield muy low (25-30 hl/ha).',
-    winemaking_en: 'Fermentación con levaduras salvajes en depósitos abiertos a 22-26°C durante 14-18 días con punch downs manual. Maceración extended 7 días. Crianza 8-10 meses en barricas de roble francés usadas. Embotellado sin filtration ni clarification. Sulfitación minimal.',
-    notes_en: 'Complejo y atlántico, con aromas de frutos negros, hierbas aromatic y mineralidad volcánica. Expresión auténtica del terroir canario.'
+    grapeSelection_en: 'Listán Negro (75%) and Tintilla (25%) de century-old vineyards en el Valle de la Orotava a 500-800 metros. Suelos volcánicos oscuros with excelente drenaje. 80-100+-year-old Vines en own roots. Manual harvest selective en october. yield muy low (25-30 hl/ha).',
+    winemaking_en: 'Fermentation with wild yeasts en open tanks a 22-26°C durante 14-18 days with punch downs manual. Maceration extended 7 days. Aging 8-10 months en barrels de French oak usadas. Embotellado without filtration ni clarification. Sulfitación minimal.',
+    notes_en: 'Complejo and atlántico, with aromas de fruits negros, hierbas aromatic and minerality volcánica. Expresión auténtica del terroir canario.'
   },
   {
     id: 120,
@@ -18474,9 +18727,9 @@ const WINES = [
     winemaking: 'Fermentación en depósitos de hormigón a 26-30°C durante 20-25 días con bazuqueos manuales. Maceración extendida 10-14 días. Crianza 16-18 meses en barricas de roble francés (40% nuevas). Clarificación con clara de huevo. Embotellado sin filtración. Potencial de guarda 15-20 años.',
     pairings: ['T-bone de Wagyu 1.1kg', 'Entrecot de Wagyu 300g', 'Cordero asado', 'Jamón ibérico de bellota Gran Reserva', 'Tartar de Wagyu dry', 'Cecina de Wagyu Premium'],
     notes: 'Monumental y complejo, con aromas de frutos negros concentrados, chocolate, tabaco y especias. Un gran vino de guarda.',
-    grapeSelection_en: 'Tinta de toro (Tempranillo) 100% de viñedos centenary en own roots sobre suelos sandy de la do (designation of origin) toro. Viñas de 70-100+ años that survived a la phylloxera thanks to los suelos de arena. Vendimia manual selective en october. yield extremely low (20-25 hl/ha).',
-    winemaking_en: 'Fermentación en depósitos de hormigón a 26-30°C durante 20-25 días con punch downs manual. Maceración extended 10-14 días. Crianza 16-18 meses en barricas de roble francés (40% nuevas). clarification con egg white. Embotellado sin filtration. cellaring potential 15-20 años.',
-    notes_en: 'monumental y complejo, con aromas de frutos negros concentrated, chocolate, tabaco y especias. Un great wine de keeping.'
+    grapeSelection_en: 'Tinta de toro (Tempranillo) 100% de century-old vineyards en own roots sobre soils sandy de la DO toro. 70-100+-year-old Vines that survived a la phylloxera thanks to los soils de arena. Manual harvest selective en october. yield extremely low (20-25 hl/ha).',
+    winemaking_en: 'Fermentation en concrete tanks a 26-30°C durante 20-25 days with punch downs manual. Maceration extended 10-14 days. Aging 16-18 months en barrels de French oak (40% nuevas). clarification with egg white. Embotellado without filtration. cellaring potential 15-20 years.',
+    notes_en: 'monumental and complejo, with aromas de fruits negros concentrated, chocolate, tabaco and especias. Un great wine de keeping.'
   }
 ];
 
@@ -20714,7 +20967,8 @@ function renderVinos(){
     else if(sub === 'wineQuiz'){ _renderWineQuiz(c, bar); }
     else if(sub === 'servicio'){ _renderWineService(c, bar); }
   } catch(e) {
-    c.innerHTML = bar + '<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en vinos ('+sub+'):</b><br>'+e.message+'<br><pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+e.stack+'</pre></div>';
+    const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+escapeHtml(e.stack)+'</pre>' : '';
+    c.innerHTML = bar + '<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en vinos ('+escapeHtml(sub)+'):</b><br>'+escapeHtml(e.message)+_stackHtml+'</div>';
     console.error('renderVinos error:', e);
   }
   // Keep sub-tab bar scrolled to the active tab
@@ -22089,7 +22343,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   });
 
   // Error handler — log map errors to console
-  _wineLeafletMap.on('error', function(e) { console.warn('[Txoko Map] Error:', e.error || e); });
+  _wineLeafletMap.on('error', function(e) { dbgw('[Txoko Map] Error:', e.error || e); });
 
   // Navigation controls (zoom, compass, pitch)
   _wineLeafletMap.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'top-right');
@@ -22134,7 +22388,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
 
   // ── Map load event — add all data layers ──
   _wineLeafletMap.on('load', async function() {
-    console.log('[Txoko Map] MapLibre GL JS loaded (WebGL GPU-accelerated)');
+    dbg('[Txoko Map] MapLibre GL JS loaded (WebGL GPU-accelerated)');
 
     // ── Try to add 3D terrain (non-blocking — map works without it) ──
     try {
@@ -22155,9 +22409,9 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         }
       });
       _wineLeafletMap.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
-      console.log('[Txoko Map] 3D terrain enabled');
+      dbg('[Txoko Map] 3D terrain enabled');
     } catch(e) {
-      console.warn('[Txoko Map] 3D terrain not available:', e.message);
+      dbgw('[Txoko Map] 3D terrain not available:', e.message);
       // Map still works fine without terrain — just flat
     }
 
@@ -22173,7 +22427,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         var provData = await results[0].json();
         var provObjKey = Object.keys(provData.objects)[0];
         var provGeojson = topojson.feature(provData, provData.objects[provObjKey]);
-        console.log('[Txoko Map] Provinces loaded: ' + provGeojson.features.length);
+        dbg('[Txoko Map] Provinces loaded: ' + provGeojson.features.length);
 
         // Enrich features with computed style properties
         provGeojson.features.forEach(function(f) {
@@ -22210,7 +22464,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         var countryData = await results[1].json();
         var countryObjKey = Object.keys(countryData.objects)[0];
         var countryGeojson = topojson.feature(countryData, countryData.objects[countryObjKey]);
-        console.log('[Txoko Map] Countries loaded: ' + countryGeojson.features.length);
+        dbg('[Txoko Map] Countries loaded: ' + countryGeojson.features.length);
 
         var wineCountries = Object.keys(_mlCountryToOrigin);
         var neighborCountries = ['France', 'Portugal', 'Andorra', 'Morocco', 'Algeria'];
@@ -22252,7 +22506,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
       }
 
     } catch(e) {
-      console.warn('[Txoko Map] Failed to load TopoJSON:', e);
+      dbgw('[Txoko Map] Failed to load TopoJSON:', e);
     }
 
     // ── DO POLYGONS ──
@@ -26448,6 +26702,10 @@ function nextExamQ(){
     const emp=getEmp(currentUser);
     const session={score:examScore,total:examDishes.length,topic:examConfig.topic,cat:examConfig.cat,time,date:todayStr(),ts:Date.now()};
     emp.sessions=emp.sessions||[];emp.sessions.push(session);
+    // Cap local history at 50 entries — cloud upload trims to 20 anyway.
+    // Without this, sessions[] grows unbounded and eventually busts the
+    // localStorage 5-10 MB quota on long-time users.
+    if(emp.sessions.length > 50) emp.sessions = emp.sessions.slice(-50);
     saveDB();examResults=session;
     supaInsertScore(session, currentUser).catch(function(){ if(typeof showToast==='function') showToast(LANG==='en'?'Error saving score':'Error guardando puntuación','warning',3000); });
     // Award XP for exam
@@ -27221,7 +27479,7 @@ function renderRanking(){
 
     const sorted = Object.values(allEmps)
       .filter(e => e.name)
-      .sort((a,b) => (b.xp||0) - (a.xp||0));
+      .sort((a,b) => (b.xp||0) - (a.xp||0) || a.name.localeCompare(b.name));
 
     if(!sorted.length){
       document.getElementById('rankingContent').innerHTML = `<div style="color:var(--parch3);font-size:.85rem">${LANG==='en'?'No data yet':'Sin datos todavía'}</div>`;
@@ -27333,8 +27591,8 @@ function renderSupPinEntry(){
         pinError=true; entered=''; draw();
         return;
       }
-      hashPin(entered).then(h=>{
-        if(h===SUP_PIN_HASH){ recordPinSuccess(); supAuthenticated=true; renderSupDashboard(); }
+      verifySupervisorPin(entered).then(ok=>{
+        if(ok){ recordPinSuccess(); supAuthenticated=true; renderSupDashboard(); }
         else { recordPinFail(); pinError=true; entered=''; draw(); }
       });
     } else { draw(); }
@@ -29040,7 +29298,7 @@ async function sendNotification(){
         tag: type
       })
     });
-  } catch(e) { console.warn('[Txoko] Push send error:', e); }
+  } catch(e) { dbgw('[Txoko] Push send error:', e); }
   const el = document.getElementById('notifSendMsg');
   if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
   document.getElementById('notifMsg').value = '';
@@ -30410,7 +30668,7 @@ async function submitDefense() {
   const duelObj = remoteDuelState.duelObj || {};
   const cTimings = jParse(duelObj.challenger_timings, []);
   const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions, cTimings, remoteDuelState.timings || []);
-  if (!result) { alert('Error'); renderDuel(); return; }
+  if (!result) { alert(LANG==='en'?'Error submitting duel — try again':'Error al enviar duelo — inténtalo de nuevo'); renderDuel(); return; }
   const { cScore, dScore, cWins, dWins, tiebreak } = result;
   const iWon = dWins;
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;
@@ -30566,8 +30824,15 @@ function duelGameOver(){
   const {p1,p2,scores}=duelState;
   const s1=scores[p1]||0, s2=scores[p2]||0;
   const winner=s1>s2?p1:s2>s1?p2:null;
-  // Award XP
-  if(winner){ const emp=getEmp(currentUser); emp.duelWins=(emp.duelWins||0)+1; saveDB(); awardXP(40, LANG==='en'?`Duel victory! »`:`¡Victoria en duelo! »`); }
+  // Credit duelWins to whoever actually won the local duel (not always currentUser);
+  // award XP only when the logged-in user is the winner — otherwise we'd be granting
+  // XP to a player who passed the device for their turn.
+  if(winner){
+    const winEmp=getEmp(winner);
+    winEmp.duelWins=(winEmp.duelWins||0)+1;
+    saveDB();
+    if(winner===currentUser) awardXP(40, LANG==='en'?`Duel victory! »`:`¡Victoria en duelo! »`);
+  }
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
       <div style="text-align:center;padding:2rem 1rem">
@@ -35610,18 +35875,24 @@ function _beaconSync(name){
     duel_wins: emp.duelWins || 0,
     updated_at: new Date().toISOString()
   });
-  // sendBeacon is fire-and-forget — browser guarantees delivery even during unload
-  if(navigator.sendBeacon){
-    var blob = new Blob([payload], {type:'application/json'});
-    // sendBeacon doesn't support custom headers, so use Supabase REST with apikey in URL
-    var sent = navigator.sendBeacon(
-      SUPA_URL+'/rest/v1/employees?on_conflict=name&apikey='+SUPA_KEY,
-      blob
-    );
-    if(sent) return; // beacon queued successfully
+  // fetch with keepalive: lets the request complete during page unload AND
+  // supports custom headers — keeps the Supabase apikey out of the URL
+  // (URL would otherwise leak into proxy logs, history, Referer, etc.).
+  try {
+    fetch(`${SUPA_URL}/rest/v1/employees?on_conflict=name`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=minimal'
+      },
+      body: payload,
+      keepalive: true
+    }).catch(()=>{});
+  } catch(e){
+    try { supaUpsertEmployee(name); } catch(_){}
   }
-  // Fallback: try regular fetch (may be aborted by browser)
-  try { supaUpsertEmployee(name); } catch(e){}
 }
 
 
@@ -35654,24 +35925,9 @@ async function txokoDiag() {
     console.log('Sync completado');
   }
 }
-window.txokoDiag = txokoDiag;
-
-// ═══════════════════════════════════════════════════════
-// RP UNA NOCHE EN TXOKO — RPG
-// ═══════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════
-// RP UNA NOCHE EN TXOKO — RPG Engine
-// ═══════════════════════════════════════════════════════════════
-
-
-// ═══════════════════════════════════════════════════════════════════
-// RP LA LEYENDA DE TXOKO — Motor Generativo v2.0
-// Arquitectura basada en sistemas interactivos (Dwarf Fortress style)
-// ═══════════════════════════════════════════════════════════════════
-
-
-
+// Only expose the diagnostic helper in dev contexts (localhost / ?debug=1).
+// Avoids leaking user data via global function on production deploys.
+if(DEBUG) window.txokoDiag = txokoDiag;
 
 
 
