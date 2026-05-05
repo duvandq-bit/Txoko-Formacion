@@ -6,7 +6,7 @@ PWA monolítica (`index.html` + `sw.js`) con sincronización vía Supabase, mód
 
 ## Versión actual
 
-**v5.7 · May 2026**
+**v5.7.1 · May 2026**
 
 La versión se expone en tres sitios sincronizados:
 - `<meta name="app-version">` y `<meta name="app-build">` en el `<head>`
@@ -14,6 +14,18 @@ La versión se expone en tres sitios sincronizados:
 - Banner en consola al arrancar
 
 ## CHANGELOG
+
+### v5.7.1 — May 2026
+
+Ampliación de contenido del simulador LQA basada en la auditoría LQA del 01-may-2026 (78.7% global).
+
+**Nuevas situaciones (22) en `LQA_SITUATIONS` — array pasa de 25 a 47 entradas**
+- **16 situaciones de error-prevention** (ids 26-41) cubriendo los 16 incumplimientos detectados en la auditoría: uso de "hola" en vez de "buenas tardes/noches", tutear cuando hay que mantener "ustedes", omisión de café/té al pedir postre, fallo de personalización (revista vs. recordar preferencias), tiempo de comanda > 3 min, pinzas saturadas con moscas, retirada incorrecta de plato sin posición de "terminado" en cubertería, inconsistencia de explicación entre mesas, no chequeo proactivo en mesas silenciosas, agua no local servida (Solán de Cabras), saleros vacíos o atascados, opciones veganas no ofrecidas, saludo de bienvenida con "hola".
+- **6 situaciones de buenas prácticas auditadas** (ids 42-47) reforzando los positivos del informe: esperar a que la huésped termine una conversación antes de acompañarla, naturalidad consistente entre mesas, modificación razonable sin fricción, oferta proactiva de vela anti-insectos, conocimiento profundo de carta, mención de origen local del pescado.
+
+**Distribución final por categoría** (47 totales): comportamiento ×13 · servicio ×10 · vino ×9 · montaje ×6 · carta ×5 · llegada ×4. **Real-vs-pedagógicas**: 28 reales · 19 pedagógicas.
+
+**No hay cambios en código motor** — `startLqaSituations()`, `renderLqaSituationQuestion()`, `lqaSituationAnswer()`, `renderLqaSituationResults()` siguen idénticos. La sesión sigue eligiendo 10 situaciones aleatorias del pool ampliado.
 
 ### v5.7 — May 2026
 
