@@ -6,7 +6,7 @@ PWA monolítica (`index.html` + `sw.js`) con sincronización vía Supabase, mód
 
 ## Versión actual
 
-**v5.7.1 · May 2026**
+**v5.8 · May 2026**
 
 La versión se expone en tres sitios sincronizados:
 - `<meta name="app-version">` y `<meta name="app-build">` en el `<head>`
@@ -14,6 +14,59 @@ La versión se expone en tres sitios sincronizados:
 - Banner en consola al arrancar
 
 ## CHANGELOG
+
+### v5.8 — May 2026 · "LQA simulator polish"
+
+Refactor completo del módulo LQA (Examen, Situaciones, Auditor) tras auditoría de v5.7. Sin cambios en el contenido (preguntas y situaciones intactas); todo el trabajo es en el motor, la UX y la analítica.
+
+**Motor compartido (`_lqaEngine`)**
+- Estado encapsulado por modo (`lqaSitState`, `lqaExamState`, `lqaAudState`) — antes había `let` globales por modo (`lqaSituationIndex`, `lqaExamIndex`, `lqaAuditorIndex` + sus arrays/scores) que se contaminaban entre sesiones, recargas y pestañas.
+- Helper `_lqaShuffle()` con Fisher-Yates correcto — antes `sort(()=>Math.random()-.5)` que es sesgado.
+- Helper `_lqaPushScore()` que persiste resultados a `emp.lqaScores` con cap rodante de **50 entradas** (parity con `emp.sessions.slice(-50)` introducido en v5.7).
+- Helpers `_lqaInstallKbd()` / `_lqaUninstallKbd()` para gestionar el listener de teclado entre pantallas sin leaks.
+- `_lqaConfirmExit()` para el botón `←` / tecla `Esc` con `confirm()` antes de descartar progreso a media sesión.
+
+**Feedback enriquecido (U1)**
+Antes: `✓` / `✗` + explicación. Las 4 opciones desaparecían — el usuario no veía qué eligió mal frente a la correcta.
+Ahora: las 4 opciones (o las 2 verdictos del Auditor) se muestran tras cada respuesta con borde verde (correcta), borde rojo (la del usuario si era errónea) y marker `✓`/`✗`. Aplicado a Examen, Situaciones y Auditor.
+
+**Pantalla "Revisar respuestas" (U5)**
+Nueva en los 3 modos. Al final de la sesión hay un botón "Revisar respuestas" que lista las 10 preguntas en `<details>` colapsibles, cada una con: enunciado, opciones marcadas con verde/rojo (con el escenario completo en Situaciones), explicación, y referencia al estándar LQA cuando aplica.
+
+**Desglose por categoría — Situaciones (A1)**
+Cada situación tiene `cat` (`llegada/servicio/vino/carta/montaje/comportamiento`). Ahora:
+- La pantalla de resultados muestra una barra horizontal por categoría con `<acertadas>/<total>` para esa sesión, ordenadas por % ascendente (zonas débiles primero).
+- Se acumula en `emp.lqaSitByCat = {<cat>: {correct, total}}` a lo largo del tiempo. Datos disponibles para el dashboard de supervisor y para futuras features de "modo zona débil".
+
+**Atajos de teclado (U2)**
+Aplicados a los 3 modos:
+- `1`–`4` (o `1`–`2` en Auditor) → seleccionar opción / verdicto
+- `Enter` o `Espacio` → avanzar a la siguiente
+- `Esc` → confirmar salida de la sesión
+
+**Captura de tiempo (E3)**
+`time_sec` se persiste en `emp.lqaScores[].time_sec` y se muestra en la pantalla de resultados (`+X XP · Ys`). Antes solo se capturaba en el módulo de exámenes de platos; los modos LQA quedaban sin esa señal.
+
+**Resultados idempotentes**
+Antes: `renderLqaSituationResults` re-persistía a `emp` y re-otorgaba XP cada vez que se llamaba. Si volvías de "Revisar respuestas" a la pantalla de resultados se duplicaba el XP. Ahora `_lqaCompleteX()` persiste una única vez y marca `state.completed = true`; las re-renders son puras.
+
+**Cambios secundarios**
+- Headings semánticos (`<h1 tabindex="-1">`) en pantallas de resultados con `.focus()` para anuncio del lectores de pantalla.
+- `aria-live="polite"` en pantallas de feedback.
+- `role="radiogroup"` en grupos de opciones.
+- `min-height: 48px` en botones de opción (cumple WCAG touch target).
+- Tag de categoría visible en cada situación durante el quiz.
+
+**Compatibilidad**
+- El shape de `emp.lqaScores` ahora incluye `time_sec` adicional. Lecturas anteriores (pre-v5.8) siguen funcionando: el campo es ignorado donde no se usa.
+- `emp.lqaSitByCat` es nuevo; código que no lo lee no se ve afectado.
+- Los 3 modos siguen interpelando `LQA_SITUATIONS`, `LQA_EXAM_QUESTIONS`, `LQA_AUDIT_SCENARIOS` igual que antes — no hay cambios en el contenido.
+
+**Diferido a v5.9**
+- Spaced repetition / evitar "recently seen" entre sesiones consecutivas
+- "Modo zona débil" en hub LQA usando `emp.lqaSitByCat`
+- Streak diaria específica de LQA
+- Sparkline de progreso histórico en pantalla de resultados
 
 ### v5.7.1 — May 2026
 

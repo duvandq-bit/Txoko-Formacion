@@ -17,7 +17,7 @@
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
   ║  Fecha de creación: 2024                                       ║
-  ║  Versión: 5.7.1 · May 2026                          ║
+  ║  Versión: 5.8 · May 2026                            ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
 <!DOCTYPE html>
@@ -28,7 +28,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
 <meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
-<meta name="app-version" content="5.7.1">
+<meta name="app-version" content="5.8">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#0e0c09">
 <!-- ═══ PWA ═══ -->
@@ -10136,7 +10136,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='5.7.1';
+const APP_VERSION='5.8';
 const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -32460,6 +32460,65 @@ const LQA_EXAM_QUESTIONS=[
   {id:30, question:'¿Qué debes sugerir automáticamente después del postre?', question_en:'What should you automatically suggest after dessert?', options:['La cuenta directamente','Solo café','Nada, esperar a que pidan','Café/té y aclarar preferencia (capuchino, espresso...)'], options_en:['The bill directly','Just coffee','Nothing, wait for them to ask','Coffee/tea and clarify preference (cappuccino, espresso...)'], correct:3, explanation:'El estándar #36 requiere ofrecer automáticamente café/té y aclarar la preferencia.', explanation_en:'Standard #36 requires automatically offering coffee/tea and clarifying preference.', standardRef:36},
 ];
 
+// ═══════════════════════════════════════════════════════════
+// LQA SHARED ENGINE — used by exam / situation / auditor modes (v5.8)
+// ═══════════════════════════════════════════════════════════
+// Encapsulates state per-mode, captures time_sec, supports rich feedback,
+// review screens, per-category aggregates and keyboard shortcuts.
+function _lqaShuffle(arr){
+  // Fisher-Yates — replaces sort(()=>Math.random()-.5) which is biased.
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function _lqaPushScore(emp, type, score, total, timeSec){
+  if (!emp.lqaScores) emp.lqaScores = [];
+  emp.lqaScores.push({ type, score, total, time_sec: timeSec, date: Date.now() });
+  // Rolling cap of 50 to avoid quota bloat over time.
+  if (emp.lqaScores.length > 50) emp.lqaScores = emp.lqaScores.slice(-50);
+}
+let _lqaKbdHandler = null;
+function _lqaUninstallKbd(){
+  if (_lqaKbdHandler) { document.removeEventListener('keydown', _lqaKbdHandler); _lqaKbdHandler = null; }
+}
+function _lqaInstallKbd(handler){
+  _lqaUninstallKbd();
+  _lqaKbdHandler = handler;
+  document.addEventListener('keydown', handler);
+}
+function _lqaConfirmExit(stateOpt){
+  // Skip confirm if the user hasn't actually answered anything yet.
+  const inProgress =
+    (lqaSitState.questions.length  > 0 && !lqaSitState.completed)  ||
+    (lqaExamState.questions.length > 0 && !lqaExamState.completed) ||
+    (lqaAudState.questions.length  > 0 && !lqaAudState.completed);
+  if (!inProgress) { _lqaUninstallKbd(); renderLqa(); return; }
+  const msg = LANG==='en' ? 'Exit this session? Progress will be lost.' : '¿Salir de esta sesión? Perderás el progreso.';
+  if (confirm(msg)) { _lqaUninstallKbd(); renderLqa(); }
+}
+// State objects — replace previous file-scoped lets across all 3 modes.
+const lqaSitState  = { questions:[], index:0, score:0, startedAt:0, answers:[], completed:false };
+const lqaExamState = { questions:[], index:0, score:0, startedAt:0, answers:[], completed:false };
+const lqaAudState  = { questions:[], index:0, score:0, startedAt:0, answers:[], completed:false };
+function _lqaResetState(s){
+  s.questions = []; s.index = 0; s.score = 0; s.startedAt = 0;
+  s.answers = []; s.completed = false;
+}
+// Build the "options as feedback" block: highlights user's pick + correct one.
+function _lqaOptionsFeedbackHtml(options, optionsEn, picked, correct){
+  return options.map((opt, idx) => {
+    const isPick = (idx === picked);
+    const isAns  = (idx === correct);
+    let bg = 'rgba(255,255,255,.55)', border = '1px solid var(--line2)', mark = '';
+    if (isAns)      { bg = 'rgba(77,138,94,.14)';  border = '2px solid #4d8a5e'; mark = '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>'; }
+    else if (isPick){ bg = 'rgba(196,112,104,.14)'; border = '2px solid #c47068'; mark = '<span style="float:right;color:#c47068;font-weight:700">✗</span>'; }
+    return `<div style="padding:.7rem .9rem;background:${bg};border:${border};border-radius:var(--r2);color:var(--parch2);font-size:.85rem;line-height:1.5;margin-bottom:.4rem;text-align:left">${mark}<span style="display:inline-block;width:1.4rem;font-weight:700;color:var(--parch3)">${idx+1}.</span>${LANG==='en'?optionsEn[idx]:opt}</div>`;
+  }).join('');
+}
+
 // LQA Render Functions
 function renderLqa(){
   lqaView='menu';
@@ -32653,289 +32712,492 @@ function renderLqaInfo(){
   </div>`;
 }
 
-let lqaExamIndex=0;let lqaExamQuestions=[];let lqaExamScore=0;
 function startLqaExam(){
-  lqaExamQuestions=[...LQA_EXAM_QUESTIONS].sort(()=>Math.random()-.5).slice(0,10);
-  lqaExamIndex=0;lqaExamScore=0;
-  lqaExamAnswered=false;
+  _lqaResetState(lqaExamState);
+  lqaExamState.questions = _lqaShuffle(LQA_EXAM_QUESTIONS).slice(0,10);
+  lqaExamState.startedAt = Date.now();
   renderLqaExamQuestion();
 }
 function renderLqaExamQuestion(){
-  if(lqaExamIndex>=lqaExamQuestions.length){renderLqaExamResults();return;}
-  const q=lqaExamQuestions[lqaExamIndex];
-  const c=document.getElementById('appContent');
-
-  if(!lqaExamAnswered){
-    c.innerHTML=`<div class="sup-wrap">
-      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-        <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-        <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'}</div>
+  const s = lqaExamState;
+  if (s.index >= s.questions.length) { _lqaCompleteExam(); return; }
+  const q = s.questions[s.index];
+  const c = document.getElementById('appContent');
+  if (!c) return;
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'LQA Exam question':'Pregunta examen LQA'}">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'}</div>
+    </div>
+    <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Question':'Pregunta'} ${s.index+1}/${s.questions.length}</div>
+      <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
+        <div style="background:#c49a3c;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
-
-      <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Question':'Pregunta'} ${lqaExamIndex+1}/10</div>
-        <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-          <div style="background:#c49a3c;height:100%;width:${(lqaExamIndex+1)/10*100}%;transition:width .3s"></div>
-        </div>
-      </div>
-
-      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
-        <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;font-weight:600">${LANG==='en'?q.question_en:q.question}</div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
-        ${q.options.map((opt,idx)=>`<button onclick="lqaExamAnswer(${idx})" style="padding:.9rem;background:linear-gradient(135deg,rgba(72,136,160,.06),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);color:var(--parch2);font-weight:600;cursor:pointer;transition:all .2s;text-align:left">${LANG==='en'?q.options_en[idx]:opt}</button>`).join('')}
-      </div>
-    </div>`;
-  }
+    </div>
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;font-weight:600">${LANG==='en'?q.question_en:q.question}</div>
+    </div>
+    <div role="radiogroup" aria-label="${LANG==='en'?'Answer options':'Opciones de respuesta'}" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
+      ${q.options.map((opt,idx)=>`<button onclick="lqaExamAnswer(${idx})" role="radio" aria-checked="false" style="padding:.9rem;background:linear-gradient(135deg,rgba(72,136,160,.06),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);color:var(--parch2);font-weight:600;cursor:pointer;transition:all .2s;text-align:left;min-height:48px"><span style="display:inline-block;width:1.4rem;font-weight:700;color:#c49a3c">${idx+1}.</span>${LANG==='en'?q.options_en[idx]:opt}</button>`).join('')}
+    </div>
+    <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: press 1-4 to choose · Esc to exit':'Tip: pulsa 1-4 para elegir · Esc para salir'}</div>
+  </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); return; }
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= q.options.length) { e.preventDefault(); lqaExamAnswer(n-1); }
+  });
 }
 function lqaExamAnswer(optIdx){
-  const q=lqaExamQuestions[lqaExamIndex];
-  const isCorrect=(optIdx===q.correct);
-  if(isCorrect) lqaExamScore++;
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  const q = s.questions[s.index];
+  const isCorrect = (optIdx === q.correct);
+  if (isCorrect) s.score++;
+  s.answers.push({ qIdx: s.index, picked: optIdx, isCorrect });
 
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'} · ${lqaExamIndex+1}/10</div>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'} · ${s.index+1}/${s.questions.length}</div>
     </div>
-
-    <div style="text-align:center;margin:1rem 0 1.5rem">
-      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct!':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
+    <div style="text-align:center;margin:.5rem 0 1rem">
+      <div style="font-size:1.6rem;margin-bottom:.4rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:${isCorrect?'#4d8a5e':'#c47068'}">${LANG==='en'?(isCorrect?'Correct':'Incorrect'):(isCorrect?'Correcto':'Incorrecto')}</div>
     </div>
-
+    <div style="margin-bottom:1rem">${_lqaOptionsFeedbackHtml(q.options, q.options_en, optIdx, q.correct)}</div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Explanation':'Explicación'}</div>
       <div style="font-size:.9rem;color:var(--parch2);line-height:1.6">${LANG==='en'?q.explanation_en:q.explanation}</div>
-      <div style="font-size:.8rem;color:var(--parch3);margin-top:1rem;font-style:italic">${LANG==='en'?'Standard #':'Estándar #'}${q.standardRef}</div>
+      ${q.standardRef ? `<div style="font-size:.75rem;color:var(--parch3);margin-top:.7rem;font-style:italic">${LANG==='en'?'Standard #':'Estándar #'}${q.standardRef}</div>` : ''}
     </div>
-
-    <button onclick="lqaExamIndex++;lqaExamAnswered=false;renderLqaExamQuestion()" style="width:100%;padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+    <button id="lqaNextBtn" onclick="lqaExamState.index++;renderLqaExamQuestion()" style="width:100%;padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
-  lqaExamAnswered=true;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); _lqaUninstallKbd();
+      lqaExamState.index++; renderLqaExamQuestion();
+    } else if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); }
+  });
+  setTimeout(()=>{ const b = document.getElementById('lqaNextBtn'); if (b) b.focus(); }, 50);
+}
+function _lqaCompleteExam(){
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  if (!s.completed) {
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*15 + (pct>=90?50:pct>=70?25:0));
+    const timeSec = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if (emp) {
+      _lqaPushScore(emp, 'exam', s.score, total, timeSec);
+      if (!emp.lqaExamBest || pct > emp.lqaExamBest) emp.lqaExamBest = pct;
+      emp.lqaExamsCompleted = (emp.lqaExamsCompleted||0) + 1;
+      saveDB();
+    }
+    s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
+    awardXP(xp, LANG==='en'?'LQA Exam':'Examen LQA', 'lqa');
+    checkNewAchievements();
+  }
+  renderLqaExamResults();
 }
 function renderLqaExamResults(){
-  const pct=Math.round(lqaExamScore/lqaExamQuestions.length*100);
-  const xpEarned=Math.round(lqaExamScore*15 + (pct>=90?50:pct>=70?25:0));
-  const emp=getEmp(currentUser);
-  if(emp){
-    if(!emp.lqaScores) emp.lqaScores=[];
-    emp.lqaScores.push({type:'exam',score:lqaExamScore,total:lqaExamQuestions.length,date:Date.now()});
-    if(!emp.lqaExamBest || pct > emp.lqaExamBest) emp.lqaExamBest = pct;
-    emp.lqaExamsCompleted = (emp.lqaExamsCompleted||0) + 1;
-    saveDB();
-  }
-  awardXP(xpEarned, LANG==='en'?'LQA Exam':'Examen LQA', 'lqa');
-  checkNewAchievements();
-
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  const total = s.questions.length;
+  const pct = s._cachedPct ?? (total ? Math.round(s.score/total*100) : 0);
+  const xp = s._cachedXp ?? 0;
+  const timeSec = s._cachedTime ?? 0;
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:2rem 0">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#c49a3c;margin-bottom:.5rem">${lqaExamScore}/10</div>
-      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:2rem">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</div>
-      <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1.5rem">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#c49a3c;margin-bottom:.5rem">${s.score}/${total}</div>
+      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:1.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</h1>
+      <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
         <div style="font-size:.85rem;color:var(--parch3);text-transform:uppercase;margin-bottom:.3rem">${LANG==='en'?'Score':'Puntuación'}</div>
         <div style="font-size:2rem;font-weight:700;color:#c49a3c">${pct}%</div>
-        <div style="font-size:.75rem;color:var(--parch3);margin-top:.3rem">+${xpEarned} XP ${LANG==='en'?'earned':'ganados'}</div>
+        <div style="font-size:.75rem;color:var(--parch3);margin-top:.3rem">+${xp} XP · ${timeSec}s</div>
       </div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Try Again':'Intentar de Nuevo'}</button>
-      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Back to Menu':'Volver al Menú'}</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="renderLqaExamReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
+      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+    </div>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+  </div>`;
+  setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
+}
+function renderLqaExamReview(){
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  const c = document.getElementById('appContent');
+  const items = s.answers.map((a, i) => {
+    const q = s.questions[a.qIdx];
+    const optsHtml = _lqaOptionsFeedbackHtml(q.options, q.options_en, a.picked, q.correct);
+    return `<details style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);margin-bottom:.6rem;padding:.6rem .8rem">
+      <summary style="cursor:pointer;font-size:.85rem;color:var(--parchment);font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:.5rem"><span>${i+1}. ${LANG==='en'?q.question_en:q.question}</span><span style="color:${a.isCorrect?'#4d8a5e':'#c47068'};font-weight:700">${a.isCorrect?'✓':'✗'}</span></summary>
+      <div style="margin-top:.6rem">${optsHtml}</div>
+      <div style="font-size:.78rem;color:var(--parch3);margin-top:.5rem;line-height:1.5">${LANG==='en'?q.explanation_en:q.explanation}${q.standardRef?` <em>(${LANG==='en'?'Std #':'Est. #'}${q.standardRef})</em>`:''}</div>
+    </details>`;
+  }).join('');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqaExamResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
+    </div>
+    ${items}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
+      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
 }
-
-let lqaSituationIndex=0;let lqaSituationQuestions=[];let lqaSituationScore=0;
 function startLqaSituations(){
-  lqaSituationQuestions=[...LQA_SITUATIONS].sort(()=>Math.random()-.5).slice(0,10);
-  lqaSituationIndex=0;lqaSituationScore=0;
+  _lqaResetState(lqaSitState);
+  lqaSitState.questions = _lqaShuffle(LQA_SITUATIONS).slice(0,10);
+  lqaSitState.startedAt = Date.now();
   renderLqaSituationQuestion();
 }
 function renderLqaSituationQuestion(){
-  if(lqaSituationIndex>=lqaSituationQuestions.length){renderLqaSituationResults();return;}
-  const s=lqaSituationQuestions[lqaSituationIndex];
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const s = lqaSitState;
+  if (s.index >= s.questions.length) { _lqaCompleteSituations(); return; }
+  const sc = s.questions[s.index];
+  const c = document.getElementById('appContent');
+  if (!c) return;
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'LQA situation':'Situación LQA'}">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'}</div>
     </div>
-
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${lqaSituationIndex+1}/${lqaSituationQuestions.length}</div>
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${s.index+1}/${s.questions.length}</div>
       <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-        <div style="background:#7a6aaa;height:100%;width:${(lqaSituationIndex+1)/lqaSituationQuestions.length*100}%;transition:width .3s"></div>
+        <div style="background:#7a6aaa;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
     </div>
-
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem">${LANG==='en'?'Situation':'Situación'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;margin-bottom:1rem">${LANG==='en'?s.scn_en:s.scn}</div>
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?s.q_en:s.q}</div>
+      <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;color:#7a6aaa;background:rgba(122,106,170,.12);padding:.15rem .55rem;border-radius:var(--r3);letter-spacing:.05em;font-weight:700">${escapeHTML(sc.cat)}</span>
+        <span style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Situation':'Situación'}</span>
+      </div>
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;margin-bottom:1rem">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?sc.q_en:sc.q}</div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
-      ${s.opts.map((o,i)=>`
-        <button onclick="lqaSituationAnswer(${i})" style="padding:.8rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:2px solid var(--line2);border-radius:var(--r2);text-align:left;cursor:pointer;transition:all .2s;color:var(--parch2);font-size:.85rem;line-height:1.5">
-          <div style="font-weight:600;color:var(--parchment);margin-bottom:.3rem">${String.fromCharCode(65+i)}.</div>
-          ${LANG==='en'?s.opts_en[i]:o}
-        </button>
-      `).join('')}
+    <div role="radiogroup" aria-label="${LANG==='en'?'Answer options':'Opciones de respuesta'}" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
+      ${sc.opts.map((o,i)=>`<button onclick="lqaSituationAnswer(${i})" role="radio" aria-checked="false" style="padding:.85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:2px solid var(--line2);border-radius:var(--r2);text-align:left;cursor:pointer;transition:all .2s;color:var(--parch2);font-size:.85rem;line-height:1.5;min-height:48px"><div style="font-weight:700;color:#7a6aaa;margin-bottom:.2rem">${i+1}.</div>${LANG==='en'?sc.opts_en[i]:o}</button>`).join('')}
     </div>
+    <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: press 1-4 to choose · Esc to exit':'Tip: pulsa 1-4 para elegir · Esc para salir'}</div>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); return; }
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= sc.opts.length) { e.preventDefault(); lqaSituationAnswer(n-1); }
+  });
 }
 function lqaSituationAnswer(idx){
-  const s=lqaSituationQuestions[lqaSituationIndex];
-  const isCorrect=idx===s.corr;
-  if(isCorrect) lqaSituationScore++;
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  const sc = s.questions[s.index];
+  const isCorrect = (idx === sc.corr);
+  if (isCorrect) s.score++;
+  s.answers.push({ qIdx: s.index, picked: idx, isCorrect, cat: sc.cat });
 
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'} · ${lqaSituationIndex+1}/${lqaSituationQuestions.length}</div>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'} · ${s.index+1}/${s.questions.length}</div>
     </div>
-
-    <div style="text-align:center;margin:1rem 0 1.5rem">
-      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct!':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
+    <div style="text-align:center;margin:.5rem 0 1rem">
+      <div style="font-size:1.6rem;margin-bottom:.4rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:${isCorrect?'#4d8a5e':'#c47068'}">${LANG==='en'?(isCorrect?'Correct':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
     </div>
-
+    <div style="margin-bottom:1rem">${_lqaOptionsFeedbackHtml(sc.opts, sc.opts_en, idx, sc.corr)}</div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Explanation':'Explicación'}</div>
-      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?s.expl_en:s.expl}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?sc.expl_en:sc.expl}</div>
     </div>
-
-    <button onclick="lqaSituationIndex++;renderLqaSituationQuestion()" style="width:100%;padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+    <button id="lqaNextBtn" onclick="lqaSitState.index++;renderLqaSituationQuestion()" style="width:100%;padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); _lqaUninstallKbd();
+      lqaSitState.index++; renderLqaSituationQuestion();
+    } else if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); }
+  });
+  setTimeout(()=>{ const b = document.getElementById('lqaNextBtn'); if (b) b.focus(); }, 50);
+}
+function _lqaCompleteSituations(){
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  if (!s.completed) {
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*12 + (pct>=90?40:pct>=70?20:0));
+    const timeSec = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if (emp) {
+      _lqaPushScore(emp, 'situations', s.score, total, timeSec);
+      if (!emp.lqaSituationBest || pct > emp.lqaSituationBest) emp.lqaSituationBest = pct;
+      emp.lqaSituationsCompleted = (emp.lqaSituationsCompleted||0) + 1;
+      // A1: per-category aggregate — unlocks "weak areas" insight in the dashboard.
+      if (!emp.lqaSitByCat) emp.lqaSitByCat = {};
+      for (const a of s.answers) {
+        const k = a.cat || 'misc';
+        if (!emp.lqaSitByCat[k]) emp.lqaSitByCat[k] = { correct:0, total:0 };
+        emp.lqaSitByCat[k].total++;
+        if (a.isCorrect) emp.lqaSitByCat[k].correct++;
+      }
+      saveDB();
+    }
+    s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
+    awardXP(xp, LANG==='en'?'LQA Situations':'Situaciones LQA', 'lqa');
+    checkNewAchievements();
+  }
+  renderLqaSituationResults();
 }
 function renderLqaSituationResults(){
-  const pct=Math.round(lqaSituationScore/lqaSituationQuestions.length*100);
-  const xpEarned=Math.round(lqaSituationScore*12 + (pct>=90?40:pct>=70?20:0));
-  const emp=getEmp(currentUser);
-  if(emp){
-    if(!emp.lqaScores) emp.lqaScores=[];
-    emp.lqaScores.push({type:'situations',score:lqaSituationScore,total:lqaSituationQuestions.length,date:Date.now()});
-    if(!emp.lqaSituationBest || pct > emp.lqaSituationBest) emp.lqaSituationBest = pct;
-    emp.lqaSituationsCompleted = (emp.lqaSituationsCompleted||0) + 1;
-    saveDB();
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  const total = s.questions.length;
+  const pct = s._cachedPct ?? (total ? Math.round(s.score/total*100) : 0);
+  const xp = s._cachedXp ?? 0;
+  const timeSec = s._cachedTime ?? 0;
+  // Build per-cat breakdown for THIS run
+  const byCat = {};
+  for (const a of s.answers) {
+    const k = a.cat || 'misc';
+    if (!byCat[k]) byCat[k] = { correct:0, total:0 };
+    byCat[k].total++;
+    if (a.isCorrect) byCat[k].correct++;
   }
-  awardXP(xpEarned, LANG==='en'?'LQA Situations':'Situaciones LQA', 'lqa');
-  checkNewAchievements();
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
-    <div style="text-align:center;margin:2rem 0">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${lqaSituationScore}/${lqaSituationQuestions.length}</div>
-      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${pct}% · +${xpEarned} XP</div>
+  const catRows = Object.entries(byCat)
+    .sort((a,b) => (a[1].correct/a[1].total) - (b[1].correct/b[1].total))
+    .map(([cat, v]) => {
+      const cpct = Math.round(v.correct/v.total*100);
+      const color = cpct >= 70 ? '#4d8a5e' : cpct >= 50 ? '#c49a3c' : '#c47068';
+      return `<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;font-size:.8rem">
+        <span style="min-width:90px;color:var(--parch2);text-transform:capitalize">${escapeHTML(cat)}</span>
+        <div style="flex:1;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden"><div style="background:${color};height:100%;width:${cpct}%;transition:width .3s"></div></div>
+        <span style="min-width:60px;text-align:right;color:${color};font-weight:700">${v.correct}/${v.total}</span>
+      </div>`;
+    }).join('');
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="text-align:center;margin:1.5rem 0 1rem">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${s.score}/${total}</div>
+      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</h1>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${pct}% · +${xp} XP · ${timeSec}s</div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-      <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Again':'De Nuevo'}</button>
-      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Menu':'Menú'}</button>
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.7rem;font-weight:600">${LANG==='en'?'By category (this run)':'Por categoría (esta sesión)'}</div>
+      ${catRows}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="renderLqaSituationReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
+      <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'De nuevo'}</button>
+    </div>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+  </div>`;
+  setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
+}
+function renderLqaSituationReview(){
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  const c = document.getElementById('appContent');
+  const items = s.answers.map((a, i) => {
+    const sc = s.questions[a.qIdx];
+    const optsHtml = _lqaOptionsFeedbackHtml(sc.opts, sc.opts_en, a.picked, sc.corr);
+    return `<details style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);margin-bottom:.6rem;padding:.6rem .8rem">
+      <summary style="cursor:pointer;font-size:.85rem;color:var(--parchment);font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start"><span><span style="display:inline-block;font-size:.6rem;text-transform:uppercase;color:#7a6aaa;background:rgba(122,106,170,.12);padding:.1rem .4rem;border-radius:var(--r3);margin-right:.4rem">${escapeHTML(sc.cat)}</span>${i+1}. ${LANG==='en'?sc.q_en:sc.q}</span><span style="color:${a.isCorrect?'#4d8a5e':'#c47068'};font-weight:700">${a.isCorrect?'✓':'✗'}</span></summary>
+      <div style="margin-top:.6rem;font-size:.8rem;color:var(--parch3);line-height:1.5;font-style:italic">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      <div style="margin-top:.6rem">${optsHtml}</div>
+      <div style="font-size:.78rem;color:var(--parch3);margin-top:.5rem;line-height:1.5">${LANG==='en'?sc.expl_en:sc.expl}</div>
+    </details>`;
+  }).join('');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqaSituationResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
+    </div>
+    ${items}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
+      <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'De nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
 }
-
-let lqaAuditorIndex=0;let lqaAuditorScenarios=[];let lqaAuditorScore=0;
 function startLqaAuditor(){
-  lqaAuditorScenarios=[...LQA_AUDIT_SCENARIOS].sort(()=>Math.random()-.5).slice(0,10);
-  lqaAuditorIndex=0;lqaAuditorScore=0;
+  _lqaResetState(lqaAudState);
+  lqaAudState.questions = _lqaShuffle(LQA_AUDIT_SCENARIOS).slice(0,10);
+  lqaAudState.startedAt = Date.now();
   renderLqaAuditorScenario();
 }
 function renderLqaAuditorScenario(){
-  if(lqaAuditorIndex>=lqaAuditorScenarios.length){renderLqaAuditorResults();return;}
-  const s=lqaAuditorScenarios[lqaAuditorIndex];
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const s = lqaAudState;
+  if (s.index >= s.questions.length) { _lqaCompleteAuditor(); return; }
+  const sc = s.questions[s.index];
+  const c = document.getElementById('appContent');
+  if (!c) return;
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'Auditor scenario':'Escenario auditor'}">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'}</div>
     </div>
-
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${lqaAuditorIndex+1}/${lqaAuditorScenarios.length}</div>
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${s.index+1}/${s.questions.length}</div>
       <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-        <div style="background:#4d8a5e;height:100%;width:${(lqaAuditorIndex+1)/lqaAuditorScenarios.length*100}%;transition:width .3s"></div>
+        <div style="background:#4d8a5e;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
     </div>
-
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Self-Evaluation':'Auto-Evaluación'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Would this service pass the LQA audit?':'¿Este servicio pasaría la auditoría LQA?'}</div>
-
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem;margin-top:1rem">${LANG==='en'?'What You Observed':'Lo Que Observaste'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;background:rgba(242,234,224,.3);padding:.8rem;border-radius:var(--r2);margin-bottom:1rem">${LANG==='en'?s.scn_en:s.scn}</div>
-
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem">${LANG==='en'?'Your Assessment':'Tu Evaluación'}</div>
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'What You Observed':'Lo Que Observaste'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;background:rgba(242,234,224,.3);padding:.8rem;border-radius:var(--r2);margin-bottom:1rem">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Would this service pass the LQA audit?':'¿Este servicio pasaría la auditoría LQA?'}</div>
     </div>
-
-    <div style="display:flex;gap:.6rem;margin-bottom:1rem">
-      <button onclick="lqaAuditorAnswer('meet')" style="flex:1;padding:.9rem;background:rgba(77,138,94,.1);border:2px solid #4d8a5e;border-radius:var(--r);color:#4d8a5e;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Yes, It Passes ✓':'Sí, Pasaría ✓'}</button>
-      <button onclick="lqaAuditorAnswer('below')" style="flex:1;padding:.9rem;background:rgba(196,112,104,.1);border:2px solid #c47068;border-radius:var(--r);color:#c47068;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'No, It Fails ✗':'No, Suspendería ✗'}</button>
+    <div style="display:flex;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="lqaAuditorAnswer('meet')" style="flex:1;padding:1rem;background:rgba(77,138,94,.1);border:2px solid #4d8a5e;border-radius:var(--r);color:#4d8a5e;font-weight:700;cursor:pointer;min-height:48px"><span style="display:inline-block;width:1.2rem;font-weight:700;opacity:.7">1.</span>${LANG==='en'?'Yes, it passes':'Sí, pasaría'} ✓</button>
+      <button onclick="lqaAuditorAnswer('below')" style="flex:1;padding:1rem;background:rgba(196,112,104,.1);border:2px solid #c47068;border-radius:var(--r);color:#c47068;font-weight:700;cursor:pointer;min-height:48px"><span style="display:inline-block;width:1.2rem;font-weight:700;opacity:.7">2.</span>${LANG==='en'?'No, it fails':'No, suspendería'} ✗</button>
     </div>
+    <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: 1 = passes · 2 = fails · Esc to exit':'Tip: 1 = pasa · 2 = falla · Esc para salir'}</div>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); return; }
+    if (e.key === '1') { e.preventDefault(); lqaAuditorAnswer('meet'); }
+    else if (e.key === '2') { e.preventDefault(); lqaAuditorAnswer('below'); }
+  });
 }
 function lqaAuditorAnswer(verdict){
-  const s=lqaAuditorScenarios[lqaAuditorIndex];
-  const isCorrect=(verdict===s.verd);
-  if(isCorrect) lqaAuditorScore++;
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  const sc = s.questions[s.index];
+  const isCorrect = (verdict === sc.verd);
+  if (isCorrect) s.score++;
+  s.answers.push({ qIdx: s.index, picked: verdict, isCorrect });
+  const std = (typeof LQA_STANDARDS!=='undefined') ? LQA_STANDARDS.find(x => x.id === sc.std) : null;
 
-  const std=LQA_STANDARDS.find(x=>x.id===s.std);
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  // Render BOTH verdict buttons highlighted: user's pick vs the correct one.
+  const meetIsAns  = (sc.verd === 'meet');
+  const meetIsPick = (verdict === 'meet');
+  const meetBg = meetIsAns ? 'rgba(77,138,94,.22)' : (meetIsPick ? 'rgba(196,112,104,.18)' : 'rgba(255,255,255,.5)');
+  const meetBd = meetIsAns ? '2px solid #4d8a5e' : (meetIsPick ? '2px solid #c47068' : '1px solid var(--line2)');
+  const meetMk = meetIsAns ? '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>' : (meetIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
+  const belowIsAns  = (sc.verd === 'below');
+  const belowIsPick = (verdict === 'below');
+  const belowBg = belowIsAns ? 'rgba(77,138,94,.22)' : (belowIsPick ? 'rgba(196,112,104,.18)' : 'rgba(255,255,255,.5)');
+  const belowBd = belowIsAns ? '2px solid #4d8a5e' : (belowIsPick ? '2px solid #c47068' : '1px solid var(--line2)');
+  const belowMk = belowIsAns ? '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>' : (belowIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
+
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'} · ${lqaAuditorIndex+1}/${lqaAuditorScenarios.length}</div>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'} · ${s.index+1}/${s.questions.length}</div>
     </div>
-
-    <div style="text-align:center;margin:1.5rem 0">
-      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct Judgment':'Incorrect Judgment'):(isCorrect?'Juicio Correcto':'Juicio Incorrecto')}</div>
+    <div style="text-align:center;margin:.5rem 0 1rem">
+      <div style="font-size:1.6rem;margin-bottom:.4rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:${isCorrect?'#4d8a5e':'#c47068'}">${LANG==='en'?(isCorrect?'Correct judgment':'Incorrect judgment'):(isCorrect?'Juicio correcto':'Juicio incorrecto')}</div>
     </div>
-
+    <div style="margin-bottom:1rem">
+      <div style="padding:.7rem .9rem;background:${meetBg};border:${meetBd};border-radius:var(--r2);color:var(--parch2);font-size:.85rem;line-height:1.5;margin-bottom:.4rem">${meetMk}${LANG==='en'?'Yes, it passes':'Sí, pasaría'}</div>
+      <div style="padding:.7rem .9rem;background:${belowBg};border:${belowBd};border-radius:var(--r2);color:var(--parch2);font-size:.85rem;line-height:1.5">${belowMk}${LANG==='en'?'No, it fails':'No, suspendería'}</div>
+    </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Standard':'Estándar'} #${s.std}</div>
-      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6;margin-bottom:1rem">${LANG==='en'?std?.std_en:std?.std}</div>
-
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Standard':'Estándar'} #${sc.std}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6;margin-bottom:1rem">${std ? (LANG==='en' ? std.std_en : std.std) : ''}</div>
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-top:1rem;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Analysis':'Análisis'}</div>
-      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?s.expl_en:s.expl}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?sc.expl_en:sc.expl}</div>
     </div>
-
-    <button onclick="lqaAuditorIndex++;renderLqaAuditorScenario()" style="width:100%;padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+    <button id="lqaNextBtn" onclick="lqaAudState.index++;renderLqaAuditorScenario()" style="width:100%;padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); _lqaUninstallKbd();
+      lqaAudState.index++; renderLqaAuditorScenario();
+    } else if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); }
+  });
+  setTimeout(()=>{ const b = document.getElementById('lqaNextBtn'); if (b) b.focus(); }, 50);
+}
+function _lqaCompleteAuditor(){
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  if (!s.completed) {
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*10 + (pct>=90?35:pct>=70?15:0));
+    const timeSec = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if (emp) {
+      _lqaPushScore(emp, 'audit', s.score, total, timeSec);
+      if (!emp.lqaAuditBest || pct > emp.lqaAuditBest) emp.lqaAuditBest = pct;
+      emp.lqaAuditsCompleted = (emp.lqaAuditsCompleted||0) + 1;
+      saveDB();
+    }
+    s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
+    awardXP(xp, LANG==='en'?'LQA Audit Sim':'Simulador Auditoría', 'lqa');
+    checkNewAchievements();
+  }
+  renderLqaAuditorResults();
 }
 function renderLqaAuditorResults(){
-  const pct=Math.round(lqaAuditorScore/lqaAuditorScenarios.length*100);
-  const xpEarned=Math.round(lqaAuditorScore*10 + (pct>=90?35:pct>=70?15:0));
-  const emp=getEmp(currentUser);
-  if(emp){
-    if(!emp.lqaScores) emp.lqaScores=[];
-    emp.lqaScores.push({type:'audit',score:lqaAuditorScore,total:lqaAuditorScenarios.length,date:Date.now()});
-    if(!emp.lqaAuditBest || pct > emp.lqaAuditBest) emp.lqaAuditBest = pct;
-    emp.lqaAuditsCompleted = (emp.lqaAuditsCompleted||0) + 1;
-    saveDB();
-  }
-  awardXP(xpEarned, LANG==='en'?'LQA Audit Sim':'Simulador Auditoría', 'lqa');
-  checkNewAchievements();
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
-    <div style="text-align:center;margin:2rem 0">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#4d8a5e;margin-bottom:.5rem">${lqaAuditorScore}/${lqaAuditorScenarios.length}</div>
-      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${LANG==='en'?'Evaluation Accuracy':'Precisión de Evaluación'}: <strong>${pct}%</strong> · +${xpEarned} XP</div>
-      <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem">
-        <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${pct>=80?LANG==='en'?'Great job! You have a solid understanding of the audit standards and what needs to pass.':'¡Excelente! Tienes un sólido conocimiento de los estándares de auditoría.':LANG==='en'?'Keep studying the standards to improve your audit readiness.':'Sigue estudiando los estándares para mejorar tu preparación.'}</div>
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  const total = s.questions.length;
+  const pct = s._cachedPct ?? (total ? Math.round(s.score/total*100) : 0);
+  const xp = s._cachedXp ?? 0;
+  const timeSec = s._cachedTime ?? 0;
+  const c = document.getElementById('appContent');
+  const tip = pct >= 80
+    ? (LANG==='en' ? 'Great job! You have a solid understanding of audit standards.' : '¡Excelente! Tienes un sólido conocimiento de los estándares de auditoría.')
+    : (LANG==='en' ? 'Keep studying the standards to improve your audit readiness.' : 'Sigue estudiando los estándares para mejorar tu preparación.');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="text-align:center;margin:1.5rem 0 1rem">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#4d8a5e;margin-bottom:.5rem">${s.score}/${total}</div>
+      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</h1>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Evaluation accuracy':'Precisión de evaluación'}: <strong>${pct}%</strong> · +${xp} XP · ${timeSec}s</div>
+      <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+        <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${tip}</div>
       </div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Try Again':'Intentar de Nuevo'}</button>
-      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Menu':'Menú'}</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="renderLqaAuditorReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
+      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+    </div>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+  </div>`;
+  setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
+}
+function renderLqaAuditorReview(){
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  const c = document.getElementById('appContent');
+  const items = s.answers.map((a, i) => {
+    const sc = s.questions[a.qIdx];
+    const std = (typeof LQA_STANDARDS!=='undefined') ? LQA_STANDARDS.find(x => x.id === sc.std) : null;
+    const verdLabel = (v) => v === 'meet' ? (LANG==='en'?'Passes':'Pasa') : (LANG==='en'?'Fails':'Falla');
+    return `<details style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);margin-bottom:.6rem;padding:.6rem .8rem">
+      <summary style="cursor:pointer;font-size:.85rem;color:var(--parchment);font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start"><span>${i+1}. ${LANG==='en'?'Std #':'Est. #'}${sc.std} · ${LANG==='en'?'You said':'Dijiste'}: <em>${verdLabel(a.picked)}</em></span><span style="color:${a.isCorrect?'#4d8a5e':'#c47068'};font-weight:700">${a.isCorrect?'✓':'✗'}</span></summary>
+      <div style="margin-top:.6rem;font-size:.8rem;color:var(--parch3);line-height:1.5;font-style:italic">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      ${std ? `<div style="margin-top:.5rem;font-size:.78rem;color:var(--parch2);line-height:1.5"><strong>${LANG==='en'?'Standard':'Estándar'}:</strong> ${LANG==='en'?std.std_en:std.std}</div>` : ''}
+      <div style="margin-top:.5rem;font-size:.8rem;color:var(--parch2);line-height:1.5"><strong>${LANG==='en'?'Correct verdict':'Veredicto correcto'}:</strong> <span style="color:#4d8a5e;font-weight:700">${verdLabel(sc.verd)}</span></div>
+      <div style="margin-top:.5rem;font-size:.78rem;color:var(--parch3);line-height:1.5">${LANG==='en'?sc.expl_en:sc.expl}</div>
+    </details>`;
+  }).join('');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqaAuditorResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
+    </div>
+    ${items}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
+      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
 }
