@@ -8664,7 +8664,7 @@ const CERT_THRESHOLD = 0.80; // 80% of dishes in category known = certified
 // instead of compared against the local SUP_PIN_HASH constant. This removes the brute-force
 // vector (a 4-digit PIN client-side hash is exhaustible in ms even with salt+iterations).
 // To enable: deploy `supabase/supervisor_pin.sql` then flip this to true.
-const USE_SERVER_PIN_VERIFY = false;
+const USE_SERVER_PIN_VERIFY = true;
 const SUP_PIN_HASH = 'b3b4e87f15d85199ddc51683559221f8375b5cb7074da6d69409cc1ed64b0a98'; // hashed supervisor PIN (LEGACY: remove from bundle once RPC is deployed)
 
 // Unified entry point — checks server-side if available, falls back to local hash compare.
