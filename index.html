@@ -10136,7 +10136,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='5.8.2';
+const APP_VERSION='5.8.3';
 const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -32474,6 +32474,26 @@ function _lqaShuffle(arr){
   }
   return a;
 }
+// F3: max number of recently-seen situation ids tracked per user.
+// Sized at ~50% of the situations pool so consecutive sessions don't repeat,
+// while still allowing rotation when the pool gets exhausted.
+const LQA_RECENT_MEMORY = 12;
+// F3: pick `count` items from `pool`, preferring those NOT in recentIds.
+// Falls back to non-fresh items if the fresh subset is too small (e.g. small
+// per-category pools where everything has been seen recently).
+function _lqaPickFresh(pool, recentIds, count){
+  const recent = new Set(recentIds || []);
+  const fresh = [], stale = [];
+  for (const item of pool){
+    if (recent.has(item.id)) stale.push(item);
+    else fresh.push(item);
+  }
+  const out = _lqaShuffle(fresh).slice(0, count);
+  if (out.length < count){
+    out.push(..._lqaShuffle(stale).slice(0, count - out.length));
+  }
+  return out;
+}
 function _lqaPushScore(emp, type, score, total, timeSec){
   if (!emp.lqaScores) emp.lqaScores = [];
   emp.lqaScores.push({ type, score, total, time_sec: timeSec, date: Date.now() });
@@ -32930,18 +32950,24 @@ function _lqaWeakestCategory(){
   return weakest;
 }
 // F1: focused practice on a single category — reuses the standard situations render pipeline.
+// F3: picks fresh situations first, falls back to recently-seen if pool runs dry.
 function startLqaWeakCategoryPractice(catId){
   const pool = LQA_SITUATIONS.filter(s => s.cat === catId);
   if (pool.length === 0) return;
+  const emp = getEmp(currentUser);
+  const recent = (emp && emp.lqaSitRecent) || [];
   _lqaResetState(lqaSitState);
-  lqaSitState.questions = _lqaShuffle(pool).slice(0, Math.min(5, pool.length));
+  lqaSitState.questions = _lqaPickFresh(pool, recent, Math.min(5, pool.length));
   lqaSitState.startedAt = Date.now();
   lqaSitState.weakCatMode = catId;
   renderLqaSituationQuestion();
 }
 function startLqaSituations(){
+  // F3: avoid recently-seen ids; falls back gracefully if pool exhausts.
+  const emp = getEmp(currentUser);
+  const recent = (emp && emp.lqaSitRecent) || [];
   _lqaResetState(lqaSitState);
-  lqaSitState.questions = _lqaShuffle(LQA_SITUATIONS).slice(0,10);
+  lqaSitState.questions = _lqaPickFresh(LQA_SITUATIONS, recent, 10);
   lqaSitState.startedAt = Date.now();
   renderLqaSituationQuestion();
 }
@@ -33036,6 +33062,13 @@ function _lqaCompleteSituations(){
         emp.lqaSitByCat[k].total++;
         if (a.isCorrect) emp.lqaSitByCat[k].correct++;
       }
+      // F3: track recently-seen situation ids to avoid déjà-vu in the next session.
+      if (!emp.lqaSitRecent) emp.lqaSitRecent = [];
+      for (const a of s.answers) {
+        const id = s.questions[a.qIdx] && s.questions[a.qIdx].id;
+        if (id != null) emp.lqaSitRecent.push(id);
+      }
+      if (emp.lqaSitRecent.length > LQA_RECENT_MEMORY) emp.lqaSitRecent = emp.lqaSitRecent.slice(-LQA_RECENT_MEMORY);
       saveDB();
     }
     s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
