@@ -10136,7 +10136,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='5.8';
+const APP_VERSION='5.8.3';
 const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -32474,11 +32474,72 @@ function _lqaShuffle(arr){
   }
   return a;
 }
+// F3: max number of recently-seen situation ids tracked per user.
+// Sized at ~50% of the situations pool so consecutive sessions don't repeat,
+// while still allowing rotation when the pool gets exhausted.
+const LQA_RECENT_MEMORY = 12;
+// F3: pick `count` items from `pool`, preferring those NOT in recentIds.
+// Falls back to non-fresh items if the fresh subset is too small (e.g. small
+// per-category pools where everything has been seen recently).
+function _lqaPickFresh(pool, recentIds, count){
+  const recent = new Set(recentIds || []);
+  const fresh = [], stale = [];
+  for (const item of pool){
+    if (recent.has(item.id)) stale.push(item);
+    else fresh.push(item);
+  }
+  const out = _lqaShuffle(fresh).slice(0, count);
+  if (out.length < count){
+    out.push(..._lqaShuffle(stale).slice(0, count - out.length));
+  }
+  return out;
+}
 function _lqaPushScore(emp, type, score, total, timeSec){
   if (!emp.lqaScores) emp.lqaScores = [];
   emp.lqaScores.push({ type, score, total, time_sec: timeSec, date: Date.now() });
   // Rolling cap of 50 to avoid quota bloat over time.
   if (emp.lqaScores.length > 50) emp.lqaScores = emp.lqaScores.slice(-50);
+}
+// F2: inline-SVG sparkline trend block for an LQA mode (exam/situations/audit).
+// Hidden if <2 prior sessions of the same type. Y axis fixed 0..100 for honest comparison across runs.
+function _lqaTrendBlock(emp, type){
+  if (!emp || !emp.lqaScores) return '';
+  const entries = emp.lqaScores.filter(s => s.type === type && s.total > 0);
+  if (entries.length < 2) return '';
+  const recent = entries.slice(-10);
+  const pcts = recent.map(s => Math.round(s.score / s.total * 100));
+  const W = 220, H = 44, padX = 6, padY = 6;
+  const usableW = W - padX*2, usableH = H - padY*2;
+  const pts = pcts.map((p,i) => [
+    padX + (i / (recent.length-1)) * usableW,
+    padY + (1 - p/100) * usableH
+  ]);
+  const path = pts.map((p,i) => (i===0?'M':'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const trend = pcts[pcts.length-1] - pcts[0];
+  const stroke = trend > 0 ? '#4d8a5e' : trend < 0 ? '#c47068' : '#7a6aaa';
+  const trendLabel = trend > 0 ? `↑ +${trend}%` : trend < 0 ? `↓ ${trend}%` : '→ 0%';
+  const lp = pts[pts.length-1];
+  const lastPct = pcts[pcts.length-1];
+  const aria = (LANG==='en'
+    ? `Last ${recent.length} sessions trend: ${trendLabel}, latest ${lastPct}%`
+    : `Tendencia ${recent.length} sesiones: ${trendLabel}, última ${lastPct}%`);
+  const dotsHtml = pts.slice(0,-1).map(p =>
+    `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="1.6" fill="${stroke}" opacity=".4"/>`
+  ).join('');
+  return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:1rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <div style="font-size:.7rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;font-weight:600">${LANG==='en'?`Trend (last ${recent.length})`:`Tendencia (últimas ${recent.length})`}</div>
+      <div style="font-size:.8rem;color:${stroke};font-weight:700">${trendLabel}</div>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${escapeHTML(aria)}" style="max-width:${W}px">
+        <line x1="${padX}" y1="${padY+usableH/2}" x2="${W-padX}" y2="${padY+usableH/2}" stroke="var(--parch4)" stroke-width=".5" stroke-dasharray="2,3" opacity=".5"/>
+        <path d="${path}" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        ${dotsHtml}
+        <circle cx="${lp[0].toFixed(1)}" cy="${lp[1].toFixed(1)}" r="3.5" fill="${stroke}"/>
+      </svg>
+    </div>
+  </div>`;
 }
 let _lqaKbdHandler = null;
 function _lqaUninstallKbd(){
@@ -32567,6 +32628,22 @@ function renderLqa(){
         </div>
         <svg class="hub-qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </div>
+      ${(()=>{
+        const weak = _lqaWeakestCategory();
+        if (!weak) return '';
+        const c = weak.cat.color;
+        const accPct = Math.round(weak.acc * 100);
+        const catTitle = LANG==='en' ? weak.cat.title_en : weak.cat.title;
+        const iconWhite = weak.cat.icon.replace(/stroke="currentColor"/g, 'stroke="#fff"');
+        return `<div class="hub-qa hub-qa-wide" style="--qa-c:${c};--qa-b:${c}4D;--qa-shadow:${c}24;--qa-icon-bg:linear-gradient(135deg,${c},${c}B3);--qa-glow:${c}4D" onclick="startLqaWeakCategoryPractice('${weak.cat.id}')">
+          <div class="hub-qa-icon">${iconWhite}</div>
+          <div class="hub-qa-text">
+            <div class="hub-qa-label">${LANG==='en'?'Practice weak area':'Practica zona débil'}</div>
+            <div class="hub-qa-sub">${escapeHTML(catTitle)} · ${accPct}%</div>
+          </div>
+          <svg class="hub-qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </div>`;
+      })()}
       <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#1f4a28 0%,#2d6a3a 50%,#1f4a28 100%);--hb-b:rgba(140,200,150,.35);--hb-glow:rgba(140,200,150,.35);grid-column:span 2" onclick="startLqaAuditor()">
         <span class="hub-banner-shine"></span>
         <div class="hub-banner-icon">
@@ -32823,6 +32900,7 @@ function renderLqaExamResults(){
         <div style="font-size:.75rem;color:var(--parch3);margin-top:.3rem">+${xp} XP · ${timeSec}s</div>
       </div>
     </div>
+    ${_lqaTrendBlock(getEmp(currentUser), 'exam')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
       <button onclick="renderLqaExamReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
       <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
@@ -32856,9 +32934,40 @@ function renderLqaExamReview(){
     </div>
   </div>`;
 }
-function startLqaSituations(){
+// F1: weakest LQA category for focused practice. Requires ≥3 attempts to qualify; ignores 100%.
+function _lqaWeakestCategory(){
+  const emp = getEmp(currentUser);
+  if (!emp || !emp.lqaSitByCat) return null;
+  const MIN_ATTEMPTS = 3;
+  let weakest = null;
+  for (const cat of LQA_CATEGORIES){
+    const stats = emp.lqaSitByCat[cat.id];
+    if (!stats || stats.total < MIN_ATTEMPTS) continue;
+    const acc = stats.correct / stats.total;
+    if (acc >= 1) continue;
+    if (!weakest || acc < weakest.acc) weakest = { cat, acc, correct: stats.correct, total: stats.total };
+  }
+  return weakest;
+}
+// F1: focused practice on a single category — reuses the standard situations render pipeline.
+// F3: picks fresh situations first, falls back to recently-seen if pool runs dry.
+function startLqaWeakCategoryPractice(catId){
+  const pool = LQA_SITUATIONS.filter(s => s.cat === catId);
+  if (pool.length === 0) return;
+  const emp = getEmp(currentUser);
+  const recent = (emp && emp.lqaSitRecent) || [];
   _lqaResetState(lqaSitState);
-  lqaSitState.questions = _lqaShuffle(LQA_SITUATIONS).slice(0,10);
+  lqaSitState.questions = _lqaPickFresh(pool, recent, Math.min(5, pool.length));
+  lqaSitState.startedAt = Date.now();
+  lqaSitState.weakCatMode = catId;
+  renderLqaSituationQuestion();
+}
+function startLqaSituations(){
+  // F3: avoid recently-seen ids; falls back gracefully if pool exhausts.
+  const emp = getEmp(currentUser);
+  const recent = (emp && emp.lqaSitRecent) || [];
+  _lqaResetState(lqaSitState);
+  lqaSitState.questions = _lqaPickFresh(LQA_SITUATIONS, recent, 10);
   lqaSitState.startedAt = Date.now();
   renderLqaSituationQuestion();
 }
@@ -32953,6 +33062,13 @@ function _lqaCompleteSituations(){
         emp.lqaSitByCat[k].total++;
         if (a.isCorrect) emp.lqaSitByCat[k].correct++;
       }
+      // F3: track recently-seen situation ids to avoid déjà-vu in the next session.
+      if (!emp.lqaSitRecent) emp.lqaSitRecent = [];
+      for (const a of s.answers) {
+        const id = s.questions[a.qIdx] && s.questions[a.qIdx].id;
+        if (id != null) emp.lqaSitRecent.push(id);
+      }
+      if (emp.lqaSitRecent.length > LQA_RECENT_MEMORY) emp.lqaSitRecent = emp.lqaSitRecent.slice(-LQA_RECENT_MEMORY);
       saveDB();
     }
     s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
@@ -32994,6 +33110,7 @@ function renderLqaSituationResults(){
       <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</h1>
       <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${pct}% · +${xp} XP · ${timeSec}s</div>
     </div>
+    ${_lqaTrendBlock(getEmp(currentUser), 'situations')}
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.7rem;font-weight:600">${LANG==='en'?'By category (this run)':'Por categoría (esta sesión)'}</div>
       ${catRows}
@@ -33165,6 +33282,7 @@ function renderLqaAuditorResults(){
         <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${tip}</div>
       </div>
     </div>
+    ${_lqaTrendBlock(getEmp(currentUser), 'audit')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
       <button onclick="renderLqaAuditorReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
       <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
