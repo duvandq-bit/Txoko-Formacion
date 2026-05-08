@@ -26553,7 +26553,7 @@ function startExam(){
         if(fb){topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');}else continue;
       }else continue;
     }
-    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==d.id));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -26577,7 +26577,7 @@ function startExam(){
       wrongs.push(w);
     }
     if(wrongs.length<3) continue; // not enough good distractors, skip
-    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const choices=_lqaShuffle([correct,...wrongs]);
     validQuestions.push({dish:d,topic,correct,choices});
   }
   examDishes=validQuestions;
@@ -29372,12 +29372,14 @@ let _liveHostQuestions = null;
 function renderLiveQuizHost(empNames){
   const _lqEn = LANG==='en';
   // Build 5 random questions
-  const pool = DISHES.sort(()=>Math.random()-.5).slice(0,5);
+  // F-P2-3 + F-P2-5: Fisher-Yates instead of biased Math.random()-.5 sort.
+  // Also avoids mutating the global DISHES array, which the previous .sort() did in place.
+  const pool = _lqaShuffle(DISHES).slice(0,5);
   const questions = pool.map(d => {
     const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
     const correct = (topic.a(d)||'').trim();
-    const wrongs = DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5).slice(0,3).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
-    const choices = [correct,...wrongs.slice(0,3)].sort(()=>Math.random()-.5);
+    const wrongs = _lqaShuffle(DISHES.filter(x=>x.id!==d.id)).slice(0,3).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
+    const choices = _lqaShuffle([correct,...wrongs.slice(0,3)]);
     return { dish: d.name, topic: topic.label, correct, choices, correctIdx: choices.indexOf(correct) };
   });
   _liveHostQuestions = questions;
@@ -29976,7 +29978,7 @@ function startPersonalErrorMode(){
       if(!fb) continue;
       correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
-    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==d.id));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -30000,7 +30002,7 @@ function startPersonalErrorMode(){
       wrongs.push(w);
     }
     if(wrongs.length<3) continue;
-    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const choices=_lqaShuffle([correct,...wrongs]);
     const correctIdx=choices.indexOf(correct);
     usedIds.add(d.id);
     examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
@@ -30034,7 +30036,7 @@ function startErrorMode(){
       if(!fb) continue;
       topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
-    const wrongPool=DISHES.filter(x=>x.id!==d.id).sort(()=>Math.random()-.5);
+    const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==d.id));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -30058,7 +30060,7 @@ function startErrorMode(){
       wrongs.push(w);
     }
     if(wrongs.length<3) continue;
-    const choices=[correct,...wrongs].sort(()=>Math.random()-.5);
+    const choices=_lqaShuffle([correct,...wrongs]);
     const correctIdx=choices.indexOf(correct);
     usedIds.add(d.id);
     examDishes.push({dish:d,topic,correct,choices,correctIdx,isErrorMode:true});
@@ -30434,16 +30436,16 @@ async function renderDuel() {
     <!-- URGENT: DEFEND -->
     <div class="duel-challenge-card" style="border-color:var(--rose);background:#fff9f9">
       <div class="duel-challenge-from" style="color:var(--rose)">» ${LANG==='en'?'INCOMING CHALLENGE':'RETO PENDIENTE'}</div>
-      <div class="duel-challenge-name">${pendingDefense.challenger}${getTrophyBadge(getEmp(pendingDefense.challenger)?.trophies)} ${LANG==='en'?'challenged you!':'te ha retado!'}</div>
+      <div class="duel-challenge-name">${escapeHTML(pendingDefense.challenger)}${getTrophyBadge(getEmp(pendingDefense.challenger)?.trophies)} ${LANG==='en'?'challenged you!':'te ha retado!'}</div>
       <div class="duel-challenge-expiry">⏰ ${LANG==='en'?'Expires':'Expira'}: ${new Date(pendingDefense.expires_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
-      <button class="btn-primary" style="width:100%" onclick="startDefense(${JSON.stringify(pendingDefense).replace(/"/g,'&quot;')})">${LANG==='en'?'Defend now! »':'¡Defender ahora! »'}</button>
+      <button class="btn-primary" style="width:100%" onclick="startDefense(${escapeHTML(JSON.stringify(pendingDefense))})">${LANG==='en'?'Defend now! »':'¡Defender ahora! »'}</button>
     </div>` : ''}
 
     ${pendingChallenge ? `
     <!-- WAITING FOR RESPONSE -->
     <div class="duel-season-card" style="border-color:var(--gold-a)">
       <div class="duel-season-title">⏳ ${LANG==='en'?'Waiting for response':'Esperando respuesta'}</div>
-      <div style="font-size:.82rem;color:var(--parchment)">${pendingChallenge.challenged} ${LANG==='en'?'has not answered yet':'aún no ha respondido'}</div>
+      <div style="font-size:.82rem;color:var(--parchment)">${escapeHTML(pendingChallenge.challenged)} ${LANG==='en'?'has not answered yet':'aún no ha respondido'}</div>
       <div style="font-size:.65rem;color:var(--parch3);margin-top:.3rem">⏰ ${LANG==='en'?'Expires':'Expira'}: ${new Date(pendingChallenge.expires_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
     </div>` : ''}
 
@@ -30456,7 +30458,7 @@ async function renderDuel() {
         return `<div class="duel-season-row" style="${isMe?'background:var(--gold-b);border-radius:var(--r2);padding:.4rem .5rem;':''}">
           <div class="duel-season-pos">${i===0?'1st':i===1?'2nd':i===2?'3rd':i+1}</div>
           <div class="duel-season-name">${escapeHTML(p.name)}${getTrophyBadge(empR?.trophies)}${isMe?' <span style="color:var(--gold);font-size:.65rem">← tú</span>':''}</div>
-          <div style="font-size:.65rem;color:var(--parch3);margin-right:.5rem">${p.wins}V ${p.losses}D${p.draws?' '+p.draws+LANG==='en'?'D':'E':''}</div>
+          <div style="font-size:.65rem;color:var(--parch3);margin-right:.5rem">${p.wins}V ${p.losses}D${p.draws?' '+p.draws+(LANG==='en'?'D':'E'):''}</div>
           <div class="duel-season-pts">${p.wins*3+p.draws}</div>
         </div>`;
       }).join('') : `<div style="font-size:.75rem;color:var(--parch3);text-align:center;padding:.5rem">${LANG==='en'?'No duels yet this season':'Sin duelos esta temporada'}</div>`}
@@ -30465,17 +30467,22 @@ async function renderDuel() {
     <!-- CHALLENGE SOMEONE -->
     ${!pendingChallenge && sentToday < 5 ? `
     <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;opacity:.8">
-      — ${LANG==='en'?'Challenge a colleague':'Retar a un compañero'} (${2-sentToday} ${LANG==='en'?'left today':'restantes hoy'}) —
+      — ${LANG==='en'?'Challenge a colleague':'Retar a un compañero'} (${5-sentToday} ${LANG==='en'?'left today':'restantes hoy'}) —
     </div>
     <div class="duel-lobby">
       ${allNames.map(n => {
         const canChallenge = canChallengeToday(allDuels, currentUser, n) && !pendingDefense;
         const rival = getEmp(n);
         const reason = !canChallengeToday(allDuels, currentUser, n) ? (LANG==='en'?'Already challenged today':'Ya retado hoy') : pendingDefense ? (LANG==='en'?'Defend first':'Defiéndete primero') : '';
-        return `<div class="duel-rival-card ${canChallenge?'':'duel-rival-disabled'}" onclick="${canChallenge?`startChallenge('${n}')`:''}" title="${reason}">
+        // F-P0-1 + F-P1-2: name escaped for both display and the inline onclick JS-string
+        // context (JSON.stringify handles the JS-string escaping; escapeHTML the attribute one).
+        // role/tabindex/keydown make the rival card keyboard-accessible.
+        const onclickArg = canChallenge ? `startChallenge(${escapeHTML(JSON.stringify(n))})` : '';
+        const kbd = canChallenge ? `onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"` : '';
+        return `<div role="button" tabindex="${canChallenge?'0':'-1'}" aria-label="${escapeHTML(n)}${canChallenge?'':', '+escapeHTML(reason)}" class="duel-rival-card ${canChallenge?'':'duel-rival-disabled'}" onclick="${onclickArg}" ${kbd} title="${escapeHTML(reason)}">
           <div class="duel-rival-avatar" style="overflow:hidden">${renderSmallAvatar(n, 32)}</div>
-          <div class="duel-rival-name">${n}${getTrophyBadge(rival?.trophies)}</div>
-          ${!canChallenge ? `<div style="font-size:.6rem;color:var(--parch3)">${reason}</div>` : '<div style="font-size:.7rem;color:var(--gold)">»</div>'}
+          <div class="duel-rival-name">${escapeHTML(n)}${getTrophyBadge(rival?.trophies)}</div>
+          ${!canChallenge ? `<div style="font-size:.6rem;color:var(--parch3)">${escapeHTML(reason)}</div>` : '<div style="font-size:.7rem;color:var(--gold)">»</div>'}
         </div>`;
       }).join('')}
     </div>` : !pendingChallenge ? `
@@ -30524,7 +30531,7 @@ function renderRemoteDuelQuestion() {
     <div class="sup-wrap">
       <div class="sup-hero" style="padding-bottom:.75rem">
         <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-        <div class="sup-hero-title">${LANG==='en'?`Challenge ${rivalName}`:`Retando a ${rivalName}`}</div>
+        <div class="sup-hero-title">${LANG==='en'?`Challenge ${escapeHTML(rivalName)}`:`Retando a ${escapeHTML(rivalName)}`}</div>
         <div class="sup-hero-sub">${LANG==='en'?`Question ${qIdx+1} of ${questions.length}`:`Pregunta ${qIdx+1} de ${questions.length}`}</div>
       </div>
       <div id="duelTimer" style="margin-bottom:.5rem"></div>
@@ -30591,7 +30598,7 @@ async function submitChallenge() {
     <div style="text-align:center;padding:2rem 1rem">
       <div style="font-size:3rem;margin-bottom:.75rem">»</div>
       <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Challenge sent!':'¡Reto enviado!'}</div>
-      <div style="font-size:.8rem;color:var(--parch2);margin-bottom:1.5rem">${rivalName} ${LANG==='en'?'has 24h to respond.':'tiene 24h para responder.'}</div>
+      <div style="font-size:.8rem;color:var(--parch2);margin-bottom:1.5rem">${escapeHTML(rivalName)} ${LANG==='en'?'has 24h to respond.':'tiene 24h para responder.'}</div>
       <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:1rem">
         ${answers.map((a, i) => `<div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;background:${a===questions[i].correctIdx?'#e8f5ee':'#fdecea'}">${a===questions[i].correctIdx?'✓':'✗'}</div>`).join('')}
       </div>
@@ -30620,7 +30627,7 @@ function renderRemoteDefenseQuestion() {
     <div class="sup-wrap">
       <div class="sup-hero" style="padding-bottom:.75rem">
         <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <div class="sup-hero-title">${LANG==='en'?`Defending vs ${rivalName}`:`Defendiendo vs ${rivalName}`}</div>
+        <div class="sup-hero-title">${LANG==='en'?`Defending vs ${escapeHTML(rivalName)}`:`Defendiendo vs ${escapeHTML(rivalName)}`}</div>
         <div class="sup-hero-sub">${LANG==='en'?`Question ${qIdx+1} of ${questions.length}`:`Pregunta ${qIdx+1} de ${questions.length}`}</div>
       </div>
       <div id="duelTimerDefense" style="margin-bottom:.5rem"></div>
@@ -30682,6 +30689,9 @@ async function submitDefense() {
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;
   if(iWon){ const emp=getEmp(currentUser); emp.duelWins=(emp.duelWins||0)+1; saveDB(); }
   awardXP(xpAmt, iWon ? (LANG==='en'?'Duel victory! VS':'¡Victoria en duelo! VS') : cWins ? (LANG==='en'?'Duel lost':'Duelo perdido') : (LANG==='en'?'Duel draw':'Empate en duelo'));
+  // F-P1-1: a_duel_win/3/10 fire on duelWins thresholds; was previously delayed.
+  if(typeof checkNewAchievements==='function') checkNewAchievements();
+  if(typeof checkMissionCompletion==='function') checkMissionCompletion();
 
   // Notify challenger
   await fetch(`${SUPA_URL}/rest/v1/notifications`, {
@@ -30699,7 +30709,7 @@ async function submitDefense() {
       ${tiebreak?`<div style="font-size:.65rem;color:var(--parch3);margin-bottom:.4rem">${LANG==='en'?'» Decided by speed':'» Decidido por velocidad'}</div>`:''}
       <div style="display:flex;gap:1rem;justify-content:center;margin:1.25rem 0">
         <div style="text-align:center">
-          <div style="font-size:.7rem;color:var(--parch3);margin-bottom:.3rem">${rivalName}</div>
+          <div style="font-size:.7rem;color:var(--parch3);margin-bottom:.3rem">${escapeHTML(rivalName)}</div>
           <div style="font-family:'Cinzel',serif;font-size:2rem;color:${cWins?'var(--sage)':'var(--rose)'}">${cScore}</div>
         </div>
         <div style="font-size:1.5rem;color:var(--parch3);align-self:center">vs</div>
@@ -30773,11 +30783,11 @@ function duelShowRoundResult(){
       <div style="font-size:.82rem;font-weight:600;color:var(--sage);margin-bottom:.75rem">${correct}</div>
       <div style="display:flex;gap:.5rem;justify-content:center">
         <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p1Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
-          <div style="font-size:.72rem;font-weight:600">${p1}</div>
+          <div style="font-size:.72rem;font-weight:600">${escapeHTML(p1)}</div>
           <div style="font-size:1.2rem">${p1Answer?.ok?'✓':'✗'}</div>
         </div>
         <div style="flex:1;padding:.5rem;border-radius:var(--r2);background:${p2Answer?.ok?'#e8f5ee':'#fdecea'};text-align:center">
-          <div style="font-size:.72rem;font-weight:600">${p2}</div>
+          <div style="font-size:.72rem;font-weight:600">${escapeHTML(p2)}</div>
           <div style="font-size:1.2rem">${p2Answer?.ok?'✓':'✗'}</div>
         </div>
       </div>
@@ -30799,16 +30809,16 @@ function duelRender(){
     <div class="duel-wrap">
       <div class="duel-vs">
         <div class="duel-player${current===p1?' active':''}">
-          <div class="duel-player-name">${p1}</div>
+          <div class="duel-player-name">${escapeHTML(p1)}</div>
           <div class="duel-player-score">${scores[p1]||0}</div>
         </div>
         <div class="duel-vs-badge">${LANG==='en'?'Round':'Ronda'} ${round}/${totalRounds}</div>
         <div class="duel-player${current===p2?' active':''}">
-          <div class="duel-player-name">${p2}</div>
+          <div class="duel-player-name">${escapeHTML(p2)}</div>
           <div class="duel-player-score">${scores[p2]||0}</div>
         </div>
       </div>
-      <div class="duel-turn-badge"> ${LANG==='en'?'Turn:':'Turno:'} ${current}</div>
+      <div class="duel-turn-badge"> ${LANG==='en'?'Turn:':'Turno:'} ${escapeHTML(current)}</div>
       <div class="txoko-scene" style="margin-bottom:.75rem">
         <div class="txoko-waiter">
           <div class="txoko-waiter-avatar"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 11v2M10 13h4"/></svg></div>
@@ -30826,6 +30836,9 @@ function duelRender(){
       </div>
       <div id="duelFeedback" style="display:none"></div>
     </div>`;
+  // F-P1-3: restore the global LANG that was overridden for the per-player view above.
+  // Previously this was never restored, silently flipping the original viewer's UI.
+  LANG = _savedLang;
 }
 
 function duelGameOver(){
@@ -30840,21 +30853,26 @@ function duelGameOver(){
     winEmp.duelWins=(winEmp.duelWins||0)+1;
     saveDB();
     if(winner===currentUser) awardXP(40, LANG==='en'?`Duel victory! »`:`¡Victoria en duelo! »`);
+    // F-P1-1: only re-check achievements when the active user's stats changed.
+    if(winner===currentUser){
+      if(typeof checkNewAchievements==='function') checkNewAchievements();
+      if(typeof checkMissionCompletion==='function') checkMissionCompletion();
+    }
   }
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
       <div style="text-align:center;padding:2rem 1rem">
         <div style="font-size:3rem;margin-bottom:.5rem">${winner?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8 21h8M12 17v4"/><path d="M7 4H4a2 2 0 000 4c0 2.5 2 4 2 4h12s2-1.5 2-4a2 2 0 000-4h-3"/><path d="M7 4h10v8a5 5 0 01-10 0V4z"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M4 11V8l3-3h4l3 3M4 11l4 4h4l4-4M16 11V8"/><path d="M8 15l-1 4h10l-1-4"/></svg>`}</div>
         <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--parchment);margin-bottom:.3rem">
-          ${winner?(LANG==='en'?`${winner} wins!`:`¡${winner} gana!`):(LANG==='en'?'Draw!':'¡Empate!')}
+          ${winner?(LANG==='en'?`${escapeHTML(winner)} wins!`:`¡${escapeHTML(winner)} gana!`):(LANG==='en'?'Draw!':'¡Empate!')}
         </div>
         <div style="display:flex;gap:.75rem;margin:1.5rem 0">
           <div class="duel-player ${s1>s2?'winner':s1<s2?'loser':''}">
-            <div class="duel-player-name">${p1}</div>
+            <div class="duel-player-name">${escapeHTML(p1)}</div>
             <div class="duel-player-score">${s1}</div>
           </div>
           <div class="duel-player ${s2>s1?'winner':s2<s1?'loser':''}">
-            <div class="duel-player-name">${p2}</div>
+            <div class="duel-player-name">${escapeHTML(p2)}</div>
             <div class="duel-player-score">${s2}</div>
           </div>
         </div>
@@ -35005,9 +35023,12 @@ function txBuildQuestion(){
     return seen;
   }
 
-  // Shuffle dishes and topics
-  const dishes = [...DISHES].sort(()=>Math.random()-.5);
-  const topics  = [...topicKeys].sort(()=>Math.random()-.5);
+  // Shuffle dishes and topics — F-P2-3 Fisher-Yates instead of biased sort.
+  // Note: F-P2-5 (early-dish bias from break-on-first-match below) is not fully
+  // resolved by an unbiased shuffle; that requires reservoir-sampling and is
+  // tracked separately in PR-B.
+  const dishes = _lqaShuffle(DISHES);
+  const topics  = _lqaShuffle(topicKeys);
 
   let chosenDish=null, chosenTopicKey=null, correctAnswer=null;
 
@@ -35032,7 +35053,7 @@ function txBuildQuestion(){
   // Build 3 unique wrong answers from same topic
   const wrongDisplays=[];
   const wrongNorms=new Set([correctAnswer]);
-  const wrongPool=[...DISHES].filter(x=>x.id!==chosenDish.id).sort(()=>Math.random()-.5);
+  const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==chosenDish.id));
 
   for(const o of wrongPool){
     if(wrongDisplays.length>=3) break;
@@ -35053,10 +35074,10 @@ function txBuildQuestion(){
     ? txTruncate(rawCorrect,90) : rawCorrect;
 
   // Shuffle choices, preserve correctIdx
-  const pool=[
+  const pool=_lqaShuffle([
     {display:correctDisplay, isCorrect:true},
     ...wrongDisplays.map(w=>({display:w, isCorrect:false}))
-  ].sort(()=>Math.random()-.5);
+  ]);
 
   const correctIdx = pool.findIndex(x=>x.isCorrect);
   const choices = pool.map(x=>x.display);
@@ -35490,7 +35511,7 @@ function renderRuleta(){
 
   // Players section
   const playersHTML = _ruletaPlayers.length > 0
-    ? _ruletaPlayers.map((p,i)=>`<span class="ruleta-player${_ruletaResult&&_ruletaResult.playerIdx===i?' active':''}" onclick="_removeRuletaPlayer(${i})" title="${_en?'Tap to remove':'Toca para eliminar'}">${p} ×</span>`).join('')
+    ? _ruletaPlayers.map((p,i)=>`<span class="ruleta-player${_ruletaResult&&_ruletaResult.playerIdx===i?' active':''}" onclick="_removeRuletaPlayer(${i})" title="${_en?'Tap to remove':'Toca para eliminar'}">${escapeHTML(p)} ×</span>`).join('')
     : `<span style="font-size:.65rem;color:rgba(28,42,34,.35)">${_en?'Add players for more fun!':'¡Añade jugadores para más diversión!'}</span>`;
 
   // Result card
@@ -35501,7 +35522,7 @@ function renderRuleta(){
       <div class="ruleta-result" style="background:none;border:none;padding:0;margin:0;animation:none">
         <div class="ruleta-result-cat" style="color:${cat.color}">${cat.icon} ${_en?cat.en:cat.es}</div>
         <div class="ruleta-result-text">${_ruletaResult.text}</div>
-        ${_ruletaResult.player ? `<div class="ruleta-result-player">${_en?'Turn:':'Turno:'} <strong>${_ruletaResult.player}</strong></div>` : ''}
+        ${_ruletaResult.player ? `<div class="ruleta-result-player">${_en?'Turn:':'Turno:'} <strong>${escapeHTML(_ruletaResult.player)}</strong></div>` : ''}
         <div class="ruleta-result-actions">
           <button class="ruleta-result-action" onclick="_spinRuletaSameCategory('${cat.key}')">${_en?'Another from this category':'Otra de esta categoría'}</button>
           <button class="ruleta-result-action" onclick="_spinRuleta()">${_en?'Spin again':'Girar de nuevo'}</button>
@@ -35529,7 +35550,7 @@ function renderRuleta(){
       <div class="ruleta-history-title">${_en?'History':'Historial'}</div>
       ${_ruletaHistory.slice(0,8).map(h=>{
         const cat = RULETA_CATS.find(c=>c.key===h.category);
-        return `<div class="ruleta-history-item"><span class="ruleta-history-dot" style="background:${cat.color}"></span><span>${h.player?'<strong>'+h.player+'</strong>: ':''}${h.text.substring(0,65)}${h.text.length>65?'…':''}</span></div>`;
+        return `<div class="ruleta-history-item"><span class="ruleta-history-dot" style="background:${cat.color}"></span><span>${h.player?'<strong>'+escapeHTML(h.player)+'</strong>: ':''}${escapeHTML(h.text.substring(0,65))}${h.text.length>65?'…':''}</span></div>`;
       }).join('')}
     </div>`;
   }
@@ -35564,11 +35585,15 @@ function renderRuleta(){
 
 function _addRuletaPlayer(){
   const _en = LANG==='en';
-  const name = prompt(_en?'Player name:':'Nombre del jugador:');
-  if(name && name.trim()){
-    _ruletaPlayers.push(name.trim());
-    renderRuleta();
-  }
+  const raw = prompt(_en?'Player name:':'Nombre del jugador:');
+  if(!raw) return;
+  // F-P1-7: cap length and reject empty / duplicate names. Display escaping
+  // is handled at render time in escapeHTML(p) — this is a sanity guard.
+  const name = String(raw).trim().slice(0, 30);
+  if(!name) return;
+  if(_ruletaPlayers.includes(name)) return;
+  _ruletaPlayers.push(name);
+  renderRuleta();
 }
 
 function _removeRuletaPlayer(idx){
@@ -35682,7 +35707,7 @@ function renderTxoko(){
       </div>
 
       <!-- TXOKO: Survive the service -->
-      <div class="game-card" onclick="txStart()" style="--gc-accent:#c49a3c;--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Survive the service: Mr. Shoesmith':'Sobrevive al servicio: Mr. Shoesmith'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card" onclick="txStart()" style="--gc-accent:#c49a3c;--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03))">
           <svg viewBox="0 0 60 70" width="48" height="56">
@@ -35723,7 +35748,7 @@ function renderTxoko(){
       </div>
 
       <!-- ERROR MODE -->
-      <div class="game-card ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}" style="--gc-accent:#d4944c;--gc-accent2:#b47430;--gc-glow:rgba(212,148,76,.2)">
+      <div role="button" tabindex="${failedCount>0?'0':'-1'}" aria-label="${_en?'Weak Spots, '+failedLabel:'Puntos Débiles, '+failedLabel}" onkeydown="${failedCount>0?`if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}`:''}" class="game-card ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}" style="--gc-accent:#d4944c;--gc-accent2:#b47430;--gc-glow:rgba(212,148,76,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(212,148,76,.08),rgba(212,148,76,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(212,148,76,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(212,148,76,.06)"/><circle cx="20" cy="20" r="10" fill="none" stroke="#d4944c" stroke-width="1"/><circle cx="20" cy="20" r="6" fill="none" stroke="#d4944c" stroke-width=".8" stroke-dasharray="3 2"/><circle cx="20" cy="20" r="2" fill="#d4944c"/></svg></div>
         <div class="game-card-body">
@@ -35738,7 +35763,7 @@ function renderTxoko(){
       </div>
 
       <!-- DUEL REMOTE -->
-      <div class="game-card" onclick="renderDuel()" style="--gc-accent:#5a9ab8;--gc-accent2:#3a7a98;--gc-glow:rgba(90,154,184,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Remote Duel':'Duelo Remoto'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card" onclick="renderDuel()" style="--gc-accent:#5a9ab8;--gc-accent2:#3a7a98;--gc-glow:rgba(90,154,184,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(90,154,184,.08),rgba(90,154,184,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(90,154,184,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(90,154,184,.06)"/><path d="M12 12l8 8-8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 12l-8 8 8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="game-card-body">
@@ -35754,7 +35779,7 @@ function renderTxoko(){
       </div>
 
       <!-- RULETA TXOKO -->
-      <div class="game-card" onclick="renderRuleta()" style="--gc-accent:#9b59b6;--gc-accent2:#7d3c98;--gc-glow:rgba(155,89,182,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Txoko Roulette':'Ruleta Txoko'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card" onclick="renderRuleta()" style="--gc-accent:#9b59b6;--gc-accent2:#7d3c98;--gc-glow:rgba(155,89,182,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(155,89,182,.08),rgba(155,89,182,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(155,89,182,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(155,89,182,.06)"/><circle cx="20" cy="20" r="12" fill="none" stroke="#9b59b6" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="14" stroke="#9b59b6" stroke-width=".8"/><line x1="20" y1="26" x2="20" y2="32" stroke="#9b59b6" stroke-width=".8"/><line x1="8" y1="20" x2="14" y2="20" stroke="#9b59b6" stroke-width=".8"/><line x1="26" y1="20" x2="32" y2="20" stroke="#9b59b6" stroke-width=".8"/><circle cx="20" cy="20" r="3" fill="#9b59b6"/><polygon points="20,6 18,3 22,3" fill="#e74c3c"/></svg></div>
         <div class="game-card-body">
@@ -36093,6 +36118,10 @@ function txAnswer(idx){
     emp.txokoRecord=txokoState.score; saveDB();
     supaInsertTxokoRecord(currentUser, emp.txokoRecord);
     awardXP(30,LANG==='en'?'New record! ★':'¡Nuevo récord! ★');
+    // F-P1-1: a_txoko5/15/30 fire on txokoRecord thresholds; was previously only triggered
+    // when the user later visited an exam/LQA screen.
+    if(typeof checkNewAchievements==='function') checkNewAchievements();
+    if(typeof checkMissionCompletion==='function') checkMissionCompletion();
   }
 
   if(txokoState.lives<=0) setTimeout(txGameOver,1200);
@@ -36758,6 +36787,9 @@ function txGameOver(){
         <button onclick="renderTxoko()" style="width:100%;padding:.85rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:500;color:var(--parch2);cursor:pointer;letter-spacing:.04em">${LANG==='en'?'← Main menu':'← Menú principal'}</button>
       </div>
     </div>`;
+  // F-P1-1: belt-and-braces — also fire here in case the run ended without a record bump.
+  if(typeof checkNewAchievements==='function') checkNewAchievements();
+  if(typeof checkMissionCompletion==='function') checkMissionCompletion();
 }
 
 
