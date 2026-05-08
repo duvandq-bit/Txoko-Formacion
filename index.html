@@ -15564,6 +15564,14 @@ function logout(){
   supAuthenticated = false;
   try { delete window._supAllEmps; delete window._supEmpNames; } catch(_) {}
   _liveQuizQuestions = null; _liveHostQuestions = null;
+  // F-P2-2: reset ruleta module-level globals so the next user inherits a clean state
+  // (player roster, last result pop-up, history, spin angle).
+  _ruletaPlayers = []; _ruletaResult = null; _ruletaHistory = [];
+  _ruletaAngle = 0; _ruletaSpinning = false;
+  // Reset remote-duel session flags too (F-P1-6 single-flight guards).
+  if (typeof remoteDuelState !== 'undefined' && remoteDuelState) {
+    remoteDuelState._answered = false; remoteDuelState._submitting = false;
+  }
   currentUser=null;
   localStorage.removeItem('txoko_session');
   document.getElementById('screenLogin').classList.add('active');
@@ -30568,6 +30576,12 @@ function renderRemoteDuelQuestion() {
       <div id="duelQFeedback" style="min-height:2rem;text-align:center;font-size:.8rem;margin-top:.5rem;padding:.4rem;border-radius:var(--r2)"></div>
     </div>`;
   remoteDuelState._qStart = Date.now();
+  // F-P1-6: reset the late-tap guard ONLY once the next question DOM is live.
+  // Previous code reset _answered to false right after the answer was registered
+  // (before the 1.4s feedback window), so a fast double-tap (or programmatic
+  // call) could advance qIdx twice and double-submit. Keeping _answered=true
+  // until this point blocks any extra answer firing during the window.
+  remoteDuelState._answered = false;
   duelStartTimer(() => remoteDuelAnswer(-1));
 }
 
@@ -30598,11 +30612,17 @@ function remoteDuelAnswer(idx) {
     else fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Correct answer:':'Respuesta correcta:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
   }
   remoteDuelState.qIdx++;
-  remoteDuelState._answered = false;
+  // F-P1-6: do NOT reset _answered=false here. The reset now happens at the end of
+  // renderRemoteDuelQuestion when the next question's DOM is live, so any late tap
+  // during this 1.4s feedback window is correctly ignored.
   setTimeout(() => renderRemoteDuelQuestion(), 1400);
 }
 
 async function submitChallenge() {
+  // F-P1-6 belt-and-braces: defend against any path that re-enters submit (renderer
+  // race, programmatic call, etc.). Single-flight guard.
+  if (remoteDuelState._submitting) return;
+  remoteDuelState._submitting = true;
   const { questions, answers, rivalName } = remoteDuelState;
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Sending challenge...':'Enviando reto...'}</div></div>`;
   const duel = await supaCreateChallenge(currentUser, rivalName, questions);
@@ -30664,6 +30684,8 @@ function renderRemoteDefenseQuestion() {
       <div id="duelQFeedbackDefense" style="min-height:2rem;text-align:center;font-size:.8rem;margin-top:.5rem;padding:.4rem;border-radius:var(--r2)"></div>
     </div>`;
   remoteDuelState._qStart = Date.now();
+  // F-P1-6: see remoteDuelAnswer comment — reset moved here to close the late-tap race.
+  remoteDuelState._answered = false;
   duelStartTimer(() => remoteDefenseAnswer(-1));
 }
 
@@ -30693,11 +30715,15 @@ function remoteDefenseAnswer(idx) {
     else fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Correct answer:':'Respuesta correcta:'} <strong>${q.choices[q.correctIdx]}</strong></span>`;
   }
   remoteDuelState.qIdx++;
-  remoteDuelState._answered = false;
+  // F-P1-6: see remoteDuelAnswer — late-tap reset moved into the next-question renderer.
   setTimeout(() => renderRemoteDefenseQuestion(), 1400);
 }
 
 async function submitDefense() {
+  // F-P1-6 belt-and-braces: single-flight guard. Without it, a late tap that managed
+  // to push past the per-question _answered guard would land here and double-credit.
+  if (remoteDuelState._submitting) return;
+  remoteDuelState._submitting = true;
   const { questions, answers, challengerAnswers, duelId, rivalName } = remoteDuelState;
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Calculating result...':'Calculando resultado...'}</div></div>`;
   const duelObj = remoteDuelState.duelObj || {};
