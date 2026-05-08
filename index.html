@@ -12041,8 +12041,12 @@ function _srsUpdate(emp, dishId, quality){
     d.nextReview = now + DAY * 0.25; // Review again in 6 hours
   } else {
     // Passed
+    // F-P2-5: align with canonical SM-2 — second successful review jumps to 6 days
+    // (not 3). The previous 3-day intermediate value caused cards to come back too
+    // soon and inflated the daily review queue. Subsequent intervals (reps>=2) keep
+    // multiplying by `ef`, so improvements compound naturally.
     if(d.reps === 0) d.interval = 1;
-    else if(d.reps === 1) d.interval = 3;
+    else if(d.reps === 1) d.interval = 6;
     else d.interval = Math.round(d.interval * d.ef);
 
     d.reps++;
@@ -13224,14 +13228,20 @@ function renderSmartReview(){
     { k:'advanced',     ic:'🔥', l_es:'Avanzado',     l_en:'Advanced',     t:12 },
     { k:'expert',       ic:'💎', l_es:'Experto',      l_en:'Expert',       t: 8 }
   ];
+  // F-P2-6: surface whether the active difficulty is auto-detected or a manual pick,
+  // and how to reset the manual override (tap the active tile again).
+  const _isAutoActive = !emp.pickedDifficulty;
+  const _modeLabel = _isAutoActive
+    ? (_en?'AUTO':'AUTO')+' · '+autoDiff.slice(0,3).toUpperCase()
+    : (_en?'MANUAL · tap again to reset':'MANUAL · toca de nuevo para auto');
   const diffHTML = `
     <div class="ri-section-head">
       <span class="ri-section-title">${_en?'CHOOSE YOUR CHALLENGE':'ELIGE TU DESAFÍO'}</span>
-      <span class="ri-section-count">${_en?'AUTO':'AUTO'} · ${autoDiff.slice(0,3).toUpperCase()}</span>
+      <span class="ri-section-count">${_modeLabel}</span>
     </div>
     <div class="ri-diff-row">
       ${diffs.map(d=>`
-        <div class="ri-diff ${pickedDiff===d.k?'active':''}" onclick="_riSetDifficulty('${d.k}')">
+        <div class="ri-diff ${pickedDiff===d.k?'active':''}" onclick="_riSetDifficulty('${d.k}')" title="${pickedDiff===d.k && !_isAutoActive ? (_en?'Tap again to use AUTO':'Toca de nuevo para AUTO') : (_en?d.l_en:d.l_es)}">
           <span class="ri-diff-icon">${d.ic}</span>
           <div class="ri-diff-lbl">${_en?d.l_en:d.l_es}</div>
           <div class="ri-diff-sub">${d.t}s/${_en?'q':'p'}</div>
@@ -13352,7 +13362,15 @@ function renderSmartReview(){
 // ── Manual difficulty selection ──
 function _riSetDifficulty(k){
   const emp = getEmp(currentUser);
-  emp.pickedDifficulty = k;
+  // F-P2-6: clicking the currently-active tile clears the override and returns
+  // to auto-detection (_srGetDifficulty). Previously emp.pickedDifficulty stuck
+  // forever once set, so a user who manually picked 'beginner' early would never
+  // get auto-promoted to 'intermediate'/'advanced' as their accuracy improved.
+  if (emp.pickedDifficulty === k) {
+    delete emp.pickedDifficulty;
+  } else {
+    emp.pickedDifficulty = k;
+  }
   if(typeof saveDB === 'function') saveDB();
   renderSmartReview();
 }
@@ -27236,6 +27254,7 @@ const VIDEOS = {
   ],
   'Hamburguesas y Bocatas': [],
   'Platos Principales': [],
+  'Sugerencias': [],
   'Guarniciones y Salsas': [],
   'Postres': [],
   'Vegetariano': []
