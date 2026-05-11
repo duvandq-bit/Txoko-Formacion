@@ -10433,9 +10433,14 @@ async function supaRestoreEmployee(name) {
     const cloudName = r.name;
     const emp = getEmp(cloudName);
 
-    // ALWAYS restore PIN from cloud — cloud is the source of truth for credentials
-    // This fixes the case where local data has a corrupted/stale PIN
-    if(r.pin) emp.pin = r.pin;
+    // ALWAYS restore PIN from cloud — cloud is the source of truth for credentials.
+    // This fixes the case where local data has a corrupted/stale PIN.
+    // Honour explicit null (e.g. supervisor reset cleared the PIN) so the reset
+    // propagates to other devices — the next login goes through the setup flow.
+    if(r.pin !== undefined) {
+      if(r.pin === null) delete emp.pin;
+      else emp.pin = r.pin;
+    }
     // Always take the highest XP between local and remote
     emp.xp = Math.max(emp.xp || 0, r.xp || 0);
     emp.streak = Math.max(emp.streak || 0, r.streak || 0);
@@ -27891,6 +27896,32 @@ function renderSupScoreTrend(allEmps){
   </div>`;
 }
 
+// Reset an employee's PIN from the supervisor panel. Triggered when the employee
+// forgets it — typical recovery flow in a shared-device restaurant context.
+// Preserves all progress / stats. Local + cloud both cleared so the reset
+// propagates to other devices on next sync; next login routes to PIN setup.
+function _supResetEmployeePin(name) {
+  const _en = LANG === 'en';
+  const ok = confirm(_en
+    ? `Reset PIN for "${name}"?\n\nThey will be asked to set a new PIN on their next login. Progress and stats are preserved.`
+    : `¿Resetear el PIN de "${name}"?\n\nSe le pedirá crear un PIN nuevo en su próximo login. El progreso y estadísticas se conservan.`);
+  if (!ok) return;
+  const emp = DB.employees && DB.employees[name];
+  if (!emp) {
+    if (typeof showToast === 'function') showToast(_en ? `Employee not found locally: ${name}` : `Empleado no encontrado localmente: ${name}`, 'warning', 2400);
+    return;
+  }
+  delete emp.pin;
+  if (typeof saveDB === 'function') saveDB();
+  // Push to Supabase so the reset reaches other devices on their next sync.
+  if (typeof supaUpsertEmployee === 'function') supaUpsertEmployee(name);
+  if (typeof showToast === 'function') {
+    showToast(_en ? `PIN reset · ${name} will set a new PIN at next login` : `PIN reseteado · ${name} creará un PIN nuevo al entrar`, 'success', 2800);
+  }
+  // Re-render the dashboard so any per-card badge refreshes.
+  if (typeof renderSupDashboard === 'function') renderSupDashboard();
+}
+
 function renderSupDashboard(){
   document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
@@ -28023,6 +28054,9 @@ function renderSupDashboard(){
                 </div>`;
               }).join('')
           }
+        </div>
+        <div style="border-top:1px solid var(--line);margin-top:.65rem;padding-top:.55rem;text-align:right">
+          <button onclick="_supResetEmployeePin(${escapeHTML(JSON.stringify(name))})" title="${LANG==='en'?'Reset employee PIN — they create a new one on next login':'Resetear PIN del empleado — creará uno nuevo al entrar'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r3);padding:.3rem .6rem;font-size:.6rem;color:var(--parch3);font-family:'DM Mono',monospace;letter-spacing:.06em;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--line)';this.style.color='var(--parch3)'">↻ ${LANG==='en'?'RESET PIN':'RESETEAR PIN'}</button>
         </div>
       </div>`;
     }).join('');
