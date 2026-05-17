@@ -33008,6 +33008,54 @@ const LQA_SITUATIONS = [
   },
 ];
 
+// ═══════ LQA · PHILOSOPHY SCORING (PR-2 of Forbes 15-may-2026 rollout) ═══════
+// Each option in selected LQA situations is tagged with one of three
+// philosophy buckets: huesped_first (guest-centric), operativa_first
+// (operationally convenient for staff), defensivo (avoids the problem or
+// passes the NO to the guest). Per-session breakdown shown on results;
+// cumulative tally drives the long-term coaching diagnostic.
+// Untagged situations (ids 1-47) are silently skipped — they pre-date this
+// system. PR-2 only activates when the user encounters tagged ids (48-59
+// from PR #15).
+const LQA_PHILOSOPHY_TAGS = {
+  huesped_first:   { es:'Lo mejor para el huésped', en:'Best for the guest',          color:'#4d8a5e' },
+  operativa_first: { es:'Comodidad operativa',      en:'Operational convenience',     color:'#c49a3c' },
+  defensivo:       { es:'Respuesta defensiva',      en:'Defensive response',          color:'#c47068' }
+};
+// Keyed by LQA_SITUATIONS.id, each array maps option index → tag.
+// Sourced from the original Forbes/LQA meeting draft (15-may-2026).
+const LQA_OPTION_TAGS = {
+  48: ['operativa_first','huesped_first','operativa_first','operativa_first'], // Personalización real
+  49: ['operativa_first','defensivo','huesped_first','defensivo'],             // Uso del nombre
+  50: ['defensivo','huesped_first','defensivo','huesped_first'],               // Quita el NO (aniversario)
+  51: ['huesped_first','huesped_first','operativa_first','defensivo'],         // Adaptación de platos
+  52: ['operativa_first','huesped_first','defensivo','defensivo'],             // Aperitivo vs snacks
+  53: ['huesped_first','defensivo','operativa_first','defensivo'],             // Segunda bebida — timing
+  54: ['operativa_first','huesped_first','operativa_first','defensivo'],       // Carta de aguas
+  55: ['operativa_first','huesped_first','defensivo','defensivo'],             // Demora — comms proactiva
+  56: ['operativa_first','huesped_first','operativa_first','defensivo'],       // Privacidad ante terceros
+  57: ['operativa_first','huesped_first','defensivo','operativa_first'],       // Storytelling natural
+  58: ['operativa_first','operativa_first','huesped_first','defensivo'],       // Café — preguntar leche
+  59: ['operativa_first','huesped_first','defensivo','huesped_first']          // Cuenta — conveniencia
+};
+// Tag for the chosen option in a single situation, or null if no tags for this id.
+function _lqaTagFor(situationId, optionIdx){
+  const tags = LQA_OPTION_TAGS[situationId];
+  return (tags && tags[optionIdx]) || null;
+}
+// End-of-session diagnostic based on cumulative tag counts on emp.lqaPhilosophy.
+// Returns null until the user has at least 5 tagged answers (small-sample guard).
+function _lqaPhilosophyDiagnostic(counts){
+  const total = (counts.huesped_first||0) + (counts.operativa_first||0) + (counts.defensivo||0);
+  if (total < 5) return null;
+  const pH = counts.huesped_first / total * 100;
+  const pD = counts.defensivo / total * 100;
+  if (pH >= 70) return { tone:'positive', es:'Mentalidad guest-first consolidada. Estándar Forbes/LQA.',                                 en:'Guest-first mindset is established. Forbes/LQA standard.' };
+  if (pH >= 50 && pD < 20) return { tone:'positive', es:'Bien encaminado. Sigue trabajando el reflejo guest-first en cada decisión.',    en:'On the right track. Keep building the guest-first reflex on every decision.' };
+  if (pD >= 30) return { tone:'warning',  es:'Atención: demasiadas respuestas defensivas. Quita el NO y ofrece alternativas.',           en:'Heads-up: too many defensive answers. Remove the NO and offer alternatives.' };
+  return { tone:'neutral', es:'Demasiado foco en lo operativo. Pregúntate: ¿qué es mejor para el huésped, no para mí?',                  en:'Too much operational focus. Ask yourself: what\'s best for the guest, not for me?' };
+}
+
 const LQA_AUDIT_SCENARIOS = [
   {id:1, scn:'El camarero nos saludó calurosamente. Mencionamos que era nuestro aniversario. Anotó la ocasión pero no preguntó sobre requisitos dietéticos especiales ni preferencias para la noche.', scn_en:'The waiter greeted us warmly. We mentioned it was our anniversary. He noted the occasion but didn\'t ask about any special dietary needs or preferences for the evening.', std:6, verd:'below', expl:'El estándar #6 requiere: "¿Preguntó el empleado si la reserva era para una ocasión especial y si tenían requisitos especiales?" El empleado reconoció la ocasión pero no preguntó sobre requisitos especiales.', expl_en:'Standard #6 requires: "Did the employee enquire if the reservation was for a special occasion and if there were any special requirements?" The employee acknowledged the occasion but didn\'t ask about special requirements.'},
   {id:2, scn:'Llegamos al restaurante. La anfitriona nos recibió inmediatamente. Nos llevó a nuestra mesa en aproximadamente 1 minuto. La mesa estaba perfectamente montada con toda la cubertería y cristalería.', scn_en:'We arrived at the restaurant. The hostess greeted us immediately. She took us to our table in approximately 1 minute. The table was perfectly set with all cutlery and glassware.', std:7, verd:'meet', expl:'El estándar #7 requiere ser saludado y sentado en una mesa completamente montada en 1 minuto de la llegada. Este escenario cumple exactamente con estos requisitos.', expl_en:'Standard #7 requires being greeted and seated at a fully laid table within 1 minute of arrival. This scenario exactly meets these requirements.'},
@@ -33617,7 +33665,7 @@ function lqaSituationAnswer(idx){
   const sc = s.questions[s.index];
   const isCorrect = (idx === sc.corr);
   if (isCorrect) s.score++;
-  s.answers.push({ qIdx: s.index, picked: idx, isCorrect, cat: sc.cat });
+  s.answers.push({ qIdx: s.index, picked: idx, isCorrect, cat: sc.cat, tag: _lqaTagFor(sc.id, idx) });
 
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
@@ -33673,6 +33721,12 @@ function _lqaCompleteSituations(){
         if (id != null) emp.lqaSitRecent.push(id);
       }
       if (emp.lqaSitRecent.length > LQA_RECENT_MEMORY) emp.lqaSitRecent = emp.lqaSitRecent.slice(-LQA_RECENT_MEMORY);
+      // PR-2: cumulative philosophy tag counts. Only tagged answers contribute.
+      // Long-run signal that drives the coaching diagnostic on the results screen.
+      if (!emp.lqaPhilosophy) emp.lqaPhilosophy = { huesped_first:0, operativa_first:0, defensivo:0 };
+      for (const a of s.answers) {
+        if (a.tag && emp.lqaPhilosophy[a.tag] !== undefined) emp.lqaPhilosophy[a.tag]++;
+      }
       saveDB();
     }
     s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
@@ -33707,6 +33761,55 @@ function renderLqaSituationResults(){
         <span style="min-width:60px;text-align:right;color:${color};font-weight:700">${v.correct}/${v.total}</span>
       </div>`;
     }).join('');
+  // PR-2: philosophy breakdown — guest-first vs operational vs defensive.
+  // Per-session shown only when this session has >=2 tagged answers (small-sample guard).
+  // Cumulative diagnostic shown only when emp has >=5 lifetime tagged answers.
+  const _empPhil = (getEmp(currentUser) && getEmp(currentUser).lqaPhilosophy) || { huesped_first:0, operativa_first:0, defensivo:0 };
+  const _sessTags = { huesped_first:0, operativa_first:0, defensivo:0 };
+  for (const a of s.answers) { if (a.tag && _sessTags[a.tag] !== undefined) _sessTags[a.tag]++; }
+  const _sessTotal = _sessTags.huesped_first + _sessTags.operativa_first + _sessTags.defensivo;
+  const _diagnostic = _lqaPhilosophyDiagnostic(_empPhil);
+  const _philBar = (counts, total) => {
+    if (total <= 0) return '';
+    const seg = (k) => {
+      const v = counts[k] || 0;
+      const pct = Math.round(v / total * 100);
+      if (!pct) return '';
+      const cfg = LQA_PHILOSOPHY_TAGS[k];
+      return `<div style="flex:${pct};background:${cfg.color};height:100%" title="${LANG==='en'?cfg.en:cfg.es} · ${v}/${total}"></div>`;
+    };
+    return `<div style="display:flex;height:8px;border-radius:var(--r3);overflow:hidden;background:var(--parch4)">${seg('huesped_first')}${seg('operativa_first')}${seg('defensivo')}</div>`;
+  };
+  const _philLegend = (counts, total) => {
+    return ['huesped_first','operativa_first','defensivo'].map(k => {
+      const v = counts[k] || 0;
+      const pct = total > 0 ? Math.round(v / total * 100) : 0;
+      const cfg = LQA_PHILOSOPHY_TAGS[k];
+      return `<div style="display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--parch2)">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cfg.color}"></span>
+        <span style="flex:1">${LANG==='en'?cfg.en:cfg.es}</span>
+        <span style="font-family:'DM Mono',monospace;color:var(--parch3);font-size:.65rem">${v} · ${pct}%</span>
+      </div>`;
+    }).join('');
+  };
+  const _philHtml = (_sessTotal >= 2 || _diagnostic) ? `
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.7rem;font-weight:600">${LANG==='en'?'Decision philosophy':'Filosofía de decisión'}</div>
+      ${_sessTotal >= 2 ? `
+        <div style="font-size:.65rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">${LANG==='en'?`This session (${_sessTotal} tagged)`:`Esta sesión (${_sessTotal} con tag)`}</div>
+        ${_philBar(_sessTags, _sessTotal)}
+        <div style="display:flex;flex-direction:column;gap:.25rem;margin-top:.5rem">${_philLegend(_sessTags, _sessTotal)}</div>
+      ` : ''}
+      ${_diagnostic ? `
+        <div style="margin-top:${_sessTotal >= 2 ? '.85rem' : '0'};padding-top:${_sessTotal >= 2 ? '.7rem' : '0'};${_sessTotal >= 2 ? 'border-top:1px solid var(--line2);' : ''}">
+          <div style="font-size:.65rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">${LANG==='en'?'Long-term coaching':'Coaching a largo plazo'}</div>
+          <div style="font-size:.8rem;color:${_diagnostic.tone==='positive'?'var(--sage)':_diagnostic.tone==='warning'?'var(--rose)':'var(--gold)'};font-weight:500;margin-bottom:.5rem;line-height:1.45">${LANG==='en'?_diagnostic.en:_diagnostic.es}</div>
+          ${_philBar(_empPhil, _empPhil.huesped_first+_empPhil.operativa_first+_empPhil.defensivo)}
+        </div>
+      ` : ''}
+    </div>
+  ` : '';
+
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:1.5rem 0 1rem">
@@ -33715,6 +33818,7 @@ function renderLqaSituationResults(){
       <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${pct}% · +${xp} XP · ${timeSec}s</div>
     </div>
     ${_lqaTrendBlock(getEmp(currentUser), 'situations')}
+    ${_philHtml}
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.7rem;font-weight:600">${LANG==='en'?'By category (this run)':'Por categoría (esta sesión)'}</div>
       ${catRows}
