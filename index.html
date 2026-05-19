@@ -3145,6 +3145,34 @@ body::after{
 }
 
 /* ─────────────────────────────────────────────────
+   MOBILE FIXES — dashboard + vinos hub (PR-C)
+   Targets narrow phones (≤380px); larger handsets keep the existing 4-up grid.
+───────────────────────────────────────────────── */
+@media (max-width:380px){
+  /* Dashboard 4-stat grid was crammed into ~70px columns on iPhone-SE-class
+     viewports (320–375px), pushing the label decorators "— Dominados —"
+     to overflow/wrap. Drop to 2 columns; numbers stay legible. */
+  .dash-stats{grid-template-columns:repeat(2,1fr);gap:.55rem}
+
+  /* Long usernames + level badge in dash-hero-top collide horizontally.
+     Stack vertically so the name has full width and the badge sits below. */
+  .dash-hero-top{flex-direction:column;align-items:stretch;gap:.65rem}
+  .dash-hero-lvl-badge{align-self:flex-start;min-width:0;padding:.35rem .7rem .3rem}
+
+  /* Wine hub three-up stats: shrink gap + slightly smaller numbers so the
+     "Wines / By Glass / Origins" row never overflows on narrow phones. */
+  .wine-hub-stats{gap:.65rem !important}
+  .wine-hub-title{font-size:1.55rem;line-height:1.1}
+}
+/* Edge-fade on the vinos sub-tab scroller was hiding the first/last tab
+   labels by ~22px on every screen size. 14px keeps the visual cue that
+   the row is scrollable without clipping legibility. */
+.tunic-subtabs{
+  mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%) !important;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%) !important;
+}
+
+/* ─────────────────────────────────────────────────
    EXAM SETUP — Divine Aura v3 (stats panel, medallion, mastery bars)
 ───────────────────────────────────────────────── */
 .exam-setup-wrap{isolation:isolate}
