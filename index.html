@@ -5905,6 +5905,19 @@ body::after{
   border-right:1px solid var(--gc-accent,rgba(196,154,60,.6));
 }
 .game-card:hover > .gc-corner{opacity:1}
+/* Primary vs secondary game cards — visual hierarchy on the Juegos hub.
+   The recommended path (Mr. Shoesmith) gets full prominence; the other
+   three drop to a denser layout so the user knows where to focus first. */
+.game-card-primary{box-shadow:0 8px 24px rgba(196,154,60,.18),0 0 0 1px rgba(196,154,60,.18) inset}
+.game-card-primary .gc-corner{opacity:1}
+.gc-recommended-badge{position:absolute;top:.7rem;right:.7rem;z-index:4;background:linear-gradient(135deg,#c49a3c,#a47a2c);color:#1c2a22;font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;font-weight:700;padding:.22rem .55rem;border-radius:4px;box-shadow:0 2px 8px rgba(196,154,60,.4);text-transform:uppercase}
+.game-card-secondary{transform:scale(.96);transform-origin:top center;opacity:.92;transition:transform .25s ease, opacity .25s ease}
+.game-card-secondary:hover{transform:scale(.98);opacity:1}
+.game-card-secondary .game-card-body{padding-top:.55rem;padding-bottom:.55rem}
+.game-card-secondary .game-card-title{font-size:.92rem}
+.game-card-secondary .game-card-desc{font-size:.7rem;line-height:1.4}
+.games-secondary-hint{font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(196,154,60,.55);letter-spacing:.18em;text-transform:uppercase;text-align:center;margin:1rem 0 .35rem;display:flex;align-items:center;gap:.5rem;justify-content:center}
+.games-secondary-hint::before,.games-secondary-hint::after{content:"";flex:0 0 32px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent)}
 /* Shimmer sweep on hover */
 .game-card > .gc-shine{
   position:absolute;top:0;bottom:0;left:-60%;width:35%;
@@ -9973,13 +9986,25 @@ const _toastContainer = (function(){
   return c;
 })();
 
-function showToast(msg, type='info', duration=4000){
+function showToast(msg, type='info', duration=4000, action=null){
   const t = document.createElement('div');
   t.className = 'txk-toast toast-' + type;
   const icons = {success:'✓',error:'✗',warning:'⚠',info:'ℹ'};
-  t.innerHTML = '<span class="txk-toast-icon">'+(icons[type]||'ℹ')+'</span><span class="txk-toast-msg">'+escapeHTML(msg)+'</span><button class="txk-toast-close" aria-label="Cerrar">&times;</button>';
-  t.querySelector('.txk-toast-close').onclick = function(){ dismissToast(t); };
-  t.onclick = function(e){ if(e.target.className!=='txk-toast-close') dismissToast(t); };
+  // Optional retry/action button: `action = { label:'Reintentar', onClick:fn }`.
+  // Errors deserve a way out — silent failures train users to ignore toasts.
+  const actionHtml = action && action.label
+    ? '<button class="txk-toast-action" style="margin-left:.6rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;padding:.3rem .65rem;border-radius:6px;font-family:\'DM Mono\',monospace;font-size:.55rem;letter-spacing:.05em;cursor:pointer;min-height:30px">' + escapeHTML(action.label) + '</button>'
+    : '';
+  t.innerHTML = '<span class="txk-toast-icon">'+(icons[type]||'ℹ')+'</span><span class="txk-toast-msg">'+escapeHTML(msg)+'</span>' + actionHtml + '<button class="txk-toast-close" aria-label="Cerrar">&times;</button>';
+  t.querySelector('.txk-toast-close').onclick = function(ev){ ev.stopPropagation(); dismissToast(t); };
+  if(action && action.onClick){
+    const btn = t.querySelector('.txk-toast-action');
+    if(btn) btn.onclick = function(ev){ ev.stopPropagation(); dismissToast(t); try{ action.onClick(); }catch(_){} };
+  }
+  t.onclick = function(e){
+    const cls = e.target.className || '';
+    if(cls!=='txk-toast-close' && cls!=='txk-toast-action') dismissToast(t);
+  };
   _toastContainer.appendChild(t);
   if(duration > 0) setTimeout(function(){ dismissToast(t); }, duration);
   // Max 3 visible
@@ -10021,12 +10046,16 @@ async function supaFetch(path, options, opts){
   }, (options && options.headers) || {});
   var fetchOpts = Object.assign({}, options || {}, { headers: headers });
 
+  const retryAction = silent ? null : { label: LANG==='en'?'Retry':'Reintentar', onClick: ()=>supaFetch(path, options, opts) };
   for(var attempt = 0; attempt <= retries; attempt++){
     try {
       var res = await fetch(url, fetchOpts);
       if(!res.ok){
         if(attempt < retries) continue;
-        if(!silent) showToast('Error al cargar ' + label + ' ('+res.status+')', 'error');
+        if(!silent) showToast(
+          (LANG==='en'?'Could not load ':'No se pudo cargar ') + label + ' ('+res.status+')',
+          'error', 6000, retryAction
+        );
         return null;
       }
       // For methods that don't return body (204, etc)
@@ -10036,7 +10065,10 @@ async function supaFetch(path, options, opts){
       return await res.json();
     } catch(e){
       if(attempt < retries) continue;
-      if(!silent) showToast((LANG==='en'?'Offline — ':'Sin conexión — ') + label + (LANG==='en'?' unavailable':' no disponible'), 'warning', 5000);
+      if(!silent) showToast(
+        (LANG==='en'?'Offline — ':'Sin conexión — ') + label + (LANG==='en'?' unavailable. Check your network.':' no disponible. Comprueba tu conexión.'),
+        'warning', 6000, retryAction
+      );
       return null;
     }
   }
@@ -10468,57 +10500,63 @@ function showXPToast(amount, reason){
 }
 
 function showLevelUpModal(levelInfo){
-  // Enhanced confetti burst with rank color
-  const confettiColors=[levelInfo.color,'#ffd700','#d4944c','#4d8a5e','#4888a0','#c47068'];
-  for(let i=0;i<60;i++){
-    const el=document.createElement('div');
-    const color=confettiColors[Math.floor(Math.random()*confettiColors.length)];
-    const size=Math.random()*10+5;
-    const x=Math.random()*window.innerWidth;
-    const delay=Math.random()*600;
-    const dur=Math.random()*1400+900;
-    el.style.cssText=`position:fixed;top:-10px;left:${x}px;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>0.5?'50%':'2px'};z-index:10001;pointer-events:none;opacity:1;transition:top ${dur}ms ${delay}ms cubic-bezier(.25,.46,.45,.94),opacity ${dur}ms ${delay}ms ease;box-shadow:0 0 ${size*2}px ${color}`;
-    document.body.appendChild(el);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      el.style.top=(window.innerHeight+20)+'px';
-      el.style.opacity='0';
-    }));
-    setTimeout(()=>el.remove(), dur+delay+100);
-  }
-  const modal = document.createElement('div');
-  modal.id = 'levelUpModal';
-  modal.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:10000;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease;backdrop-filter:blur(2px)`;
-  // Ensure level color contrasts well on dark bg — lighten very dark colors
+  // Non-blocking celebratory banner (was a full-screen modal blocking the
+  // post-quiz flow for 3+ seconds). Auto-dismisses; click to dismiss earlier.
+  // Respects prefers-reduced-motion for the confetti burst.
+  const _reduceMotion = typeof matchMedia==='function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const _lvlC = levelInfo.color;
   const _lvlBright = (() => {
     const hex = _lvlC.replace('#','');
     const r = parseInt(hex.substr(0,2),16), g = parseInt(hex.substr(2,2),16), b = parseInt(hex.substr(4,2),16);
     const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
-    if(lum < 0.45) { // too dark for glow, brighten
+    if(lum < 0.45){
       const f = 1.4;
       return '#' + [Math.min(255,Math.round(r*f)),Math.min(255,Math.round(g*f)),Math.min(255,Math.round(b*f))].map(v=>v.toString(16).padStart(2,'0')).join('');
     }
     return _lvlC;
   })();
-  modal.innerHTML = `
-    <div style="background:linear-gradient(145deg,#1a2820,#22342a,#1a2820);border:3px solid ${_lvlBright};border-radius:var(--r);padding:2.5rem 2rem;text-align:center;max-width:340px;width:90%;box-shadow:0 0 60px ${_lvlBright}50,0 20px 60px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.04);animation:scaleIn .4s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden">
-      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,${_lvlBright}12,transparent 70%);pointer-events:none"></div>
-      <div style="font-size:5rem;margin-bottom:.5rem;animation:bounce .6s .2s cubic-bezier(.34,1.56,.64,1) both;display:inline-block;filter:drop-shadow(0 0 14px ${_lvlBright})">${levelInfo.icon}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:${_lvlBright};text-transform:uppercase;letter-spacing:.3em;margin-bottom:.5rem;font-weight:bold;text-shadow:0 0 8px ${_lvlBright}60">
-        ◇ ${LANG==='en'?'RANK UP':'RANGO ALCANZADO'} ◇
-      </div>
-      <div style="font-family:'Cinzel',serif;font-size:2rem;color:${_lvlBright};margin-bottom:.5rem;line-height:1.2;font-weight:bold;text-shadow:0 0 14px ${_lvlBright}50">
-        ${LANG==='en'?`Level ${levelInfo.level}`:`Nivel ${levelInfo.level}`}
-      </div>
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:#f4ede2;margin-bottom:.6rem;font-style:italic;font-weight:bold">${levelInfo.title}</div>
-      <div style="font-size:.85rem;color:rgba(244,237,226,.6);margin-bottom:1.75rem;font-style:italic;line-height:1.6;border-top:1px solid ${_lvlBright}30;border-bottom:1px solid ${_lvlBright}30;padding:.5rem 0">${LANG==='en'?'Kitchen Excellence Unlocked':'Excelencia Culinaria Desbloqueada'}</div>
-      <button onclick="document.getElementById('levelUpModal').remove()" style="background:linear-gradient(135deg,${_lvlBright},${_lvlBright}cc);color:#1c2a22;border:2px solid ${_lvlBright};border-radius:30px;padding:.8rem 2.5rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;letter-spacing:.08em;transition:all .3s;box-shadow:0 0 20px ${_lvlBright}50">
-        ${LANG==='en'?'Keep climbing!':'¡Sigue subiendo!'}
-      </button>
+  if(!_reduceMotion){
+    const confettiColors=[_lvlBright,'#ffd700','#d4944c','#4d8a5e','#4888a0','#c47068'];
+    const N = 30; // halved from 60 — same vibe, less GPU on mobile
+    for(let i=0;i<N;i++){
+      const el=document.createElement('div');
+      const color=confettiColors[Math.floor(Math.random()*confettiColors.length)];
+      const size=Math.random()*10+5;
+      const x=Math.random()*window.innerWidth;
+      const delay=Math.random()*600;
+      const dur=Math.random()*1400+900;
+      el.style.cssText=`position:fixed;top:-10px;left:${x}px;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>0.5?'50%':'2px'};z-index:10001;pointer-events:none;opacity:1;transition:top ${dur}ms ${delay}ms cubic-bezier(.25,.46,.45,.94),opacity ${dur}ms ${delay}ms ease;box-shadow:0 0 ${size*2}px ${color}`;
+      document.body.appendChild(el);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        el.style.top=(window.innerHeight+20)+'px';
+        el.style.opacity='0';
+      }));
+      setTimeout(()=>el.remove(), dur+delay+100);
+    }
+  }
+  // Dismiss any existing level-up banner so multiple bursts don't stack.
+  const prev = document.getElementById('levelUpBanner'); if(prev) prev.remove();
+  const banner = document.createElement('div');
+  banner.id = 'levelUpBanner';
+  banner.setAttribute('role','status');
+  banner.setAttribute('aria-live','polite');
+  banner.style.cssText = `position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:10000;background:linear-gradient(145deg,#1a2820,#22342a,#1a2820);border:2px solid ${_lvlBright};border-radius:14px;padding:.8rem 1.1rem;display:flex;align-items:center;gap:.85rem;box-shadow:0 8px 32px rgba(0,0,0,.45),0 0 40px ${_lvlBright}40;opacity:0;transition:all .4s cubic-bezier(.22,1,.36,1);max-width:360px;cursor:pointer`;
+  banner.innerHTML = `
+    <div style="font-size:2.2rem;line-height:1;filter:drop-shadow(0 0 10px ${_lvlBright})">${levelInfo.icon}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:${_lvlBright};letter-spacing:.18em;text-transform:uppercase">${LANG==='en'?'Rank Up · Level':'Rango · Nivel'} ${levelInfo.level}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:#f4ede2;font-weight:700;margin-top:.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${levelInfo.title}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;color:rgba(244,237,226,.55);margin-top:.1rem">${LANG==='en'?'Tap to dismiss · Keep going':'Toca para cerrar · Sigue así'}</div>
     </div>`;
+  banner.addEventListener('click', ()=>{ banner.style.opacity='0'; banner.style.transform='translateX(-50%) translateY(-20px)'; setTimeout(()=>banner.remove(), 400); });
+  document.body.appendChild(banner);
+  requestAnimationFrame(()=>{ banner.style.opacity='1'; banner.style.transform='translateX(-50%) translateY(0)'; });
   playSound('levelup');
-  document.body.appendChild(modal);
-  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+  setTimeout(()=>{
+    if(!banner.parentNode) return;
+    banner.style.opacity='0'; banner.style.transform='translateX(-50%) translateY(-20px)';
+    setTimeout(()=>banner.remove(), 400);
+  }, 5000);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -14280,6 +14318,7 @@ function showPinModal(name, title, subtitle, isSetup){
         ${[0,1,2,3].map(i=>'<div class="pin-dot" id="pd'+i+'"></div>').join('')}
       </div>
       <div class="pin-error-msg" id="pinErr"></div>
+      <input id="pinHiddenInput" type="text" inputmode="numeric" pattern="\d*" maxlength="4" autocomplete="one-time-code" aria-label="PIN — 4 dígitos" oninput="pinHiddenInputHandler(this)" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;opacity:0">
       <div class="pin-keypad">
         ${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="pin-key" onclick="pinKey('${n}')">${n}</button>`).join('')}
         <button class="pin-key empty"></button>
@@ -14290,11 +14329,26 @@ function showPinModal(name, title, subtitle, isSetup){
     </div>
   `;
   document.body.appendChild(overlay);
+  // Focus the hidden input so iOS/Android show the numeric keypad and voice
+  // control / password managers can dictate the PIN. The visual keypad still
+  // works for touch.
+  setTimeout(()=>{ const inp=document.getElementById('pinHiddenInput'); if(inp){ try{ inp.focus(); }catch(_){} } }, 50);
+}
+
+// Sync visible dots from hidden input. Only digits are accepted; iOS sometimes
+// inserts spaces/dashes when autocompleting OTPs, so we strip non-digits.
+function pinHiddenInputHandler(inp){
+  const digits = (inp.value||'').replace(/\D/g,'').slice(0,4);
+  if(digits !== inp.value) inp.value = digits;
+  pinBuffer = digits;
+  updatePinDots();
+  if(pinBuffer.length === 4){ setTimeout(()=>pinSubmit(), 120); }
 }
 
 function pinKey(digit){
   if(pinBuffer.length>=4) return;
   pinBuffer+=digit;
+  const inp=document.getElementById('pinHiddenInput'); if(inp) inp.value=pinBuffer;
   updatePinDots();
   if(pinBuffer.length===4){
     setTimeout(()=>pinSubmit(), 120);
@@ -14304,6 +14358,7 @@ function pinKey(digit){
 function pinDel(){
   if(pinBuffer.length>0){
     pinBuffer=pinBuffer.slice(0,-1);
+    const inp=document.getElementById('pinHiddenInput'); if(inp) inp.value=pinBuffer;
     updatePinDots();
     document.getElementById('pinErr').textContent='';
     document.querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('error'));
@@ -25951,7 +26006,13 @@ function nextExamQ(){
     // localStorage 5-10 MB quota on long-time users.
     if(emp.sessions.length > 50) emp.sessions = emp.sessions.slice(-50);
     saveDB();examResults=session;
-    supaInsertScore(session, currentUser).catch(function(){ if(typeof showToast==='function') showToast(LANG==='en'?'Error saving score':'Error guardando puntuación','warning',3000); });
+    supaInsertScore(session, currentUser).catch(function(){
+      if(typeof showToast==='function') showToast(
+        LANG==='en'?'Could not save score to cloud. Saved locally.':'No se pudo guardar la puntuación en la nube. Guardada localmente.',
+        'warning', 6000,
+        { label: LANG==='en'?'Retry':'Reintentar', onClick: ()=>supaInsertScore(session, currentUser).catch(()=>{}) }
+      );
+    });
     // Award XP for exam
     const pctExam=Math.round(examScore/examDishes.length*100);
     const baseXP=examDishes.length*3;
@@ -27532,7 +27593,14 @@ function renderAllergenResults() {
   const cls = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
   const bonus = pct>=90?30:pct>=70?15:pct>=50?5:0;
   if (bonus) awardXP(bonus, `${LANG==='en'?'Allergen exam':'Examen alérgenos'} (${pct}%)`, 'allergens');
-  supaInsertScore({ score, total: questions.length, topic: 'alergenos', cat: cat||'all', time }, currentUser).catch(function(){ if(typeof showToast==='function') showToast(LANG==='en'?'Error saving score':'Error guardando puntuación','warning',3000); });
+  const _payload = { score, total: questions.length, topic: 'alergenos', cat: cat||'all', time };
+  supaInsertScore(_payload, currentUser).catch(function(){
+    if(typeof showToast==='function') showToast(
+      LANG==='en'?'Could not save score to cloud. Saved locally.':'No se pudo guardar la puntuación en la nube. Guardada localmente.',
+      'warning', 6000,
+      { label: LANG==='en'?'Retry':'Reintentar', onClick: ()=>supaInsertScore(_payload, currentUser).catch(()=>{}) }
+    );
+  });
   // Save allergen best score
   const emp = getEmp(currentUser);
   if(emp) {
@@ -34584,8 +34652,9 @@ function renderTxoko(){
         <div class="games-header-sub">${_en?'Train while competing':'Entrena mientras compites'}</div>
       </div>
 
-      <!-- TXOKO: Survive the service -->
-      <div role="button" tabindex="0" aria-label="${_en?'Survive the service: Mr. Shoesmith':'Sobrevive al servicio: Mr. Shoesmith'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card" onclick="txStart()" style="--gc-accent:#c49a3c;--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
+      <!-- TXOKO: Survive the service — PRIMARY recommended game -->
+      <div role="button" tabindex="0" aria-label="${_en?'Recommended: Survive the service — Mr. Shoesmith':'Recomendado: Sobrevive al servicio — Mr. Shoesmith'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-primary" onclick="txStart()" style="--gc-accent:#c49a3c;--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
+        <span class="gc-recommended-badge">★ ${_en?'Recommended':'Recomendado'}</span>
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03))">
           <svg viewBox="0 0 60 70" width="48" height="56">
@@ -34625,8 +34694,10 @@ function renderTxoko(){
         <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c" opacity=".8"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><polyline points="9 12 14 12 11 8 14 12 11 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
 
+      <div class="games-secondary-hint">${_en?'More ways to train':'Más formas de entrenar'}</div>
+
       <!-- ERROR MODE -->
-      <div role="button" tabindex="${failedCount>0?'0':'-1'}" aria-label="${_en?'Weak Spots, '+failedLabel:'Puntos Débiles, '+failedLabel}" onkeydown="${failedCount>0?`if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}`:''}" class="game-card ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}" style="--gc-accent:#d4944c;--gc-accent2:#b47430;--gc-glow:rgba(212,148,76,.2)">
+      <div role="button" tabindex="${failedCount>0?'0':'-1'}" aria-label="${_en?'Weak Spots, '+failedLabel:'Puntos Débiles, '+failedLabel}" onkeydown="${failedCount>0?`if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}`:''}" class="game-card game-card-secondary ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}" style="--gc-accent:#d4944c;--gc-accent2:#b47430;--gc-glow:rgba(212,148,76,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(212,148,76,.08),rgba(212,148,76,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(212,148,76,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(212,148,76,.06)"/><circle cx="20" cy="20" r="10" fill="none" stroke="#d4944c" stroke-width="1"/><circle cx="20" cy="20" r="6" fill="none" stroke="#d4944c" stroke-width=".8" stroke-dasharray="3 2"/><circle cx="20" cy="20" r="2" fill="#d4944c"/></svg></div>
         <div class="game-card-body">
@@ -34641,7 +34712,7 @@ function renderTxoko(){
       </div>
 
       <!-- DUEL REMOTE -->
-      <div role="button" tabindex="0" aria-label="${_en?'Remote Duel':'Duelo Remoto'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card" onclick="renderDuel()" style="--gc-accent:#5a9ab8;--gc-accent2:#3a7a98;--gc-glow:rgba(90,154,184,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Remote Duel':'Duelo Remoto'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="renderDuel()" style="--gc-accent:#5a9ab8;--gc-accent2:#3a7a98;--gc-glow:rgba(90,154,184,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(90,154,184,.08),rgba(90,154,184,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(90,154,184,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(90,154,184,.06)"/><path d="M12 12l8 8-8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 12l-8 8 8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="game-card-body">
@@ -34657,7 +34728,7 @@ function renderTxoko(){
       </div>
 
       <!-- RULETA TXOKO -->
-      <div role="button" tabindex="0" aria-label="${_en?'Txoko Roulette':'Ruleta Txoko'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card" onclick="renderRuleta()" style="--gc-accent:#9b59b6;--gc-accent2:#7d3c98;--gc-glow:rgba(155,89,182,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Txoko Roulette':'Ruleta Txoko'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="renderRuleta()" style="--gc-accent:#9b59b6;--gc-accent2:#7d3c98;--gc-glow:rgba(155,89,182,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(155,89,182,.08),rgba(155,89,182,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(155,89,182,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(155,89,182,.06)"/><circle cx="20" cy="20" r="12" fill="none" stroke="#9b59b6" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="14" stroke="#9b59b6" stroke-width=".8"/><line x1="20" y1="26" x2="20" y2="32" stroke="#9b59b6" stroke-width=".8"/><line x1="8" y1="20" x2="14" y2="20" stroke="#9b59b6" stroke-width=".8"/><line x1="26" y1="20" x2="32" y2="20" stroke="#9b59b6" stroke-width=".8"/><circle cx="20" cy="20" r="3" fill="#9b59b6"/><polygon points="20,6 18,3 22,3" fill="#e74c3c"/></svg></div>
         <div class="game-card-body">
