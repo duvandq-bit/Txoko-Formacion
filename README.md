@@ -147,6 +147,21 @@ Auditoría post-v5.6 detectó 20 hallazgos. Este release los resuelve todos los 
 
 Versión anterior. Ver historial git para detalles.
 
+## Tests
+
+Suite de *smoke tests* sin dependencias (Node ≥18) que protege un PWA de un solo
+archivo sin paso de build. Se ejecuta en cada push/PR vía GitHub Actions
+(`.github/workflows/ci.yml`).
+
+```bash
+npm test        # node tests/smoke.mjs
+```
+
+Comprueba: sintaxis del `<script>` principal, validez/estructura de los JSON en
+`data/`, que toda ruta de `showTab` apunte a una función existente, que las rutas
+de `loadLazyData` existan en disco, versión del service worker, `crossorigin` en
+dependencias CDN y ausencia de marcadores de conflicto de git.
+
 ## Despliegue
 
 Sitio estático. Subir `index.html`, `sw.js`, `manifest.json` (raíz) a cualquier hosting estático (GitHub Pages, Netlify, etc.).

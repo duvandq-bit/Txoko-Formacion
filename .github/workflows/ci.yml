@@ -1,0 +1,24 @@
+name: CI
+
+# Safety net for a single-file PWA with no build step. Runs the
+# zero-dependency smoke suite (tests/smoke.mjs) on every push and PR so
+# a syntax error or broken data file can't reach production unnoticed.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  smoke:
+    name: Smoke tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # No dependencies to install — the suite is pure Node stdlib.
+      - name: Run smoke tests
+        run: npm test

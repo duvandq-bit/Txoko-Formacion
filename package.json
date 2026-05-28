@@ -1,0 +1,13 @@
+{
+  "name": "txoko-formacion",
+  "version": "5.8.3",
+  "private": true,
+  "description": "PWA de formación para el staff de Txoko by Martín Berasategui (Ritz-Carlton, Abama).",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
