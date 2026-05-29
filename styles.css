@@ -39,6 +39,74 @@
   --candy-red:    #b86050;
   --candy-yellow: #e8c44c;
   --candy-teal:   #4a9a8a;
+
+  /* ═══════════════════════════════════════════════════════════
+     DESIGN SYSTEM (formalized) — see DESIGN_SYSTEM.md
+     Additive single source of truth. Existing primitives above are
+     kept; these tokens alias / extend them so new and migrated UI
+     share one vocabulary. Adoption is incremental — defining a token
+     changes nothing until a rule references it.
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Semantic colors — refer to these in new/migrated UI, not raw hex */
+  --color-bg:        var(--parchment);
+  --color-surface:   var(--ink);          /* card / panel face       */
+  --color-text:      var(--ink);          /* on dark bg              */
+  --color-text-ink:  var(--parchment);    /* on light surface        */
+  --color-accent:    var(--gold);
+  --color-accent-hi: var(--gold3);
+  --color-success:   var(--sage);
+  --color-danger:    var(--rose);
+  --color-info:      var(--azure);
+  --color-line:      var(--line);
+
+  /* Spacing scale — 4px base grid. Use for margin/padding/gap. */
+  --space-1: 0.25rem;   /*  4px */
+  --space-2: 0.5rem;    /*  8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.5rem;    /* 24px */
+  --space-6: 2rem;      /* 32px */
+  --space-7: 3rem;      /* 48px */
+  --space-8: 4rem;      /* 64px */
+
+  /* Type scale — names map onto the app's existing density tiers.
+     --text-micro/2xs are the DM Mono metadata labels; base is body. */
+  --text-micro: 0.55rem;
+  --text-2xs:   0.65rem;
+  --text-xs:    0.72rem;
+  --text-sm:    0.82rem;
+  --text-base:  0.92rem;
+  --text-lg:    1.1rem;
+  --text-xl:    1.4rem;
+  --text-2xl:   1.85rem;
+  --text-3xl:   2.4rem;
+
+  /* Font families (canonical names) */
+  --font-sans:  'Quicksand', sans-serif;
+  --font-serif: 'Cinzel', serif;
+  --font-mono:  'DM Mono', monospace;
+  --font-read:  'Cormorant Garamond', serif;
+
+  /* Radius — aliases over the existing --r/--r2/--r3 */
+  --radius-sm:   var(--r3);   /*  8px */
+  --radius-md:   var(--r2);   /* 12px */
+  --radius-lg:   var(--r);    /* 16px */
+  --radius-full: 999px;
+
+  /* Elevation — aliases over the existing --shadow ladder */
+  --elev-1: var(--shadow);
+  --elev-2: var(--shadow2);
+  --elev-3: var(--shadow3);
+
+  /* Motion — subtle, non-decorative (Apple principle). Atmospheric
+     keyframes stay as-is; these standardize UI state transitions. */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-slow: 360ms;
+  --ease-standard:   cubic-bezier(.4, 0, .2, 1);
+  --ease-emphasized: cubic-bezier(.2, 0, 0, 1);
+  --ease-decelerate: cubic-bezier(0, 0, .2, 1);
 }
 html{font-size:16px;scroll-behavior:smooth}
 body{

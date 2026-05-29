@@ -144,6 +144,40 @@ test('styles.css is linked, non-trivial, and not duplicated inline', () => {
   assert(/['"`]\.\/styles\.css['"`]/.test(sw), 'styles.css not in SW SHELL_URLS');
 });
 
+// ─── 4c. Design system token layer is coherent ─────────────────
+console.log('\nDesign system');
+test('styles.css defines the formalized token scales', () => {
+  const css = read('styles.css');
+  // Spacing scale (1..8), type scale, radius/elevation aliases, motion.
+  for (let i = 1; i <= 8; i++) assert(css.includes(`--space-${i}:`), `--space-${i} missing`);
+  for (const t of ['--text-micro','--text-base','--text-3xl']) assert(css.includes(`${t}:`), `${t} missing`);
+  for (const t of ['--radius-sm','--radius-md','--radius-lg','--radius-full']) assert(css.includes(`${t}:`), `${t} missing`);
+  for (const t of ['--elev-1','--elev-2','--elev-3']) assert(css.includes(`${t}:`), `${t} missing`);
+  for (const t of ['--motion-fast','--motion-base','--ease-standard']) assert(css.includes(`${t}:`), `${t} missing`);
+  for (const t of ['--font-sans','--font-serif','--font-mono','--font-read']) assert(css.includes(`${t}:`), `${t} missing`);
+});
+
+test('semantic color tokens reference existing primitives (no dangling var())', () => {
+  const css = read('styles.css');
+  const root = css.slice(css.indexOf(':root{'), css.indexOf('}', css.indexOf(':root{')) + 1);
+  const defined = new Set([...css.matchAll(/(--[a-z0-9-]+)\s*:/gi)].map(m => m[1]));
+  // Every var(--x) used INSIDE a token definition must itself be defined.
+  for (const m of root.matchAll(/var\((--[a-z0-9-]+)\)/gi)) {
+    assert(defined.has(m[1]), `token references undefined ${m[1]}`);
+  }
+  // Spot-check the semantic aliases exist and point somewhere.
+  for (const t of ['--color-bg','--color-accent','--color-danger','--color-success']) {
+    assert(new RegExp(`${t}:\\s*var\\(--`).test(css), `${t} should alias a primitive`);
+  }
+});
+
+test('DESIGN_SYSTEM.md exists and documents the scales', () => {
+  const doc = read('DESIGN_SYSTEM.md');
+  for (const s of ['Color', 'Typography', 'Spacing', 'Motion', 'Atmospheric', 'Dual mode']) {
+    assert(doc.includes(s), `DESIGN_SYSTEM.md missing section: ${s}`);
+  }
+});
+
 // ─── 5. Service-worker version hygiene ──────────────────────────
 console.log('\nService worker');
 test('sw.js VERSION is well-formed and drives CACHE_NAME', () => {
