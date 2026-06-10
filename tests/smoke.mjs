@@ -375,6 +375,26 @@ test('async render functions guard against tab-change races', () => {
   }
 });
 
+test('quiz distractor pools prefer same-category dishes', () => {
+  // The pedagogical bug: a "Tarta de queso: Queso San Millán, ..." option
+  // appearing as distractor in an Entrantes ingredient quiz reveals itself
+  // by name prefix — the trainee crosses it off without knowing the recipe.
+  // _pickDistractorPool(d) filters to same-category dishes when possible
+  // so distractors stay pedagogically valid.
+  const helper = html.match(/function _pickDistractorPool\(d\)\s*\{[\s\S]{0,400}?\}/);
+  assert(helper, '_pickDistractorPool helper missing — distractors will leak across categories');
+  assert(/x\.cat\s*===\s*d\.cat/.test(helper[0]),
+    '_pickDistractorPool no longer filters by category');
+  assert(/sameCat\.length\s*>=?\s*6/.test(helper[0]),
+    '_pickDistractorPool fallback threshold removed — small categories like Sugerencias will starve');
+  // 1 definition + 4 callsites (startExam, renderLiveQuizHost, smart review, error mode)
+  const usages = (html.match(/_pickDistractorPool\(/g) || []).length;
+  assert(usages >= 5, `_pickDistractorPool used ${usages-1} times; expected 4 callsites`);
+  // No raw `DISHES.filter(x=>x.id!==d.id)` should remain — those bypassed the category filter
+  const orphans = (html.match(/DISHES\.filter\(x=>x\.id!==d\.id\)/g) || []).length;
+  assert(orphans === 0, `${orphans} unfiltered DISHES distractor pools remain — re-introduces cross-category leaks`);
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
