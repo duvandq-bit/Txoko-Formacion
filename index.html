@@ -14346,6 +14346,16 @@ function selCat(el){_examSetSel('#catOpts', el);examConfig.cat=el.dataset.cat;}
 function selTopic(el){_examSetSel('#topicOpts', el);examConfig.topic=el.dataset.topic;}
 function selCount(el,n){_examSetSel('#countOpts', el);examConfig.count=n;}
 
+// Prefer same-category distractors. A "Tarta de queso: ..." option as
+// distractor for an Entrantes ingredient question reveals itself by name
+// and trains nothing — the trainee crosses it off without knowing the
+// recipe. Falls back to the wider pool only when the dish's category is
+// too small to source 3 valid distractors (Sugerencias has 2 dishes).
+function _pickDistractorPool(d){
+  const sameCat = DISHES.filter(x => x.id !== d.id && x.cat === d.cat);
+  return sameCat.length >= 6 ? sameCat : DISHES.filter(x => x.id !== d.id);
+}
+
 function startExam(){
   let pool=examConfig.cat==='all'?[...DISHES]:DISHES.filter(d=>d.cat===examConfig.cat);
   pool = pool.filter(d => _isQuizableDish(d));
@@ -14379,7 +14389,7 @@ function startExam(){
         if(fb){topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');}else continue;
       }else continue;
     }
-    const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==d.id));
+    const wrongPool=_lqaShuffle(_pickDistractorPool(d));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -16366,7 +16376,7 @@ function renderLiveQuizHost(empNames){
   const questions = pool.map(d => {
     const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
     const correct = (topic.a(d)||'').trim();
-    const wrongs = _lqaShuffle(DISHES.filter(x=>x.id!==d.id)).slice(0,3).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
+    const wrongs = _lqaShuffle(_pickDistractorPool(d)).slice(0,3).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
     const choices = _lqaShuffle([correct,...wrongs.slice(0,3)]);
     return { dish: d.name, topic: topic.label, correct, choices, correctIdx: choices.indexOf(correct) };
   });
@@ -17010,7 +17020,7 @@ function startPersonalErrorMode(){
       if(!fb) continue;
       correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
-    const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==d.id));
+    const wrongPool=_lqaShuffle(_pickDistractorPool(d));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
@@ -17068,7 +17078,7 @@ function startErrorMode(){
       if(!fb) continue;
       topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
-    const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==d.id));
+    const wrongPool=_lqaShuffle(_pickDistractorPool(d));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
     const _correctNorm = _normAns(correct);
