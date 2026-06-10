@@ -16574,6 +16574,9 @@ function stopLiveQuiz(){
 // ═══ PARTICIPAR EN QUIZ EN VIVO (vista empleado) ═══
 async function renderJoinLiveQuiz(){
   const c = document.getElementById('appContent');
+  // Same race-guard idea as renderVinos / renderDuel: the auto-detect
+  // fetch can resolve after the user has navigated elsewhere.
+  const _startTab = currentTab;
   // Try to auto-detect active session so user doesn't need to type a code
   try {
     const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?state=in.(waiting,active)&order=created_at.desc&limit=1`,
@@ -16581,12 +16584,14 @@ async function renderJoinLiveQuiz(){
     if(res.ok){
       const rows = await res.json();
       if(rows.length > 0){
+        if (currentTab !== _startTab) return;
         livePlayerLastQ = -1;
         renderLiveQuizWaiting(rows[0].code, JSON.parse(rows[0].questions||'[]'));
         return;
       }
     }
   } catch(e){}
+  if (currentTab !== _startTab) return;
   // Fallback: manual code entry
   const _en = LANG==='en';
   c.innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
@@ -17426,6 +17431,10 @@ let remoteDuelState = null;
 
 async function renderDuel() {
   const c = document.getElementById('appContent');
+  // Guard against the user navigating away during the multi-fetch below —
+  // without this, the final c.innerHTML lower in the function overwrites
+  // whatever tab they actually went to.
+  const _startTab = currentTab;
   c.innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">⏳</div></div>`;
 
   await supaExpireOldDuels();
@@ -17438,6 +17447,9 @@ async function renderDuel() {
   const allDuels = await supaFetchMyDuels(currentUser);
   const seasonDuels = await supaFetchDuelSeason(getDuelSeasonId());
   const feed = await supaFetchDuelFeed();
+  // If the user navigated to a different tab while we awaited Supabase, bail
+  // out — otherwise the c.innerHTML below would overwrite the new view.
+  if (currentTab !== _startTab) return;
   const allNames = (window._supEmpNames || Object.keys(DB.employees)).filter(n => n && n !== currentUser);
   const emp = getEmp(currentUser);
 

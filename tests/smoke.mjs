@@ -316,6 +316,65 @@ test('Plan de hoy sits above Stats Strip on the dashboard', () => {
     'PLAN DE HOY must come before STATS STRIP (action-first hierarchy)');
 });
 
+// ─── 6f. Latent-bug regression guards (sideways drift family) ───
+console.log('\nLatent bug guards');
+test('every fullscreen-ish overflow-y:auto container also clips X', () => {
+  const css = read('styles.css');
+  // The sideways-drift bug class: setting overflow-y:auto without taming
+  // overflow-x lets touch scrollers drift diagonally, especially when a
+  // child has a sticky :hover translateX. These selectors are fullscreen
+  // or near-fullscreen, so they're the high-impact ones — child-level
+  // pills/chips with their own intentional horizontal scrollers are fine.
+  const mustClip = [
+    '.sf-overlay', '.svc-body', '.dj-body', '.ranks-body',
+    '.wine-detail-overlay', '.login-employees'
+  ];
+  for (const sel of mustClip) {
+    const ruleRe = new RegExp(`\\${sel}\\s*\\{[^}]*\\}`, 'g');
+    let found = 0, clipped = 0;
+    for (const m of css.matchAll(ruleRe)) {
+      found++;
+      if (/overflow-x\s*:\s*hidden/.test(m[0])) clipped++;
+    }
+    assert(found > 0, `selector ${sel} no longer defined`);
+    assert(clipped === found, `${sel}: ${clipped}/${found} rules clip overflow-x — sideways drift regression`);
+  }
+});
+
+test('hover translateX rules are scoped to @media(hover:hover)', () => {
+  // On touch, :hover sticks after tap — if the hover shifts an element
+  // horizontally and the parent doesn't clip X, you get the sideways
+  // drift bug again. Every sideways hover transform must be inside a
+  // hover-capable media query.
+  const css = read('styles.css');
+  // Find :hover rules that translateX and check the preceding 80 chars
+  // include the media query.
+  const re = /([\s\S]{0,80}):hover\s*\{[^}]*transform\s*:[^;}]*translateX/g;
+  for (const m of css.matchAll(re)) {
+    const context = m[1];
+    assert(/@media\s*\(\s*hover\s*:\s*hover/.test(context),
+      `unscoped :hover translateX near offset ${m.index} — touch will stick`);
+  }
+});
+
+test('async render functions guard against tab-change races', () => {
+  // When the user navigates away while a multi-fetch render is awaiting
+  // Supabase, the final innerHTML overwrites the new tab. Every async
+  // renderTab function must capture currentTab and bail before writing.
+  for (const fn of ['renderVinos', 'renderDuel', 'renderJoinLiveQuiz']) {
+    const startIdx = html.search(new RegExp(`async function ${fn}\\(`));
+    assert(startIdx !== -1, `${fn} no longer async — guard expectations stale`);
+    // The body of the function is bounded by the next top-level function
+    // declaration; grab a generous slice and check for the pattern.
+    const slice = html.slice(startIdx, startIdx + 8000);
+    assert(/const _startTab\s*=\s*currentTab/.test(slice) ||
+           /var _startTab\s*=\s*currentTab/.test(slice),
+      `${fn} missing _startTab capture — tab-change race regression`);
+    assert(/currentTab\s*!==\s*_startTab/.test(slice),
+      `${fn} missing currentTab !== _startTab guard`);
+  }
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
