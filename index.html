@@ -5095,12 +5095,12 @@ syncCustomDishesFromCloud();
 
 // ═══ DAILY STREAK ═══
 function todayStr(){
-  // Canary Islands date
-  const now=new Date();
-  const h=now.getUTCHours()+(isCanaryDST()?1:0);
-  const d=new Date(now);
-  if(h<0) d.setUTCDate(d.getUTCDate()-1);
-  return d.toISOString().slice(0,10);
+  // Canary Islands date. The previous manual UTC+DST math returned the
+  // UTC date instead of the Canary date — between 00:00 and 01:00 local
+  // in CEST (summer), todayStr() returned yesterday, which double-counted
+  // streaks and split single sessions across two day buckets. Intl with
+  // an explicit IANA zone is the only DST-safe option here.
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Atlantic/Canary' }).format(new Date());
 }
 // DST-safe day difference between two YYYY-MM-DD strings.
 // Uses UTC midnight for both so DST transitions don't cause off-by-one results.

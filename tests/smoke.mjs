@@ -395,6 +395,26 @@ test('quiz distractor pools prefer same-category dishes', () => {
   assert(orphans === 0, `${orphans} unfiltered DISHES distractor pools remain — re-introduces cross-category leaks`);
 });
 
+test('todayStr() uses Intl Atlantic/Canary, not manual UTC math', () => {
+  // Before the fix, todayStr() returned the UTC date computed from
+  // raw UTC hours. In CEST (UTC+1), between 00:00 and 01:00 Canary
+  // local, the UTC date was still "yesterday" — streaks double-counted
+  // and a single overnight session split across two day buckets. Intl
+  // with the IANA zone is the only DST-safe way to compute this.
+  const fn = html.match(/function todayStr\(\)\s*\{[\s\S]{0,600}?^\}/m);
+  assert(fn, 'todayStr() function missing');
+  assert(/Atlantic\/Canary/.test(fn[0]),
+    'todayStr() no longer references Atlantic/Canary — manual DST math will silently break overnight');
+  assert(/Intl\.DateTimeFormat/.test(fn[0]),
+    'todayStr() no longer uses Intl — regressed to manual UTC math');
+  // Verify the invariant the fix protects: 00:30 CEST should return the
+  // Canary date, not the UTC date.
+  const probe = new Intl.DateTimeFormat('en-CA', { timeZone: 'Atlantic/Canary' })
+    .format(new Date(Date.UTC(2025, 5, 10, 23, 30)));
+  assert(probe === '2025-06-11',
+    `Intl Atlantic/Canary returned ${probe} instead of 2025-06-11 — runtime broken`);
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
