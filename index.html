@@ -1817,13 +1817,14 @@ async function renderNotifPanel() {
   const notifs = await supaFetchNotifications(currentUser);
   const overlay = document.createElement('div');
   overlay.id = 'notifOverlay';
+  overlay.setAttribute('aria-label', 'Notificaciones');
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;justify-content:flex-end;align-items:flex-start';
   const typeIcon = t => t==='warning'?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".4"/><path d="M12 8v4M12 14v.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`:t==='success'?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg>`:t==='urgent'?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polygon points="12,22 20,17 20,7 12,12" fill="#2d6a3e" opacity=".4"/><circle cx="12" cy="9" r="1" fill="#fff"/><path d="M12 12v4" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`;
   overlay.innerHTML = `
     <div style="background:var(--ink);border-left:1px solid var(--line);height:100%;width:min(340px,100vw);padding:1.5rem 1rem;overflow-y:auto;animation:slideRight .25s ease">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
         <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">Notificaciones</div>
-        <button onclick="document.getElementById('notifOverlay').remove()" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;color:var(--parch3)">✕</button>
+        <button onclick="document.getElementById('notifOverlay').remove()" aria-label="Cerrar notificaciones" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;color:var(--parch3)">✕</button>
       </div>
       ${!notifs.length
         ? `<div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">Sin notificaciones nuevas ✦</div>`
@@ -1841,6 +1842,7 @@ async function renderNotifPanel() {
     </div>`;
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+  setupModalA11y(overlay, () => overlay.remove());
 }
 
 async function markNotifRead(id, el) {

@@ -415,6 +415,24 @@ test('todayStr() uses Intl Atlantic/Canary, not manual UTC math', () => {
     `Intl Atlantic/Canary returned ${probe} instead of 2025-06-11 — runtime broken`);
 });
 
+test('modal a11y coverage ratchet', () => {
+  // Number of createElement-based overlays wired into the central
+  // setupModalA11y helper (ESC-to-close, focus trap, focus restoration,
+  // role/aria-modal). This floor ratchets up as we migrate each modal;
+  // dropping below it means a modal lost its keyboard accessibility.
+  //
+  // Migrated so far: delOverlay (#36 era), notifOverlay (#NN era).
+  // Remaining candidates: djOverlay (has custom keydown — needs care),
+  // pinOverlay, cloudPinOverlay, onboardingOverlay, wineDetailOverlay,
+  // avatarPickerOverlay, smartOverlay (x2), sfOverlay, ~15 total.
+  // Count only real call sites: lines that invoke the helper with the
+  // remove-callback pattern. Excludes the function definition, the
+  // doc-comment example, and the window assignment.
+  const calls = (html.match(/^\s+setupModalA11y\(overlay,\s*\(\)/gm) || []).length;
+  assert(calls >= 2,
+    `setupModalA11y wired to only ${calls} overlays; expected >= 2 after notif panel migration`);
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
