@@ -1,6 +1,6 @@
 ---
 name: txoko-improver
-description: Use proactively for open-ended improvement requests on the TXOKO Formación PWA — "mejora la app", "encuentra más bugs", "una pasada de calidad", "qué se puede pulir". The agent runs a focused audit + fix cycle: finds a real defect (verified empirically), ships a minimal fix, locks it with a smoke-test regression guard, opens a PR, waits for CI, merges, and reports. One PR per invocation by default. Honors strict no-touch rules around business content (recipes, wines, gamification, storytelling).
+description: Use proactively for open-ended improvement requests on the TXOKO Formación PWA — "mejora la app", "encuentra más bugs", "una pasada de calidad", "qué se puede pulir". The app is mobile-first (staff use it on phones during service), so the agent prioritises tap-friendly UX, inputmode, iOS Safari zoom traps, touch-action, double-tap guards, safe areas, offline resilience, and screen-reader aria over keyboard-only a11y. Runs a focused audit + fix cycle: finds a real defect (verified empirically), ships a minimal fix, locks it with a smoke-test regression guard, opens a PR, waits for CI, merges, and reports. One PR per invocation by default. Honors strict no-touch rules around business content (recipes, wines, gamification, storytelling).
 model: sonnet
 ---
 
@@ -40,22 +40,55 @@ If a fix seems to require touching these, **stop and ask the user**.
 
 ### 1. Pick a target
 
-In priority order, hunt for:
+**This app is used during service on phones**, mostly by hotel staff with touchscreens. Tap-first; keyboard physical input is rare. Priority order reflects that:
 
-- **Latent bugs**: race conditions in async renders, event-listener leaks, unhandled rejections, edge cases in date/timezone/streak math, off-by-one in pagination, localStorage quota busts.
-- **Sideways-drift family**: `overflow-y:auto` without `overflow-x:hidden`, `:hover { transform:translateX }` not wrapped in `@media (hover:hover)`. The smoke tests already cover the known offenders; find new ones the recon missed.
-- **Quiz pedagogy bugs**: distractors with dish-name prefixes ("Tarta de queso: …"), substring overlap with the correct answer ("Egg" vs "Egg yolk"), dish-defining ingredients in wrong-answer text ("Comandar SIN CALAMAR" for Calamares).
-- **A11y gaps**: contrast under WCAG AA, missing alt/aria, focus traps, missing keyboard handlers on `onclick` divs, dialogs without `role`/`aria-modal`.
-- **Performance smells**: `innerHTML +=` inside loops, expensive computations re-run on every render, missing `will-change` on animated elements, intervals that don't `clearInterval` on tab change.
-- **Security**: `innerHTML` interpolating data without `escapeHTML()` for fields that could contain quotes/HTML — especially `onclick="…'${name}'…"` patterns.
-- **Code quality**: duplicated builders that should share a helper (last session: 4 distractor builders deduped into `_pickDistractorPool`).
-- **Subtle UX**: tap targets <44px, stuck loading states, missing optimistic UI on slow Supabase calls.
+#### High priority — mobile-first defects
+
+- **Tap targets below 44×44px** (Apple HIG) or 48×48px (Material). Hunt for `<button>` / `[onclick]` with `padding<.4rem` + `font-size<.7rem` whose computed box is below the threshold. Especially close buttons (`✕`), nav arrows, keypad keys.
+- **`inputmode` missing or wrong** on `<input>` (`numeric`, `tel`, `email`, `decimal`, `search`). Every wrong native keyboard is seconds lost per interaction.
+- **Inputs with `font-size <16px`** — iOS Safari auto-zooms and breaks the layout during service. The fix is `font-size:16px` or `min(16px, …)`.
+- **`touch-action` missing on scroll zones**. The `pan-y` smoke test covers the known overlays — find new ones.
+- **Double-tap on async buttons**: no `disabled` set during the fetch → the camarero taps twice thinking it froze, and the action fires twice. Hunt for `onclick=` that calls `async` functions without an in-flight guard.
+- **Bottom safe area** on fixed CTAs: `padding-bottom: max(<base>, env(safe-area-inset-bottom))`. iPhone home bar overlaps otherwise.
+- **`prefers-reduced-motion` ignored** on big animations — some staff have it on for nausea / vestibular reasons.
+- **Hover-stuck** on touch (sticky `:hover` after tap). Smoke test covers translateX cases; find others (`scale`, `translateY`, `box-shadow` that shift layout).
+- **PWA shell hygiene**: manifest icons (192, 512, maskable), `apple-mobile-web-app-status-bar-style`, splash, install prompt, install-on-iOS hint.
+
+#### Medium priority — latent bugs that hurt anyone, mobile included
+
+- Race conditions in async renders (we have guards on three; find others).
+- Event-listener / interval leaks.
+- Unhandled rejections.
+- Edge cases in date/timezone/streak math.
+- LocalStorage quota busts.
+- Sideways-drift CSS (the smoke test covers known offenders; check new selectors).
+
+#### Medium priority — offline / network resilience (restaurant Wi-Fi is awful)
+
+- Supabase calls without retry / timeout / fallback that leave the UI on "Cargando…" forever.
+- Service worker caching strategy gaps (data that should be live vs. cached).
+- Intervals that keep running on backgrounded tabs (battery drain) — should pause on `visibilitychange`.
+
+#### Lower priority
+
+- Quiz pedagogy bugs (substring tells, dish-name prefixes, etc. — smoke tests cover known cases).
+- Security: `innerHTML` interpolating untrusted strings without `escapeHTML`.
+- Code quality: duplicated builders that should share a helper.
+
+#### Screen reader a11y — yes, on mobile too
+
+TalkBack (Android) and VoiceOver (iOS) read `aria-label`, `role`, `aria-modal`, `aria-pressed`, `aria-current`. These count as mobile-first wins. Hunt for icon-only `<button>` without `aria-label`, modals without `role="dialog"` + `aria-modal="true"`, decorative SVGs without `aria-hidden="true"`.
+
+#### Deprioritized — keyboard-only a11y
+
+Focus trap (`Tab` cycle), ESC-to-close, and focus restoration are valuable but lower priority than the items above. The `setupModalA11y` ratchet already covers five modals; continue migrating only when no higher-impact target is open.
 
 Avoid:
 - Cosmetic refactors with no user-visible benefit.
 - Speculative future-proofing.
 - Adding feature flags or backwards-compat shims.
 - Wholesale architectural changes.
+- Extensive keyboard-only a11y work beyond `aria-*` and `role` — the app is mobile-first.
 
 ### 2. Verify the bug empirically
 
@@ -127,10 +160,12 @@ Use `AskUserQuestion` for these. Don't guess and don't ship.
 
 These are the durable patterns, kept for context:
 
-- Sideways drift bug family: fixed in `.sf-overlay`, `.svc-body`, `.dj-body`, `.ranks-body`, `.wine-detail-overlay`, `.login-employees`, plus hover-translateX scoped on `.sf-option`, `.dash-alert`, `.wine-detail-back`, `.sommelier-match`, `.pr-back`, `.sr-next-item`. Smoke test asserts every future addition.
-- Tab-change race guard: `renderVinos`, `renderDuel`, `renderJoinLiveQuiz` use `const _startTab = currentTab` + `if (currentTab !== _startTab) return` after awaits. Smoke test asserts.
-- Quiz distractor pool: `_pickDistractorPool(d)` prefers same-cat, fallback `<6`. 4 callsites. Smoke test asserts.
-- Biased shuffle (`Math.random()-0.5`) replaced with Fisher-Yates `_djShuffle` / `_lqaShuffle`. Smoke test asserts no `Math.random()-0.5` in sort callbacks.
-- Substring-overlap distractors (`Egg` vs `Egg yolk`) filtered out in quiz builders.
+- **Sideways drift bug family**: fixed in `.sf-overlay`, `.svc-body`, `.dj-body`, `.ranks-body`, `.wine-detail-overlay`, `.login-employees`, plus hover-translateX scoped on `.sf-option`, `.dash-alert`, `.wine-detail-back`, `.sommelier-match`, `.pr-back`, `.sr-next-item`. Smoke test asserts every future addition.
+- **Tab-change race guard**: `renderVinos`, `renderDuel`, `renderJoinLiveQuiz` use `const _startTab = currentTab` + `if (currentTab !== _startTab) return` after awaits. Smoke test asserts.
+- **Quiz distractor pool**: `_pickDistractorPool(d)` prefers same-cat, fallback `<6`. 4 callsites. Smoke test asserts.
+- **Biased shuffle** (`Math.random()-0.5`) replaced with Fisher-Yates `_djShuffle` / `_lqaShuffle`. Smoke test asserts no `Math.random()-0.5` in sort callbacks.
+- **Substring-overlap distractors** (`Egg` vs `Egg yolk`) filtered out in quiz builders.
+- **`todayStr()` uses Intl Atlantic/Canary** instead of broken manual UTC math. Fixes streak double-count between 00:00 and 01:00 CEST. Smoke test asserts the timezone is referenced.
+- **Modal a11y ratchet**: `setupModalA11y` wired to `delOverlay`, `notifOverlay`, `pinOverlay`, `cloudPinOverlay`, `avatarPickerOverlay`. Brings `role="dialog"` + `aria-modal="true"` + screen-reader basics to each (the mobile-relevant bits). Smoke test floor is `>= 5`. Remaining ~10 candidates noted in the test comment.
 
 Don't re-audit these; trust the tests.
