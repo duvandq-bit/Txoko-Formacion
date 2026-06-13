@@ -5002,7 +5002,7 @@ body::after{
 .svc-close:hover{color:#e8c275;border-color:rgba(196,154,60,.55);background:linear-gradient(165deg,rgba(196,154,60,.12),rgba(196,154,60,.04))}
 .svc-body{flex:1;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;padding:.85rem;-webkit-overflow-scrolling:touch;position:relative}
 .svc-search-wrap{position:relative;margin-bottom:.85rem}
-.svc-search{width:100%;padding:.7rem 1rem .7rem 2.4rem;background:linear-gradient(165deg,rgba(44,32,22,.65),rgba(28,20,14,.55));border:1.5px solid rgba(196,154,60,.22);border-radius:12px;color:#faf6ee;font-size:.88rem;font-family:'Quicksand',sans-serif;outline:none;transition:all .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.svc-search{width:100%;padding:.7rem 1rem .7rem 2.4rem;background:linear-gradient(165deg,rgba(44,32,22,.65),rgba(28,20,14,.55));border:1.5px solid rgba(196,154,60,.22);border-radius:12px;color:#faf6ee;font-size:16px;font-family:'Quicksand',sans-serif;outline:none;transition:all .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
 .svc-search:focus{border-color:rgba(196,154,60,.6);box-shadow:0 0 0 3px rgba(196,154,60,.12),inset 0 1px 0 rgba(255,255,255,.04)}
 .svc-search::placeholder{color:rgba(244,237,226,.3);font-style:italic}
 .svc-search-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:rgba(196,154,60,.5);font-size:.95rem}
@@ -5270,7 +5270,11 @@ body::after{
 .svc-fab:active{transform:scale(.88)}
 @keyframes svc-fab-pulse{0%,100%{box-shadow:0 4px 20px rgba(196,154,60,.4),0 0 0 0 rgba(196,154,60,.25)}50%{box-shadow:0 4px 20px rgba(196,154,60,.5),0 0 0 8px rgba(196,154,60,0)}}
 @media(max-width:600px){
-  .svc-search{font-size:.8rem;padding:.55rem .8rem .55rem 2.2rem}
+  /* iOS Safari auto-zooms inputs with font-size <16px on focus; the
+     zoom shifts the layout and hides the on-screen keypad behind the
+     input. During service the camarero needs the search field rock
+     steady, so the mobile override now sits at the 16px floor. */
+  .svc-search{font-size:16px;padding:.55rem .8rem .55rem 2.2rem}
   .svc-result{padding:.65rem}
   .svc-fab{bottom:68px;right:12px;width:58px;height:58px;font-size:1.3rem}
   .svc-fab::after{inset:-12px}

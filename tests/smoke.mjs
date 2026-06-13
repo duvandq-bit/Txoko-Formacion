@@ -434,6 +434,42 @@ test('modal a11y coverage ratchet', () => {
     `setupModalA11y wired to only ${calls} overlays; expected >= 5 after avatarPickerOverlay migration`);
 });
 
+test('mobile input font-size avoids iOS Safari auto-zoom trap', () => {
+  // iOS Safari (mobile WebKit) auto-zooms <input> elements whose
+  // computed font-size is below 16px when they receive focus. The zoom
+  // shifts the layout and can hide the on-screen keypad behind the
+  // input. Hot-path search inputs that the camarero uses during service
+  // must sit at the 16px floor in the mobile media block.
+  //
+  // Currently audited: .svc-search (service panel search). Add more
+  // selectors to this list as future passes migrate other inputs.
+  const css = read('styles.css');
+  // Each selector in the list must have at least one mobile-context rule
+  // where font-size is >= 16px. Walk every `.selector{...}` block,
+  // measure font-size if present, and require at least one safe variant.
+  for (const sel of ['.svc-search']) {
+    const ruleRe = new RegExp(`\\${sel}\\s*\\{([^}]+)\\}`, 'g');
+    const sizes = [];
+    let m;
+    while ((m = ruleRe.exec(css)) !== null) {
+      const sizeMatch = m[1].match(/font-size:\s*([\d.]+)(rem|px|em)/);
+      if (sizeMatch) {
+        const px = sizeMatch[2] === 'px'
+          ? parseFloat(sizeMatch[1])
+          : parseFloat(sizeMatch[1]) * 16;
+        sizes.push(px);
+      }
+    }
+    assert(sizes.length > 0, `${sel} no font-size declared anywhere`);
+    // The smallest declared font-size for this selector must clear 16px.
+    // CSS cascade may make a larger value win at runtime, but the
+    // mobile-context one (which is usually the smallest) is the trap.
+    const min = Math.min(...sizes);
+    assert(min >= 16,
+      `${sel} declares font-size ${min}px somewhere — iOS Safari auto-zooms <16px inputs on focus`);
+  }
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
