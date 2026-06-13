@@ -6597,6 +6597,10 @@ function _showCloudPinLogin(name, emp) {
   }
   draw();
   document.body.appendChild(overlay);
+  // ESC + role/aria + focus restoration. The cloud PIN path runs during
+  // login from a cloud-restored account, so dismissing must return focus
+  // to the login screen instead of stranding the keyboard user.
+  setupModalA11y(overlay, () => overlay.remove());
 }
 
 function closePinAndEnter(){

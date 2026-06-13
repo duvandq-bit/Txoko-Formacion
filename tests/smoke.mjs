@@ -421,16 +421,16 @@ test('modal a11y coverage ratchet', () => {
   // role/aria-modal). This floor ratchets up as we migrate each modal;
   // dropping below it means a modal lost its keyboard accessibility.
   //
-  // Migrated so far: delOverlay, notifOverlay, pinOverlay.
+  // Migrated so far: delOverlay, notifOverlay, pinOverlay, cloudPinOverlay.
   // Remaining candidates: djOverlay (has custom keydown — needs care),
-  // cloudPinOverlay, onboardingOverlay, wineDetailOverlay,
-  // avatarPickerOverlay, smartOverlay (x2), sfOverlay, ~12 total.
+  // onboardingOverlay, wineDetailOverlay, avatarPickerOverlay,
+  // smartOverlay (x2), sfOverlay, ~11 total.
   // Count only real call sites: lines that invoke the helper with the
   // remove-callback pattern. Excludes the function definition, the
   // doc-comment example, and the window assignment.
   const calls = (html.match(/^\s+setupModalA11y\(overlay,\s*\(\)/gm) || []).length;
-  assert(calls >= 3,
-    `setupModalA11y wired to only ${calls} overlays; expected >= 3 after pinOverlay migration`);
+  assert(calls >= 4,
+    `setupModalA11y wired to only ${calls} overlays; expected >= 4 after cloudPinOverlay migration`);
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
