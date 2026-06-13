@@ -6391,6 +6391,11 @@ function showPinModal(name, title, subtitle, isSetup){
     </div>
   `;
   document.body.appendChild(overlay);
+  // ESC + focus trap + focus restoration on close. pinCancel() also resets
+  // pinBuffer/pinStep/pinFirst, which the global ESC handler in the keydown
+  // listener does not — wiring through pinCancel keeps the modal state
+  // consistent regardless of how the user dismisses it.
+  setupModalA11y(overlay, () => pinCancel());
   // Focus the hidden input so iOS/Android show the numeric keypad and voice
   // control / password managers can dictate the PIN. The visual keypad still
   // works for touch.
