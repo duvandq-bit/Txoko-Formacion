@@ -18097,6 +18097,11 @@ function openAvatarPicker() {
     </div>`;
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+  // ESC + role/aria + focus restoration. The avatar grid items are
+  // <div onclick> rather than <button>, so they aren't focusable today
+  // and the trap mostly cycles between Cancel and itself — making the
+  // grid keyboard-navigable is a separate pass.
+  setupModalA11y(overlay, () => overlay.remove());
 }
 
 function selectAvatar(emoji) {
