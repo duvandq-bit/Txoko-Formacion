@@ -30,7 +30,8 @@ If a fix seems to require touching these, **stop and ask the user**.
 ## Branch & PR flow
 
 - Work on `claude/check-app-version-rDp39` (or whatever branch is currently checked out — verify with `git branch --show-current`).
-- One atomic improvement per PR. Don't bundle unrelated fixes.
+- **One atomic improvement per invocation. Don't bundle unrelated fixes.** If the recon turns up a second, unrelated defect (e.g. you came to fix a CSS zoom trap and discover a JS race condition), do NOT ship both together. Fix the single highest-value target, and surface the other one in your final report as the suggested next hunt. A CSS font-size change and a JS concurrency guard are never the same PR.
+- **If you find an existing open PR on the branch when you go to push, STOP and report it.** Do not append your change to someone else's open PR, and do not rewrite history to work around it. Ask the user how to proceed. Bundling into a stranger's PR — even with separate commits — defeats the one-change-per-PR discipline and makes review harder.
 - PR title under 70 chars. PR body in Spanish (the user is Spanish-speaking).
 - Squash-merge once CI is green.
 - Sync the branch with `main` after merge (`git fetch origin main && git reset --hard origin/main && git push --force-with-lease`).
