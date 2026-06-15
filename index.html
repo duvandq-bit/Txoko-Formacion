@@ -16730,6 +16730,12 @@ async function submitLiveAnswer(code, qIdx, choiceIdx){
   if(!questions || !questions[qIdx]) return;
   const answer = questions[qIdx].choices[choiceIdx];
   if(typeof answer === 'undefined') return;
+  // Disable all choice buttons immediately so a double-tap (or a second tap
+  // while the round-trip is in flight on slow Wi-Fi) can't overwrite the
+  // first answer before the re-render lands.
+  const choiceBtns = document.querySelectorAll('#liveChoices button');
+  if([...choiceBtns].some(b=>b.disabled)) return;
+  choiceBtns.forEach(b=>{ b.disabled=true; b.style.opacity='.5'; });
   await supaSubmitLiveAnswer(decoded, currentUser, qIdx, answer);
   const sess = await supaGetLiveSession(decoded);
   if(sess) renderLiveQuizQuestion(decoded, questions, qIdx, jParse(sess.answers, {}));

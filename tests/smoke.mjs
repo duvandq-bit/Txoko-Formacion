@@ -488,6 +488,28 @@ test('mobile input font-size avoids iOS Safari auto-zoom trap', () => {
   }
 });
 
+test('live quiz answer submission guards against double-tap race', () => {
+  // submitLiveAnswer does a read-modify-write of sess.answers (not an
+  // atomic upsert). On slow restaurant Wi-Fi the round trip can take
+  // seconds; a second tap on another choice before the first resolves
+  // races the first and can silently overwrite it — the camarero's
+  // first (intended) answer gets replaced by whichever network call
+  // resolves last. The handler must disable #liveChoices buttons and
+  // bail on re-entry *before* the first await, synchronously on tap.
+  const startIdx = html.search(/async function submitLiveAnswer\(/);
+  assert(startIdx !== -1, 'submitLiveAnswer not found');
+  const slice = html.slice(startIdx, startIdx + 800);
+  const firstAwaitIdx = slice.search(/\bawait\b/);
+  assert(firstAwaitIdx !== -1, 'submitLiveAnswer has no await — guard expectations stale');
+  const beforeAwait = slice.slice(0, firstAwaitIdx);
+  assert(/#liveChoices button/.test(beforeAwait),
+    'submitLiveAnswer must inspect/disable #liveChoices buttons before the first await');
+  assert(/\.disabled\s*=\s*true/.test(beforeAwait),
+    'submitLiveAnswer must disable choice buttons before the first await — double-tap can overwrite the first answer');
+  assert(/return/.test(beforeAwait),
+    'submitLiveAnswer must bail out early on re-entry (already-disabled buttons) before the first await');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
