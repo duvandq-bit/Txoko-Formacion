@@ -510,6 +510,32 @@ test('live quiz answer submission guards against double-tap race', () => {
     'submitLiveAnswer must bail out early on re-entry (already-disabled buttons) before the first await');
 });
 
+test('pinSubmit guards against re-entrant double-submit', () => {
+  // pinSubmit is scheduled via setTimeout from pinKey/pinHiddenInputHandler
+  // once the 4th digit lands, then awaits verifyEmployeePinServer (a fetch).
+  // On slow restaurant Wi-Fi that round trip can take seconds; if the camarero
+  // deletes and re-enters a digit while it's in flight, a second pinSubmit
+  // gets scheduled and runs concurrently, double-counting recordPinFail (or
+  // recordPinSuccess/closePinAndEnter) for a single PIN entry. A module-level
+  // in-flight flag, checked before the first await and cleared in a finally,
+  // must prevent the re-entrant call.
+  const startIdx = html.search(/async function pinSubmit\(\)\{/);
+  assert(startIdx !== -1, 'pinSubmit not found');
+  const slice = html.slice(startIdx, startIdx + 3200);
+  const endIdx = slice.search(/\n\}\n/);
+  assert(endIdx !== -1, 'could not find end of pinSubmit');
+  const body = slice.slice(0, endIdx);
+  const firstAwaitIdx = body.search(/\bawait\b/);
+  assert(firstAwaitIdx !== -1, 'pinSubmit has no await — guard expectations stale');
+  const beforeAwait = body.slice(0, firstAwaitIdx);
+  assert(/_pinSubmitInFlight\)\s*return/.test(beforeAwait),
+    'pinSubmit must bail out early on re-entry (in-flight flag already set) before the first await');
+  assert(/_pinSubmitInFlight\s*=\s*true/.test(beforeAwait),
+    'pinSubmit must set the in-flight flag before the first await');
+  assert(/finally\s*\{\s*_pinSubmitInFlight\s*=\s*false;/.test(body),
+    'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

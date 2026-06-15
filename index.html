@@ -6346,6 +6346,7 @@ function deleteProfileConfirmed(name){
 // ═══════ PIN SYSTEM ═══════
 let pinTarget=null, pinBuffer='', pinStep='enter'; // step: 'enter'|'setup1'|'setup2'
 let pinFirst=''; // store first entry during setup
+let _pinSubmitInFlight=false; // re-entrancy guard, see pinSubmit()
 
 function login(name){
   localStorage.setItem('txoko_last_user', name);
@@ -6442,6 +6443,14 @@ function updatePinDots(error=false){
 }
 
 async function pinSubmit(){
+  // Guard against re-entrant calls: pinKey/pinHiddenInputHandler each schedule
+  // a setTimeout(pinSubmit) once the 4th digit lands. On slow Wi-Fi the
+  // verifyEmployeePinServer round-trip can still be in flight when the user,
+  // thinking the modal froze, deletes and re-enters a digit — scheduling a
+  // second pinSubmit that would double-count recordPinFail/recordPinSuccess.
+  if(_pinSubmitInFlight) return;
+  _pinSubmitInFlight = true;
+  try {
   const emp=getEmp(pinTarget);
   if(pinStep==='enter'){
     if(!checkPinRateLimit()){
@@ -6507,6 +6516,9 @@ async function pinSubmit(){
         document.getElementById('pinErr').textContent='';
       }, 900);
     }
+  }
+  } finally {
+    _pinSubmitInFlight = false;
   }
 }
 
