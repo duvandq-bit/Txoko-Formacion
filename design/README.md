@@ -21,6 +21,7 @@ PR + smoke tests.
 | Archivo | Qué cubre | Estado |
 |---------|-----------|--------|
 | `foundations.html` | Paleta, tipografía, radios, sombras, espaciado, motion — los tokens reales | ✅ referencia |
+| `exam-options.html` | Opciones de examen (`.choice`): actual + 2 variantes de rediseño, 4 estados cada una | 🔬 a decidir |
 
 ## Conexión con Claude Design (claude.ai/design)
 
