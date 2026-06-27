@@ -1,0 +1,112 @@
+<!-- @dsCard group="Components" name="Opciones de examen — MEZCLA" subtitle="Carácter de B + claridad de A · 4 estados" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Opciones — Mezcla</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --parchment:#1c2a22;
+    --gold:#c49a3c; --gold3:#e4be68; --sage:#4d8a5e; --rose:#c47068;
+    --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:480px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.5rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  .q-stem{font-family:var(--font-serif);font-size:1rem;color:var(--ink);margin-bottom:.2rem}
+  .q-meta{font-family:var(--font-mono);font-size:.55rem;color:#8a8478;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+  .recipe{font-family:var(--font-mono);font-size:.6rem;color:#cfc5b3;line-height:1.7;margin:1.5rem 0 .5rem;padding-top:1rem;border-top:1px solid var(--line)}
+  .recipe b{color:var(--gold3)}
+
+  /* ───────── MEZCLA: base estética de B + feedback de estado de A ───────── */
+  .choices{display:flex;flex-direction:column;gap:0}
+  .choice{display:flex;align-items:center;gap:.75rem;
+    padding:.95rem 1rem .95rem .85rem;margin-bottom:.55rem;min-height:54px;
+    background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+    border:1.5px solid rgba(196,154,60,.14);border-left:3px solid transparent;
+    border-radius:12px;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+    font-family:var(--font-sans);font-size:.9rem;font-weight:500;color:#1c2a22;text-align:left;width:100%}
+  /* subtle rombo texture from the real .choice::before */
+  .choice::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg width='30' height='26' viewBox='0 0 30 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='15,1 29,13 15,25 1,13' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.3'/%3E%3C/svg%3E");
+    background-size:30px 26px}
+  .choice-ltr{width:30px;height:30px;border-radius:9px;background:#1c2a22;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-serif);font-size:.8rem;color:var(--gold3);font-weight:600;
+    flex-shrink:0;transition:all .18s;position:relative;z-index:1}
+  .choice-txt{flex:1;position:relative;z-index:1}
+  .choice-mark{width:22px;flex-shrink:0;font-size:1.05rem;font-weight:700;text-align:center;
+    opacity:0;transition:opacity .2s;position:relative;z-index:1}
+
+  /* seleccionado: barra dorada (de B) + badge dorado */
+  .choice.sel{border-left-color:var(--gold);background:linear-gradient(155deg,#fffaf0,#f3ead6);
+    box-shadow:0 3px 14px rgba(28,42,34,.1)}
+  .choice.sel .choice-ltr{background:var(--gold);color:#fff}
+
+  /* correcto: verde + icono ✓ (de A) */
+  .choice.correct{border-color:var(--sage);border-left-color:var(--sage);
+    background:linear-gradient(155deg,rgba(77,138,94,.13),rgba(77,138,94,.05));
+    box-shadow:0 0 16px rgba(77,138,94,.14)}
+  .choice.correct .choice-ltr{background:var(--sage);color:#fff}
+  .choice.correct .choice-mark{opacity:1;color:var(--sage)}
+
+  /* incorrecto: rojo + icono ✕ (de A) */
+  .choice.wrong{border-color:var(--rose);border-left-color:var(--rose);
+    background:linear-gradient(155deg,rgba(196,112,104,.13),rgba(196,112,104,.05))}
+  .choice.wrong .choice-ltr{background:var(--rose);color:#fff}
+  .choice.wrong .choice-mark{opacity:1;color:var(--rose)}
+
+  .state-label{font-family:var(--font-mono);font-size:.5rem;color:#8a8478;letter-spacing:.1em;
+    text-transform:uppercase;margin:1.2rem 0 .4rem}
+</style>
+</head>
+<body>
+  <h1>Opciones — Mezcla</h1>
+  <div class="sub">Carácter de B + claridad de A</div>
+
+  <div class="q-stem">¿Cuáles son los ingredientes de Calamares a la Andaluza?</div>
+  <div class="q-meta">Pregunta 5 / 15 · Ingredientes</div>
+
+  <!-- En reposo: cómo se ve antes de responder -->
+  <div class="state-label">En reposo (antes de responder)</div>
+  <div id="resting"></div>
+
+  <!-- Respondido: cómo se ve tras elegir B (incorrecta) y revelarse la correcta -->
+  <div class="state-label">Respondido — eligió B, la correcta era A</div>
+  <div id="answered"></div>
+
+  <div class="recipe">
+    <b>Qué toma de cada variante:</b><br>
+    · Barra de acento dorada izquierda + badge cuadrado serif (Cinzel) — <b>de B (carácter)</b><br>
+    · Icono ✓/✕ a la derecha, no solo color — <b>de A (claridad, daltonismo)</b><br>
+    · Badge que toma el color del estado, tap target 54px — <b>de A</b><br>
+    · Textura de rombo sutil + paleta parchment/oro — <b>del .choice actual</b>
+  </div>
+
+<script>
+  const opts=[
+    ['A','Calamar, harina, levadura, cerveza, ajo, limón, tinta'],
+    ['B','Pulpo, papa, pimentón, aceite de oliva'],
+    ['C','Bacalao, garbanzos, espinacas, huevo'],
+    ['D','Gambas, ajo, guindilla, perejil']
+  ];
+  const mark=s=> s==='correct'?'✓' : s==='wrong'?'✕' : '';
+  function row([ltr,txt],state){
+    return `<button class="choice ${state}"><span class="choice-ltr">${ltr}</span><span class="choice-txt">${txt}</span><span class="choice-mark">${mark(state)}</span></button>`;
+  }
+  // En reposo: todas neutras, C marcada como "seleccionada" para mostrar ese estado
+  document.getElementById('resting').innerHTML='<div class="choices">'+
+    [row(opts[0],''),row(opts[1],''),row(opts[2],'sel'),row(opts[3],'')].join('')+'</div>';
+  // Respondido: A correcta (verde ✓), B incorrecta (roja ✕)
+  document.getElementById('answered').innerHTML='<div class="choices">'+
+    [row(opts[0],'correct'),row(opts[1],'wrong'),row(opts[2],''),row(opts[3],'')].join('')+'</div>';
+</script>
+</body>
+</html>
