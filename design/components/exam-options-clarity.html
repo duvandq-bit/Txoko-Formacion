@@ -1,0 +1,96 @@
+<!-- @dsCard group="Components" name="Opciones de examen — CLARIDAD (Variante A)" subtitle="Sobria, cercana al actual · 4 estados" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Opciones — Claridad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --parchment:#1c2a22;
+    --gold:#c49a3c; --gold3:#e4be68; --sage:#4d8a5e; --rose:#c47068;
+    --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:480px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.5rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  .q-stem{font-family:var(--font-serif);font-size:1rem;color:var(--ink);margin-bottom:.2rem}
+  .q-meta{font-family:var(--font-mono);font-size:.55rem;color:#8a8478;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+  .recipe{font-family:var(--font-mono);font-size:.6rem;color:#cfc5b3;line-height:1.7;margin:1.5rem 0 .5rem;padding-top:1rem;border-top:1px solid var(--line)}
+  .recipe b{color:var(--gold3)}
+  .state-label{font-family:var(--font-mono);font-size:.5rem;color:#8a8478;letter-spacing:.1em;text-transform:uppercase;margin:1.2rem 0 .4rem}
+
+  /* ───────── CLARIDAD (Variante A): sobria, badge circular DM Mono, sin barra ───────── */
+  .choices{display:flex;flex-direction:column;gap:0}
+  .choice{display:flex;align-items:center;gap:.7rem;padding:.9rem 1rem;margin-bottom:.5rem;min-height:52px;
+    background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);
+    border-radius:12px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+    font-family:var(--font-sans);font-size:.88rem;color:#1c2a22;text-align:left;width:100%}
+  .choice::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg width='30' height='26' viewBox='0 0 30 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='15,1 29,13 15,25 1,13' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.3'/%3E%3C/svg%3E");
+    background-size:30px 26px}
+  .choice-ltr{width:30px;height:30px;border-radius:50%;background:rgba(196,154,60,.1);
+    display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);
+    font-size:.68rem;color:var(--gold);font-weight:700;flex-shrink:0;transition:all .2s;position:relative;z-index:1}
+  .choice-txt{flex:1;position:relative;z-index:1}
+  .choice-mark{width:22px;flex-shrink:0;font-size:1rem;font-weight:700;text-align:center;opacity:0;transition:opacity .2s;position:relative;z-index:1}
+
+  /* seleccionado: badge dorado, sin barra lateral */
+  .choice.sel{border-color:rgba(196,154,60,.45);box-shadow:0 2px 12px rgba(28,42,34,.08);transform:translateY(-1px)}
+  .choice.sel .choice-ltr{background:var(--gold);color:#fff}
+
+  /* correcto: verde + icono ✓ */
+  .choice.correct{border-color:var(--sage);background:linear-gradient(155deg,rgba(77,138,94,.12),rgba(77,138,94,.05));box-shadow:0 0 16px rgba(77,138,94,.14)}
+  .choice.correct .choice-ltr{background:var(--sage);color:#fff}
+  .choice.correct .choice-mark{opacity:1;color:var(--sage)}
+
+  /* incorrecto: rojo + icono ✕ */
+  .choice.wrong{border-color:var(--rose);background:linear-gradient(155deg,rgba(196,112,104,.12),rgba(196,112,104,.05))}
+  .choice.wrong .choice-ltr{background:var(--rose);color:#fff}
+  .choice.wrong .choice-mark{opacity:1;color:var(--rose)}
+</style>
+</head>
+<body>
+  <h1>Opciones — Claridad</h1>
+  <div class="sub">Variante A · sobria, cercana al actual</div>
+
+  <div class="q-stem">¿Cuáles son los ingredientes de Calamares a la Andaluza?</div>
+  <div class="q-meta">Pregunta 5 / 15 · Ingredientes</div>
+
+  <div class="state-label">En reposo (antes de responder)</div>
+  <div id="resting"></div>
+
+  <div class="state-label">Respondido — eligió B, la correcta era A</div>
+  <div id="answered"></div>
+
+  <div class="recipe">
+    <b>Claridad (A) frente a la Mezcla:</b><br>
+    · Badge <b>circular en DM Mono</b> (no cuadrado serif) — más sobrio<br>
+    · <b>Sin barra dorada</b> a la izquierda — la selección se marca con borde + badge<br>
+    · Conserva el icono ✓/✕, el badge que toma color de estado y el tap de 52px<br>
+    · Es el cambio de <b>menor diff</b> sobre el .choice actual
+  </div>
+
+<script>
+  const opts=[
+    ['A','Calamar, harina, levadura, cerveza, ajo, limón, tinta'],
+    ['B','Pulpo, papa, pimentón, aceite de oliva'],
+    ['C','Bacalao, garbanzos, espinacas, huevo'],
+    ['D','Gambas, ajo, guindilla, perejil']
+  ];
+  const mark=s=> s==='correct'?'✓' : s==='wrong'?'✕' : '';
+  function row([ltr,txt],state){
+    return `<button class="choice ${state}"><span class="choice-ltr">${ltr}</span><span class="choice-txt">${txt}</span><span class="choice-mark">${mark(state)}</span></button>`;
+  }
+  document.getElementById('resting').innerHTML='<div class="choices">'+
+    [row(opts[0],''),row(opts[1],''),row(opts[2],'sel'),row(opts[3],'')].join('')+'</div>';
+  document.getElementById('answered').innerHTML='<div class="choices">'+
+    [row(opts[0],'correct'),row(opts[1],'wrong'),row(opts[2],''),row(opts[3],'')].join('')+'</div>';
+</script>
+</body>
+</html>
