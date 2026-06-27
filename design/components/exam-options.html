@@ -1,0 +1,140 @@
+<!-- @dsCard group="Components" name="Opciones de examen (.choice)" subtitle="Actual + 2 variantes · 4 estados cada una" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Opciones de examen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --parchment:#1c2a22; --parch3:rgba(28,42,34,.65);
+    --gold:#c49a3c; --gold3:#e4be68; --sage:#4d8a5e; --rose:#c47068;
+    --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);
+    padding:1.5rem 1rem 4rem;max-width:480px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.5rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  h2{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;
+    margin:2rem 0 .35rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.74rem;color:#cfc5b3;margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:var(--gold3)}
+  .q-stem{font-family:var(--font-serif);font-size:1rem;color:var(--ink);margin-bottom:.2rem}
+  .q-meta{font-family:var(--font-mono);font-size:.55rem;color:#8a8478;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem}
+  .state-tag{font-family:var(--font-mono);font-size:.5rem;color:#8a8478;letter-spacing:.08em;margin:.5rem 0 .2rem;text-transform:uppercase}
+  .choices{display:flex;flex-direction:column;gap:0;margin-bottom:.5rem}
+
+  /* ───────────────────────── ACTUAL (copiado literal de styles.css) ───────────────────────── */
+  .v0 .choice{display:flex;align-items:center;gap:.65rem;padding:.85rem 1rem;margin-bottom:.45rem;
+    background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);
+    border-radius:12px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+    font-family:var(--font-sans);font-size:.86rem;color:#1c2a22;text-align:left;width:100%}
+  .v0 .choice-ltr{width:28px;height:28px;border-radius:50%;background:rgba(196,154,60,.08);
+    display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);
+    font-size:.65rem;color:var(--gold);font-weight:700;flex-shrink:0}
+  .v0 .choice.sel{border-color:rgba(196,154,60,.3);box-shadow:0 2px 10px rgba(28,42,34,.06);transform:translateY(-1px)}
+  .v0 .choice.correct{border-color:rgba(77,138,94,.5);background:linear-gradient(155deg,rgba(77,138,94,.1),rgba(77,138,94,.04));box-shadow:0 0 16px rgba(77,138,94,.12)}
+  .v0 .choice.wrong{border-color:rgba(196,112,104,.5);background:linear-gradient(155deg,rgba(196,112,104,.1),rgba(196,112,104,.04))}
+
+  /* ───────────────────────── VARIANTE A — CLARIDAD ─────────────────────────
+     Mismo lenguaje visual, pero: icono ✓/✕ a la derecha (no solo color),
+     badge de letra que toma el color del estado, y min-height 52px de tap. */
+  .vA .choice{display:flex;align-items:center;gap:.7rem;padding:.9rem 1rem;margin-bottom:.5rem;min-height:52px;
+    background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);
+    border-radius:12px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+    font-family:var(--font-sans);font-size:.88rem;color:#1c2a22;text-align:left;width:100%}
+  .vA .choice-ltr{width:30px;height:30px;border-radius:50%;background:rgba(196,154,60,.1);
+    display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);
+    font-size:.68rem;color:var(--gold);font-weight:700;flex-shrink:0;transition:all .2s}
+  .vA .choice-txt{flex:1}
+  .vA .choice-mark{width:22px;flex-shrink:0;font-size:1rem;font-weight:700;text-align:center;opacity:0;transition:opacity .2s}
+  .vA .choice.sel{border-color:rgba(196,154,60,.45);box-shadow:0 2px 12px rgba(28,42,34,.08);transform:translateY(-1px)}
+  .vA .choice.sel .choice-ltr{background:var(--gold);color:#fff}
+  .vA .choice.correct{border-color:var(--sage);background:linear-gradient(155deg,rgba(77,138,94,.12),rgba(77,138,94,.05));box-shadow:0 0 16px rgba(77,138,94,.14)}
+  .vA .choice.correct .choice-ltr{background:var(--sage);color:#fff}
+  .vA .choice.correct .choice-mark{opacity:1;color:var(--sage)}
+  .vA .choice.wrong{border-color:var(--rose);background:linear-gradient(155deg,rgba(196,112,104,.12),rgba(196,112,104,.05))}
+  .vA .choice.wrong .choice-ltr{background:var(--rose);color:#fff}
+  .vA .choice.wrong .choice-mark{opacity:1;color:var(--rose)}
+
+  /* ───────────────────────── VARIANTE B — CARÁCTER ─────────────────────────
+     Más identidad Txoko: barra de acento dorada a la izquierda en selección,
+     badge cuadrado-redondeado, tipografía un punto mayor, estado con icono. */
+  .vB .choice{display:flex;align-items:center;gap:.75rem;padding:.95rem 1rem .95rem .85rem;margin-bottom:.5rem;min-height:54px;
+    background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.14);
+    border-left:3px solid transparent;border-radius:12px;cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;font-family:var(--font-sans);font-size:.9rem;font-weight:500;color:#1c2a22;text-align:left;width:100%}
+  .vB .choice-ltr{width:30px;height:30px;border-radius:9px;background:#1c2a22;
+    display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);
+    font-size:.8rem;color:var(--gold3);font-weight:600;flex-shrink:0;transition:all .18s}
+  .vB .choice-txt{flex:1}
+  .vB .choice-mark{width:22px;flex-shrink:0;font-size:1.05rem;font-weight:700;text-align:center;opacity:0;transition:opacity .2s}
+  .vB .choice.sel{border-left-color:var(--gold);background:linear-gradient(155deg,#fffaf0,#f3ead6);box-shadow:0 3px 14px rgba(28,42,34,.1)}
+  .vB .choice.sel .choice-ltr{background:var(--gold);color:#fff}
+  .vB .choice.correct{border-color:var(--sage);border-left-color:var(--sage);background:linear-gradient(155deg,rgba(77,138,94,.13),rgba(77,138,94,.05))}
+  .vB .choice.correct .choice-ltr{background:var(--sage);color:#fff}
+  .vB .choice.correct .choice-mark{opacity:1;color:var(--sage)}
+  .vB .choice.wrong{border-color:var(--rose);border-left-color:var(--rose);background:linear-gradient(155deg,rgba(196,112,104,.13),rgba(196,112,104,.05))}
+  .vB .choice.wrong .choice-ltr{background:var(--rose);color:#fff}
+  .vB .choice.wrong .choice-mark{opacity:1;color:var(--rose)}
+</style>
+</head>
+<body>
+  <h1>Opciones de examen</h1>
+  <div class="sub">.choice · actual + 2 variantes · 4 estados</div>
+
+  <div class="q-stem">¿Cuáles son los ingredientes de Calamares a la Andaluza?</div>
+  <div class="q-meta">Pregunta 5 / 15 · Ingredientes</div>
+
+  <!-- ════════ ACTUAL ════════ -->
+  <h2>Actual</h2>
+  <div class="blurb">Lo que ve hoy el camarero. Los estados correcto/incorrecto cambian
+    <b>solo color de borde y fondo</b> — sutil, y problemático para daltónicos.</div>
+  <div id="v0"></div>
+
+  <!-- ════════ VARIANTE A ════════ -->
+  <h2>Variante A — Claridad</h2>
+  <div class="blurb">Mismo lenguaje visual. Añade <b>icono ✓ / ✕</b> a la derecha (no depende
+    solo del color), el <b>badge de letra toma el color del estado</b>, y sube el tap target a 52px.</div>
+  <div id="vA"></div>
+
+  <!-- ════════ VARIANTE B ════════ -->
+  <h2>Variante B — Carácter</h2>
+  <div class="blurb">Más identidad Txoko: <b>barra de acento dorada</b> a la izquierda al seleccionar,
+    badge cuadrado con la tipografía serif (Cinzel) de la marca, texto un punto mayor. También con icono de estado.</div>
+  <div id="vB"></div>
+
+<script>
+  // [letra, texto, estado]  estado: '' | 'sel' | 'correct' | 'wrong'
+  const opts=[
+    ['A','Calamar, harina, levadura, cerveza, ajo, limón, tinta','correct'],
+    ['B','Pulpo, papa, pimentón, aceite de oliva','wrong'],
+    ['C','Bacalao, garbanzos, espinacas, huevo','sel'],
+    ['D','Gambas, ajo, guindilla, perejil','']
+  ];
+  const mark=s=> s==='correct'?'✓' : s==='wrong'?'✕' : '';
+
+  function render(id, variant){
+    const wrap=document.getElementById(id);
+    let html='<div class="choices '+variant+'">';
+    for(const [ltr,txt,state] of opts){
+      if(variant==='v0'){
+        html+=`<button class="choice ${state}"><span class="choice-ltr">${ltr}</span><span>${txt}</span></button>`;
+      } else {
+        html+=`<button class="choice ${state}"><span class="choice-ltr">${ltr}</span><span class="choice-txt">${txt}</span><span class="choice-mark">${mark(state)}</span></button>`;
+      }
+    }
+    html+='</div>';
+    wrap.innerHTML=html;
+  }
+  render('v0','v0');
+  render('vA','vA');
+  render('vB','vB');
+</script>
+</body>
+</html>

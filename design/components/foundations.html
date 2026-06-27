@@ -1,0 +1,141 @@
+<!-- @dsCard group="Foundations" name="Foundations — color, type, radius, motion" subtitle="Tokens reales de Txoko" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Foundations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Same families the app loads, plus Cormorant Garamond (see note below) -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ── Real Txoko tokens, copied verbatim from styles.css :root ── */
+  :root{
+    --ink:#f4ede2; --ink2:#ebe3d5; --ink3:#ddd4c4; --ink4:#cfc5b3; --ink5:#bfb5a3;
+    --parchment:#1c2a22; --parch2:rgba(28,42,34,.82); --parch3:rgba(28,42,34,.65); --parch4:rgba(28,42,34,.55);
+    --gold:#c49a3c; --gold2:#d4aa4c; --gold3:#e4be68; --gold-a:rgba(196,154,60,.14); --gold-b:rgba(196,154,60,.06);
+    --sage:#4d8a5e; --rose:#c47068; --azure:#4888a0;
+    --line:rgba(196,154,60,.14); --line2:rgba(196,154,60,.28);
+    --r:16px; --r2:12px; --r3:8px;
+    --shadow:0 4px 14px rgba(28,42,34,.08),0 1px 3px rgba(28,42,34,.05);
+    --shadow2:0 8px 30px rgba(28,42,34,.12),0 2px 8px rgba(28,42,34,.06);
+    --shadow3:0 16px 48px rgba(28,42,34,.15),0 4px 12px rgba(28,42,34,.08);
+    --cat-entrantes:#c49a3c; --cat-hamburguesas:#c47068; --cat-principales:#4888a0;
+    --cat-guarniciones:#4d8a5e; --cat-postres:#8b5e9b; --cat-vegetariano:#5a9a6e;
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif;
+    --font-mono:'DM Mono',monospace; --font-read:'Cormorant Garamond',serif;
+    --text-micro:.55rem; --text-2xs:.65rem; --text-xs:.72rem; --text-sm:.82rem;
+    --text-base:.92rem; --text-lg:1.1rem; --text-xl:1.4rem; --text-2xl:1.85rem; --text-3xl:2.4rem;
+    --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+    --space-5:1.5rem; --space-6:2rem; --space-7:3rem; --space-8:4rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);color:var(--ink);font-family:var(--font-sans);
+    padding:var(--space-5) var(--space-4);max-width:760px;margin:0 auto;line-height:1.5}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:var(--text-2xl);color:var(--gold3);
+    letter-spacing:.04em;margin-bottom:var(--space-1)}
+  .sub{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--parch3);
+    text-transform:uppercase;letter-spacing:.14em;color:var(--ink4)}
+  h2{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--gold);letter-spacing:.12em;
+    text-transform:uppercase;margin:var(--space-6) 0 var(--space-3);padding-bottom:var(--space-2);
+    border-bottom:1px solid var(--line)}
+  .note{background:var(--gold-b);border:1px solid var(--line2);border-radius:var(--r2);
+    padding:var(--space-3) var(--space-4);font-size:var(--text-sm);color:var(--ink3);margin-top:var(--space-3)}
+  .note b{color:var(--gold3)}
+
+  /* Swatch grid */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:var(--space-3)}
+  .sw{border-radius:var(--r3);overflow:hidden;border:1px solid var(--line)}
+  .sw-chip{height:64px}
+  .sw-meta{padding:var(--space-2);background:rgba(255,255,255,.03)}
+  .sw-name{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--ink2)}
+  .sw-val{font-family:var(--font-mono);font-size:var(--text-micro);color:var(--parch3);color:var(--ink5)}
+
+  /* Type specimens */
+  .type-row{display:flex;align-items:baseline;gap:var(--space-4);padding:var(--space-2) 0;
+    border-bottom:1px solid var(--line)}
+  .type-tok{font-family:var(--font-mono);font-size:var(--text-micro);color:var(--ink5);
+    width:140px;flex-shrink:0}
+  .type-spec{color:var(--ink)}
+
+  /* Radius + elevation demos */
+  .demo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--space-4)}
+  .demo-box{background:var(--ink);height:80px;display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-mono);font-size:var(--text-micro);color:var(--parchment)}
+  .motion-row{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-2)}
+  .motion-dot{width:18px;height:18px;border-radius:50%;background:var(--gold)}
+</style>
+</head>
+<body>
+  <h1>Txoko · Foundations</h1>
+  <div class="sub">Tokens reales · referencia viva · no es la app</div>
+
+  <h2>Neutros — ink (claro) / parchment (oscuro)</h2>
+  <div class="swatches" id="neutrals"></div>
+
+  <h2>Oro — acento de marca</h2>
+  <div class="swatches" id="golds"></div>
+
+  <h2>Semánticos + categorías de carta</h2>
+  <div class="swatches" id="semantic"></div>
+
+  <h2>Tipografía</h2>
+  <div id="type"></div>
+  <div class="note"><b>Hallazgo:</b> el token <code>--font-read</code> apunta a
+    <b>Cormorant Garamond</b> pero la app <b>no carga esa fuente</b> (el &lt;link&gt; solo trae
+    Cinzel, Quicksand y DM Mono). Donde se use, cae a <code>serif</code> genérico del sistema.
+    Aquí sí la cargo para enseñar la intención. Es candidato a fix: añadir la fuente al &lt;link&gt;
+    o cambiar el token.</div>
+
+  <h2>Radios</h2>
+  <div class="demo-grid" id="radii"></div>
+
+  <h2>Elevación (sombras)</h2>
+  <div class="demo-grid" id="elev"></div>
+
+  <h2>Espaciado — escala base 4px</h2>
+  <div id="space"></div>
+
+  <h2>Motion — duración + easing</h2>
+  <div id="motion"></div>
+
+<script>
+  const neutrals=[['--ink','#f4ede2'],['--ink2','#ebe3d5'],['--ink3','#ddd4c4'],['--ink4','#cfc5b3'],['--ink5','#bfb5a3'],['--parchment','#1c2a22'],['--parch2','rgba(28,42,34,.82)'],['--parch3','rgba(28,42,34,.65)']];
+  const golds=[['--gold','#c49a3c'],['--gold2','#d4aa4c'],['--gold3','#e4be68'],['--gold-a','rgba(196,154,60,.14)'],['--gold-b','rgba(196,154,60,.06)']];
+  const semantic=[['--sage (success)','#4d8a5e'],['--rose (danger)','#c47068'],['--azure (info)','#4888a0'],['--cat-entrantes','#c49a3c'],['--cat-hamburguesas','#c47068'],['--cat-principales','#4888a0'],['--cat-guarniciones','#4d8a5e'],['--cat-postres','#8b5e9b'],['--cat-vegetariano','#5a9a6e']];
+  const chip=([name,val])=>`<div class="sw"><div class="sw-chip" style="background:${val}"></div><div class="sw-meta"><div class="sw-name">${name}</div><div class="sw-val">${val}</div></div></div>`;
+  const $=id=>document.getElementById(id);
+  neutrals.forEach(c=>$('neutrals').insertAdjacentHTML('beforeend',chip(c)));
+  golds.forEach(c=>$('golds').insertAdjacentHTML('beforeend',chip(c)));
+  semantic.forEach(c=>$('semantic').insertAdjacentHTML('beforeend',chip(c)));
+
+  const fonts=[['--font-serif · Cinzel',"'Cinzel',serif",600],['--font-sans · Quicksand',"'Quicksand',sans-serif",500],['--font-mono · DM Mono',"'DM Mono',monospace",400],['--font-read · Cormorant',"'Cormorant Garamond',serif",400]];
+  const sizes=[['--text-3xl','2.4rem'],['--text-2xl','1.85rem'],['--text-xl','1.4rem'],['--text-lg','1.1rem'],['--text-base','.92rem'],['--text-sm','.82rem'],['--text-xs','.72rem'],['--text-2xs','.65rem'],['--text-micro','.55rem']];
+  let typeHtml='';
+  fonts.forEach(([flabel,ff,fw])=>{
+    typeHtml+=`<div style="margin:1rem 0 .4rem;font-family:'DM Mono',monospace;font-size:.55rem;color:#bfb5a3;letter-spacing:.1em">${flabel}</div>`;
+    sizes.slice(2).forEach(([tok,sz])=>{
+      typeHtml+=`<div class="type-row"><div class="type-tok">${tok} · ${sz}</div><div class="type-spec" style="font-family:${ff};font-weight:${fw};font-size:${sz}">Ostras nº2 · Wagyu</div></div>`;
+    });
+  });
+  $('type').innerHTML=typeHtml;
+
+  [['--r3','8px'],['--r2','12px'],['--r','16px'],['999px','999px']].forEach(([tok,v])=>{
+    $('radii').insertAdjacentHTML('beforeend',`<div class="demo-box" style="border-radius:${v}">${tok}</div>`);
+  });
+  [['--shadow','0 4px 14px rgba(28,42,34,.08),0 1px 3px rgba(28,42,34,.05)'],['--shadow2','0 8px 30px rgba(28,42,34,.12),0 2px 8px rgba(28,42,34,.06)'],['--shadow3','0 16px 48px rgba(28,42,34,.15),0 4px 12px rgba(28,42,34,.08)']].forEach(([tok,v])=>{
+    $('elev').insertAdjacentHTML('beforeend',`<div class="demo-box" style="border-radius:12px;box-shadow:${v}">${tok}</div>`);
+  });
+
+  [['--space-1','.25rem','4px'],['--space-2','.5rem','8px'],['--space-3','.75rem','12px'],['--space-4','1rem','16px'],['--space-5','1.5rem','24px'],['--space-6','2rem','32px'],['--space-7','3rem','48px'],['--space-8','4rem','64px']].forEach(([tok,rem,px])=>{
+    $('space').insertAdjacentHTML('beforeend',`<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem"><div style="font-family:'DM Mono',monospace;font-size:.55rem;color:#bfb5a3;width:130px">${tok} · ${px}</div><div style="height:14px;width:${rem};background:#c49a3c;border-radius:3px"></div></div>`);
+  });
+
+  [['--motion-fast','120ms'],['--motion-base','200ms'],['--motion-slow','360ms']].forEach(([tok,v])=>{
+    $('motion').insertAdjacentHTML('beforeend',`<div class="motion-row"><div style="font-family:'DM Mono',monospace;font-size:.55rem;color:#bfb5a3;width:130px">${tok} · ${v}</div><div class="motion-dot" style="animation:slide ${v} var(--ease-standard,ease) infinite alternate"></div></div>`);
+  });
+  const st=document.createElement('style');st.textContent='@keyframes slide{to{transform:translateX(40px)}}';document.head.appendChild(st);
+</script>
+</body>
+</html>
