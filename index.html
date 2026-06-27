@@ -6651,17 +6651,15 @@ function closePinAndEnter(){
   supaRestoreEmployee(currentUser).then(() => {
     const emp = getEmp(currentUser);
     // Show onboarding only if user has never earned XP; once they earn XP it stops
-    // ── Check SF trigger BEFORE updating lastStudyDay ──
-    const _sfNeeded = emp.xp && emp.xp > 0 && typeof _sfShouldTrigger==='function' && _sfShouldTrigger(emp);
     // ── Always mark today as connected so push notifications stop nagging ──
     emp.lastStudyDay = todayStr();
     saveDB();
+    // ═══ SERVICIO FANTASMA disabled by owner request ═══
+    // The inactivity drill no longer intercepts returning users on login —
+    // they go straight to the dashboard. The _sf* functions are kept in the
+    // codebase (unreferenced) so the feature can be re-enabled later if wanted.
     if(!emp.xp || emp.xp <= 0){
       showOnboarding();
-    } else if(_sfNeeded){
-      // ═══ SERVICIO FANTASMA — intercept inactive user ═══
-      var launched = launchServicioFantasma(emp);
-      if(!launched){ showTab('dashboard'); checkStreak(); }
     } else {
       showTab('dashboard');
       checkStreak();

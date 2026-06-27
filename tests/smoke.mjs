@@ -536,6 +536,18 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('Servicio Fantasma inactivity trigger stays disabled', () => {
+  // The Servicio Fantasma drill used to intercept returning users on login
+  // when inactive >= 7 days. The owner asked to remove that interception.
+  // launchServicioFantasma must therefore appear ONLY as its own definition,
+  // never as a call site — any re-introduced invocation brings the drill back.
+  const defs = (html.match(/function\s+launchServicioFantasma\s*\(/g) || []).length;
+  const allRefs = (html.match(/launchServicioFantasma\s*\(/g) || []).length;
+  assert(defs === 1, `expected exactly 1 launchServicioFantasma definition, found ${defs}`);
+  assert(allRefs === defs,
+    `launchServicioFantasma is invoked ${allRefs - defs} time(s) — the inactivity drill trigger is back; the owner disabled it`);
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
