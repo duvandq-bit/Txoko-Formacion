@@ -456,6 +456,20 @@ body::after{
 .btn-primary:hover{background:linear-gradient(135deg,#b08a52,#9a7340);transform:translateY(-2px);box-shadow:0 6px 0 #6b4d28, 0 8px 20px rgba(196,154,60,.25)}
 .btn-primary:active{transform:translateY(2px);box-shadow:0 1px 0 #6b4d28}
 
+/* Secondary action — alternative to the primary CTA. The class was already
+   used on 3 "Volver" buttons but had no rule, so they rendered as bare grey
+   system buttons. Cream fill + gold border + dark-gold text (5.7:1 contrast),
+   sized like the primary but "hollow" so it reads one step below it. */
+.btn-secondary{
+  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  color:#7d5c2f;border:1.5px solid var(--gold);border-radius:var(--r);
+  padding:.72rem 1.4rem;font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.02em;text-transform:uppercase;
+  box-shadow:0 3px 0 var(--ink4),0 3px 10px rgba(196,154,60,.1);
+}
+@media (hover:hover){.btn-secondary:hover{border-color:#7d5c2f;transform:translateY(-1px)}}
+.btn-secondary:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink4)}
+
 /* ═════════════════════════════════════════════════
    TUNIC Onboarding Guide — Divine Manuscript v4
 ═════════════════════════════════════════════════ */

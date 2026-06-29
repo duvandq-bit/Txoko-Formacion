@@ -536,6 +536,23 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('.btn-secondary has a real style rule (not a bare grey button)', () => {
+  // .btn-secondary is used on "Volver" buttons but for a long time had no
+  // CSS rule, so those rendered as unstyled grey system buttons. The rule
+  // must exist with the brand cream/gold treatment and the dark-gold text
+  // that clears WCAG (#9a7340 was 3.98:1 and failed; #7d5c2f is 5.66:1).
+  const css = read('styles.css');
+  const rule = css.match(/\.btn-secondary\s*\{([^}]*)\}/);
+  assert(rule, '.btn-secondary has no CSS rule — Volver buttons render as bare grey');
+  assert(/border:[^;]*var\(--gold\)/.test(rule[1]) || /border:[^;]*#c49a3c/.test(rule[1]),
+    '.btn-secondary lost its gold border');
+  assert(/color:\s*#7d5c2f/.test(rule[1]),
+    '.btn-secondary text must be dark gold #7d5c2f (lighter gold fails WCAG on cream)');
+  // Still used in the markup — guard against the class being renamed away.
+  assert((html.match(/class="btn-secondary/g) || []).length >= 1,
+    'no .btn-secondary usages found — was the class renamed?');
+});
+
 test('dashboard review alert uses the .dash-num data badge', () => {
   // Ported "Dato protagonista" (variant B): the SRS review count moves to
   // a large left-hand badge so the camarero sees how many dishes are due
