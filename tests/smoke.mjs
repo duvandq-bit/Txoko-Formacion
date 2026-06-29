@@ -536,6 +536,25 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('viewport is clipped horizontally on <html>, not just <body>', () => {
+  // Sideways-drift on app open: body had overflow-x:hidden but <html>
+  // did not. On iOS/Android the document scroll lives on <html>, so the
+  // viewport still drags sideways (e.g. the 140vw login godrays). <html>
+  // must clip overflow-x; clip is preferred (no scroll container, keeps
+  // sticky working) with hidden as the old-WebKit fallback.
+  const css = read('styles.css');
+  // The base html/body rules each start at the beginning of a line.
+  const htmlRule = css.match(/\nhtml\s*\{([^}]*)\}/);
+  assert(htmlRule, 'html rule not found');
+  assert(/overflow-x\s*:\s*(clip|hidden)/.test(htmlRule[1]),
+    'html must set overflow-x:clip/hidden or the viewport drags sideways on touch');
+  // body should also disable horizontal overscroll so there's no
+  // rubber-band / swipe-to-navigate drift.
+  const bodyRule = css.match(/\nbody\s*\{([^}]*)\}/);
+  assert(bodyRule && /overscroll-behavior-x\s*:\s*none/.test(bodyRule[1]),
+    'body must set overscroll-behavior-x:none to stop horizontal rubber-band drift');
+});
+
 test('PWA theme-color is unified across manifest and meta tag', () => {
   // The launch splash on installed Android PWAs is drawn by the OS from
   // the manifest. Keeping theme_color == background_color (the brand dark
