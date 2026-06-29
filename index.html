@@ -13834,10 +13834,10 @@ function renderDashboard(){
     <div class="tunic-divider"><span>${_en?'Today\u2019s plan':'Plan de hoy'}</span></div>
     <div style="display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem">
       ${_srsDue>0 ? `
-      <button class="dash-alert" style="--da-c:#4888a0;min-height:56px;border:none;width:100%;text-align:left" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4888a0" stroke-width="1.5" aria-hidden="true"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4888a0"/><polygon points="12,22 20,17 20,7 12,12" fill="#2e6878" opacity=".4"/><path d="M8 12a4 4 0 017-2.6M16 12a4 4 0 01-7 2.6M16 8v2.5h-2.5M8 16v-2.5h2.5" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <button class="dash-alert" style="--da-c:#4888a0;min-height:64px;border:none;width:100%;text-align:left" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
+        <div class="dash-num" aria-hidden="true">${_srsDue}</div>
         <div class="dash-alert-body">
-          <div class="dash-alert-title">${_srsDue} ${_en?(_srsDue===1?'dish to review':'dishes to review'):(_srsDue===1?'plato para repasar':'platos para repasar')}${_srsOverdue>0?` · ${_srsOverdue} ${_en?'overdue':'atrasados'}`:''}</div>
+          <div class="dash-alert-title">${_en?(_srsDue===1?'dish to review':'dishes to review'):(_srsDue===1?'plato para repasar':'platos para repasar')}${_srsOverdue>0?` · ${_srsOverdue} ${_en?'overdue':'atrasados'}`:''}</div>
           <div class="dash-alert-sub">${_en?'Spaced repetition — tap to open':'Repetición espaciada — toca para abrir'}</div>
         </div>
         <span class="dash-alert-arrow">›</span>
