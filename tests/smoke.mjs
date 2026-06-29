@@ -536,6 +536,20 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('exam progress bar is visible and feedback colours clear WCAG', () => {
+  // On the cream exam bg the gold "Correcto" feedback was 2.25:1 and the
+  // 2px progress bar was near-invisible. Fixed: 6px bar, and success/error
+  // feedback in dark green/red that clear 4.5:1.
+  const css = read('styles.css');
+  const track = (css.match(/\.exam-track\s*\{([^}]*)\}/) || [])[1] || '';
+  const h = (track.match(/height:\s*(\d+)px/) || [])[1];
+  assert(h && parseInt(h) >= 4, `.exam-track height ${h}px is too thin to see on a phone`);
+  assert(/\.exam-feedback\.ok\s*\{[^}]*color:\s*#2d6a3e/.test(css),
+    '.exam-feedback.ok must be dark green #2d6a3e (gold was 2.25:1 on cream, failed WCAG)');
+  assert(/\.exam-feedback\.ko\s*\{[^}]*color:\s*#a04848/.test(css),
+    '.exam-feedback.ko must be dark red #a04848 (light red failed WCAG on cream)');
+});
+
 test('sub-tabs are tappable and use the flat (Sobria) active style', () => {
   // .tunic-stab tap target was ~34px; the "Sobria" redesign sets a 44px
   // min-height and a legible label, and drops the heavy pulsing aura on
