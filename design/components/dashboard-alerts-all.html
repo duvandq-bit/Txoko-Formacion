@@ -1,0 +1,98 @@
+<!-- @dsCard group="Components" name="Dashboard alerts — badge generalizado" subtitle="Las 4 tarjetas restantes con badge" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Dashboard badge generalizado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --parchment:#1c2a22;
+    --gold:#c49a3c; --gold3:#e4be68; --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:480px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.4rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  .lead{font-size:.78rem;color:#cfc5b3;line-height:1.5;margin-bottom:1.5rem}
+  .lead b{color:var(--gold3)}
+  .tag{font-family:var(--font-mono);font-size:.55rem;color:#8a8478;letter-spacing:.1em;text-transform:uppercase;margin:1.3rem 0 .4rem}
+
+  /* Real .dash-alert + .dash-num from styles.css */
+  .dash-alert{display:flex;align-items:center;gap:.8rem;padding:.95rem 1rem;margin-bottom:.6rem;
+    min-height:64px;border:none;width:100%;text-align:left;cursor:pointer;border-radius:12px;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--da-c) 8%,#faf6ee) 0%,#faf6ee 55%,color-mix(in srgb,var(--da-c) 5%,#f4ede2) 100%);
+    box-shadow:0 2px 8px rgba(28,42,34,.05),inset 0 1px 0 rgba(255,255,255,.55);position:relative;overflow:hidden}
+  .dash-alert::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:3px;
+    background:linear-gradient(180deg,transparent,var(--da-c),transparent);border-radius:0 2px 2px 0}
+  .dash-num{flex-shrink:0;width:44px;height:44px;border-radius:12px;
+    background:color-mix(in srgb,var(--da-c) 16%,#fff);display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-serif);font-weight:700;font-size:1.3rem;color:var(--da-c);line-height:1}
+  .dash-num svg{width:24px;height:24px}
+  .dash-num .emoji{font-size:1.4rem;line-height:1}
+  .dash-alert-body{flex:1;min-width:0}
+  .dash-alert-title{font-size:.85rem;font-weight:600;color:var(--da-c);font-family:var(--font-serif);letter-spacing:.02em;line-height:1.2}
+  .dash-alert-sub{font-family:var(--font-mono);font-size:.66rem;color:rgba(28,42,34,.78);margin-top:.2rem;letter-spacing:.03em}
+  .dash-alert-arrow{color:var(--da-c);font-size:1.15rem;opacity:.8;flex-shrink:0}
+  /* rank card keeps its column layout + progress bar */
+  .dash-alert.col{flex-direction:column;align-items:stretch;gap:.55rem;cursor:default}
+  .rank-row{display:flex;align-items:center;gap:.8rem}
+  .rank-pct{font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:var(--da-c);flex-shrink:0}
+  .bar{height:6px;background:rgba(196,154,60,.15);border-radius:3px;overflow:hidden}
+  .bar > div{height:100%;background:linear-gradient(90deg,#c49a3c,#e4be68);border-radius:3px}
+</style>
+</head>
+<body>
+  <h1>Badge generalizado</h1>
+  <div class="sub">las 4 tarjetas restantes del dashboard</div>
+  <div class="lead">La de repaso ya lleva el badge (en producción). Esta es la propuesta para
+    las demás: <b>número</b> donde hay un conteo, <b>icono</b> donde es estado o alerta. Todas con
+    el mismo badge cuadrado para dar unidad.</div>
+
+  <div class="tag">Referencia — repaso (ya en la app)</div>
+  <button class="dash-alert" style="--da-c:#4888a0">
+    <div class="dash-num">5</div>
+    <div class="dash-alert-body"><div class="dash-alert-title">platos para repasar · 2 atrasados</div>
+    <div class="dash-alert-sub">Repetición espaciada — toca para abrir</div></div>
+    <span class="dash-alert-arrow">›</span>
+  </button>
+
+  <div class="tag">1 · Próximo rango (badge = icono de rango)</div>
+  <div class="dash-alert col" style="--da-c:#c49a3c">
+    <div class="rank-row">
+      <div class="dash-num"><span class="emoji">♛</span></div>
+      <div class="dash-alert-body"><div class="dash-alert-title">Próximo rango: Maître</div>
+      <div class="dash-alert-sub">8 platos por dominar · precisión 82%</div></div>
+      <div class="rank-pct">64%</div>
+    </div>
+    <div class="bar"><div style="width:64%"></div></div>
+  </div>
+
+  <div class="tag">2 · Práctica enfocada (badge = nº de fallos)</div>
+  <button class="dash-alert" style="--da-c:#c47068">
+    <div class="dash-num">3</div>
+    <div class="dash-alert-body"><div class="dash-alert-title">Práctica enfocada: Alérgenos</div>
+    <div class="dash-alert-sub">inicia repaso inteligente</div></div>
+    <span class="dash-alert-arrow">›</span>
+  </button>
+
+  <div class="tag">3 · Necesita práctica / alerta (badge = icono ⚠)</div>
+  <button class="dash-alert" style="--da-c:#c47068">
+    <div class="dash-num"><svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><path d="M12 8v4M12 15v.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+    <div class="dash-alert-body"><div class="dash-alert-title">Necesita práctica: Vinos</div>
+    <div class="dash-alert-sub">45% precisión — toca para practicar</div></div>
+    <span class="dash-alert-arrow">›</span>
+  </button>
+
+  <div class="tag">4 · ¡Excelente! / logro (badge = icono ✓)</div>
+  <div class="dash-alert" style="--da-c:#4d8a5e;cursor:default">
+    <div class="dash-num"><svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polyline points="8 13 11 16 16 9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="dash-alert-body"><div class="dash-alert-title">¡Excelente! Alérgenos</div>
+    <div class="dash-alert-sub">88% precisión</div></div>
+  </div>
+</body>
+</html>
