@@ -6168,7 +6168,7 @@ body::after{
 .dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1rem}
 .dash-stat{
   position:relative;overflow:hidden;text-align:center;cursor:default;
-  padding:.9rem .35rem .75rem;
+  padding:1rem .4rem .85rem;
   background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 60%,#ece1ca 100%);
   border:1.5px solid rgba(196,154,60,.18);
   border-radius:var(--r2);
@@ -6188,11 +6188,8 @@ body::after{
   opacity:.75;
 }
 .dash-stat:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--ds-c,#c49a3c) 55%,transparent);box-shadow:0 6px 16px rgba(28,42,34,.09),0 0 16px color-mix(in srgb,var(--ds-c,#c49a3c) 18%,transparent),inset 0 1px 0 rgba(255,255,255,.7)}
-.dash-stat-corner{position:absolute;width:12px;height:12px;pointer-events:none;opacity:.55}
-.dash-stat-corner.tl{top:5px;left:5px;border-top:1px solid var(--ds-c,#c49a3c);border-left:1px solid var(--ds-c,#c49a3c);border-top-left-radius:2px}
-.dash-stat-corner.tr{top:5px;right:5px;border-top:1px solid var(--ds-c,#c49a3c);border-right:1px solid var(--ds-c,#c49a3c);border-top-right-radius:2px}
-.dash-stat-corner.bl{bottom:5px;left:5px;border-bottom:1px solid var(--ds-c,#c49a3c);border-left:1px solid var(--ds-c,#c49a3c);border-bottom-left-radius:2px}
-.dash-stat-corner.br{bottom:5px;right:5px;border-bottom:1px solid var(--ds-c,#c49a3c);border-right:1px solid var(--ds-c,#c49a3c);border-bottom-right-radius:2px}
+/* corner marks removed in the "Limpia" stat redesign — the number is the
+   protagonist now; markup no longer emits .dash-stat-corner spans */
 .dash-stat-icon{
   position:relative;z-index:1;width:28px;height:28px;margin:0 auto .35rem;
   display:flex;align-items:center;justify-content:center;
@@ -6202,17 +6199,17 @@ body::after{
 }
 .dash-stat-num{
   position:relative;z-index:1;
-  font-family:'Cinzel',serif;font-size:1.18rem;line-height:1;font-weight:700;
+  font-family:'Cinzel',serif;font-size:1.65rem;line-height:1;font-weight:700;
   color:var(--ds-cd,#a47a2c);
   text-shadow:0 1px 0 rgba(255,255,255,.5);
 }
+/* "Limpia": label legible (was .5rem ~8px), no em-dashes — the big number
+   carries the card now */
 .dash-stat-lbl{
   position:relative;z-index:1;
-  font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--parch3);margin-top:.3rem;
+  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;font-weight:500;
+  text-transform:uppercase;color:var(--parch3);margin-top:.4rem;
 }
-.dash-stat-lbl::before{content:'— ';color:var(--ds-c,#c49a3c);opacity:.7;margin-right:1px}
-.dash-stat-lbl::after{content:' —';color:var(--ds-c,#c49a3c);opacity:.7;margin-left:1px}
 /* ═══ Study hub — primary + secondary action cards ═══ */
 .dash-hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.55rem}
 .dash-hub{

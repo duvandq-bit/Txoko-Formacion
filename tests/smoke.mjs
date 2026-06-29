@@ -536,6 +536,21 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('dashboard stat label stays legible (Limpia redesign)', () => {
+  // The stat label was .5rem (~8px) — too small. The "Limpia" redesign
+  // bumped it and dropped the em-dash ::before/::after and the corner
+  // marks. Guard the legible floor and that the decorations stay gone.
+  const css = read('styles.css');
+  const lbl = (css.match(/\.dash-stat-lbl\s*\{([^}]*)\}/) || [])[1] || '';
+  const size = (lbl.match(/font-size:\s*([\d.]+)rem/) || [])[1];
+  assert(size && parseFloat(size) >= 0.58,
+    `.dash-stat-lbl font-size ${size}rem dropped below the legible floor (.58rem)`);
+  assert(!/\.dash-stat-lbl::(before|after)\s*\{/.test(css),
+    'the em-dash ::before/::after on the stat label came back — Limpia removed them');
+  assert((html.match(/dash-stat-corner/g) || []).length === 0,
+    'dash-stat-corner spans are back in the markup — Limpia removed them');
+});
+
 test('.btn-secondary has a real style rule (not a bare grey button)', () => {
   // .btn-secondary is used on "Volver" buttons but for a long time had no
   // CSS rule, so those rendered as unstyled grey system buttons. The rule
