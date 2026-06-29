@@ -536,6 +536,27 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('exam .choice has high-contrast state badge + check/cross mark', () => {
+  // Ported "Claridad" redesign: on answer the letter badge must go to the
+  // DARK green/red (white letter legible) and a ✓/✕ mark must appear so the
+  // result isn't communicated by colour alone. The mark is CSS-injected via
+  // ::after keyed on the state class, so the markup just needs the span.
+  const css = read('styles.css');
+  assert(/\.choice\.correct\s+\.choice-ltr\s*\{[^}]*background:\s*#2d6a3e/.test(css),
+    '.choice.correct badge must use dark green #2d6a3e (light sage fails WCAG on white text)');
+  assert(/\.choice\.wrong\s+\.choice-ltr\s*\{[^}]*background:\s*#a85848/.test(css),
+    '.choice.wrong badge must use dark red #a85848 (light rose fails WCAG on white text)');
+  assert(/\.choice\.correct\s+\.choice-mark::after\s*\{\s*content:\s*'✓'/.test(css),
+    '.choice.correct must inject a ✓ mark (colour-blind-safe state signal)');
+  assert(/\.choice\.wrong\s+\.choice-mark::after\s*\{\s*content:\s*'✕'/.test(css),
+    '.choice.wrong must inject a ✕ mark');
+  assert(/min-width:\s*0/.test((css.match(/\.choice-txt\s*\{([^}]*)\}/)||[])[1]||''),
+    '.choice-txt needs min-width:0 so long ingredient text does not push the badge/mark off a narrow phone');
+  // Markup must carry the two spans the CSS targets.
+  assert(/class="choice-txt"/.test(html) && /class="choice-mark"/.test(html),
+    'exam choice markup must include .choice-txt and .choice-mark spans');
+});
+
 test('viewport is clipped horizontally on <html>, not just <body>', () => {
   // Sideways-drift on app open: body had overflow-x:hidden but <html>
   // did not. On iOS/Android the document scroll lives on <html>, so the

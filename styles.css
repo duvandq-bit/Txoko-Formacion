@@ -3504,12 +3504,18 @@ body::after{
 
 .choices{display:flex;flex-direction:column;gap:0;max-width:420px;margin:0 auto;margin-bottom:1.5rem}
 .choice{
-  display:flex;align-items:center;gap:.65rem;
-  padding:.85rem 1rem;margin-bottom:.45rem;
+  display:flex;align-items:center;gap:.7rem;
+  padding:.9rem 1rem;margin-bottom:.5rem;min-height:52px;
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);
   border:1.5px solid rgba(196,154,60,.12);border-radius:12px;
   cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
 }
+/* text takes the middle, must be allowed to shrink so long ingredient
+   lists don't shove the badge or the state mark off a narrow phone */
+.choice-txt{flex:1;min-width:0;position:relative;z-index:1}
+/* state mark (check / cross) revealed on answer via the state classes */
+.choice-mark{width:22px;flex-shrink:0;text-align:center;font-size:1rem;
+  font-weight:700;opacity:0;transition:opacity .2s;position:relative;z-index:1}
 .choice::before{
   content:'';position:absolute;top:0;left:0;right:0;bottom:0;
   background-image:url("data:image/svg+xml,%3Csvg width='30' height='26' viewBox='0 0 30 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='15,1 29,13 15,25 1,13' fill='none' stroke='rgba(196,154,60,0.025)' stroke-width='0.3'/%3E%3C/svg%3E");
@@ -3521,21 +3527,31 @@ body::after{
   transform:translateY(-1px);
 }
 .choice-ltr{
-  width:28px;height:28px;border-radius:50%;
-  background:rgba(196,154,60,.08);
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(196,154,60,.1);
   display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);
-  font-weight:700;flex-shrink:0;
+  font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold);
+  font-weight:700;flex-shrink:0;transition:all .2s;position:relative;z-index:1;
 }
+/* On answer: the row tints light green/red, and the letter badge goes
+   DARK green/red so the white letter stays legible (light sage/rose
+   badges fail WCAG at ~3.6:1; the dark tones clear 5:1). The ✓/✕ mark
+   backs up the colour for colour-vision-deficient users. */
 .choice.correct{
   border-color:rgba(77,138,94,.5);
   background:linear-gradient(155deg,rgba(77,138,94,.1),rgba(77,138,94,.04));
   box-shadow:0 0 16px rgba(77,138,94,.12);
 }
+.choice.correct .choice-ltr{background:#2d6a3e;color:#fff}
+.choice.correct .choice-mark{opacity:1;color:#2d6a3e}
+.choice.correct .choice-mark::after{content:'✓'}
 .choice.wrong{
   border-color:rgba(196,112,104,.5);
   background:linear-gradient(155deg,rgba(196,112,104,.1),rgba(196,112,104,.04));
 }
+.choice.wrong .choice-ltr{background:#a85848;color:#fff}
+.choice.wrong .choice-mark{opacity:1;color:#a85848}
+.choice.wrong .choice-mark::after{content:'✕'}
 .choice.locked{cursor:default}
 
 .exam-feedback{

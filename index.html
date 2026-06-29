@@ -14465,7 +14465,7 @@ function renderExamQuestion(){
       <div class="exam-dish-title">${qd.name}</div>
       <div class="choices" id="examChoices">
         ${q.choices.map((c,i)=>`<button class="choice" onclick="answerExam(${i})" id="choice${i}">
-          <span class="choice-ltr">${letters[i]}</span><span>${c}</span>
+          <span class="choice-ltr">${letters[i]}</span><span class="choice-txt">${c}</span><span class="choice-mark" aria-hidden="true"></span>
         </button>`).join('')}
       </div>
       <div class="exam-feedback" id="examFeedback"></div>
