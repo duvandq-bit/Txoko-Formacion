@@ -1,0 +1,63 @@
+<!-- @dsCard group="Components" name="Login — formulario" subtitle="iOS zoom fix + legibilidad" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold3:#e4be68; --ink:#f4ede2; --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  /* fondo oscuro real del login */
+  body{background:#1c2a22;color:var(--ink);font-family:var(--font-sans);padding:1.5rem 1rem 3rem;max-width:420px;margin:0 auto}
+  .tag{font-family:var(--font-mono);font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:1.6rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid rgba(196,154,60,.18)}
+  .tag:first-child{margin-top:0}
+  .blurb{font-size:.74rem;color:rgba(244,237,226,.6);margin-bottom:1.1rem;line-height:1.45}
+  .blurb b{color:var(--gold3)}
+  .card{border:1px solid rgba(196,154,60,.18);border-radius:14px;padding:1.6rem 1.2rem;text-align:center;background:rgba(244,237,226,.02)}
+
+  .logo h1{font-family:var(--font-serif);font-size:2.6rem;font-weight:700;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;line-height:1}
+  .logo .line{height:1px;width:54px;margin:.6rem auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .login-input{width:100%;padding:.7rem .9rem;background:rgba(244,237,226,.06);border:1px solid rgba(196,154,60,.15);border-radius:8px;color:var(--ink);font-family:var(--font-sans);outline:none;margin-bottom:.6rem}
+  .login-input::placeholder{color:rgba(244,237,226,.25)}
+  .login-enter{width:100%;margin-top:.4rem;background:linear-gradient(145deg,#c49a3c,#9a7340 55%,#7d5c2f);color:#fff;border:none;border-radius:12px;padding:.8rem;font-family:var(--font-sans);font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+
+  /* ACTUAL */
+  .v0 .sub{font-family:var(--font-mono);font-size:.6rem;color:rgba(228,190,104,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:1.4rem}
+  .v0 .login-input{font-size:.9rem}  /* 14.4px → iOS zoom */
+
+  /* MEJORADO */
+  .vA .sub{font-family:var(--font-mono);font-size:.66rem;color:rgba(228,190,104,.8);letter-spacing:.16em;text-transform:uppercase;margin-bottom:1.4rem}
+  .vA .login-input{font-size:16px}  /* no zoom en iOS */
+</style>
+</head>
+<body>
+  <div class="tag">Actual</div>
+  <div class="blurb">Los inputs van a <b>.9rem (14.4px)</b> — al tocarlos, <b>iOS Safari hace zoom</b> y
+    desplaza toda la pantalla. Y el subtítulo a .6rem con dorado al 50% apenas se lee.</div>
+  <div class="card v0">
+    <div class="logo"><h1>TXOKO</h1><div class="line"></div></div>
+    <div class="sub">by Martín Berasategui · Formación</div>
+    <input class="login-input" placeholder="Tu nombre…">
+    <input class="login-input" type="password" placeholder="PIN o contraseña">
+    <button class="login-enter">Entrar</button>
+  </div>
+
+  <div class="tag">Mejorado</div>
+  <div class="blurb">Inputs a <b>16px</b> → iOS ya no hace zoom al enfocar (mismo fix que el buscador de
+    servicio). Subtítulo a .66rem con más contraste, legible.</div>
+  <div class="card vA">
+    <div class="logo"><h1>TXOKO</h1><div class="line"></div></div>
+    <div class="sub">by Martín Berasategui · Formación</div>
+    <input class="login-input" placeholder="Tu nombre…">
+    <input class="login-input" type="password" placeholder="PIN o contraseña">
+    <button class="login-enter">Entrar</button>
+  </div>
+
+  <div class="blurb" style="margin-top:1.4rem">Nota: las capas cinematográficas del login (rayos,
+    partículas, sellos) <b>no se tocan</b> — solo el formulario.</div>
+</body>
+</html>
