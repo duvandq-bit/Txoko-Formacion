@@ -1,0 +1,108 @@
+<!-- @dsCard group="Components" name="Stats del dashboard (.dash-stat)" subtitle="Actual + 2 variantes · grid 2x2 móvil" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Dashboard stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --parchment:#1c2a22; --parch3:rgba(28,42,34,.65);
+    --gold:#c49a3c; --gold3:#e4be68; --r2:12px; --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:440px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.4rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  h2{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:2rem 0 .5rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.74rem;color:#cfc5b3;margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:var(--gold3)}
+
+  /* grid 2x2 como en móvil real */
+  .dash-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;margin-bottom:1rem}
+  .dash-stat{position:relative;overflow:hidden;text-align:center;
+    background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 60%,#ece1ca 100%);
+    border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r2);
+    box-shadow:0 2px 8px rgba(28,42,34,.07),inset 0 1px 0 rgba(255,255,255,.6)}
+  .dash-stat::after{content:'';position:absolute;top:0;left:18%;right:18%;height:2px;
+    background:linear-gradient(90deg,transparent,var(--ds-c) 30%,var(--ds-c2) 50%,var(--ds-c) 70%,transparent);opacity:.75}
+  .corner{position:absolute;width:12px;height:12px;opacity:.55}
+  .corner.tl{top:5px;left:5px;border-top:1px solid var(--ds-c);border-left:1px solid var(--ds-c);border-top-left-radius:2px}
+  .corner.tr{top:5px;right:5px;border-top:1px solid var(--ds-c);border-right:1px solid var(--ds-c);border-top-right-radius:2px}
+  .corner.bl{bottom:5px;left:5px;border-bottom:1px solid var(--ds-c);border-left:1px solid var(--ds-c);border-bottom-left-radius:2px}
+  .corner.br{bottom:5px;right:5px;border-bottom:1px solid var(--ds-c);border-right:1px solid var(--ds-c);border-bottom-right-radius:2px}
+  .ico{position:relative;z-index:1;width:28px;height:28px;margin:0 auto .35rem;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(155deg,color-mix(in srgb,var(--ds-c) 18%,#faf6ee),color-mix(in srgb,var(--ds-c) 8%,#f4ede2));
+    clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)}
+  .num{position:relative;z-index:1;font-family:var(--font-serif);line-height:1;font-weight:700;color:var(--ds-cd);text-shadow:0 1px 0 rgba(255,255,255,.5)}
+  .lbl{position:relative;z-index:1;font-family:var(--font-mono);text-transform:uppercase;color:var(--parch3)}
+
+  /* ── ACTUAL ── */
+  .v0 .dash-stat{padding:.9rem .35rem .75rem}
+  .v0 .num{font-size:1.18rem}
+  .v0 .lbl{font-size:.5rem;letter-spacing:.1em;margin-top:.3rem}
+  .v0 .lbl::before{content:'— ';color:var(--ds-c);opacity:.7}
+  .v0 .lbl::after{content:' —';color:var(--ds-c);opacity:.7}
+
+  /* ── VARIANTE A — LEGIBILIDAD (mantiene decoración) ── */
+  .vA .dash-stat{padding:.95rem .4rem .8rem}
+  .vA .num{font-size:1.4rem}
+  .vA .lbl{font-size:.58rem;letter-spacing:.08em;margin-top:.35rem}
+  .vA .lbl::before{content:'— ';color:var(--ds-c);opacity:.7}
+  .vA .lbl::after{content:' —';color:var(--ds-c);opacity:.7}
+
+  /* ── VARIANTE B — LIMPIA (sin esquinas ni guiones, número protagonista) ── */
+  .vB .dash-stat{padding:1rem .4rem .85rem}
+  .vB .corner{display:none}
+  .vB .num{font-size:1.65rem}
+  .vB .lbl{font-size:.6rem;letter-spacing:.06em;margin-top:.4rem;font-weight:500}
+</style>
+</head>
+<body>
+  <h1>Stats del dashboard</h1>
+  <div class="sub">.dash-stat · grid 2x2 en móvil</div>
+
+  <h2>Actual</h2>
+  <div class="blurb">El label va en DM Mono a <b>.5rem (≈8px)</b> con guiones — cuesta leerlo. Mucha
+    decoración (4 esquinas + textura + línea + icono) para tarjetas pequeñas.</div>
+  <div id="v0"></div>
+
+  <h2>Variante A — Legibilidad</h2>
+  <div class="blurb">Mantiene el estilo TUNIC (esquinas, guiones), pero <b>número a 1.4rem</b> y
+    <b>label a .58rem</b>. Mismo carácter, se lee mejor.</div>
+  <div id="vA"></div>
+
+  <h2>Variante B — Limpia</h2>
+  <div class="blurb">Quita las 4 esquinas y los guiones del label. <b>Número protagonista a 1.65rem</b>,
+    label legible. Más moderna y despejada; conserva el icono rombo y la línea de color de marca.</div>
+  <div id="vB"></div>
+
+<script>
+  const stats=[
+    {ic:'#c49a3c',c2:'#e4be68',cd:'#a47a2c',num:'12',lbl:'Exámenes'},
+    {ic:'#4d8a5e',c2:'#7aae8c',cd:'#3a6a4a',num:'84%',lbl:'Media'},
+    {ic:'#4888a0',c2:'#6aa8bc',cd:'#36687a',num:'27',lbl:'Dominados'},
+    {ic:'#7a6aaa',c2:'#9e82c8',cd:'#5a4a8a',num:'56',lbl:'Tarjetas'}
+  ];
+  const diamond=c=>`<svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="${c.ic}" opacity=".85"/><polygon points="7,1 10,7 7,10 4,7" fill="${c.c2}" opacity=".8"/><circle cx="7" cy="7" r="1.4" fill="#fff" opacity=".7"/></svg>`;
+  function grid(variant){
+    let h='<div class="dash-stats '+variant+'">';
+    for(const s of stats){
+      h+=`<div class="dash-stat" style="--ds-c:${s.ic};--ds-c2:${s.c2};--ds-cd:${s.cd}">
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        <div class="ico">${diamond(s)}</div>
+        <div class="num">${s.num}</div>
+        <div class="lbl">${s.lbl}</div></div>`;
+    }
+    return h+'</div>';
+  }
+  document.getElementById('v0').innerHTML=grid('v0');
+  document.getElementById('vA').innerHTML=grid('vA');
+  document.getElementById('vB').innerHTML=grid('vB');
+</script>
+</body>
+</html>
