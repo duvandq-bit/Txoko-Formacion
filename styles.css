@@ -6309,9 +6309,18 @@ body::after{
 }
 .dash-alert-body{flex:1;min-width:0}
 .dash-alert-title{font-size:.82rem;font-weight:600;color:var(--da-c,#c47068);font-family:'Cinzel',serif;letter-spacing:.02em;line-height:1.15}
-.dash-alert-sub{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3);margin-top:.15rem;letter-spacing:.04em}
-.dash-alert-arrow{color:var(--da-c,#c49a3c);font-size:1rem;opacity:.55;transition:transform .2s,opacity .2s}
-@media (hover:hover){.dash-alert:hover .dash-alert-arrow{opacity:.9;transform:translateX(3px)}}
+.dash-alert-sub{font-family:'DM Mono',monospace;font-size:.66rem;color:rgba(28,42,34,.78);margin-top:.2rem;letter-spacing:.03em}
+.dash-alert-arrow{color:var(--da-c,#c49a3c);font-size:1.15rem;opacity:.8;transition:transform .2s,opacity .2s;flex-shrink:0}
+@media (hover:hover){.dash-alert:hover .dash-alert-arrow{opacity:1;transform:translateX(3px)}}
+/* "Dato protagonista" badge: the pending count reads at a glance before
+   any text. Tinted square in the alert's own --da-c, number in the brand
+   serif. aria-hidden in markup since the count is already in the button's
+   aria-label. */
+.dash-num{flex-shrink:0;width:44px;height:44px;border-radius:12px;
+  background:color-mix(in srgb,var(--da-c,#c49a3c) 16%,#fff);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-weight:700;font-size:1.3rem;
+  color:var(--da-c,#c49a3c);line-height:1;position:relative;z-index:1}
 
 .sound-toggle{
   position:fixed;bottom:14px;left:12px;

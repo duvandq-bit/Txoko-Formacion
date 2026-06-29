@@ -536,6 +536,23 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('dashboard review alert uses the .dash-num data badge', () => {
+  // Ported "Dato protagonista" (variant B): the SRS review count moves to
+  // a large left-hand badge so the camarero sees how many dishes are due
+  // at a glance. The badge styling must exist and the review alert markup
+  // must use it (with the count no longer duplicated in the title).
+  const css = read('styles.css');
+  assert(/\.dash-num\s*\{[^}]*width:\s*44px/.test(css),
+    '.dash-num badge style missing or resized — data-badge redesign lost');
+  assert(/class="dash-num"/.test(html),
+    'dashboard review alert must render the .dash-num badge');
+  // Subtitle legibility bump shipped alongside: must clear the old .58rem.
+  const sub = (css.match(/\.dash-alert-sub\s*\{([^}]*)\}/) || [])[1] || '';
+  const subSize = (sub.match(/font-size:\s*([\d.]+)rem/) || [])[1];
+  assert(subSize && parseFloat(subSize) >= 0.64,
+    `.dash-alert-sub font-size ${subSize}rem is back below the legible floor (.64rem)`);
+});
+
 test('exam .choice has high-contrast state badge + check/cross mark', () => {
   // Ported "Claridad" redesign: on answer the letter badge must go to the
   // DARK green/red (white letter legible) and a ✓/✕ mark must appear so the
