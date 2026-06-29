@@ -2833,18 +2833,13 @@ body::after{
 .fc-q{font-size:.83rem;color:var(--parch2);line-height:1.7;max-width:480px}
 .fc-flip-hint{
   position:absolute;bottom:1.1rem;
-  font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.16em;
-  color:var(--parch4);text-transform:uppercase;
-  display:flex;align-items:center;gap:.4rem;
+  font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.1em;
+  color:rgba(28,42,34,.6);text-transform:uppercase;
+  display:flex;align-items:center;gap:.45rem;
 }
-.fc-flip-hint::before{
-  content:'';display:inline-block;width:18px;height:1px;
-  background:var(--gold-a);opacity:.5;
-}
-.fc-flip-hint::after{
-  content:'';display:inline-block;width:18px;height:1px;
-  background:var(--gold-a);opacity:.5;
-}
+/* a ↻ flip glyph reads the "tap to turn" gesture at a glance; replaces the
+   two faint decorative dashes that flanked the old, too-small (.52rem) hint */
+.fc-flip-hint svg{width:14px;height:14px;stroke:var(--gold);flex-shrink:0}
 
 .fc-answer-label{
   font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.18em;
@@ -2867,8 +2862,8 @@ body::after{
 /* ── Rating buttons — TUNIC style with runes, glow & living animation ── */
 .fc-rating{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;padding-top:.35rem;perspective:600px;max-width:460px;margin:0 auto}
 .fc-rate-btn{
-  position:relative;flex:1;min-width:88px;padding:.55rem .5rem .5rem;border-radius:11px;cursor:pointer;
-  font-family:'Cinzel',serif;font-size:.7rem;font-weight:500;letter-spacing:.05em;
+  position:relative;flex:1;min-width:0;min-height:64px;padding:.6rem .4rem;border-radius:11px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.78rem;font-weight:500;letter-spacing:.04em;
   transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, background .2s;
   border:1.5px solid;background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 50%,#f0e8d8 100%);
   display:flex;flex-direction:column;align-items:center;gap:.35rem;overflow:hidden;
@@ -2894,7 +2889,7 @@ body::after{
 }
 .fc-rate-btn .fc-rate-rune svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.8;opacity:1;filter:brightness(.35)}
 .fc-rate-btn:hover .fc-rate-rune{opacity:.25;transform:rotate(20deg) scale(1.15)}
-.fc-rate-btn .fc-rate-lbl{line-height:1;position:relative;z-index:2}
+.fc-rate-btn .fc-rate-lbl{line-height:1;position:relative;z-index:2;font-size:.72rem}
 .fc-rate-btn .fc-rate-kbd{
   position:absolute;top:4px;right:6px;font-family:'DM Mono',monospace;font-size:.42rem;
   letter-spacing:.08em;opacity:.38;color:currentColor;
@@ -2909,7 +2904,7 @@ body::after{
   50%{box-shadow:0 2px 0 rgba(28,42,34,.08),0 4px 14px rgba(28,42,34,.06),inset 0 1px 0 rgba(255,255,255,.7),0 0 0 6px transparent}
 }
 
-.fc-rate-again{color:#b55858;border-color:rgba(201,112,112,.35);--fc-glow:rgba(201,112,112,.35)}
+.fc-rate-again{color:#a04848;border-color:rgba(201,112,112,.35);--fc-glow:rgba(201,112,112,.35)}
 .fc-rate-again:hover{background:linear-gradient(155deg,#fdf5f2,#fae8e3);border-color:rgba(201,112,112,.6)}
 .fc-rate-ok{color:#4d6a96;border-color:rgba(112,149,200,.35);--fc-glow:rgba(112,149,200,.35);animation:fc-rate-idle 3.8s ease-in-out infinite .2s, fc-rate-pulse 2.6s ease-in-out infinite}
 .fc-rate-ok:hover{background:linear-gradient(155deg,#f4f6fb,#e8eff8);border-color:rgba(112,149,200,.6)}

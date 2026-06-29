@@ -536,6 +536,24 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('flashcard hint + rating buttons stay legible and accessible', () => {
+  // Flip hint was .52rem (~8px) with no flip affordance; rating buttons
+  // packed a decorative keyboard glyph and the "Repasar" red failed WCAG
+  // (4.33:1). Guard the legibility bump, the flip icon, the removed glyph,
+  // and the darker red.
+  const css = read('styles.css');
+  const hint = (css.match(/\.fc-flip-hint\s*\{([^}]*)\}/) || [])[1] || '';
+  const hintSize = (hint.match(/font-size:\s*([\d.]+)rem/) || [])[1];
+  assert(hintSize && parseFloat(hintSize) >= 0.6,
+    `.fc-flip-hint font-size ${hintSize}rem fell below the legible floor (.6rem)`);
+  assert(/\.fc-flip-hint svg\s*\{/.test(css),
+    'flip-hint lost its ↻ icon — the turn gesture is no longer signalled');
+  assert((html.match(/fc-rate-kbd"/g) || []).length === 0,
+    'the decorative keyboard glyph came back to the rating buttons');
+  assert(/\.fc-rate-again\s*\{[^}]*color:\s*#a04848/.test(css),
+    '.fc-rate-again red must stay #a04848 (the old #b55858 was 4.33:1, below WCAG)');
+});
+
 test('dashboard stat label stays legible (Limpia redesign)', () => {
   // The stat label was .5rem (~8px) — too small. The "Limpia" redesign
   // bumped it and dropped the em-dash ::before/::after and the corner

@@ -14043,17 +14043,14 @@ function renderFlashcards(){
     </div>
     <div class="fc-rating" id="fcRating" style="display:none">
       <button class="fc-rate-btn fc-rate-again" onclick="_fcRateFire(this);fcRate(0)">
-        <span class="fc-rate-kbd">◇</span>
         <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="fc-rate-lbl">${t('rateAgain')}</span>
       </button>
       <button class="fc-rate-btn fc-rate-ok" onclick="_fcRateFire(this);fcRate(1)">
-        <span class="fc-rate-kbd">◈</span>
         <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="fc-rate-lbl">${t('rateOk')}</span>
       </button>
       <button class="fc-rate-btn fc-rate-good" onclick="_fcRateFire(this);fcRate(2)">
-        <span class="fc-rate-kbd">✦</span>
         <span class="fc-rate-rune"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6L20 9.4l-4 3.9 1 5.6L12 16.3l-5 2.6 1-5.6-4-3.9 5.4-.8z" stroke-linejoin="round"/></svg></span>
         <span class="fc-rate-lbl">${t('rateGood')}</span>
       </button>
@@ -14088,7 +14085,7 @@ function renderFcCard(){
     </div>
     <!-- Dish name LARGE (primary focus of the card) -->
     <div class="fc-dish" style="font-size:1.85rem;line-height:1.15;padding:0 .6rem;text-align:center">${escapeHTML(dd.name)}</div>
-    <div class="fc-flip-hint" style="margin-top:1.3rem">${_en?'Tap to see ingredients & allergens':'Toca para ver ingredientes y alérgenos'}</div>
+    <div class="fc-flip-hint" style="margin-top:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg> ${_en?'Tap to see ingredients & allergens':'Toca para ver ingredientes y alérgenos'}</div>
   `;
 
   card.classList.remove('fc-animating-out','fc-animating-in');
