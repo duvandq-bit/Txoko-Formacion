@@ -13938,10 +13938,6 @@ function renderDashboard(){
         {num:known, lbl:LANG==='en'?'Mastered':'Dominados', target:known, col:'#4888a0', colD:'#36687a', col2:'#6aa8bc'},
         {num:fc, lbl:LANG==='en'?'Cards':'Tarjetas', target:fc, col:'#7a6aaa', colD:'#5a4a8a', col2:'#9e82c8'}
       ].map((s,i)=>`<div class="dash-stat" style="--ds-c:${s.col};--ds-c2:${s.col2};--ds-cd:${s.colD};animation-delay:${i*70}ms">
-        <span class="dash-stat-corner tl"></span>
-        <span class="dash-stat-corner tr"></span>
-        <span class="dash-stat-corner bl"></span>
-        <span class="dash-stat-corner br"></span>
         <div class="dash-stat-icon"><svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="${s.col}" opacity=".85"/><polygon points="7,1 10,7 7,10 4,7" fill="${s.col2}" opacity=".8"/><circle cx="7" cy="7" r="1.4" fill="#fff" opacity=".7"/></svg></div>
         <div class="dash-stat-num" data-target="${s.target||0}" data-suffix="${s.suffix||''}">${s.num}</div>
         <div class="dash-stat-lbl">${s.lbl}</div>
