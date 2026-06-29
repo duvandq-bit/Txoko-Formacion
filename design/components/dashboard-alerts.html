@@ -1,0 +1,116 @@
+<!-- @dsCard group="Components" name="Tarjetas de acción del dashboard (.dash-alert)" subtitle="Actual + 2 variantes" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Dashboard alerts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --parchment:#1c2a22; --parch3:rgba(28,42,34,.65);
+    --gold:#c49a3c; --gold3:#e4be68; --azure:#4888a0;
+    --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:480px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.4rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  h2{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:2rem 0 .35rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.74rem;color:#cfc5b3;margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:var(--gold3)}
+  .icon{flex-shrink:0}
+
+  /* ───────── ACTUAL (copiado de styles.css) ───────── */
+  .v0 .dash-alert{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;margin-bottom:1rem;
+    min-height:56px;border:none;width:100%;text-align:left;cursor:pointer;border-radius:12px;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--da-c) 8%,#faf6ee) 0%,#faf6ee 55%,color-mix(in srgb,var(--da-c) 5%,#f4ede2) 100%);
+    box-shadow:0 2px 8px rgba(28,42,34,.05),inset 0 1px 0 rgba(255,255,255,.55);position:relative;overflow:hidden}
+  .v0 .dash-alert::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:3px;
+    background:linear-gradient(180deg,transparent,var(--da-c),transparent);border-radius:0 2px 2px 0}
+  .v0 .dash-alert-body{flex:1;min-width:0}
+  .v0 .dash-alert-title{font-size:.82rem;font-weight:600;color:var(--da-c);font-family:var(--font-serif);letter-spacing:.02em;line-height:1.15}
+  .v0 .dash-alert-sub{font-family:var(--font-mono);font-size:.58rem;color:var(--parch3);margin-top:.15rem;letter-spacing:.04em}
+  .v0 .dash-alert-arrow{color:var(--da-c);font-size:1rem;opacity:.55}
+
+  /* ───────── VARIANTE A — LEGIBILIDAD ─────────
+     Mismo lenguaje, pero el subtítulo sube a .68rem, la flecha se ve más,
+     y el tap target a 60px. Cambio mínimo, gana lectura en servicio. */
+  .vA .dash-alert{display:flex;align-items:center;gap:.8rem;padding:.95rem 1rem;margin-bottom:1rem;
+    min-height:60px;border:none;width:100%;text-align:left;cursor:pointer;border-radius:12px;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--da-c) 8%,#faf6ee) 0%,#faf6ee 55%,color-mix(in srgb,var(--da-c) 5%,#f4ede2) 100%);
+    box-shadow:0 2px 8px rgba(28,42,34,.05),inset 0 1px 0 rgba(255,255,255,.55);position:relative;overflow:hidden}
+  .vA .dash-alert::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:3px;
+    background:linear-gradient(180deg,transparent,var(--da-c),transparent);border-radius:0 2px 2px 0}
+  .vA .dash-alert-body{flex:1;min-width:0}
+  .vA .dash-alert-title{font-size:.85rem;font-weight:600;color:var(--da-c);font-family:var(--font-serif);letter-spacing:.02em;line-height:1.2}
+  .vA .dash-alert-sub{font-family:var(--font-mono);font-size:.68rem;color:rgba(28,42,34,.78);margin-top:.2rem;letter-spacing:.03em}
+  .vA .dash-alert-arrow{color:var(--da-c);font-size:1.15rem;opacity:.8;flex-shrink:0}
+
+  /* ───────── VARIANTE B — DATO PROTAGONISTA ─────────
+     El número pendiente pasa a un badge grande a la izquierda, para que el
+     camarero vea "cuánto" de un vistazo. El icono se integra pequeño. */
+  .vB .dash-alert{display:flex;align-items:center;gap:.85rem;padding:.9rem 1rem;margin-bottom:1rem;
+    min-height:64px;border:none;width:100%;text-align:left;cursor:pointer;border-radius:12px;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--da-c) 10%,#faf6ee) 0%,#faf6ee 60%,color-mix(in srgb,var(--da-c) 6%,#f4ede2) 100%);
+    box-shadow:0 2px 8px rgba(28,42,34,.05),inset 0 1px 0 rgba(255,255,255,.55);position:relative;overflow:hidden}
+  .vB .dash-alert::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:3px;
+    background:linear-gradient(180deg,transparent,var(--da-c),transparent);border-radius:0 2px 2px 0}
+  .vB .dash-num{flex-shrink:0;width:44px;height:44px;border-radius:12px;
+    background:color-mix(in srgb,var(--da-c) 16%,#fff);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--font-serif);font-weight:700;font-size:1.3rem;color:var(--da-c);line-height:1}
+  .vB .dash-alert-body{flex:1;min-width:0}
+  .vB .dash-alert-title{font-size:.85rem;font-weight:600;color:var(--da-c);font-family:var(--font-serif);letter-spacing:.02em;line-height:1.2}
+  .vB .dash-alert-sub{font-family:var(--font-mono);font-size:.66rem;color:rgba(28,42,34,.78);margin-top:.2rem;letter-spacing:.03em}
+  .vB .dash-alert-arrow{color:var(--da-c);font-size:1.15rem;opacity:.8;flex-shrink:0}
+</style>
+</head>
+<body>
+  <h1>Tarjetas de acción</h1>
+  <div class="sub">.dash-alert · primera pantalla al entrar</div>
+
+  <h2>Actual</h2>
+  <div class="blurb">El subtítulo va en DM Mono a <b>.58rem (≈9px)</b> — cuesta leerlo de un vistazo
+    en servicio. El número de platos pendientes va dentro del texto, no destaca.</div>
+  <div id="v0"></div>
+
+  <h2>Variante A — Legibilidad</h2>
+  <div class="blurb">Mismo diseño, pero subtítulo a <b>.68rem</b> con más contraste, flecha más visible
+    y tap target a 60px. Cambio mínimo, se lee mejor.</div>
+  <div id="vA"></div>
+
+  <h2>Variante B — Dato protagonista</h2>
+  <div class="blurb">El número pendiente salta a un <b>badge grande a la izquierda</b>: el camarero
+    ve "cuánto tengo" de un vistazo antes de leer nada. El icono se integra pequeño.</div>
+  <div id="vB"></div>
+
+<script>
+  // [color, num, titulo, subtitulo]
+  const azure='#4888a0', gold='#c49a3c', rose='#c47068';
+  const reviewIcon='<svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4888a0" stroke-width="1.5" aria-hidden="true"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4888a0"/><polygon points="12,22 20,17 20,7 12,12" fill="#2e6878" opacity=".4"/><path d="M8 12a4 4 0 017-2.6M16 12a4 4 0 01-7 2.6" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  const smallIcon='<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4888a0" stroke-width="1.5" aria-hidden="true"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4888a0" opacity=".5"/></svg>';
+
+  document.getElementById('v0').innerHTML=
+    `<div class="v0"><button class="dash-alert" style="--da-c:${azure}">${reviewIcon}
+      <div class="dash-alert-body"><div class="dash-alert-title">5 platos para repasar · 2 atrasados</div>
+      <div class="dash-alert-sub">Repetición espaciada — toca para abrir</div></div>
+      <span class="dash-alert-arrow">›</span></button></div>`;
+
+  document.getElementById('vA').innerHTML=
+    `<div class="vA"><button class="dash-alert" style="--da-c:${azure}">${reviewIcon}
+      <div class="dash-alert-body"><div class="dash-alert-title">5 platos para repasar · 2 atrasados</div>
+      <div class="dash-alert-sub">Repetición espaciada — toca para abrir</div></div>
+      <span class="dash-alert-arrow">›</span></button></div>`;
+
+  document.getElementById('vB').innerHTML=
+    `<div class="vB"><button class="dash-alert" style="--da-c:${azure}">
+      <div class="dash-num">5</div>
+      <div class="dash-alert-body"><div class="dash-alert-title">Platos para repasar · 2 atrasados</div>
+      <div class="dash-alert-sub">Repetición espaciada — toca para abrir</div></div>
+      <span class="dash-alert-arrow">›</span></button></div>`;
+</script>
+</body>
+</html>
