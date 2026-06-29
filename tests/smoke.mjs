@@ -536,6 +536,22 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('exam results ring is a real progress ring with result colour', () => {
+  // The results ring was a decorative gold border with a gold % at
+  // 2.25:1 on cream. Now it's a conic-gradient that fills to the score
+  // and the % takes the result colour (green/gold/red, all WCAG-legible).
+  const css = read('styles.css');
+  const ring = (css.match(/\.results-ring\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(/conic-gradient/.test(ring),
+    '.results-ring lost its conic-gradient progress fill — back to a decorative circle');
+  const pct = (css.match(/\.results-pct\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(/color:\s*var\(--sc/.test(pct),
+    '.results-pct must take the result colour var(--sc), not flat gold (gold was 2.25:1 on cream)');
+  // markup must pass the score colour + percent into the ring
+  assert(/--sc:\$\{scoreCol\}/.test(html) && /--p:\$\{pct\}/.test(html),
+    'results markup must feed --sc and --p into the ring');
+});
+
 test('exam progress bar is visible and feedback colours clear WCAG', () => {
   // On the cream exam bg the gold "Correcto" feedback was 2.25:1 and the
   // 2px progress bar was near-invisible. Fixed: 6px bar, and success/error

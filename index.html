@@ -14550,9 +14550,12 @@ function renderExamResults(){
   const pct=Math.round(r.score/r.total*100);
   const msg=pct>=90?t('msgExcellent'):pct>=70?t('msgGood'):pct>=50?t('msgOk'):t('msgLow');
   const cls=pct>=80?'score-hi':pct>=50?'score-mid':'score-lo';
+  // result colour drives the progress ring + the % (green/gold/red, all
+  // WCAG-legible on the cream results bg)
+  const scoreCol=pct>=80?'#2d6a3e':pct>=50?'#7d5c2f':'#a04848';
   document.getElementById('appContent').innerHTML=`
     <div class="results-wrap">
-      <div class="results-ring"><div class="results-pct">${pct}<sup>%</sup></div></div>
+      <div class="results-ring" style="--sc:${scoreCol};--p:${pct}"><div class="results-pct">${pct}<sup>%</sup></div></div>
       <div class="results-sub">${r.score} / ${r.total} ${t('correct_short')}</div>
       <div class="results-msg">${msg}</div>
       <div class="results-breakdown">
