@@ -1,0 +1,92 @@
+<!-- @dsCard group="Foundations" name="Sistema de botones" subtitle="Primario / Secundario / Ghost" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Botones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --ink4:#cfc5b3; --parchment:#1c2a22; --parch2:rgba(28,42,34,.82);
+    --gold:#c49a3c; --gold3:#e4be68; --candy-blue:#5a9ab8; --r:16px;
+    --line:rgba(196,154,60,.14); --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:480px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.4rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  h2{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:2rem 0 .35rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.74rem;color:#cfc5b3;margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:var(--gold3)}
+  .row{display:flex;flex-direction:column;gap:.7rem;align-items:flex-start;margin-bottom:.5rem}
+  .panel{background:#faf6ee;border-radius:14px;padding:1.3rem;margin-bottom:.5rem}
+
+  /* ── PRIMARIO (real, ya en la app) ── */
+  .btn-primary{background:linear-gradient(145deg,#c49a3c 0%,#9a7340 45%,#7d5c2f 100%);
+    color:#fff;border:none;border-radius:var(--r);padding:.75rem 1.4rem;font-family:var(--font-sans);
+    font-size:.85rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.02em;
+    box-shadow:0 4px 0 #6b4d28,0 4px 12px rgba(196,154,60,.2),inset 0 1px 1px rgba(255,255,255,.25);
+    text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.15);position:relative;overflow:hidden}
+  .btn-primary:active{transform:translateY(2px);box-shadow:0 1px 0 #6b4d28}
+
+  /* ── SECUNDARIO ACTUAL (sin regla CSS → botón gris del sistema) ── */
+  .btn-secondary-broken{width:100%;margin-top:.25rem}
+
+  /* ── SECUNDARIO PROPUESTO ── */
+  .btn-secondary{background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+    color:#7d5c2f;border:1.5px solid var(--gold);border-radius:var(--r);
+    padding:.72rem 1.4rem;font-family:var(--font-sans);font-size:.85rem;font-weight:700;
+    cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.02em;text-transform:uppercase;
+    box-shadow:0 3px 0 var(--ink4),0 3px 10px rgba(196,154,60,.1)}
+  .btn-secondary:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink4)}
+
+  /* ── GHOST / volver (real, ya en la app) ── */
+  .btn-back{background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);
+    border-radius:var(--r);padding:.45rem 1rem;font-family:var(--font-sans);font-size:.78rem;font-weight:600;
+    color:var(--parch2);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;
+    box-shadow:0 2px 0 var(--ink4)}
+
+  .w100{width:100%}
+</style>
+</head>
+<body>
+  <h1>Sistema de botones</h1>
+  <div class="sub">jerarquía: primario · secundario · ghost</div>
+
+  <h2>1 · Primario — CTA principal</h2>
+  <div class="blurb">El dorado con relieve 3D. Ya en la app (17 usos). Es la acción principal de cada
+    pantalla: "Empezar examen", "Entrar". <b>Sin cambios</b>, es la referencia.</div>
+  <div class="panel"><div class="row">
+    <button class="btn-primary">Empezar examen →</button>
+    <button class="btn-primary w100">Entrar</button>
+  </div></div>
+
+  <h2>2 · Secundario — acción alternativa</h2>
+  <div class="blurb"><b>Bug actual:</b> la clase <code>.btn-secondary</code> se usa en 3 botones "Volver"
+    pero <b>no tiene ninguna regla CSS</b> → se ve como botón gris del sistema, sin marca:</div>
+  <div class="panel"><button class="btn-secondary-broken">← Volver al panel</button></div>
+  <div class="blurb"><b>Propuesto:</b> mismo tamaño que el primario pero en hueco — fondo crema, borde
+    dorado, texto dorado oscuro (contraste 5.7:1). Jerárquicamente entre el primario y el ghost.</div>
+  <div class="panel"><div class="row">
+    <button class="btn-secondary w100">← Volver al panel</button>
+    <button class="btn-secondary">Cancelar</button>
+  </div></div>
+
+  <h2>3 · Ghost — navegación atrás</h2>
+  <div class="blurb">Outline sutil para "atrás" dentro de una vista. Ya en la app. <b>Sin cambios</b>.</div>
+  <div class="panel"><div class="row">
+    <button class="btn-back">← Atrás</button>
+  </div></div>
+
+  <h2>Los tres juntos (jerarquía)</h2>
+  <div class="blurb">Cómo se leen en una misma pantalla: el ojo va al primario, luego al secundario, el ghost es el más discreto.</div>
+  <div class="panel"><div class="row">
+    <button class="btn-primary w100">Confirmar reserva</button>
+    <button class="btn-secondary w100">← Volver al panel</button>
+    <button class="btn-back">← Atrás</button>
+  </div></div>
+</body>
+</html>
