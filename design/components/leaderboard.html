@@ -1,0 +1,83 @@
+<!-- @dsCard group="Components" name="Leaderboard / ranking (.lb-row)" subtitle="Top-3 podio + contraste" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold-a:rgba(196,154,60,.14); --line:rgba(196,154,60,.14); --ink3:#ddd4c4; --ink4:#cfc5b3; --parch3:rgba(28,42,34,.65); --r2:12px;
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:#1c2a22;font-family:var(--font-sans);padding:1.2rem 1rem 3rem;max-width:430px;margin:0 auto}
+  .tag{font-family:var(--font-mono);font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:1.6rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--gold-a)}
+  .tag:first-child{margin-top:0}
+  .blurb{font-size:.74rem;color:rgba(28,42,34,.7);margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:#7d5c2f}
+  .leaderboard-rows{display:flex;flex-direction:column;gap:.3rem}
+
+  .lb-row{display:flex;align-items:center;gap:.75rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:.55rem .9rem}
+  .lb-name{font-size:.8rem;font-weight:500;color:#1c2a22;flex:1;letter-spacing:.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lb-score{font-family:var(--font-mono);font-size:.7rem;font-weight:500}
+
+  /* ── ACTUAL ── */
+  .v0 .lb-rank{font-family:var(--font-mono);font-size:.65rem;color:var(--parch3);width:18px;text-align:center;flex-shrink:0}
+  .v0 .lb-rank.gold{color:#d4944c;font-weight:600}
+  .v0 .lb-rank.silver{color:#9aa0a8;font-weight:600}
+  .v0 .lb-rank.bronze{color:#b07850;font-weight:600}
+  .v0 .lb-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--ink3),var(--ink4));border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:.72rem;color:var(--gold);flex-shrink:0}
+  .v0 .lb-score.hi{color:#4d8a5e}
+  .v0 .lb-score.mid{color:#c49a3c}  /* 2.42:1 falla */
+  .v0 .lb-score.lo{color:#c47068}   /* 3.32:1 falla */
+
+  /* ── MEJORADO ── */
+  .vA .lb-row.top{border-color:rgba(196,154,60,.3);background:linear-gradient(90deg,rgba(196,154,60,.06),#fff)}
+  .vA .lb-rank{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    font-family:var(--font-mono);font-size:.66rem;color:var(--parch3);font-weight:600}
+  .vA .lb-rank.medal{color:#fff;font-family:var(--font-serif);font-size:.72rem}
+  .vA .lb-rank.gold{background:linear-gradient(145deg,#e4be68,#c49a3c)}
+  .vA .lb-rank.silver{background:linear-gradient(145deg,#c2c8d0,#9aa0a8)}
+  .vA .lb-rank.bronze{background:linear-gradient(145deg,#cf9a6e,#b07850)}
+  .vA .lb-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--ink3),var(--ink4));border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:.78rem;color:#7d5c2f;flex-shrink:0}
+  .vA .lb-score.hi{color:#2d6a3e;font-weight:700}
+  .vA .lb-score.mid{color:#7d5c2f;font-weight:700}
+  .vA .lb-score.lo{color:#a04848;font-weight:700}
+</style>
+</head>
+<body>
+  <div class="tag">Actual</div>
+  <div class="blurb">Las 3 primeras solo cambian el <b>color del número</b> (poco visible), y los scores en
+    dorado/rojo claro <b>fallan contraste</b> (2.4:1 y 3.3:1 sobre crema).</div>
+  <div class="leaderboard-rows v0" id="v0"></div>
+
+  <div class="tag">Mejorado</div>
+  <div class="blurb">Top-3 con <b>medalla de posición</b> (oro/plata/bronce) y fila destacada. Avatar un
+    punto mayor. Scores en verde/oro-oscuro/rojo legibles (5.5-6:1). El nombre largo se recorta sin romper.</div>
+  <div class="leaderboard-rows vA" id="vA"></div>
+
+<script>
+  const data=[
+    [1,'AM','Ana Martín','2480','hi','gold'],
+    [2,'JL','Jon Lizarazu','2210','hi','silver'],
+    [3,'CR','Carla Ruiz','1980','mid','bronze'],
+    [4,'DS','Duvan Stiven Ramírez Duque','1650','mid',''],
+    [5,'MB','Mikel B.','1120','lo','']
+  ];
+  function rows(variant){
+    return data.map(([pos,ini,name,score,sc,medal])=>{
+      const rankCls = variant==='vA' ? (medal?`lb-rank medal ${medal}`:'lb-rank') : (medal?`lb-rank ${medal}`:'lb-rank');
+      const rowCls = variant==='vA' && medal ? 'lb-row top' : 'lb-row';
+      return `<div class="${rowCls}"><span class="${rankCls}">${pos}</span>`+
+        `<span class="lb-avatar">${ini}</span>`+
+        `<span class="lb-name">${name}</span>`+
+        `<span class="lb-score ${sc}">${score} XP</span></div>`;
+    }).join('');
+  }
+  document.getElementById('v0').innerHTML=rows('v0');
+  document.getElementById('vA').innerHTML=rows('vA');
+</script>
+</body>
+</html>
