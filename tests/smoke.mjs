@@ -536,6 +536,19 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('simulation terminal uses the Pip-Boy phosphor-green palette', () => {
+  // The contextual-simulation screen (.smart-terminal) was reskinned to a
+  // Fallout Pip-Boy: phosphor green on near-black with a CRT bloom.
+  const css = read('styles.css');
+  const rule = (css.match(/\.smart-terminal\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(/--trm-ink:\s*#3dffa0/.test(rule),
+    '.smart-terminal --trm-ink must be phosphor green #3dffa0 (Pip-Boy look)');
+  assert(/--trm-accent:\s*#22ff88/.test(rule),
+    '.smart-terminal --trm-accent must be phosphor green #22ff88');
+  assert(/\.smart-terminal \.dj-phase-title\{text-shadow:0 0 9px rgba\(34,255,136/.test(css),
+    'the phosphor glow on the title is missing — core of the CRT look');
+});
+
 test('Aprender sub-tabs lead with Smart Review, then Explore', () => {
   // Owner request: Repaso Inteligente (smart) comes before Explorar
   // (repaso) in the Aprender sub-tab bar, and is the default sub-tab.
