@@ -1,0 +1,65 @@
+<!-- @dsCard group="Components" name="Perfil / Stats (.stat-tile)" subtitle="Números legibles" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold-a:rgba(196,154,60,.14); --parch3:rgba(28,42,34,.65); --sage:#4d8a5e; --candy-purple:#7a6aaa; --candy-teal:#4a9a8a;
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:#1c2a22;font-family:var(--font-sans);padding:1.2rem 1rem 3rem;max-width:440px;margin:0 auto}
+  .tag{font-family:var(--font-mono);font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:1.7rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--gold-a)}
+  .tag:first-child{margin-top:0}
+  .blurb{font-size:.74rem;color:rgba(28,42,34,.7);margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:#7d5c2f}
+
+  .stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem}
+  .stat-tile{background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-radius:14px;padding:1.1rem 1rem;border-left:3px solid var(--gold);position:relative}
+  .stat-num{font-family:var(--font-serif);font-size:2rem;font-weight:700;line-height:1}
+  .stat-lbl{font-family:var(--font-mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--parch3);margin-top:.35rem}
+
+  /* posiciones de color (como en la app: nth-child) */
+  .t1{border-left-color:var(--c1)} .t1 .stat-num{color:var(--c1)}
+  .t2{border-left-color:var(--c2)} .t2 .stat-num{color:var(--c2)}
+  .t3{border-left-color:var(--candy-purple)} .t3 .stat-num{color:var(--candy-purple)}
+  .t4{border-left-color:var(--c4)} .t4 .stat-num{color:var(--c4)}
+  .t5{border-left-color:var(--sage)} .t5 .stat-num{color:var(--sage)}
+  .t6{border-left-color:var(--candy-teal)} .t6 .stat-num{color:var(--candy-teal)}
+
+  /* ACTUAL: gold/orange/blue fallan contraste (2.4 / 2.4 / 2.9 : 1) */
+  .v0{--c1:#c49a3c;--c2:#d4944c;--c4:#5a9ab8}
+  /* MEJORADO: oscurecidos a >=4:1 manteniendo el matiz */
+  .vA{--c1:#9a7340;--c2:#b06828;--c4:#3d7a96}
+</style>
+</head>
+<body>
+  <div class="tag">Actual</div>
+  <div class="blurb">Los números grandes en <b>dorado, naranja y azul</b> fallan contraste sobre la tarjeta
+    crema (2.4 / 2.4 / 2.9 : 1) — cuestan de leer.</div>
+  <div class="stats-row v0">
+    <div class="stat-tile t1"><div class="stat-num">Nv 7</div><div class="stat-lbl">Nivel</div></div>
+    <div class="stat-tile t2"><div class="stat-num">12</div><div class="stat-lbl">Racha días</div></div>
+    <div class="stat-tile t3"><div class="stat-num">27</div><div class="stat-lbl">Dominados</div></div>
+    <div class="stat-tile t4"><div class="stat-num">84%</div><div class="stat-lbl">Precisión</div></div>
+    <div class="stat-tile t5"><div class="stat-num">48</div><div class="stat-lbl">Sesiones</div></div>
+    <div class="stat-tile t6"><div class="stat-num">3h</div><div class="stat-lbl">Tiempo</div></div>
+  </div>
+
+  <div class="tag">Mejorado</div>
+  <div class="blurb">Mismos colores pero <b>un punto más oscuros</b> (≥4:1) — siguen siendo dorado/naranja/azul
+    de marca, ahora legibles. Los demás (morado, verde, teal) ya pasaban, sin cambios.</div>
+  <div class="stats-row vA">
+    <div class="stat-tile t1"><div class="stat-num">Nv 7</div><div class="stat-lbl">Nivel</div></div>
+    <div class="stat-tile t2"><div class="stat-num">12</div><div class="stat-lbl">Racha días</div></div>
+    <div class="stat-tile t3"><div class="stat-num">27</div><div class="stat-lbl">Dominados</div></div>
+    <div class="stat-tile t4"><div class="stat-num">84%</div><div class="stat-lbl">Precisión</div></div>
+    <div class="stat-tile t5"><div class="stat-num">48</div><div class="stat-lbl">Sesiones</div></div>
+    <div class="stat-tile t6"><div class="stat-num">3h</div><div class="stat-lbl">Tiempo</div></div>
+  </div>
+</body>
+</html>
