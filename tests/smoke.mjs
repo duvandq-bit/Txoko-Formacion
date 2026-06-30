@@ -536,6 +536,22 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('smart review leads with the simulation CTA, no live-case block', () => {
+  // Owner request: the "ENTRAR EN SIMULACIÓN" CTA moves to the top of the
+  // smart-review body, and the "EN VIVO · MESA AHORA" single-case block is
+  // removed (redundant with the simulation).
+  const start = html.indexOf('function renderSmartReview()');
+  assert(start !== -1, 'renderSmartReview not found');
+  const fn = html.slice(start, start + 9000);
+  assert(!/class="ri-case-quote"/.test(fn) && !/id="riCaseQuote"/.test(fn),
+    'the EN VIVO / MESA AHORA case block markup is back');
+  const ctaIdx = fn.indexOf('class="ri-cta-wrap"');
+  const statsIdx = fn.indexOf('class="ri-stats-row"');
+  assert(ctaIdx !== -1 && statsIdx !== -1, 'cta or stats row missing');
+  assert(ctaIdx < statsIdx,
+    'simulation CTA must render above the stats row (lead action)');
+});
+
 test('video accordion tabs are tappable with legible labels', () => {
   // renderVideoAccordion built tab buttons with a ~32px tap target,
   // .58rem labels, and label colours that failed contrast (gold/red/

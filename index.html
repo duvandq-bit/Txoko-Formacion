@@ -4387,26 +4387,8 @@ function renderSmartReview(){
     </div>
   `).join('');
 
-  // ── Tonight's Case (scenario) ──
-  const caseHTML = samples[0] ? (() => {
-    const quote = stripQuote(samples[0].q.q);
-    const catLbl = (typeof catLocal === 'function') ? catLocal(samples[0].dish.cat) : samples[0].dish.cat;
-    return `
-      <div class="ri-case">
-        <div class="ri-case-head">
-          <span class="ri-case-tag">${_en?'LIVE · TABLE NOW':'EN VIVO · MESA AHORA'}</span>
-          <span class="ri-case-badge">${_en?'CASE':'CASO'} #${Math.floor(Math.random()*900+100)}</span>
-        </div>
-        <div class="ri-case-quote" id="riCaseQuote" data-full="${quote.replace(/"/g,'&quot;')}"><span class="ri-type-caret"></span></div>
-        <div class="ri-case-meta">
-          <span class="ri-case-dish">${getDish(samples[0].dish).name}</span>
-          <span class="ri-case-dot">·</span>
-          <span class="ri-case-cat">${catLbl}</span>
-          <button class="ri-case-refresh" onclick="renderSmartReview()" title="${_en?'Another case':'Otro caso'}">↻ ${_en?'New case':'Otro caso'}</button>
-        </div>
-      </div>
-    `;
-  })() : '';
+  // "EN VIVO · MESA AHORA" single-case block removed per owner request —
+  // redundant with the full simulation, which is now the lead action.
 
   // ── Focus areas (weaknesses) ──
   const weaknesses = _adaptiveWeaknesses(emp).slice(0, 5);
@@ -4512,16 +4494,6 @@ function renderSmartReview(){
       </div>
 
       <div class="ri-pad">
-        <div class="ri-stats-row">${statsHTML}</div>
-
-        ${caseHTML}
-
-        ${focusHTML}
-
-        ${diffHTML}
-
-        ${allergenHTML}
-
         <div class="ri-cta-wrap">
           <button onclick="_startSmartSession()" class="ri-cta" aria-label="${_en?'Enter simulation':'Entrar en simulación'}">
             <span class="ri-cta-bracket tl" aria-hidden="true"></span>
@@ -4541,30 +4513,18 @@ function renderSmartReview(){
           </button>
           <button onclick="renderSmartReview()" class="ri-secondary">↻ ${_en?'Reshuffle selection':'Regenerar selección'}</button>
         </div>
+
+        <div class="ri-stats-row">${statsHTML}</div>
+
+        ${focusHTML}
+
+        ${diffHTML}
+
+        ${allergenHTML}
       </div>
     </div>
   `;
 
-  // ── Typewriter effect on the case quote (safe against special chars) ──
-  (function(){
-    const el = document.getElementById('riCaseQuote');
-    if(!el) return;
-    const full = el.getAttribute('data-full') || '';
-    let i = 0;
-    const tick = () => {
-      if(i <= full.length){
-        // Use textContent for safety, then append caret node
-        el.textContent = full.slice(0, i);
-        const caret = document.createElement('span');
-        caret.className = 'ri-type-caret';
-        el.appendChild(caret);
-        i++;
-        setTimeout(tick, 18 + Math.random()*24);
-      }
-    };
-    // start after the console fade-in
-    setTimeout(tick, 380);
-  })();
 }
 
 // ── Manual difficulty selection ──
