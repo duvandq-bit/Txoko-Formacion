@@ -536,6 +536,17 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('sommelier search input is >=16px (no iOS zoom)', () => {
+  // 4th input with the iOS auto-zoom trap (after svc-search,
+  // maridajeSearch, login). The camarero uses it tableside.
+  const css = read('styles.css');
+  const rule = (css.match(/\.sommelier-input\s*\{([^}]*)\}/) || [])[1] || '';
+  const m = rule.match(/font-size:\s*([\d.]+)(px|rem)/);
+  assert(m, '.sommelier-input has no font-size');
+  const px = m[2] === 'px' ? parseFloat(m[1]) : parseFloat(m[1]) * 16;
+  assert(px >= 16, `.sommelier-input font-size is ${px}px (<16) — iOS will zoom on focus`);
+});
+
 test('leaderboard scores are WCAG-legible and names truncate', () => {
   // Score colours were gold/sage/rose on cream — 2.4 / 4.1 / 3.3:1, all
   // failing. Now dark green/gold/red. And long names must ellipsis, not
