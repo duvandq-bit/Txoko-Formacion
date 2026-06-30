@@ -4072,20 +4072,24 @@ body::after{
 .lb-rank.silver{color:#9aa0a8;font-weight:600}
 .lb-rank.bronze{color:#b07850;font-weight:600}
 .lb-avatar{
-  width:26px;height:26px;border-radius:50%;
+  width:30px;height:30px;border-radius:50%;
   background:linear-gradient(135deg,var(--ink3),var(--ink4));
   border:1px solid var(--gold-a);
   display:flex;align-items:center;justify-content:center;
-  font-family:'Cinzel',serif;font-size:.72rem;
-  color:var(--gold);flex-shrink:0;
+  font-family:'Cinzel',serif;font-size:.78rem;
+  color:#7d5c2f;flex-shrink:0;
 }
-.lb-name{font-size:.8rem;font-weight:500;color:var(--parchment);flex:1;letter-spacing:.01em}
+/* min-width:0 + ellipsis so long names ("Duvan Stiven Ramírez Duque")
+   truncate instead of wrapping and breaking the row height */
+.lb-name{font-size:.8rem;font-weight:500;color:var(--parchment);flex:1;min-width:0;letter-spacing:.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lb-score{
-  font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;
+  font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;
 }
-.lb-score.hi{color:var(--sage)}
-.lb-score.mid{color:var(--gold)}
-.lb-score.lo{color:var(--rose)}
+/* dark, WCAG-legible on the cream rows: sage/gold/rose were 4.1 / 2.4 /
+   3.3:1; these clear 5.5:1 and match the app's green/gold/red system */
+.lb-score.hi{color:#2d6a3e}
+.lb-score.mid{color:#7d5c2f}
+.lb-score.lo{color:#a04848}
 .lb-no-scores{
   text-align:center;padding:.8rem;font-size:.72rem;
   color:var(--parch4);font-style:italic;

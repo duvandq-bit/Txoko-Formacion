@@ -536,6 +536,20 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('leaderboard scores are WCAG-legible and names truncate', () => {
+  // Score colours were gold/sage/rose on cream — 2.4 / 4.1 / 3.3:1, all
+  // failing. Now dark green/gold/red. And long names must ellipsis, not
+  // wrap and blow up the row.
+  const css = read('styles.css');
+  assert(/\.lb-score\.mid\s*\{[^}]*color:\s*#7d5c2f/.test(css),
+    '.lb-score.mid must be dark gold #7d5c2f (var(--gold) was 2.4:1 on cream)');
+  assert(/\.lb-score\.lo\s*\{[^}]*color:\s*#a04848/.test(css),
+    '.lb-score.lo must be dark red #a04848 (rose was 3.3:1)');
+  const name = (css.match(/\.lb-name\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(/text-overflow:\s*ellipsis/.test(name) && /min-width:\s*0/.test(name),
+    '.lb-name must truncate long names (ellipsis + min-width:0)');
+});
+
 test('login inputs are >=16px so iOS does not zoom on focus', () => {
   // .login-input (name / PIN / password) was .9rem (14.4px) — iOS Safari
   // auto-zooms inputs under 16px on focus, shifting the whole login. Must
