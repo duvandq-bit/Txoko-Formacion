@@ -536,6 +536,20 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('profile stat numbers clear large-text contrast', () => {
+  // The gold/orange/blue stat numbers were 2.42 / 2.39 / 2.89:1 on the
+  // cream tiles — below even the 3:1 large-text floor. Darkened to >=4:1
+  // while keeping the hue (tile border-left stays the vivid token).
+  const css = read('styles.css');
+  const base = (css.match(/\.stat-num\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(/color:\s*#9a7340/.test(base),
+    '.stat-num base must be darkened gold #9a7340 (var(--gold) was 2.42:1)');
+  assert(/\.stat-tile:nth-child\(2\) \.stat-num\{color:#b06828\}/.test(css),
+    'tile 2 number must be darkened orange #b06828');
+  assert(/\.stat-tile:nth-child\(4\) \.stat-num\{color:#3d7a96\}/.test(css),
+    'tile 4 number must be darkened blue #3d7a96');
+});
+
 test('sommelier search input is >=16px (no iOS zoom)', () => {
   // 4th input with the iOS auto-zoom trap (after svc-search,
   // maridajeSearch, login). The camarero uses it tableside.

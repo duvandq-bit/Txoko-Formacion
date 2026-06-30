@@ -2647,11 +2647,13 @@ body::after{
 .stat-tile:nth-child(6){border-left-color:var(--candy-teal)}
 .stat-num{
   font-family:'Cinzel',serif;font-size:2rem;font-weight:700;
-  color:var(--gold);line-height:1;position:relative;z-index:1;
+  /* darkened gold (token --gold was 2.42:1 on the cream tile, fails even
+     the large-text 3:1 floor); border-left keeps the vivid token colour */
+  color:#9a7340;line-height:1;position:relative;z-index:1;
 }
-.stat-tile:nth-child(2) .stat-num{color:var(--candy-orange)}
+.stat-tile:nth-child(2) .stat-num{color:#b06828} /* was candy-orange, 2.39:1 */
 .stat-tile:nth-child(3) .stat-num{color:var(--candy-purple)}
-.stat-tile:nth-child(4) .stat-num{color:var(--candy-blue)}
+.stat-tile:nth-child(4) .stat-num{color:#3d7a96} /* was candy-blue, 2.89:1 */
 .stat-num sup{font-size:.9rem;vertical-align:super}
 .stat-lbl{
   font-family:'DM Mono',monospace;font-size:.6rem;font-weight:600;
