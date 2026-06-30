@@ -1,0 +1,75 @@
+<!-- @dsCard group="Components" name="Vinos / Sommelier — buscador + filtros" subtitle="iOS zoom fix + tap targets" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Sommelier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold2:#d4aa4c; --parchment:#1c2a22; --parch3:rgba(28,42,34,.65); --gold-a:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:#1c2a22;font-family:var(--font-sans);padding:1.2rem 1rem 3rem;max-width:440px;margin:0 auto}
+  .tag{font-family:var(--font-mono);font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:1.7rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--gold-a)}
+  .tag:first-child{margin-top:0}
+  .blurb{font-size:.74rem;color:rgba(28,42,34,.7);margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:#7d5c2f}
+
+  .somm-wrap{position:relative;margin-bottom:.9rem}
+  .somm-icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--gold)}
+  .sommelier-input{width:100%;padding:.7rem 1rem .7rem 2.4rem;background:rgba(255,255,255,.5);border:1.5px solid var(--gold);border-radius:12px;font-family:var(--font-sans);color:var(--parchment);outline:none}
+  .sommelier-input::placeholder{color:var(--parch3);font-style:italic}
+  .filters{display:flex;gap:.5rem;flex-wrap:wrap}
+  .wine-filter-pill{display:flex;align-items:center;gap:.25rem;border-radius:20px;font-family:var(--font-sans);cursor:pointer;white-space:nowrap}
+  .wine-filter-pill.active{background:linear-gradient(135deg,var(--gold),#b8882e);color:#1a0f05;border:none;font-weight:600}
+  .wine-filter-pill:not(.active){background:linear-gradient(155deg,#faf6ee,#f0e8d8);color:var(--parch3);border:1.5px solid rgba(196,154,60,.12);font-weight:500}
+
+  /* ACTUAL */
+  .v0 .sommelier-input{font-size:.85rem}      /* 13.6px → iOS zoom */
+  .v0 .wine-filter-pill{padding:.4rem .75rem;font-size:.72rem}   /* ~28px alto */
+
+  /* MEJORADO */
+  .vA .sommelier-input{font-size:16px}         /* no zoom */
+  .vA .wine-filter-pill{padding:.55rem .9rem;font-size:.74rem;min-height:38px}
+</style>
+</head>
+<body>
+  <div class="tag">Actual</div>
+  <div class="blurb">El buscador del sommelier va a <b>.85rem (13.6px)</b> → <b>iOS hace zoom</b> al tocarlo
+    (el camarero lo usa en plena mesa para buscar maridaje). Y los filtros tienen un tap pequeño (~28px).</div>
+  <div class="v0">
+    <div class="somm-wrap">
+      <svg class="somm-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="sommelier-input" placeholder="¿Qué plato vas a maridar?">
+    </div>
+    <div class="filters">
+      <button class="wine-filter-pill active">Todos</button>
+      <button class="wine-filter-pill">Tinto</button>
+      <button class="wine-filter-pill">Blanco</button>
+      <button class="wine-filter-pill">Espumoso</button>
+    </div>
+  </div>
+
+  <div class="tag">Mejorado</div>
+  <div class="blurb">Buscador a <b>16px</b> → iOS ya no hace zoom (cuarto input que lo arreglamos, tras
+    servicio, maridaje y login). Filtros con <b>tap target mayor</b> (~38px).</div>
+  <div class="vA">
+    <div class="somm-wrap">
+      <svg class="somm-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="sommelier-input" placeholder="¿Qué plato vas a maridar?">
+    </div>
+    <div class="filters">
+      <button class="wine-filter-pill active">Todos</button>
+      <button class="wine-filter-pill">Tinto</button>
+      <button class="wine-filter-pill">Blanco</button>
+      <button class="wine-filter-pill">Espumoso</button>
+    </div>
+  </div>
+
+  <div class="blurb" style="margin-top:1.4rem">Nota: los <b>datos de vinos y maridajes no se tocan</b> —
+    solo el buscador y los filtros.</div>
+</body>
+</html>
