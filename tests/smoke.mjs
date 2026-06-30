@@ -582,6 +582,10 @@ test('Aprender sub-tabs lead with Smart Review, then Explore', () => {
   assert(smartIdx < repasoIdx, 'Smart Review must come before Explore in the Aprender sub-tabs');
   assert(/_subTab\.aprender\s*\|\|\s*'smart'/.test(html),
     "Aprender default sub-tab must be 'smart' so the first tab is active on open");
+  // the initial _subTab state must also be 'smart' — '|| smart' never fires
+  // because _subTab.aprender is always truthy once initialised
+  assert(/let _subTab = \{ aprender:'smart'/.test(html),
+    "_subTab must initialise aprender to 'smart', else Explore stays the active default");
 });
 
 test('smart review leads with the simulation CTA, no live-case block', () => {
