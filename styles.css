@@ -2297,8 +2297,8 @@ body::after{
 }
 
 .wine-filter-pill{
-  display:flex;align-items:center;gap:.25rem;padding:.4rem .75rem;
-  border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.72rem;
+  display:flex;align-items:center;justify-content:center;gap:.25rem;padding:.55rem .9rem;min-height:38px;
+  border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.74rem;
   cursor:pointer;white-space:nowrap;transition:all .2s;
 }
 .wine-filter-pill.active{
@@ -2550,7 +2550,9 @@ body::after{
 .sommelier-input{
   width:100%;padding:.7rem 1rem .7rem 2.4rem;
   border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);
-  font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);
+  /* 16px so iOS Safari doesn't auto-zoom on focus tableside — same trap
+     fixed on svc-search / maridajeSearch / login */
+  font-family:'Quicksand',sans-serif;font-size:16px;color:var(--parchment);
   background:linear-gradient(155deg,#fff,#faf6ee);
   box-sizing:border-box;transition:all .3s;outline:none;
 }
@@ -7551,7 +7553,7 @@ body::after{
   .tunic-stab{padding:.45rem .65rem;font-size:.62rem;gap:.25rem;border-radius:10px;min-width:auto}
   .tunic-stab.active{padding:.45rem .75rem}
   /* Wine filter pills: compact on mobile for horizontal scroll */
-  .wine-filter-pill{padding:.35rem .55rem;font-size:.6rem;min-height:36px;min-width:auto;flex-shrink:0}
+  .wine-filter-pill{padding:.35rem .55rem;font-size:.6rem;min-height:40px;min-width:auto;flex-shrink:0}
   .wine-filter-pill span{font-size:.5rem !important}
   /* Utility classes scale up on mobile */
   .f-mono-xs{font-size:.58rem}.f-mono-sm{font-size:.63rem}.f-mono-md{font-size:.68rem}.f-mono-base{font-size:.72rem}
