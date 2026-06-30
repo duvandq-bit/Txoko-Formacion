@@ -536,6 +536,17 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('Smart Review console wears the Pip-Boy phosphor skin', () => {
+  const css = read('styles.css');
+  const con = (css.match(/\.ri-console\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(/#03160c/.test(con) || /#02110a/.test(con),
+    '.ri-console must use the dark Pip-Boy background');
+  assert(/\.ri-console \.ri-stat-v\{color:#3dffa0/.test(css),
+    'the stat numbers must be phosphor green in the reskinned console');
+  assert(/\.ri-console::after\{[^}]*repeating-linear-gradient/.test(css),
+    'the CRT scanline overlay on the console is missing');
+});
+
 test('smart review screen is stripped to the simulation lead', () => {
   // Owner removed the focus-areas, difficulty-picker and allergen blocks
   // from the smart-review screen; difficulty is auto. Guard they stay out.
