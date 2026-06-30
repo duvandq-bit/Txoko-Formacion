@@ -1,0 +1,106 @@
+<!-- @dsCard group="Components" name="Simulación — estética Pip-Boy" subtitle="Fallout retro CRT verde fósforo" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Simulación Pip-Boy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pip:#22ff88; --pip-dim:#1acc6e; --pip-faint:rgba(34,255,136,.45); --pip-ghost:rgba(34,255,136,.18);
+    --pip-bg:#04140b; --pip-panel:rgba(34,255,136,.05);
+    --mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#02160c;font-family:var(--mono);padding:0;margin:0}
+  .screen{
+    max-width:460px;margin:0 auto;min-height:100vh;position:relative;overflow:hidden;
+    background:radial-gradient(ellipse 100% 80% at 50% 40%, #06200f 0%, #04140b 60%, #020c07 100%);
+    color:var(--pip);padding:1.1rem 1rem 2rem;
+    text-shadow:0 0 6px rgba(34,255,136,.55), 0 0 2px rgba(34,255,136,.8);
+  }
+  /* CRT scanlines */
+  .screen::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.25) 0px, rgba(0,0,0,.25) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode:multiply;opacity:.7}
+  /* CRT vignette + flicker glow */
+  .screen::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:6;
+    background:radial-gradient(ellipse 90% 75% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);
+    animation:flick 5s infinite}
+  @keyframes flick{0%,96%,100%{opacity:1}97%{opacity:.82}98%{opacity:.95}}
+
+  .row{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+  .x{width:42px;height:42px;border:1px solid var(--pip-faint);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--pip);font-size:1.1rem}
+  .chip{border:1px solid var(--pip-faint);border-radius:4px;padding:.35rem .7rem;font-size:.7rem;letter-spacing:.12em;color:var(--pip)}
+  .kbd{font-size:.7rem;color:var(--pip-dim);letter-spacing:.1em}
+
+  .eyebrow{text-align:center;font-size:.62rem;letter-spacing:.28em;color:var(--pip-dim);margin:1.4rem 0 .5rem;position:relative;z-index:2}
+  .eyebrow::before,.eyebrow::after{content:'◄ ';opacity:.5}
+  .eyebrow::after{content:' ►'}
+  .title{font-family:'VT323',var(--mono);font-size:2.6rem;line-height:.95;text-align:center;color:var(--pip);letter-spacing:.02em;position:relative;z-index:2;margin-bottom:.5rem}
+  .data{font-size:.62rem;letter-spacing:.12em;color:var(--pip-dim);text-align:center;line-height:1.7;position:relative;z-index:2;margin-bottom:1.4rem}
+  .data b{color:var(--pip)}
+
+  .qbar{display:flex;align-items:center;justify-content:space-between;font-size:.64rem;letter-spacing:.14em;color:var(--pip-dim);position:relative;z-index:2;margin-bottom:.7rem}
+  .qdots{display:flex;gap:.35rem}
+  .qdot{width:30px;height:24px;border:1px solid var(--pip-ghost);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--pip-ghost)}
+  .qdot.on{border-color:var(--pip);color:var(--pip);box-shadow:0 0 8px rgba(34,255,136,.4),inset 0 0 8px rgba(34,255,136,.15)}
+
+  .panel{border:1px solid var(--pip-faint);border-radius:8px;padding:1.1rem 1rem;position:relative;z-index:2;
+    background:var(--pip-panel);box-shadow:inset 0 0 30px rgba(34,255,136,.06),0 0 14px rgba(34,255,136,.08)}
+  .bracket{position:absolute;width:14px;height:14px;border:1.5px solid var(--pip);z-index:3}
+  .bracket.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+  .bracket.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+  .bracket.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+  .bracket.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+  .q{font-size:.92rem;line-height:1.55;color:var(--pip);margin-bottom:1rem}
+  .q::before{content:'> ';color:var(--pip-dim)}
+  .opt{display:flex;gap:.7rem;align-items:center;border:1px solid var(--pip-ghost);border-radius:6px;padding:.8rem .9rem;margin-bottom:.55rem;
+    min-height:46px;cursor:pointer;transition:all .15s;background:transparent}
+  .opt:hover{border-color:var(--pip);box-shadow:0 0 10px rgba(34,255,136,.25),inset 0 0 10px rgba(34,255,136,.08)}
+  .opt-k{color:var(--pip);font-size:.8rem;flex-shrink:0}
+  .opt-t{color:var(--pip-dim);font-size:.88rem}
+  .opt:hover .opt-t{color:var(--pip)}
+
+  .foot{display:flex;align-items:center;justify-content:space-between;margin-top:1.6rem;position:relative;z-index:2;font-size:.74rem;letter-spacing:.1em;color:var(--pip-dim)}
+  .next{border:1px solid var(--pip);border-radius:6px;padding:.6rem 1rem;color:var(--pip);letter-spacing:.14em;box-shadow:0 0 10px rgba(34,255,136,.25)}
+  .caret{animation:blink 1.1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+</style>
+</head>
+<body>
+  <div class="screen">
+    <div class="row">
+      <div class="x">✕</div>
+      <div class="chip">▶ AVANZADO 1/5</div>
+      <div style="width:42px"></div>
+    </div>
+
+    <div class="eyebrow">SIMULACIÓN CONTEXTUAL</div>
+    <div class="title">Tartar de tomate<br>y queso stracciatella</div>
+    <div class="data">// DATA › <b>VEGETARIANO</b> · <b>7 ALÉRGENOS</b> · INTERACCIÓN CON HUÉSPED</div>
+
+    <div class="qbar">
+      <span>PREGUNTA 1 / 4</span>
+      <div class="qdots"><span class="qdot on">01</span><span class="qdot">02</span><span class="qdot">03</span><span class="qdot">04</span></div>
+    </div>
+
+    <div class="panel">
+      <span class="bracket tl"></span><span class="bracket tr"></span><span class="bracket bl"></span><span class="bracket br"></span>
+      <div class="q">Pareja: "Él es alérgico a Gluten, ella a Crustáceos. ¿Pueden compartir Tartar de tomate y queso stracciatella?"<span class="caret">_</span></div>
+      <div class="opt"><span class="opt-k">[A]</span><span class="opt-t">Solo si se prepara aparte</span></div>
+      <div class="opt"><span class="opt-k">[B]</span><span class="opt-t">Sí, ambos pueden</span></div>
+      <div class="opt"><span class="opt-k">[C]</span><span class="opt-t">No — afecta a uno de ellos</span></div>
+      <div class="opt"><span class="opt-k">[D]</span><span class="opt-t">Solo un bocado</span></div>
+    </div>
+
+    <div class="foot">
+      <span>PUNTOS: 0/0</span>
+      <span class="next">SIGUIENTE PLATO →</span>
+    </div>
+  </div>
+</body>
+</html>

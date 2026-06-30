@@ -7830,19 +7830,23 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
    Narrative: the artisanal manual represents accumulated human
    knowledge; this console represents the AI simulation testing it.
    ═══════════════════════════════════════════════════════════════════ */
+/* ── Pip-Boy / Fallout phosphor-green palette ── */
 .smart-terminal{
-  --trm-bg:#0a0d0e; --trm-bg2:#12161a;
-  --trm-line:rgba(232,228,218,.08); --trm-line-hot:rgba(232,228,218,.22);
-  --trm-ink:#e8e4da; --trm-ink-dim:rgba(232,228,218,.55); --trm-ink-mute:rgba(232,228,218,.28);
-  --trm-accent:#d4cfa8; --trm-accent-hot:#efe6b0;
-  --trm-ok:#a8c8a0; --trm-ok-hot:#c4dcb8;
-  --trm-err:#d4a0a0; --trm-warn:#d4c290;
-  --trm-grid:rgba(232,228,218,.035);
+  --trm-bg:#02140a; --trm-bg2:#04200f;
+  --trm-line:rgba(34,255,136,.14); --trm-line-hot:rgba(34,255,136,.34);
+  --trm-ink:#3dffa0; --trm-ink-dim:rgba(61,255,160,.6); --trm-ink-mute:rgba(61,255,160,.32);
+  --trm-accent:#22ff88; --trm-accent-hot:#7dffba;
+  --trm-ok:#5dffa0; --trm-ok-hot:#9fffc8;
+  --trm-err:#ff6a5c; --trm-warn:#ffd24d;
+  --trm-grid:rgba(34,255,136,.06);
 }
 .smart-terminal.dj-overlay{background:var(--trm-bg);animation:trmPowerOn .45s cubic-bezier(.2,.7,.3,1) both}
+/* phosphor CRT bloom — the glow that reads as a Pip-Boy monitor */
+.smart-terminal .dj-body,.smart-terminal .dj-header,.smart-terminal .dj-nav{text-shadow:0 0 5px rgba(34,255,136,.45),0 0 1px rgba(34,255,136,.75)}
+.smart-terminal .dj-phase-title{text-shadow:0 0 9px rgba(34,255,136,.55),0 0 2px rgba(34,255,136,.85)}
 .smart-terminal .dj-bg{background:var(--trm-bg)}
 .smart-terminal .dj-bg::before{background:radial-gradient(ellipse 120% 70% at 50% -10%,rgba(212,207,168,.045),transparent 70%),radial-gradient(ellipse 120% 90% at 50% 110%,rgba(0,0,0,.55),transparent 60%)}
-.smart-terminal .dj-bg::after{background:linear-gradient(var(--trm-grid) 1px,transparent 1px) 0 0/32px 32px,linear-gradient(90deg,var(--trm-grid) 1px,transparent 1px) 0 0/32px 32px,repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 3px 4px);opacity:1}
+.smart-terminal .dj-bg::after{background:linear-gradient(var(--trm-grid) 1px,transparent 1px) 0 0/32px 32px,linear-gradient(90deg,var(--trm-grid) 1px,transparent 1px) 0 0/32px 32px,repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px);opacity:1}
 /* Corner brackets */
 .smart-terminal .dj-container::before,
 .smart-terminal .dj-container::after{content:"";position:absolute;z-index:3;width:22px;height:22px;pointer-events:none;border:1px solid var(--trm-line-hot)}
