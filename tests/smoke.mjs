@@ -536,6 +536,21 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('video accordion tabs are tappable with legible labels', () => {
+  // renderVideoAccordion built tab buttons with a ~32px tap target,
+  // .58rem labels, and label colours that failed contrast (gold/red/
+  // orange 2.4-3.3:1). Now 44px tap, .64rem labels, dark colours.
+  const fn = html.match(/function renderVideoAccordion\([\s\S]*?\n\}/);
+  assert(fn, 'renderVideoAccordion not found');
+  const body = fn[0];
+  assert(/min-height:44px/.test(body),
+    'video accordion tab buttons must have a 44px tap target');
+  assert(/font-size:\.64rem/.test(body),
+    'video accordion labels must be .64rem (were .58rem ~9px)');
+  assert(/#a04848/.test(body) && /#7d5c2f/.test(body),
+    'video accordion label colours must use the dark WCAG palette');
+});
+
 test('profile stat numbers clear large-text contrast', () => {
   // The gold/orange/blue stat numbers were 2.42 / 2.39 / 2.89:1 on the
   // cream tiles — below even the 3:1 large-text floor. Darkened to >=4:1

@@ -15171,19 +15171,22 @@ function renderVideoAccordion(dishName, videoId) {
   if(!d) return '';
   const uid = (videoId||'v0').replace(/[^a-z0-9]/gi,'');
   const allergens = d.allergens&&d.allergens.length ? d.allergens.join(' · ') : (LANG==='en'?'None':'Ninguno');
-  const allergenColor = d.allergens&&d.allergens.length ? '#c47068' : '#4d8a5e';
+  // WCAG-legible label colours on the cream rows (the vivid #c47068 /
+  // #d4944c / --gold were 2.4-3.8:1); same dark green/red/gold/orange
+  // system used across the app
+  const allergenColor = d.allergens&&d.allergens.length ? '#a04848' : '#2d6a3e';
   const tabs = [
-    {id:'ing', label:LANG==='en'?'Ingredients':'Ingredientes', content:d.ingredients||'—', color:'var(--gold)'},
+    {id:'ing', label:LANG==='en'?'Ingredients':'Ingredientes', content:d.ingredients||'—', color:'#7d5c2f'},
     {id:'alg', label:LANG==='en'?'Allergens':'Alérgenos', content:allergens, color:allergenColor},
-    {id:'str', label:'Storytelling', content:d.history||(LANG==='en'?'Coming soon':'Próximamente'), color:'var(--gold)'},
+    {id:'str', label:'Storytelling', content:d.history||(LANG==='en'?'Coming soon':'Próximamente'), color:'#7d5c2f'},
   ];
-  if(d.notes) tabs.push({id:'not', label:LANG==='en'?'Notes':'Notas', content:d.notes, color:'#d4944c'});
+  if(d.notes) tabs.push({id:'not', label:LANG==='en'?'Notes':'Notas', content:d.notes, color:'#b06828'});
   tabs.push({id:'rec', label:LANG==='en'?'Recipe':'Receta', content:LANG==='en'?'PDF coming soon':'PDF próximamente', color:'var(--parch3)'});
   return '<div style="border:1.5px solid rgba(196,154,60,.1);border-radius:12px;overflow:hidden;margin-top:.1rem">' +
     tabs.map((tab,i) =>
       '<div style="'+(i<tabs.length-1?'border-bottom:1px solid var(--line2)':'')+'">' +
-        '<button data-bid="vb_'+uid+'_'+tab.id+'" onclick="toggleVidTab(this.getAttribute(\'data-bid\'))" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:.6rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:none;cursor:pointer;text-align:left">' +
-          '<span style="font-family:\'DM Mono\',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:'+tab.color+'">'+tab.label+'</span>' +
+        '<button data-bid="vb_'+uid+'_'+tab.id+'" onclick="toggleVidTab(this.getAttribute(\'data-bid\'))" style="width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;padding:.7rem .9rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:none;cursor:pointer;text-align:left">' +
+          '<span style="font-family:\'DM Mono\',monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:'+tab.color+'">'+tab.label+'</span>' +
           '<span id="varr_'+uid+'_'+tab.id+'" style="font-size:.6rem;color:var(--parch4);display:inline-block;transition:transform .2s">&#9662;</span>' +
         '</button>' +
         '<div id="vb_'+uid+'_'+tab.id+'" style="display:none;padding:.65rem .85rem .8rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border-top:1px solid rgba(196,154,60,.08);border-left:3px solid '+tab.color+';font-size:.78rem;color:var(--parch2);line-height:1.65">'+tab.content+'</div>' +
