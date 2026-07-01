@@ -6860,13 +6860,14 @@ function showTab(tab){
 // ═══ SUB-TAB HELPERS ═══
 // Sub-tab navigation as a dropdown (no horizontal scroll — every option is
 // reachable without swiping). onclickFor(id) yields the per-item onclick.
-function _subTabDropdown(tabs, activeId, onclickFor){
+function _subTabDropdown(tabs, activeId, onclickFor, variant){
   const active = tabs.find(t=>t[0]===activeId) || tabs[0];
   const curIcon = active[2] ? `<span class="tunic-dd-ico">${active[2]}</span>` : '';
   const items = tabs.map(([id,label,icon])=>
     `<button role="menuitem" class="tunic-dd-item${id===activeId?' on':''}" onclick="${onclickFor(id)}">${icon?`<span class="tunic-dd-ico">${icon}</span>`:''}<span>${label}</span></button>`
   ).join('');
-  return `<div class="tunic-dd">
+  const vcls = variant==='green' ? ' tunic-dd--green' : '';
+  return `<div class="tunic-dd${vcls}">
     <button class="tunic-dd-trigger" aria-haspopup="true" onclick="this.closest('.tunic-dd').classList.toggle('open')">
       <span class="tunic-dd-cur">${curIcon}${active[1]}</span>
       <span class="tunic-dd-chev" aria-hidden="true">▾</span>
@@ -6875,7 +6876,9 @@ function _subTabDropdown(tabs, activeId, onclickFor){
   </div>`;
 }
 function _subTabBar(tabs, activeTab, parentTab){
-  return _subTabDropdown(tabs, activeTab, id=>`_subTab.${parentTab}='${id}';showTab('${id}')`);
+  // Green only on Repaso Inteligente (matches the Pip-Boy console); gold elsewhere
+  const variant = (parentTab==='aprender' && activeTab==='smart') ? 'green' : '';
+  return _subTabDropdown(tabs, activeTab, id=>`_subTab.${parentTab}='${id}';showTab('${id}')`, variant);
 }
 // Close an open sub-tab dropdown when tapping anywhere outside it
 document.addEventListener('click', function(e){

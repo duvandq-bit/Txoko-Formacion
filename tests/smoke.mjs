@@ -584,6 +584,14 @@ test('sub-tab navigation is a dropdown, not a horizontal scroller', () => {
   const css = read('styles.css');
   assert(/\.tunic-dd\.open \.tunic-dd-list\{display:flex/.test(css),
     'the dropdown open-state CSS is missing');
+  // Tenet-style: active item gets a left accent bar; green variant exists
+  // and is applied only on Repaso Inteligente (smart tab of Aprender).
+  assert(/\.tunic-dd-item\.on\{[^}]*border-left-color:var\(--gold\)/.test(css),
+    'active dropdown item must have the gold left accent bar (Tenet style)');
+  assert(/\.tunic-dd--green /.test(css),
+    'the green dropdown variant is missing');
+  assert(/parentTab==='aprender' && activeTab==='smart'\) \? 'green'/.test(html),
+    'green variant must be scoped to Repaso Inteligente only');
 });
 
 test('Aprender sub-tabs lead with Smart Review, then Explore', () => {
