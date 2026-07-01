@@ -630,6 +630,21 @@ test('nav opens as a thumb-zone bottom sheet with a dim scrim', () => {
     'a tappable scrim element that closes the nav must exist');
 });
 
+test('screen wrapper never animates transform (breaks fixed nav sheet)', () => {
+  // The bottom-sheet nav + search overlay are position:fixed inside #screenApp.
+  // If .screen.active animates transform, #screenApp becomes a containing block
+  // and the sheet renders at the bottom of the (tall) page instead of the
+  // viewport — i.e. off-screen. It must use an opacity-only enter animation.
+  const css = read('styles.css');
+  const m = css.match(/\.screen\.active\{[^}]*animation:\s*([a-zA-Z0-9_-]+)/);
+  assert(m, '.screen.active must declare an enter animation');
+  const anim = m[1];
+  assert(anim === 'screenEnter', `.screen.active must use the opacity-only screenEnter (got ${anim})`);
+  const kf = css.match(/@keyframes\s+screenEnter\{([^]*?)\}\s*(?:@|\/\*|\.[a-z])/i);
+  assert(kf && !/transform/.test(kf[1]),
+    'screenEnter keyframes must not animate transform');
+});
+
 test('global search: entry, overlay and deep-link wiring', () => {
   const css = read('styles.css');
   // one-tap entry lives at the top of the nav sheet

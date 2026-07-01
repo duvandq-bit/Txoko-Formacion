@@ -155,7 +155,12 @@ body::after{
    SCREENS
 ───────────────────────────────────────────────── */
 .screen{display:none;min-height:100vh;position:relative;z-index:1}
-.screen.active{display:flex;animation:tabEnter .4s cubic-bezier(.22,1,.36,1) both}
+/* The screen wrapper fades in with an OPACITY-ONLY animation. It must not
+   animate transform: a transform animation makes the element a containing block
+   for its position:fixed descendants (Chromium composites it), which pushed the
+   bottom-sheet nav + scrim off-screen. Tab *content* still slides via
+   .tab-entering on #appContent, which is not an ancestor of the nav. */
+.screen.active{display:flex;animation:screenEnter .4s cubic-bezier(.22,1,.36,1) both}
 
 
 /* ─────────────────────────────────────────────────
@@ -949,7 +954,14 @@ body::after{
 }
 
 /* Tab transitions */
-@keyframes tabEnter{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+/* Ends at transform:none (identical to translateY(0) scale(1)) so .tab-entering
+   on #appContent doesn't hold a transform after the run — that would make the
+   content area a containing block for any position:fixed child. Defensive;
+   the nav-sheet fix itself is .screen.active using screenEnter (below). */
+@keyframes tabEnter{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+/* Screen-level enter: opacity only, so the screen never becomes a containing
+   block for the fixed-position bottom-sheet nav. See .screen.active. */
+@keyframes screenEnter{from{opacity:0}to{opacity:1}}
 .tab-entering{animation:tabEnter .35s cubic-bezier(.22,1,.36,1) forwards}
 
 /* Animated stat counter */
