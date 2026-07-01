@@ -203,6 +203,22 @@ test('sw.js VERSION is well-formed and drives CACHE_NAME', () => {
     'CACHE_NAME must derive from VERSION so old caches are dropped on bump');
 });
 
+test('sw.js serves the shell network-first (no HTML/CSS version skew)', () => {
+  // Stale-while-revalidate on the shell caused mismatched HTML/CSS after a
+  // deploy. The shell (navigation + styles.css) must be network-first so an
+  // online user always gets a matching, freshly-deployed pair.
+  const sw = read('sw.js');
+  assert(/function isShellRequest\(/.test(sw),
+    'sw must classify shell requests (navigation + styles.css)');
+  assert(/if \(isShellRequest\(req, url\)\)/.test(sw),
+    'the fetch handler must branch on shell requests');
+  assert(sw.includes('index\\.html|styles\\.css|manifest\\.json'),
+    'styles.css must be treated as part of the shell');
+  // and the page reloads once when a new SW takes control
+  assert(/addEventListener\('controllerchange'/.test(html) && /_swReloaded/.test(html),
+    'a guarded controllerchange reload must apply new deploys in-session');
+});
+
 // ─── 6. CDN tags carry crossorigin (SRI prerequisite) ───────────
 console.log('\nSupply chain');
 test('all third-party CDN <script>/<link> tags set crossorigin', () => {

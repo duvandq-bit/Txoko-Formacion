@@ -1635,6 +1635,17 @@ function urlBase64ToUint8Array(base64String) {
   return arr;
 }
 
+// When a newly-installed service worker takes control (a fresh deploy), reload
+// once so the running page picks up the matching HTML/CSS/JS instead of showing
+// a half-updated mix until the next manual reopen. Guarded so it fires only once.
+let _swReloaded = false;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (_swReloaded) return;
+    _swReloaded = true;
+    location.reload();
+  });
+}
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
   try {

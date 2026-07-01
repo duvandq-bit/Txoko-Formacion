@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.41';
+const VERSION = 'v7.42';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
@@ -42,11 +42,21 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// ─── Fetch: stale-while-revalidate for same-origin GET ──────────
-// Strategy:
-//   1. Serve from cache immediately if available (fast, works offline).
-//   2. In parallel, fetch from network; on success, update the cache.
-//   3. If no cache and network fails, fall through to default browser error.
+// The app shell (the HTML document + its CSS/manifest) must never drift out of
+// sync across a deploy. A navigation request and styles.css are matched here so
+// they can use network-first below.
+function isShellRequest(req, url) {
+  if (req.mode === 'navigate') return true;               // the HTML document
+  const p = url.pathname;
+  return p === '/' || p.endsWith('/') ||
+         /\/(index\.html|styles\.css|manifest\.json)$/.test(p);
+}
+
+// ─── Fetch: network-first for the shell, stale-while-revalidate for the rest ──
+// The shell (HTML + styles.css + manifest) is served NETWORK-FIRST so an online
+// user always gets the freshly deployed version — HTML and CSS together, never a
+// mismatched pair — with the cache as an offline-only fallback. Everything else
+// (lazy-loaded data JSON, icons) keeps stale-while-revalidate for speed.
 // Skips: non-GET, cross-origin, Supabase API/RPC calls (always live).
 self.addEventListener('fetch', (e) => {
   const req = e.request;
@@ -56,6 +66,27 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== self.location.origin) return; // CDN, Supabase, fonts → bypass
   if (url.pathname.startsWith('/rest/') || url.pathname.startsWith('/functions/')) return;
 
+  // ── Shell → network-first (fresh deploy wins; cache only if offline) ──
+  if (isShellRequest(req, url)) {
+    e.respondWith(
+      caches.open(CACHE_NAME).then(async (cache) => {
+        try {
+          const fresh = await fetch(req);
+          if (fresh && fresh.ok && fresh.type === 'basic') {
+            cache.put(req, fresh.clone()).catch(() => null);
+          }
+          return fresh;
+        } catch (_) {
+          // Offline: serve the cached document/asset, falling back to index.html
+          const cached = await cache.match(req) || (req.mode === 'navigate' ? await cache.match('./index.html') : null);
+          return cached || new Response('Offline', { status: 503, statusText: 'Offline' });
+        }
+      })
+    );
+    return;
+  }
+
+  // ── Everything else → stale-while-revalidate ──
   e.respondWith(
     caches.open(CACHE_NAME).then(async (cache) => {
       const cached = await cache.match(req);
