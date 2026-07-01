@@ -571,6 +571,21 @@ test('simulation terminal uses the Pip-Boy phosphor-green palette', () => {
     'the phosphor glow on the title is missing — core of the CRT look');
 });
 
+test('sub-tab navigation is a dropdown, not a horizontal scroller', () => {
+  // The scrolling .tunic-subtabs bar hid off-screen options. Both the
+  // shared _subTabBar and the Vinos bar now render a .tunic-dd dropdown
+  // via _subTabDropdown, so every option is reachable without swiping.
+  assert(/function _subTabDropdown\(/.test(html),
+    '_subTabDropdown helper missing');
+  assert(/return _subTabDropdown\(tabs, activeTab,/.test(html),
+    '_subTabBar must delegate to the dropdown helper');
+  assert(/_subTabDropdown\(tabs, sub, id=>`_vinoSubTab/.test(html),
+    'the Vinos bar must also use the dropdown helper');
+  const css = read('styles.css');
+  assert(/\.tunic-dd\.open \.tunic-dd-list\{display:flex/.test(css),
+    'the dropdown open-state CSS is missing');
+});
+
 test('Aprender sub-tabs lead with Smart Review, then Explore', () => {
   // Owner request: Repaso Inteligente (smart) comes before Explorar
   // (repaso) in the Aprender sub-tab bar, and is the default sub-tab.

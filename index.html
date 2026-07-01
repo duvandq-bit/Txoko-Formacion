@@ -6858,15 +6858,31 @@ function showTab(tab){
 }
 
 // ═══ SUB-TAB HELPERS ═══
-function _subTabBar(tabs, activeTab, parentTab){
-  return `<div class="tunic-subtabs">${
-    tabs.map(([id,label,icon])=>{
-      const isActive = activeTab===id;
-      const shine = isActive ? '<span class="tunic-shine" aria-hidden="true"></span>' : '';
-      return `<button onclick="_subTab.${parentTab}='${id}';showTab('${id}')" class="tunic-stab${isActive?' active':''}">${shine}<span class="tunic-icon">${icon}</span><span class="tunic-label">${label}</span></button>`;
-    }).join('')
-  }</div>`;
+// Sub-tab navigation as a dropdown (no horizontal scroll — every option is
+// reachable without swiping). onclickFor(id) yields the per-item onclick.
+function _subTabDropdown(tabs, activeId, onclickFor){
+  const active = tabs.find(t=>t[0]===activeId) || tabs[0];
+  const curIcon = active[2] ? `<span class="tunic-dd-ico">${active[2]}</span>` : '';
+  const items = tabs.map(([id,label,icon])=>
+    `<button role="menuitem" class="tunic-dd-item${id===activeId?' on':''}" onclick="${onclickFor(id)}">${icon?`<span class="tunic-dd-ico">${icon}</span>`:''}<span>${label}</span></button>`
+  ).join('');
+  return `<div class="tunic-dd">
+    <button class="tunic-dd-trigger" aria-haspopup="true" onclick="this.closest('.tunic-dd').classList.toggle('open')">
+      <span class="tunic-dd-cur">${curIcon}${active[1]}</span>
+      <span class="tunic-dd-chev" aria-hidden="true">▾</span>
+    </button>
+    <div class="tunic-dd-list" role="menu">${items}</div>
+  </div>`;
 }
+function _subTabBar(tabs, activeTab, parentTab){
+  return _subTabDropdown(tabs, activeTab, id=>`_subTab.${parentTab}='${id}';showTab('${id}')`);
+}
+// Close an open sub-tab dropdown when tapping anywhere outside it
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.tunic-dd.open').forEach(dd=>{
+    if(!dd.contains(e.target)) dd.classList.remove('open');
+  });
+});
 
 function renderAprender(){
   const c=document.getElementById('appContent');
@@ -8615,13 +8631,7 @@ async function renderVinos(){
     ['wineQuiz','Quiz',''],
     ['servicio',_en?'Service':'Servicio','']
   ];
-  const bar = `<div class="tunic-subtabs">${
-    tabs.map(([id,label,icon])=>{
-      const isActive = sub===id;
-      const shine = isActive ? '<span class="tunic-shine" aria-hidden="true"></span>' : '';
-      return `<button onclick="_vinoSubTab='${id}';renderVinos()" class="tunic-stab${isActive?' active':''}">${shine}<span class="tunic-icon">${icon}</span><span class="tunic-label">${label}</span></button>`;
-    }).join('')
-  }</div>`;
+  const bar = _subTabDropdown(tabs, sub, id=>`_vinoSubTab='${id}';renderVinos()`);
 
   try {
     if(sub === 'sommelier'){ _renderSommelier(c, bar); }
