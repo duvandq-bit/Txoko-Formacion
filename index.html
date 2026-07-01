@@ -140,12 +140,20 @@
     <em class="login-subtitle" id="loginSubtitle">by Martín Berasategui · Formación de Equipo</em>
   </div>
 
-  <!-- Multi-restaurant selector. Hidden while only one venue is enabled in
-       data/themes.json; appears automatically as soon as a second venue is
-       enabled — picking one reskins the whole app via applyTheme(). -->
+  <!-- Multi-restaurant selector (dropdown). Shown whenever the registry lists
+       more than one venue; venues with enabled:false appear locked ("Próximamente")
+       and cannot be selected. Picking an enabled one reskins via applyTheme(). -->
   <div class="login-venue" id="loginVenue" style="display:none">
-    <div class="login-venue-label" id="loginVenueLabel">Elige tu restaurante</div>
-    <div class="login-venue-cards" id="loginVenueCards" role="radiogroup" aria-label="Restaurante"></div>
+    <div class="login-venue-label" id="loginVenueLabel">Restaurante</div>
+    <div class="login-venue-dd" id="loginVenueDD">
+      <button type="button" class="login-venue-trigger" id="loginVenueTrigger" aria-haspopup="listbox" aria-expanded="false"
+        onclick="var d=this.closest('.login-venue-dd');d.classList.toggle('open');this.setAttribute('aria-expanded',d.classList.contains('open'))">
+        <span class="login-venue-dot" id="loginVenueTriggerDot" aria-hidden="true"></span>
+        <span class="login-venue-trigger-name" id="loginVenueTriggerName">TXOKO</span>
+        <span class="login-venue-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+      </button>
+      <div class="login-venue-cards" id="loginVenueCards" role="listbox" aria-label="Restaurante"></div>
+    </div>
   </div>
 
   <div class="login-card" role="form" aria-label="Iniciar sesión">
@@ -921,34 +929,54 @@ function applyTheme(v){
   if(sub) sub.textContent = (LANG==='en' ? (v.subtitle_en || v.subtitle) : (v.subtitle || v.subtitle_en)) || '';
   if(v.title) document.title = v.title;
 }
+function _venueTriggerSync(v){
+  const nameEl = document.getElementById('loginVenueTriggerName');
+  if(nameEl) nameEl.textContent = v.name || v.id;
+  const dot = document.getElementById('loginVenueTriggerDot');
+  if(dot) dot.style.background = (v.brand && v.brand.accent) || '';
+}
 function renderVenuePicker(venues, activeId){
   const wrap = document.getElementById('loginVenue');
   const cards = document.getElementById('loginVenueCards');
   if(!wrap || !cards) return;
   const lbl = document.getElementById('loginVenueLabel');
-  if(lbl) lbl.textContent = LANG==='en' ? 'Choose your restaurant' : 'Elige tu restaurante';
+  if(lbl) lbl.textContent = LANG==='en' ? 'Restaurant' : 'Restaurante';
   cards.innerHTML = venues.map(v => {
     const accent = (v.brand && v.brand.accent) || '#c49a3c';
+    const locked = !v.enabled;
     const on = v.id === activeId;
-    return '<button type="button" role="radio" aria-checked="' + on + '" class="login-venue-card' + (on ? ' on' : '') + '"'
+    const soon = LANG==='en' ? 'Coming soon' : 'Próximamente';
+    return '<button type="button" role="option" aria-selected="' + on + '"'
+      + (locked ? ' aria-disabled="true" tabindex="-1"' : '')
+      + ' class="login-venue-card' + (on ? ' on' : '') + (locked ? ' locked' : '') + '"'
       + ' data-venue="' + escapeHtml(v.id) + '" onclick="selectVenue(this.dataset.venue)" style="--vcard-accent:' + escapeHtml(accent) + '">'
       + '<span class="login-venue-dot" aria-hidden="true"></span>'
       + '<span class="login-venue-info"><span class="login-venue-name">' + escapeHtml(v.name || v.id) + '</span>'
-      + '<span class="login-venue-eyebrow">' + escapeHtml(v.eyebrow || '') + '</span></span>'
-      + '<span class="login-venue-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>'
+      + '<span class="login-venue-eyebrow">' + (locked ? soon : escapeHtml(v.eyebrow || '')) + '</span></span>'
+      + (locked
+        ? '<span class="login-venue-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span>'
+        : '<span class="login-venue-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>')
       + '</button>';
   }).join('');
   wrap.style.display = 'block';
 }
 function selectVenue(id){
+  // Only venues flagged enabled in the registry are selectable — locked
+  // ("Próximamente") entries are rejected here too, not just styled inert.
   const v = _enabledVenues().find(x => x.id === id);
   if(!v) return;
   applyTheme(v);
+  _venueTriggerSync(v);
   document.querySelectorAll('.login-venue-card').forEach(c => {
     const on = c.dataset.venue === id;
     c.classList.toggle('on', on);
-    c.setAttribute('aria-checked', String(on));
+    c.setAttribute('aria-selected', String(on));
   });
+  const dd = document.getElementById('loginVenueDD');
+  if(dd){ dd.classList.remove('open');
+    const trg = document.getElementById('loginVenueTrigger');
+    if(trg) trg.setAttribute('aria-expanded','false');
+  }
 }
 async function initVenues(){
   try{
@@ -956,13 +984,17 @@ async function initVenues(){
     if(!res.ok) return;
     THEMES = await res.json();
   }catch(e){ return; /* offline first visit: CSS Txoko defaults stand */ }
-  const venues = _enabledVenues();
-  if(!venues.length) return;
+  const enabled = _enabledVenues();
+  if(!enabled.length) return;
   let saved = null;
   try{ saved = localStorage.getItem('txk_venue'); }catch(e){}
-  const current = venues.find(v => v.id === saved) || venues[0];
+  const current = enabled.find(v => v.id === saved) || enabled[0];
   applyTheme(current);
-  if(venues.length > 1) renderVenuePicker(venues, current.id);
+  _venueTriggerSync(current);
+  // The dropdown shows whenever the registry lists more than one venue —
+  // locked ones included, so the team can see what's coming.
+  const all = (THEMES && Array.isArray(THEMES.venues)) ? THEMES.venues.filter(v => v && v.id && v.name) : [];
+  if(all.length > 1) renderVenuePicker(all, current.id);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -6325,9 +6357,11 @@ function renderLogin(){
       ? ((LANG==='en' ? (_v.subtitle_en || _v.subtitle) : (_v.subtitle || _v.subtitle_en)) || '')
       : (LANG==='en' ? 'by Martín Berasategui · Team Training' : 'by Martín Berasategui · Formación de Equipo');
   }
-  // Venue picker label follows the language too
-  const _vlbl = document.getElementById('loginVenueLabel');
-  if(_vlbl) _vlbl.textContent = LANG==='en' ? 'Choose your restaurant' : 'Elige tu restaurante';
+  // Venue dropdown follows the language too (label + "Próximamente" entries)
+  if(typeof THEMES !== 'undefined' && THEMES && Array.isArray(THEMES.venues)){
+    const _all = THEMES.venues.filter(v => v && v.id && v.name);
+    if(_all.length > 1 && ACTIVE_VENUE) renderVenuePicker(_all, ACTIVE_VENUE.id);
+  }
   // Restore checkbox state
   const remCb = document.getElementById('loginRemember');
   if(remCb) remCb.checked = !!localStorage.getItem('txoko_session');
@@ -7041,9 +7075,9 @@ function _subTabBar(tabs, activeTab, parentTab){
   const variant = (parentTab==='aprender' && activeTab==='smart') ? 'green' : '';
   return _subTabDropdown(tabs, activeTab, id=>`_subTab.${parentTab}='${id}';showTab('${id}')`, variant);
 }
-// Close an open dropdown (sub-tab or main nav) when tapping outside it
+// Close an open dropdown (sub-tab, main nav or login venue) when tapping outside it
 document.addEventListener('click', function(e){
-  document.querySelectorAll('.tunic-dd.open, .nav-dd.open').forEach(dd=>{
+  document.querySelectorAll('.tunic-dd.open, .nav-dd.open, .login-venue-dd.open').forEach(dd=>{
     if(!dd.contains(e.target)) dd.classList.remove('open');
   });
 });

@@ -283,16 +283,50 @@ body::after{
   font-family:'DM Mono',monospace;font-size:.66rem;color:rgba(228,190,104,.8);
   letter-spacing:.16em;text-transform:uppercase;
 }
-/* ── Multi-restaurant selector (login) ──────────────────────────────
-   Hidden while data/themes.json has a single enabled venue; rendered by
-   renderVenuePicker() as soon as there are two or more. Each card carries
-   its venue's accent via --vcard-accent so the options preview their brand. */
-.login-venue{width:100%;max-width:380px;margin:0 0 1.1rem;position:relative;z-index:1}
+/* ── Multi-restaurant selector (login dropdown) ─────────────────────
+   Shown whenever data/themes.json lists more than one venue. The trigger
+   displays the active venue; the panel lists all of them — venues with
+   enabled:false render locked ("Próximamente") and cannot be picked. Each
+   entry carries its venue's accent via --vcard-accent. */
+.login-venue{width:100%;max-width:380px;margin:0 0 1.1rem;position:relative;z-index:5}
 .login-venue-label{
   font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(228,190,104,.75);
   letter-spacing:.16em;text-transform:uppercase;text-align:center;margin-bottom:.55rem;
 }
-.login-venue-cards{display:flex;flex-direction:column;gap:.5rem}
+.login-venue-dd{position:relative}
+.login-venue-trigger{
+  display:flex;align-items:center;gap:.75rem;width:100%;min-height:52px;
+  padding:.65rem .9rem;cursor:pointer;text-align:left;border-radius:13px;
+  background:linear-gradient(155deg,rgba(28,42,34,.65),rgba(20,32,26,.75));
+  border:1.5px solid rgba(196,154,60,.28);color:rgba(244,237,226,.9);
+  font-family:'Cinzel',serif;font-weight:600;font-size:.92rem;letter-spacing:.06em;
+  -webkit-tap-highlight-color:transparent;
+}
+.login-venue-trigger:active{transform:translateY(1px)}
+.login-venue-trigger-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.login-venue-chev{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;flex-shrink:0;border-radius:8px;color:var(--gold);
+  background:rgba(196,154,60,.15);border:1px solid rgba(196,154,60,.32);
+  transition:transform .24s ease;
+}
+.login-venue-chev svg{width:14px;height:14px}
+.login-venue-dd.open .login-venue-chev{transform:rotate(180deg)}
+.login-venue-cards{
+  position:absolute;top:calc(100% + .4rem);left:0;right:0;z-index:10;
+  display:none;flex-direction:column;gap:.4rem;padding:.45rem;
+  background:linear-gradient(155deg,rgba(20,30,24,.97),rgba(14,22,18,.98));
+  border:1.5px solid rgba(196,154,60,.25);border-radius:15px;
+  box-shadow:0 14px 40px rgba(0,0,0,.5);
+}
+.login-venue-dd.open .login-venue-cards{display:flex;animation:ddIn .18s ease both}
+.login-venue-card.locked{opacity:.55;cursor:default}
+.login-venue-card.locked:active{transform:none}
+.login-venue-lock{
+  width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:rgba(244,237,226,.5);
+}
+.login-venue-lock svg{width:15px;height:15px}
 .login-venue-card{
   display:flex;align-items:center;gap:.75rem;width:100%;min-height:56px;
   padding:.7rem .9rem;cursor:pointer;text-align:left;border-radius:13px;

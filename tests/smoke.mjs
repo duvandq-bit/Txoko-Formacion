@@ -130,6 +130,16 @@ test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   assert(/\^#\[0-9a-fA-F\]\{6\}\$/.test(html), 'applyTheme must validate hex values');
   // Venue fields are injected with escapeHtml (registry is data, not code).
   assert(/escapeHtml\(v\.name \|\| ''\)/.test(html), 'venue name must go through escapeHtml');
+  // Dropdown shape: trigger + panel, closes on outside tap like the other dropdowns.
+  assert(/id="loginVenueTrigger"/.test(html), 'venue dropdown trigger missing');
+  assert(/\.login-venue-dd\.open, \.tunic-dd\.open|\.tunic-dd\.open, \.nav-dd\.open, \.login-venue-dd\.open/.test(html),
+    'click-outside handler must also close the venue dropdown');
+  // Locked venues: rendered with a padlock + aria-disabled, and selectVenue
+  // only accepts enabled venues (registry is the gate, not just the styling).
+  assert(/aria-disabled="true" tabindex="-1"/.test(html), 'locked venues must be aria-disabled');
+  assert(/Próximamente/.test(html), 'locked venues must read Próximamente');
+  assert(/const v = _enabledVenues\(\)\.find\(x => x\.id === id\);\s*\n?\s*if\(!v\) return;/.test(html),
+    'selectVenue must reject venues that are not enabled');
   // Long venue names scale down instead of overflowing the login logo.
   const css = read('styles.css');
   assert(/\.login-logo h1\.long\{/.test(css) && /classList\.toggle\('long'/.test(html),
