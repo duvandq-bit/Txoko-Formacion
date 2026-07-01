@@ -157,6 +157,26 @@ test('styles.css defines the formalized token scales', () => {
   for (const t of ['--font-sans','--font-serif','--font-mono','--font-read']) assert(css.includes(`${t}:`), `${t} missing`);
 });
 
+test('brand-token layer drives the palette (multi-restaurant ready)', () => {
+  const css = read('styles.css');
+  // The 8 brand tokens must be defined with the Txoko identity values so a new
+  // venue is a theme swap, not a find-and-replace. The dark ones must stay dark
+  // (WCAG): --brand-primary #2d6a3e and --brand-accent-deep #7d5c2f.
+  assert(/--brand-primary:\s*#2d6a3e/.test(css), '--brand-primary must be #2d6a3e (dark green)');
+  assert(/--brand-accent:\s*#c49a3c/.test(css), '--brand-accent must be #c49a3c (gold)');
+  assert(/--brand-accent-deep:\s*#7d5c2f/.test(css), '--brand-accent-deep must be #7d5c2f (dark gold)');
+  assert(/--brand-ink:\s*#1c2a22/.test(css), '--brand-ink must be #1c2a22');
+  assert(/--brand-paper:\s*#f4ede2/.test(css), '--brand-paper must be #f4ede2');
+  // Primitives must derive from the brand layer, and the migration targets exist.
+  assert(/--gold:\s*var\(--brand-accent\)/.test(css), '--gold must derive from --brand-accent');
+  assert(/--green-deep:\s*var\(--brand-primary\)/.test(css), '--green-deep must derive from --brand-primary');
+  assert(/--gold-deep:\s*var\(--brand-accent-deep\)/.test(css), '--gold-deep must derive from --brand-accent-deep');
+  // The migration must have removed the raw brand hexes from the sheet: only the
+  // 8 --brand-* definitions should still carry them (comments may add a couple).
+  const rawGold = (css.match(/#c49a3c/gi) || []).length;
+  assert(rawGold <= 1, `#c49a3c should survive only in --brand-accent (found ${rawGold})`);
+});
+
 test('semantic color tokens reference existing primitives (no dangling var())', () => {
   const css = read('styles.css');
   const root = css.slice(css.indexOf(':root{'), css.indexOf('}', css.indexOf(':root{')) + 1);
@@ -774,8 +794,8 @@ test('leaderboard scores are WCAG-legible and names truncate', () => {
   // failing. Now dark green/gold/red. And long names must ellipsis, not
   // wrap and blow up the row.
   const css = read('styles.css');
-  assert(/\.lb-score\.mid\s*\{[^}]*color:\s*#7d5c2f/.test(css),
-    '.lb-score.mid must be dark gold #7d5c2f (var(--gold) was 2.4:1 on cream)');
+  assert(/\.lb-score\.mid\s*\{[^}]*color:\s*(?:#7d5c2f|var\(--gold-deep\))/.test(css),
+    '.lb-score.mid must be dark gold #7d5c2f / var(--gold-deep) (var(--gold) was 2.4:1 on cream)');
   assert(/\.lb-score\.lo\s*\{[^}]*color:\s*#a04848/.test(css),
     '.lb-score.lo must be dark red #a04848 (rose was 3.3:1)');
   const name = (css.match(/\.lb-name\s*\{([^}]*)\}/) || [])[1] || '';
@@ -819,8 +839,8 @@ test('exam progress bar is visible and feedback colours clear WCAG', () => {
   const track = (css.match(/\.exam-track\s*\{([^}]*)\}/) || [])[1] || '';
   const h = (track.match(/height:\s*(\d+)px/) || [])[1];
   assert(h && parseInt(h) >= 4, `.exam-track height ${h}px is too thin to see on a phone`);
-  assert(/\.exam-feedback\.ok\s*\{[^}]*color:\s*#2d6a3e/.test(css),
-    '.exam-feedback.ok must be dark green #2d6a3e (gold was 2.25:1 on cream, failed WCAG)');
+  assert(/\.exam-feedback\.ok\s*\{[^}]*color:\s*(?:#2d6a3e|var\(--green-deep\))/.test(css),
+    '.exam-feedback.ok must be dark green #2d6a3e / var(--green-deep) (gold was 2.25:1 on cream, failed WCAG)');
   assert(/\.exam-feedback\.ko\s*\{[^}]*color:\s*#a04848/.test(css),
     '.exam-feedback.ko must be dark red #a04848 (light red failed WCAG on cream)');
 });
@@ -884,8 +904,8 @@ test('.btn-secondary has a real style rule (not a bare grey button)', () => {
   assert(rule, '.btn-secondary has no CSS rule — Volver buttons render as bare grey');
   assert(/border:[^;]*var\(--gold\)/.test(rule[1]) || /border:[^;]*#c49a3c/.test(rule[1]),
     '.btn-secondary lost its gold border');
-  assert(/color:\s*#7d5c2f/.test(rule[1]),
-    '.btn-secondary text must be dark gold #7d5c2f (lighter gold fails WCAG on cream)');
+  assert(/color:\s*(?:#7d5c2f|var\(--gold-deep\))/.test(rule[1]),
+    '.btn-secondary text must be dark gold #7d5c2f / var(--gold-deep) (lighter gold fails WCAG on cream)');
   // Still used in the markup — guard against the class being renamed away.
   assert((html.match(/class="btn-secondary/g) || []).length >= 1,
     'no .btn-secondary usages found — was the class renamed?');
@@ -921,8 +941,8 @@ test('exam .choice has high-contrast state badge + check/cross mark', () => {
   // result isn't communicated by colour alone. The mark is CSS-injected via
   // ::after keyed on the state class, so the markup just needs the span.
   const css = read('styles.css');
-  assert(/\.choice\.correct\s+\.choice-ltr\s*\{[^}]*background:\s*#2d6a3e/.test(css),
-    '.choice.correct badge must use dark green #2d6a3e (light sage fails WCAG on white text)');
+  assert(/\.choice\.correct\s+\.choice-ltr\s*\{[^}]*background:\s*(?:#2d6a3e|var\(--green-deep\))/.test(css),
+    '.choice.correct badge must use dark green #2d6a3e / var(--green-deep) (light sage fails WCAG on white text)');
   assert(/\.choice\.wrong\s+\.choice-ltr\s*\{[^}]*background:\s*#a85848/.test(css),
     '.choice.wrong badge must use dark red #a85848 (light rose fails WCAG on white text)');
   assert(/\.choice\.correct\s+\.choice-mark::after\s*\{\s*content:\s*'✓'/.test(css),
