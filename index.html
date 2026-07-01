@@ -272,7 +272,12 @@
     <span class="nav-dd-cur" id="navDDCur"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</span>
     <span class="nav-dd-chev" aria-hidden="true">▾</span>
   </button>
+  <div class="nav-scrim" aria-hidden="true" onclick="document.getElementById('mainNavDD').classList.remove('open')"></div>
   <nav class="app-nav nav-dd-list" id="appNav" role="navigation" aria-label="Navegación principal">
+    <button type="button" class="nav-search-entry" id="navSearchEntry" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span id="navSearchEntryLabel">Buscar plato, vino, alérgeno…</span>
+    </button>
     <button class="nav-btn active" id="navDashboard" onclick="showTab('dashboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</button>
     <button class="nav-btn" id="navAprender" onclick="showTab('aprender')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Aprender</button>
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
@@ -282,6 +287,16 @@
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
+  </div>
+
+  <!-- Global search — instant lookup across dishes, wines and allergens -->
+  <div class="gs-overlay" id="gsOverlay" role="dialog" aria-modal="true" aria-label="Buscar">
+    <div class="gs-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="search" class="gs-input" id="gsInput" placeholder="Buscar plato, vino, alérgeno…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" aria-label="Buscar plato, vino o alérgeno" oninput="_gsRender(this.value)" onkeydown="if(event.key==='Escape')closeGlobalSearch()">
+      <button type="button" class="gs-close" onclick="closeGlobalSearch()" aria-label="Cerrar búsqueda">✕</button>
+    </div>
+    <div class="gs-results" id="gsResults" role="listbox" aria-label="Resultados"></div>
   </div>
 
   <main class="app-content" id="appContent" aria-live="polite"></main>
@@ -940,6 +955,11 @@ function applyLangToApp() {
       if(svg) el.insertBefore(svg, el.firstChild);
     }
   });
+  // Global-search entry + input placeholder
+  const _gsLbl = document.getElementById('navSearchEntryLabel');
+  if(_gsLbl) _gsLbl.textContent = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
+  const _gsInp = document.getElementById('gsInput');
+  if(_gsInp) _gsInp.placeholder = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
 }
 
 // ═══════════════════════════════════════════════════
@@ -6897,6 +6917,131 @@ document.addEventListener('click', function(e){
     if(!dd.contains(e.target)) dd.classList.remove('open');
   });
 });
+
+// ═══ GLOBAL SEARCH ═══════════════════════════════════════════════
+// One-tap lookup across dishes, wines and allergens so a waiter can jump
+// straight to any item mid-service instead of navigating menus. Results
+// deep-link into the existing detail views (launchDishJourney / _showWineDetail).
+// Read-only over business data — indexes names/allergens, never mutates them.
+const _GS_ICON_DISH = '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/></svg>';
+const _GS_ICON_WINE = '<svg viewBox="0 0 24 24" fill="none"><path d="M8 3h8l-1 7a3 3 0 01-6 0L8 3z"/><path d="M12 13v6"/><path d="M8.5 21h7"/></svg>';
+let _gsDishIdx = null, _gsWineIdx = null;
+function _gsNorm(s){ return (s==null?'':String(s)).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function _gsDishIndex(){
+  if(_gsDishIdx) return _gsDishIdx;
+  if(typeof DISHES==='undefined' || !Array.isArray(DISHES)) return [];
+  const enMap = {};
+  if(typeof DISHES_EN!=='undefined' && Array.isArray(DISHES_EN)) DISHES_EN.forEach(d=>{ enMap[d.id]=d; });
+  _gsDishIdx = DISHES.map(d=>{
+    const e = enMap[d.id] || {};
+    const search = _gsNorm([d.name, e.name, d.cat, (d.allergens||[]).join(' '), (e.allergens||[]).join(' '), d.ingredients, e.ingredients].join(' '));
+    return { type:'dish', id:d.id, name:d.name, nameEn:e.name||d.name, cat:d.cat||'', allergens:d.allergens||[], search };
+  });
+  return _gsDishIdx;
+}
+function _gsWineIndex(){
+  if(_gsWineIdx) return _gsWineIdx;
+  if(typeof WINES==='undefined' || !Array.isArray(WINES)) return [];
+  _gsWineIdx = WINES.map(w=>({ type:'wine', id:w.id, name:w.name, wtype:w.type||'', region:w.region||'',
+    search:_gsNorm([w.name, w.type, w.grapes, w.region, w.origin].join(' ')) }));
+  return _gsWineIdx;
+}
+function _gsMark(name, tokens){
+  const safe = escapeHtml(name||'');
+  const low = (name||'').toLowerCase();
+  let best=-1, bl=0;
+  tokens.forEach(t=>{ const i=low.indexOf(t); if(i>=0 && (best<0||i<best)){ best=i; bl=t.length; } });
+  if(best<0) return safe;
+  return escapeHtml(name.slice(0,best)) + '<mark>' + escapeHtml(name.slice(best,best+bl)) + '</mark>' + escapeHtml(name.slice(best+bl));
+}
+function _gsRank(name, first){
+  const n=_gsNorm(name);
+  if(n.startsWith(first)) return 0;
+  if(n.indexOf(first)>=0) return 1;
+  return 2;
+}
+function _gsRender(raw){
+  const box = document.getElementById('gsResults');
+  if(!box) return;
+  const en = LANG==='en';
+  const query = _gsNorm(raw).trim();
+  if(!query){
+    box.innerHTML = '<div class="gs-hint">'+(en?'Type to find a dish, wine or allergen':'Escribe para encontrar un plato, vino o alérgeno')+'</div>';
+    return;
+  }
+  const tokens = query.split(/\s+/).filter(Boolean);
+  const first = tokens[0];
+  const match = s => tokens.every(t=>s.indexOf(t)>=0);
+  const dishes = _gsDishIndex().filter(it=>match(it.search))
+    .sort((a,b)=>_gsRank(en?a.nameEn:a.name,first)-_gsRank(en?b.nameEn:b.name,first) || (a.name>b.name?1:-1)).slice(0,40);
+  const wines = _gsWineIndex().filter(it=>match(it.search))
+    .sort((a,b)=>_gsRank(a.name,first)-_gsRank(b.name,first) || (a.name>b.name?1:-1)).slice(0,40);
+  if(!dishes.length && !wines.length){
+    box.innerHTML = '<div class="gs-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div>'
+      + (en?'No matches for':'Sin resultados para') + ' “' + escapeHtml(raw.trim()) + '”</div></div>';
+    return;
+  }
+  let html='';
+  if(dishes.length){
+    html += '<div class="gs-group-lbl">'+(en?'Dishes':'Platos')+' · '+dishes.length+'</div>';
+    html += dishes.map(it=>{
+      const nm = en?it.nameEn:it.name;
+      const alg = (it.allergens||[]).map(a=>typeof allergenLocal==='function'?allergenLocal(a):a).join(', ');
+      const sub = [it.cat, alg].filter(Boolean).join(' · ');
+      return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'dish\','+it.id+')">'
+        + '<span class="gs-hit-ic">'+_GS_ICON_DISH+'</span>'
+        + '<span class="gs-hit-body"><span class="gs-hit-name">'+_gsMark(nm,tokens)+'</span><span class="gs-hit-sub">'+escapeHtml(sub)+'</span></span>'
+        + '<span class="gs-hit-go">›</span></button>';
+    }).join('');
+  }
+  if(wines.length){
+    html += '<div class="gs-group-lbl">'+(en?'Wines':'Vinos')+' · '+wines.length+'</div>';
+    html += wines.map(it=>{
+      const sub = [it.wtype, it.region].filter(Boolean).join(' · ');
+      return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'wine\','+it.id+')">'
+        + '<span class="gs-hit-ic">'+_GS_ICON_WINE+'</span>'
+        + '<span class="gs-hit-body"><span class="gs-hit-name">'+_gsMark(it.name,tokens)+'</span><span class="gs-hit-sub">'+escapeHtml(sub)+'</span></span>'
+        + '<span class="gs-hit-go">›</span></button>';
+    }).join('');
+  }
+  box.innerHTML = html;
+}
+async function openGlobalSearch(){
+  const nav = document.getElementById('mainNavDD');
+  if(nav) nav.classList.remove('open');
+  const ov = document.getElementById('gsOverlay');
+  if(!ov) return;
+  ov.classList.add('open');
+  const inp = document.getElementById('gsInput');
+  if(inp){ inp.value=''; setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 60); }
+  _gsRender('');
+  // Wines are lazy-loaded; make sure the cellar + sensory content are present
+  // so wine results can open their detail view. Dishes are always in memory.
+  try{
+    if((typeof WINES==='undefined' || !WINES) && typeof loadLazyData==='function'){
+      const w = await loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos', { silent:true });
+      if(w && (typeof WINES==='undefined' || !WINES)) WINES = w;
+      _gsWineIdx = null; // rebuild now that data exists
+    }
+    if(typeof loadVinosContent==='function') await loadVinosContent();
+  }catch(e){ /* wines just won't appear in results; dishes still work */ }
+  if(ov.classList.contains('open') && inp) _gsRender(inp.value);
+}
+function closeGlobalSearch(){
+  const ov = document.getElementById('gsOverlay');
+  if(ov) ov.classList.remove('open');
+  const inp = document.getElementById('gsInput');
+  if(inp){ try{ inp.blur(); }catch(e){} }
+}
+function _gsGo(type, id){
+  closeGlobalSearch();
+  setTimeout(()=>{
+    try{
+      if(type==='dish'){ if(typeof launchDishJourney==='function') launchDishJourney(id); }
+      else if(type==='wine'){ if(typeof _showWineDetail==='function') _showWineDetail(id, (typeof WINES!=='undefined'&&WINES?WINES.map(w=>w.id):null), null); }
+    }catch(e){ console.error('search deep-link failed', e); }
+  }, 140);
+}
 
 function renderAprender(){
   const c=document.getElementById('appContent');

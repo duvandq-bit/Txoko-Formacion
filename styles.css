@@ -1863,11 +1863,70 @@ body::after{
 .nav-dd-cur svg{width:18px;height:18px;flex-shrink:0}
 .nav-dd-chev{color:var(--gold);font-size:.85rem;transition:transform .22s ease;flex-shrink:0}
 .nav-dd.open .nav-dd-chev{transform:rotate(180deg)}
-/* the list overrides the old horizontally-scrolling .app-nav */
-.nav-dd .nav-dd-list{position:absolute;top:calc(100% + .35rem);left:.8rem;right:.8rem;z-index:100;
-  display:none;flex-direction:column;overflow:hidden;max-width:none;padding:0;margin:0;
-  background:#faf6ee;border:1px solid rgba(196,154,60,.3);border-radius:14px;box-shadow:0 12px 30px rgba(28,42,34,.22)}
-.nav-dd.open .nav-dd-list{display:flex;animation:ddIn .18s ease both}
+/* ── Bottom-sheet navigation ──────────────────────────────────────────
+   The option list rises from the bottom into the thumb zone (fastest reach
+   for a waiter holding the phone one-handed) instead of dropping from the
+   top edge. A dim scrim behind it focuses attention and gives a large
+   tap-to-close target. Trigger, sections, and active marker are unchanged. */
+.nav-scrim{position:fixed;inset:0;z-index:9990;background:rgba(12,20,14,.55);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  opacity:0;visibility:hidden;transition:opacity .24s ease,visibility .24s ease}
+.nav-dd.open .nav-scrim{opacity:1;visibility:visible}
+.nav-dd .nav-dd-list{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:9991;
+  display:flex;flex-direction:column;max-width:none;max-height:84vh;overflow-y:auto;
+  padding:0 0 max(.6rem,env(safe-area-inset-bottom,0px));margin:0;
+  background:#faf6ee;border:none;border-top:1px solid rgba(196,154,60,.3);
+  border-radius:20px 20px 0 0;box-shadow:0 -14px 44px rgba(28,42,34,.4);
+  transform:translateY(105%);visibility:hidden;
+  transition:transform .3s cubic-bezier(.2,0,0,1),visibility .3s}
+.nav-dd.open .nav-dd-list{transform:translateY(0);visibility:visible}
+/* grab handle affordance at the top of the sheet */
+.nav-dd .nav-dd-list::before{content:"";display:block;flex:0 0 auto;width:38px;height:4px;
+  border-radius:2px;background:rgba(28,42,34,.18);margin:.6rem auto .3rem}
+/* one-tap entry to global search — the fastest lookup for a waiter */
+.nav-search-entry{display:flex;align-items:center;gap:.6rem;width:calc(100% - 1.6rem);
+  margin:.15rem .8rem .55rem;min-height:50px;padding:.7rem .9rem;cursor:pointer;text-align:left;
+  border:1px solid var(--line);border-radius:12px;background:#f0e8d8;
+  font-family:'Quicksand',sans-serif;font-size:16px;color:rgba(28,42,34,.5)}
+.nav-search-entry svg{width:18px;height:18px;stroke:var(--gold);flex-shrink:0}
+.nav-search-entry:active{background:#ece2cf}
+
+/* ── Global search overlay — instant lookup across dishes, wines, allergens, LQA ── */
+.gs-overlay{position:fixed;inset:0;z-index:10050;display:none;flex-direction:column;
+  background:#f4ede2;animation:fadeIn .18s ease}
+.gs-overlay.open{display:flex}
+.gs-bar{display:flex;align-items:center;gap:.6rem;padding:max(.7rem,env(safe-area-inset-top,0px)) .9rem .7rem;
+  background:linear-gradient(145deg,#d4b87a 0%,#c49a3c 30%,#9a7340 70%,#7d5c2f 100%);
+  box-shadow:0 3px 12px rgba(196,154,60,.25)}
+.gs-bar svg{width:20px;height:20px;stroke:#fff;flex-shrink:0}
+.gs-input{flex:1;min-width:0;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+  border-radius:11px;padding:.6rem .85rem;color:#fff;font-family:'Quicksand',sans-serif;
+  font-size:16px;min-height:46px;outline:none}
+.gs-input::placeholder{color:rgba(255,255,255,.7)}
+.gs-close{flex-shrink:0;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+  color:#fff;border-radius:10px;min-width:46px;min-height:46px;font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+.gs-results{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.5rem .8rem 2rem}
+.gs-group-lbl{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.14em;
+  text-transform:uppercase;padding:1rem .3rem .4rem}
+.gs-hit{display:flex;align-items:center;gap:.75rem;width:100%;min-height:60px;padding:.7rem .85rem;margin-bottom:.35rem;
+  border:1px solid var(--line);border-radius:13px;background:#faf6ee;cursor:pointer;text-align:left;
+  box-shadow:0 1px 3px rgba(28,42,34,.05)}
+.gs-hit:active{background:#f2ebdd;transform:translateY(1px)}
+.gs-hit-ic{flex-shrink:0;width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;background:var(--gold-a)}
+.gs-hit-ic svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.7}
+.gs-hit-body{min-width:0;flex:1}
+.gs-hit-name{font-family:'Cinzel',serif;font-weight:600;font-size:.92rem;color:#1c2a22;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gs-hit-sub{font-size:.72rem;color:rgba(28,42,34,.6);margin-top:.1rem;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gs-hit mark{background:rgba(196,154,60,.28);color:inherit;border-radius:3px;padding:0 .1em}
+.gs-hit-go{flex-shrink:0;color:rgba(28,42,34,.25);font-size:1rem}
+.gs-empty{text-align:center;color:rgba(28,42,34,.5);font-size:.85rem;padding:3rem 1rem;line-height:1.6}
+.gs-empty svg{width:34px;height:34px;stroke:rgba(28,42,34,.28);margin-bottom:.7rem}
+.gs-hint{font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(28,42,34,.42);
+  text-align:center;padding:.6rem;letter-spacing:.04em}
 .nav-dd-list .nav-btn{display:flex;align-items:center;gap:.85rem;width:100%;min-height:56px;padding:.9rem 1.1rem;
   border:none;border-left:4px solid transparent;border-radius:0;background:transparent;cursor:pointer;text-align:left;
   font-family:'Cinzel',serif;font-weight:500;font-size:.9rem;letter-spacing:.02em;text-transform:none;

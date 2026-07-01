@@ -593,6 +593,43 @@ test('Repaso Inteligente uses a green dot, not a red one', () => {
     'the SRS-due indicator on Repaso Inteligente must be a green dot, not red');
 });
 
+test('nav opens as a thumb-zone bottom sheet with a dim scrim', () => {
+  // The option list rises from the bottom (reachable one-handed) instead of
+  // dropping from the top edge, and a scrim dims the page behind it.
+  const css = read('styles.css');
+  assert(/\.nav-scrim\{[^}]*position:fixed[^}]*z-index:999\d/.test(css),
+    'nav scrim must be a fixed full-screen layer above the header');
+  assert(/\.nav-dd \.nav-dd-list\{[^}]*position:fixed[^}]*bottom:0[^}]*transform:translateY\(105%\)/.test(css),
+    'the nav list must be a bottom sheet that slides up (translateY)');
+  assert(/\.nav-dd\.open \.nav-dd-list\{transform:translateY\(0\)/.test(css),
+    'opening the nav must slide the sheet into view');
+  // markup: scrim element that closes the sheet on tap
+  assert(/class="nav-scrim"[^>]*onclick="[^"]*mainNavDD'\)\.classList\.remove\('open'\)/.test(html),
+    'a tappable scrim element that closes the nav must exist');
+});
+
+test('global search: entry, overlay and deep-link wiring', () => {
+  const css = read('styles.css');
+  // one-tap entry lives at the top of the nav sheet
+  assert(/id="navSearchEntry"[^>]*onclick="openGlobalSearch\(\)"/.test(html),
+    'the search entry button must call openGlobalSearch()');
+  // overlay + input exist and the input is >=16px (no iOS zoom) via .gs-input
+  assert(/id="gsOverlay"/.test(html) && /id="gsInput"/.test(html),
+    'search overlay + input must exist');
+  assert(/\.gs-input\{[^}]*font-size:16px/.test(css),
+    'search input must be >=16px so iOS does not zoom on focus');
+  // engine + deep-links into the real detail views
+  assert(/function openGlobalSearch\(/.test(html) && /function _gsRender\(/.test(html),
+    'search engine functions missing');
+  assert(/if\(type==='dish'\)\{ if\(typeof launchDishJourney==='function'\) launchDishJourney\(id\)/.test(html),
+    'dish results must deep-link into launchDishJourney');
+  assert(/_showWineDetail\(id,/.test(html),
+    'wine results must deep-link into _showWineDetail');
+  // accent-insensitive index so "lacteos" matches "Lácteos", "gluten" the allergen
+  assert(/normalize\('NFD'\)\.replace\(\/\[\\u0300-\\u036f\]\/g,''\)/.test(html),
+    'search must fold accents for allergen/name matching');
+});
+
 test('sub-tab navigation is a dropdown, not a horizontal scroller', () => {
   // The scrolling .tunic-subtabs bar hid off-screen options. Both the
   // shared _subTabBar and the Vinos bar now render a .tunic-dd dropdown

@@ -1,0 +1,130 @@
+<!-- @dsCard group="Components" name="Navegación premium móvil" subtitle="Bottom-sheet en zona pulgar + scrim + búsqueda" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Navegación premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold3:#e4be68; --ink:#1c2a22; --paper:#faf6ee; --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0f1712;color:#1c2a22;font-family:var(--font-sans);margin:0;padding:1.4rem 1rem 4rem}
+  .wrap{max-width:440px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.3rem;color:var(--gold3);text-align:center}
+  .sub{font-family:var(--font-mono);font-size:.58rem;color:#8a8478;text-transform:uppercase;letter-spacing:.16em;text-align:center;margin:.3rem 0 1.6rem}
+  h2{font-family:var(--font-mono);font-size:.66rem;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin:2rem 0 .7rem;padding-bottom:.4rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.75rem;color:rgba(232,224,210,.72);margin-bottom:1rem;line-height:1.5}
+  .blurb b{color:var(--gold3)}
+
+  /* ── phone frame ── */
+  .phone{position:relative;width:100%;height:560px;border-radius:26px;overflow:hidden;
+    background:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.5);border:1px solid rgba(196,154,60,.18)}
+
+  /* header (real look) */
+  .hdr{background:linear-gradient(145deg,#d4b87a 0%,#c49a3c 30%,#9a7340 70%,#7d5c2f 100%);
+    height:52px;display:flex;align-items:center;padding:0 .9rem;gap:.5rem}
+  .logo{font-family:var(--font-serif);font-weight:700;color:#fff;font-size:1.05rem;letter-spacing:.06em;flex:1}
+  .logo sup{font-size:.5em;opacity:.85}
+  .hdr-ico{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem}
+
+  /* trigger row (stays at top, shows current section) */
+  .trigrow{background:#25352b;padding:.5rem .8rem}
+  .trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:50px;
+    border-radius:12px;padding:.7rem 1.05rem;border:1px solid rgba(196,154,60,.35);
+    font-family:var(--font-serif);font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--gold3);background:linear-gradient(145deg,#1c2a22,#243028)}
+  .trigger .cur{display:flex;align-items:center;gap:.55rem}
+  .trigger svg{width:18px;height:18px}
+  .chev{color:var(--gold)}
+
+  /* faux page content */
+  .page{padding:1rem;display:flex;flex-direction:column;gap:.7rem}
+  .ph-card{background:var(--paper);border-radius:14px;height:64px;opacity:.9}
+  .ph-card:nth-child(2){height:96px}
+
+  /* ── SCRIM + BOTTOM SHEET (the improvement) ── */
+  .scrim{position:absolute;inset:0;background:rgba(12,20,14,.55);backdrop-filter:blur(3px)}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--paper);
+    border-radius:20px 20px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.4);
+    padding:.55rem 0 max(.9rem,env(safe-area-inset-bottom));overflow:hidden}
+  .grab{width:38px;height:4px;border-radius:2px;background:rgba(28,42,34,.18);margin:.35rem auto .5rem}
+
+  /* search field — the waiter-speed feature */
+  .search{margin:.2rem .9rem .7rem;display:flex;align-items:center;gap:.55rem;
+    background:#f0e8d8;border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;min-height:48px}
+  .search svg{width:18px;height:18px;stroke:var(--gold);opacity:.9}
+  .search span{font-size:.9rem;color:rgba(28,42,34,.45)} /* 16px+ → no iOS zoom */
+  .kbd{margin-left:auto;font-family:var(--font-mono);font-size:.55rem;color:rgba(28,42,34,.4);
+    border:1px solid var(--line);border-radius:5px;padding:.15rem .35rem}
+
+  .sheet-lbl{font-family:var(--font-mono);font-size:.56rem;color:var(--gold);letter-spacing:.14em;
+    text-transform:uppercase;padding:.1rem 1.05rem .45rem}
+
+  .item{display:flex;align-items:center;gap:.85rem;width:100%;min-height:52px;padding:.75rem 1.05rem;
+    border:none;border-left:4px solid transparent;background:transparent;text-align:left;
+    font-family:var(--font-serif);font-weight:500;font-size:.92rem;color:rgba(28,42,34,.78)}
+  .item + .item{border-top:1px solid rgba(196,154,60,.1)}
+  .item svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6;flex-shrink:0}
+  .item .go{margin-left:auto;color:rgba(28,42,34,.25);font-size:.85rem}
+  .item.on{color:#7d5c2f;background:rgba(196,154,60,.1);border-left-color:var(--gold);font-weight:600}
+  .item.on .go{color:var(--gold)}
+
+  .why{background:#141d17;border:1px solid rgba(196,154,60,.16);border-radius:14px;padding:1rem 1.1rem;margin-top:1.2rem}
+  .why li{list-style:none;font-size:.78rem;color:rgba(232,224,210,.82);line-height:1.5;padding-left:1.3rem;position:relative;margin:.4rem 0}
+  .why li::before{content:"→";position:absolute;left:0;color:var(--gold)}
+  .why li b{color:var(--gold3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Navegación premium · móvil</h1>
+  <div class="sub">bottom-sheet en zona del pulgar · scrim · búsqueda</div>
+
+  <h2>Antes — el menú cae desde arriba</h2>
+  <div class="blurb">El trigger y sus opciones viven en el <b>borde superior</b>: el pulgar tiene que estirarse
+    al punto más lejano de la pantalla, dos veces por salto. Sin oscurecer el fondo.</div>
+  <div class="phone">
+    <div class="hdr"><span class="hdr-ico">☰</span><span class="logo">TXOKO<sup>MB</sup></span><span class="hdr-ico">?</span></div>
+    <div class="trigrow"><button class="trigger"><span class="cur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</span><span class="chev">▾</span></button></div>
+    <div class="page"><div class="ph-card"></div><div class="ph-card"></div><div class="ph-card"></div><div class="ph-card"></div></div>
+  </div>
+
+  <h2>Después — bottom-sheet en la zona del pulgar</h2>
+  <div class="blurb">Un tap en el trigger y las opciones <b>suben desde abajo</b>, donde el pulgar ya está.
+    El fondo se <b>oscurece</b> (foco + tap para cerrar). Arriba de todo, una <b>búsqueda</b> para saltar
+    directo a un plato, alérgeno o vino sin navegar.</div>
+  <div class="phone">
+    <div class="hdr"><span class="hdr-ico">☰</span><span class="logo">TXOKO<sup>MB</sup></span><span class="hdr-ico">?</span></div>
+    <div class="trigrow"><button class="trigger"><span class="cur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</span><span class="chev">▴</span></button></div>
+    <div class="page" style="filter:blur(1px);opacity:.5"><div class="ph-card"></div><div class="ph-card"></div></div>
+    <div class="scrim"></div>
+    <div class="sheet">
+      <div class="grab"></div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span>Buscar plato, vino, alérgeno…</span><span class="kbd">FASE 2</span>
+      </div>
+      <div class="sheet-lbl">Ir a</div>
+      <button class="item on"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>Inicio<span class="go">›</span></button>
+      <button class="item"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Aprender<span class="go">›</span></button>
+      <button class="item"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Examen<span class="go">›</span></button>
+      <button class="item"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>LQA<span class="go">›</span></button>
+      <button class="item"><svg viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg>Vinos<span class="go">›</span></button>
+      <button class="item"><svg viewBox="0 0 24 24"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg>Juegos<span class="go">›</span></button>
+      <button class="item"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Ranking<span class="go">›</span></button>
+    </div>
+  </div>
+
+  <ul class="why">
+    <li><b>Alcance:</b> las opciones aparecen abajo, en la zona natural del pulgar. Menos estiramiento, saltos más rápidos.</li>
+    <li><b>Foco:</b> el scrim oscurece el fondo — un objetivo claro y un tap enorme para cerrar.</li>
+    <li><b>Velocidad real:</b> el buscador (fase 2) permite saltar a un plato/vino/alérgeno sin pasar por menús.</li>
+    <li><b>Sin perder lo aprobado:</b> mismo trigger arriba con la sección actual, mismas 7 secciones apiladas, activa marcada.</li>
+  </ul>
+</div>
+</body>
+</html>
