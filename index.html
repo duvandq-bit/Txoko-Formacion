@@ -133,11 +133,19 @@
 
   <div class="login-vignette" aria-hidden="true"></div>
 
-  <div class="login-eyebrow"><span>Ritz-Carlton Abama · Tenerife</span></div>
+  <div class="login-eyebrow"><span id="loginEyebrow">Ritz-Carlton Abama · Tenerife</span></div>
   <div class="login-logo">
-    <h1>TXOKO</h1>
+    <h1 id="loginLogoName">TXOKO</h1>
     <div class="login-logo-line"></div>
     <em class="login-subtitle" id="loginSubtitle">by Martín Berasategui · Formación de Equipo</em>
+  </div>
+
+  <!-- Multi-restaurant selector. Hidden while only one venue is enabled in
+       data/themes.json; appears automatically as soon as a second venue is
+       enabled — picking one reskins the whole app via applyTheme(). -->
+  <div class="login-venue" id="loginVenue" style="display:none">
+    <div class="login-venue-label" id="loginVenueLabel">Elige tu restaurante</div>
+    <div class="login-venue-cards" id="loginVenueCards" role="radiogroup" aria-label="Restaurante"></div>
   </div>
 
   <div class="login-card" role="form" aria-label="Iniciar sesión">
@@ -248,7 +256,7 @@
 <!-- ═══════ APP ═══════ -->
 <div id="screenApp" class="screen">
   <header class="app-header" role="banner">
-    <div class="header-logo">TXOKO<sup>MB</sup></div>
+    <div class="header-logo" id="headerLogo">TXOKO<sup>MB</sup></div>
     <div class="header-spacer"></div>
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
@@ -878,7 +886,87 @@ let duelState=null;
 
 
 
+// ═══ MULTI-RESTAURANT THEMING ════════════════════════════════════
+// data/themes.json is the venue registry. applyTheme() injects the 8
+// --brand-* tokens (which the whole stylesheet derives from) plus the
+// venue identity (logo, eyebrow, subtitle, title). With one enabled
+// venue the login flows straight through; with two or more, the login
+// shows the venue picker automatically. CSS ships with Txoko defaults,
+// so if this never runs (offline first visit) nothing breaks.
+let THEMES = null, ACTIVE_VENUE = null;
+function _enabledVenues(){
+  return (THEMES && Array.isArray(THEMES.venues)) ? THEMES.venues.filter(v => v && v.enabled) : [];
+}
+function applyTheme(v){
+  if(!v) return;
+  ACTIVE_VENUE = v;
+  try{ localStorage.setItem('txk_venue', v.id); }catch(e){}
+  const tokenMap = { primary:'--brand-primary', secondary:'--brand-secondary',
+    accent:'--brand-accent', accentHi:'--brand-accent-hi', accent2:'--brand-accent-2',
+    accentDeep:'--brand-accent-deep', ink:'--brand-ink', paper:'--brand-paper' };
+  const b = v.brand || {};
+  for(const k in tokenMap){
+    if(b[k] && /^#[0-9a-fA-F]{6}$/.test(b[k])) document.documentElement.style.setProperty(tokenMap[k], b[k]);
+  }
+  const hdr = document.getElementById('headerLogo');
+  if(hdr) hdr.innerHTML = escapeHtml(v.name || '') + (v.logoSup ? '<sup>' + escapeHtml(v.logoSup) + '</sup>' : '');
+  const lname = document.getElementById('loginLogoName');
+  if(lname){
+    lname.textContent = v.name || '';
+    lname.classList.toggle('long', (v.name || '').length > 8);
+  }
+  const eye = document.getElementById('loginEyebrow');
+  if(eye) eye.textContent = v.eyebrow || '';
+  const sub = document.getElementById('loginSubtitle');
+  if(sub) sub.textContent = (LANG==='en' ? (v.subtitle_en || v.subtitle) : (v.subtitle || v.subtitle_en)) || '';
+  if(v.title) document.title = v.title;
+}
+function renderVenuePicker(venues, activeId){
+  const wrap = document.getElementById('loginVenue');
+  const cards = document.getElementById('loginVenueCards');
+  if(!wrap || !cards) return;
+  const lbl = document.getElementById('loginVenueLabel');
+  if(lbl) lbl.textContent = LANG==='en' ? 'Choose your restaurant' : 'Elige tu restaurante';
+  cards.innerHTML = venues.map(v => {
+    const accent = (v.brand && v.brand.accent) || '#c49a3c';
+    const on = v.id === activeId;
+    return '<button type="button" role="radio" aria-checked="' + on + '" class="login-venue-card' + (on ? ' on' : '') + '"'
+      + ' data-venue="' + escapeHtml(v.id) + '" onclick="selectVenue(this.dataset.venue)" style="--vcard-accent:' + escapeHtml(accent) + '">'
+      + '<span class="login-venue-dot" aria-hidden="true"></span>'
+      + '<span class="login-venue-info"><span class="login-venue-name">' + escapeHtml(v.name || v.id) + '</span>'
+      + '<span class="login-venue-eyebrow">' + escapeHtml(v.eyebrow || '') + '</span></span>'
+      + '<span class="login-venue-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>'
+      + '</button>';
+  }).join('');
+  wrap.style.display = 'block';
+}
+function selectVenue(id){
+  const v = _enabledVenues().find(x => x.id === id);
+  if(!v) return;
+  applyTheme(v);
+  document.querySelectorAll('.login-venue-card').forEach(c => {
+    const on = c.dataset.venue === id;
+    c.classList.toggle('on', on);
+    c.setAttribute('aria-checked', String(on));
+  });
+}
+async function initVenues(){
+  try{
+    const res = await fetch('data/themes.json');
+    if(!res.ok) return;
+    THEMES = await res.json();
+  }catch(e){ return; /* offline first visit: CSS Txoko defaults stand */ }
+  const venues = _enabledVenues();
+  if(!venues.length) return;
+  let saved = null;
+  try{ saved = localStorage.getItem('txk_venue'); }catch(e){}
+  const current = venues.find(v => v.id === saved) || venues[0];
+  applyTheme(current);
+  if(venues.length > 1) renderVenuePicker(venues, current.id);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initVenues();
   const nav = document.getElementById('appNav');
   if(nav){
     nav.addEventListener('scroll', updateNavFade);
@@ -6230,7 +6318,16 @@ function renderLogin(){
   const disclaimerEl = document.getElementById('disclaimerText');
   if(disclaimerEl) disclaimerEl.textContent = LANG==='en' ? 'Application independently developed by Duvan Stiven Ramírez Duque. All rights reserved \u00A9 2026.' : 'Aplicaci\u00F3n desarrollada de forma independiente por Duvan Stiven Ram\u00EDrez Duque. Todos los derechos reservados \u00A9 2026.';
   const subtitleEl = document.getElementById('loginSubtitle');
-  if(subtitleEl) subtitleEl.textContent = LANG==='en' ? 'by Martín Berasategui · Team Training' : 'by Martín Berasategui · Formación de Equipo';
+  if(subtitleEl){
+    // Venue-aware: use the active venue's subtitle, falling back to Txoko copy
+    const _v = (typeof ACTIVE_VENUE !== 'undefined' && ACTIVE_VENUE) ? ACTIVE_VENUE : null;
+    subtitleEl.textContent = _v
+      ? ((LANG==='en' ? (_v.subtitle_en || _v.subtitle) : (_v.subtitle || _v.subtitle_en)) || '')
+      : (LANG==='en' ? 'by Martín Berasategui · Team Training' : 'by Martín Berasategui · Formación de Equipo');
+  }
+  // Venue picker label follows the language too
+  const _vlbl = document.getElementById('loginVenueLabel');
+  if(_vlbl) _vlbl.textContent = LANG==='en' ? 'Choose your restaurant' : 'Elige tu restaurante';
   // Restore checkbox state
   const remCb = document.getElementById('loginRemember');
   if(remCb) remCb.checked = !!localStorage.getItem('txoko_session');

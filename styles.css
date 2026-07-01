@@ -215,6 +215,9 @@ body::after{
   letter-spacing:.14em;color:var(--gold);text-transform:uppercase;
   line-height:1;text-shadow:0 2px 20px rgba(196,154,60,.2);
 }
+/* Venue names longer than "TXOKO" scale down instead of overflowing the
+   viewport — applyTheme() toggles .long when the name exceeds 8 chars. */
+.login-logo h1.long{font-size:clamp(1.5rem,8.5vw,2.4rem);letter-spacing:.1em;line-height:1.2}
 .login-logo-line{
   width:0;height:2px;margin:.6rem auto .5rem;
   background:linear-gradient(90deg,transparent,var(--gold),var(--gold3),transparent);
@@ -280,6 +283,52 @@ body::after{
   font-family:'DM Mono',monospace;font-size:.66rem;color:rgba(228,190,104,.8);
   letter-spacing:.16em;text-transform:uppercase;
 }
+/* ── Multi-restaurant selector (login) ──────────────────────────────
+   Hidden while data/themes.json has a single enabled venue; rendered by
+   renderVenuePicker() as soon as there are two or more. Each card carries
+   its venue's accent via --vcard-accent so the options preview their brand. */
+.login-venue{width:100%;max-width:380px;margin:0 0 1.1rem;position:relative;z-index:1}
+.login-venue-label{
+  font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(228,190,104,.75);
+  letter-spacing:.16em;text-transform:uppercase;text-align:center;margin-bottom:.55rem;
+}
+.login-venue-cards{display:flex;flex-direction:column;gap:.5rem}
+.login-venue-card{
+  display:flex;align-items:center;gap:.75rem;width:100%;min-height:56px;
+  padding:.7rem .9rem;cursor:pointer;text-align:left;border-radius:13px;
+  background:linear-gradient(155deg,rgba(28,42,34,.65),rgba(20,32,26,.75));
+  border:1.5px solid rgba(196,154,60,.15);color:rgba(244,237,226,.85);
+  transition:border-color .2s ease,background .2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.login-venue-card:active{transform:translateY(1px)}
+.login-venue-dot{
+  width:14px;height:14px;border-radius:50%;flex-shrink:0;
+  background:var(--vcard-accent,var(--gold));
+  box-shadow:0 0 8px color-mix(in srgb, var(--vcard-accent,var(--gold)) 55%, transparent);
+}
+.login-venue-info{display:flex;flex-direction:column;min-width:0;flex:1}
+.login-venue-name{
+  font-family:'Cinzel',serif;font-weight:600;font-size:.92rem;letter-spacing:.06em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.login-venue-eyebrow{
+  font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(244,237,226,.5);margin-top:.15rem;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.login-venue-check{
+  width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;color:#fff;background:var(--vcard-accent,var(--gold));
+  opacity:0;transform:scale(.6);transition:opacity .2s ease,transform .2s ease;
+}
+.login-venue-check svg{width:13px;height:13px}
+.login-venue-card.on{
+  border-color:var(--vcard-accent,var(--gold));
+  background:linear-gradient(155deg,rgba(28,42,34,.85),rgba(20,32,26,.9));
+  box-shadow:0 0 20px color-mix(in srgb, var(--vcard-accent,var(--gold)) 20%, transparent);
+}
+.login-venue-card.on .login-venue-check{opacity:1;transform:scale(1)}
 .login-card{
   background:linear-gradient(155deg,rgba(28,42,34,.7),rgba(20,32,26,.8));
   border:1.5px solid rgba(196,154,60,.15);border-radius:16px;
@@ -835,6 +884,8 @@ body::after{
   font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;
   letter-spacing:.18em;color:#fff;text-transform:uppercase;
   flex-shrink:0;text-shadow:0 1px 3px rgba(0,0,0,.15);
+  /* long venue names truncate instead of pushing the user controls out */
+  max-width:46vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .header-logo sup{
   font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.12em;

@@ -92,6 +92,51 @@ test('data/lqa-situations.json is valid JSON (non-empty array)', () => {
   assert(Array.isArray(lqa) && lqa.length > 0, 'not a non-empty array');
 });
 
+test('data/themes.json venue registry is well-formed', () => {
+  // Multi-restaurant registry: every venue needs a name and the 8 brand hexes
+  // that applyTheme() injects; at least one venue must be enabled or the app
+  // would boot without an identity.
+  const themes = JSON.parse(read('data/themes.json'));
+  assert(Array.isArray(themes.venues) && themes.venues.length > 0, 'venues array missing/empty');
+  const enabled = themes.venues.filter(v => v.enabled);
+  assert(enabled.length >= 1, 'at least one venue must be enabled');
+  const keys = ['primary','secondary','accent','accentHi','accent2','accentDeep','ink','paper'];
+  for (const v of themes.venues) {
+    assert(v.id && v.name, `venue missing id/name: ${JSON.stringify(v).slice(0,60)}`);
+    for (const k of keys) {
+      assert(v.brand && /^#[0-9a-fA-F]{6}$/.test(v.brand[k]),
+        `venue ${v.id}: brand.${k} must be a 6-digit hex`);
+    }
+  }
+  // The default (first enabled) venue must match the CSS Txoko defaults, so
+  // first paint and the themed state agree.
+  assert(enabled[0].brand.accent.toLowerCase() === '#c49a3c',
+    'first enabled venue accent must match the CSS default (#c49a3c)');
+});
+
+test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
+  for (const fn of ['applyTheme','initVenues','renderVenuePicker','selectVenue']) {
+    assert(new RegExp(`function ${fn}\\(`).test(html), `${fn}() missing`);
+  }
+  assert(/initVenues\(\);/.test(html), 'initVenues() must run at DOMContentLoaded');
+  // Picker exists and ships hidden — single-venue installs must never flash it.
+  assert(/id="loginVenue"[^>]*style="display:none"/.test(html),
+    'login venue picker must exist and be hidden by default');
+  // applyTheme must cover all 8 brand tokens and validate hex before injecting.
+  for (const t of ['--brand-primary','--brand-secondary','--brand-accent','--brand-accent-hi',
+                   '--brand-accent-2','--brand-accent-deep','--brand-ink','--brand-paper']) {
+    assert(html.includes(`'${t}'`), `applyTheme token map missing ${t}`);
+  }
+  assert(/\^#\[0-9a-fA-F\]\{6\}\$/.test(html), 'applyTheme must validate hex values');
+  // Venue fields are injected with escapeHtml (registry is data, not code).
+  assert(/escapeHtml\(v\.name \|\| ''\)/.test(html), 'venue name must go through escapeHtml');
+  // Long venue names scale down instead of overflowing the login logo.
+  const css = read('styles.css');
+  assert(/\.login-logo h1\.long\{/.test(css) && /classList\.toggle\('long'/.test(html),
+    'long venue names need the .long auto-fit');
+  assert(/\.login-venue-card\.on\{/.test(css), 'selected venue card style missing');
+});
+
 test('data/ghost-scenarios.json scenarios have scenes with options', () => {
   const ghost = JSON.parse(read('data/ghost-scenarios.json'));
   assert(Array.isArray(ghost) && ghost.length > 0, 'not a non-empty array');

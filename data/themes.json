@@ -1,0 +1,46 @@
+{
+  "_readme": "Registro multi-restaurante. Cada 'venue' define identidad (nombre, logo, textos) y los 8 tokens de marca que pintan toda la app. Con UN venue activo (enabled:true) el login va directo, sin selector. En cuanto haya DOS o más activos, el login muestra automáticamente el selector de restaurante — no hay que tocar código. Para estrenar un restaurante: duplica la plantilla, rellena los campos y pon enabled:true.",
+  "version": 1,
+  "venues": [
+    {
+      "id": "txoko",
+      "enabled": true,
+      "name": "TXOKO",
+      "logoSup": "MB",
+      "eyebrow": "Ritz-Carlton Abama · Tenerife",
+      "subtitle": "by Martín Berasategui · Formación de Equipo",
+      "subtitle_en": "by Martín Berasategui · Team Training",
+      "title": "TXOKO · Formación",
+      "brand": {
+        "primary": "#2d6a3e",
+        "secondary": "#4d8a5e",
+        "accent": "#c49a3c",
+        "accentHi": "#e4be68",
+        "accent2": "#d4aa4c",
+        "accentDeep": "#7d5c2f",
+        "ink": "#1c2a22",
+        "paper": "#f4ede2"
+      }
+    },
+    {
+      "id": "plantilla",
+      "enabled": false,
+      "name": "NUEVO RESTAURANTE",
+      "logoSup": "",
+      "eyebrow": "Ciudad · Zona",
+      "subtitle": "Formación de Equipo",
+      "subtitle_en": "Team Training",
+      "title": "Nuevo Restaurante · Formación",
+      "brand": {
+        "primary": "#5a2233",
+        "secondary": "#8a4a5e",
+        "accent": "#b0763c",
+        "accentHi": "#d9a05e",
+        "accent2": "#c08a4c",
+        "accentDeep": "#6e4a26",
+        "ink": "#221a1e",
+        "paper": "#f4ede6"
+      }
+    }
+  ]
+}
