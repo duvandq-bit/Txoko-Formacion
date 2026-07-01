@@ -845,6 +845,16 @@ test('PWA theme-color is unified across manifest and meta tag', () => {
     `<meta theme-color> (${meta[1]}) != manifest theme_color (${manifest.theme_color}) — they must stay in sync`);
 });
 
+test('Service Mode stays removed (no FAB, no show call)', () => {
+  // Owner removed Service Mode. The FAB (its only entry point) must not be
+  // rendered and _svcShowFab() must not be called; the _svc* code is kept
+  // but unreferenced, like the Servicio Fantasma removal.
+  assert(!/id="svcFab"/.test(html),
+    'the Service Mode FAB button is back in the markup');
+  assert(!/[^n] _svcShowFab\(\)/.test(html.replace(/function _svcShowFab\(\)/g, 'function DEFN')),
+    '_svcShowFab() is being called again — Service Mode FAB would reappear');
+});
+
 test('Servicio Fantasma inactivity trigger stays disabled', () => {
   // The Servicio Fantasma drill used to intercept returning users on login
   // when inactive >= 7 days. The owner asked to remove that interception.

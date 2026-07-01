@@ -283,7 +283,7 @@
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
   <div class="txk-sync-pill" id="syncStatusPill" role="status" aria-live="polite" aria-atomic="true"><span class="dot"></span><span id="syncStatusText">Offline</span></div>
-  <button class="svc-fab" id="svcFab" onclick="toggleServiceMode()" title="Modo Servicio" style="display:none">»</button>
+  <!-- Service Mode FAB removed per owner request; _svc* code kept, unreferenced -->
 </div>
 <div class="svc-overlay svc-hidden" id="svcOverlay"></div>
 
@@ -6604,8 +6604,7 @@ function closePinAndEnter(){
   // Show supervisor tab for Duvan
   const _supBtn=document.getElementById('navSupervisor');
   if(_supBtn) _supBtn.style.display=currentUser==='Duvan'?'':'none';
-  // Show Service Companion FAB for all users
-  if(typeof _svcShowFab === 'function') _svcShowFab();
+  // Service Mode removed per owner request — the FAB is no longer shown
   // Restore from Supabase first, then show dashboard, then sync back
   supaRestoreEmployee(currentUser).then(() => {
     const emp = getEmp(currentUser);
