@@ -1655,6 +1655,25 @@ async function registerServiceWorker() {
   } catch(e) { dbgw('[Txoko] SW register failed:', e); return null; }
 }
 
+// Reliable auto-update for the installed PWA. An installed app in standalone
+// mode often *resumes* a frozen page instead of reloading, so a new deploy can
+// sit unseen behind the cache. Force a service-worker update check on load and
+// every time the app returns to the foreground; when a new worker installs it
+// activates immediately (skipWaiting) and the controllerchange handler above
+// reloads once. Net effect: opening the app is enough to get the latest build.
+function _checkForAppUpdate() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.getRegistration()
+    .then(reg => { if (reg) reg.update(); })
+    .catch(() => {});
+}
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', _checkForAppUpdate);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') _checkForAppUpdate();
+  });
+}
+
 async function subscribeToPush(employeeName) {
   try {
     // Step 1: Check if Notification API is available

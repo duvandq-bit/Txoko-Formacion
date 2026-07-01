@@ -217,6 +217,12 @@ test('sw.js serves the shell network-first (no HTML/CSS version skew)', () => {
   // and the page reloads once when a new SW takes control
   assert(/addEventListener\('controllerchange'/.test(html) && /_swReloaded/.test(html),
     'a guarded controllerchange reload must apply new deploys in-session');
+  // an installed PWA must actively check for updates on load + on refocus,
+  // otherwise a frozen standalone page never sees a new deploy.
+  assert(/function _checkForAppUpdate\(/.test(html) && /reg\.update\(\)/.test(html),
+    'must force a SW update check');
+  assert(/visibilitychange'[^]*?_checkForAppUpdate|_checkForAppUpdate[^]*?visibilitychange/.test(html),
+    'update check must run when the app returns to the foreground');
 });
 
 // ─── 6. CDN tags carry crossorigin (SRI prerequisite) ───────────
