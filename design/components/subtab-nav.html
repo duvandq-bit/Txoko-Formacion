@@ -1,0 +1,93 @@
+<!-- @dsCard group="Components" name="Navegación sub-pestañas — sin scroll" subtitle="Wrap vs Desplegable" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Sub-nav</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold3:#e4be68; --parchment:#1c2a22; --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:#1c2a22;font-family:var(--font-sans);padding:1.2rem 1rem 3rem;max-width:460px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.4rem;color:#7d5c2f}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#8a8478;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.2rem}
+  h2{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:1.8rem 0 .5rem;padding-bottom:.4rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.74rem;color:rgba(28,42,34,.7);margin-bottom:.9rem;line-height:1.45}
+  .blurb b{color:#7d5c2f}
+
+  /* panel base (real .tunic-subtabs look) */
+  .panel{background:radial-gradient(ellipse 70% 120% at 50% -20%, rgba(228,196,122,.16) 0%, transparent 60%),linear-gradient(180deg, rgba(251,246,234,.75) 0%, rgba(243,234,207,.55) 100%);
+    border:1px solid rgba(196,154,60,.22);border-radius:14px;padding:.55rem .6rem;box-shadow:0 1px 0 rgba(255,255,255,.8) inset}
+  .stab{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:.35rem;border-radius:9px;
+    font-family:var(--font-serif);font-weight:500;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    color:rgba(74,64,42,.75);border:1px solid transparent;padding:.6rem .85rem;min-height:44px;cursor:pointer}
+  .stab.active{color:#fbf1d6;background:linear-gradient(145deg,#c49a3c,#9a7340);border:1px solid rgba(90,60,20,.35);box-shadow:0 2px 8px rgba(154,115,64,.3)}
+
+  /* ACTUAL — scroll horizontal (se corta) */
+  .scroll{display:flex;gap:.5rem;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%)}
+  .scroll::-webkit-scrollbar{display:none}
+
+  /* OPCIÓN A — WRAP (todas visibles, varias filas) */
+  .wrap{display:flex;gap:.5rem;flex-wrap:wrap}
+  .wrap .stab{flex:1 1 auto}
+
+  /* OPCIÓN B — DESPLEGABLE */
+  .dd{position:relative}
+  .dd-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;
+    border-radius:10px;padding:.7rem 1rem;cursor:pointer;
+    background:linear-gradient(145deg,#c49a3c,#9a7340);color:#fbf1d6;border:1px solid rgba(90,60,20,.35);
+    font-family:var(--font-serif);font-weight:500;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+  .dd-chev{font-size:.9rem}
+  .dd-list{margin-top:.35rem;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#faf6ee}
+  .dd-item{display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;min-height:46px;border-bottom:1px solid var(--line);
+    font-family:var(--font-serif);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(74,64,42,.8)}
+  .dd-item:last-child{border-bottom:none}
+  .dd-item.on{color:#7d5c2f;background:rgba(196,154,60,.08)}
+</style>
+</head>
+<body>
+  <h1>Navegación de sub-pestañas</h1>
+  <div class="sub">el problema del scroll + 2 soluciones</div>
+
+  <h2>Actual — Vinos (6 opciones, con scroll)</h2>
+  <div class="blurb">Solo se ven ~3-4; <b>Mapa, Aprende y Servicio quedan ocultos</b> a la derecha. La gente
+    no descubre lo que no ve.</div>
+  <div class="panel"><div class="scroll">
+    <button class="stab active">Carta</button><button class="stab">Sommelier</button>
+    <button class="stab">Sensorial</button><button class="stab">Mapa</button>
+    <button class="stab">Aprende</button><button class="stab">Servicio</button>
+  </div></div>
+
+  <h2>Opción A — Rejilla (wrap) · recomendada</h2>
+  <div class="blurb"><b>Todas visibles</b> de un vistazo, en 2 filas, <b>sin scroll</b> y con <b>un solo tap</b>.
+    Escala solo: Aprender queda en 1 fila, Vinos en 2.</div>
+  <div class="blurb" style="font-size:.62rem;color:#8a8478">VINOS</div>
+  <div class="panel"><div class="wrap">
+    <button class="stab active">Carta</button><button class="stab">Sommelier</button>
+    <button class="stab">Sensorial</button><button class="stab">Mapa</button>
+    <button class="stab">Aprende</button><button class="stab">Servicio</button>
+  </div></div>
+  <div class="blurb" style="font-size:.62rem;color:#8a8478;margin-top:.6rem">APRENDER</div>
+  <div class="panel"><div class="wrap">
+    <button class="stab active">Repaso Int.</button><button class="stab">Explorar</button>
+    <button class="stab">Flashcards</button><button class="stab">Videos</button>
+  </div></div>
+
+  <h2>Opción B — Desplegable</h2>
+  <div class="blurb">Muestra la pestaña <b>activa + una flecha</b>; al tocar despliega la lista completa. Compacto,
+    pero requiere <b>2 taps</b> y oculta las opciones hasta abrir.</div>
+  <div class="dd">
+    <div class="dd-trigger"><span>Carta</span><span class="dd-chev">▾</span></div>
+    <div class="dd-list">
+      <div class="dd-item on">Carta</div><div class="dd-item">Sommelier</div>
+      <div class="dd-item">Sensorial</div><div class="dd-item">Mapa</div>
+      <div class="dd-item">Aprende</div><div class="dd-item">Servicio</div>
+    </div>
+  </div>
+</body>
+</html>
