@@ -270,7 +270,7 @@
   <div class="nav-dd" id="mainNavDD">
   <button class="nav-dd-trigger" aria-haspopup="true" aria-label="Menú de navegación" onclick="this.closest('.nav-dd').classList.toggle('open')">
     <span class="nav-dd-cur" id="navDDCur"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</span>
-    <span class="nav-dd-chev" aria-hidden="true">▾</span>
+    <span class="nav-dd-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6"/></svg></span>
   </button>
   <div class="nav-scrim" aria-hidden="true" onclick="document.getElementById('mainNavDD').classList.remove('open')"></div>
   <nav class="app-nav nav-dd-list" id="appNav" role="navigation" aria-label="Navegación principal">
@@ -6934,7 +6934,7 @@ function _subTabDropdown(tabs, activeId, onclickFor, variant){
   return `<div class="tunic-dd${vcls}">
     <button class="tunic-dd-trigger" aria-haspopup="true" onclick="this.closest('.tunic-dd').classList.toggle('open')">
       <span class="tunic-dd-cur">${curIcon}${active[1]}</span>
-      <span class="tunic-dd-chev" aria-hidden="true">▾</span>
+      <span class="tunic-dd-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6"/></svg></span>
     </button>
     <div class="tunic-dd-list" role="menu">${items}</div>
   </div>`;

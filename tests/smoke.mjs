@@ -665,6 +665,26 @@ test('screen wrapper never animates transform (breaks fixed nav sheet)', () => {
     'screenEnter keyframes must not animate transform');
 });
 
+test('dropdown triggers use a clear chevron-chip (not a subtle glyph)', () => {
+  const css = read('styles.css');
+  assert(/\.nav-dd-chev\{[^}]*border:1px solid[^}]*\}/.test(css) && /\.nav-dd-chev svg\{/.test(css),
+    'nav chevron must be a bordered chip containing an SVG');
+  assert(/class="nav-dd-chev"[^>]*><svg/.test(html),
+    'main nav trigger chevron must be an SVG, not a ▾ glyph');
+  assert(/class="tunic-dd-chev"[^>]*><svg/.test(html),
+    'sub-tab trigger chevron must be an SVG, not a ▾ glyph');
+});
+
+test('floating FABs hide behind the open nav sheet / search', () => {
+  // The sound toggle + sync pill float above #screenApp and otherwise overlap
+  // the bottom-sheet options; they must hide while the nav or search is open.
+  const css = read('styles.css');
+  assert(/body:has\(#mainNavDD\.open\)\s+\.sound-toggle/.test(css),
+    'sound toggle must hide when the nav sheet is open');
+  assert(/body:has\(#gsOverlay\.open\)\s+\.sound-toggle/.test(css),
+    'sound toggle must hide when global search is open');
+});
+
 test('global search: entry, overlay and deep-link wiring', () => {
   const css = read('styles.css');
   // one-tap entry lives at the top of the nav sheet
