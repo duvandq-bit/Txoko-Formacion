@@ -759,6 +759,25 @@ test('vinos filter pills wrap instead of side-scrolling', () => {
   }
 });
 
+test('section labels share the tunic-divider recipe (no rogue styles)', () => {
+  // One section-label style across screens: the gold Cinzel divider. Ranking
+  // used orange Quicksand (also ~2.4:1 on cream, WCAG fail), exam had a
+  // literal ◆…◆ variant, games a one-off mono hint.
+  assert(/tunic-divider"><span>\$\{LANG==='en'\?'By total XP':'Por XP total'\}/.test(html),
+    'ranking label must use the tunic-divider');
+  assert(/tunic-divider"><span>\$\{_en\?'Mastery by Theme':'Dominio por Tema'\}/.test(html),
+    'exam mastery label must use the tunic-divider');
+  assert(/tunic-divider"[^>]*><span>\$\{_en\?'More ways to train':'Más formas de entrenar'\}/.test(html),
+    'games section label must use the tunic-divider');
+  // Ranking XP value must be brand gold (WCAG 5.66:1), not candy-orange.
+  assert(!/color:var\(--candy-orange\)"?>\$\{\(emp\.xp/.test(html),
+    'ranking XP value must not be candy-orange');
+  // The replaced one-off recipes must not linger unused in the stylesheet.
+  const css = read('styles.css');
+  assert(!/exam-topics-mastery-title|games-secondary-hint/.test(css + html),
+    'orphaned section-label classes must be removed');
+});
+
 test('floating FABs hide behind the open nav sheet / search', () => {
   // The sound toggle + sync pill float above #screenApp and otherwise overlap
   // the bottom-sheet options; they must hide while the nav or search is open.

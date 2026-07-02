@@ -14593,7 +14593,7 @@ function renderExamSetup(){
 
       <!-- Per-topic mastery bars -->
       <div class="exam-topics-mastery">
-        <div class="exam-topics-mastery-title">◆ ${_en?'Mastery by Theme':'Dominio por Tema'} ◆</div>
+        <div class="tunic-divider"><span>${_en?'Mastery by Theme':'Dominio por Tema'}</span></div>
         ${_topicBars}
       </div>
 
@@ -15652,8 +15652,8 @@ function renderRanking(){
           ${tags.length ? `<div style="font-family:'Quicksand',sans-serif;font-size:.58rem;font-weight:500;color:var(--parch4);margin-top:.15rem">${tags.join(' · ')}</div>` : ''}
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <div style="font-family:'Quicksand',sans-serif;font-size:1.2rem;font-weight:800;color:var(--candy-orange)">${(emp.xp||0).toLocaleString()}</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.55rem;font-weight:700;color:var(--candy-orange);opacity:.5">XP</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:1.2rem;font-weight:800;color:var(--gold-deep)">${(emp.xp||0).toLocaleString()}</div>
+          <div style="font-family:'Quicksand',sans-serif;font-size:.55rem;font-weight:700;color:var(--gold-deep);opacity:.6">XP</div>
         </div>
       </div>`;
     }).join('');
@@ -15664,7 +15664,7 @@ function renderRanking(){
     const _rc = document.getElementById('rankingContent');
     _rc.removeAttribute('style');
     _rc.innerHTML = `
-      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;color:var(--candy-orange);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem;text-align:center">— ${LANG==='en'?'By total XP':'Por XP total'} —</div>
+      <div class="tunic-divider"><span>${LANG==='en'?'By total XP':'Por XP total'}</span></div>
       ${rows}`;
   });
 }
@@ -21361,7 +21361,7 @@ function renderTxoko(){
         <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c" opacity=".8"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><polyline points="9 12 14 12 11 8 14 12 11 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
 
-      <div class="games-secondary-hint">${_en?'More ways to train':'Más formas de entrenar'}</div>
+      <div class="tunic-divider" style="margin-top:1.2rem"><span>${_en?'More ways to train':'Más formas de entrenar'}</span></div>
 
       <!-- ERROR MODE -->
       <div role="button" tabindex="${failedCount>0?'0':'-1'}" aria-label="${_en?'Weak Spots, '+failedLabel:'Puntos Débiles, '+failedLabel}" onkeydown="${failedCount>0?`if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}`:''}" class="game-card game-card-secondary ${failedCount===0?'game-card-disabled':''}" onclick="${failedCount>0?'startErrorMode()':''}" style="--gc-accent:#d4944c;--gc-accent2:#b47430;--gc-glow:rgba(212,148,76,.2)">

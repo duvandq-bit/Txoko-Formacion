@@ -3675,12 +3675,6 @@ body::after{
   border-radius:12px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
 }
-.exam-topics-mastery-title{
-  font-family:'Cinzel',serif;font-size:.62rem;font-weight:500;
-  color:var(--gold);letter-spacing:.28em;text-align:center;
-  text-transform:uppercase;opacity:.85;
-  margin-bottom:.75rem;
-}
 .exam-topic-bar{margin-bottom:.7rem}
 .exam-topic-bar:last-child{margin-bottom:0}
 .exam-topic-bar-head{
@@ -6257,8 +6251,6 @@ body::after{
 .game-card-secondary .game-card-body{padding-top:.55rem;padding-bottom:.55rem}
 .game-card-secondary .game-card-title{font-size:.92rem}
 .game-card-secondary .game-card-desc{font-size:.7rem;line-height:1.4}
-.games-secondary-hint{font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(196,154,60,.55);letter-spacing:.18em;text-transform:uppercase;text-align:center;margin:1rem 0 .35rem;display:flex;align-items:center;gap:.5rem;justify-content:center}
-.games-secondary-hint::before,.games-secondary-hint::after{content:"";flex:0 0 32px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent)}
 /* Shimmer sweep on hover */
 .game-card > .gc-shine{
   position:absolute;top:0;bottom:0;left:-60%;width:35%;
