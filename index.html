@@ -9164,7 +9164,7 @@ function renderVinosCarta(){
     <div style="padding:.5rem 0 1rem">
       <div class="wine-section-header">
         <div class="wine-section-title">◇ ${_en?'Wine List':'Carta de Vinos'} ◇</div>
-        <div class="wine-section-sub">TXOKO by Martín Berasategui</div>
+        <div class="wine-section-sub">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id!=='txoko') ? escapeHTML(ACTIVE_VENUE.name + (ACTIVE_VENUE.eyebrow ? ' · ' + ACTIVE_VENUE.eyebrow : '')) : 'TXOKO by Martín Berasategui'}</div>
       </div>
 
       <div class="wine-storybook-intro wine-enchanted">

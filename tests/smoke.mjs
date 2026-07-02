@@ -778,6 +778,20 @@ test('section labels share the tunic-divider recipe (no rogue styles)', () => {
     'orphaned section-label classes must be removed');
 });
 
+test('vinos hero is compact and venue-aware', () => {
+  const css = read('styles.css');
+  // Hero spacing: header + intro tightened so the first wine lands sooner.
+  assert(/\.wine-section-header\{[^}]*margin-bottom:1rem/.test(css),
+    'wine section header must keep the tightened 1rem gap');
+  assert(/\.wine-storybook-intro\{[^}]*padding:\.4rem 1rem;margin-bottom:\.7rem/.test(css),
+    'storybook intro must keep the tightened spacing');
+  // The hero byline must come from the active venue (multi-restaurant), with
+  // the exact Txoko copy preserved as the default.
+  assert(/ACTIVE_VENUE\.id!=='txoko'\) \? escapeHTML\(ACTIVE_VENUE\.name/.test(html)
+    && /: 'TXOKO by Martín Berasategui'\}/.test(html),
+    'vinos hero byline must be venue-aware with the Txoko copy as default');
+});
+
 test('floating FABs hide behind the open nav sheet / search', () => {
   // The sound toggle + sync pill float above #screenApp and otherwise overlap
   // the bottom-sheet options; they must hide while the nav or search is open.
