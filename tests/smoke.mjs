@@ -810,6 +810,19 @@ test('vinos carta premium port: fonts, search, pills, card, light sub-trigger', 
     'green variant must keep its dark Pip-Boy trigger');
 });
 
+test('wine detail speaks the premium carta language', () => {
+  // The detail view must match the redesigned carta: dot+mono type, deep-gold
+  // prices, Cormorant story, and the "G " label typo fixed to the ◇ ornament.
+  const detail = html.slice(html.indexOf('function _showWineDetail'), html.indexOf('function _showWineDetail') + 9000);
+  assert(/class="wc-type"/.test(detail), 'detail type must use the dot+mono style');
+  assert(/color:var\(--gold-deep\);font-weight:600">\$\{w\.price\} €/.test(detail),
+    'detail bottle price must be deep gold with a spaced euro');
+  assert(/Cormorant Garamond[^"]*"[^>]*>"\$\{escapeHTML\(_en && w\.story_en/.test(detail),
+    'detail story must use Cormorant italic');
+  assert(!/wine-info-label"[^>]*>G \$\{/.test(html),
+    'the broken "G " info label must be the ◇ ornament');
+});
+
 test('vinos hero is compact and venue-aware', () => {
   const css = read('styles.css');
   // Hero spacing: header + intro tightened so the first wine lands sooner.
