@@ -12664,7 +12664,6 @@ function _showWineDetail(id, list, direction){
   const hasNext = _wineDetailIdx < _wineDetailList.length - 1;
   const navCounter = _wineDetailList.length > 1 ? (_wineDetailIdx + 1) + ' / ' + _wineDetailList.length : '';
   const typeLabels = {blanco:_en?'White Wine':'Vino Blanco',tinto:_en?'Red Wine':'Vino Tinto',rosado:_en?'Rosé Wine':'Vino Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Dessert Wine':'Vino Dulce'};
-  const typeIconsSvg = {blanco:TXKO_ICONS.wBlanco,tinto:TXKO_ICONS.wTinto,rosado:TXKO_ICONS.wRosado,espumoso:TXKO_ICONS.wEspumoso,dulce:TXKO_ICONS.wDulce};
   const isWine = w.type !== 'cocktail';
 
   const overlay = document.createElement('div');
@@ -12686,14 +12685,13 @@ function _showWineDetail(id, list, direction){
       ${hasNext ? '<span class="wsp-arrow right">▷</span>' : '<span style="width:.6rem;display:inline-block"></span>'}
     </div>` : ''}
 
-    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem">
-      <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold),var(--gold3));width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.3rem">${typeIconsSvg[w.type]||TXKO_ICONS.wTinto}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">
-        <span class="wine-badge" style="background:rgba(196,154,60,.08);color:var(--gold);border:1px solid rgba(196,154,60,.15)">${typeLabels[w.type]||w.type}</span>
-        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ '+(_en?'Recommended':'Recomendado')+'</span>':''}
-        ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.08);color:#8b6914;border:1px solid rgba(139,105,20,.15)">◆ Tempos Vega Sicilia</span>':''}
-        ${w.kosher?'<span class="wine-badge" style="background:rgba(196,154,60,.06);color:var(--parch3);border:1px solid rgba(196,154,60,.1)">✡ Kosher</span>':''}
-      </div>
+    <div class="wc-top" style="margin-bottom:.8rem">
+      <span class="wc-type"><span class="wc-type-dot" style="background:${({blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'})[w.type]||'var(--gold)'}"></span>${typeLabels[w.type]||w.type}</span>
+      <span class="wc-badges">
+        ${w.recommended?'<span class="wc-rec">★ '+(_en?'RECOMMENDED':'RECOMENDADO')+'</span>':''}
+        ${w.vegaSicilia?'<span class="wc-rec" style="color:#8b6914;border-color:rgba(139,105,20,.2);background:rgba(139,105,20,.08)">◆ VEGA SICILIA</span>':''}
+        ${w.kosher?'<span class="wc-rec" style="color:rgba(28,42,34,.55)">✡ KOSHER</span>':''}
+      </span>
     </div>
 
     ${_wineImgHtml(w, 'detail')}
@@ -12704,11 +12702,11 @@ function _showWineDetail(id, list, direction){
     <div class="wine-price-box">
       <div>
         <div class="wine-info-label">${w.format||(_en?'Bottle':'Botella')}</div>
-        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:700">${w.price}€</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${w.price} €</div>
       </div>
-      ${w.glass?`<div style="border-left:1.5px solid rgba(196,154,60,.15);padding-left:.8rem">
+      ${w.glass?`<div style="border-left:1px solid rgba(196,154,60,.25);padding-left:.8rem">
         <div class="wine-info-label">${_en?'Glass':'Copa'}</div>
-        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--sage);font-weight:600">${w.glass}€</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold-deep);font-weight:600">${w.glass} €</div>
       </div>`:''}
     </div>
 
@@ -12727,7 +12725,7 @@ function _showWineDetail(id, list, direction){
 
     <div class="wine-story-box">
       <div class="wine-info-label" style="margin-left:.6rem">✦ ${_en?'Story & Production':'Historia y Elaboración'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.6;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--parchment);line-height:1.5;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
       ${isWine ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;margin-left:.6rem">${_wineStoryTags(w).map(t=>'<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;border-radius:6px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.1);color:var(--parch3)">◇ '+t+'</span>').join('')}</div>` : ''}
     </div>
 
@@ -12735,7 +12733,7 @@ function _showWineDetail(id, list, direction){
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
       <div style="display:flex;flex-direction:column;gap:.9rem">
         <div>
-          <div class="wine-info-label" style="margin-bottom:.4rem">G ${_en?'Grape Selection':'Selección de Uvas'}</div>
+          <div class="wine-info-label" style="margin-bottom:.4rem">◇ ${_en?'Grape Selection':'Selección de Uvas'}</div>
           <div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.55">${escapeHTML(_en && w.grapeSelection_en ? w.grapeSelection_en : w.grapeSelection)}</div>
         </div>
         ${w.winemaking ? `<div style="border-top:1px solid rgba(196,154,60,.1);padding-top:.8rem">
