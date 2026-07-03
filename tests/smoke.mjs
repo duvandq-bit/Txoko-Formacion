@@ -823,6 +823,27 @@ test('wine detail speaks the premium carta language', () => {
     'the broken "G " info label must be the ◇ ornament');
 });
 
+test('vinos sub-screens finished in the premium language', () => {
+  // No wine section title may carry flanking ✦/◇ glyphs — the ornament is the
+  // fine rule under the title (the carta pattern).
+  assert(!/wine-section-title">[✦◇]|wine-section-title">\$\{[^}]*\?'[✦◇]/.test(html),
+    'wine section titles must not open with a flanking glyph');
+  assert(!/[✦◇] \$\{_en\?'Learn about Wine|[✦◇] \$\{_en\?'Wine Parchments/.test(html),
+    'aprende/pergaminos titles must be clean');
+  // Sommelier hub: unified deep-gold stat trio (was gold/sage/azure), and the
+  // hub verse speaks Cormorant.
+  const hub = html.slice(html.indexOf('wine-hub-stats'), html.indexOf('wine-hub-stats') + 1800);
+  assert(!/var\(--sage\)|var\(--azure\)/.test(hub),
+    'sommelier stat trio must not mix sage/azure — deep gold only');
+  const css = read('styles.css');
+  assert(/\.wine-hub-verse\{[^}]*Cormorant Garamond/.test(css),
+    'sommelier verse must use Cormorant');
+  // Discover-today featured card uses the carta language (dot, spaced price, wc-story).
+  const disc = html.slice(html.indexOf('Descubre Hoy'), html.indexOf('Descubre Hoy') + 2600);
+  assert(/wc-type-dot/.test(disc) && /wc-price/.test(disc) && /wc-story/.test(disc),
+    'featured wine card must use the carta card classes');
+});
+
 test('vinos hero is compact and venue-aware', () => {
   const css = read('styles.css');
   // Hero spacing: header + intro tightened so the first wine lands sooner.
