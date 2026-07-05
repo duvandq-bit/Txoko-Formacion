@@ -9164,27 +9164,24 @@ function _renderSommelier(c, bar){
         </div>`).join('')}
     </div>
 
-    <!-- Quick access grid -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-      <button onclick="_vinoSubTab='carta';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
-        <div style="font-size:1.6rem;line-height:1">${txIcon('wTinto','1.6rem')}</div>
-        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">${_en?'Full Menu':'Carta Completa'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINES.length} ${_en?'wines':'vinos'}</div>
+    <!-- Quick access — manual index, no boxes -->
+    <div class="tunic-divider" style="margin-top:1.2rem"><span>${_en?'Quick access':'Acceso rápido'}</span></div>
+    <div class="dash-index">
+      <button class="dash-index-entry" onclick="_vinoSubTab='carta';renderVinos()">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg>
+        <span><span class="dash-index-lbl">${_en?'Full Menu':'Carta Completa'}</span><span class="dash-index-meta">${WINES.length} ${_en?'wines':'vinos'}</span></span>
       </button>
-      <button onclick="_vinoSubTab='aprende';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
-        <div style="font-size:1.6rem;line-height:1">${txIcon('learn','1.6rem')}</div>
-        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">${_en?'Learn':'Aprende'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_CONCEPTS.length} ${_en?'concepts':'conceptos'}</div>
+      <button class="dash-index-entry" onclick="_vinoSubTab='aprende';renderVinos()">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        <span><span class="dash-index-lbl">${_en?'Learn':'Aprende'}</span><span class="dash-index-meta">${WINE_CONCEPTS.length} ${_en?'concepts':'conceptos'}</span></span>
       </button>
-      <button onclick="_vinoSubTab='wineFlash';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
-        <div style="font-size:1.6rem;line-height:1">${txIcon('flash','1.6rem')}</div>
-        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Flashcards</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${WINE_FLASHCARDS.length} ${_en?'cards':'tarjetas'}</div>
+      <button class="dash-index-entry" onclick="_vinoSubTab='wineFlash';renderVinos()">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+        <span><span class="dash-index-lbl">Flashcards</span><span class="dash-index-meta">${WINE_FLASHCARDS.length} ${_en?'cards':'tarjetas'}</span></span>
       </button>
-      <button onclick="_vinoSubTab='wineQuiz';renderVinos()" class="wine-quiz-option" style="flex-direction:column;gap:.3rem;padding:.9rem .7rem;text-align:center">
-        <div style="font-size:1.6rem;line-height:1">${txIcon('quiz','1.6rem')}</div>
-        <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment)">Quiz</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${_en?'4 modes':'4 modos'}</div>
+      <button class="dash-index-entry" onclick="_vinoSubTab='wineQuiz';renderVinos()">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 2-2.5 2.2-2.5 4"/><path d="M12 17h.01"/></svg>
+        <span><span class="dash-index-lbl">Quiz</span><span class="dash-index-meta">${_en?'4 modes':'4 modos'}</span></span>
       </button>
     </div>
   </div>`;
@@ -13923,10 +13920,10 @@ function _renderWineService(c, bar){
             var topWines = wines.sort(function(a,b){ return (b.recommended?1:0)-(a.recommended?1:0) || a.price-b.price; }).slice(0,2);
             var preview = topWines.map(function(w){ return escapeHTML(w.name); }).join(', ');
             if(wCount > 2) preview += ' +' + (wCount-2);
-            return '<div class="maridaje-item" data-dish="' + escapeHTML(dish.toLowerCase()) + ' ' + escapeHTML(_translateDish(dish).toLowerCase()) + '" onclick="_showMaridajeDish(\'' + dish.replace(/'/g,"\\'") + '\')" style="padding:.55rem .75rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.1);border-left:3px solid ' + borderColor + ';border-radius:10px;cursor:pointer;transition:all .2s;animation:fadeInUp .3s ' + (i*0.015) + 's both">' +
+            return '<div class="maridaje-item" data-dish="' + escapeHTML(dish.toLowerCase()) + ' ' + escapeHTML(_translateDish(dish).toLowerCase()) + '" onclick="_showMaridajeDish(\'' + dish.replace(/'/g,"\\'") + '\')" style="padding:.6rem .15rem;border-bottom:1px solid rgba(28,42,34,.1);cursor:pointer;animation:fadeInUp .3s ' + (i*0.015) + 's both">' +
               '<div style="display:flex;justify-content:space-between;align-items:center;gap:.4rem">' +
                 '<div style="flex:1;min-width:0">' +
-                  '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(_translateDish(dish)) + '</div>' +
+                  '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span style="display:inline-block;width:6px;height:6px;transform:rotate(45deg);background:' + borderColor + ';margin-right:.45rem;vertical-align:1px"></span>' + escapeHTML(_translateDish(dish)) + '</div>' +
                   '<div style="font-family:\'Quicksand\',sans-serif;font-size:.62rem;color:rgba(28,42,34,.5);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + preview + '</div>' +
                 '</div>' +
                 '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0">' +
@@ -13953,9 +13950,9 @@ function _renderWineService(c, bar){
           {situation:_en?'Asks for the cheapest wine':'Pide el vino más barato',script:_en?'"Our La Campagne is an excellent choice at 45€, a very pleasant French Cabernet Sauvignon. By the glass, the Arienzo de Marqués de Riscal at 10€ is wonderful."':'\"Nuestro La Campagne es una excelente opción a 45€, un Cabernet Sauvignon francés muy agradable. Por copa, el Arienzo de Marqués de Riscal a 10€ es estupendo.\"'},
           {situation:_en?'Wants to impress their guests':'Quiere impresionar a sus invitados',script:_en?'"The Castillo Ygay Gran Reserva 2011 is an iconic piece from Marqués de Murrieta — only produced in the best vintages. We also have Álvaro Palacios Gratallops in Magnum, perfect for sharing."':'\"El Castillo Ygay Gran Reserva 2011 es una pieza icónica de Marqués de Murrieta — solo se produce en las mejores añadas. También tenemos el Álvaro Palacios Gratallops en Magnum, perfecto para compartir.\"'},
           {situation:_en?'Has allergies/intolerance':'Es alérgico/intolerante',script:_en?'"All our wines naturally contain sulphites. If you\'re looking for lower-sulphite options, organic and natural wines like Fanny Sabre tend to have lower levels. We also have alcohol-free mocktails."':'\"Todos nuestros vinos contienen sulfitos de forma natural. Si busca opciones con menos sulfitos, los vinos ecológicos y naturales como Fanny Sabre suelen tener niveles más bajos. También tenemos mocktails sin alcohol.\"'}
-        ].map((s,i)=>`<div onclick="this.querySelector('.ss-detail').classList.toggle('open')" class="wine-service-card card-animate" style="animation-delay:${i*0.04}s">
+        ].map((s,i)=>`<div onclick="this.querySelector('.ss-detail').classList.toggle('open')" class="wine-service-card wc-row card-animate" style="animation-delay:${i*0.04}s">
           <div style="display:flex;align-items:center;gap:.5rem;position:relative">
-            <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold-a),rgba(196,154,60,.15));width:28px;height:28px;font-size:.65rem;font-family:'DM Mono',monospace;display:flex;align-items:center;justify-content:center;color:var(--gold)">S</div>
+            <span style="color:var(--gold);font-size:.8rem;flex-shrink:0;width:18px;text-align:center">✦</span>
             <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);flex:1">${s.situation}</div>
             <svg style="opacity:.3;color:var(--gold)" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>

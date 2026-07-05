@@ -836,6 +836,19 @@ test('wine detail speaks the premium carta language', () => {
     'the broken "G " info label must be the ◇ ornament');
 });
 
+test('vinos sweep 3: sommelier index, maridaje rows, frases rows', () => {
+  // Visible de-boxing for the remaining sub-screens (owner follow-up).
+  assert(/dash-index-entry" onclick="_vinoSubTab='carta';renderVinos\(\)/.test(html),
+    'sommelier quick access must be the manual index');
+  assert(!/wine-quiz-option" style="flex-direction:column/.test(html),
+    'boxed quick-access tiles must be gone');
+  assert(/maridaje-item[^>]*style="padding:\.6rem \.15rem;border-bottom:1px solid rgba\(28,42,34,\.1\)/.test(html),
+    'pairing guide entries must be hairline rows');
+  assert(/wine-service-card wc-row/.test(html), 'selling scripts must use the row modifier');
+  const css = read('styles.css');
+  assert(/\.wine-service-card\.wc-row,/.test(css), 'wc-row must cover service cards');
+});
+
 test('vinos sweep 2: quiz rows, concept rows, no paren counts on map pills', () => {
   // Re-audit with the TUNIC bar: quiz category tiles and concept accordion
   // cards become hairline rows; map origin pills drop spreadsheet parens.
