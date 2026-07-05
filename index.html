@@ -4537,11 +4537,13 @@ function _scenarioWhichAdaptable(dish, dd, _en){
   return null;
 }
 
-// ═══ Prep-time notice — does the CURRENT dish carry a stated wait? ═══
-// Options are uniform in shape (durations + "no special wait"), so the card
-// header naming the dish reveals nothing (owner-reported leak: the previous
-// which-dish form put the header dish among the options). Fires always on
-// wait-flagged dishes and rarely on clean ones, keeping both answers live.
+// ═══ Prep-time notice — waits per the HOUSE RULES ═══
+// Owner-stated norm (Jul 2026): a dish ordered WITHOUT starters carries a
+// ~40-minute wait that must be communicated; with starters + mains the
+// pacing follows the Forbes/LQA standard (already trained in the LQA exam).
+// Per-dish card waits (e.g. "~30 min, baked to order") are the dish-specific
+// exception and use the card's own number. The previous version answered
+// "no special wait" for clean dishes — false per the house norm; removed.
 function _srWaitMins(d){
   const m = ((d && d.notes) || '').match(/~?\s*(\d{1,3})\s*(?:min\b|minutos?\b|-?minute)/i);
   const v = m ? parseInt(m[1], 10) : 0;
@@ -4549,29 +4551,33 @@ function _srWaitMins(d){
 }
 function _scenarioWaitTime(dish, dd, _en){
   const mins = _srWaitMins(dish);
-  if(!mins && Math.random() < 0.88) return null; // clean dishes vastly outnumber flagged ones
   const label = x => _en ? `About ${x} minutes` : `Unos ${x} minutos`;
-  const optNone = _en ? 'None — its card states no special wait'
-                      : 'Ninguna — su ficha no indica espera especial';
-  let correct, options;
   if(mins){
-    const distract = _djShuffle([10,15,20,45,60].filter(x=>Math.abs(x-mins)>=8)).slice(0,2);
-    if(distract.length < 2) return null;
-    correct = label(mins);
-    options = _djShuffle([correct, ...distract.map(label), optNone]);
-  } else {
-    correct = optNone;
-    options = _djShuffle([correct, ..._djShuffle([10,15,20,30,45,60]).slice(0,3).map(label)]);
+    // Dish-specific stated wait (tartar adaptation, baked-to-order cake…)
+    const distract = _djShuffle([10, 15, 40, 60].filter(x=>Math.abs(x-mins)>=8)).slice(0,3);
+    if(distract.length < 3) return null;
+    const correct = label(mins);
+    const options = _djShuffle([correct, ...distract.map(label)]);
+    const qEs = `Huésped pide ${dd.name} (o su versión adaptada). Su ficha exige avisar de una espera de preparación. ¿Cuánto debes comunicar?`;
+    const qEn = `A guest orders ${dd.name} (or its adapted version). Its card requires warning about a preparation wait. How long must you communicate?`;
+    return {
+      q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct),
+      explain: _en ? `The card states ~${mins} min for this dish — always inform the guest before confirming the order.`
+                   : `La ficha indica ~${mins} min para este plato — avisar siempre al huésped antes de confirmar la comanda.`,
+      type:'modification'
+    };
   }
-  const qEs = `Huésped con prisa pide ${dd.name}. ¿Qué espera de preparación debes comunicarle al comandar?`;
-  const qEn = `A guest in a hurry orders ${dd.name}. What preparation wait must you communicate when ordering?`;
+  // House-norm question — only for main courses ordered straight, no starters
+  if(dish.cat !== 'Platos Principales') return null;
+  if(Math.random() < 0.6) return null; // moderate frequency across sessions
+  const correct = label(40);
+  const options = _djShuffle([correct, label(15), label(25), (_en ? 'No wait — it comes out at normal pace' : 'Sin espera — sale al ritmo normal')]);
+  const qEs = `Mesa pide ${dd.name} directamente, SIN entrantes. ¿Qué espera debes comunicar al huésped al comandar?`;
+  const qEn = `A table orders ${dd.name} directly, with NO starters. What wait must you communicate to the guest when ordering?`;
   return {
     q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct),
-    explain: mins
-      ? (_en ? `The card states ~${mins} min — always inform the guest before confirming the order.`
-             : `La ficha indica ~${mins} min — avisar siempre al huésped antes de confirmar la comanda.`)
-      : (_en ? `${dd.name} carries no stated wait on its card — it runs at normal kitchen pace.`
-             : `${dd.name} no tiene espera indicada en su ficha — va al ritmo normal de cocina.`),
+    explain: _en ? `Txoko house rule: a main ordered without starters carries ~40 minutes and must be communicated when taking the order. With starters, course pacing follows the Forbes/LQA standard.`
+                 : `Norma de Txoko: un principal pedido sin entrantes lleva ~40 minutos y debe comunicarse al tomar la comanda. Con entrantes, el ritmo de pases sigue el estándar Forbes/LQA.`,
     type:'modification'
   };
 }

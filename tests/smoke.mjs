@@ -1097,9 +1097,14 @@ test('smart review owner-reported fixes: header leak, agua), Txipiron≠ron', ()
   const wa = html.slice(html.indexOf('function _scenarioWhichAdaptable'), html.indexOf('function _scenarioWhichAdaptable') + 3200);
   assert(/d\.id!==dish\.id && _simDishName\(d\)\.toLowerCase\(\)!==_curName/.test(wa),
     'WhichAdaptable must exclude the header dish (by id AND display name)');
-  const wt = html.slice(html.indexOf('function _scenarioWaitTime'), html.indexOf('function _scenarioWaitTime') + 3200);
-  assert(/optNone/.test(wt) && !/opts\.map\(d=>_simDishName\(d\)\)/.test(wt),
-    'WaitTime must use duration-shaped options, not dish names');
+  const wt = html.slice(html.indexOf('function _scenarioWaitTime'), html.indexOf('function _scenarioWaitTime') + 3600);
+  assert(!/opts\.map\(d=>_simDishName\(d\)\)/.test(wt), 'WaitTime must use duration-shaped options, not dish names');
+  // Owner-stated house rule: a main ordered WITHOUT starters carries ~40 min.
+  // The old "Ninguna — su ficha no indica espera especial" answer taught
+  // something false and must stay removed.
+  assert(/label\(40\)/.test(wt) && /SIN entrantes/.test(wt), 'WaitTime 40-min house rule (main without starters) missing');
+  assert(/Norma de Txoko/.test(wt) && /Forbes\/LQA/.test(wt), 'WaitTime explanation must cite the house norm and Forbes pacing');
+  assert(!/no indica espera especial/.test(wt), 'false "no special wait" answer is back in WaitTime');
   // 2. Ingredient extraction must strip parentheses ("¿lleva agua)?" bug).
   assert(/replace\(\/\[\(\)\]\/g/.test(html.slice(html.indexOf('function _simExtractIngredients'), html.indexOf('function _simExtractIngredients') + 900)),
     'ingredient extractor must strip parentheses before filtering');
