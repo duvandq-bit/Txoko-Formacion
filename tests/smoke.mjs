@@ -1230,6 +1230,22 @@ test('.btn-secondary has a real style rule (not a bare grey button)', () => {
     'no .btn-secondary usages found — was the class renamed?');
 });
 
+test('LQA hub is a TUNIC manual page (banner + index + ledger categories)', () => {
+  // Same de-boxing language as the dashboard: the 9 colored cards became one
+  // flagship Ghost banner, a 2-col mode index and hairline category rows.
+  const lqa = html.slice(html.indexOf('LQA hub — TUNIC manual page'), html.indexOf('function renderLqaCategory'));
+  assert(lqa.length > 100, 'LQA hub block missing');
+  assert(/hub-banner[^>]*startGhostInspection/.test(lqa), 'Ghost banner must stay the flagship');
+  assert(/dash-index-entry" onclick="lqaView='info'/.test(lqa)
+    && /dash-index-entry" onclick="startLqaExam\(\)/.test(lqa)
+    && /dash-index-entry" onclick="startLqaSituations\(\)/.test(lqa)
+    && /dash-index-entry" onclick="startLqaAuditor\(\)/.test(lqa),
+    'the four LQA modes must live in the manual index');
+  assert(/dash-row" onclick="renderLqaCategory/.test(lqa),
+    'categories must render as ledger rows');
+  assert(!/hub-qa"|lqa-cat-card/.test(lqa), 'old boxed hub cards must be gone');
+});
+
 test('dashboard alerts are hairline ledger rows (TUNIC de-boxing)', () => {
   // The colored .dash-alert cards + .dash-num badges became .dash-row ledger
   // rows: ink numeral, hairline separator, semantic color only on numerals.
