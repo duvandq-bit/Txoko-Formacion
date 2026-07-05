@@ -1548,6 +1548,153 @@ test('Servicio Fantasma inactivity trigger stays disabled', () => {
     `launchServicioFantasma is invoked ${allRefs - defs} time(s) — the inactivity drill trigger is back; the owner disabled it`);
 });
 
+// ─── 6z. Correctness audit guards (owner-reported, Jul 2026) ────
+// Five owner reports in one week, all the same two defect classes:
+// multiple-correct options and false claims from regex heuristics.
+// These guards EXECUTE the real generators on the real carta.
+console.log('\nQuestion correctness (owner bugs 1-6, Jul 2026)');
+
+function _xFn(name) {
+  const i = html.indexOf('function ' + name + '(');
+  assert(i !== -1, `function ${name} not found`);
+  let k = html.indexOf('{', i), depth = 0;
+  for (;;) {
+    const ch = html[k];
+    if (ch === '{') depth++;
+    else if (ch === '}') { depth--; if (!depth) return html.slice(i, k + 1); }
+    k++;
+  }
+}
+function _xConst(name, closer) {
+  const i = html.indexOf('const ' + name + ' =');
+  assert(i !== -1, `const ${name} not found`);
+  const j = html.indexOf(closer, i);
+  return html.slice(i, j + closer.length);
+}
+let SIM = null;
+test('real generators extract and run (harness sanity)', () => {
+  const src = [
+    "let LANG='es'; const t=()=>''; let WINES=null;",
+    _xConst('DISHES_EN', '\n];'),
+    _xFn('getDish'),
+    _xConst('DISHES', '\n];'),
+    _xFn('_djShuffle'),
+    _xFn('_simPick'),
+    _xFn('_simExtractIngredients'),
+    _xFn('_simNonRemovableAllergens'),
+    _xFn('_scenarioModification'),
+    _xFn('_scenarioVegetarian'),
+    'return {DISHES, DISHES_EN, getDish, _simExtractIngredients, _simNonRemovableAllergens, _scenarioModification, _scenarioVegetarian};'
+  ].join('\n');
+  SIM = new Function(src)(); // eslint-disable-line no-new-func
+  assert(SIM.DISHES.length > 50, 'DISHES extraction failed');
+});
+
+test('bug 1: no Modification option may be a valid comanda of the dish (Tartar de solomillo)', () => {
+  // Owner screenshot: "¿Cómo se comanda?" offered BOTH "SIN MOSTAZA SAVORA"
+  // (correct) and "SIN EL PAN" — but the card also says "Comandar SIN PAN
+  // CARASAU", so two options were right. The collision sets are now seeded
+  // with EVERY real pair and word-overlapping fakes are excluded.
+  const tartar = SIM.DISHES.find(d => d.id === 16);
+  assert(tartar, 'Tartar de solomillo (id 16) missing');
+  for (let i = 0; i < 300; i++) {
+    const q = SIM._scenarioModification(tartar, tartar, false);
+    assert(q && q.correctIdx >= 0 && new Set(q.options).size === 4, 'malformed modification question');
+    q.options.forEach((opt, oi) => {
+      if (oi === q.correctIdx) return;
+      assert(!/\bPAN\b|CARASAU|MOSTAZA|SAVORA/i.test(opt),
+        `distractor overlaps a real comanda of the dish: "${opt}" (correct: "${q.options[q.correctIdx]}")`);
+    });
+  }
+});
+
+test('bug 2: vegetarian variant claim requires REAL variant data', () => {
+  // Owner: "Ravioli solo hay de pularda y de espinaca, no hay de boletus."
+  // The old heuristic matched the word "boletus" inside the FILLING and told
+  // vegetarians that a Boletus ravioli exists. The variant verdict now needs
+  // a `variants` array with a verifiably vegetarian flavour.
+  const ravioli = SIM.DISHES.find(d => d.id === 23);
+  const qv = SIM._scenarioVegetarian(ravioli, ravioli, false);
+  assert(qv, 'vegetarian scenario must fire for Ravioli de pularda');
+  assert(/^No — lleva productos animales/.test(qv.options[qv.correctIdx]),
+    `Ravioli de pularda must be a plain NO, got: "${qv.options[qv.correctIdx]}"`);
+  assert(!/Boletus/i.test(qv.explain), 'explain must not invent a Boletus ravioli');
+  const croq = SIM.DISHES.find(d => d.id === 1);
+  const qc = SIM._scenarioVegetarian(croq, croq, false);
+  assert(qc && /variantes|sabores/.test(qc.options[qc.correctIdx]),
+    'Croquetas Premium must keep the variant verdict (it HAS a Boletus variant)');
+  assert(/Boletus/.test(qc.explain), 'Croquetas explain must name Boletus from the variant DATA');
+});
+
+test('bug 3: no oil may ever be an ingredient question subject', () => {
+  // Owner: "La mayoría de platos están hechos con aceite de Oliva, no usamos
+  // otro aceite" — oil compounds (Aceite de oliva / olive oil / Aceite Dauro)
+  // slipped past the bare-word pantry filter and produced unanswerable
+  // questions ("¿cuál llevaba aceite de oliva?").
+  for (const d of [...SIM.DISHES, ...SIM.DISHES_EN]) {
+    for (const ing of SIM._simExtractIngredients(d)) {
+      assert(!/^aceite\b/i.test(ing) && !/\boil\b/i.test(ing),
+        `oil leaked as a question target: "${ing}" (${d.name})`);
+    }
+  }
+});
+
+test('bug 4: substitution vocabulary counts as retirability (ostras, tartar, drill)', () => {
+  // Owner: "El gluten se puede evitar. Se prepararía la selección de ostras
+  // sin la frita con panko." The card says "se puede sustituir" — posRe now
+  // recognizes preparation/substitution phrasings.
+  const ostras = SIM.DISHES.find(d => d.id === 10);
+  const nrO = SIM._simNonRemovableAllergens(ostras);
+  for (const a of ['Gluten', 'Huevos', 'Soja']) {
+    assert(!nrO.includes(a), `Selección de ostras: ${a} must be REMOVABLE (se puede sustituir / SIN PANKO)`);
+  }
+  const tartar = SIM.DISHES.find(d => d.id === 16);
+  assert(!SIM._simNonRemovableAllergens(tartar).includes('Apio'),
+    'Tartar de solomillo: Apio must be removable (puede prepararse sin mostaza savora)');
+  assert(/sustituir\|cambiar\|evitar/.test(html), 'posRe substitution vocabulary missing');
+  // The allergen drill must use the same clause-scoped parser — its old
+  // segment heuristic said "blocked" while the adapt option quoted the real
+  // comanda (two defensible answers on screen).
+  const drill = html.slice(html.indexOf('function buildAllergenQuestions'), html.indexOf('function startAllergenTest'));
+  assert(/_simNonRemovableAllergens\(dish\)/.test(drill), 'drill must classify retirability via _simNonRemovableAllergens');
+  assert(/_fakeBank = _comandaBank\.filter/.test(drill), "drill fake comanda must exclude the dish's own comandas");
+  assert(/_ownComandas/.test(drill), 'drill adapt verdict must quote a real comanda of THIS dish');
+});
+
+test('bug 5+6: recommendations exclude side-named twins; avoid/adapt pools are twin-safe and removability-aware', () => {
+  // Owner: "No está bien recomendar una guarnición como sustituto de un
+  // entrante o principal" — lunch/dinner copies of Guarniciones items pass
+  // the category filter, so recommendation pools filter by display name too.
+  // And a dish the guest "should avoid" must carry the allergen NON-removably
+  // (SharedAllergen once said Selección de ostras' gluten "no se puede
+  // retirar" — false premise) for EVERY dish sharing the display name (both
+  // tatakis are "Tuna tataki" in EN with different cards).
+  assert(/function _simIsSideNamed\(/.test(html), '_simIsSideNamed helper missing');
+  assert(/function _simDisplayTwins\(/.test(html) && /function _simTwinsAll\(/.test(html), 'display-twin helpers missing');
+  const sa = html.slice(html.indexOf('function _scenarioSafeAlternative'), html.indexOf('function _srShuffleOpts'));
+  assert(/!_simIsSideNamed\(d\)/.test(sa), 'SafeAlternative must exclude side-named dishes');
+  assert(/_simTwinsAll\(d, t=>t\.allergens && t\.allergens\.includes\(allergen\) && _simNonRemovableAllergens\(t\)\.includes\(allergen\)\)/.test(sa),
+    'SafeAlternative wrongs must be non-removable carriers for every twin');
+  const sh = html.slice(html.indexOf('function _scenarioSharedAllergen'), html.indexOf('function _scenarioWinePairing'));
+  assert(/_simNonRemovableAllergens\(t\)\.includes\(a\)/.test(sh) && /_simTwinsAll/.test(sh),
+    'SharedAllergen correct pool must be twin-safe non-removable carriers');
+  const wa = html.slice(html.indexOf('function _scenarioWhichAdaptable'), html.indexOf('function _srWaitMins'));
+  assert(/!_simIsSideNamed\(d\)/.test(wa) && /_simTwinsAll/.test(wa),
+    'WhichAdaptable must exclude side-named dishes and be twin-safe');
+  const iw = html.slice(html.indexOf('function _scenarioIngredientWhere'), html.indexOf('function _srGenerateQuiz'));
+  assert(/_simTwinsAll\(target/.test(iw) && /_simTwinsAll\(s/.test(iw), 'IngredientWhere must be twin-safe on target and clean pool');
+});
+
+test('exam reversed questions: identical passages / duplicate names cannot yield two corrects', () => {
+  // Data audit: embutidos/jamón/cecina share one history verbatim; lunch and
+  // dinner twins share ingredient lists; Ensalada verde exists twice. A
+  // distractor with the same answer text or display name as the correct dish
+  // made two options right in "which dish is this?" questions.
+  const ex = html.slice(html.indexOf('function startExam'), html.indexOf('function renderExamQuestion'));
+  assert(/_correctAns/.test(ex) && /_seenNames/.test(ex) && /_twNorm\(a\.replace/.test(ex),
+    'startExam reversed twin/duplicate guard missing');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

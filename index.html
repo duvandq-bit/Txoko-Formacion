@@ -3718,6 +3718,32 @@ function _simDedupeOptions(dishArr){
     return true;
   });
 }
+// ── Twin- and side-safety helpers (owner-audit, Jul 2026) ──
+// 1. Display-name twins: several dishes render with the SAME display name in
+//    a language (both tatakis are "Tuna tataki" in EN; Ensalada verde exists
+//    twice in ES) while their cards differ. An option label is only honest if
+//    the asserted property holds for EVERY dish behind that label.
+function _simDisplayTwins(d){
+  const n = _simDishName(d).toLowerCase();
+  return _simDishes().filter(x => _simDishName(x).toLowerCase() === n);
+}
+function _simTwinsAll(d, pred){ return _simDisplayTwins(d).every(pred); }
+// 2. Side-named dishes: the owner forbids recommending a guarnición as a
+//    substitute for a starter or main. Lunch/dinner copies of side items sit
+//    under other categories (Ensalada verde, Pimientos del padrón, Patatas
+//    cerilla…) and used to pass the category filter — exclude any dish whose
+//    display name (ES or EN) matches a Guarniciones y Salsas item from every
+//    recommendation-style pool.
+function _simIsSideNamed(d){
+  const _n = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s*\([^)]*\)\s*/g,' ').replace(/\s+/g,' ').trim();
+  const sides = new Set();
+  DISHES.forEach(x => {
+    if(x.archived || x.cat !== 'Guarniciones y Salsas') return;
+    sides.add(_n(x.name)); sides.add(_n(getDish(x).name));
+  });
+  return sides.has(_n(d.name)) || sides.has(_n(getDish(d).name));
+}
 function _simExtractIngredients(dish){
   if(!dish.ingredients) return [];
   // Split on commas, periods, colons; strip parentheses BEFORE filtering —
@@ -3729,6 +3755,13 @@ function _simExtractIngredients(dish){
     .filter(s=>s.length>2 && s.length<30
     && !/^(rebozado|tempura|espuma|salsa|refrito|aderezo|vinagreta|demi glace|polvo de)/i.test(s)
     && !/^(agua|water|sal|salt|aceite|oil|azúcar|sugar|pimienta|pepper|hielo|ice)$/i.test(s)
+    // Oils are ubiquitous house pantry (owner: "La mayoría de platos están
+    // hechos con aceite de Oliva, no usamos otro aceite") — the bare-word
+    // filter above missed compounds like "Aceite de oliva" / "Aceite Dauro" /
+    // "olive oil", which became absurd ask-targets ("¿cuál llevaba aceite de
+    // oliva?" is unanswerable: every dish does, whatever its card lists).
+    // No oil may ever be a question subject, fake target or distractor.
+    && !/^aceite\b/i.test(s) && !/\boil\b/i.test(s)
   );
 }
 
@@ -3905,7 +3938,13 @@ function _simNonRemovableAllergens(dish){
   // Negation MUST be checked before affirmation: "NO se puede retirar" contains
   // the substring "se puede retirar", which would otherwise be a false positive.
   const negRe = /\bNO\s+(?:se\s+pued\w+\s+)?retirar\w*|\bNO\s+retirables?\b|cannot\s+be\s+removed|can'?t\s+be\s+removed|\bNOT\s+removable\b|son\s+estructural\w*|are\s+structural|\bESTRUCTURAL\w*/i;
-  const posRe = /\bse\s+pued\w+\s+retirar\w*|\bpued\w+\s+retirarse|\bcan\s+be\s+removed|\bComandar\s+SIN|\bOrder\s+WITHOUT|\bsolicitar[^.]*\bSIN\b|\brequest[^.]*\bWITHOUT\b/i;
+  // Preparation and SUBSTITUTION phrasings are affirmative retirability too
+  // (owner-reported, Jul 2026): Tartar de solomillo "puede prepararse sin
+  // mostaza savora" (Apio/Mostaza), Selección de ostras "Gluten y Huevos en
+  // la ostra frita de panko — se puede sustituir por otra" ("el gluten se
+  // puede evitar" — owner). Missing them classified adaptable allergens as
+  // blocked across SharedAllergen/SafeAlternative/DeclaredAllergy/the drill.
+  const posRe = /\bse\s+pued\w+\s+retirar\w*|\bpued\w+\s+retirarse|\bcan\s+be\s+removed|\bComandar\s+SIN|\bOrder\s+WITHOUT|\bsolicitar[^.]*\bSIN\b|\brequest[^.]*\bWITHOUT\b|\bpued\w+\s+(?:prepararse|servirse|pedirse)\s+sin|\bcan\s+be\s+(?:prepared|served|ordered)\s+without|\bse\s+pued\w+\s+(?:sustituir|cambiar|evitar)|\bpued\w+\s+(?:sustituirse|cambiarse|evitarse)|\bcan\s+be\s+(?:substituted|swapped|replaced|avoided)/i;
   return dish.allergens.filter(a => {
     const aEsc = a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
     // Vegetarian-adaptation shortcut (applies globally, not clause-scoped).
@@ -3931,15 +3970,20 @@ function _scenarioSafeAlternative(dish, dd, _en){
   // Skip allergens that are trivially obvious from the dish name (e.g. "Lubina" + Pescado)
   const nonObvious = nonRemovable.filter(a => !_simAllergenObviousInName(dish, a));
   const allergen = nonObvious.length > 0 ? _simPick(nonObvious) : _simPick(nonRemovable);
-  // Alternatives: same category, no sides, free of the allergen
-  const alternatives = _simMainDishes().filter(d=>d.id!==dish.id && d.cat===dish.cat && (!d.allergens || !d.allergens.includes(allergen)));
+  // Alternatives: same category, no sides (nor side-NAMED lunch/dinner twins
+  // — owner: never recommend a guarnición as a substitute), free of the
+  // allergen for EVERY dish sharing the display name (EN twins differ).
+  const alternatives = _simMainDishes().filter(d=>d.id!==dish.id && d.cat===dish.cat
+    && !_simIsSideNamed(d)
+    && _simTwinsAll(d, t=>!t.allergens || !t.allergens.includes(allergen)));
   if(alternatives.length===0) return null;
-  // Wrong answers: other real dishes (no sides) that DO contain the allergen.
-  // Prefer distractors whose NAME does NOT reveal the allergen — they train
-  // composition knowledge, not pattern matching. If a Fish question shows
-  // "Lubina", "Tataki atún" and "Fish and chips" as distractors, the alumno
-  // picks the correct option from names alone and learns nothing.
-  const allWrongs = _simMainDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(allergen));
+  // Wrong answers: other real dishes (no sides) where the allergen is
+  // NON-removable per every twin's card. A wrong that merely CONTAINS the
+  // allergen but removable was a defensible second recommendation ("pídalo
+  // adaptado") — measured in 67% of questions before the fix.
+  const allWrongs = _simMainDishes().filter(d=>d.id!==dish.id
+    && !_simIsSideNamed(d)
+    && _simTwinsAll(d, t=>t.allergens && t.allergens.includes(allergen) && _simNonRemovableAllergens(t).includes(allergen)));
   if(allWrongs.length<2) return null;
   const wrongsNonObvious = allWrongs.filter(d => !_simAllergenObviousInName(d, allergen));
   const wrongsObvious    = allWrongs.filter(d =>  _simAllergenObviousInName(d, allergen));
@@ -4001,7 +4045,7 @@ function _scenarioVegetarian(dish, dd, _en){
   if(dish.cat==='Guarniciones y Salsas') return null;
   const isVegCat = dish.cat === 'Vegetariano';
   const text = (dish.ingredients||'') + ' ' + (dish.notes||'') + ' ' + dish.name;
-  const nameAnimal = /atún|tuna|pollo|chicken|cerdo|pork|jamón|ham|chorizo|wagyu|cecina|jerky|cordero|lamb|pulpo|octopus|langosta|lobster|salmón|salmon|bacalao|cod|mero|grouper|brisket|ternera|veal|ventresca|anchoa|anchov|ostras|oyster|chistorra|calamares|squid|langostino|prawn|embutido|charcuterie|costillas|ribs|carrillera|pluma|panceta|belly/i.test(dish.name);
+  const nameAnimal = /atún|tuna|pollo|chicken|cerdo|pork|jamón|ham|chorizo|wagyu|cecina|jerky|cordero|lamb|pulpo|octopus|langosta|lobster|salmón|salmon|bacalao|cod|mero|grouper|brisket|ternera|veal|ventresca|anchoa|anchov|ostras|oyster|chistorra|calamares|squid|langostino|prawn|embutido|charcuterie|costillas|ribs|carrillera|pluma|panceta|belly|alitas|wings|fish/i.test(dish.name);
   const hasAnimal = /pollo|ternera|atún|bacalao|cerdo|jamón|chorizo|panceta|morcilla|pulpo|anchoa|boqueron|wagyu|cecina|cordero|pescado|mero|mariscos|crustáceos|caldo de pollo|huesos de pollo|tocineta|bacon|langostino|txipiron/i.test(text);
   const notes = dish.notes || '';
 
@@ -4025,9 +4069,29 @@ function _scenarioVegetarian(dish, dd, _en){
   const _allCovered = _animalsInDish.length > 0
     && _animalsInDish.every(t => new RegExp('(sin|without)\\s+(?:[^.]*?\\s)?'+t, 'i').test(_notesNorm));
   const canBeVeg = explicitVegAdapt || _allCovered;
-  // Detect if the dish has a vegetarian VARIANT/flavour (e.g. croquettes with Boletus option)
-  const hasVegVariant = /boletus|opción vegetariana|vegetarian option/i.test(text)
-    || (/sabores|flavour|flavor/i.test(notes) && /boletus/i.test(text));
+  // Detect if the dish has a vegetarian VARIANT/flavour — from REAL variant
+  // data only. The old heuristic fired on the word "boletus" anywhere in the
+  // text: Ravioli de pularda carries boletus inside the FILLING and was
+  // falsely told "solo algunas variantes son aptas" naming a Boletus ravioli
+  // that does not exist (owner-reported). Now the claim requires the dish's
+  // `variants` array — a variant counts as vegetarian only if neither its
+  // name nor its own ingredient segment carries an animal product — or an
+  // explicit "opción vegetariana" marker in the NOTES. The flavour named in
+  // the explanation comes from the variant data, never hardcoded.
+  const _vegVarAnimalRe = /pollo|chicken|ternera|veal|atun|atún|tuna|bacalao|cerdo|pork|jamon|jamón|\bham\b|chorizo|panceta|morcilla|pulpo|octopus|anchoa|anchov|boqueron|wagyu|cecina|cordero|lamb|pescado|\bfish\b|\bmero\b|marisco|shellfish|crustaceo|crustáceo|prawn|shrimp|tocineta|bacon|langostino|txipiron|chipiron|calamar|squid|dry\s*age|foie|demi[\s-]?glace|\bcarne\b|\bbeef\b|\bcod\b|buey|solomillo|presa|secreto|\bpato\b|\bduck\b|codorniz|quail|conejo|rabbit|gamba|camar[oó]n|vieira|scallop|almeja|clam|mejill[oó]n|mussel|ostra|oyster|salm[oó]n|salmon|lubina|\bbass\b|merluza|hake|\brape\b|bonito|sardina|caballa|jurel|pularda|poularde|brisket|jarrete/i;
+  const vegVariantNames = [];
+  let nonVegVariantCount = 0;
+  if(Array.isArray(dish.variants) && dish.variants.length){
+    const _varSrc = ((_en ? dd.ingredients : dish.ingredients) || dish.ingredients || '');
+    dish.variants.forEach(v => {
+      const nameEsc = String(v.name||'').replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      const seg = ((_varSrc.match(new RegExp(nameEsc + '\\s*:\\s*([^.·]*)','i'))||[])[1]) || '';
+      if(_vegVarAnimalRe.test(v.name||'') || _vegVarAnimalRe.test(seg)) nonVegVariantCount++;
+      else vegVariantNames.push(v.name);
+    });
+  }
+  const hasVegVariant = (vegVariantNames.length > 0 && nonVegVariantCount > 0)
+    || /opción vegetariana|vegetarian option/i.test(notes);
 
   const qEs = `Huésped vegetariano: "¿${dd.name} es apto para mí?"`;
   const qEn = `Vegetarian guest: "Is ${dd.name} suitable for me?"`;
@@ -4048,8 +4112,13 @@ function _scenarioVegetarian(dish, dd, _en){
   let correct, explain;
   if(hasVegVariant && hasAnimal){
     correct = optVariant;
-    explain = _en ? `Not all varieties are vegetarian, but Boletus is. Advise the guest on which flavours are suitable.`
-                  : `No todas las variedades son vegetarianas, pero la de Boletus sí. Aconsejar al huésped los sabores aptos.`;
+    // Name the suitable flavour(s) only when the variant DATA provides them.
+    const _vegList = vegVariantNames.join(', ');
+    explain = _vegList
+      ? (_en ? `Not all varieties are vegetarian — ${_vegList} is. Advise the guest on the suitable flavours.`
+             : `No todas las variedades son vegetarianas — ${_vegList} sí lo es. Aconsejar al huésped los sabores aptos.`)
+      : (_en ? `Per its card, only some variants are vegetarian. Notes: ${notes.substring(0,120)}...`
+             : `Según su ficha, solo algunas variantes son vegetarianas. Notas: ${notes.substring(0,120)}...`);
   } else if(canBeVeg && hasAnimal){
     correct = optAdapt;
     explain = _en ? `Contains animal products but can be adapted. Notes: ${notes.substring(0,120)}...`
@@ -4136,6 +4205,9 @@ function _scenarioModification(dish, dd, _en){
     if(!hint && allHints.length > 0){
       hint = allHints[allHints.length - 1][1].trim().replace(/^⚠\s*/, '');
     }
+    // Card wording like "Gluten SOLO en el pan carasau" leaked "soy alérgico
+    // a gluten solo" into the guest's voice — strip the qualifier.
+    hint = hint.replace(/\s+(SOLO|ONLY)$/i, '');
     pairs.push({ cmd, hint });
   }
   if(pairs.length === 0) return null;
@@ -4185,8 +4257,14 @@ function _scenarioModification(dish, dd, _en){
   );
   const fakesPool = [];
   ingList.forEach(ing => { fakesPool.push(_prefix + ing.toUpperCase()); });
-  // Also add the other "Comandar SIN" from this dish as plausible distractors
-  pairs.filter(p=>p.cmd.toUpperCase()!==mod.toUpperCase()).forEach(p=>{ fakesPool.push(_prefix + p.cmd.toUpperCase()); });
+  // NEVER add the dish's other real "Comandar SIN" pairs as distractors:
+  // Tartar de solomillo has TWO real comandas (SIN MOSTAZA SAVORA and SIN PAN
+  // CARASAU) and in the generic question form ("una modificación por
+  // alergia") ANY real comanda of the dish is a correct answer — the owner
+  // caught a question with two right options. The same applies to the
+  // specific-hint form: hints can be vague ("gluten") and several pairs may
+  // target overlapping components, so no option other than the correct may
+  // be a valid modification of the dish in EITHER form.
   // Generic fallbacks
   (_en ? ['THE SAUCE','THE GARNISH','THE DRESSING','THE BREAD','THE CHEESE','THE CREAM']
        : ['LA SALSA','LA GUARNICIÓN','EL ADEREZO','EL PAN','EL QUESO','LA CREMA']).forEach(f=>fakesPool.push(_prefix+f));
@@ -4202,10 +4280,15 @@ function _scenarioModification(dish, dd, _en){
   // Prevents generic-vs-specific duplicates like generic fallback "EL PAN" vs ingredient "PAN TOSTADO".
   const wordSet = k => new Set(k.split(' ').filter(Boolean));
   const isSubset = (a, b) => { for(const w of a) if(!b.has(w)) return false; return a.size > 0; };
-  const correctKey = normKey(correctLabel);
-  const correctSet = wordSet(correctKey);
-  const seenKeys = [correctKey];
-  const seenSets = [correctSet];
+  // Seed the collision sets with EVERY real comanda of the dish (not just the
+  // chosen correct one) so generic fallbacks like "SIN EL PAN" can never
+  // shadow a real "SIN PAN CARASAU" (word-subset), and no ingredient-derived
+  // fake that shares a content word with any real comanda survives either.
+  const pairKeys = pairs.map(p => normKey(_prefix + p.cmd.toUpperCase()));
+  const pairSets = pairKeys.map(k => wordSet(k));
+  const seenKeys = [...pairKeys];
+  const seenSets = pairSets.map(s => new Set(s));
+  const overlapsRealPair = set => pairSets.some(ps => { for(const w of set) if(ps.has(w)) return true; return false; });
   const collides = (k, set) => {
     if(!k) return true;
     for(let i = 0; i < seenKeys.length; i++){
@@ -4218,7 +4301,7 @@ function _scenarioModification(dish, dd, _en){
   for(const f of _djShuffle(fakesPool)){
     const k = normKey(f);
     const set = wordSet(k);
-    if(collides(k, set)) continue;
+    if(collides(k, set) || overlapsRealPair(set)) continue;
     seenKeys.push(k);
     seenSets.push(set);
     uniqueFakes.push(f);
@@ -4247,9 +4330,15 @@ function _scenarioSharedAllergen(dish, dd, _en){
   // Prefer allergens NOT trivially obvious from the dish name
   const nonObvious = nonRemovable.filter(al => !_simAllergenObviousInName(dish, al));
   const a = nonObvious.length > 0 ? _simPick(nonObvious) : _simPick(nonRemovable);
-  // Use only real dishes (no sides) as options
-  const same = _simMainDishes().filter(d=>d.id!==dish.id && d.allergens && d.allergens.includes(a));
-  const diff = _simMainDishes().filter(d=>d.id!==dish.id && d.allergens && !d.allergens.includes(a));
+  // Use only real dishes (no sides) as options. The "avoid" dish must carry
+  // the allergen NON-removably per EVERY twin's card — telling a guest to
+  // avoid an adaptable dish ("se puede pedir sin X") taught something false
+  // (measured in 21% of questions before the fix). Wrongs must be clean of
+  // the allergen for every display-name twin.
+  const same = _simMainDishes().filter(d=>d.id!==dish.id
+    && _simTwinsAll(d, t=>t.allergens && t.allergens.includes(a) && _simNonRemovableAllergens(t).includes(a)));
+  const diff = _simMainDishes().filter(d=>d.id!==dish.id
+    && _simTwinsAll(d, t=>t.allergens && !t.allergens.includes(a)));
   if(same.length===0 || diff.length<3) return null;
   const correct = _simPick(same);
   const wrongs = _djShuffle(diff).slice(0,3);
@@ -4271,7 +4360,7 @@ function _scenarioSharedAllergen(dish, dd, _en){
     q:_en?qEn:qEs,
     options: opts.map(d=>_simDishName(d)),
     correctIdx: opts.indexOf(correct),
-    explain: _en?`${_simDishName(correct)} also contains ${aLbl}.`:`${_simDishName(correct)} también contiene ${aLbl}.`,
+    explain: _en?`${_simDishName(correct)} also contains ${aLbl} and it cannot be removed either.`:`${_simDishName(correct)} también contiene ${aLbl} y tampoco se puede retirar.`,
     type:'allergen'
   };
 }
@@ -4506,11 +4595,14 @@ function _scenarioWhichAdaptable(dish, dd, _en){
   // names it, which would bias guessing toward/away from it. Compare by
   // display name too — lunch/dinner twins share names (e.g. Ensalada verde).
   const _curName = _simDishName(dish).toLowerCase();
-  const mains = _simMainDishes().filter(d=>d.id!==dish.id && _simDishName(d).toLowerCase()!==_curName);
+  // "¿Cuál puedes ofrecerle adaptado?" is an OFFER — side-named lunch/dinner
+  // twins are excluded (owner: never offer a guarnición as a substitute) and
+  // each verdict must hold for every dish sharing the display name.
+  const mains = _simMainDishes().filter(d=>d.id!==dish.id && _simDishName(d).toLowerCase()!==_curName
+    && !_simIsSideNamed(d));
   for(const a of _djShuffle([...dish.allergens])){
-    const withA = mains.filter(d=>d.allergens && d.allergens.includes(a));
-    const adaptable = withA.filter(d=>!_simNonRemovableAllergens(d).includes(a));
-    const blocked = withA.filter(d=>_simNonRemovableAllergens(d).includes(a));
+    const adaptable = mains.filter(d=>_simTwinsAll(d, t=>t.allergens && t.allergens.includes(a) && !_simNonRemovableAllergens(t).includes(a)));
+    const blocked = mains.filter(d=>_simTwinsAll(d, t=>t.allergens && t.allergens.includes(a) && _simNonRemovableAllergens(t).includes(a)));
     if(adaptable.length===0 || blocked.length<3) continue;
     const correct = _simPick(adaptable);
     // Correct-first dedupe so a same-named wrong can't evict it; shuffle after
@@ -4602,10 +4694,13 @@ function _scenarioIngredientWhere(dish, dd, _en){
     const ings = _simExtractIngredients(tSrc).filter(i => i.length > 3 && !_simIngredientTrivialInName(i, tSrc.name));
     const pool = [dish, ...sibs.filter(s=>s.id!==target.id)];
     for(const ing of _djShuffle(ings).slice(0,4)){
-      const clean = pool.filter(s => {
-        const ls = localize(s);
+      // Twin guard: the hidden answer and every clean distractor must satisfy
+      // their predicate for ALL dishes sharing the display name (EN twins).
+      if(!_simTwinsAll(target, t => _simHasIngredient(localize(t), ing))) continue;
+      const clean = pool.filter(s => _simTwinsAll(s, t => {
+        const ls = localize(t);
         return !_simHasIngredient(ls, ing) && !_simIngredientOverlapsDish(ing, ls) && !_simIngredientTrivialInName(ing, ls.name);
-      });
+      }));
       if(clean.length < 3) continue;
       let opts = _simDedupeOptions([target, ..._djShuffle(clean).slice(0,3)]);
       if(opts.length < 4){
@@ -14991,8 +15086,21 @@ function startExam(){
     // shown with all candidates' name tokens masked and the options are dish
     // names. Allergens stay direct — measured 0% echo (shared vocabulary).
     if(topic.key==='ingredients' || topic.key==='history'){
+      // Twin guard (owner-audit): several dishes share one passage verbatim
+      // (embutidos/jamón/cecina share a history; lunch/dinner twins share
+      // ingredients) or one display name — a distractor with the same answer
+      // text or the same name as the correct dish makes TWO options right.
+      const _twNorm = s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+      const _correctAns = _twNorm(correct);
+      const _seenNames = new Set([_twNorm(getDish(d).name)]);
       const namePool=_lqaShuffle(_pickDistractorPool(d)).filter(o=>{
-        const a=(topic.a(o)||'').trim(); return a && a!=='—' && a!==noHist;
+        const a=(topic.a(o)||'').trim();
+        if(!a || a==='—' || a===noHist) return false;
+        if(_twNorm(a.replace(/\.+$/,'')) === _correctAns) return false;
+        const nm = _twNorm(getDish(o).name);
+        if(_seenNames.has(nm)) return false;
+        _seenNames.add(nm);
+        return true;
       }).slice(0,3);
       if(namePool.length<3) continue;
       const candidates=[d,...namePool];
@@ -16543,50 +16651,20 @@ function buildAllergenQuestions(cat) {
       : allergens[Math.floor(Math.random() * allergens.length)]);
     const enAllergen = ALLERGEN_ES_TO_EN[declaredAllergen] || declaredAllergen;
 
-    // Check if notes explicitly say this allergen can be removed (strict check)
-    const notesLower = (dish.notes || '').toLowerCase();
+    // Retirability comes from the same clause-scoped parser used across
+    // Repaso Inteligente (_simNonRemovableAllergens). The drill's old ad-hoc
+    // segment heuristic split on [·—] only and mis-read real cards (owner-
+    // audit, Jul 2026): Selección de ostras — "Gluten y Huevos en la ostra
+    // frita de panko — se puede sustituir por otra… Comandar SIN PANKO" was
+    // classified blocked; Tartar de solomillo — Apio removable via SIN
+    // MOSTAZA SAVORA was classified blocked while the adapt option quoted
+    // that very comanda (two defensible answers on screen).
     const allergenLower = declaredAllergen.toLowerCase();
     const allergenSlice = allergenLower.slice(0,5);
     const enAllergenSlice = enAllergen.toLowerCase().slice(0,5);
-
-    // Find the sentence/segment mentioning THIS specific allergen
-    const noteSegments = notesLower.split(/[·—]/);
-    const relevantSegment = noteSegments.find(seg =>
-      seg.includes(allergenSlice) || seg.includes(enAllergenSlice)
-    ) || '';
-
-    // Check if this allergen is mentioned in the notes at all
-    const allergenMentioned = notesLower.includes(allergenSlice) || notesLower.includes(enAllergenSlice);
-
-    // Allergens that are ALWAYS in the dough/base and can never be removed
-    const baseAllergens = ['huevos','lácteos','lacteos','gluten','eggs','dairy'];
-    const isBaseAllergen = baseAllergens.some(b => allergenSlice.includes(b.slice(0,5)) || b.includes(allergenSlice));
-
-    // If notes say "en la masa" + this allergen, it's not removable
-    const inMasa = notesLower.includes('en la masa') && allergenMentioned;
-
-    // If the segment says "no se puede(n) retirar" or "not removable", it's NOT removable
-    const isExplicitlyNotRemovable = relevantSegment.includes('no se pueden retirar') ||
-      relevantSegment.includes('no se puede retirar') ||
-      relevantSegment.includes('not removable') ||
-      relevantSegment.includes('no puede retirarse') ||
-      relevantSegment.includes('cannot be removed') ||
-      relevantSegment.includes('no se puede servir') ||
-      inMasa;
-
-    // Check comanda/removal notes ONLY in the segment for THIS allergen, not all notes
-    const hasComandaNote = relevantSegment.includes('comandar sin') || relevantSegment.includes('comandar con pan sin');
-    const hasTraditionalNote = (
-      relevantSegment.includes('puede prepararse sin') ||
-      relevantSegment.includes('puede servirse sin') ||
-      relevantSegment.includes('puede evitarse') ||
-      relevantSegment.includes('se puede retirar') ||
-      relevantSegment.includes('can be prepared without') ||
-      relevantSegment.includes('can be served without')
-    );
-
-    const isRemovable = !isExplicitlyNotRemovable &&
-      dish.notes && (hasComandaNote || hasTraditionalNote) && allergenMentioned;
+    const _rawDeclared = isAbsent ? null
+      : (allergens.find(a => normalizeAllergen(a) === declaredAllergen) || declaredAllergen);
+    const isRemovable = !isAbsent && !_simNonRemovableAllergens(dish).includes(_rawDeclared);
 
     // Build comanda instruction — find the one specific to this allergen
     let comandaInstr = '';
@@ -16613,10 +16691,27 @@ function buildAllergenQuestions(cat) {
     // The three action-frames — present in EVERY question, truth varies by dish
     const state = isAbsent ? 'absent' : (isRemovable ? 'adapt' : 'blocked');
     const _instrReal = (comandaInstr || '').trim().toLowerCase();
-    const _instrFake = _comandaBank.length
-      ? _comandaBank[Math.floor(Math.random() * _comandaBank.length)]
+    // The fake comanda shown when "adapt" is NOT the correct answer must not
+    // be one of THIS dish's own real comandas — quoting a real adaptation of
+    // the dish next to a "cannot be served" verdict reads as a second
+    // plausible answer (owner-audit, Jul 2026).
+    const _dishNotesLower = (dish.notes || '').toLowerCase();
+    const _fakeBank = _comandaBank.filter(c => !_dishNotesLower.includes(c));
+    const _instrFake = _fakeBank.length
+      ? _fakeBank[Math.floor(Math.random() * _fakeBank.length)]
       : (LANG === 'en' ? 'without the sauce' : 'sin la salsa');
-    const _instr = (state === 'adapt' && _instrReal) ? _instrReal : _instrFake;
+    // When the verdict is "adapt" the quoted comanda must be REAL for this
+    // dish. If the allergen-scoped extraction found nothing (e.g. Ensalada
+    // Niçoise: Pescado is removable via the vegetarian shortcut but the card
+    // says "Comandar SIN ATÚN Y SIN HUEVO" without the word "pescado"), fall
+    // back to the dish's OWN first comanda — never to another dish's (the
+    // correct option once read "comandar sin americana" on the Niçoise).
+    const _ownComandas = ((dish.notes || '').match(/Comandar ([^.·—]+)/gi) || [])
+      .map(x => x.replace(/^Comandar /i, '').trim().toLowerCase())
+      .filter(x => x.length > 3 && x.length < 60);
+    const _instr = (state === 'adapt')
+      ? (_instrReal || _ownComandas[0] || _instrFake)
+      : _instrFake;
     const optServe = LANG === 'en'
       ? `Serve it as is — this dish does not contain ${enAllergen}.`
       : `Se puede servir tal cual — este plato no contiene ${declaredAllergen}.`;
