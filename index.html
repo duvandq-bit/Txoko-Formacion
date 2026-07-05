@@ -7089,6 +7089,7 @@ document.addEventListener('click', function(e){
 // Read-only over business data — indexes names/allergens, never mutates them.
 const _GS_ICON_DISH = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/></svg>';
 const _GS_ICON_WINE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 3h8l-1 7a3 3 0 01-6 0L8 3z"/><path d="M12 13v6"/><path d="M8.5 21h7"/></svg>';
+const _GS_ICON_LQA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>';
 let _gsDishIdx = null, _gsWineIdx = null;
 function _gsNorm(s){ return (s==null?'':String(s)).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function _gsDishIndex(){
@@ -7109,6 +7110,17 @@ function _gsWineIndex(){
   _gsWineIdx = WINES.map(w=>({ type:'wine', id:w.id, name:w.name, wtype:w.type||'', region:w.region||'',
     search:_gsNorm([w.name, w.type, w.grapes, w.region, w.origin].join(' ')) }));
   return _gsWineIdx;
+}
+let _gsLqaIdx = null;
+function _gsLqaIndex(){
+  if(_gsLqaIdx) return _gsLqaIdx;
+  if(typeof LQA_SITUATIONS==='undefined' || !Array.isArray(LQA_SITUATIONS)) return [];
+  const catTitle = id => { const c=(typeof LQA_CATEGORIES!=='undefined'?LQA_CATEGORIES:[]).find(x=>x.id===id); return c ? (LANG==='en'?(c.title_en||c.title):c.title) : (id||''); };
+  _gsLqaIdx = LQA_SITUATIONS.map(s=>({ type:'lqasit', id:s.id,
+    name:(LANG==='en' && s.scn_en ? s.scn_en : s.scn) || '',
+    cat:catTitle(s.cat),
+    search:_gsNorm([s.scn, s.scn_en, s.q, s.q_en, s.expl, s.expl_en, s.cat, catTitle(s.cat)].join(' ')) }));
+  return _gsLqaIdx;
 }
 function _gsMark(name, tokens){
   const safe = escapeHtml(name||'');
@@ -7140,7 +7152,9 @@ function _gsRender(raw){
     .sort((a,b)=>_gsRank(en?a.nameEn:a.name,first)-_gsRank(en?b.nameEn:b.name,first) || (a.name>b.name?1:-1)).slice(0,40);
   const wines = _gsWineIndex().filter(it=>match(it.search))
     .sort((a,b)=>_gsRank(a.name,first)-_gsRank(b.name,first) || (a.name>b.name?1:-1)).slice(0,40);
-  if(!dishes.length && !wines.length){
+  const lqas = _gsLqaIndex().filter(it=>match(it.search))
+    .sort((a,b)=>_gsRank(a.name,first)-_gsRank(b.name,first)).slice(0,25);
+  if(!dishes.length && !wines.length && !lqas.length){
     box.innerHTML = '<div class="gs-empty"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div>'
       + (en?'No matches for':'Sin resultados para') + ' “' + escapeHtml(raw.trim()) + '”</div></div>';
     return;
@@ -7168,6 +7182,16 @@ function _gsRender(raw){
         + '<span class="gs-hit-go">›</span></button>';
     }).join('');
   }
+  if(lqas.length){
+    html += '<div class="gs-group-lbl">'+(en?'LQA situations':'Situaciones LQA')+' · '+lqas.length+'</div>';
+    html += lqas.map(it=>{
+      const nm = it.name.length>84 ? it.name.slice(0,84)+'…' : it.name;
+      return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'lqasit\',\''+escapeHtml(String(it.id))+'\')">'
+        + '<span class="gs-hit-ic">'+_GS_ICON_LQA+'</span>'
+        + '<span class="gs-hit-body"><span class="gs-hit-name" style="white-space:normal;font-size:.8rem;line-height:1.3">'+_gsMark(nm,tokens)+'</span><span class="gs-hit-sub">'+escapeHtml(it.cat)+'</span></span>'
+        + '<span class="gs-hit-go">›</span></button>';
+    }).join('');
+  }
   box.innerHTML = html;
 }
 async function openGlobalSearch(){
@@ -7180,8 +7204,8 @@ async function openGlobalSearch(){
   const inp = document.getElementById('gsInput');
   if(inp){ inp.value=''; setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 60); }
   _gsRender('');
-  // Wines are lazy-loaded; make sure the cellar + sensory content are present
-  // so wine results can open their detail view. Dishes are always in memory.
+  // Wines and LQA situations are lazy-loaded; make sure they're present so
+  // their results can render. Dishes are always in memory.
   try{
     if((typeof WINES==='undefined' || !WINES) && typeof loadLazyData==='function'){
       const w = await loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos', { silent:true });
@@ -7190,6 +7214,13 @@ async function openGlobalSearch(){
     }
     if(typeof loadVinosContent==='function') await loadVinosContent();
   }catch(e){ /* wines just won't appear in results; dishes still work */ }
+  try{
+    if((typeof LQA_SITUATIONS==='undefined' || !LQA_SITUATIONS) && typeof loadLazyData==='function'){
+      const l = await loadLazyData('data/lqa-situations.json', LANG==='en'?'LQA situations':'situaciones LQA', { silent:true });
+      if(l && (typeof LQA_SITUATIONS==='undefined' || !LQA_SITUATIONS)) LQA_SITUATIONS = l;
+      _gsLqaIdx = null;
+    }
+  }catch(e){ /* LQA just won't appear in results */ }
   if(ov.classList.contains('open') && inp) _gsRender(inp.value);
 }
 function closeGlobalSearch(){
@@ -7204,8 +7235,54 @@ function _gsGo(type, id){
     try{
       if(type==='dish'){ if(typeof launchDishJourney==='function') launchDishJourney(id); }
       else if(type==='wine'){ if(typeof _showWineDetail==='function') _showWineDetail(id, (typeof WINES!=='undefined'&&WINES?WINES.map(w=>w.id):null), null); }
+      else if(type==='lqasit'){ _gsShowLqaSituation(id); }
     }catch(e){ console.error('search deep-link failed', e); }
   }, 140);
+}
+
+// Read-only LQA situation reference card, opened from search. Shows the
+// scenario, the options with the correct one marked, and the explanation —
+// a mid-service consultation view. It never touches quiz state and awards
+// no XP, so LQA gamification is unaffected.
+function _gsShowLqaSituation(id){
+  const s = (typeof LQA_SITUATIONS!=='undefined' && LQA_SITUATIONS ? LQA_SITUATIONS : []).find(x=>String(x.id)===String(id));
+  if(!s) return;
+  const _en = LANG==='en';
+  const cat = (typeof LQA_CATEGORIES!=='undefined'?LQA_CATEGORIES:[]).find(c=>c.id===s.cat);
+  const catTitle = cat ? (_en?(cat.title_en||cat.title):cat.title) : (s.cat||'');
+  const catColor = (cat && cat.color) || '#4888a0';
+  const opts = (_en && s.opts_en ? s.opts_en : s.opts) || [];
+  const corr = parseInt(s.corr,10);
+  const old = document.getElementById('gsLqaOverlay');
+  if(old) old.remove();
+  const ov = document.createElement('div');
+  ov.id = 'gsLqaOverlay';
+  ov.setAttribute('role','dialog');
+  ov.setAttribute('aria-modal','true');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:10060;background:rgba(12,20,14,.6);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;';
+  ov.innerHTML = `
+    <div style="background:#faf6ee;border-radius:20px 20px 0 0;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1.1rem 1.1rem calc(1.2rem + env(safe-area-inset-bottom,0px));box-shadow:0 -14px 44px rgba(28,42,34,.4)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.8rem">
+        <span style="font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:${catColor};background:${catColor}18;border:1px solid ${catColor}44;border-radius:999px;padding:.3rem .7rem">${escapeHtml(catTitle)}${s.real?' · '+(_en?'Real case':'Caso real'):''}</span>
+        <button type="button" onclick="document.getElementById('gsLqaOverlay').remove()" aria-label="${_en?'Close':'Cerrar'}" style="flex-shrink:0;min-width:40px;min-height:40px;border:1px solid rgba(196,154,60,.25);border-radius:10px;background:transparent;color:rgba(28,42,34,.6);font-size:1rem;cursor:pointer">✕</button>
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.08rem;line-height:1.45;color:rgba(28,42,34,.8);margin-bottom:.8rem">${escapeHtml((_en && s.scn_en ? s.scn_en : s.scn)||'')}</div>
+      <div style="font-family:'Cinzel',serif;font-weight:600;font-size:.92rem;color:var(--gold-deep);margin-bottom:.6rem">${escapeHtml((_en && s.q_en ? s.q_en : s.q)||'')}</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.9rem">
+        ${opts.map((o,i)=>{
+          const ok = i===corr;
+          return '<div style="display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .75rem;border-radius:11px;font-size:.82rem;line-height:1.4;'
+            + (ok ? 'background:rgba(45,106,62,.08);border:1px solid rgba(45,106,62,.3);color:var(--green-deep);font-weight:600'
+                  : 'background:#f4ede2;border:1px solid rgba(196,154,60,.12);color:rgba(28,42,34,.6)')
+            + '">'+(ok?'<span aria-hidden="true" style="flex-shrink:0;font-weight:700">✓</span>':'<span aria-hidden="true" style="flex-shrink:0;opacity:.35">○</span>')
+            + '<span>'+escapeHtml(o)+'</span></div>';
+        }).join('')}
+      </div>
+      <div style="border-left:3px solid ${catColor};padding:.6rem .8rem;background:#f4ede2;border-radius:0 11px 11px 0;font-size:.8rem;line-height:1.5;color:rgba(28,42,34,.75);margin-bottom:1rem">${escapeHtml((_en && s.expl_en ? s.expl_en : s.expl)||'')}</div>
+      <button type="button" onclick="document.getElementById('gsLqaOverlay').remove();showTab('protocolo')" style="display:block;width:100%;min-height:48px;border:1px solid rgba(196,154,60,.35);border-radius:12px;background:transparent;cursor:pointer;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)">${_en?'Practice in LQA →':'Practicar en LQA →'}</button>
+    </div>`;
+  ov.addEventListener('click', e=>{ if(e.target===ov) ov.remove(); });
+  document.body.appendChild(ov);
 }
 
 function renderAprender(){
