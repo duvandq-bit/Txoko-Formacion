@@ -3730,7 +3730,12 @@ function _simExtractIngredients(dish){
 // ── Scenario builders: return {q, options, correctIdx, explain, type} or null
 function _scenarioDeclaredAllergy(dish, dd, _en){
   const profileKeys = Object.keys(_SIM_PROFILES).filter(k=>_SIM_PROFILES[k].allergen);
-  const key = _simPick(profileKeys);
+  // Bias the declared allergy toward allergens this dish actually carries —
+  // a uniformly random pick almost never hits the dish, making "yes, safe as
+  // plated" correct 77% of the time (measured). ~55/45 keeps all three
+  // verdicts live.
+  const dishProfileKeys = profileKeys.filter(k=>dish.allergens && dish.allergens.includes(_SIM_PROFILES[k].allergen));
+  const key = (dishProfileKeys.length > 0 && Math.random() < 0.55) ? _simPick(dishProfileKeys) : _simPick(profileKeys);
   const p = _SIM_PROFILES[key];
   const hasIt = dish.allergens && dish.allergens.includes(p.allergen);
   const intro = _simPick(_en?p.intro_en:p.intro_es);
@@ -3739,27 +3744,36 @@ function _scenarioDeclaredAllergy(dish, dd, _en){
   // Check if this SPECIFIC allergen is removable from the dish
   const nonRemovable = _simNonRemovableAllergens(dish);
   const modifiable = hasIt && !nonRemovable.includes(p.allergen);
-  let correctIdx, opts;
-  if(modifiable){
-    opts = _en ? ['Yes, exactly as plated','Yes, but we must modify it (flag to kitchen)','No, it\'s not possible for you','I\'ll ask the chef']
-               : ['Sí, tal como se emplata','Sí, pero hay que modificarlo (avisar a cocina)','No, no es posible para usted','Consulto con el chef'];
-    correctIdx = 1;
-  } else if(hasIt){
-    opts = _en ? ['Yes, no problem','No, it contains that allergen','Only without the sauce','I\'ll check with the kitchen']
-               : ['Sí, sin problema','No, contiene ese alérgeno','Solo sin la salsa','Consulto con cocina'];
-    correctIdx = 1;
-  } else {
-    opts = _en ? ['Yes, perfectly safe','No, it contains that allergen','Only under supervision','I need to check']
-               : ['Sí, es totalmente seguro','No, contiene ese alérgeno','Solo bajo supervisión','Tengo que consultar'];
-    correctIdx = 0;
-  }
+  // v2 unified frames. The old version used a DIFFERENT option set per truth
+  // state (measured: the set fingerprinted the answer in 100% of questions —
+  // "tal como se emplata" in the list meant "modificarlo" was correct, etc.).
+  // Now the SAME three real courses of action appear in every question and
+  // only the dish decides which is true, plus one rotating protocol trap.
+  const optYes = _en ? 'Yes — it can be served as plated, it does not contain that allergen'
+                     : 'Sí — se puede servir tal como se emplata, no contiene ese alérgeno';
+  const optMod = _en ? 'Yes, but it must be adapted — flag the modification to the kitchen'
+                     : 'Sí, pero hay que adaptarlo — comandar la modificación a cocina';
+  const optNo  = _en ? 'No — it contains that allergen and it cannot be removed'
+                     : 'No — contiene ese alérgeno y no se puede retirar';
+  const trapBank = _en ? [
+    'Remove the visible ingredient at the table before serving',
+    'A small amount will not trigger a reaction',
+    'Yes, as long as the kitchen cleans the station first',
+    'Ask how severe the allergy is before deciding'
+  ] : [
+    'Retirar el ingrediente visible en sala antes de servirlo',
+    'En pequeña cantidad no provoca reacción',
+    'Sí, siempre que cocina limpie la estación primero',
+    'Preguntar cómo de grave es la alergia antes de decidir'
+  ];
+  const correct = modifiable ? optMod : (hasIt ? optNo : optYes);
+  const options = _djShuffle([optYes, optMod, optNo, _simPick(trapBank)]);
   const aLbl = _simAllergenLabel(p.allergen, _en);
   let explain;
   if(modifiable) explain = _en ? `Contains ${aLbl} but can be modified. Notes: ${dish.notes}` : `Contiene ${aLbl} pero es modificable. Notas: ${dish.notes}`;
   else if(hasIt) explain = _en ? `${dd.name} contains ${aLbl} — not suitable.` : `${dd.name} contiene ${aLbl} — no es apto.`;
   else explain = _en ? `${dd.name} is free of ${aLbl}.` : `${dd.name} no contiene ${aLbl}.`;
-  const s = _srShuffleOpts(opts, correctIdx);
-  return { q:_en?qEn:qEs, options:s.options, correctIdx:s.correctIdx, explain, type:'allergen' };
+  return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'allergen' };
 }
 
 // Returns true when `ingredient` is already revealed by the dish name
@@ -3936,8 +3950,11 @@ function _scenarioSafeAlternative(dish, dd, _en){
   }
   const correct = _simPick(alternatives);
   const wrongSample = _djShuffle(wrongsPool).slice(0,3);
-  // Deduplicate options by name (avoid "Tartar de tomate y queso" + "Tartar de tomate y queso stracciatella")
-  let opts = _simDedupeOptions(_djShuffle([correct, ...wrongSample]));
+  // Deduplicate options by name (avoid "Tartar de tomate y queso" + "Tartar de tomate y queso stracciatella").
+  // The correct dish goes FIRST into the dedupe (which keeps first occurrence)
+  // so a same-named wrong can never evict it (that produced correctIdx = -1);
+  // the real shuffle happens after.
+  let opts = _simDedupeOptions([correct, ...wrongSample]);
   // If dedup removed too many, refill — preferring non-obvious first, then obvious as last resort
   if(opts.length < 4){
     const nonObviousExtras = wrongsNonObvious.filter(d=>!opts.includes(d));
@@ -3946,9 +3963,10 @@ function _scenarioSafeAlternative(dish, dd, _en){
       const obviousExtras = wrongsObvious.filter(d=>!opts.includes(d));
       extras = [...extras, ..._djShuffle(obviousExtras).slice(0, (4 - opts.length) - extras.length)];
     }
-    opts = _simDedupeOptions(_djShuffle([...opts, ...extras]));
+    opts = _simDedupeOptions([...opts, ...extras]);
   }
   if(opts.length < 4) return null;
+  opts = _djShuffle(opts);
   const aLbl = _simAllergenLabel(allergen, _en);
   const catLabel = catLocal ? catLocal(dish.cat) : dish.cat;
   const dishPhrase = _simDishPhraseForAllergen(dish, allergen, _en);
@@ -4008,53 +4026,72 @@ function _scenarioVegetarian(dish, dd, _en){
 
   const qEs = `Huésped vegetariano: "¿${dd.name} es apto para mí?"`;
   const qEn = `Vegetarian guest: "Is ${dd.name} suitable for me?"`;
-  let opts, correctIdx, explain;
 
+  // v2 unified frames. The old version used a distinct option set per truth
+  // state ("Solo sin la salsa" vs "Solo sin la guarnición" alone revealed
+  // yes/no — measured 100% set-tell) and the correct option even named the
+  // vegetarian flavour ("ej. Boletus"). Now the SAME four real verdicts appear
+  // in every question; the flavour is revealed only in the explanation.
+  const optAsIs    = _en ? 'Yes — suitable exactly as served'
+                         : 'Sí — es apto tal como se sirve';
+  const optAdapt   = _en ? 'It can be adapted — flag the modification to the kitchen'
+                         : 'Se puede adaptar — comandar la modificación a cocina';
+  const optNoVeg   = _en ? 'No — it carries animal products that cannot be removed'
+                         : 'No — lleva productos animales que no se pueden retirar';
+  const optVariant = _en ? 'Only some variants or flavours of this dish are suitable'
+                         : 'Solo algunas variantes o sabores del plato son aptos';
+  let correct, explain;
   if(hasVegVariant && hasAnimal){
-    // Has both animal AND vegetarian variants (e.g. Croquetas Premium → Boletus is vegetarian)
-    opts = _en ? ['Yes, all varieties are vegetarian','No, none are suitable','Yes, but only certain flavours (e.g. Boletus)','I\'ll ask the kitchen']
-               : ['Sí, todas las variedades son vegetarianas','No, ninguna es apta','Sí, pero solo ciertos sabores (ej. Boletus)','Consulto en cocina'];
-    correctIdx = 2;
+    correct = optVariant;
     explain = _en ? `Not all varieties are vegetarian, but Boletus is. Advise the guest on which flavours are suitable.`
                   : `No todas las variedades son vegetarianas, pero la de Boletus sí. Aconsejar al huésped los sabores aptos.`;
   } else if(canBeVeg && hasAnimal){
-    // Can be adapted by removing animal components
-    opts = _en ? ['Yes, exactly as served','No, it contains animal products and cannot be adapted','Yes, but it must be modified — notify the kitchen','I\'ll ask the kitchen']
-               : ['Sí, tal como se sirve','No, contiene productos animales y no se puede adaptar','Sí, pero hay que modificarlo — avisar a cocina','Consulto en cocina'];
-    correctIdx = 2;
+    correct = optAdapt;
     explain = _en ? `Contains animal products but can be adapted. Notes: ${notes.substring(0,120)}...`
                   : `Contiene productos animales pero se puede adaptar. Notas: ${notes.substring(0,120)}...`;
   } else if(hasAnimal){
-    // Straight "No"
-    opts = _en ? ['Yes, it\'s vegetarian','No, it contains animal products','Only without the sauce','I\'ll ask the kitchen']
-               : ['Sí, es vegetariano','No, contiene productos de origen animal','Solo sin la salsa','Consulto en cocina'];
-    correctIdx = 1;
+    correct = optNoVeg;
     const flag = /caldo de pollo|huesos de pollo/i.test(text) ? (_en?' (contains chicken stock)':' (lleva caldo/huesos de pollo)') : '';
     explain = _en ? `Not vegetarian${flag}.` : `No es vegetariano${flag}.`;
   } else if(isVegCat){
-    // Listed as vegetarian
-    opts = _en ? ['Yes, it\'s vegetarian','No, it contains animal products','Only without the garnish','I\'ll ask the kitchen']
-               : ['Sí, es vegetariano','No, contiene productos de origen animal','Solo sin la guarnición','Consulto en cocina'];
-    correctIdx = 0;
+    correct = optAsIs;
     explain = _en ? 'Yes, suitable for vegetarians.' : 'Sí, apto para vegetarianos.';
   } else {
     // Not vegetarian category and no animal detected — skip trivial
     return null;
   }
-  const s = _srShuffleOpts(opts, correctIdx);
-  return { q:_en?qEn:qEs, options:s.options, correctIdx:s.correctIdx, explain, type:'ingredient' };
+  const options = _djShuffle([optAsIs, optAdapt, optNoVeg, optVariant]);
+  return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'ingredient' };
 }
 
 function _scenarioCrossContamination(dish, dd, _en){
   const notes = (dish.notes||'').toLowerCase();
   const hasCross = /trazas|contaminación cruzada|freidora aparte|freidora común|cross|traces/i.test(notes);
-  if(!hasCross) return null;
+  // v2: the old version only fired on flagged dishes, so "yes, there is risk"
+  // was the correct answer 100% of the time — recognizable after one round.
+  // Now it also fires (less often) on gluten-free dishes with no traces flag,
+  // where the truthful answer is the opposite. The trainee must know the card.
+  const hasGluten = (dish.allergens||[]).includes('Gluten');
+  if(!hasCross){
+    if(hasGluten) return null;            // a celiac couldn't order it anyway — other scenarios cover that
+    // Clean dishes vastly outnumber flagged ones — a high skip keeps the two
+    // answers near 50/50 across the menu instead of drowning the flagged side.
+    if(Math.random() < 0.88) return null;
+  }
   const qEs = `Huésped celíaco severo: "¿Hay riesgo de contaminación cruzada en ${dd.name}?"`;
   const qEn = `Severely celiac guest: "Is there cross-contamination risk in ${dd.name}?"`;
-  const opts = _en ? ['No risk at all','Yes, I must inform and advise caution','Only if we reheat it','It\'s impossible to know']
-                   : ['Ningún riesgo','Sí, debo informar y aconsejar precaución','Solo si se recalienta','Es imposible saberlo'];
-  const s = _srShuffleOpts(opts, 1);
-  return { q:_en?qEn:qEs, options:s.options, correctIdx:s.correctIdx, explain:_en?`Notes indicate cross-contamination risk: ${dish.notes}`:`Las notas indican riesgo de contaminación cruzada: ${dish.notes}`, type:'allergen' };
+  const optRisk  = _en ? 'Yes — the dish card flags a risk, I must inform and advise caution'
+                       : 'Sí — la ficha del plato indica riesgo, debo informar y aconsejar precaución';
+  const optClean = _en ? 'No — it has no gluten and its card carries no traces warning'
+                       : 'No — no lleva gluten y su ficha no tiene aviso de trazas';
+  const traps = _en ? ['Only if it is reheated','It\'s impossible to know from the dining room']
+                    : ['Solo si se recalienta','Es imposible saberlo desde sala'];
+  const correct = hasCross ? optRisk : optClean;
+  const options = _djShuffle([optRisk, optClean, ...traps]);
+  const explain = hasCross
+    ? (_en?`Notes indicate cross-contamination risk: ${dish.notes}`:`Las notas indican riesgo de contaminación cruzada: ${dish.notes}`)
+    : (_en?`${dd.name} carries no gluten and no traces flag on its card.`:`${dd.name} no lleva gluten y su ficha no tiene aviso de trazas.`);
+  return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'allergen' };
 }
 
 function _scenarioModification(dish, dd, _en){
@@ -4099,15 +4136,22 @@ function _scenarioModification(dish, dd, _en){
   if(pairs.length === 0) return null;
 
   const chosen = _simPick(pairs);
-  const allergenHint = chosen.hint;
   const mod = chosen.cmd;
+  // Echo guard: if a token of the allergen hint appears inside the comanda
+  // itself ("alérgico a mostaza" → "SIN MOSTAZA SAVORA"), naming the allergen
+  // in the question hands over the answer (measured 16% of questions). Use
+  // the generic phrasing in that case.
+  const _hnorm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const _modNorm = _hnorm(mod);
+  const _hintToks = _hnorm(chosen.hint).split(/[^a-zñ0-9]+/).filter(w=>w.length>3);
+  const allergenHint = (_hintToks.length && !_hintToks.some(t=>_modNorm.includes(t))) ? chosen.hint : '';
 
   const qEs = allergenHint
     ? `Huésped: "Me gustaría pedir ${dd.name}, pero soy alérgico a ${allergenHint.toLowerCase()}. ¿Cómo se comanda la modificación?"`
-    : `Huésped: "Me gustaría pedir ${dd.name} con una modificación. ¿Cómo se comanda?"`;
+    : `Huésped: "Me gustaría pedir ${dd.name} con una modificación por alergia. ¿Cómo se comanda?"`;
   const qEn = allergenHint
     ? `Guest: "I'd like to order ${dd.name}, but I'm allergic to ${allergenHint.toLowerCase()}. How do I order the modification?"`
-    : `Guest: "I'd like to order ${dd.name} with a modification. How do I order it?"`;
+    : `Guest: "I'd like to order ${dd.name} with an allergy modification. How do I order it?"`;
 
   // Build the correct answer with "Comandar SIN" prefix
   const _prefix = _en ? 'Order WITHOUT ' : 'Comandar SIN ';
@@ -4204,13 +4248,14 @@ function _scenarioSharedAllergen(dish, dd, _en){
   if(same.length===0 || diff.length<3) return null;
   const correct = _simPick(same);
   const wrongs = _djShuffle(diff).slice(0,3);
-  // Deduplicate options by name
-  let opts = _simDedupeOptions(_djShuffle([correct, ...wrongs]));
+  // Deduplicate options by name — correct goes first so dedupe can't evict it
+  let opts = _simDedupeOptions([correct, ...wrongs]);
   if(opts.length < 4){
     const extra = _djShuffle(diff.filter(d=>!opts.includes(d))).slice(0, 4 - opts.length);
-    opts = _simDedupeOptions(_djShuffle([...opts, ...extra]));
+    opts = _simDedupeOptions([...opts, ...extra]);
   }
   if(opts.length < 4) return null;
+  opts = _djShuffle(opts);
   const aLbl = _simAllergenLabel(a, _en);
   const dishPhrase = _simDishPhraseForAllergen(dish, a, _en);
   // Capitalize first letter if phrase starts a sentence (Spanish/English)
@@ -4268,23 +4313,42 @@ function _scenarioMultipleAllergies(dish, dd, _en){
   // Skip sides — couples wouldn't specifically ask about sharing a garnish
   if(dish.cat==='Guarniciones y Salsas') return null;
   if(!dish.allergens || dish.allergens.length===0) return null;
-  // Pick one allergen the dish HAS (non-removable) and one it DOESN'T
-  const nonRemovable = _simNonRemovableAllergens(dish);
-  if(nonRemovable.length===0) return null;
   const keys = Object.keys(_SIM_PROFILES).filter(k=>_SIM_PROFILES[k].allergen);
+  // v2: the old version always picked one allergen the dish HAS, so "No —
+  // affects one of them" was correct 100% of the time. Now half the couples
+  // name two allergens the dish does NOT carry — the trainee has to check
+  // both against the card instead of reflex-answering "no".
+  const cleanKeys = _djShuffle(keys.filter(k=>!dish.allergens.includes(_SIM_PROFILES[k].allergen)));
+  const nonRemovable = _simNonRemovableAllergens(dish);
   const hasKey = keys.find(k=>nonRemovable.includes(_SIM_PROFILES[k].allergen));
-  const notKey = keys.find(k=>!dish.allergens.includes(_SIM_PROFILES[k].allergen));
-  if(!hasKey || !notKey) return null;
-  const a1 = _SIM_PROFILES[hasKey].allergen;
-  const a2 = _SIM_PROFILES[notKey].allergen;
+  const bothClear = cleanKeys.length >= 2 && (!hasKey || Math.random() < 0.5);
+  let a1, a2, correctIsYes;
+  if(bothClear){
+    a1 = _SIM_PROFILES[cleanKeys[0]].allergen;
+    a2 = _SIM_PROFILES[cleanKeys[1]].allergen;
+    correctIsYes = true;
+  } else {
+    if(!hasKey || cleanKeys.length === 0) return null;
+    a1 = _SIM_PROFILES[hasKey].allergen;
+    a2 = _SIM_PROFILES[cleanKeys[0]].allergen;
+    correctIsYes = false;
+  }
   const a1Lbl = _simAllergenLabel(a1,_en);
   const a2Lbl = _simAllergenLabel(a2,_en);
   const qEs = `Pareja: "Él es alérgico a ${a1Lbl}, ella a ${a2Lbl}. ¿Pueden compartir ${dd.name}?"`;
   const qEn = `Couple: "He's allergic to ${a1Lbl}, she's allergic to ${a2Lbl}. Can they share ${dd.name}?"`;
-  const opts = _en ? ['Yes, both can eat it','No — it affects one of them','Only a small taste','Only if prepared separately']
-                   : ['Sí, ambos pueden','No — afecta a uno de ellos','Solo un bocado','Solo si se prepara aparte'];
-  const s = _srShuffleOpts(opts, 1);
-  return { q:_en?qEn:qEs, options:s.options, correctIdx:s.correctIdx, explain:_en?`Contains ${a1Lbl} — affects him.`:`Contiene ${a1Lbl} — le afecta a él.`, type:'allergen' };
+  const optYes = _en ? 'Yes — the dish contains neither of the two allergens'
+                     : 'Sí — el plato no contiene ninguno de los dos alérgenos';
+  const optNo  = _en ? 'No — it contains a non-removable allergen that affects one of them'
+                     : 'No — contiene un alérgeno no retirable que afecta a uno de ellos';
+  const traps = _en ? ['They can share it if the affected one takes only a taste','Yes, if it is served on two separate plates']
+                    : ['Pueden compartirlo si el afectado prueba solo un bocado','Sí, si se sirve en dos platos separados'];
+  const correct = correctIsYes ? optYes : optNo;
+  const options = _djShuffle([optYes, optNo, ...traps]);
+  const explain = correctIsYes
+    ? (_en?`${dd.name} contains neither ${a1Lbl} nor ${a2Lbl}.`:`${dd.name} no contiene ni ${a1Lbl} ni ${a2Lbl}.`)
+    : (_en?`Contains ${a1Lbl} — affects him.`:`Contiene ${a1Lbl} — le afecta a él.`);
+  return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'allergen' };
 }
 
 function _scenarioPregnancy(dish, dd, _en){
@@ -4293,8 +4357,10 @@ function _scenarioPregnancy(dish, dd, _en){
   const alcohol = /(flamb|brandy|coñac|ron|whisky|vodka|porto|sake|vino(?! de)|cerveza)/i.test(text);
   const blueCheese = /(cabrales|queso azul|roquefort|gorgonzola)/i.test(text);
   const risky = raw || alcohol || blueCheese;
-  // Only fire if either risky or we have enough baseline to be informative
-  if(!risky && Math.random()<0.7) return null;
+  // Fire on safe dishes almost as often as risky ones — with the old 70% skip
+  // the answer was "not recommended" in 66% of questions (measured), so the
+  // polarity itself leaked. Near-50/50 forces reading the card.
+  if(!risky && Math.random()<0.45) return null;
   const qEs = `Huésped embarazada: "¿${dd.name} es seguro para mí?"`;
   const qEn = `Pregnant guest: "Is ${dd.name} safe for me?"`;
   const opts = _en ? ['Yes, fully safe','Not recommended — contains raw/uncooked or alcohol','It depends on the trimester','I\'ll check with the kitchen']
@@ -4417,6 +4483,117 @@ function _scenarioVariantRemovable(dish, dd, _en){
   };
 }
 
+// ═══ Which dish can be ADAPTED — inverse retirability across the carta ═══
+// The most valuable service skill isn't "does it contain X" but "which dish
+// can be SAVED with a comanda". All four options carry the allergen; only one
+// has it as a removable component per its card. Derived entirely from notes.
+function _scenarioWhichAdaptable(dish, dd, _en){
+  if(!dish.allergens || dish.allergens.length===0) return null;
+  const mains = _simMainDishes();
+  for(const a of _djShuffle([...dish.allergens])){
+    const withA = mains.filter(d=>d.allergens && d.allergens.includes(a));
+    const adaptable = withA.filter(d=>!_simNonRemovableAllergens(d).includes(a));
+    const blocked = withA.filter(d=>_simNonRemovableAllergens(d).includes(a));
+    if(adaptable.length===0 || blocked.length<3) continue;
+    const correct = _simPick(adaptable);
+    // Correct-first dedupe so a same-named wrong can't evict it; shuffle after
+    let opts = _simDedupeOptions([correct, ..._djShuffle(blocked).slice(0,3)]);
+    if(opts.length < 4){
+      const extra = _djShuffle(blocked.filter(d=>!opts.includes(d))).slice(0, 4-opts.length);
+      opts = _simDedupeOptions([...opts, ...extra]);
+    }
+    if(opts.length < 4 || !opts.includes(correct)) continue;
+    opts = _djShuffle(opts);
+    const aLbl = _simAllergenLabel(a,_en);
+    const qEs = `Huésped alérgico a ${aLbl}: "Sé que varios platos lo llevan, pero ¿alguno se puede adaptar para mí?" ¿Cuál puedes ofrecerle adaptado?`;
+    const qEn = `Guest allergic to ${aLbl}: "I know several dishes carry it, but can any be adapted for me?" Which one can you offer adapted?`;
+    return {
+      q:_en?qEn:qEs,
+      options: opts.map(d=>_simDishName(d)),
+      correctIdx: opts.indexOf(correct),
+      explain: _en
+        ? `Per its card, ${aLbl} can be removed from ${_simDishName(correct)} — in the others it is structural.`
+        : `Según su ficha, a ${_simDishName(correct)} se le puede retirar ${aLbl} — en los demás es estructural.`,
+      type:'modification'
+    };
+  }
+  return null;
+}
+
+// ═══ Prep-time notice — WHICH dish carries an explicit wait ═══
+// Every stated wait on this menu happens to be ~30 min, so asking for the
+// duration is answerable by rote after one round. The real skill is knowing
+// WHICH dishes carry a wait at all — options are dishes, correct varies.
+function _srWaitMins(d){
+  const m = ((d && d.notes) || '').match(/~?\s*(\d{1,3})\s*(?:min\b|minutos?\b|-?minute)/i);
+  const v = m ? parseInt(m[1], 10) : 0;
+  return v >= 5 ? v : 0;
+}
+function _scenarioWaitTime(dish, dd, _en){
+  const mins = _srWaitMins(dish);
+  if(!mins) return null;
+  // Wrongs: dishes whose cards state NO wait
+  const clean = _simMainDishes().filter(d=>d.id!==dish.id && !_srWaitMins(d));
+  if(clean.length < 3) return null;
+  let opts = _simDedupeOptions([dish, ..._djShuffle(clean).slice(0,3)]);
+  if(opts.length < 4){
+    const extra = _djShuffle(clean.filter(d=>!opts.includes(d))).slice(0, 4-opts.length);
+    opts = _simDedupeOptions([...opts, ...extra]);
+  }
+  if(opts.length < 4 || !opts.includes(dish)) return null;
+  opts = _djShuffle(opts);
+  const qEs = `Huésped con prisa antes de una función: "¿Alguno de estos platos lleva espera especial?" ¿Cuál requiere avisar de un tiempo de preparación?`;
+  const qEn = `Guest in a hurry before a show: "Do any of these carry a special wait?" Which one requires warning about preparation time?`;
+  return {
+    q:_en?qEn:qEs,
+    options: opts.map(d=>_simDishName(d)),
+    correctIdx: opts.indexOf(dish),
+    explain: _en ? `${dd.name} states ~${mins} min on its card — always inform the guest before confirming the order.`
+                 : `${dd.name} indica ~${mins} min en su ficha — avisar siempre al huésped antes de confirmar la comanda.`,
+    type:'modification'
+  };
+}
+
+// ═══ Cross-carta ingredient location — "which dish was it?" ═══
+// Inverse of the ingredient check: the guest remembers an ingredient, the
+// waiter must place it on the right dish among same-category siblings that
+// verifiably do NOT carry it (synonym- and name-leak-safe).
+function _scenarioIngredientWhere(dish, dd, _en){
+  if(dish.cat === 'Guarniciones y Salsas') return null;
+  const src = _en ? dd : dish;
+  const localize = d => _en ? getDish(d) : d;
+  const ings = _simExtractIngredients(src).filter(i => i.length > 3 && !_simIngredientTrivialInName(i, src.name));
+  if(!ings.length) return null;
+  const sibs = _simMainDishes().filter(d=>d.id!==dish.id && d.id!==103 && d.cat===dish.cat && d.ingredients);
+  if(sibs.length < 3) return null;
+  for(const ing of _djShuffle(ings)){
+    const clean = sibs.filter(s => {
+      const ls = localize(s);
+      return !_simHasIngredient(ls, ing) && !_simIngredientOverlapsDish(ing, ls) && !_simIngredientTrivialInName(ing, ls.name);
+    });
+    if(clean.length < 3) continue;
+    let opts = _simDedupeOptions([dish, ..._djShuffle(clean).slice(0,3)]);
+    if(opts.length < 4){
+      const extra = _djShuffle(clean.filter(d=>!opts.includes(d))).slice(0, 4-opts.length);
+      opts = _simDedupeOptions([...opts, ...extra]);
+    }
+    if(opts.length < 4 || !opts.includes(dish)) continue;
+    opts = _djShuffle(opts);
+    const catLabel = (typeof catLocal==='function') ? catLocal(dish.cat) : dish.cat;
+    const qEs = `Huésped: "La última vez tomé un plato de ${catLabel} que llevaba ${ing.toLowerCase()} y me encantó. ¿Cuál era?"`;
+    const qEn = `Guest: "Last time I had a ${catLabel} dish with ${ing.toLowerCase()} and loved it. Which one was it?"`;
+    return {
+      q:_en?qEn:qEs,
+      options: opts.map(d=>_simDishName(d)),
+      correctIdx: opts.indexOf(dish),
+      explain: _en ? `${dd.name} lists ${ing.toLowerCase()} among its ingredients — the others don't carry it.`
+                   : `${dd.name} lleva ${ing.toLowerCase()} entre sus ingredientes — los otros no lo llevan.`,
+      type:'ingredient'
+    };
+  }
+  return null;
+}
+
 // ═══ Main generator: picks 3-4 scenarios weighted by available data ═══
 function _srGenerateQuiz(dish, difficulty){
   const _en = LANG==='en';
@@ -4447,6 +4624,11 @@ function _srGenerateQuiz(dish, difficulty){
   // based on one entrée/main alone; pairing is done over the full menu selection,
   // not per dish. Wine knowledge lives in the dedicated Vinos section.
   tryAdd(()=>_scenarioMultipleAllergies(dish, dd, _en), 2);
+  // Smarter cross-carta scenarios (v2): inverse retirability, explicit wait
+  // times, and ingredient placement across sibling dishes.
+  if(dish.allergens && dish.allergens.length>0) tryAdd(()=>_scenarioWhichAdaptable(dish, dd, _en), 2);
+  tryAdd(()=>_scenarioWaitTime(dish, dd, _en), 2);
+  tryAdd(()=>_scenarioIngredientWhere(dish, dd, _en), 2);
   tryAdd(()=>_scenarioPregnancy(dish, dd, _en), 1);
   tryAdd(()=>_scenarioChildFriendly(dish, dd, _en), 1);
   tryAdd(()=>_scenarioSpicy(dish, dd, _en), 1);

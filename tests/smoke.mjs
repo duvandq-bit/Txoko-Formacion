@@ -1035,6 +1035,38 @@ test('tartar gluten is a removable side (pan carasau) — owner-reported correct
     'comanda-instruction regex must accept both Comandar (ES) and Order (EN)');
 });
 
+test('smart review v2: unified frames, no set-fingerprint, smarter scenarios', () => {
+  // Measured before the rebuild: DeclaredAllergy and Vegetarian revealed the
+  // answer through their option SET in 100% of questions (each truth state
+  // had its own texts), and CrossContamination / MultipleAllergies had the
+  // same correct answer 100% of the time. The v2 frames must stay unified.
+  assert(!html.includes("'Sí, tal como se emplata'"), 'old per-state DeclaredAllergy option set is back');
+  assert(!html.includes("'Sí, es totalmente seguro'"), 'old per-state DeclaredAllergy option set is back (safe)');
+  assert(!html.includes('(ej. Boletus)'), 'Vegetarian correct option leaks the flavour again');
+  assert(!html.includes("'Solo sin la guarnición'"), 'old per-state Vegetarian option set is back');
+  const da = html.slice(html.indexOf('function _scenarioDeclaredAllergy'), html.indexOf('function _scenarioDeclaredAllergy') + 4500);
+  assert(/const optYes\b/.test(da) && /const optMod\b/.test(da) && /const optNo\b/.test(da) && /trapBank/.test(da),
+    'DeclaredAllergy must use unified frames + rotating trap bank');
+  assert(/dishProfileKeys/.test(da), 'DeclaredAllergy must bias the allergen toward the dish (polarity balance)');
+  const cc = html.slice(html.indexOf('function _scenarioCrossContamination'), html.indexOf('function _scenarioCrossContamination') + 3500);
+  assert(/optRisk\b/.test(cc) && /optClean\b/.test(cc), 'CrossContamination must have both truth polarities');
+  const ma = html.slice(html.indexOf('function _scenarioMultipleAllergies'), html.indexOf('function _scenarioMultipleAllergies') + 4000);
+  assert(/bothClear/.test(ma), 'MultipleAllergies must include the shareable (yes) polarity');
+  // Modification echo guard: allergen named in the question must not appear
+  // inside the comanda answer (measured 16% echo before).
+  assert(/_hintToks/.test(html) && /hintEchoes|!_hintToks\.some/.test(html.slice(html.indexOf('function _scenarioModification'))),
+    'Modification allergen-echo guard missing');
+  // New smarter scenario types exist and are wired into the generator.
+  for (const fn of ['_scenarioWhichAdaptable', '_scenarioWaitTime', '_scenarioIngredientWhere']) {
+    assert(html.includes(`function ${fn}(`), `${fn} missing`);
+    assert(html.includes(`${fn}(dish, dd, _en)`), `${fn} not wired into _srGenerateQuiz`);
+  }
+  // Correct-first dedupe: a same-named wrong option must never evict the
+  // correct dish (produced correctIdx = -1 → unanswerable question).
+  assert(!/_simDedupeOptions\(_djShuffle\(\[correct,/.test(html) && !/_simDedupeOptions\(_djShuffle\(\[dish,/.test(html),
+    'dedupe must receive the correct option FIRST (shuffle after), or correctIdx can be -1');
+});
+
 test('exam anti-echo: ingredients/history questions are reversed and redacted', () => {
   // Measured on the real menu: the correct option leaked dish-name words in
   // 74% (ingredients) / 83% (history) of questions. Those topics now ask in
