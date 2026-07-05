@@ -23616,12 +23616,42 @@ async function _chatInsert(fields){
       const rows = await res.json();
       const row = Array.isArray(rows) ? rows[0] : rows;
       if(row) _chatOnInsert(row);  // append now; realtime echo is deduped by id
+      _chatBroadcastPush(body);
     } else {
       showToast(LANG==='en'?'Could not send':'No se pudo enviar', 'warning', 2600);
     }
   }catch(_){
     showToast(LANG==='en'?'No connection':'Sin conexión', 'warning', 2600);
   }
+}
+
+// ── "New message" push for teammates who are NOT in the chat ──
+// One push per absent teammate via the send-push fn (per-name targeting).
+// Anti-spam: (a) skip whoever is inside the chat right now (presence) — they
+// can see it; (b) skip the sender and anyone mentioned (mentions get their own
+// personal push); (c) at most one broadcast per sender per 3 minutes — the
+// first message of a burst rings, the rest coalesce under the same 'chat' tag.
+let _chatLastBroadcastAt = 0;
+function _chatBroadcastPush(body){
+  try{
+    const now = Date.now();
+    if(now - _chatLastBroadcastAt < 3*60*1000) return;
+    let mentioned = [];
+    try{ mentioned = JSON.parse(body.mentions||'[]'); }catch(_){}
+    const present = Object.keys(_chatPresence||{});
+    const skip = new Set([currentUser, ...present, ...mentioned]);
+    const recipients = (_chatRoster||[]).filter(n=>n && !skip.has(n));
+    if(!recipients.length) return;
+    _chatLastBroadcastAt = now;
+    const raw = body.image_url ? '📷 '+(body.message||(LANG==='en'?'Photo':'Foto')) : (body.message||'');
+    const snippet = raw.length>90 ? raw.slice(0,90)+'…' : raw;
+    recipients.forEach(n=>{
+      fetch(`${SUPA_URL}/functions/v1/send-push`, {
+        method:'POST', headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ target:n, title:`💬 ${currentUser} · La Terraza`, body:snippet, tag:'chat' })
+      }).catch(()=>{});
+    });
+  }catch(_){}
 }
 
 async function _chatDelete(id){

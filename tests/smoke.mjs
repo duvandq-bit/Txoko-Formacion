@@ -436,6 +436,13 @@ test('La Terraza chat: WhatsApp features (mentions, replies, reactions, typing)'
   // Typing: broadcast (no DB writes) + throttle + expiry.
   assert(/event:'typing'/.test(html) && /_chatNotifyTyping/.test(html) && /_chatTypingSentAt < 2200/.test(html),
     'typing indicator must use throttled realtime broadcast');
+  // New-message push: absent teammates only, sender/present/mentioned excluded,
+  // rate-limited so a lively conversation can't machine-gun phones.
+  const bp = html.slice(html.indexOf('function _chatBroadcastPush'), html.indexOf('function _chatBroadcastPush') + 1600);
+  assert(/_chatPresence/.test(bp) && /mentioned/.test(bp) && /currentUser, \.\.\.present, \.\.\.mentioned/.test(bp),
+    'chat broadcast push must exclude sender, present users and mentioned users');
+  assert(/3\*60\*1000/.test(bp), 'chat broadcast push must be rate-limited (3 min gate)');
+  assert(/_chatBroadcastPush\(body\)/.test(html), 'broadcast push must fire on successful insert');
   // The typing dots respect reduced motion.
   const css = read('styles.css');
   assert(/prefers-reduced-motion[^}]*\{[^}]*chat-typing-dots/s.test(css) || /chat-typing-dots i, \.chat-row\.sel/.test(css),
