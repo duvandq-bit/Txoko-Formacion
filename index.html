@@ -16335,7 +16335,34 @@ function buildAllergenQuestions(cat) {
   if (!pool.length) return [];
 
   const questions = [];
-  const shuffled = [...pool].sort(() => Math.random() - .5);
+  const shuffled = _lqaShuffle([...pool]);
+
+  // v2 anti-pattern rebuild. The old options were three FIXED trap texts plus
+  // a correct whose yes/no polarity was unique among them — after one round
+  // you could ace the drill by recognizing option style, without knowing the
+  // menu. Now every question offers the same three real courses of action
+  // (serve as-is / adapt via comanda / cannot be served) whose truth depends
+  // on the dish, plus one rotating protocol trap from a bank. Polarity and
+  // memorized texts no longer discriminate.
+  const _comandaBank = [...new Set(pool.flatMap(d => {
+    const m = (d.notes || '').match(/Comandar ([^.·—]+)/gi) || [];
+    return m.map(x => x.replace(/^Comandar /i, '').trim().toLowerCase()).filter(x => x.length > 3 && x.length < 60);
+  }))];
+  const _trapBank = LANG === 'en' ? [
+    'Serve it while informing the guest that some risk remains',
+    'Remove the ingredient at the table before serving',
+    'It is safe if the kitchen cleans the grill and utensils first',
+    'Serve it — small amounts do not trigger a reaction',
+    'Offer the same dish without the garnish to avoid the allergen',
+    'Ask the guest to double-check with their doctor before ordering'
+  ] : [
+    'Servirlo informando al huésped de que existe algo de riesgo',
+    'Retirar el ingrediente en sala antes de llevarlo a la mesa',
+    'Es seguro si cocina limpia la plancha y los utensilios primero',
+    'Servirlo — en cantidades pequeñas no provoca reacción',
+    'Ofrecer el mismo plato sin la guarnición para evitar el alérgeno',
+    'Pedir al huésped que lo confirme con su médico antes de comandar'
+  ];
 
   for (const dish of shuffled) {
     if (questions.length >= 10) break;
@@ -16343,7 +16370,14 @@ function buildAllergenQuestions(cat) {
     if (!allergens.length) continue;
 
     const dishDisplay = LANG === 'en' ? (DISHES_EN.find(x=>x.id===dish.id)?.name || dish.name) : dish.name;
-    const declaredAllergen = normalizeAllergen(allergens[Math.floor(Math.random() * allergens.length)]);
+    // A third of the time the declared allergen is NOT in the dish — the
+    // waiter must recognize it can be served as-is (replaces old Type 2).
+    const _allInPool = [...new Set(pool.flatMap(x => x.allergens || []))];
+    const _absentOpts = _allInPool.filter(a => !allergens.includes(a));
+    const isAbsent = _absentOpts.length > 0 && Math.random() < 0.34;
+    const declaredAllergen = normalizeAllergen(isAbsent
+      ? _absentOpts[Math.floor(Math.random() * _absentOpts.length)]
+      : allergens[Math.floor(Math.random() * allergens.length)]);
     const enAllergen = ALLERGEN_ES_TO_EN[declaredAllergen] || declaredAllergen;
 
     // Check if notes explicitly say this allergen can be removed (strict check)
@@ -16413,77 +16447,40 @@ function buildAllergenQuestions(cat) {
       }
     }
 
-    // Correct answer
-    const correct = isRemovable
-      ? (LANG === 'en'
-          ? `Yes — ${enAllergen} can be removed. ${comandaInstr ? 'Send the order to the kitchen: ' + comandaInstr + '.' : 'Inform the kitchen when ordering.'}`
-          : `Sí — el ${declaredAllergen} se puede retirar. ${comandaInstr ? 'Avisar a cocina al comandar: ' + comandaInstr + '.' : 'Avisar a cocina al comandar.'}`)
-      : (LANG === 'en'
-          ? `No — this dish contains ${enAllergen} and cannot be served.`
-          : `No — este plato contiene ${declaredAllergen} y no se puede servir.`);
+    // The three action-frames — present in EVERY question, truth varies by dish
+    const state = isAbsent ? 'absent' : (isRemovable ? 'adapt' : 'blocked');
+    const _instrReal = (comandaInstr || '').trim().toLowerCase();
+    const _instrFake = _comandaBank.length
+      ? _comandaBank[Math.floor(Math.random() * _comandaBank.length)]
+      : (LANG === 'en' ? 'without the sauce' : 'sin la salsa');
+    const _instr = (state === 'adapt' && _instrReal) ? _instrReal : _instrFake;
+    const optServe = LANG === 'en'
+      ? `Serve it as is — this dish does not contain ${enAllergen}.`
+      : `Se puede servir tal cual — este plato no contiene ${declaredAllergen}.`;
+    const optAdapt = LANG === 'en'
+      ? `Adapt it — send the order to the kitchen: ${_instr}.`
+      : `Se puede adaptar — comandar ${_instr}.`;
+    const optBlock = LANG === 'en'
+      ? `It cannot be served — ${enAllergen} is part of the dish's base.`
+      : `No se puede servir — el ${declaredAllergen} forma parte de la base del plato.`;
+    const trap = _trapBank[Math.floor(Math.random() * _trapBank.length)];
+    const correct = state === 'absent' ? optServe : state === 'adapt' ? optAdapt : optBlock;
+    const choices = _lqaShuffle([optServe, optAdapt, optBlock, trap]);
 
-    // Traps — all plausible mistakes, none confusingly wrong
-    const traps = [
-      LANG === 'en'
-        ? `Yes — the ${enAllergen} in this dish is minimal and not a risk.`
-        : `Sí — el ${declaredAllergen} de este plato es mínimo y no supone riesgo.`,
-      LANG === 'en'
-        ? `Yes, but inform the guest it contains ${enAllergen}.`
-        : `Sí, pero informando al huésped de que contiene ${declaredAllergen}.`,
-      LANG === 'en'
-        ? `Ask the kitchen to remove the ${enAllergen} ingredient before serving.`
-        : `Pedir a cocina que retire el ingrediente con ${declaredAllergen} antes de servir.`
-    ].sort(() => Math.random() - .5);
-
-    const choices = [correct, ...traps].sort(() => Math.random() - .5);
     questions.push({
       dish, dishDisplay, declaredAllergen, enAllergen,
       situation: LANG === 'en'
-        ? `A guest declares a ${enAllergen} allergy. They want to order "${dishDisplay}". Can you serve it?`
-        : `Un huésped declara alergia a ${declaredAllergen}. Quiere pedir "${dishDisplay}". ¿Puedes servirlo?`,
+        ? `A guest declares a ${enAllergen} allergy. They want to order "${dishDisplay}". What do you do?`
+        : `Un huésped declara alergia a ${declaredAllergen}. Quiere pedir "${dishDisplay}". ¿Qué haces?`,
       correct, choices,
       correctIdx: choices.indexOf(correct),
       color: getCatColor(dish.cat),
       icon: CAT_ICONS[dish.cat] || '',
       catLabel: dish.cat
     });
-
-    // Type 2: dish does NOT contain a specific allergen — safe to serve?
-    const allAllergens = [...new Set(pool.flatMap(d => d.allergens || []))];
-    const notInDish = allAllergens.filter(a => !allergens.includes(a)).sort(() => Math.random() - .5);
-    if (notInDish.length > 0 && Math.random() > 0.65 && questions.length < 10) {
-      const safeAllergen = notInDish[0];
-      const safeEn = ALLERGEN_ES_TO_EN[safeAllergen] || safeAllergen;
-      const safeCorrect = LANG === 'en'
-        ? `Yes — this dish does not contain ${safeEn}. It can be served.`
-        : `Sí — este plato no contiene ${safeAllergen}. Se puede servir.`;
-      const safeTraps = [
-        LANG === 'en'
-          ? `No — all dishes may contain traces due to shared kitchen equipment.`
-          : `No — todos los platos pueden contener trazas por compartir equipos en cocina.`,
-        LANG === 'en'
-          ? `Consult the kitchen before serving any guest with allergies.`
-          : `Consultar siempre con cocina antes de servir a cualquier alérgico.`,
-        LANG === 'en'
-          ? `No — ask the guest to sign a waiver first.`
-          : `No — pedir al huésped que firme una exención antes de servirlo.`
-      ].sort(() => Math.random() - .5);
-      const safeChoices = [safeCorrect, ...safeTraps].sort(() => Math.random() - .5);
-      questions.push({
-        dish, dishDisplay, declaredAllergen: safeAllergen, enAllergen: safeEn,
-        situation: LANG === 'en'
-          ? `A guest declares a ${safeEn} allergy. They want to order "${dishDisplay}". Can you serve it?`
-          : `Un huésped declara alergia a ${safeAllergen}. Quiere pedir "${dishDisplay}". ¿Puedes servirlo?`,
-        correct: safeCorrect, choices: safeChoices,
-        correctIdx: safeChoices.indexOf(safeCorrect),
-        color: getCatColor(dish.cat),
-        icon: CAT_ICONS[dish.cat] || '',
-        catLabel: dish.cat
-      });
-    }
   }
 
-  return questions.slice(0, 10).sort(() => Math.random() - .5);
+  return _lqaShuffle(questions).slice(0, 10);
 }
 
 
