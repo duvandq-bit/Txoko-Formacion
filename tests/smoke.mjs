@@ -836,6 +836,25 @@ test('wine detail speaks the premium carta language', () => {
     'the broken "G " info label must be the ◇ ornament');
 });
 
+test('editorial TUNIC DNA: left headers, pull-quotes, crisp radii, slim bars', () => {
+  // Owner verdict: the centered temple-hero pattern on every screen read as
+  // AI-made. Sub-screen headers are now left-aligned editorial blocks with a
+  // hairline; quotes are left pull-quotes with a gold edge; global radii are
+  // crisper; the two nav bars are slimmer.
+  const css = read('styles.css');
+  assert(/--r:12px; --r2:10px; --r3:7px;/.test(css), 'crisp radius tokens missing');
+  assert(/\.wine-section-header\{\n  text-align:left/.test(css), 'section header must be left-aligned');
+  assert(/\.wine-section-header::before\{content:none\}/.test(css), 'centered glow orb must be retired');
+  assert(/\.wine-storybook-intro\{[^}]*border-left:2px solid rgba\(196,154,60,\.45\)/.test(css),
+    'storybook quote must be the left pull-quote');
+  assert(/\.wine-hub-title\{\n  font-family:'Cinzel',serif;font-size:1\.18rem[^}]*text-align:left/.test(css),
+    'sommelier hub title must be editorial');
+  assert(/\.wine-hex-medallion\{display:none;/.test(css) && !/\.wine-hex-medallion\{display:none;[^}]*display:flex/.test(css),
+    'hub medallion must be retired without a later display override');
+  assert(/\.nav-dd-trigger\{[^}]*min-height:44px/.test(css) && /\.tunic-dd-trigger\{[^}]*min-height:44px/.test(css),
+    'both nav bars must be the slim 44px variant');
+});
+
 test('vinos sweep 3: sommelier index, maridaje rows, frases rows', () => {
   // Visible de-boxing for the remaining sub-screens (owner follow-up).
   assert(/dash-index-entry" onclick="_vinoSubTab='carta';renderVinos\(\)/.test(html),
@@ -890,8 +909,8 @@ test('vinos hero is compact and venue-aware', () => {
   // Hero spacing: header + intro tightened so the first wine lands sooner.
   assert(/\.wine-section-header\{[^}]*margin-bottom:1rem/.test(css),
     'wine section header must keep the tightened 1rem gap');
-  assert(/\.wine-storybook-intro\{[^}]*padding:\.4rem 1rem;margin-bottom:\.7rem/.test(css),
-    'storybook intro must keep the tightened spacing');
+  assert(/\.wine-storybook-intro\{[^}]*border-left:2px solid rgba\(196,154,60,\.45\)/.test(css),
+    'storybook intro must be the left pull-quote');
   // The hero byline must come from the active venue (multi-restaurant), with
   // the exact Txoko copy preserved as the default.
   assert(/ACTIVE_VENUE\.id!=='txoko'\) \? escapeHTML\(ACTIVE_VENUE\.name/.test(html)

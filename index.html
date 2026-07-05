@@ -9100,8 +9100,8 @@ function _renderSommelier(c, bar){
       <div class="wine-hub-vine"></div>
       <div class="wine-hub-verse">"${greeting}"</div>
 
-      <div class="wine-hub-stats" style="display:flex;justify-content:center;gap:1.2rem;margin-top:1.2rem">
-        <div style="text-align:center">
+      <div class="wine-hub-stats" style="display:flex;justify-content:flex-start;gap:1.6rem;margin-top:.9rem">
+        <div style="text-align:left">
           <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${WINES.length}</div>
           <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">${_en?'Wines':'Vinos'}</div>
         </div>
@@ -12962,30 +12962,10 @@ function _renderWineLearn(c, bar){
       <div class="wine-section-sub">${_en?'Your path from zero to sommelier':'Tu camino de cero a sommelier'}</div>
     </div>
 
-    <!-- Welcoming intro for total beginners -->
-    <div class="sommelier-box wine-enchanted" style="margin-bottom:1.2rem;text-align:center">
-      <div style="font-size:1.8rem;margin-bottom:.4rem;position:relative">${txIcon('wBlanco','2rem')}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);line-height:1.4;margin-bottom:.5rem;position:relative">${_en?'Is wine an unknown world to you?':'¿El vino es un mundo desconocido para ti?'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch3);line-height:1.6;margin-bottom:.8rem;position:relative">${_en?'Perfect! You\'re in the right place. We\'ve created a step-by-step path for you to learn from scratch, without pressure. Start with "Beginner" and progress at your own pace.':'¡Perfecto! Estás en el lugar ideal. Hemos creado un camino paso a paso para que aprendas desde cero, sin prisa y sin agobios. Empieza por "Principiante" y ve avanzando a tu ritmo.'}</div>
-      <div style="display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;position:relative">
-        <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(77,138,94,.08);border:1px solid rgba(77,138,94,.15)">
-          <div style="font-size:1.3rem;line-height:1">${txIcon('sFrutal','1.3rem')}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--sage);letter-spacing:.08em">${_en?'BEGINNER':'PRINCIPIANTE'}</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">${_en?'The basics':'Lo básico'}</div>
-        </div>
-        <div style="color:var(--parch4);display:flex;align-items:center;font-size:.8rem">→</div>
-        <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.12)">
-          <div style="font-size:1.3rem;line-height:1">${txIcon('cAging','1.3rem')}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.08em">${_en?'INTERMEDIATE':'INTERMEDIO'}</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">${_en?'Go deeper':'Profundiza'}</div>
-        </div>
-        <div style="color:var(--parch4);display:flex;align-items:center;font-size:.8rem">→</div>
-        <div style="text-align:center;padding:.4rem .6rem;border-radius:8px;background:rgba(122,106,170,.06);border:1px solid rgba(122,106,170,.12)">
-          <div style="font-size:1.3rem;line-height:1">${txIcon('trophy','1.3rem')}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--candy-purple);letter-spacing:.08em">${_en?'ADVANCED':'AVANZADO'}</div>
-          <div style="font-family:'Quicksand',sans-serif;font-size:.6rem;color:var(--parch4)">${_en?'Master':'Domina'}</div>
-        </div>
-      </div>
+    <!-- Welcoming intro — editorial pull-quote + inline path -->
+    <div style="margin-bottom:1.2rem;padding-left:.85rem;border-left:2px solid rgba(196,154,60,.45)">
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(28,42,34,.7);line-height:1.45">${_en?'Is wine an unknown world to you? Perfect — this path takes you from zero, step by step, at your own pace.':'¿El vino es un mundo desconocido para ti? Perfecto — este camino te lleva desde cero, paso a paso, a tu ritmo.'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);margin-top:.5rem">${_en?'Beginner':'Principiante'} <span style="color:rgba(28,42,34,.35)">→</span> ${_en?'Intermediate':'Intermedio'} <span style="color:rgba(28,42,34,.35)">→</span> ${_en?'Advanced':'Avanzado'}</div>
     </div>
 
     <!-- Level filter pills — wrap so every option is visible -->

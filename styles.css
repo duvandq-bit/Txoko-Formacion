@@ -46,7 +46,7 @@
   --azure-a:   rgba(72,136,160,.14);
   --line:      rgba(196,154,60,.14);
   --line2:     rgba(196,154,60,.28);
-  --r:16px; --r2:12px; --r3:8px;
+  --r:12px; --r2:10px; --r3:7px;
   --shadow: 0 4px 14px rgba(28,42,34,.08), 0 1px 3px rgba(28,42,34,.05);
   --shadow2: 0 8px 30px rgba(28,42,34,.12), 0 2px 8px rgba(28,42,34,.06);
   --shadow3: 0 16px 48px rgba(28,42,34,.15), 0 4px 12px rgba(28,42,34,.08);
@@ -1941,8 +1941,8 @@ body::after{
 /* Sub-tab trigger is LIGHT so hierarchy reads at a glance: dark main nav →
    light sub-section selector. (Was a second dark slab identical to the nav.)
    The green Pip-Boy variant below overrides this and stays dark by design. */
-.tunic-dd-trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:52px;
-  border-radius:12px;padding:.85rem 1.1rem;cursor:pointer;border:1px solid rgba(196,154,60,.3);
+.tunic-dd-trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:44px;
+  border-radius:10px;padding:.55rem 1rem;cursor:pointer;border:1px solid rgba(196,154,60,.3);
   font-family:'Cinzel',serif;font-weight:600;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;
   color:var(--gold-deep);background:#faf6ee;
   box-shadow:0 1px 4px rgba(28,42,34,.06)}
@@ -1982,9 +1982,9 @@ body::after{
 .tunic-dd--green .tunic-dd-item.on{color:#c8ffe0;background:rgba(34,255,136,.08);border-left-color:#22ff88}
 
 /* ── Main nav as a dropdown (same Tenet pattern, always gold) ── */
-.nav-dd{position:relative;z-index:95;background:#25352b;padding:.5rem .8rem}
-.nav-dd-trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:50px;
-  border-radius:12px;padding:.7rem 1.05rem;cursor:pointer;border:1px solid rgba(196,154,60,.35);
+.nav-dd{position:relative;z-index:95;background:#25352b;padding:.4rem .8rem}
+.nav-dd-trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:44px;
+  border-radius:10px;padding:.5rem .95rem;cursor:pointer;border:1px solid rgba(196,154,60,.35);
   font-family:'Cinzel',serif;font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
   color:var(--gold3);background:linear-gradient(145deg,var(--parchment),#243028)}
 .nav-dd-trigger:active{transform:translateY(1px)}
@@ -2212,34 +2212,23 @@ body::after{
    WINE SECTION — TUNIC parchment cards + CINEMATIC LAYER
 ───────────────────────────────────────────────── */
 .wine-section-header{
-  text-align:center;margin-bottom:1rem;animation:cardSlideUp .4s ease both;
-  position:relative;padding:.4rem 0;
+  text-align:left;margin-bottom:1rem;animation:cardSlideUp .4s ease both;
+  position:relative;padding:.2rem 0 .65rem;border-bottom:1px solid rgba(28,42,34,.12);
 }
-.wine-section-header::before{
-  content:'';position:absolute;left:50%;top:-6px;transform:translateX(-50%);
-  width:46px;height:46px;border-radius:50%;
-  background:radial-gradient(circle,rgba(196,154,60,.22),rgba(196,154,60,0) 70%);
-  pointer-events:none;filter:blur(2px);animation:wineHeaderPulse 3.4s ease-in-out infinite;
-}
-.wine-section-header::after{
-  content:'';position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
-  width:60%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--gold3),var(--gold),transparent);
-  opacity:.5;
-}
+.wine-section-header::before{content:none}
+.wine-section-header::after{content:none}
 @keyframes wineHeaderPulse{
   0%,100%{opacity:.65;transform:translateX(-50%) scale(1)}
   50%{opacity:1;transform:translateX(-50%) scale(1.15)}
 }
 .wine-section-title{
-  font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:var(--gold);
-  letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:.5rem;
-  text-shadow:0 2px 14px rgba(196,154,60,.2),0 0 32px rgba(228,190,104,.1);
+  font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);
+  letter-spacing:.05em;display:flex;align-items:baseline;justify-content:flex-start;gap:.5rem;
   position:relative;
 }
 .wine-section-sub{
-  font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);
-  letter-spacing:.15em;text-transform:uppercase;margin-top:.4rem;
+  font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-deep);
+  letter-spacing:.15em;text-transform:uppercase;margin-top:.25rem;
   position:relative;
 }
 
@@ -2292,12 +2281,12 @@ body::after{
 }
 
 /* ═══════ WINE HEX MEDALLION (for hero/section headers) ═══════ */
-.wine-hex-medallion{
+.wine-hex-medallion{display:none;
   width:58px;height:58px;
   clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
   background:
     radial-gradient(circle at 40% 35%, rgba(255,248,230,.8), rgba(196,154,60,.1) 60%, rgba(28,42,34,.3));
-  display:flex;align-items:center;justify-content:center;
+  align-items:center;justify-content:center;
   position:relative;margin:0 auto .7rem;
   filter:drop-shadow(0 3px 14px rgba(196,154,60,.4)) drop-shadow(0 0 22px rgba(228,190,104,.18));
   animation:wineMedallionPulse 4s ease-in-out infinite;
@@ -2754,19 +2743,12 @@ body::after{
 }
 
 .wine-hub-hero{
-  text-align:center;padding:2rem 1rem 1.4rem;
-  position:relative;overflow:hidden;border-radius:var(--r);
+  text-align:left;padding:.4rem 0 0;
+  position:relative;overflow:visible;border-radius:0;
   animation:storyReveal .7s cubic-bezier(.22,1,.36,1) both;
-  min-height:220px;
+  min-height:0;
 }
-.wine-hub-hero::before{
-  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(196,154,60,.1) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 20% 80%, rgba(77,138,94,.06) 0%, transparent 50%),
-    radial-gradient(ellipse 35% 25% at 80% 60%, rgba(122,106,170,.05) 0%, transparent 50%);
-  pointer-events:none;z-index:0;
-}
+.wine-hub-hero::before{content:none}
 /* Hero hex pattern backdrop */
 .wine-hub-hero::after{
   content:'';position:absolute;inset:0;
@@ -2775,7 +2757,7 @@ body::after{
   pointer-events:none;z-index:0;
 }
 /* Hero floating sparkles */
-.wine-hub-sparkle{
+.wine-hub-sparkle{display:none;
   position:absolute;width:3px;height:3px;border-radius:50%;
   background:radial-gradient(circle,rgba(255,248,230,1),rgba(228,190,104,.5) 40%,transparent 70%);
   box-shadow:0 0 6px rgba(228,190,104,.8),0 0 14px rgba(196,154,60,.4);
@@ -2787,13 +2769,9 @@ body::after{
   30%,70%{opacity:1;transform:scale(1) translateY(-6px)}
 }
 .wine-hub-title{
-  font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;
-  color:var(--gold);letter-spacing:.06em;line-height:1.1;
-  text-shadow:0 2px 20px rgba(196,154,60,.25),0 0 48px rgba(228,190,104,.15);
-  position:relative;z-index:2;
-  background:linear-gradient(180deg,var(--gold3) 0%,var(--gold) 50%,var(--gold2) 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  animation:wineTitleGlow 4s ease-in-out infinite;
+  font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);
+  letter-spacing:.05em;text-align:left;line-height:1.3;position:relative;z-index:2;
+  padding-bottom:.65rem;border-bottom:1px solid rgba(28,42,34,.12);
 }
 @keyframes wineTitleGlow{
   /* Replaced filter-based glow with a pure text-shadow cycle. filter cycles
@@ -2803,19 +2781,15 @@ body::after{
   50%{text-shadow:0 2px 22px rgba(228,190,104,.46),0 0 48px rgba(228,190,104,.22)}
 }
 .wine-hub-verse{
-  font-family:'Cormorant Garamond',serif;font-size:1.02rem;font-style:italic;
-  color:var(--parch2);line-height:1.45;margin-top:.7rem;
-  max-width:330px;margin-left:auto;margin-right:auto;
-  position:relative;z-index:2;
-  padding:0 .8rem;
+  font-family:'Cormorant Garamond',serif;font-size:.98rem;font-style:italic;
+  color:rgba(28,42,34,.62);line-height:1.45;margin:.8rem 0 0;
+  text-align:left;padding-left:.85rem;border-left:2px solid rgba(196,154,60,.45);
+  max-width:none;position:relative;z-index:2;
 }
-.wine-hub-verse::before,.wine-hub-verse::after{
-  content:'';position:absolute;top:50%;width:18px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(196,154,60,.5));
-}
+.wine-hub-verse::before,.wine-hub-verse::after{content:none}
 .wine-hub-verse::before{left:-8px;transform:translateY(-50%) scaleX(-1)}
 .wine-hub-verse::after{right:-8px;transform:translateY(-50%)}
-.wine-hub-vine{
+.wine-hub-vine{display:none;
   width:0;height:1.5px;margin:.9rem auto;position:relative;z-index:2;
   background:linear-gradient(90deg,transparent,var(--gold),var(--gold3),var(--gold),transparent);
   animation:vineGrow 1.2s .4s cubic-bezier(.22,1,.36,1) forwards;
@@ -2895,15 +2869,15 @@ body::after{
 .wine-flashcard{animation:wineFloat 6s ease-in-out infinite}
 
 .wine-storybook-intro{
-  padding:.4rem 1rem;margin-bottom:.7rem;text-align:center;
-  position:relative;
+  padding:.15rem 0 .15rem .85rem;margin-bottom:.9rem;text-align:left;
+  position:relative;border-left:2px solid rgba(196,154,60,.45);
 }
 .wine-storybook-text{
   font-family:'Cormorant Garamond',serif;font-size:.98rem;font-style:italic;
-  color:rgba(28,42,34,.62);line-height:1.45;max-width:330px;margin:0 auto;
+  color:rgba(28,42,34,.62);line-height:1.45;max-width:none;margin:0;
 }
 /* fine ornament rule between the hero title and the byline */
-.wine-hero-rule{display:flex;align-items:center;gap:.5rem;justify-content:center;margin:.45rem auto .35rem;max-width:220px}
+.wine-hero-rule{display:none}
 .wine-hero-rule::before,.wine-hero-rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent)}
 .wine-hero-rule span{color:var(--gold);font-size:.6rem}
 
@@ -5150,7 +5124,7 @@ body::after{
     radial-gradient(ellipse 70% 40% at 50% 0%, rgba(196,154,60,.08), transparent 60%),
     radial-gradient(ellipse 60% 40% at 50% 100%, rgba(122,106,170,.04), transparent 55%);
 }
-.sensory-header{text-align:center;padding:1.2rem 0 .6rem;position:relative;z-index:1}
+.sensory-header{text-align:left;padding:.2rem 0 .65rem;margin-bottom:.9rem;border-bottom:1px solid rgba(28,42,34,.12);position:relative;z-index:1}
 .sensory-header::before{
   content:'';position:absolute;left:50%;top:2px;transform:translateX(-50%);
   width:50px;height:50px;border-radius:50%;
@@ -5158,13 +5132,10 @@ body::after{
   pointer-events:none;filter:blur(2px);animation:wineHeaderPulse 3.4s ease-in-out infinite;
 }
 .sensory-header h2{
-  font-family:var(--ff-display);font-size:1.35rem;color:var(--gold);margin:0 0 .3rem;letter-spacing:.05em;
-  text-shadow:0 2px 16px rgba(196,154,60,.2),0 0 32px rgba(228,190,104,.1);
-  background:linear-gradient(180deg,var(--gold3) 0%,var(--gold) 55%,var(--gold2) 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  position:relative;z-index:2;display:inline-block;
+  font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);
+  letter-spacing:.05em;margin:0;position:relative;z-index:2;
 }
-.sensory-header p{font-size:.74rem;color:rgba(28,42,34,.55);margin:0;line-height:1.5;max-width:380px;margin:0 auto;position:relative;z-index:2}
+.sensory-header p{font-size:.72rem;color:rgba(28,42,34,.55);margin:.25rem 0 0;line-height:1.5;max-width:none;position:relative;z-index:2}
 .sensory-modes{display:flex;gap:.4rem;justify-content:center;margin:1rem 0;position:relative;z-index:1}
 .sensory-mode{
   padding:.45rem .9rem;border-radius:20px;border:1.5px solid rgba(182,161,105,.3);
