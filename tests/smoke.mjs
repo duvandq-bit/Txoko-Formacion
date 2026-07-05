@@ -372,6 +372,18 @@ test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', 
     'map attribution control missing (required by OSM/CARTO tile terms)');
 });
 
+test('no dish in the Vegetariano category self-declares as not vegetarian', () => {
+  // Owner call (Jul 2026): the potato purée sat in Vegetariano while its own
+  // card warned "NO es vegetariano (caldo de pollo)" — moved to Guarniciones.
+  // Lock the class of contradiction, not just that dish.
+  const i = html.indexOf('const DISHES = [');
+  const j = html.indexOf('\n];', i);
+  const dishes = html.slice(i, j);
+  for (const m of dishes.matchAll(/\{id:(\d+),cat:'Vegetariano'[^\n]*/g)) {
+    assert(!/NO es vegetariano/i.test(m[0]), `dish id:${m[1]} is in Vegetariano but its notes say it is not vegetarian`);
+  }
+});
+
 // ─── 6c. Employee PIN server-verify wiring ──────────────────────
 console.log('\nAuth hardening');
 test('USE_SERVER_EMP_PIN_VERIFY exists and ships disabled (safe default)', () => {
