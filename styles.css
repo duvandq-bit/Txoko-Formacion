@@ -3245,8 +3245,8 @@ body::after{
   color:var(--gold);font-size:.55rem;letter-spacing:.35em;
   font-family:'Cinzel',serif;opacity:.7;
 }
-.exam-setup-crown-orn::before,
-.exam-setup-crown-orn::after{content:'◆';font-size:.5rem;opacity:.7}
+/* (flanking ◆ glyphs removed — the crown's side gradient lines carry the
+   ornament, matching the app-wide hero language) */
 
 .exam-setup-title{
   font-family:'Cinzel',serif;font-size:1.95rem;font-weight:500;letter-spacing:.06em;
@@ -6201,8 +6201,8 @@ body::after{
   letter-spacing:.05em;position:relative;z-index:1;margin:0 0 .3rem;
   text-shadow:0 0 24px rgba(228,190,104,.28),0 1px 2px rgba(0,0,0,.3);
 }
-.games-header-title::before{content:'◇';margin-right:.6rem;color:rgba(228,190,104,.5);font-size:.65rem;vertical-align:middle}
-.games-header-title::after{content:'◇';margin-left:.6rem;color:rgba(228,190,104,.5);font-size:.65rem;vertical-align:middle}
+/* (flanking ◇ glyphs removed — hero ornament language is the thin gradient
+   lines on the mono subtitle, shared with sup-hero and games-header-sub) */
 .games-header-sub{
   font-family:'DM Mono',monospace;font-size:.6rem;
   color:rgba(228,190,104,.6);letter-spacing:.18em;text-transform:uppercase;

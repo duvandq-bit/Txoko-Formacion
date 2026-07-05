@@ -876,6 +876,19 @@ test('dashboard polish: readable progress hexes, capitalized alert, collapsed ac
     'expanded view must still show the full canonical grid');
 });
 
+test('section heroes share one ornament language (no flanking glyphs)', () => {
+  // Exam's ◆ EVALUACIÓN ◆ and Juegos' ◇ Juegos ◇ came from CSS pseudo-elements;
+  // the app-wide hero ornament is the thin gradient line (sup-hero-sub style).
+  const css = read('styles.css');
+  assert(!/games-header-title::(before|after)\{content:'◇'/.test(css),
+    'games hero title must not flank with ◇ glyphs');
+  assert(!/exam-setup-crown-orn::(before|after)[^}]*content:'◆'/.test(css),
+    'exam crown must not flank with ◆ glyphs');
+  // The shared thin-line ornament stays.
+  assert(/\.sup-hero-sub::before/.test(css) && /\.games-header-sub::before/.test(css),
+    'hero subtitles must keep their gradient-line ornament');
+});
+
 test('floating FABs hide behind the open nav sheet / search', () => {
   // The sound toggle + sync pill float above #screenApp and otherwise overlap
   // the bottom-sheet options; they must hide while the nav or search is open.
