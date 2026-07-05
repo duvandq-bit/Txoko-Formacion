@@ -858,6 +858,24 @@ test('vinos hero is compact and venue-aware', () => {
     'vinos hero byline must be venue-aware with the Txoko copy as default');
 });
 
+test('dashboard polish: readable progress hexes, capitalized alert, collapsed achievements', () => {
+  // Progress hex center % used colDark (dark red/blue/purple) on the dark
+  // green card — unreadable. Both the % and the n/6 subtext must use colLight.
+  assert(/fill="\$\{pct>=100\?'#fff':colLight\}"/.test(html),
+    'progress hex percentage must use the light topic tone');
+  assert(!/font-size="6" fill="\$\{colDark\}"/.test(html),
+    'progress hex subtext must not use colDark on the dark card');
+  // The SRS alert title is capitalized like its sibling alerts.
+  assert(/'Plato para repasar':'Platos para repasar'/.test(html),
+    'SRS alert title must be capitalized');
+  // Achievements collapse to a showcase with a view-all toggle; the toggle is
+  // presentational only (unlock logic untouched).
+  assert(/function _toggleAchievements\(/.test(html) && /id="achSection"/.test(html),
+    'achievements section must collapse with a toggle');
+  assert(/_achShowAll \? ACHIEVEMENTS/.test(html),
+    'expanded view must still show the full canonical grid');
+});
+
 test('floating FABs hide behind the open nav sheet / search', () => {
   // The sound toggle + sync pill float above #screenApp and otherwise overlap
   // the bottom-sheet options; they must hide while the nav or search is open.

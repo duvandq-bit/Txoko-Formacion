@@ -14020,8 +14020,8 @@ function renderDashboard(){
             <!-- Progress segments -->
             ${segPaths}
             <!-- Center text -->
-            <text x="${cx}" y="${cy-1}" text-anchor="middle" dominant-baseline="middle" font-family="'Cinzel',serif" font-size="15" fill="${pct>=100?'#fff':colDark}" font-weight="700" filter="${pct>=100?`url(#${uid}_glow)`:''}">${pct}%</text>
-            <text x="${cx}" y="${cy+10}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="${colDark}" opacity=".55">${filled}/${segs}</text>
+            <text x="${cx}" y="${cy-1}" text-anchor="middle" dominant-baseline="middle" font-family="'Cinzel',serif" font-size="15" fill="${pct>=100?'#fff':colLight}" font-weight="700" filter="${pct>=100?`url(#${uid}_glow)`:''}">${pct}%</text>
+            <text x="${cx}" y="${cy+10}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="${colLight}" opacity=".65">${filled}/${segs}</text>
             <!-- Top gem crown -->
             <polygon points="${cx},${cy-42} ${cx+4},${cy-37} ${cx},${cy-32} ${cx-4},${cy-37}" fill="${col}" opacity=".7"/>
             <polygon points="${cx},${cy-32} ${cx+4},${cy-37} ${cx},${cy-35}" fill="${colDark}" opacity=".35"/>
@@ -14034,7 +14034,7 @@ function renderDashboard(){
           </g>
         </svg>
       </div>
-      <div style="font-family:'Cinzel',serif;font-size:.56rem;color:${col};text-align:center;letter-spacing:.08em;text-transform:uppercase;max-width:75px;line-height:1.2;font-weight:600;text-shadow:0 0 8px ${col}33">${tp.label}</div>
+      <div style="font-family:'Cinzel',serif;font-size:.56rem;color:${colLight};text-align:center;letter-spacing:.08em;text-transform:uppercase;max-width:75px;line-height:1.2;font-weight:600;text-shadow:0 0 8px ${col}55">${tp.label}</div>
     </div>`;
   }).join('');
 
@@ -14129,7 +14129,7 @@ function renderDashboard(){
       <button class="dash-alert" style="--da-c:#4888a0;min-height:64px;border:none;width:100%;text-align:left" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
         <div class="dash-num" aria-hidden="true">${_srsDue}</div>
         <div class="dash-alert-body">
-          <div class="dash-alert-title">${_en?(_srsDue===1?'dish to review':'dishes to review'):(_srsDue===1?'plato para repasar':'platos para repasar')}${_srsOverdue>0?` · ${_srsOverdue} ${_en?'overdue':'atrasados'}`:''}</div>
+          <div class="dash-alert-title">${_en?(_srsDue===1?'Dish to review':'Dishes to review'):(_srsDue===1?'Plato para repasar':'Platos para repasar')}${_srsOverdue>0?` · ${_srsOverdue} ${_en?'overdue':'atrasados'}`:''}</div>
           <div class="dash-alert-sub">${_en?'Spaced repetition — tap to open':'Repetición espaciada — toca para abrir'}</div>
         </div>
         <span class="dash-alert-arrow">›</span>
@@ -19146,16 +19146,31 @@ function _spawnGemParticles(container){
   }
 }
 
+// Collapsed by default: the dashboard used to end in a wall of ~34 locked
+// ghost tiles. The showcase shows every unlocked gem plus a short locked
+// teaser; "Ver los N logros" expands to the full canonical grid. Purely
+// presentational — achievements, XP and unlock logic are untouched.
+let _achShowAll=false;
+function _toggleAchievements(){
+  _achShowAll=!_achShowAll;
+  const el=document.getElementById('achSection');
+  if(el) el.outerHTML=renderAchievementsSection();
+}
 function renderAchievementsSection(){
   const emp=getEmp(currentUser);
   const unlocked=getUnlockedAchievements(emp);
   const unlockedIds=unlocked.map(a=>a.id);
+  const _lockedAll=ACHIEVEMENTS.filter(a=>!unlockedIds.includes(a.id));
+  const _teaser=Math.max(3, 8-unlocked.length);
+  const _shown=_achShowAll ? ACHIEVEMENTS
+    : ACHIEVEMENTS.filter(a=>unlockedIds.includes(a.id)).concat(_lockedAll.slice(0,_teaser));
+  const _hiddenCount=ACHIEVEMENTS.length-_shown.length;
 
-  return `<div style="margin-bottom:1rem">
+  return `<div style="margin-bottom:1rem" id="achSection">
     <div class="tunic-divider"><span>${LANG==='en'?'Achievements':'Logros'} (${unlocked.length}/${ACHIEVEMENTS.length})</span></div>
     <div class="dash-defer" style="display:flex;flex-wrap:wrap;gap:.55rem;background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 50%,#f0e8d8 100%);border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);padding:1.1rem;position:relative;overflow:hidden;box-shadow:inset 0 2px 8px rgba(196,154,60,.04),0 2px 12px rgba(28,42,34,.05)">
       <div style="position:absolute;inset:0;background-image:url(${"\"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.035)' stroke-width='0.4'/%3E%3C/svg%3E\""});pointer-events:none"></div>
-      ${ACHIEVEMENTS.map(a=>{
+      ${_shown.map(a=>{
         const isUnlocked=unlockedIds.includes(a.id);
         const gemIcon=gemSVG(a.gemColors[0],a.gemColors[1],a.gemColors[2],a.gemShape);
         const lockedGem=`<svg viewBox="0 0 64 64" width="38" height="38"><defs><linearGradient id="lkg_${a.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ccc" stop-opacity=".5"/><stop offset="100%" stop-color="#999" stop-opacity=".3"/></linearGradient><radialGradient id="lkr_${a.id}" cx=".4" cy=".3" r=".5"><stop offset="0%" stop-color="#ddd" stop-opacity=".3"/><stop offset="100%" stop-color="#aaa" stop-opacity="0"/></radialGradient></defs><polygon points="32,2 62,24 51,62 13,62 2,24" fill="url(#lkg_${a.id})" stroke="#bbb" stroke-width="1" opacity=".5"/><polygon points="32,2 48,24 32,17 16,24" fill="#eee" opacity=".2"/><rect x="0" y="0" width="64" height="64" fill="url(#lkr_${a.id})" opacity=".5"/><line x1="2" y1="24" x2="62" y2="24" stroke="#ccc" stroke-width=".4" opacity=".2"/><rect x="25" y="28" width="14" height="16" rx="3" fill="#b0b0b0" opacity=".3"/><rect x="27" y="30" width="10" height="12" rx="2" fill="#a0a0a0" opacity=".15"/><path d="M27,30 L27,26 Q27,20 32,20 Q37,20 37,26 L37,30" fill="none" stroke="#aaa" stroke-width="2" opacity=".35" stroke-linecap="round"/><circle cx="32" cy="37" r="1.8" fill="#999" opacity=".3"/><line x1="32" y1="37" x2="32" y2="41" stroke="#999" stroke-width="1" opacity=".25"/></svg>`;
@@ -19165,6 +19180,9 @@ function renderAchievementsSection(){
         </div>`;
       }).join('')}
     </div>
+    <button type="button" onclick="_toggleAchievements()" style="display:block;width:100%;min-height:44px;margin-top:.5rem;padding:.6rem;cursor:pointer;background:transparent;border:1px dashed rgba(196,154,60,.35);border-radius:12px;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)">
+      ${_achShowAll ? (LANG==='en'?'Show less':'Mostrar menos') : (LANG==='en'?`View all ${ACHIEVEMENTS.length} achievements`:`Ver los ${ACHIEVEMENTS.length} logros`) + ' · +' + _hiddenCount}
+    </button>
   </div>`;
 }
 
