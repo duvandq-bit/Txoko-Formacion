@@ -1,0 +1,115 @@
+<!-- @dsCard group="Screens" name="Examen simplificado" subtitle="Una acción principal, config plegada, roles claros" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Examen simplificado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital@1&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold3:#e4be68; --gold-deep:#7d5c2f; --ink:#1c2a22; --paper:#faf6ee;
+    --line:rgba(196,154,60,.16); --line2:rgba(196,154,60,.3); --rose:#c47068; --green:#2d6a3e; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:var(--ink);font-family:'Quicksand',sans-serif;margin:0;padding:1.2rem 0 4rem}
+  .note{padding:0 1rem .3rem;font-family:'DM Mono',monospace;font-size:.6rem;color:#8a8478;letter-spacing:.14em;text-transform:uppercase}
+  .blurb{padding:0 1rem .9rem;font-size:.74rem;color:rgba(28,42,34,.7);line-height:1.5}
+  .blurb b{color:var(--gold-deep)}
+  .frame{max-width:400px;margin:0 auto;background:#f4ede2;border:1px solid rgba(0,0,0,.06);padding:1.2rem .9rem 2rem}
+
+  /* hero mínimo */
+  .crown{display:flex;align-items:center;gap:.6rem;justify-content:center;margin-bottom:.6rem}
+  .crown::before,.crown::after{content:'';width:46px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.55),transparent)}
+  .crown span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);opacity:.7}
+  h1{font-family:'Cinzel',serif;font-size:1.7rem;font-weight:500;text-align:center;color:var(--ink)}
+  .sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(28,42,34,.6);text-align:center;margin:.35rem auto .3rem;max-width:300px;line-height:1.4}
+  /* orientación: qué es cada cosa */
+  .orient{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;color:rgba(28,42,34,.5);
+    text-align:center;margin:.5rem auto 1.1rem;max-width:330px;line-height:1.7;text-transform:uppercase}
+  .orient b{color:var(--gold-deep);font-weight:500}
+
+  /* ACCIÓN PRINCIPAL: un tap y empiezas */
+  .primary{display:flex;align-items:center;gap:.8rem;width:100%;min-height:64px;padding:1rem 1.1rem;margin-bottom:.55rem;
+    border:none;border-radius:16px;cursor:pointer;text-align:left;
+    background:linear-gradient(145deg,#d4aa4c,#c49a3c);box-shadow:0 4px 16px rgba(196,154,60,.35)}
+  .primary .ic{width:38px;height:38px;flex-shrink:0;border-radius:10px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center}
+  .primary .ic svg{width:20px;height:20px;stroke:#1a0f05}
+  .primary .tt{font-family:'Cinzel',serif;font-weight:600;font-size:1rem;color:#1a0f05}
+  .primary .ss{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:rgba(26,15,5,.65);margin-top:.15rem;text-transform:uppercase}
+  .primary .go{margin-left:auto;color:#1a0f05;font-size:1.2rem}
+
+  /* config plegada */
+  .custom{display:flex;align-items:center;gap:.6rem;width:100%;min-height:50px;padding:.75rem 1rem;margin-bottom:1.1rem;
+    border:1px dashed rgba(196,154,60,.4);border-radius:13px;background:transparent;cursor:pointer;text-align:left;
+    font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)}
+  .custom .chev{margin-left:auto;display:inline-flex;width:24px;height:24px;border-radius:7px;align-items:center;justify-content:center;
+    background:rgba(196,154,60,.14);border:1px solid rgba(196,154,60,.3)}
+  .custom .chev svg{width:12px;height:12px;stroke:var(--gold)}
+
+  /* simulacro de alérgenos: rol claro, separado */
+  .divider{display:flex;align-items:center;gap:.6rem;margin:.2rem 0 .7rem}
+  .divider::before,.divider::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.2),transparent)}
+  .divider span{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .drill{display:flex;align-items:center;gap:.8rem;width:100%;min-height:60px;padding:.9rem 1rem;margin-bottom:1.2rem;
+    border:1px solid rgba(196,112,104,.35);border-left:4px solid var(--rose);border-radius:14px;background:var(--paper);cursor:pointer;text-align:left;
+    box-shadow:0 2px 10px rgba(196,112,104,.08)}
+  .drill .ic{width:36px;height:36px;flex-shrink:0;border-radius:10px;background:rgba(196,112,104,.12);display:flex;align-items:center;justify-content:center}
+  .drill .ic svg{width:19px;height:19px;stroke:var(--rose)}
+  .drill .tt{font-family:'Cinzel',serif;font-weight:600;font-size:.92rem;color:var(--ink)}
+  .drill .ss{font-size:.7rem;color:rgba(28,42,34,.6);margin-top:.15rem;line-height:1.35}
+  .drill .go{margin-left:auto;color:var(--rose)}
+
+  /* progreso compacto: stats + barras juntos, al final */
+  .prog{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1rem;box-shadow:0 2px 10px rgba(28,42,34,.05)}
+  .prog-stats{display:flex;justify-content:space-around;margin-bottom:.9rem}
+  .prog-stats .n{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:600;color:var(--gold-deep);text-align:center}
+  .prog-stats .l{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;color:rgba(28,42,34,.5);text-transform:uppercase;text-align:center;margin-top:.15rem}
+  .bar{margin-bottom:.6rem}
+  .bar .h{display:flex;justify-content:space-between;font-size:.68rem;font-weight:600;color:rgba(28,42,34,.7);margin-bottom:.25rem}
+  .bar .h b{font-family:'DM Mono',monospace;font-weight:500}
+  .bar .t{height:6px;border-radius:3px;background:rgba(196,154,60,.12);overflow:hidden}
+  .bar .f{height:100%;border-radius:3px}
+</style>
+</head>
+<body>
+  <div class="note">Examen — propuesta simplificada</div>
+  <div class="blurb"><b>1)</b> Fuera "Modo Examen" (la pestaña ya dice Examen); <b>2)</b> una línea que orienta qué es cada cosa; <b>3)</b> UNA acción principal — empezar un examen rápido de un toque; <b>4)</b> la configuración (tema · categoría · nº preguntas) se pliega en "Personalizar"; <b>5)</b> el Test de Alérgenos se renombra <b>Simulacro de Alérgenos</b> con su rol explicado — no compite con el examen; <b>6)</b> stats + dominio en UNA tarjeta compacta al final.</div>
+
+  <div class="frame">
+    <div class="crown"><span>EVALUACIÓN</span></div>
+    <h1>Examen</h1>
+    <div class="sub">"Mide tu dominio. Cada acierto sube tu precisión y tu rango."</div>
+    <div class="orient"><b>Repasar</b> entrena tu memoria a diario · <b>el examen</b> comprueba lo que ya dominas</div>
+
+    <button class="primary">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
+      <span><span class="tt">Empezar examen</span><br><span class="ss">10 preguntas · todos los temas</span></span>
+      <span class="go">›</span>
+    </button>
+
+    <button class="custom">Personalizar — tema · categoría · nº de preguntas
+      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+
+    <div class="divider"><span>Entrenamiento crítico</span></div>
+    <button class="drill">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+      <span><span class="tt">Simulacro de Alérgenos</span><br><span class="ss">Situaciones reales con trampas — distinto del repaso: aquí se entrena la seguridad</span></span>
+      <span class="go">›</span>
+    </button>
+
+    <div class="divider"><span>Tu dominio</span></div>
+    <div class="prog">
+      <div class="prog-stats">
+        <div><div class="n">59</div><div class="l">Preguntas</div></div>
+        <div><div class="n">71%</div><div class="l">Precisión</div></div>
+        <div><div class="n">8<span style="font-size:.7em;opacity:.6">/90</span></div><div class="l">Dominados</div></div>
+      </div>
+      <div class="bar"><div class="h"><span>Alérgenos</span><b>67%</b></div><div class="t"><div class="f" style="width:67%;background:linear-gradient(90deg,#c47068,#c47068cc)"></div></div></div>
+      <div class="bar"><div class="h"><span>Ingredientes</span><b>73%</b></div><div class="t"><div class="f" style="width:73%;background:linear-gradient(90deg,#4888a0,#4888a0cc)"></div></div></div>
+      <div class="bar"><div class="h"><span>Storytelling</span><b>73%</b></div><div class="t"><div class="f" style="width:73%;background:linear-gradient(90deg,#7a6aaa,#7a6aaacc)"></div></div></div>
+    </div>
+  </div>
+</body>
+</html>

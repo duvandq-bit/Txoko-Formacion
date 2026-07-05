@@ -564,6 +564,8 @@ const T = {
     qAllergens: (name) => `¿Qué alérgenos contiene ${name}?`,
     qIngredients: (name) => `¿Cuáles son los ingredientes principales de ${name}?`,
     qHistory: (name) => `¿Cuál es el storytelling de ${name}?`,
+    qIngredientsRev: () => `¿De qué plato son estos ingredientes?`,
+    qHistoryRev: () => `¿De qué plato habla este storytelling?`,
     cats: ['Entrantes','Principales','Guarniciones','Salsas','Postres','Vegetariano'],
     pinEnter: 'Introduce tu PIN',
     pinSetup: 'Crea un PIN de 4 dígitos para proteger tu perfil',
@@ -658,6 +660,8 @@ const T = {
     qAllergens: (name) => `What allergens does ${name} contain?`,
     qIngredients: (name) => `What are the main ingredients of ${name}?`,
     qHistory: (name) => `What is the storytelling behind ${name}?`,
+    qIngredientsRev: () => `Which dish do these ingredients belong to?`,
+    qHistoryRev: () => `Which dish is this storytelling about?`,
     cats: ['Starters','Mains','Sides','Sauces','Desserts','Vegetarian'],
     pinEnter: 'Enter your PIN',
     pinSetup: 'Create a 4-digit PIN to protect your profile',
@@ -4116,7 +4120,7 @@ function _scenarioModification(dish, dd, _en){
   // trainee can dismiss those without thinking, defeating the test. The
   // dish-name substring check is conservative: it only fires when the
   // overlap is unambiguous (>3 chars, normalized for accents/case).
-  const _norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const _norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   const dishNameNorm = _norm(src.name || '');
   const dishNameWords = dishNameNorm.split(/\s+/).filter(w => w.length > 3);
   const isDishDefining = (ing) => {
@@ -11415,7 +11419,7 @@ let _WINE_ADJACENT_TYPES = null; // lazy-loaded from data/vinos-content.json (se
 
 // Normaliza string (lowercase, sin acentos, trim)
 function _wineNorm(s){
-  return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
 }
 
 /**
@@ -11526,7 +11530,7 @@ const OLD_WORLD = new Set([
   'austria','hungria','alemania','germany','italia','italy','portugal','grecia','greece'
 ]);
 function _wineWorld(origin){
-  const o = (origin||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+  const o = (origin||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   if(NEW_WORLD.has(o)) return 'new';
   if(OLD_WORLD.has(o)) return 'old';
   return null;
@@ -14739,6 +14743,30 @@ function _pickDistractorPool(d){
   return sameCat.length >= 6 ? sameCat : DISHES.filter(x => x.id !== d.id);
 }
 
+// ── Anti-echo question reversal ─────────────────────────────────────
+// Measured on the real menu: in "what are the ingredients of X?" questions the
+// correct option contained dish-name words that no distractor had in 74% of
+// cases (83% for storytelling) — readable without studying. Those topics now
+// ask in reverse ("which dish is this?") and the shown passage masks the name
+// tokens of all four candidate dishes, so the tell is impossible by
+// construction. Data is untouched — masking is quiz-display only.
+const _EXAM_STOP = new Set(['con','de','del','la','las','los','el','en','al','and','the','with','of','y','a','su','sus','para']);
+function _examNameTokens(d){
+  const dd = getDish(d);
+  const both = (d.name || '') + ' ' + (dd.name || '');
+  return both.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .split(/[^a-z0-9]+/).filter(w => w.length > 3 && !_EXAM_STOP.has(w));
+}
+function _examRedact(text, candidates){
+  const stems = new Set();
+  candidates.forEach(c => _examNameTokens(c).forEach(tk => stems.add(tk.replace(/(es|s)$/,''))));
+  return String(text).split(/(\s+|[.,;:()"«»¡!¿?])/).map(part => {
+    const w = part.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if(!/^[a-z0-9]{3,}$/.test(w)) return part;
+    return stems.has(w.replace(/(es|s)$/,'')) ? '···' : part;
+  }).join('');
+}
+
 function startExam(){
   let pool=examConfig.cat==='all'?[...DISHES]:DISHES.filter(d=>d.cat===examConfig.cat);
   pool = pool.filter(d => _isQuizableDish(d));
@@ -14771,6 +14799,21 @@ function startExam(){
         });
         if(fb){topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');}else continue;
       }else continue;
+    }
+    // Ingredients & storytelling reverse direction (anti-echo): the passage is
+    // shown with all candidates' name tokens masked and the options are dish
+    // names. Allergens stay direct — measured 0% echo (shared vocabulary).
+    if(topic.key==='ingredients' || topic.key==='history'){
+      const namePool=_lqaShuffle(_pickDistractorPool(d)).filter(o=>{
+        const a=(topic.a(o)||'').trim(); return a && a!=='—' && a!==noHist;
+      }).slice(0,3);
+      if(namePool.length<3) continue;
+      const candidates=[d,...namePool];
+      const passage=_examRedact(correct, candidates);
+      const nameOf=x=>getDish(x).name;
+      const choices=_lqaShuffle(candidates.map(nameOf));
+      validQuestions.push({dish:d,topic,correct:nameOf(d),choices,rev:true,passage});
+      continue;
     }
     const wrongPool=_lqaShuffle(_pickDistractorPool(d));
     const wrongs=[];
@@ -14823,8 +14866,11 @@ function renderExamQuestion(){
         <span class="exam-timer" id="examTimer">—</span>
       </div>
       <div class="exam-track"><div class="exam-track-fill" style="width:${pct}%"></div></div>
-      <div class="exam-q-label">${q.topic.q(q.dish)}</div>
-      <div class="exam-dish-title">${qd.name}</div>
+      ${q.rev
+        ? `<div class="exam-q-label">${q.topic.key==='ingredients'?t('qIngredientsRev'):t('qHistoryRev')}</div>
+           <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.22);border-left:3px solid var(--gold);border-radius:12px;padding:.85rem 1rem;margin:0 0 1rem;font-family:${q.topic.key==='history'?"'Cormorant Garamond',serif;font-style:italic;font-size:1rem":"'Quicksand',sans-serif;font-size:.85rem"};line-height:1.55;color:rgba(28,42,34,.8)">"${escapeHtml(q.passage)}"</div>`
+        : `<div class="exam-q-label">${q.topic.q(q.dish)}</div>
+           <div class="exam-dish-title">${qd.name}</div>`}
       <div class="choices" id="examChoices">
         ${q.choices.map((c,i)=>`<button class="choice" onclick="answerExam(${i})" id="choice${i}">
           <span class="choice-ltr">${letters[i]}</span><span class="choice-txt">${c}</span><span class="choice-mark" aria-hidden="true"></span>

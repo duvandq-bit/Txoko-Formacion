@@ -902,6 +902,22 @@ test('section heroes share one ornament language (no flanking glyphs)', () => {
     'hero subtitles must keep their gradient-line ornament');
 });
 
+test('exam anti-echo: ingredients/history questions are reversed and redacted', () => {
+  // Measured on the real menu: the correct option leaked dish-name words in
+  // 74% (ingredients) / 83% (history) of questions. Those topics now ask in
+  // reverse with the passage masked of all candidates' name tokens.
+  assert(/function _examRedact\(/.test(html) && /function _examNameTokens\(/.test(html),
+    'redaction helpers missing');
+  assert(/topic\.key==='ingredients' \|\| topic\.key==='history'/.test(html),
+    'ingredients/history must branch into the reversed builder');
+  assert(/rev:true,passage/.test(html), 'reversed questions must carry the redacted passage');
+  assert(/qIngredientsRev/.test(html) && /qHistoryRev/.test(html),
+    'reversed question labels missing (ES/EN)');
+  // The renderer must show the passage, not the dish name, for reversed questions.
+  assert(/q\.rev\s*\n?\s*\?/.test(html) && /escapeHtml\(q\.passage\)/.test(html),
+    'renderer must show the redacted passage for reversed questions');
+});
+
 test('floating FABs hide behind the open nav sheet / search', () => {
   // The sound toggle + sync pill float above #screenApp and otherwise overlap
   // the bottom-sheet options; they must hide while the nav or search is open.
