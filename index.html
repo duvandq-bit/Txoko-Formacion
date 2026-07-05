@@ -4774,10 +4774,12 @@ function renderSmartReview(){
   const _icoFlame = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-5-4-7-4-11 0 0-3 2-3 6-1 0-2-1-2-3-2 1.5-3 4-3 8a7 7 0 0 0 8 7z"/></svg>';
   const _icoBolt = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>';
   const _icoTarget = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6"/></svg>';
+  // Strict phosphor monochrome — the old orange/gold accents broke the
+  // Pip-Boy tube (inline --stat-c wins over the scoped CSS override).
   const statsHTML = [
-    { icon:_icoFlame, v: streakVal, l: _en?'streak':'racha', c:'#dc5a32', cls: currStreak > 0 ? 'flame' : '' },
-    { icon:_icoBolt, v: bestStreak, l: _en?'best combo':'mejor combo', c:'#c49a3c', cls:'' },
-    { icon:_icoTarget, v: ad.totalQuizzes>0 ? accuracy+'%' : '—', l: _en?'precision':'precisión', c:'#4a8f6f', cls:'' }
+    { icon:_icoFlame, v: streakVal, l: _en?'streak':'racha', c:'#3dffa0', cls: currStreak > 0 ? 'flame' : '' },
+    { icon:_icoBolt, v: bestStreak, l: _en?'best combo':'mejor combo', c:'#3dffa0', cls:'' },
+    { icon:_icoTarget, v: ad.totalQuizzes>0 ? accuracy+'%' : '—', l: _en?'precision':'precisión', c:'#3dffa0', cls:'' }
   ].map(s=>`
     <div class="ri-stat ${s.cls}" style="--stat-c:${s.c}">
       <div class="ri-stat-icon">${s.icon}</div>
@@ -4861,13 +4863,18 @@ function renderSmartReview(){
         <span></span><span></span><span></span><span></span>
       </div>
 
+      <div class="ri-topbar" aria-hidden="true">
+        <span><b>TXOKO·OS</b> // ${_en?'FLOOR TERMINAL':'TERMINAL DE SALA'}</span>
+        <span class="ri-sys">SYS·OK</span>
+      </div>
+
       <div class="ri-hero">
         <div class="ri-ring" style="--ring-target:${ringTarget}">
           <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
             <defs>
               <linearGradient id="riRingGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#4a8f6f"/>
-                <stop offset="100%" stop-color="#c49a3c"/>
+                <stop offset="0%" stop-color="#3dffa0"/>
+                <stop offset="100%" stop-color="#7fffb8"/>
               </linearGradient>
             </defs>
             <circle class="ri-ring-track" cx="36" cy="36" r="32"/>

@@ -1067,6 +1067,28 @@ test('smart review v2: unified frames, no set-fingerprint, smarter scenarios', (
     'dedupe must receive the correct option FIRST (shuffle after), or correctIdx can be -1');
 });
 
+test('Repaso Inteligente landing is a real Pip-Boy tube (monochrome CRT)', () => {
+  // Owner: "haz que parezca mucho más a un pip-boy". The device illusion dies
+  // with any non-green accent inside the screen, serif type, or missing CRT
+  // furniture — lock the invariants.
+  const css = read('styles.css');
+  const smart = html.slice(html.indexOf('function renderSmartReview'), html.indexOf('function _riSetDifficulty'));
+  assert(!/#dc5a32|#c49a3c/.test(smart), 'orange/gold accents are back inside the Pip-Boy stats');
+  assert(smart.includes('ri-topbar'), 'device boot strip (TXOKO·OS) missing');
+  const cssPip = css.slice(css.indexOf('Pip-Boy / Fallout reskin'), css.indexOf('Hero greeting with radial progress'));
+  assert(/ri-crt-sweep/.test(cssPip), 'CRT sweep beam missing');
+  assert(/repeating-linear-gradient\(0deg,rgba\(0,0,0,\.14\)/.test(cssPip), 'scanlines missing or weakened');
+  assert(/\.ri-console \.ri-greet-name\{[^}]*DM Mono/.test(cssPip), 'greeting must be terminal mono, not serif');
+  assert(/ri-cursor/.test(cssPip), 'blinking terminal cursor missing');
+  // Motion must be gated for staff with vestibular sensitivity — the Pip-Boy
+  // ambient animations live in the GLOBAL atmospheric freeze list.
+  const rmIdx = css.indexOf('ATMOSPHERIC LAYER — prefers-reduced-motion guard');
+  const rmBlock = css.slice(rmIdx, rmIdx + 3000);
+  for (const sel of ['.ri-console::before', '.ri-topbar .ri-sys::before', '.ri-console .ri-greet-name::after']) {
+    assert(rmBlock.includes(sel), `${sel} missing from the reduced-motion freeze list`);
+  }
+});
+
 test('smart review owner-reported fixes: header leak, agua), Txipiron≠ron', () => {
   // 1. The Smart Review card header names the current dish, so cross-carta
   //    questions must never use it as the hidden answer.
