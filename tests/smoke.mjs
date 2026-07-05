@@ -1230,6 +1230,18 @@ test('.btn-secondary has a real style rule (not a bare grey button)', () => {
     'no .btn-secondary usages found — was the class renamed?');
 });
 
+test('Explorar is a TUNIC manual page (statline + ledger categories)', () => {
+  // Same de-boxing as dashboard/LQA: the boxed stats banner and the seven
+  // ~200px category tiles became a mono stat line and hairline ledger rows.
+  const rep = html.slice(html.indexOf('const cards=activeCats.map'), html.indexOf('function searchRepaso'));
+  assert(/dash-row" aria-label[^>]*onclick="openRepasoCat/.test(rep),
+    'categories must render as ledger rows');
+  assert(/repaso-statline/.test(rep), 'overview must be the mono stat line');
+  assert(!/repaso-cat-tile|repaso-orient-stat/.test(rep), 'old boxed tiles/banner must be gone');
+  const css = read('styles.css');
+  assert(/\.repaso-statline\{/.test(css), 'repaso statline style missing');
+});
+
 test('LQA hub is a TUNIC manual page (banner + index + ledger categories)', () => {
   // Same de-boxing language as the dashboard: the 9 colored cards became one
   // flagship Ghost banner, a 2-col mode index and hairline category rows.

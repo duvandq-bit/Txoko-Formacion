@@ -6799,6 +6799,11 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .dash-statline b{color:var(--gold3);font-weight:500}
 .dash-statline i{font-style:normal;color:rgba(196,154,60,.5)}
 
+.repaso-statline{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin:0 0 1rem;
+  font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;color:rgba(28,42,34,.55)}
+.repaso-statline b{color:var(--parchment);font-weight:500}
+.repaso-statline i{font-style:normal;color:rgba(196,154,60,.5)}
+
 /* ═══════ ACHIEVEMENT DETAIL MODAL ═══════ */
 .achievement-modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(2px);

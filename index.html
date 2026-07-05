@@ -14982,14 +14982,16 @@ function renderRepasoCats(){
   const cards=activeCats.map(c=>{
     const dishes=DISHES.filter(d=>d.cat===c);
     const kn=dishes.filter(d=>known[d.id]).length;
-    const pct=Math.round(kn/dishes.length*100);
+    const full=kn===dishes.length&&dishes.length>0;
     const col=CAT_COLORS[c];
-    return `<div role="button" tabindex="0" aria-label="${escapeHTML(catLocal(c))}, ${kn}/${dishes.length} ${LANG==='en'?'mastered':'dominados'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="repaso-cat-tile" style="--cat-color:${col}" onclick="openRepasoCat('${escapeHTML(c)}')">
-      <div class="repaso-cat-icon">${CAT_ICONS[c]}</div>
-      <div class="repaso-cat-name">${catLocal(c)}</div>
-      <div class="repaso-cat-meta">${dishes.length} ${t('dishes')} · ${kn} ${t('dominated')}</div>
-      <div class="repaso-track"><div class="repaso-track-fill" style="width:${pct}%"></div></div>
-    </div>`;
+    return `<button class="dash-row" aria-label="${escapeHTML(catLocal(c))}, ${kn}/${dishes.length} ${LANG==='en'?'mastered':'dominados'}" onclick="openRepasoCat('${escapeHTML(c)}')">
+      <span class="dash-row-num" style="font-size:.8rem;color:${full?'var(--green-deep)':'var(--parch3)'}" aria-hidden="true">${kn}/${dishes.length}</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title"><span style="display:inline-block;width:6px;height:6px;transform:rotate(45deg);background:${col};margin-right:.45rem;vertical-align:1px"></span>${catLocal(c)}</span>
+        <span class="dash-row-sub" style="display:block">${dishes.length} ${t('dishes')} · ${kn} ${t('dominated')}</span>
+      </span>
+      <span class="dash-row-go">›</span>
+    </button>`;
   }).join('');
 
   // Orientation banner stats
@@ -15001,20 +15003,11 @@ function renderRepasoCats(){
   }).length;
 
   document.getElementById('appContent').innerHTML=`
-    <!-- Orientation banner -->
-    <div class="repaso-orient" role="status" aria-label="${_en?'Overview':'Resumen'}">
-      <div class="repaso-orient-stat">
-        <div class="repaso-orient-num">${totalRecipes}</div>
-        <div class="repaso-orient-label">${_en?'Recipes':'Recetas'}</div>
-      </div>
-      <div class="repaso-orient-stat">
-        <div class="repaso-orient-num mast">${masteredCount}</div>
-        <div class="repaso-orient-label">${_en?'Mastered':'Dominadas'}</div>
-      </div>
-      <div class="repaso-orient-stat">
-        <div class="repaso-orient-num${dueCount>0?' due':''}">${dueCount}</div>
-        <div class="repaso-orient-label">${_en?'To review':'A repasar'}</div>
-      </div>
+    <!-- Orientation: one mono line, no box -->
+    <div class="repaso-statline" role="status" aria-label="${_en?'Overview':'Resumen'}">
+      <span><b>${totalRecipes}</b> ${_en?'recipes':'recetas'}</span><i>·</i>
+      <span><b style="color:var(--gold-deep)">${masteredCount}</b> ${_en?'mastered':'dominadas'}</span><i>·</i>
+      <span><b${dueCount>0?' style="color:#a04848"':''}>${dueCount}</b> ${_en?'to review':'a repasar'}</span>
     </div>
     <!-- Search bar (manuscript pen-nib) -->
     <div style="position:relative;margin-bottom:1rem;animation:slideUp .3s ease both">
@@ -15033,8 +15026,8 @@ function renderRepasoCats(){
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
     <!-- Category grid -->
     <div id="repasoCatGrid">
-      <div class="section-eyebrow" style="animation:slideUp .3s ease both">${t('selectSection')}</div>
-      <div class="repaso-grid">${cards}</div>
+      <div class="tunic-divider"><span>${t('selectSection')}</span></div>
+      <div>${cards}</div>
     </div>
   `;
 }
