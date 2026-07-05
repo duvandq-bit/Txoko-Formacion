@@ -10295,7 +10295,7 @@ function _renderWineMap(c, bar) {
     '<div id="wineOriginButtons" style="display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-bottom:.8rem;position:relative;z-index:1">' +
     regionDots.map(r =>
       '<button data-origin="' + r.name.replace(/"/g,'&quot;') + '" onclick="_selectMapOrigin(\'' + r.name.replace(/'/g, "\\'") + '\')" class="wine-map-origin-pill' + (_mapSelectedOrigin===r.name ? ' active' : '') + '">' +
-      r.name + ' <span style="opacity:.6">(' + r.wines.length + ')</span></button>'
+      r.name + ' <i class="wfp-count">' + r.wines.length + '</i></button>'
     ).join('') +
     '</div>' +
     '<div class="wine-map-frame">' +
@@ -10660,7 +10660,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
       // Hover tooltip
       var popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'ml-do-tooltip', offset: [0, -sz/2] });
       el.addEventListener('mouseenter', function() {
-        popup.setLngLat([r.lng, r.lat]).setHTML('<span class="ml-region-label">' + r.name + ' (' + r.wines.length + ')</span>').addTo(_wineLeafletMap);
+        popup.setLngLat([r.lng, r.lat]).setHTML('<span class="ml-region-label">' + r.name + ' · ' + r.wines.length + '</span>').addTo(_wineLeafletMap);
       });
       el.addEventListener('mouseleave', function() { popup.remove(); });
 
@@ -13009,9 +13009,9 @@ function _renderWineLearn(c, bar){
         const _cDetail = _t.detail || c.detail;
         const _cTip = _t.tip || c.tip;
         return `
-        <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.04}s">
+        <div onclick="this.querySelector('.wc-detail').classList.toggle('open')" class="wine-concept-card wc-row card-animate" style="animation-delay:${i*0.04}s">
           <div style="display:flex;align-items:center;gap:.6rem;position:relative">
-            <div class="wine-type-icon" style="background:linear-gradient(135deg,var(--gold-a),rgba(196,154,60,.2));width:32px;height:32px;font-size:1rem">${c.icon}</div>
+            <span style="font-size:1.05rem;flex-shrink:0;width:24px;text-align:center">${c.icon}</span>
             <div style="flex:1">
               <div style="display:flex;align-items:center;gap:.4rem">
                 <span style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment)">${_cTitle}</span>
@@ -13057,7 +13057,7 @@ function _renderWineLearn(c, bar){
                   const lvlTxt = e.level==='principiante'?'var(--sage)':e.level==='intermedio'?'var(--gold)':'var(--candy-purple)';
                   const title = _en?(e.title_en||e.title):e.title;
                   const body = _en?(e.body_en||e.body):e.body;
-                  return `<div onclick="this.querySelector('.we-detail').classList.toggle('open')" class="wine-concept-card card-animate" style="animation-delay:${i*0.03}s;border-left:3px solid ${cm.color}">
+                  return `<div onclick="this.querySelector('.we-detail').classList.toggle('open')" class="wine-concept-card wc-row card-animate" style="animation-delay:${i*0.03}s;border-left:3px solid ${cm.color}">
                     <div style="display:flex;align-items:center;gap:.5rem;position:relative">
                       <span style="font-size:1.1rem">${e.icon}</span>
                       <div style="flex:1">
@@ -13336,16 +13336,22 @@ function _renderWineQuiz(c, bar){
       <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);font-weight:700;margin-bottom:.3rem">${LANG==='en'?'Wine Quiz':'Quiz de Vinos'}</div>
       <div style="font-size:.8rem;color:var(--parch2)">${LANG==='en'?'Test your wine knowledge':'Pon a prueba tu conocimiento vinícola'}</div>
     </div>
-    <div class="wq-cat-grid">
-      <button class="wq-cat-btn wq-cat-all" onclick="_startWineQuiz('all',15)">
-        <div class="wq-cat-icon">T</div>
-        <div class="wq-cat-name">${LANG==='en'?'All':'Todas'}</div>
-        <div class="wq-cat-count">${WINE_FLASHCARDS.length} ${LANG==='en'?'questions':'preguntas'}</div>
+    <div>
+      <button class="dash-row" onclick="_startWineQuiz('all',15)">
+        <span class="dash-row-num" style="font-size:.9rem;color:var(--gold-deep)" aria-hidden="true">${WINE_FLASHCARDS.length}</span>
+        <span class="dash-row-body">
+          <span class="dash-row-title">${LANG==='en'?'All questions':'Todas las preguntas'}</span>
+          <span class="dash-row-sub" style="display:block">${LANG==='en'?'15-question mixed round':'ronda mixta de 15 preguntas'}</span>
+        </span>
+        <span class="dash-row-go">›</span>
       </button>
-      ${cats.map(ct => `<button class="wq-cat-btn" onclick="_startWineQuiz('${ct}',Math.min(10,${catCounts[ct]}))">
-        <div class="wq-cat-icon">${{Principiante:TXKO_ICONS.sFrutal,Conceptos:TXKO_ICONS.learn,['Nuestra Carta']:TXKO_ICONS.wTinto,Maridaje:TXKO_ICONS.cloche,Servicio:TXKO_ICONS.pServicio}[ct]||'◇'}</div>
-        <div class="wq-cat-name">${LANG==='en'?({Principiante:'Beginner',Conceptos:'Concepts',['Nuestra Carta']:'Our Menu',Maridaje:'Pairings',Servicio:'Service'}[ct]||ct):ct}</div>
-        <div class="wq-cat-count">${catCounts[ct]} ${LANG==='en'?'questions':'preguntas'}</div>
+      ${cats.map(ct => `<button class="dash-row" onclick="_startWineQuiz('${ct}',Math.min(10,${catCounts[ct]}))">
+        <span class="dash-row-num" style="font-size:.9rem;color:var(--parch3)" aria-hidden="true">${catCounts[ct]}</span>
+        <span class="dash-row-body">
+          <span class="dash-row-title">${LANG==='en'?({Principiante:'Beginner',Conceptos:'Concepts',['Nuestra Carta']:'Our Menu',Maridaje:'Pairings',Servicio:'Service'}[ct]||ct):ct}</span>
+          <span class="dash-row-sub" style="display:block">${LANG==='en'?'questions':'preguntas'}</span>
+        </span>
+        <span class="dash-row-go">›</span>
       </button>`).join('')}
     </div>
   </div>`;

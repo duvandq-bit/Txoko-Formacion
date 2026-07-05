@@ -836,6 +836,21 @@ test('wine detail speaks the premium carta language', () => {
     'the broken "G " info label must be the ◇ ornament');
 });
 
+test('vinos sweep 2: quiz rows, concept rows, no paren counts on map pills', () => {
+  // Re-audit with the TUNIC bar: quiz category tiles and concept accordion
+  // cards become hairline rows; map origin pills drop spreadsheet parens.
+  assert(/dash-row" onclick="_startWineQuiz\('all',15\)/.test(html),
+    'wine quiz must lead with the all-questions ledger row');
+  assert(!/wq-cat-grid/.test(html), 'boxed quiz category grid must be gone');
+  assert(/wine-concept-card wc-row/.test(html), 'concept accordions must use the row modifier');
+  const css = read('styles.css');
+  assert(/\.wine-concept-card\.wc-row\{[^}]*border-bottom:1px solid rgba\(28,42,34,\.1\)/.test(css),
+    'wc-row must be a hairline row');
+  assert(/wfp-count\" > \' \+ r\.wines\.length|wfp-count\">' \+ r\.wines\.length/.test(html),
+    'map origin pills must use the fine mono count');
+  assert(!/\(' \+ r\.wines\.length \+ '\)/.test(html), 'paren counts must be gone from map pills');
+});
+
 test('vinos sub-screens finished in the premium language', () => {
   // No wine section title may carry flanking ✦/◇ glyphs — the ornament is the
   // fine rule under the title (the carta pattern).

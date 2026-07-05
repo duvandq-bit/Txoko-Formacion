@@ -6804,6 +6804,15 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .repaso-statline b{color:var(--parchment);font-weight:500}
 .repaso-statline i{font-style:normal;color:rgba(196,154,60,.5)}
 
+/* concept accordions as hairline rows (TUNIC de-boxing) — the base
+   .wine-concept-card stays a card for callout uses */
+.wine-concept-card.wc-row{
+  background:transparent;border:none;border-radius:0;box-shadow:none;
+  border-bottom:1px solid rgba(28,42,34,.1);padding:.75rem .15rem;
+}
+.wine-concept-card.wc-row:last-child{border-bottom:none}
+.wine-concept-card.wc-row[style*="border-left"]{border-left-width:3px !important;padding-left:.6rem}
+
 /* ═══════ ACHIEVEMENT DETAIL MODAL ═══════ */
 .achievement-modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(2px);
