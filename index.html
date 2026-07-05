@@ -39,7 +39,7 @@
      frame-src: YouTube embeds.  worker-src blob: for MapLibre's workers.
    • Rollback: delete this tag and bump the service-worker VERSION.
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.tile.opentopomap.org https://demotiles.maplibre.org https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://demotiles.maplibre.org https://*.tile.opentopomap.org; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
@@ -10297,7 +10297,7 @@ function _renderWineMap(c, bar) {
     '</div>' +
     '<div class="wine-map-frame">' +
     '<div id="wineLeafletMap" class="wine-leaflet-map" style="position:relative;z-index:1"></div>' +
-    '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.5rem;letter-spacing:.08em;position:relative;z-index:1">✦ ' + (_en ? 'Rotate: Right-click + drag · Tilt: Ctrl + drag' : 'Rotar: Click derecho + arrastrar · Inclinar: Ctrl + arrastrar') + ' ✦</div>' +
+    '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:var(--parch4);text-align:center;margin-top:.5rem;letter-spacing:.08em;position:relative;z-index:1">✦ ' + (_en ? 'Pinch to zoom · Tap a region or a DO point' : 'Pellizca para acercar · Toca una región o un punto DO') + ' ✦</div>' +
     '</div>' +
     '<div id="wineDOList" style="position:relative;z-index:1"></div>' +
     '<div id="wineInfoPanel" style="position:relative;z-index:1"></div>' +
@@ -10316,9 +10316,23 @@ function _mlBoundsFromFeatures(features) {
       coords[0].forEach(function(c) { bounds.extend(c); });
     } else if(f.geometry.type === 'MultiPolygon') {
       coords.forEach(function(poly) { poly[0].forEach(function(c) { bounds.extend(c); }); });
+    } else if(f.geometry.type === 'Point') {
+      bounds.extend(coords);
     }
   });
   return bounds;
+}
+
+// Helper: centroid [lng,lat] of a hand-traced DO ring (stored as [lat,lng]
+// vertex lists in _wineDOPolygons). Bounding-box midpoint — stable even for
+// irregular or unevenly-sampled rings.
+function _mlDOCentroid(coords) {
+  var minLa = 90, maxLa = -90, minLo = 180, maxLo = -180;
+  coords.forEach(function(c) {
+    if(c[0] < minLa) minLa = c[0]; if(c[0] > maxLa) maxLa = c[0];
+    if(c[1] < minLo) minLo = c[1]; if(c[1] > maxLo) maxLo = c[1];
+  });
+  return [(minLo + maxLo) / 2, (minLa + maxLa) / 2];
 }
 
 async function _initWineLeafletMap(regionDots, byOrigin) {
@@ -10348,38 +10362,39 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   mapEl.parentElement.style.position = 'relative';
   mapEl.parentElement.appendChild(badge);
 
-  // Initialize MapLibre GL JS — WebGL GPU-accelerated map
-  // NOTE: Terrain 3D is added AFTER load to avoid blocking if DEM source fails
+  // Initialize MapLibre GL JS — WebGL GPU-accelerated map.
+  // Basemap: CARTO Voyager raster (@2x retina) — real professional cartography
+  // (cities, roads, relief tint, water) served untouched: no color filters,
+  // top-down north-up view, like a printed atlas.
   _wineLeafletMap = new maplibregl.Map({
     container: 'wineLeafletMap',
     style: {
       version: 8,
       sources: {
-        'topo-raster': {
+        'carto-voyager': {
           type: 'raster',
           tiles: [
-            'https://a.tile.opentopomap.org/{z}/{x}/{y}.png',
-            'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
-            'https://c.tile.opentopomap.org/{z}/{x}/{y}.png'
+            'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+            'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+            'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+            'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'
           ],
           tileSize: 256,
-          maxzoom: 17
+          maxzoom: 18,
+          attribution: '© OpenStreetMap contributors · © CARTO'
         }
       },
       layers: [
-        { id: 'background', type: 'background', paint: { 'background-color': '#8a9e7c' } },
-        {
-          id: 'topo-tiles', type: 'raster', source: 'topo-raster',
-          paint: { 'raster-saturation': -0.35, 'raster-brightness-max': 0.93, 'raster-contrast': 0.08, 'raster-hue-rotate': 12 }
-        }
+        { id: 'background', type: 'background', paint: { 'background-color': '#d6dee2' } },
+        { id: 'basemap-tiles', type: 'raster', source: 'carto-voyager' }
       ]
     },
     center: [-2, 42],
     zoom: 5,
     minZoom: 3,
     maxZoom: 11,
-    pitch: 40,
-    bearing: -5,
+    pitch: 0,
+    bearing: 0,
     antialias: true,
     attributionControl: false
   });
@@ -10389,6 +10404,8 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
 
   // Navigation controls (zoom, compass, pitch)
   _wineLeafletMap.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'top-right');
+  // Required attribution for OSM/CARTO tiles (compact "i" toggle)
+  _wineLeafletMap.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
   // Hover popup (reused)
   _mlHoverPopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'ml-do-tooltip', offset: 12 });
@@ -10431,31 +10448,6 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   // ── Map load event — add all data layers ──
   _wineLeafletMap.on('load', async function() {
     dbg('[Txoko Map] MapLibre GL JS loaded (WebGL GPU-accelerated)');
-
-    // ── Try to add 3D terrain (non-blocking — map works without it) ──
-    try {
-      _wineLeafletMap.addSource('terrain-dem', {
-        type: 'raster-dem',
-        tiles: ['https://demotiles.maplibre.org/terrain-tiles/{z}/{x}/{y}.png'],
-        tileSize: 256,
-        maxzoom: 12
-      });
-      _wineLeafletMap.addLayer({
-        id: 'hillshade', type: 'hillshade', source: 'terrain-dem',
-        paint: {
-          'hillshade-shadow-color': '#473B24',
-          'hillshade-highlight-color': '#fff8e8',
-          'hillshade-accent-color': '#5a4a2a',
-          'hillshade-illumination-direction': 315,
-          'hillshade-exaggeration': 0.25
-        }
-      });
-      _wineLeafletMap.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
-      dbg('[Txoko Map] 3D terrain enabled');
-    } catch(e) {
-      dbgw('[Txoko Map] 3D terrain not available:', e.message);
-      // Map still works fine without terrain — just flat
-    }
 
     // Load province + country TopoJSON in parallel
     try {
@@ -10551,7 +10543,11 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
       dbgw('[Txoko Map] Failed to load TopoJSON:', e);
     }
 
-    // ── DO POLYGONS ──
+    // ── DO MARKERS ──
+    // The DO shapes in _wineDOPolygons are hand-approximated, not official
+    // boundaries — drawing them as filled areas over a real basemap reads as
+    // fake. Instead each DO is shown as a precise point at its centroid:
+    // honest, accurate, and it lets the real cartography breathe.
     var doFeatures = _wineDOPolygons.map(function(do_) {
       var origin = do_.origin;
       var color = _wineRegionColors[origin] || '#c49a3c';
@@ -10561,49 +10557,46 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
         type: 'Feature',
         properties: {
           name: do_.name, origin: origin,
-          _fillColor: isActive ? color : (hasWines ? color : 'transparent'),
-          _fillOpacity: isActive ? 0.45 : (hasWines ? 0.15 : 0),
-          _lineColor: isActive ? '#ffd700' : (hasWines ? color : '#5a4a2a'),
-          _lineWidth: isActive ? 3.5 : (hasWines ? 1.8 : 0.8),
-          _lineOpacity: isActive ? 1 : (hasWines ? 0.75 : 0.35)
+          _color: isActive ? '#ffd700' : color,
+          _radius: isActive ? 6 : (hasWines ? 4.5 : 3),
+          _opacity: hasWines ? 0.9 : 0.35
         },
-        geometry: {
-          type: 'Polygon',
-          coordinates: [do_.coords.map(function(c) { return [c[1], c[0]]; })]
-        }
+        geometry: { type: 'Point', coordinates: _mlDOCentroid(do_.coords) }
       };
     });
 
     _mlDOGeoJSON = { type: 'FeatureCollection', features: doFeatures };
 
-    _wineLeafletMap.addSource('do-polygons', { type: 'geojson', data: _mlDOGeoJSON });
+    _wineLeafletMap.addSource('do-points', { type: 'geojson', data: _mlDOGeoJSON });
     _wineLeafletMap.addLayer({
-      id: 'do-fill', type: 'fill', source: 'do-polygons',
-      paint: { 'fill-color': ['get', '_fillColor'], 'fill-opacity': ['get', '_fillOpacity'] }
-    });
-    _wineLeafletMap.addLayer({
-      id: 'do-line', type: 'line', source: 'do-polygons',
-      paint: { 'line-color': ['get', '_lineColor'], 'line-width': ['get', '_lineWidth'], 'line-opacity': ['get', '_lineOpacity'] },
-      layout: { 'line-cap': 'round', 'line-join': 'round' }
+      id: 'do-points', type: 'circle', source: 'do-points',
+      paint: {
+        'circle-radius': ['get', '_radius'],
+        'circle-color': ['get', '_color'],
+        'circle-opacity': ['get', '_opacity'],
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': '#ffffff',
+        'circle-stroke-opacity': ['get', '_opacity']
+      }
     });
 
     // ── HOVER & CLICK INTERACTIVITY ──
     // DO hover
-    _wineLeafletMap.on('mouseenter', 'do-fill', function() {
+    _wineLeafletMap.on('mouseenter', 'do-points', function() {
       _wineLeafletMap.getCanvas().style.cursor = 'pointer';
     });
-    _wineLeafletMap.on('mouseleave', 'do-fill', function() {
+    _wineLeafletMap.on('mouseleave', 'do-points', function() {
       _wineLeafletMap.getCanvas().style.cursor = '';
       if(_mlHoverPopup) _mlHoverPopup.remove();
     });
-    _wineLeafletMap.on('mousemove', 'do-fill', function(e) {
+    _wineLeafletMap.on('mousemove', 'do-points', function(e) {
       if(e.features && e.features[0]) {
         var doName = e.features[0].properties.name;
         _mlHoverPopup.setLngLat(e.lngLat).setHTML(doName).addTo(_wineLeafletMap);
       }
     });
     // DO click
-    _wineLeafletMap.on('click', 'do-fill', function(e) {
+    _wineLeafletMap.on('click', 'do-points', function(e) {
       if(e.features && e.features[0]) {
         _selectMapOrigin(e.features[0].properties.origin);
       }
@@ -10679,7 +10672,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
 
       var labelEl = document.createElement('div');
       labelEl.className = 'ml-region-label';
-      labelEl.textContent = origin + (count ? ' (' + count + ')' : '');
+      labelEl.textContent = origin + (count ? ' · ' + count : '');
 
       new maplibregl.Marker({ element: labelEl, anchor: 'center' })
         .setLngLat([center.lng, center.lat])
@@ -10727,34 +10720,28 @@ function _mlApplyDOColors(byOrigin) {
     if(isActive) {
       var doColor = _doColorPalette[_doColorIdx % _doColorPalette.length];
       _doColorIdx++;
-      f.properties._fillColor = doColor;
-      f.properties._fillOpacity = 0.35;
-      f.properties._lineColor = doColor;
-      f.properties._lineWidth = 3.5;
-      f.properties._lineOpacity = 1;
+      f.properties._color = doColor;
+      f.properties._radius = 6;
+      f.properties._opacity = 1;
 
-      // Add DO label at center
-      var bounds = _mlBoundsFromFeatures([f]);
-      var center = bounds.getCenter();
+      // Add DO name label just above its centroid point
       var shortName = f.properties.name.replace(/^(DOCa |DO Ca |DOP |DO |AOC |DOCG |VT |VP |DAC )/,'');
       var labelEl = document.createElement('div');
       labelEl.className = 'ml-do-label';
       labelEl.style.background = doColor;
       labelEl.textContent = shortName;
-      var lbl = new maplibregl.Marker({ element: labelEl, anchor: 'center' })
-        .setLngLat([center.lng, center.lat])
+      var lbl = new maplibregl.Marker({ element: labelEl, anchor: 'bottom', offset: [0, -8] })
+        .setLngLat(f.geometry.coordinates)
         .addTo(_wineLeafletMap);
       _wineDOLabels.push(lbl);
     } else {
-      f.properties._fillColor = hasWines ? regionColor : 'transparent';
-      f.properties._fillOpacity = hasWines ? 0.10 : 0;
-      f.properties._lineColor = hasWines ? regionColor : '#5a4a2a';
-      f.properties._lineWidth = hasWines ? 1.5 : 0.8;
-      f.properties._lineOpacity = hasWines ? 0.6 : 0.3;
+      f.properties._color = regionColor;
+      f.properties._radius = hasWines ? 4.5 : 3;
+      f.properties._opacity = hasWines ? 0.9 : 0.35;
     }
   });
 
-  _wineLeafletMap.getSource('do-polygons').setData(_mlDOGeoJSON);
+  _wineLeafletMap.getSource('do-points').setData(_mlDOGeoJSON);
 }
 
 function _selectMapOrigin(name) {

@@ -345,10 +345,31 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
     'unpkg.com',                        // maplibre + topojson (script/style)
     'fonts.googleapis.com',             // font CSS (style-src)
     'fonts.gstatic.com',                // font files (font-src)
-    'tile.opentopomap.org',             // wine map tiles (img/connect)
+    'basemaps.cartocdn.com',            // wine map tiles — CARTO Voyager (img/connect)
     'www.youtube.com'                   // video embeds (frame-src)
   ];
   for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
+});
+
+test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', () => {
+  // Basemap must be CARTO Voyager retina raster served untouched — no hue/
+  // saturation filters that make real cartography look artificial.
+  assert(html.includes('basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'),
+    'CARTO Voyager retina tiles missing from map init');
+  assert(!/raster-hue-rotate|raster-saturation/.test(html),
+    'raster color filters are back — the basemap should render untouched');
+  // The old "3D terrain" pointed at a DEM endpoint that does not exist
+  // (demotiles.maplibre.org/terrain-tiles) — it must stay removed.
+  assert(!html.includes('demotiles.maplibre.org'), 'dead demotiles DEM endpoint is back in the map');
+  assert(!/setTerrain\(/.test(html), 'fake 3D terrain is back in the wine map');
+  // Hand-approximated DO rings must not render as filled areas over real
+  // cartography: each DO is a precise centroid point + label instead.
+  assert(html.includes("id: 'do-points', type: 'circle'"), 'do-points circle layer missing');
+  assert(!html.includes("id: 'do-fill'"), 'hand-drawn DO polygon fill layer is back');
+  assert(/function _mlDOCentroid\(/.test(html), '_mlDOCentroid centroid helper missing');
+  // OSM/CARTO tile usage requires visible attribution on the map.
+  assert(/new maplibregl\.AttributionControl\(\{ compact: true \}\)/.test(html),
+    'map attribution control missing (required by OSM/CARTO tile terms)');
 });
 
 // ─── 6c. Employee PIN server-verify wiring ──────────────────────
