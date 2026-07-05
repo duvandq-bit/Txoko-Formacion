@@ -23251,6 +23251,12 @@ let _chatMsgs = [];
 let _chatPresence = {};   // name -> {avatar, at}
 let _chatSeenIds = new Set();
 let _chatEmojiOpen = false;
+let _chatRoster = [];          // employee names for @mention autocomplete
+let _chatReplyTo = null;       // message being quoted in the composer
+let _chatTypers = {};          // name -> last typing ts (broadcast)
+let _chatTypingSentAt = 0;
+let _chatTypingTimer = null;
+const CHAT_QUICK_REACTS = ['👍','❤️','😂','🔥','👏','🙏'];
 const CHAT_EMOJIS = ['😀','😂','🥹','😍','😎','🤩','😅','😉','🙂','😇','🤗','🤔','😴','🥳','😭','😤','😱','🙄','😬','🤤','👍','👏','🙌','🙏','💪','👌','🤝','✌️','🔥','✨','⭐','💯','❤️','🧡','💛','💚','💙','💜','🖤','🤍','☕','🍷','🍸','🥂','🍾','🍽️','🧑‍🍳','👨‍🍳','👩‍🍳','🥗','🍤','🧀','🍰','🎉','🎂','⚡','🌅','🌙','☀️','🌊'];
 
 function _getSupaClient(){
@@ -23299,8 +23305,17 @@ function renderChat(){
       <div class="chat-stream" id="chatStream" role="log" aria-live="polite">
         <div class="chat-loading">${_en?'Connecting…':'Conectando…'}</div>
       </div>
+      <div class="chat-typing" id="chatTyping" style="display:none" aria-live="polite"></div>
       <div class="chat-emoji-pop" id="chatEmojiPop" style="display:none" aria-hidden="true">
         ${CHAT_EMOJIS.map(e=>`<button type="button" class="chat-emoji" onclick="_chatAddEmoji('${e}')">${e}</button>`).join('')}
+      </div>
+      <div class="chat-mention-pop" id="chatMentionPop" style="display:none" role="listbox" aria-label="${_en?'Mention someone':'Mencionar a alguien'}"></div>
+      <div class="chat-reply-bar" id="chatReplyBar" style="display:none">
+        <div class="chat-reply-bar-body">
+          <span class="chat-reply-bar-author" id="chatReplyAuthor"></span>
+          <span class="chat-reply-bar-text" id="chatReplyText"></span>
+        </div>
+        <button type="button" class="chat-reply-cancel" onclick="_chatCancelReply()" aria-label="${_en?'Cancel reply':'Cancelar respuesta'}">✕</button>
       </div>
       <div class="chat-composer">
         <button type="button" class="chat-tool" onclick="_chatPickPhoto()" aria-label="${_en?'Send photo':'Enviar foto'}" title="${_en?'Photo':'Foto'}">
@@ -23310,8 +23325,8 @@ function renderChat(){
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
         </button>
         <textarea id="chatInput" class="chat-input" rows="1" maxlength="800"
-          placeholder="${_en?'Write to the team…':'Escribe al equipo…'}"
-          enterkeyhint="send" oninput="_chatGrow(this)"
+          placeholder="${_en?'Write to the team… @ mentions':'Escribe al equipo… @ menciona'}"
+          enterkeyhint="send" oninput="_chatGrow(this);_chatNotifyTyping();_chatMentionScan(this)"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();_chatSend();}"></textarea>
         <button type="button" class="chat-send" id="chatSendBtn" onclick="_chatSend()" aria-label="${_en?'Send':'Enviar'}">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
@@ -23343,9 +23358,17 @@ async function _chatConnect(){
     if(stream) stream.innerHTML = `<div class="chat-loading">${LANG==='en'?'Chat unavailable offline':'Chat no disponible sin conexión'}</div>`;
     return;
   }
+  // Roster for @mention autocomplete (cloud first, local fallback)
+  if(!_chatRoster.length){
+    try{
+      const all = await supaFetchAllEmployees();
+      if(all && all.length) _chatRoster = all.map(e=>e.name);
+    }catch(_){}
+    if(!_chatRoster.length) _chatRoster = Object.keys(DB.employees||{});
+  }
   // 1) Load recent history over REST
   try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages?select=id,employee,message,image_url,deleted,created_at&room=eq.${CHAT_ROOM}&order=created_at.desc&limit=80`,
+    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages?select=id,employee,message,image_url,deleted,created_at,reply_to,reactions,mentions&room=eq.${CHAT_ROOM}&order=created_at.desc&limit=80`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
     if(res.ok){
       const rows = await res.json();
@@ -23367,11 +23390,41 @@ async function _chatConnect(){
     .on('postgres_changes', { event:'UPDATE', schema:'public', table:'chat_messages', filter:'room=eq.'+CHAT_ROOM },
       (payload)=>_chatOnUpdate(payload.new))
     .on('presence', { event:'sync' }, ()=>_chatSyncPresence())
+    .on('broadcast', { event:'typing' }, (p)=>_chatOnTyping(p && p.payload))
     .subscribe((status)=>{
       if(status==='SUBSCRIBED'){
         _chatChannel.track({ name: me, avatar: (getEmp(me)||{}).avatar || null, at: new Date().toISOString() });
       }
     });
+}
+
+// ── "Escribiendo…" (realtime broadcast, no DB) ──
+function _chatNotifyTyping(){
+  const now = Date.now();
+  if(!_chatChannel || now - _chatTypingSentAt < 2200) return;
+  _chatTypingSentAt = now;
+  try{ _chatChannel.send({ type:'broadcast', event:'typing', payload:{ name: currentUser } }); }catch(_){}
+}
+function _chatOnTyping(payload){
+  if(!payload || !payload.name || payload.name===currentUser) return;
+  _chatTypers[payload.name] = Date.now();
+  _chatRenderTyping();
+  clearTimeout(_chatTypingTimer);
+  _chatTypingTimer = setTimeout(_chatRenderTyping, 4200);
+}
+function _chatRenderTyping(){
+  const el = document.getElementById('chatTyping');
+  if(!el) return;
+  const now = Date.now();
+  const names = Object.keys(_chatTypers).filter(n=>now-_chatTypers[n] < 4000);
+  Object.keys(_chatTypers).forEach(n=>{ if(now-_chatTypers[n] >= 4000) delete _chatTypers[n]; });
+  if(!names.length){ el.style.display='none'; el.textContent=''; return; }
+  const _en = LANG==='en';
+  const label = names.length===1
+    ? `${names[0]} ${_en?'is typing':'está escribiendo'}`
+    : `${names.slice(0,2).join(_en?' and ':' y ')}${names.length>2?' +'+(names.length-2):''} ${_en?'are typing':'están escribiendo'}`;
+  el.innerHTML = `${_chatEsc(label)}<span class="chat-typing-dots"><i></i><i></i><i></i></span>`;
+  el.style.display='flex';
 }
 
 function _chatDisconnect(){
@@ -23382,6 +23435,9 @@ function _chatDisconnect(){
   }
   _chatChannel = null;
   _chatEmojiOpen = false;
+  _chatReplyTo = null;
+  _chatTypers = {};
+  clearTimeout(_chatTypingTimer);
 }
 
 function _chatSyncPresence(){
@@ -23453,20 +23509,51 @@ function _chatRenderStream(forceScroll){
     const grouped = m.employee===lastName && (ts-lastTs) < 4*60*1000;
     lastName = m.employee; lastTs = ts;
     const canDel = !m.deleted && (mine || currentUser==='Duvan');
+    let mentions = [];
+    try{ mentions = JSON.parse(m.mentions||'[]'); }catch(_){ mentions = []; }
+    const mentionsMe = !m.deleted && mentions.includes(currentUser);
     let body;
     if(m.deleted){
       body = `<span class="chat-deleted">${LANG==='en'?'message deleted':'mensaje eliminado'}</span>`;
     } else if(m.image_url){
       body = `<img class="chat-photo" src="${_chatEsc(m.image_url)}" alt="foto" loading="lazy" onclick="event.stopPropagation();_chatOpenPhoto('${_chatEsc(m.image_url)}')">`
-           + (m.message ? `<div class="chat-caption">${_chatEsc(m.message)}</div>` : '');
+           + (m.message ? `<div class="chat-caption">${_chatDecorateMentions(_chatEsc(m.message), mentions)}</div>` : '');
     } else {
-      body = `<div class="chat-text">${_chatEsc(m.message)}</div>`;
+      body = `<div class="chat-text">${_chatDecorateMentions(_chatEsc(m.message), mentions)}</div>`;
     }
-    html += `<div class="chat-row ${mine?'mine':'other'}${grouped?' grouped':''}" data-id="${m.id}">
+    // Quoted message (reply) — resolve within loaded history
+    let quote = '';
+    if(!m.deleted && m.reply_to){
+      const q = _chatMsgs.find(x=>x.id===m.reply_to);
+      const qText = q ? (q.deleted ? (LANG==='en'?'message deleted':'mensaje eliminado')
+                                   : (q.image_url ? '📷 '+(q.message||(LANG==='en'?'Photo':'Foto')) : (q.message||'')))
+                      : (LANG==='en'?'previous message':'mensaje anterior');
+      quote = `<div class="chat-quote" onclick="event.stopPropagation();_chatScrollToMsg(${m.reply_to})">
+        <span class="chat-quote-author">${q?_chatEsc(q.employee):'·'}</span>
+        <span class="chat-quote-text">${_chatEsc(String(qText).slice(0,110))}</span>
+      </div>`;
+    }
+    // Reactions pills
+    const reacts = m.deleted ? {} : _chatParseReactions(m);
+    const reactKeys = Object.keys(reacts);
+    const reactsHtml = reactKeys.length ? `<div class="chat-reacts">${reactKeys.map(e=>{
+      const who = reacts[e]||[];
+      return `<button type="button" class="chat-react-pill${who.includes(currentUser)?' me':''}"
+        onclick="event.stopPropagation();_chatReact(${m.id},'${_chatEsc(e)}')"
+        title="${_chatEsc(who.join(', '))}">${_chatEsc(e)} ${who.length}</button>`;
+    }).join('')}</div>` : '';
+    // Action row on tap: quick reactions + reply (+ delete when allowed)
+    const actions = m.deleted ? '' : `<div class="chat-actions">
+      ${CHAT_QUICK_REACTS.map(e=>`<button type="button" class="chat-act" onclick="event.stopPropagation();_chatReact(${m.id},'${e}');this.closest('.chat-row').classList.remove('sel')">${e}</button>`).join('')}
+      <button type="button" class="chat-act chat-act-tool" onclick="event.stopPropagation();_chatStartReply(${m.id})" aria-label="${LANG==='en'?'Reply':'Responder'}">↩</button>
+      ${canDel?`<button type="button" class="chat-act chat-act-tool del" onclick="event.stopPropagation();_chatDelete(${m.id})" aria-label="${LANG==='en'?'Delete':'Eliminar'}">🗑</button>`:''}
+    </div>`;
+    html += `<div class="chat-row ${mine?'mine':'other'}${grouped?' grouped':''}${mentionsMe?' mentioned':''}" data-id="${m.id}">
       ${(!mine && !grouped) ? `<span class="chat-avatar">${renderSmallAvatar(m.employee, 30)}</span>` : `<span class="chat-avatar-spacer"></span>`}
       <div class="chat-bubble-wrap">
         ${(!grouped) ? `<div class="chat-meta">${mine?'':`<span class="chat-author">${_chatEsc(m.employee)}</span>`}<span class="chat-ts">${_chatTime(m.created_at)}</span></div>` : ''}
-        <div class="chat-bubble" onclick="this.closest('.chat-row').classList.toggle('sel')">${body}${canDel?`<button class="chat-del" onclick="event.stopPropagation();_chatDelete(${m.id})" aria-label="${LANG==='en'?'Delete':'Eliminar'}" title="${LANG==='en'?'Delete':'Eliminar'}">✕</button>`:''}</div>
+        <div class="chat-bubble" onclick="_chatBubbleTap(this)">${quote}${body}</div>
+        ${actions}${reactsHtml}
       </div>
     </div>`;
   });
@@ -23479,6 +23566,15 @@ function _chatGrow(el){
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
 
+// Tap a bubble → toggle its action row (only one open at a time)
+function _chatBubbleTap(bubble){
+  const row = bubble.closest('.chat-row');
+  if(!row) return;
+  const wasSel = row.classList.contains('sel');
+  document.querySelectorAll('.chat-row.sel').forEach(r=>r.classList.remove('sel'));
+  if(!wasSel) row.classList.add('sel');
+}
+
 async function _chatSend(){
   const input = document.getElementById('chatInput');
   if(!input) return;
@@ -23486,7 +23582,24 @@ async function _chatSend(){
   if(!text) return;
   input.value = ''; _chatGrow(input);
   if(_chatEmojiOpen) _chatToggleEmoji();
-  await _chatInsert({ message: text });
+  const pop = document.getElementById('chatMentionPop'); if(pop) pop.style.display='none';
+  const mentions = _chatParseMentions(text).filter(n=>n!==currentUser);
+  const fields = { message: text };
+  if(mentions.length) fields.mentions = JSON.stringify(mentions);
+  if(_chatReplyTo) fields.reply_to = _chatReplyTo.id;
+  _chatCancelReply();
+  await _chatInsert(fields);
+  // Notify mentioned teammates: in-app bell + lock-screen push (send-push fn)
+  if(mentions.length){
+    const snippet = text.length>90 ? text.slice(0,90)+'…' : text;
+    mentions.forEach(n=>{
+      supaCreateNotification(n, `💬 ${currentUser} te ha mencionado en La Terraza: "${snippet}"`, 'info');
+      fetch(`${SUPA_URL}/functions/v1/send-push`, {
+        method:'POST', headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ target:n, title:`💬 ${currentUser} · La Terraza`, body:snippet, tag:'chat' })
+      }).catch(()=>{});
+    });
+  }
 }
 
 async function _chatInsert(fields){
@@ -23539,6 +23652,116 @@ function _chatAddEmoji(e){
   const input = document.getElementById('chatInput');
   if(!input) return;
   input.value += e; input.focus(); _chatGrow(input);
+}
+
+// ── @Menciones ──
+// Autocomplete: when the caret sits after "@prefix", offer matching teammates.
+function _chatMentionScan(input){
+  const pop = document.getElementById('chatMentionPop');
+  if(!pop) return;
+  const upto = input.value.slice(0, input.selectionStart==null?input.value.length:input.selectionStart);
+  const m = upto.match(/(?:^|\s)@([^\s@]{0,20})$/);
+  if(!m){ pop.style.display='none'; return; }
+  const q = m[1].toLowerCase();
+  const norm = s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const cands = _chatRoster
+    .filter(n=>n!==currentUser && (q==='' || norm(n).startsWith(norm(q)) || norm(n).includes(' '+norm(q))))
+    .slice(0, 6);
+  if(!cands.length){ pop.style.display='none'; return; }
+  pop.innerHTML = cands.map(n=>`
+    <button type="button" class="chat-mention-item" role="option" onclick="_chatMentionPick('${_chatEsc(n).replace(/'/g,"\\'")}')">
+      <span class="chat-avatar sm">${renderSmallAvatar(n, 22)}</span>
+      <span>${_chatEsc(n)}</span>
+      ${_chatPresence[n]?'<span class="chat-online-dot" style="margin-left:auto"></span>':''}
+    </button>`).join('');
+  pop.style.display='flex';
+}
+function _chatMentionPick(name){
+  const input = document.getElementById('chatInput');
+  const pop = document.getElementById('chatMentionPop');
+  if(!input) return;
+  const pos = input.selectionStart==null?input.value.length:input.selectionStart;
+  const upto = input.value.slice(0, pos);
+  const rest = input.value.slice(pos);
+  input.value = upto.replace(/@[^\s@]{0,20}$/, '@'+name+' ') + rest;
+  if(pop) pop.style.display='none';
+  input.focus(); _chatGrow(input);
+}
+// Parse known-teammate mentions out of a message (longest names first so
+// "Ana María" wins over "Ana").
+function _chatParseMentions(text){
+  const found = [];
+  const sorted = [..._chatRoster].sort((a,b)=>b.length-a.length);
+  const norm = s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const tNorm = norm(text);
+  sorted.forEach(n=>{
+    if(found.includes(n)) return;
+    if(tNorm.includes('@'+norm(n))) found.push(n);
+  });
+  return found;
+}
+// Highlight @mentions inside an ALREADY-ESCAPED message body.
+function _chatDecorateMentions(escaped, mentions){
+  let out = escaped;
+  (mentions||[]).forEach(n=>{
+    const escName = _chatEsc(n).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    out = out.replace(new RegExp('@('+escName+')','gi'),
+      (_, g1)=>`<span class="chat-mention${n===currentUser?' me':''}">@${g1}</span>`);
+  });
+  return out;
+}
+
+// ── Responder citando ──
+function _chatStartReply(id){
+  const m = _chatMsgs.find(x=>x.id===id);
+  if(!m || m.deleted) return;
+  _chatReplyTo = m;
+  const bar = document.getElementById('chatReplyBar');
+  if(bar){
+    document.getElementById('chatReplyAuthor').textContent = m.employee;
+    document.getElementById('chatReplyText').textContent =
+      m.image_url ? '📷 ' + (m.message || (LANG==='en'?'Photo':'Foto')) : (m.message||'').slice(0,90);
+    bar.style.display='flex';
+  }
+  document.querySelectorAll('.chat-row.sel').forEach(r=>r.classList.remove('sel'));
+  const input = document.getElementById('chatInput');
+  if(input) input.focus();
+}
+function _chatCancelReply(){
+  _chatReplyTo = null;
+  const bar = document.getElementById('chatReplyBar');
+  if(bar) bar.style.display='none';
+}
+function _chatScrollToMsg(id){
+  const el = document.querySelector(`.chat-row[data-id="${id}"]`);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.classList.add('flash');
+  setTimeout(()=>el.classList.remove('flash'), 1400);
+}
+
+// ── Reacciones ──
+function _chatParseReactions(m){
+  try{ const r = JSON.parse(m.reactions||'{}'); return (r && typeof r==='object') ? r : {}; }
+  catch(_){ return {}; }
+}
+async function _chatReact(id, emoji){
+  const m = _chatMsgs.find(x=>x.id===id);
+  if(!m || m.deleted || !currentUser) return;
+  const r = _chatParseReactions(m);
+  const list = r[emoji] || [];
+  const i = list.indexOf(currentUser);
+  if(i>=0) list.splice(i,1); else list.push(currentUser);
+  if(list.length) r[emoji] = list; else delete r[emoji];
+  m.reactions = JSON.stringify(r);
+  _chatRenderStream();  // optimistic; realtime UPDATE reconciles for everyone
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/chat_messages?id=eq.${id}`, {
+      method:'PATCH',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ reactions: m.reactions })
+    });
+  }catch(_){}
 }
 
 function _chatPickPhoto(){

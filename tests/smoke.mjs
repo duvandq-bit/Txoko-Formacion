@@ -406,7 +406,7 @@ test('La Terraza chat: nav wired, realtime teardown, safe render, moderation', (
   assert(/currentTab==='chat' && tab!=='chat'/.test(html) && /function _chatDisconnect\(/.test(html),
     'chat realtime teardown on tab change missing');
   // User content must be escaped (no XSS via message/name/photo url).
-  const rc = html.slice(html.indexOf('function _chatRenderStream'), html.indexOf('function _chatRenderStream') + 3000);
+  const rc = html.slice(html.indexOf('function _chatRenderStream'), html.indexOf('function _chatRenderStream') + 8000);
   assert(/_chatEsc\(m\.message\)/.test(rc) && /_chatEsc\(m\.image_url\)/.test(rc) && /_chatEsc\(m\.employee\)/.test(rc),
     'chat message/photo/author must be HTML-escaped');
   // Moderation: author deletes own; supervisor 'Duvan' deletes any.
@@ -415,6 +415,31 @@ test('La Terraza chat: nav wired, realtime teardown, safe render, moderation', (
   // Photos are downscaled client-side before upload (mobile bandwidth).
   assert(/function _chatDownscale\(/.test(html) && /\.toBlob\(/.test(html) && /'image\/webp'/.test(html),
     'chat photo downscale-to-webp missing');
+});
+
+test('La Terraza chat: WhatsApp features (mentions, replies, reactions, typing)', () => {
+  // @Mentions: autocomplete + parse + notify (in-app bell AND lock-screen push)
+  assert(/function _chatMentionScan\(/.test(html) && /function _chatParseMentions\(/.test(html),
+    'mention autocomplete/parse missing');
+  const send = html.slice(html.indexOf('async function _chatSend'), html.indexOf('async function _chatSend') + 2200);
+  assert(/te ha mencionado/.test(send) && /send-push/.test(send),
+    'mentioned teammates must get in-app notification + push');
+  // Mention highlighting must operate on ALREADY-ESCAPED text (no XSS door).
+  assert(/_chatDecorateMentions\(_chatEsc\(m\.message\)/.test(html),
+    'mention decoration must wrap the escaped message, never raw');
+  // Replies: composer bar + reply_to persisted + quote block + tap-to-jump.
+  assert(/function _chatStartReply\(/.test(html) && /fields\.reply_to = _chatReplyTo\.id/.test(html)
+    && /chat-quote/.test(html) && /_chatScrollToMsg/.test(html), 'reply-quoting incomplete');
+  // Reactions: toggle own name per emoji, optimistic PATCH, pills with count.
+  assert(/function _chatReact\(/.test(html) && /chat-react-pill/.test(html),
+    'emoji reactions missing');
+  // Typing: broadcast (no DB writes) + throttle + expiry.
+  assert(/event:'typing'/.test(html) && /_chatNotifyTyping/.test(html) && /_chatTypingSentAt < 2200/.test(html),
+    'typing indicator must use throttled realtime broadcast');
+  // The typing dots respect reduced motion.
+  const css = read('styles.css');
+  assert(/prefers-reduced-motion[^}]*\{[^}]*chat-typing-dots/s.test(css) || /chat-typing-dots i, \.chat-row\.sel/.test(css),
+    'chat animations need a reduced-motion gate');
 });
 
 test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', () => {
