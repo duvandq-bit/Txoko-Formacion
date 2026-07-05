@@ -1015,6 +1015,26 @@ test('allergen drill: three action-frames per question, no fixed traps', () => {
     'question shuffle must be unbiased (_lqaShuffle)');
 });
 
+test('tartar gluten is a removable side (pan carasau) — owner-reported correction', () => {
+  // The gluten in the tomato and sirloin tartares comes ONLY from the carasau
+  // bread, which is served on the side: without it the dish is gluten-free.
+  // Notes must say so in one drill-parsable segment (no ·/— between the word
+  // "gluten" and the removal phrase) so the drill classifies it as ADAPT.
+  const need = [
+    // ES — both tartares
+    'Gluten SOLO en las tostas de pan carasau, que se sirven aparte: se puede retirar y el plato queda SIN GLUTEN. Comandar SIN PAN CARASAU.',
+    'Gluten SOLO en el pan carasau, que se sirve aparte: se puede retirar y el plato queda SIN GLUTEN. Comandar SIN PAN CARASAU.',
+    // EN — both tartares
+    'Gluten ONLY in the carasau bread toasts, served on the side and removable: the dish can be served without them and is then GLUTEN-FREE. Order WITHOUT CARASAU BREAD.',
+    'Gluten ONLY in the carasau bread, served on the side and removable: the dish can be served without it and is then GLUTEN-FREE. Order WITHOUT CARASAU BREAD.'
+  ];
+  for (const s of need) assert(html.includes(s), `tartar gluten note lost or reworded: "${s.slice(0, 60)}…"`);
+  // The generator must extract EN comanda instructions too ("Order WITHOUT …"),
+  // otherwise the correct adapt answer shows a fake generic instruction in EN.
+  assert(html.includes('(?:Comandar|Order) ([^.]+)\\.'),
+    'comanda-instruction regex must accept both Comandar (ES) and Order (EN)');
+});
+
 test('exam anti-echo: ingredients/history questions are reversed and redacted', () => {
   // Measured on the real menu: the correct option leaked dish-name words in
   // 74% (ingredients) / 83% (history) of questions. Those topics now ask in
