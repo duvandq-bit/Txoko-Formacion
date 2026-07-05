@@ -836,6 +836,13 @@ test('wine detail speaks the premium carta language', () => {
     'the broken "G " info label must be the ◇ ornament');
 });
 
+test('editorial sweep: quiz + dish headers join the shared recipe', () => {
+  assert(/wine-section-title">\$\{LANG==='en'\?'Wine Quiz':'Quiz de Vinos'\}/.test(html),
+    'wine quiz header must use the shared editorial classes');
+  assert(/text-align:left;margin-bottom:1\.2rem;padding-bottom:\.65rem;border-bottom:1px solid rgba\(28,42,34,\.12\)/.test(html),
+    'explorar dish header must be the left editorial block');
+});
+
 test('editorial TUNIC DNA: left headers, pull-quotes, crisp radii, slim bars', () => {
   // Owner verdict: the centered temple-hero pattern on every screen read as
   // AI-made. Sub-screen headers are now left-aligned editorial blocks with a
