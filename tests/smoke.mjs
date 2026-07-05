@@ -160,6 +160,47 @@ test('data/ghost-scenarios.json scenarios have scenes with options', () => {
   }
 });
 
+// Ghost (Servicio Fantasma) full schema + integrity guard.
+// Locks the 12 Forbes-inspection scenarios added Jul 2026 (g_reserva, g_idioma,
+// g_acceso, g_bebe, g_ebrio, g_halal, g_derrame, g_vino, g_sobremesa, g_terraza,
+// g_cuenta, g_olvido) plus the shared invariants of the whole bank.
+test('data/ghost-scenarios.json full schema + std ids + ES/EN parity', () => {
+  const ghost = JSON.parse(read('data/ghost-scenarios.json'));
+  assert(ghost.length >= 22, `expected >= 22 scenarios, got ${ghost.length}`);
+  const NEW = new Set(['g_reserva','g_idioma','g_acceso','g_bebe','g_ebrio','g_halal',
+    'g_derrame','g_vino','g_sobremesa','g_terraza','g_cuenta','g_olvido']);
+  const ids = new Set();
+  const topStr = ['id','title','title_en','role','role_en','tagline','tagline_en','icon','ctx','ctx_en'];
+  const scStr = ['title','title_en','role','role_en','situation','situation_en','prompt','prompt_en'];
+  for (const s of ghost) {
+    assert(!ids.has(s.id), `duplicate scenario id ${s.id}`);
+    ids.add(s.id);
+    for (const f of topStr) assert(typeof s[f] === 'string' && s[f].trim(), `${s.id}: empty/missing ${f}`);
+    for (const [i, sc] of s.scenes.entries()) {
+      for (const f of scStr) assert(typeof sc[f] === 'string' && sc[f].trim(), `${s.id} sc${i}: empty/missing ${f}`);
+      assert(sc.options.length === 3, `${s.id} sc${i}: expected 3 options, got ${sc.options.length}`);
+      let allMet = 0;
+      for (const o of sc.options) {
+        for (const f of ['label','label_en','feedback','feedback_en'])
+          assert(typeof o[f] === 'string' && o[f].trim(), `${s.id} sc${i}: option empty/missing ${f}`);
+        assert(Array.isArray(o.effects) && o.effects.length > 0, `${s.id} sc${i}: option has no effects`);
+        for (const e of o.effects) {
+          assert(Number.isInteger(e.std) && e.std >= 1 && e.std <= 80, `${s.id} sc${i}: std ${e.std} out of range 1..80`);
+          assert(typeof e.met === 'boolean', `${s.id} sc${i}: effect met not boolean`);
+        }
+        if (o.effects.every(e => e.met)) allMet++;
+      }
+      // The Jul-2026 scenarios follow the strict one-correct-answer convention.
+      // (Some earlier authored scenarios intentionally have 0 or 2 fully-correct
+      //  options — e.g. g_family's kitchen-chain failure — so this is NEW-only.)
+      if (NEW.has(s.id)) assert(allMet === 1, `${s.id} sc${i}: expected exactly 1 all-met option, got ${allMet}`);
+    }
+    // New scenarios: arc of 4-5 scenes.
+    if (NEW.has(s.id)) assert(s.scenes.length >= 4 && s.scenes.length <= 5, `${s.id}: expected 4-5 scenes, got ${s.scenes.length}`);
+  }
+  for (const id of NEW) assert(ids.has(id), `missing new scenario ${id}`);
+});
+
 // ─── 3. Every showTab route resolves to a defined function ──────
 console.log('\nRouting integrity');
 test('every renderMap route points to a function that exists', () => {
