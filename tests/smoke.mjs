@@ -899,6 +899,24 @@ test('floating FABs hide behind the open nav sheet / search', () => {
     'sound toggle must hide when global search is open');
 });
 
+test('global search phase 2: LQA situations searchable + read-only card', () => {
+  // The search must index LQA situations (both languages + category) and open
+  // a read-only reference card — never the quiz, never awarding XP.
+  assert(/function _gsLqaIndex\(/.test(html), 'LQA search index missing');
+  assert(/s\.scn, s\.scn_en, s\.q, s\.q_en, s\.expl, s\.expl_en/.test(html),
+    'LQA index must cover ES+EN scenario, question and explanation');
+  assert(/data\/lqa-situations\.json'[^)]*\{ silent:true \}/.test(html),
+    'openGlobalSearch must silently lazy-load the LQA data');
+  assert(/Situaciones LQA/.test(html), 'results must group LQA situations');
+  assert(/function _gsShowLqaSituation\(/.test(html) && /id = 'gsLqaOverlay'/.test(html),
+    'LQA result must open the reference overlay');
+  // Read-only: the card body must not touch quiz state or award XP.
+  const card = html.slice(html.indexOf('function _gsShowLqaSituation'), html.indexOf('function _gsShowLqaSituation') + 5200);
+  assert(!/awardXP|lqaSitState|lqaExamState/.test(card),
+    'the reference card must not award XP or touch quiz state');
+  assert(/showTab\('protocolo'\)/.test(card), 'card must link to practice in LQA');
+});
+
 test('global search: entry, overlay and deep-link wiring', () => {
   const css = read('styles.css');
   // one-tap entry lives at the top of the nav sheet
