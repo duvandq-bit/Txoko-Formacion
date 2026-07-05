@@ -5887,24 +5887,19 @@ function getChallengeProgress(ch){
 function renderWeeklyChallenge(){
   const ch=getCurrentChallenge();
   const {total,completed}=getChallengeProgress(ch);
-  const pct=Math.round(completed/Math.max(total,1)*100);
   const label=LANG==='en'?ch.en:ch.es;
   const daysLeft=7-new Date().getDay()||7;
   return `
-    <div class="weekly-card" onclick="startChallengeExam('${ch.topic}','${ch.cat}')">
-      <span class="weekly-corner tr"></span>
-      <span class="weekly-corner br"></span>
-      <div class="weekly-header">
-        <span class="weekly-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><polygon points="12,6 14.5,10.5 19,11 15.5,14 16.5,18 12,15.5 7.5,18 8.5,14 5,11 10,10.5" fill="#fff" opacity=".85"/></svg> ${LANG==='en'?'Weekly challenge':'Reto semanal'}</span>
-        <span class="weekly-days">${daysLeft}d</span>
-      </div>
-      <div class="weekly-title">${label}</div>
-      <div class="weekly-bar-wrap">
-        <div class="weekly-bar-track"><div class="weekly-bar-fill" style="width:${pct}%"></div></div>
-        <span class="weekly-bar-label">${completed}/${total} ${LANG==='en'?'passed (≥70%)':'superado (≥70%)'}</span>
-      </div>
-    </div>`;
+    <button class="dash-row" style="margin-bottom:.4rem" onclick="startChallengeExam('${ch.topic}','${ch.cat}')" aria-label="${LANG==='en'?'Weekly challenge':'Reto semanal'}: ${label}">
+      <span class="dash-row-num" style="font-size:.8rem;color:#5a4a8a" aria-hidden="true">${daysLeft}d</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title">${LANG==='en'?'Weekly challenge':'Reto semanal'}: ${label}</span>
+        <span class="dash-row-sub" style="display:block">${completed}/${total} ${LANG==='en'?'passed (≥70%)':'superado (≥70%)'}</span>
+      </span>
+      <span class="dash-row-go">›</span>
+    </button>`;
 }
+
 function startChallengeExam(topic,cat){
   examConfig={count:15,topic,cat};
   showTab('exam');
@@ -14205,121 +14200,81 @@ function renderDashboard(){
     <!-- ── PLAN DE HOY (SRS due + next rank + top weakness) ── -->
     ${(_srsDue>0 || _rankProg || _weakDisplay) ? `
     <div class="tunic-divider"><span>${_en?'Today\u2019s plan':'Plan de hoy'}</span></div>
-    <div style="display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem">
+    <div style="margin-bottom:1rem">
       ${_srsDue>0 ? `
-      <button class="dash-alert" style="--da-c:#4888a0;min-height:64px;border:none;width:100%;text-align:left" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
-        <div class="dash-num" aria-hidden="true">${_srsDue}</div>
-        <div class="dash-alert-body">
-          <div class="dash-alert-title">${_en?(_srsDue===1?'Dish to review':'Dishes to review'):(_srsDue===1?'Plato para repasar':'Platos para repasar')}${_srsOverdue>0?` · ${_srsOverdue} ${_en?'overdue':'atrasados'}`:''}</div>
-          <div class="dash-alert-sub">${_en?'Spaced repetition — tap to open':'Repetición espaciada — toca para abrir'}</div>
-        </div>
-        <span class="dash-alert-arrow">›</span>
+      <button class="dash-row" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
+        <span class="dash-row-num" aria-hidden="true">${_srsDue}</span>
+        <span class="dash-row-body">
+          <span class="dash-row-title">${_en?(_srsDue===1?'Dish to review':'Dishes to review'):(_srsDue===1?'Plato para repasar':'Platos para repasar')}</span>
+          <span class="dash-row-sub" style="display:block">${_srsOverdue>0?`${_srsOverdue} ${_en?'overdue · ':'atrasados · '}`:''}${_en?'spaced repetition':'repetición espaciada'}</span>
+        </span>
+        <span class="dash-row-go">›</span>
       </button>` : ''}
       ${_rankProg ? `
-      <div class="dash-alert" style="--da-c:var(--gold);cursor:default;flex-direction:column;align-items:stretch;gap:.45rem;padding:.75rem 1rem">
-        <div style="display:flex;align-items:center;gap:.65rem">
-          <div class="dash-num" aria-hidden="true"><span class="emoji">${_rankProg.nextIcon}</span></div>
-          <div style="flex:1;min-width:0">
-            <div class="dash-alert-title" style="color:#a47a2c">${_en?'Next rank':'Próximo rango'}: ${_rankProg.nextLabel}</div>
-            <div class="dash-alert-sub">${_rankProg.dishesNeeded>0 ? `${_rankProg.dishesNeeded} ${_en?(_rankProg.dishesNeeded===1?'dish to master':'dishes to master'):(_rankProg.dishesNeeded===1?'plato por dominar':'platos por dominar')}` : (_en?'Mastery reached':'Dominio alcanzado')}${_rankProg.needsAcc ? ` · ${_en?'accuracy':'precisión'} ${_rankProg.curAccuracy}%` : ''}</div>
-          </div>
-          <div style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:#a47a2c;flex-shrink:0" aria-label="${_rankProg.overallPct}% ${_en?'progress':'progreso'}">${_rankProg.overallPct}%</div>
-        </div>
-        <div role="progressbar" aria-valuenow="${_rankProg.overallPct}" aria-valuemin="0" aria-valuemax="100" aria-label="${_en?'Progress to next rank':'Progreso al siguiente rango'}" style="height:6px;background:rgba(196,154,60,.15);border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${_rankProg.overallPct}%;background:linear-gradient(90deg,var(--gold),var(--gold3));border-radius:3px;transition:width .6s ease"></div>
-        </div>
+      <div class="dash-row" data-static aria-label="${_rankProg.overallPct}% ${_en?'progress to next rank':'progreso al siguiente rango'}">
+        <span class="dash-row-num" style="font-size:.95rem;color:var(--gold-deep)" aria-hidden="true">${_rankProg.overallPct}%</span>
+        <span class="dash-row-body">
+          <span class="dash-row-title">${_en?'Next rank':'Próximo rango'}: ${_rankProg.nextLabel}</span>
+          <span class="dash-row-sub" style="display:block">${_rankProg.dishesNeeded>0 ? `${_rankProg.dishesNeeded} ${_en?(_rankProg.dishesNeeded===1?'dish to master':'dishes to master'):(_rankProg.dishesNeeded===1?'plato por dominar':'platos por dominar')}` : (_en?'Mastery reached':'Dominio alcanzado')}${_rankProg.needsAcc ? ` · ${_en?'accuracy':'precisión'} ${_rankProg.curAccuracy}%` : ''}</span>
+        </span>
       </div>` : ''}
       ${_weakDisplay ? `
-      <button class="dash-alert" style="--da-c:#c47068;min-height:64px;border:none;width:100%;text-align:left" onclick="_startSmartSession()" aria-label="${_en?`Practice weak ${_weakDisplay.type_en}: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'miss':'misses'}`:`Practicar ${_weakDisplay.type_es} débil: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'fallo':'fallos'}`}">
-        <div class="dash-num" aria-hidden="true">${_weakDisplay.count}</div>
-        <div class="dash-alert-body">
-          <div class="dash-alert-title">${_en?'Focus practice':'Práctica enfocada'}: ${escapeHTML(_weakDisplay.label)}</div>
-          <div class="dash-alert-sub">${_en?'start smart review':'inicia repaso inteligente'}</div>
-        </div>
-        <span class="dash-alert-arrow">›</span>
+      <button class="dash-row" onclick="_startSmartSession()" aria-label="${_en?`Practice weak ${_weakDisplay.type_en}: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'miss':'misses'}`:`Practicar ${_weakDisplay.type_es} débil: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'fallo':'fallos'}`}">
+        <span class="dash-row-num" style="color:#a04848" aria-hidden="true">${_weakDisplay.count}</span>
+        <span class="dash-row-body">
+          <span class="dash-row-title">${_en?'Focus practice':'Práctica enfocada'}: ${escapeHTML(_weakDisplay.label)}</span>
+          <span class="dash-row-sub" style="display:block">${_en?'start smart review':'inicia repaso inteligente'}</span>
+        </span>
+        <span class="dash-row-go">›</span>
       </button>` : ''}
     </div>` : ''}
 
     <!-- ── URGENT ALERT (weak topic) ── -->
     ${weakTopic && weakTopic.pct < 60 ? `
-    <div class="dash-alert" style="--da-c:#c47068;min-height:64px" onclick="showTab('exam')">
-      <div class="dash-num" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><path d="M12 8v4M12 15v.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-      <div class="dash-alert-body">
-        <div class="dash-alert-title">${LANG==='en'?'Needs practice':'Necesita práctica'}: ${weakTopic.label}</div>
-        <div class="dash-alert-sub">${weakTopic.pct}% ${LANG==='en'?'accuracy — tap to practice':'precisión — toca para practicar'}</div>
-      </div>
-      <span class="dash-alert-arrow">›</span>
-    </div>` : bestTopic && bestTopic.pct >= 80 ? `
-    <div class="dash-alert" style="--da-c:var(--sage);cursor:default;min-height:64px">
-      <div class="dash-num" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polyline points="8 13 11 16 16 9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="dash-alert-body">
-        <div class="dash-alert-title">${LANG==='en'?'Excellent!':'¡Excelente!'} ${bestTopic.label}</div>
-        <div class="dash-alert-sub">${bestTopic.pct}% ${LANG==='en'?'accuracy':'precisión'}</div>
-      </div>
+    <button class="dash-row" style="margin-bottom:.4rem" onclick="showTab('exam')">
+      <span class="dash-row-num" style="color:#a04848" aria-hidden="true">${weakTopic.pct}%</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title">${LANG==='en'?'Needs practice':'Necesita práctica'}: ${weakTopic.label}</span>
+        <span class="dash-row-sub" style="display:block">${LANG==='en'?'accuracy — tap to practice':'precisión — toca para practicar'}</span>
+      </span>
+      <span class="dash-row-go">›</span>
+    </button>` : bestTopic && bestTopic.pct >= 80 ? `
+    <div class="dash-row" data-static style="margin-bottom:.4rem">
+      <span class="dash-row-num" style="color:var(--green-deep)" aria-hidden="true">${bestTopic.pct}%</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title">${LANG==='en'?'Excellent!':'¡Excelente!'} ${bestTopic.label}</span>
+        <span class="dash-row-sub" style="display:block">${LANG==='en'?'accuracy':'precisión'}</span>
+      </span>
     </div>` : ''}
 
     ${renderWeeklyChallenge()}
 
     ${renderDailyMissions()}
 
-    <!-- ── PRIMARY ACTIONS ── -->
+    <!-- ── PRIMARY ACTIONS: manual index, no boxes ── -->
     <div class="tunic-divider"><span>${LANG==='en'?'Study':'Estudiar'}</span></div>
-    <div class="dash-hub-grid">
-      <button class="dash-hub" style="--dh-c:var(--gold);--dh-c2:var(--gold3)" onclick="showTab('flashcards')">
-        <span class="dash-hub-corner tl"></span>
-        <span class="dash-hub-corner tr"></span>
-        <span class="dash-hub-corner bl"></span>
-        <span class="dash-hub-corner br"></span>
-        <span class="dash-hub-shine"></span>
-        <div class="dash-hub-icon"><svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c49a3c"/><polygon points="12,22 20,17 20,7 12,12" fill="#a47a2c" opacity=".45"/><rect x="6" y="7" width="12" height="9" rx="1.5" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="6" y1="10.5" x2="18" y2="10.5" stroke="#fff" stroke-width="1" opacity=".65"/></svg></div>
-        <div class="dash-hub-title">Flashcards</div>
-        <div class="dash-hub-meta">${DISHES.length} ${LANG==='en'?'dishes':'platos'}</div>
-        <span class="dash-hub-arrow">›</span>
+    <div class="dash-index">
+      <button class="dash-index-entry" onclick="showTab('flashcards')">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+        <span><span class="dash-index-lbl">Flashcards</span><span class="dash-index-meta">${DISHES.length} ${LANG==='en'?'dishes':'platos'}</span></span>
       </button>
-      <button class="dash-hub" style="--dh-c:#7a6aaa;--dh-c2:#9e82c8" onclick="showTab('exam')">
-        <span class="dash-hub-corner tl"></span>
-        <span class="dash-hub-corner tr"></span>
-        <span class="dash-hub-corner bl"></span>
-        <span class="dash-hub-corner br"></span>
-        <span class="dash-hub-shine"></span>
-        <div class="dash-hub-icon"><svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#7a6aaa"/><polygon points="12,22 20,17 20,7 12,12" fill="#5a4a8a" opacity=".45"/><rect x="7" y="6" width="10" height="13" rx="1.5" fill="none" stroke="#fff" stroke-width="1.1"/><rect x="9" y="4" width="6" height="3" rx="1" fill="#fff" opacity=".55"/><line x1="9" y1="11" x2="15" y2="11" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="14" x2="13" y2="14" stroke="#fff" stroke-width="1" opacity=".7"/></svg></div>
-        <div class="dash-hub-title">${LANG==='en'?'Exam':'Examen'}</div>
-        <div class="dash-hub-meta">${sessions.length} ${LANG==='en'?'completed':'completados'}</div>
-        <span class="dash-hub-arrow">›</span>
+      <button class="dash-index-entry" onclick="showTab('exam')">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        <span><span class="dash-index-lbl">${LANG==='en'?'Exam':'Examen'}</span><span class="dash-index-meta">${sessions.length} ${LANG==='en'?'completed':'completados'}</span></span>
       </button>
-    </div>
-    <div class="dash-mini-grid">
-      <button class="dash-mini" style="--dm-c:#4888a0" onclick="showTab('repaso')">
-        <svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4888a0"/><polygon points="12,22 20,17 20,7 12,12" fill="#2e6878" opacity=".45"/><path d="M5 5h5a3 3 0 013 3v10a2 2 0 00-2-2H5V5z" fill="#fff" opacity=".8"/><path d="M19 5h-5a3 3 0 00-3 3v10a2 2 0 012-2h6V5z" fill="#fff" opacity=".6"/></svg>
-        <div class="dash-mini-lbl">${LANG==='en'?'Explore':'Explorar'}</div>
+      <button class="dash-index-entry" onclick="showTab('repaso')">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/></svg>
+        <span><span class="dash-index-lbl">${LANG==='en'?'Explore':'Explorar'}</span><span class="dash-index-meta">${LANG==='en'?'the menu':'la carta'}</span></span>
       </button>
-      <button class="dash-mini" style="--dm-c:#c47068" onclick="startPersonalErrorMode()">
-        <svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".45"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1"/><circle cx="12" cy="12" r="1.2" fill="#fff"/></svg>
-        <div class="dash-mini-lbl">${LANG==='en'?'Weak spots':'Débiles'}</div>
+      <button class="dash-index-entry" onclick="startPersonalErrorMode()">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/></svg>
+        <span><span class="dash-index-lbl">${LANG==='en'?'Weak spots':'Débiles'}</span><span class="dash-index-meta">${LANG==='en'?'your misses':'tus fallos'}</span></span>
       </button>
-      <button class="dash-mini" style="--dm-c:var(--gold)" onclick="showTab('ranking')">
-        <svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c49a3c"/><polygon points="12,22 20,17 20,7 12,12" fill="#a47a2c" opacity=".45"/><path d="M8 18h8M12 15v3" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><path d="M8 6h8v5a4 4 0 01-8 0V6z" fill="#fff" opacity=".85"/><path d="M8 6H6a1 1 0 00-1 1c0 1.5 1 2 2 2h1M16 6h2a1 1 0 011 1c0 1.5-1 2-2 2h-1" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/></svg>
-        <div class="dash-mini-lbl">Ranking</div>
-      </button>
-    </div>
-
-    <!-- ── STATS STRIP (passive context — moved below the actionable plan) ── -->
-    <div class="dash-stats">
-      ${[
-        {num:sessions.length, lbl:LANG==='en'?'Exams':'Exámenes', target:sessions.length, col:'#c49a3c', colD:'#a47a2c', col2:'#e4be68'},
-        {num:(avg||0)+'%', lbl:LANG==='en'?'Average':'Media', target:avg||0, suffix:'%', col:'#4d8a5e', colD:'#3a6a4a', col2:'#7aae8c'},
-        {num:known, lbl:LANG==='en'?'Mastered':'Dominados', target:known, col:'#4888a0', colD:'#36687a', col2:'#6aa8bc'},
-        {num:fc, lbl:LANG==='en'?'Cards':'Tarjetas', target:fc, col:'#7a6aaa', colD:'#5a4a8a', col2:'#9e82c8'}
-      ].map((s,i)=>`<div class="dash-stat" style="--ds-c:${s.col};--ds-c2:${s.col2};--ds-cd:${s.colD};animation-delay:${i*70}ms">
-        <div class="dash-stat-icon"><svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="${s.col}" opacity=".85"/><polygon points="7,1 10,7 7,10 4,7" fill="${s.col2}" opacity=".8"/><circle cx="7" cy="7" r="1.4" fill="#fff" opacity=".7"/></svg></div>
-        <div class="dash-stat-num" data-target="${s.target||0}" data-suffix="${s.suffix||''}">${s.num}</div>
-        <div class="dash-stat-lbl">${s.lbl}</div>
-      </div>`).join('')}
     </div>
 
     <!-- ── PROGRESS RINGS ── -->
     <div class="tunic-divider"><span>${LANG==='en'?'Your progress':'Tu progreso'}</span></div>
-    <div class="dash-defer-sm" style="background:linear-gradient(160deg,#2a3530 0%,var(--parchment) 40%,#243028 100%);border:1.5px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1.4rem .8rem 1.2rem;display:flex;justify-content:space-around;align-items:flex-start;margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1)">
+    <div class="dash-defer-sm" style="background:linear-gradient(160deg,#2a3530 0%,var(--parchment) 40%,#243028 100%);border:1.5px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1.4rem .8rem 1.1rem;display:block;margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1)">
       <!-- Diamond pattern overlay -->
       <div style="position:absolute;inset:0;background-image:url(${`"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.06)' stroke-width='0.5'/%3E%3C/svg%3E"`});pointer-events:none"></div>
       <!-- Ambient glow -->
@@ -14332,7 +14287,13 @@ function renderDashboard(){
       <!-- Top decorative line -->
       <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.25),transparent)"></div>
       <div style="position:absolute;bottom:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.25),transparent)"></div>
-      ${topicRings}
+      <div style="display:flex;justify-content:space-around;align-items:flex-start;position:relative;z-index:1">${topicRings}</div>
+      <div class="dash-statline">
+        <span><b>${sessions.length}</b> ${LANG==='en'?'exams':'exámenes'}</span><i>·</i>
+        <span><b>${avg||0}%</b> ${LANG==='en'?'average':'media'}</span><i>·</i>
+        <span><b>${known}</b> ${LANG==='en'?'mastered':'dominados'}</span><i>·</i>
+        <span><b>${fc}</b> ${LANG==='en'?'cards':'tarjetas'}</span>
+      </div>
     </div>
 
     ${renderAchievementsSection()}
@@ -18788,23 +18749,22 @@ function renderDailyMissions(){
   const missions=getTodayMissions();
   const claimed=emp.missionsClaimed||{};
   const today=todayStr();
+  const doneCount=missions.filter(m=>claimed[m.id+'_'+today]||m.check(emp)).length;
 
   return `<div style="margin-bottom:1rem">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem">
-      <div class="tunic-divider"><span>${LANG==='en'?'Daily Missions':'Misiones del día'}</span></div>
-      <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.08em">${missions.filter(m=>claimed[m.id+'_'+today]||m.check(emp)).length}/${missions.length}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.15rem">
+      <div class="tunic-divider" style="flex:1;margin-bottom:0"><span>${LANG==='en'?'Daily Missions':'Misiones del día'}</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:.56rem;color:var(--parch4);letter-spacing:.08em;margin-left:.6rem">${doneCount}/${missions.length}</div>
     </div>
     ${missions.map(m=>{
       const done=claimed[m.id+'_'+today]||m.check(emp);
       const current=Math.min(m.getCurrent(emp),m.target);
-      const pct=Math.round(current/m.target*100);
-      return `<div class="mission-card ${done?'completed':''}">
-        <div class="mission-icon">${done?'<svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><polyline points="8 12 11 15 16 9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':m.icon}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-family:'Cinzel',serif;font-size:.82rem;font-weight:600;color:${done?'var(--sage)':'var(--parchment)'};letter-spacing:.015em;line-height:1.2;${done?'text-decoration:line-through;opacity:.75':''}">${LANG==='en'?m.title_en:m.title}</div>
-          <div class="mission-progress"><div class="mission-progress-fill" style="width:${pct}%;background:${done?'linear-gradient(90deg,var(--sage),#7aae8c)':'linear-gradient(90deg,var(--gold),var(--gold3))'}"></div></div>
-        </div>
-        <div class="mission-xp">+${m.xp}xp</div>
+      return `<div class="dash-row ${done?'done':''}" data-static style="min-height:46px">
+        <span class="dash-row-mark" aria-hidden="true">${done
+          ?'<svg viewBox="0 0 24 24" fill="none"><path d="M12 3l9 9-9 9-9-9z" fill="currentColor" opacity=".25"/><polyline points="8.5 12 11 14.5 15.5 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 9-9 9-9-9z"/></svg>'}</span>
+        <span class="dash-row-title" style="font-weight:500;font-size:.82rem">${LANG==='en'?m.title_en:m.title}${!done&&current>0?` <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(28,42,34,.45)">${current}/${m.target}</span>`:''}</span>
+        <span class="dash-row-meta">+${m.xp} XP</span>
       </div>`;
     }).join('')}
   </div>`;
@@ -19304,8 +19264,7 @@ function renderAchievementsSection(){
 
   return `<div style="margin-bottom:1rem" id="achSection">
     <div class="tunic-divider"><span>${LANG==='en'?'Achievements':'Logros'} (${unlocked.length}/${ACHIEVEMENTS.length})</span></div>
-    <div class="dash-defer" style="display:flex;flex-wrap:wrap;gap:.55rem;background:linear-gradient(155deg,#faf6ee 0%,var(--ink) 50%,#f0e8d8 100%);border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);padding:1.1rem;position:relative;overflow:hidden;box-shadow:inset 0 2px 8px rgba(196,154,60,.04),0 2px 12px rgba(28,42,34,.05)">
-      <div style="position:absolute;inset:0;background-image:url(${"\"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.035)' stroke-width='0.4'/%3E%3C/svg%3E\""});pointer-events:none"></div>
+    <div class="dash-defer" style="display:flex;flex-wrap:wrap;gap:.7rem .65rem;padding:.4rem .2rem .2rem">
       ${_shown.map(a=>{
         const isUnlocked=unlockedIds.includes(a.id);
         const gemIcon=gemSVG(a.gemColors[0],a.gemColors[1],a.gemColors[2],a.gemShape);

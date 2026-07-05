@@ -1,0 +1,202 @@
+<!-- @dsCard group="Screens" name="Dashboard manual TUNIC" subtitle="Una hoja de pergamino: filas y líneas finas, no sopa de cajas" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Dashboard TUNIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital@0;1&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold3:#e4be68; --gold-deep:#7d5c2f; --ink:#1c2a22; --paper:#faf6ee;
+    --line:rgba(196,154,60,.16); --hair:rgba(28,42,34,.1); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:var(--ink);font-family:'Quicksand',sans-serif;margin:0;padding:1.2rem 0 4rem}
+  .note{padding:0 1rem .3rem;font-family:'DM Mono',monospace;font-size:.6rem;color:#8a8478;letter-spacing:.14em;text-transform:uppercase;max-width:400px;margin:0 auto}
+  .frame{max-width:400px;margin:0 auto;border:1px solid rgba(0,0,0,.06);
+    background:
+      radial-gradient(circle at 50% 50%, rgba(154,115,64,.03) 1px, transparent 1.4px) 0 0/18px 18px,
+      linear-gradient(180deg,#f7f0e2,#f4ede2);
+    padding:1rem .95rem 2rem}
+
+  /* ── HERO (se conserva — ya es TUNIC) ── */
+  .hero{position:relative;border-radius:18px;overflow:hidden;padding:1.3rem 1.2rem 1.1rem;margin-bottom:1.6rem;
+    background:linear-gradient(160deg,#2a3530 0%,#1c2a22 45%,#243028 100%);
+    border:1.5px solid rgba(196,154,60,.25);
+    box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1)}
+  .hero::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.07)' stroke-width='0.5'/%3E%3C/svg%3E")}
+  .hero .eyebrow{display:flex;align-items:center;gap:.6rem;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;color:rgba(228,190,104,.6);text-transform:uppercase}
+  .hero .eyebrow::before,.hero .eyebrow::after{content:'';width:22px;height:1px;background:linear-gradient(90deg,transparent,rgba(228,190,104,.4),transparent)}
+  .hero h1{font-family:'Cinzel',serif;font-weight:500;font-size:1.5rem;color:#f4ede2;margin-top:.5rem;line-height:1.25}
+  .hero h1 em{font-style:italic;color:var(--gold3)}
+  .hero .lvl{position:absolute;top:1rem;right:1rem;text-align:right;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold3)}
+  .hero .rank{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;margin-top:1rem;
+    padding-top:.8rem;border-top:1px solid rgba(196,154,60,.22)}
+  .hero .rank .t{font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold3)}
+  .hero .rank .m{font-family:'DM Mono',monospace;font-size:.56rem;color:rgba(244,237,226,.55)}
+  .hero .xpbar{height:4px;border-radius:2px;background:rgba(0,0,0,.35);margin-top:.55rem;overflow:hidden}
+  .hero .xpbar i{display:block;height:100%;width:86%;border-radius:2px;background:linear-gradient(90deg,#c49a3c,#e4be68)}
+
+  /* ── LA HOJA: secciones con small-caps + ◆, filas con línea fina ── */
+  .sect{display:flex;align-items:center;gap:.55rem;margin:1.5rem 0 .35rem}
+  .sect .d{width:7px;height:7px;transform:rotate(45deg);background:linear-gradient(135deg,#e4be68,#c49a3c);box-shadow:0 0 6px rgba(228,190,104,.4)}
+  .sect .t{font-family:'Cinzel',serif;font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep)}
+  .sect .m{margin-left:auto;font-family:'DM Mono',monospace;font-size:.56rem;color:rgba(28,42,34,.45)}
+
+  .row{display:flex;align-items:center;gap:.75rem;min-height:56px;padding:.65rem .15rem;cursor:pointer;
+    border-bottom:1px solid var(--hair)}
+  .row:last-of-type{border-bottom:none}
+  .row .num{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:600;color:var(--ink);min-width:2.1rem;text-align:right;font-variant-numeric:tabular-nums}
+  .row .dot{width:6px;height:6px;transform:rotate(45deg);flex-shrink:0}
+  .row .tt{font-weight:600;font-size:.86rem;color:var(--ink);line-height:1.25}
+  .row .ss{font-size:.68rem;color:rgba(28,42,34,.52);margin-top:.1rem}
+  .row .go{margin-left:auto;color:rgba(196,154,60,.7);font-family:'Cinzel',serif;font-size:.9rem;flex-shrink:0}
+  .row .xp{margin-left:auto;font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-deep);flex-shrink:0}
+  .row .mark{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(196,154,60,.55)}
+  .row .mark svg{width:13px;height:13px}
+
+  /* estudiar: índice de manual en 2 columnas, sin cajas */
+  .index{display:grid;grid-template-columns:1fr 1fr;position:relative;margin-top:.2rem}
+  .index::before{content:'';position:absolute;top:8%;bottom:8%;left:50%;width:1px;background:var(--hair)}
+  .ientry{display:flex;align-items:center;gap:.6rem;padding:.7rem .5rem;min-height:52px;cursor:pointer}
+  .ientry svg{width:19px;height:19px;stroke:var(--gold);flex-shrink:0}
+  .ientry .l{font-family:'Cinzel',serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;color:var(--ink)}
+  .ientry .c{display:block;font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.08em;color:rgba(28,42,34,.45);margin-top:.15rem;text-transform:uppercase}
+  .ientry:nth-child(1),.ientry:nth-child(2){border-bottom:1px solid var(--hair)}
+
+  /* ── PANEL OSCURO: hexes + la línea de stats integrada ── */
+  .prog{position:relative;overflow:hidden;border-radius:16px;padding:1.2rem 1rem 1.1rem;margin-top:.4rem;
+    background:linear-gradient(160deg,#2a3530 0%,#1c2a22 40%,#243028 100%);
+    border:1.5px solid rgba(196,154,60,.25);box-shadow:0 6px 24px rgba(0,0,0,.15)}
+  .prog::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.06)' stroke-width='0.5'/%3E%3C/svg%3E")}
+  .hexrow{display:flex;justify-content:space-around;align-items:center}
+  .hx{text-align:center}
+  .hx .h{width:74px;height:74px;margin:0 auto;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;
+    font-family:'Cinzel',serif;font-weight:700}
+  .hx .p{font-size:.95rem}.hx .f{font-family:'DM Mono',monospace;font-size:.42rem;opacity:.7}
+  .hx .l{font-family:'Cinzel',serif;font-size:.54rem;font-weight:600;letter-spacing:.1em;margin-top:.5rem;text-transform:uppercase}
+  .statline{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-top:1rem;padding-top:.85rem;
+    border-top:1px solid rgba(196,154,60,.18);
+    font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:rgba(244,237,226,.6)}
+  .statline b{color:var(--gold3);font-weight:500}
+  .statline i{font-style:normal;color:rgba(196,154,60,.5)}
+
+  /* logros: gemas desnudas sobre el pergamino */
+  .gems{display:flex;flex-wrap:wrap;gap:1rem .95rem;padding:.5rem .3rem .2rem;align-items:center}
+  .gem{width:34px;height:34px;filter:drop-shadow(0 2px 4px rgba(28,42,34,.25))}
+  .gem.lk{opacity:.22;filter:grayscale(1)}
+  .more{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--gold-deep);
+    padding:.6rem .3rem;cursor:pointer;text-transform:uppercase}
+</style>
+</head>
+<body>
+  <div class="note">Dashboard — hoja de manual TUNIC (fuera la sopa de cajas)</div>
+
+  <div class="frame">
+    <!-- hero: se queda, es lo más TUNIC de la pantalla -->
+    <div class="hero">
+      <div class="lvl">Lv.26<br><span style="opacity:.7">◆ 15d</span></div>
+      <div class="eyebrow">Ritz-Carlton Abama</div>
+      <h1>Buenas tardes,<br><em>Duvan</em></h1>
+      <div class="rank">
+        <span class="t">⬡ Fénix del Turno Doble</span>
+        <span class="m">7.470 XP · faltan 30</span>
+      </div>
+      <div class="xpbar"><i></i></div>
+    </div>
+
+    <!-- PLAN DE HOY: filas de libro de cuentas, número en tinta, punto de color semántico -->
+    <div class="sect"><span class="d"></span><span class="t">Plan de hoy</span></div>
+    <div class="row">
+      <span class="num">88</span>
+      <span><span class="tt">Platos para repasar</span><br><span class="ss">12 atrasados · repetición espaciada</span></span>
+      <span class="go">›</span>
+    </div>
+    <div class="row">
+      <span class="num" style="font-size:.95rem;color:var(--gold-deep)">0%</span>
+      <span><span class="tt">Próximo rango: Aprendiz</span><br><span class="ss">9 platos por dominar</span></span>
+      <span class="go">›</span>
+    </div>
+    <div class="row">
+      <span class="num" style="color:#a04848">18%</span>
+      <span><span class="tt">Necesita práctica: Alérgenos</span><br><span class="ss">toca para practicar</span></span>
+      <span class="go">›</span>
+    </div>
+
+    <!-- MISIONES: checklist fina, sin cajas ni barras por fila -->
+    <div class="sect"><span class="d"></span><span class="t">Misiones del día</span><span class="m">0/3</span></div>
+    <div class="row" style="min-height:46px">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 9-9 9-9-9z"/></svg></span>
+      <span class="tt" style="font-weight:500">Completa 1 examen</span>
+      <span class="xp">+20 XP</span>
+    </div>
+    <div class="row" style="min-height:46px">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 9-9 9-9-9z"/></svg></span>
+      <span class="tt" style="font-weight:500">Saca 80%+ en un examen</span>
+      <span class="xp">+30 XP</span>
+    </div>
+    <div class="row" style="min-height:46px">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 9-9 9-9-9z"/></svg></span>
+      <span class="tt" style="font-weight:500">Repasa 5 flashcards</span>
+      <span class="xp">+15 XP</span>
+    </div>
+
+    <!-- ESTUDIAR: índice de manual a 2 columnas -->
+    <div class="sect"><span class="d"></span><span class="t">Estudiar</span></div>
+    <div class="index">
+      <div class="ientry">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+        <span><span class="l">Flashcards</span><span class="c">90 platos</span></span>
+      </div>
+      <div class="ientry">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        <span><span class="l">Examen</span><span class="c">9 completados</span></span>
+      </div>
+      <div class="ientry">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/></svg>
+        <span><span class="l">Explorar</span><span class="c">la carta</span></span>
+      </div>
+      <div class="ientry">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span><span class="l">Débiles</span><span class="c">tus fallos</span></span>
+      </div>
+    </div>
+
+    <!-- TU PROGRESO: hexes + stats integrados en una línea mono -->
+    <div class="sect"><span class="d"></span><span class="t">Tu progreso</span></div>
+    <div class="prog">
+      <div class="hexrow">
+        <div class="hx"><div class="h" style="background:linear-gradient(160deg,#8a4a42,#5a2e28);box-shadow:0 0 18px rgba(196,112,104,.25)"><span class="p">18%</span><span class="f">1/6</span></div><div class="l" style="color:#f0c8c0">Alérgenos</div></div>
+        <div class="hx"><div class="h" style="background:linear-gradient(160deg,#3e788e,#26495a);box-shadow:0 0 18px rgba(72,136,160,.3)"><span class="p">97%</span><span class="f">6/6</span></div><div class="l" style="color:#b0d8e8">Ingredientes</div></div>
+        <div class="hx"><div class="h" style="background:linear-gradient(160deg,#6a5a96,#453a66);box-shadow:0 0 18px rgba(122,106,170,.3)"><span class="p">94%</span><span class="f">6/6</span></div><div class="l" style="color:#c8b8e0">Storytelling</div></div>
+      </div>
+      <div class="statline">
+        <span><b>9</b> exámenes</span><i>·</i>
+        <span><b>88%</b> media</span><i>·</i>
+        <span><b>0</b> dominados</span><i>·</i>
+        <span><b>241</b> tarjetas</span>
+      </div>
+    </div>
+
+    <!-- LOGROS: gemas desnudas, bloqueadas como sombras -->
+    <div class="sect"><span class="d"></span><span class="t">Logros</span><span class="m">20/42</span></div>
+    <div class="gems">
+      <svg class="gem" viewBox="0 0 64 64"><polygon points="32,4 58,22 50,58 14,58 6,22" fill="#c85048"/><polygon points="32,4 46,22 32,17 18,22" fill="#fff" opacity=".35"/></svg>
+      <svg class="gem" viewBox="0 0 64 64"><rect x="10" y="10" width="44" height="44" rx="9" fill="#4888c8"/><polygon points="10,10 54,10 32,30" fill="#fff" opacity=".3"/></svg>
+      <svg class="gem" viewBox="0 0 64 64"><polygon points="32,4 60,32 32,60 4,32" fill="#e8b84a"/><polygon points="32,4 60,32 32,28" fill="#fff" opacity=".35"/></svg>
+      <svg class="gem" viewBox="0 0 64 64"><polygon points="32,6 54,20 54,44 32,58 10,44 10,20" fill="#5aa87a"/><polygon points="32,6 54,20 32,24 10,20" fill="#fff" opacity=".3"/></svg>
+      <svg class="gem" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="#7a6ab8"/><ellipse cx="24" cy="22" rx="10" ry="7" fill="#fff" opacity=".3"/></svg>
+      <svg class="gem" viewBox="0 0 64 64"><polygon points="32,2 39,24 62,24 43,38 50,60 32,46 14,60 21,38 2,24 25,24" fill="#e8c44c"/></svg>
+      <svg class="gem" viewBox="0 0 64 64"><polygon points="32,4 58,22 50,58 14,58 6,22" fill="#d07838"/><polygon points="32,4 46,22 32,17 18,22" fill="#fff" opacity=".35"/></svg>
+      <svg class="gem lk" viewBox="0 0 64 64"><polygon points="32,4 58,22 50,58 14,58 6,22" fill="#888"/></svg>
+      <svg class="gem lk" viewBox="0 0 64 64"><polygon points="32,6 54,20 54,44 32,58 10,44 10,20" fill="#888"/></svg>
+      <svg class="gem lk" viewBox="0 0 64 64"><polygon points="32,4 60,32 32,60 4,32" fill="#888"/></svg>
+    </div>
+    <div class="more">Ver los 42 logros · +19 ›</div>
+  </div>
+</body>
+</html>

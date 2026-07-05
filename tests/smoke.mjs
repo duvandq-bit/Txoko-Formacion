@@ -411,19 +411,19 @@ test('hero is slim: no motivational quote, no duplicate level title', () => {
   assert(!/motivations_es|motivations_en/.test(html), 'dead motivational quote arrays returned');
 });
 
-test('Plan de hoy sits above Stats Strip on the dashboard', () => {
-  // Action-first hierarchy: the user opens the app to see WHAT TO DO,
-  // not how many flashcards exist. Stats are passive context, moved below.
+test('dashboard: plan first, stats folded into the dark progress panel', () => {
+  // TUNIC manual-page redesign (owner-approved): the standalone stats strip
+  // is gone — the four figures live as a mono line inside the progress panel,
+  // below the actionable plan.
   const dashStart = html.indexOf("document.getElementById('appContent').innerHTML=`", html.indexOf('function renderDashboard'));
   assert(dashStart !== -1, 'renderDashboard innerHTML template not found');
   const dashEnd = html.indexOf('`;', dashStart);
   const dashTpl = html.slice(dashStart, dashEnd);
-  const planIdx = dashTpl.indexOf('PLAN DE HOY');
-  const statsIdx = dashTpl.indexOf('STATS STRIP');
-  assert(planIdx !== -1, 'PLAN DE HOY section missing');
-  assert(statsIdx !== -1, 'STATS STRIP section missing');
-  assert(planIdx < statsIdx,
-    'PLAN DE HOY must come before STATS STRIP (action-first hierarchy)');
+  assert(dashTpl.indexOf('PLAN DE HOY') !== -1, 'PLAN DE HOY section missing');
+  assert(dashTpl.indexOf('STATS STRIP') === -1, 'the boxed stats strip must stay removed');
+  assert(/dash-statline/.test(dashTpl), 'stat line must live inside the progress panel');
+  assert(dashTpl.indexOf('PLAN DE HOY') < dashTpl.indexOf('dash-statline'),
+    'plan (actions) must come before the stats (passive context)');
 });
 
 // ─── 6f. Latent-bug regression guards (sideways drift family) ───
@@ -1230,28 +1230,18 @@ test('.btn-secondary has a real style rule (not a bare grey button)', () => {
     'no .btn-secondary usages found — was the class renamed?');
 });
 
-test('dashboard review alert uses the .dash-num data badge', () => {
-  // Ported "Dato protagonista" (variant B): the SRS review count moves to
-  // a large left-hand badge so the camarero sees how many dishes are due
-  // at a glance. The badge styling must exist and the review alert markup
-  // must use it (with the count no longer duplicated in the title).
+test('dashboard alerts are hairline ledger rows (TUNIC de-boxing)', () => {
+  // The colored .dash-alert cards + .dash-num badges became .dash-row ledger
+  // rows: ink numeral, hairline separator, semantic color only on numerals.
   const css = read('styles.css');
-  assert(/\.dash-num\s*\{[^}]*width:\s*44px/.test(css),
-    '.dash-num badge style missing or resized — data-badge redesign lost');
-  // The badge is now generalised to all dashboard alerts (review, rank,
-  // focus practice, needs-practice, excellent). Count the render sites so
-  // a regression that drops the badge from some cards is caught.
-  const badgeUses = (html.match(/class="dash-num"/g) || []).length;
-  assert(badgeUses >= 5,
-    `.dash-num used on only ${badgeUses} dashboard alerts; expected >= 5 after generalising the badge`);
-  // svg/emoji sub-styles must exist so icon/rank badges size correctly.
-  assert(/\.dash-num svg\s*\{[^}]*width:\s*24px/.test(css),
-    '.dash-num svg sizing missing — icon badges will render at wrong size');
-  // Subtitle legibility bump shipped alongside: must clear the old .58rem.
-  const sub = (css.match(/\.dash-alert-sub\s*\{([^}]*)\}/) || [])[1] || '';
-  const subSize = (sub.match(/font-size:\s*([\d.]+)rem/) || [])[1];
-  assert(subSize && parseFloat(subSize) >= 0.64,
-    `.dash-alert-sub font-size ${subSize}rem is back below the legible floor (.64rem)`);
+  assert(/\.dash-row\{[^}]*border-bottom:1px solid rgba\(28,42,34,\.1\)/.test(css),
+    '.dash-row must separate with a hairline, not a card box');
+  assert(/\.dash-row-num\{[^}]*Cinzel/.test(css), 'ledger numeral style missing');
+  const rows = (html.match(/class="dash-row[" ]/g) || []).length;
+  assert(rows >= 5, `expected >=5 dashboard ledger rows, found ${rows}`);
+  // Study section must be the 2-column index, not the boxed hub grid.
+  assert(/dash-index-entry/.test(html) && !/dash-hub-grid/.test(html),
+    'study must render as the manual index, not boxed hub cards');
 });
 
 test('exam .choice has high-contrast state badge + check/cross mark', () => {

@@ -1156,25 +1156,27 @@ body::after{
   75%{transform:scale(1.22) rotate(-3deg);text-shadow:0 0 22px #ffcc00,0 0 44px rgba(255,160,0,.9),0 0 66px rgba(255,80,0,.5)}
 }
 .badge-unlock{animation:badgeUnlock .6s cubic-bezier(.22,1,.36,1) forwards}
+/* Bare gems on the parchment (TUNIC de-boxing): the tile chrome is gone —
+   the stones themselves carry the section. Locked ones read as faint shadows. */
 .achievement-badge{
-  width:62px;height:62px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  width:52px;height:52px;display:flex;align-items:center;justify-content:center;
   position:relative;transition:all .4s cubic-bezier(.22,1,.36,1);cursor:default;
-  background:linear-gradient(145deg,#f8f3ea,#efe6d6);border:1.5px solid rgba(196,154,60,.12);
-  box-shadow:0 2px 6px rgba(28,42,34,.05),inset 0 1px 0 rgba(255,255,255,.6);
+  background:transparent;border:none;
+  filter:drop-shadow(0 2px 4px rgba(28,42,34,.22));
 }
 .achievement-badge.locked{
-  opacity:.5;background:linear-gradient(145deg,#eae6de,#ddd8ce);border-color:var(--ink4);
+  opacity:.22;filter:grayscale(1);
 }
 .achievement-badge.locked span{
   display:inline-block;filter:grayscale(1) brightness(.7) contrast(.7);opacity:.55;
 }
 .achievement-badge.unlocked{
-  background:radial-gradient(ellipse at 50% 30%,rgba(255,250,230,.9) 0%,rgba(255,245,210,.6) 30%,rgba(248,240,224,.95) 100%);
-  border-color:rgba(196,154,60,.35);
-  box-shadow:0 3px 12px rgba(196,154,60,.2),0 0 24px rgba(228,190,104,.12),0 1px 3px rgba(28,42,34,.08),inset 0 1px 0 rgba(255,255,255,.7);
+  background:transparent;border:none;cursor:pointer;
+  box-shadow:none;
+  filter:drop-shadow(0 2px 5px rgba(28,42,34,.25)) drop-shadow(0 0 10px rgba(228,190,104,.18));
 }
 .achievement-badge.unlocked::before{
-  content:'';position:absolute;top:3px;left:50%;width:24px;height:8px;
+  content:none;position:absolute;top:3px;left:50%;width:24px;height:8px;
   background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,.05));border-radius:50%;transform:translateX(-50%);
   pointer-events:none;z-index:1;
 }
@@ -6759,6 +6761,43 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   content:'';position:absolute;width:100%;height:100%;
   border:1px solid var(--gold);transform:rotate(45deg);
 }
+
+/* ── Dashboard manual page (TUNIC de-boxing) ─────────────────────────
+   The dashboard reads as one parchment sheet: hairline-separated ledger
+   rows instead of stacked colored cards, a two-column study index, the
+   stat strip folded into the dark progress panel, and bare gems. */
+.dash-row{display:flex;align-items:center;gap:.75rem;width:100%;min-height:56px;padding:.65rem .15rem;
+  cursor:pointer;text-align:left;background:transparent;border:none;
+  border-bottom:1px solid rgba(28,42,34,.1);font-family:'Quicksand',sans-serif}
+.dash-row:last-child{border-bottom:none}
+.dash-row[data-static]{cursor:default}
+.dash-row-num{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:600;color:var(--parchment);
+  min-width:2.3rem;text-align:right;font-variant-numeric:tabular-nums;flex-shrink:0}
+.dash-row-body{flex:1;min-width:0}
+.dash-row-title{font-weight:600;font-size:.86rem;color:var(--parchment);line-height:1.25}
+.dash-row-sub{font-size:.68rem;color:rgba(28,42,34,.52);margin-top:.1rem}
+.dash-row-go{margin-left:auto;color:rgba(196,154,60,.7);font-family:'Cinzel',serif;font-size:.95rem;flex-shrink:0}
+.dash-row-meta{margin-left:auto;font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-deep);flex-shrink:0;letter-spacing:.06em}
+.dash-row-mark{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(196,154,60,.55)}
+.dash-row-mark svg{width:13px;height:13px}
+.dash-row.done .dash-row-title{text-decoration:line-through;opacity:.6}
+.dash-row.done .dash-row-mark{color:var(--sage)}
+/* study index: 2 columns split by a hairline cross */
+.dash-index{display:grid;grid-template-columns:1fr 1fr;position:relative;margin-bottom:1rem}
+.dash-index::before{content:'';position:absolute;top:8%;bottom:8%;left:50%;width:1px;background:rgba(28,42,34,.1)}
+.dash-index-entry{display:flex;align-items:center;gap:.6rem;padding:.7rem .5rem;min-height:56px;
+  cursor:pointer;background:transparent;border:none;text-align:left}
+.dash-index-entry:nth-child(-n+2){border-bottom:1px solid rgba(28,42,34,.1)}
+.dash-index-entry svg{flex-shrink:0}
+.dash-index-lbl{font-family:'Cinzel',serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;color:var(--parchment)}
+.dash-index-meta{display:block;font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.08em;
+  color:rgba(28,42,34,.45);margin-top:.15rem;text-transform:uppercase}
+/* stat line inside the dark progress panel */
+.dash-statline{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-top:1.05rem;
+  padding-top:.85rem;border-top:1px solid rgba(196,154,60,.18);position:relative;z-index:1;
+  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:rgba(244,237,226,.6)}
+.dash-statline b{color:var(--gold3);font-weight:500}
+.dash-statline i{font-style:normal;color:rgba(196,154,60,.5)}
 
 /* ═══════ ACHIEVEMENT DETAIL MODAL ═══════ */
 .achievement-modal-overlay{
