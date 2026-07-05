@@ -3264,10 +3264,58 @@ body::after{
   opacity:.8;
 }
 .exam-setup-desc{
-  font-size:.78rem;color:var(--parch3);text-align:center;
-  margin:1rem auto 1.75rem;line-height:1.75;max-width:360px;
-  font-style:italic;letter-spacing:.015em;
+  font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:rgba(28,42,34,.62);
+  text-align:center;margin:.5rem auto .3rem;line-height:1.4;max-width:300px;
+  font-style:italic;
 }
+/* orientation line: what review vs exam are for */
+.exam-orient{
+  font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;
+  color:rgba(28,42,34,.5);text-align:center;margin:.6rem auto 1.3rem;
+  max-width:330px;line-height:1.8;text-transform:uppercase;position:relative;z-index:1;
+}
+.exam-orient b{color:var(--gold-deep);font-weight:500}
+/* subline inside the quick-start button */
+.exam-quick-sub{
+  display:block;font-family:'DM Mono',monospace;font-size:.52rem;
+  letter-spacing:.18em;color:rgba(255,246,223,.75);margin-top:.35rem;text-transform:uppercase;
+}
+/* Personalizar toggle — thin-line flanked, chevron chip rotates when open */
+.exam-custom-toggle{
+  display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;
+  min-height:46px;padding:.7rem 1rem;margin:.55rem 0 .9rem;border:none;background:transparent;
+  cursor:pointer;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(125,92,47,.85);position:relative;z-index:1;
+}
+.exam-custom-toggle::before,.exam-custom-toggle::after{
+  content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent);
+}
+.exam-custom-chev{
+  display:inline-flex;width:22px;height:22px;border-radius:6px;align-items:center;justify-content:center;
+  background:rgba(196,154,60,.13);border:1px solid rgba(196,154,60,.3);color:var(--gold);
+  transition:transform .22s ease;margin-left:.4rem;
+}
+.exam-custom-toggle.open .exam-custom-chev{transform:rotate(180deg)}
+/* Mastery: stats trio + topic bars merged into the dark rune panel
+   (same craft as the dashboard "Tu progreso" card) */
+.exam-dom-panel{
+  position:relative;overflow:hidden;border-radius:16px;padding:1.15rem 1rem 1rem;
+  background:linear-gradient(160deg,#2a3530 0%,var(--parchment) 40%,#243028 100%);
+  border:1.5px solid rgba(196,154,60,.25);
+  box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1);
+}
+.exam-dom-panel::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.07)' stroke-width='0.5'/%3E%3C/svg%3E");
+}
+.exam-dom-panel .exam-stats-row{margin-bottom:1rem}
+.exam-dom-panel .exam-stat-num{color:var(--gold3);text-shadow:0 0 14px rgba(228,190,104,.35)}
+.exam-dom-panel .exam-stat-lbl{color:rgba(244,237,226,.5)}
+.exam-dom-panel .exam-topic-bar-label{color:rgba(244,237,226,.8)}
+.exam-dom-panel .exam-topic-bar-meta{color:rgba(244,237,226,.45)}
+.exam-dom-panel .exam-topic-bar-track{background:rgba(0,0,0,.3);box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+/* (gilded-divider label styling lives in the later .exam-gilded-divider span
+   rule — the one that wins the cascade) */
 
 /* Hero allergen card — dedicated class (replaces inline) */
 .exam-hero-card{
@@ -3768,7 +3816,11 @@ body::after{
 .exam-gilded-divider::after{right:3%}
 .exam-gilded-divider span{
   display:inline-block;padding:0 .55rem;
-  background:var(--parchment,#faf6ee);position:relative;z-index:1;
+  /* mask the rule with the PAGE cream — --ink is the paper tone in this
+     codebase's inverted naming (--parchment is the dark green and painted
+     an olive chip behind the label) */
+  background:var(--ink,#f4ede2);position:relative;z-index:1;
+  font-family:'Cinzel',serif;font-weight:600;letter-spacing:.14em;
 }
 
 @media (max-width:380px){

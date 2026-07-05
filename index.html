@@ -556,8 +556,8 @@ const T = {
     correct_short: 'correctas',
     noAllergens: 'Sin alérgenos declarados.',
     noHistory: '✦ Storytelling próximamente',
-    examSetupTitle: 'Modo Examen',
-    examSetupDesc: 'Responde preguntas de opción múltiple. Tu puntuación y progreso por tema quedan registrados.',
+    examSetupTitle: 'Examen',
+    examSetupDesc: '"Mide tu dominio. Cada acierto sube tu precisión y tu rango."',
     topicAllergens: 'Alérgenos',
     topicIngredients: 'Ingredientes',
     topicHistory: 'Storytelling',
@@ -652,8 +652,8 @@ const T = {
     correct_short: 'correct',
     noAllergens: 'No declared allergens.',
     noHistory: '✦ Storytelling coming soon',
-    examSetupTitle: 'Exam Mode',
-    examSetupDesc: 'Answer multiple choice questions. Your score and topic progress are saved.',
+    examSetupTitle: 'Exam',
+    examSetupDesc: '"Measure your mastery. Every correct answer raises your accuracy and rank."',
     topicAllergens: 'Allergens',
     topicIngredients: 'Ingredients',
     topicHistory: 'Storytelling',
@@ -14618,11 +14618,13 @@ function renderExamSetup(){
     const s = _tops[tp.key] || {correct:0,total:0};
     const pct = s.total > 0 ? Math.round(s.correct*100/s.total) : 0;
     const color = tp.key==='allergens' ? '#c47068' : tp.key==='ingredients' ? '#4888a0' : '#7a6aaa';
+    // pct text uses the topic's LIGHT tone — the bars live on the dark panel
+    const colorLight = tp.key==='allergens' ? '#f0c8c0' : tp.key==='ingredients' ? '#b0d8e8' : '#c8b8e0';
     return `<div class="exam-topic-bar">
       <div class="exam-topic-bar-head">
         <span class="exam-topic-bar-icon">${TOPIC_ICONS[tp.key]||''}</span>
         <span class="exam-topic-bar-label">${tp.label}</span>
-        <span class="exam-topic-bar-pct" style="color:${color}">${pct}%</span>
+        <span class="exam-topic-bar-pct" style="color:${colorLight}">${pct}%</span>
       </div>
       <div class="exam-topic-bar-track"><div class="exam-topic-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${color},${color}cc)"></div></div>
       <div class="exam-topic-bar-meta">${s.correct}/${s.total} ${_en?'correct':'aciertos'}</div>
@@ -14646,54 +14648,20 @@ function renderExamSetup(){
 
       <div class="exam-setup-title">${t('examSetupTitle')}</div>
       <div class="exam-setup-desc">${t('examSetupDesc')}</div>
+      <div class="exam-orient">${_en?'<b>Review</b> trains your memory daily<br><b>The exam</b> proves what you already master':'<b>Repasar</b> entrena tu memoria a diario<br><b>El examen</b> comprueba lo que ya dominas'}</div>
 
-      <!-- Divine performance panel -->
-      <div class="exam-stats-panel">
-        <div class="exam-stats-corner exam-stats-corner-tl"></div>
-        <div class="exam-stats-corner exam-stats-corner-tr"></div>
-        <div class="exam-stats-corner exam-stats-corner-bl"></div>
-        <div class="exam-stats-corner exam-stats-corner-br"></div>
-        <div class="exam-stats-row">
-          <div class="exam-stat">
-            <div class="exam-stat-num">${_totalQ}</div>
-            <div class="exam-stat-lbl">${_en?'Questions':'Preguntas'}</div>
-          </div>
-          <div class="exam-stat-sep"></div>
-          <div class="exam-stat">
-            <div class="exam-stat-num" style="color:${_acc>=80?'#4d8a5e':_acc>=60?'#c49a3c':'#c47068'}">${_acc}%</div>
-            <div class="exam-stat-lbl">${_en?'Accuracy':'Precisión'}</div>
-          </div>
-          <div class="exam-stat-sep"></div>
-          <div class="exam-stat">
-            <div class="exam-stat-num">${_known}<span style="font-size:.55em;color:var(--parch3);font-weight:400">/${DISHES.length}</span></div>
-            <div class="exam-stat-lbl">${_en?'Mastered':'Dominados'}</div>
-          </div>
-        </div>
-        <div class="exam-stats-known-track"><div class="exam-stats-known-fill" style="width:${_knownPct}%"></div></div>
-      </div>
+      <!-- One-tap quick start: mixed topics, all categories, 10 questions -->
+      <button class="btn-start" style="margin-bottom:.4rem" onclick="examConfig={topic:'mixed',cat:'all',count:10};startExam()">
+        ${_en?'Start exam':'Empezar examen'}
+        <span class="exam-quick-sub">${_en?'10 questions · all topics':'10 preguntas · todos los temas'}</span>
+      </button>
 
-      <!-- Per-topic mastery bars -->
-      <div class="exam-topics-mastery">
-        <div class="tunic-divider"><span>${_en?'Mastery by Theme':'Dominio por Tema'}</span></div>
-        ${_topicBars}
-      </div>
-
-      <!-- Test de Alérgenos destacado — TUNIC hero card -->
-      <div class="exam-hero-card" onclick="startAllergenTest(null)">
-        <span class="exam-hero-shine"></span>
-        <div class="exam-hero-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.2" opacity=".4"/><path d="M12 8v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="15" r="1.2" fill="#fff"/></svg>
-        </div>
-        <div class="exam-hero-body">
-          <div class="exam-hero-title">${_en?'Allergen Test':'Test de Alérgenos'}</div>
-          <div class="exam-hero-sub">${_en?'Real situations · Traps included':'Situaciones reales · Con trampas'}</div>
-        </div>
-        <svg class="exam-hero-arrow" width="22" height="22" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c47068" opacity=".15"/><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="none" stroke="#c47068" stroke-width="1" opacity=".4"/><polyline points="10 8 14 12 10 16" fill="none" stroke="#c47068" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-
-      <!-- Gilded divider -->
-      <div class="exam-gilded-divider"><span>◆</span></div>
-
+      <!-- Customize: the full topic/category/count pickers, folded by default -->
+      <button type="button" class="exam-custom-toggle" id="examCustomToggle" aria-expanded="false" onclick="_examToggleCustom()">
+        <span>${_en?'Customize':'Personalizar'}</span>
+        <span class="exam-custom-chev"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span>
+      </button>
+      <div id="examCustom" style="display:none">
       <div class="section-eyebrow">${t('topicTheme')}</div>
       <div class="opt-grid" id="topicOpts">
         <div class="opt-tile sel" data-topic="mixed" onclick="selTopic(this)">${shine}<div class="opt-tile-icon"><svg width="16" height="16" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M7 7l10 10M17 7l-10 10" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".8"/></svg></div><div class="opt-tile-name">${t('mixed')}</div><div class="opt-tile-sub">${t('mixedSub')}</div></div>
@@ -14712,8 +14680,56 @@ function renderExamSetup(){
       </div>
 
       <button class="btn-start" onclick="startExam()">${t('startExam')}</button>
+      </div><!-- /examCustom -->
+
+      <div class="exam-gilded-divider"><span>${_en?'CRITICAL TRAINING':'ENTRENAMIENTO CRÍTICO'}</span></div>
+
+      <!-- Simulacro de Alérgenos — safety drill, distinct role from the exam -->
+      <div class="exam-hero-card" onclick="startAllergenTest(null)">
+        <span class="exam-hero-shine"></span>
+        <div class="exam-hero-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.2" opacity=".4"/><path d="M12 8v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="15" r="1.2" fill="#fff"/></svg>
+        </div>
+        <div class="exam-hero-body">
+          <div class="exam-hero-title">${_en?'Allergen Drill':'Simulacro de Alérgenos'}</div>
+          <div class="exam-hero-sub">${_en?'Real situations with traps — this trains safety, not memory':'Situaciones reales con trampas — aquí se entrena la seguridad, no la memoria'}</div>
+        </div>
+        <svg class="exam-hero-arrow" width="22" height="22" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c47068" opacity=".15"/><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="none" stroke="#c47068" stroke-width="1" opacity=".4"/><polyline points="10 8 14 12 10 16" fill="none" stroke="#c47068" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="exam-gilded-divider"><span>${_en?'YOUR MASTERY':'TU DOMINIO'}</span></div>
+
+      <!-- Mastery: stats trio + topic bars merged in the dark rune panel -->
+      <div class="exam-dom-panel">
+        <div class="exam-stats-row">
+          <div class="exam-stat">
+            <div class="exam-stat-num">${_totalQ}</div>
+            <div class="exam-stat-lbl">${_en?'Questions':'Preguntas'}</div>
+          </div>
+          <div class="exam-stat-sep"></div>
+          <div class="exam-stat">
+            <div class="exam-stat-num">${_acc}%</div>
+            <div class="exam-stat-lbl">${_en?'Accuracy':'Precisión'}</div>
+          </div>
+          <div class="exam-stat-sep"></div>
+          <div class="exam-stat">
+            <div class="exam-stat-num">${_known}<span style="font-size:.55em;opacity:.6;font-weight:400">/${DISHES.length}</span></div>
+            <div class="exam-stat-lbl">${_en?'Mastered':'Dominados'}</div>
+          </div>
+        </div>
+        ${_topicBars}
+      </div>
     </div>
   `;
+}
+
+function _examToggleCustom(){
+  const box=document.getElementById('examCustom');
+  const btn=document.getElementById('examCustomToggle');
+  if(!box) return;
+  const open=box.style.display==='none';
+  box.style.display=open?'block':'none';
+  if(btn){ btn.setAttribute('aria-expanded',String(open)); btn.classList.toggle('open',open); }
 }
 
 function _examSetSel(container, el){

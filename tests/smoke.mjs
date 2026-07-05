@@ -778,8 +778,8 @@ test('section labels share the tunic-divider recipe (no rogue styles)', () => {
   // literal ◆…◆ variant, games a one-off mono hint.
   assert(/tunic-divider"><span>\$\{LANG==='en'\?'By total XP':'Por XP total'\}/.test(html),
     'ranking label must use the tunic-divider');
-  assert(/tunic-divider"><span>\$\{_en\?'Mastery by Theme':'Dominio por Tema'\}/.test(html),
-    'exam mastery label must use the tunic-divider');
+  // (exam mastery moved into the dark dom-panel under a gilded-divider label
+  //  in the simplified Examen redesign — asserted by its own test below)
   assert(/tunic-divider"[^>]*><span>\$\{_en\?'More ways to train':'Más formas de entrenar'\}/.test(html),
     'games section label must use the tunic-divider');
   // Ranking XP value must be brand gold (WCAG 5.66:1), not candy-orange.
@@ -900,6 +900,26 @@ test('section heroes share one ornament language (no flanking glyphs)', () => {
   // The shared thin-line ornament stays.
   assert(/\.sup-hero-sub::before/.test(css) && /\.games-header-sub::before/.test(css),
     'hero subtitles must keep their gradient-line ornament');
+});
+
+test('exam setup: one-tap start, folded customize, drill role, dark mastery panel', () => {
+  // Owner feedback: the exam screen was overwhelming (20+ elements, 4 decisions
+  // before starting) and "Modo Examen" duplicated the tab name.
+  assert(/examSetupTitle: 'Examen',/.test(html) && /examSetupTitle: 'Exam',/.test(html),
+    'title must be Examen/Exam, not Modo Examen');
+  assert(/examConfig=\{topic:'mixed',cat:'all',count:10\};startExam\(\)/.test(html),
+    'quick-start button must launch a mixed 10-question exam in one tap');
+  assert(/id="examCustom" style="display:none"/.test(html) && /function _examToggleCustom\(/.test(html),
+    'topic/category/count pickers must fold behind Personalizar');
+  assert(/Simulacro de Alérgenos/.test(html) && /aquí se entrena la seguridad, no la memoria/.test(html),
+    'the allergen drill must be renamed and explain its role');
+  const css = read('styles.css');
+  assert(/\.exam-dom-panel\{/.test(css) && /class="exam-dom-panel"/.test(html),
+    'mastery must live in the dark dom-panel');
+  assert(/\.exam-dom-panel \.exam-stat-lbl\{color:rgba\(244,237,226/.test(css),
+    'dom-panel stats must use light ink on the dark card');
+  assert(/\.exam-orient\{/.test(css) && /class="exam-orient"/.test(html),
+    'the review-vs-exam orientation line must exist');
 });
 
 test('exam anti-echo: ingredients/history questions are reversed and redacted', () => {
