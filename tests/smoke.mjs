@@ -922,6 +922,24 @@ test('exam setup: one-tap start, folded customize, drill role, dark mastery pane
     'the review-vs-exam orientation line must exist');
 });
 
+test('allergen drill: three action-frames per question, no fixed traps', () => {
+  // The old drill used three FIXED trap texts and a correct answer whose
+  // yes/no polarity was unique — solvable by option style after one round.
+  // Every question now carries the same three real courses of action whose
+  // truth depends on the dish, plus one rotating trap from a bank.
+  const fn = html.slice(html.indexOf('function buildAllergenQuestions'), html.indexOf('function buildAllergenQuestions') + 12000);
+  assert(/_trapBank/.test(fn) && /_comandaBank/.test(fn), 'rotating trap/comanda banks missing');
+  assert(/optServe/.test(fn) && /optAdapt/.test(fn) && /optBlock/.test(fn),
+    'the three action-frames must exist');
+  assert(/state === 'absent' \? optServe : state === 'adapt' \? optAdapt : optBlock/.test(fn),
+    'the correct answer must be the frame matching the dish truth');
+  assert(!/es mínimo y no supone riesgo/.test(html),
+    'the old fixed trap texts must be gone');
+  assert(!/firme una exención/.test(html), 'old waiver trap must be gone');
+  assert(/_lqaShuffle\(questions\)\.slice\(0, 10\)/.test(fn),
+    'question shuffle must be unbiased (_lqaShuffle)');
+});
+
 test('exam anti-echo: ingredients/history questions are reversed and redacted', () => {
   // Measured on the real menu: the correct option leaked dish-name words in
   // 74% (ingredients) / 83% (history) of questions. Those topics now ask in
