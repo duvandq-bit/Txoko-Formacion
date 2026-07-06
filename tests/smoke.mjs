@@ -567,6 +567,13 @@ test('DISH_ACTIONS matrix: full coverage, comandas present, Trifasi fix locked',
   assert(pairs >= 260 && removables >= 70, `matrix coverage shrank (pairs=${pairs}, removables=${removables})`);
   assert(M['89'] && M['89']['Huevos'] && M['89']['Huevos'].r === 0,
     'Trifasi Huevos must stay STRUCTURAL (veg version keeps the fried egg; brioche egg is structural)');
+  // Vitello tonnato (owner, jul 2026): la salsa tonnata es ingrediente
+  // principal — retirarla desarma el plato. Pescado/Huevos/Sulfitos NUNCA
+  // vuelven a ser adaptables aquí; solo el brioche (Gluten) se retira.
+  for (const a of ['Pescado', 'Huevos', 'Sulfitos']) {
+    assert(M['8'] && M['8'][a] && M['8'][a].r === 0, `Vitello ${a} must stay STRUCTURAL (tonnato is core)`);
+  }
+  assert(M['8']['Gluten'] && M['8']['Gluten'].r === 1, 'Vitello Gluten (brioche) must stay removable');
   // Consumers must consult the matrix before the prose parser.
   const nr = html.slice(html.indexOf('function _simNonRemovableAllergens'), html.indexOf('function _simNonRemovableAllergens') + 1200);
   assert(/DISH_ACTIONS\[dish\.id\]/.test(nr), '_simNonRemovableAllergens must read DISH_ACTIONS first');
@@ -1634,6 +1641,10 @@ test('smart review owner-reported fixes: header leak, agua), Txipiron≠ron', ()
   // 4. Beer/wine in fried or baked preparations loses its alcohol
   //    (owner-confirmed: Calamares tempura) — pregnancy must exempt it.
   assert(/tempura\|rebozado\|masa\|frit/.test(html), 'cooked beer/wine exemption missing in pregnancy scenario');
+
+  // Huevo a baja temperatura = poco cocinado → embarazada NO (owner, jul 2026)
+  const preg = html.slice(html.indexOf('function _scenarioPregnancy'), html.indexOf('function _scenarioChildFriendly'));
+  assert(/baja temperatura/.test(preg), 'pregnancy scenario must treat low-temperature egg as undercooked');
 });
 
 test('exam surfaces shuffle options: LQA exam/situations + wine quiz shape guard', () => {
