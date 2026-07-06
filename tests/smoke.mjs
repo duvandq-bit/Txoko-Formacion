@@ -655,6 +655,26 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('force-update escape hatch + APP_VERSION synced to the SW', () => {
+  // iOS PWAs se aferran a builds viejas (reporte del propietario: "en iPhone
+  // sigue apareciendo la versión antigua"). El botón Actualizar del login
+  // desregistra el SW, borra las cachés y recarga con cache-busting — sin
+  // tocar localStorage — y muestra la versión realmente cacheada en el
+  // dispositivo. APP_VERSION (cosmética, consola) debe ir SIEMPRE a la par
+  // de la VERSION del service worker: llevaba clavada en 5.8.3 desde mayo.
+  assert(/async function forceAppUpdate\(\)/.test(html), 'forceAppUpdate missing');
+  const f = html.slice(html.indexOf('async function forceAppUpdate'), html.indexOf('async function forceAppUpdate') + 900);
+  assert(/unregister\(\)/.test(f) && /caches\.delete\(k\)/.test(f) && /localStorage/.test(f) === false,
+    'forceAppUpdate must unregister SW + clear caches and never touch localStorage');
+  assert(/\?upd=/.test(f), 'forceAppUpdate must reload with cache-busting');
+  assert(/onclick="forceAppUpdate\(\)"/.test(html), 'update button missing from login footer');
+  assert(/txoko-shell-/.test(html.slice(html.indexOf('_showCachedVersion'), html.indexOf('_showCachedVersion') + 700)),
+    'cached-version label must read the real SW cache name');
+  const swv = read('sw.js').match(/const VERSION = 'v([\d.]+)';/)[1];
+  const appv = html.match(/const APP_VERSION='([\d.]+)'/)[1];
+  assert(swv === appv, `APP_VERSION (${appv}) must match sw.js VERSION (${swv}) — bump both together`);
+});
+
 test('ghost inactivity interceptor stays dead: no callers + kill-switch', () => {
   // El propietario eliminó el Servicio Fantasma por inactividad; se siguió
   // viendo en dispositivos con la build ANTIGUA cacheada (justo los
