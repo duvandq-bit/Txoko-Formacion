@@ -662,6 +662,23 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('login fits one phone screen; Share/Update buttons prominent', () => {
+  // Petición del propietario: nada de arrastrar en el login, y Compartir/
+  // Actualizar se veían "muy poco". Medido en headless a 390x844: el botón
+  // Actualizar termina en y=833 (cabe). Candados de las reglas que lo logran.
+  const css = read('styles.css');
+  assert(/#screenLogin\{padding:1rem \.9rem \.8rem\}/.test(css), 'mobile login compaction missing');
+  assert(/\.login-error:empty\{min-height:0/.test(css), 'empty error div must not reserve height');
+  assert(/\.login-logo h1\{font-size:2\.35rem\}/.test(css), 'mobile logo size missing');
+  assert(/max-height:720px/.test(css), 'short-screen (iPhone SE) tier missing');
+  // Los botones del pie con presencia: borde y texto firmes, fondo sutil
+  const shareBtn = html.slice(html.indexOf('onclick="shareApp()"'), html.indexOf('onclick="shareApp()"') + 400);
+  assert(/rgba\(196,154,60,\.55\)/.test(shareBtn) && /rgba\(196,154,60,\.08\)/.test(shareBtn),
+    'Share button must have the strengthened border + subtle fill');
+  const updBtn = html.slice(html.indexOf('onclick="forceAppUpdate()"'), html.indexOf('onclick="forceAppUpdate()"') + 400);
+  assert(/rgba\(196,154,60,\.55\)/.test(updBtn), 'Update button must have the strengthened border');
+});
+
 test('avatar system: branded SVG medallions, no emojis, self-styled picker', () => {
   // Reporte del propietario: el selector salía como texto crudo (las clases
   // avatar-picker-* nunca existieron en styles.css) y las opciones eran
