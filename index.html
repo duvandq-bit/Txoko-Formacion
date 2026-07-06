@@ -4814,7 +4814,7 @@ function _scenarioIngredientWhere(dish, dd, _en){
 // por clasificación común (mantequilla→Lácteos, atún→Pescado), el par se
 // descarta — la pregunta debe exigir conocer la ficha, no saber clasificar.
 const _SR_OBVIOUS = {
-  'Gluten': /harina|\bpan\b|pan |brioche|panko|masa|hojaldre|trigo|pasta|ravioli|linguini|gluten/,
+  'Gluten': /harina|\bpan\b|pan |brioche|panko|masa|hojaldre|trigo|pasta|ravioli|linguini|gluten|focaccia|tosta|galleta|bizcocho/,
   'Lácteos': /\bleche\b|mantequilla|queso|nata|yogur|lacte|bechamel/,
   'Huevos': /huevo/,
   'Pescado': /pescado|atun|lubina|\bmero\b|anchoa|ventresca|bacalao|merluza|boqueron|salmon|pampano|caballa|sardina|fumet/,
@@ -4845,7 +4845,12 @@ function _scenarioAllergenSource(dish, dd, _en){
   for(const a of _djShuffle([...(dish.allergens||[])])){
     const carriers = real.filter(c=>c.a.includes(a));
     if(!carriers.length) continue;
-    const hidden = carriers.filter(c=>!_srObviousSource(a, c.n));
+    // Anti-fuga de nombre: si el componente comparte una palabra con el
+    // nombre del plato (Focaccia ↔ "Focaccia con vegetales"), la pregunta se
+    // responde leyendo el enunciado — ese portador no puede ser la correcta.
+    const _dishToks = new Set(_srNorm(dd.name||'').split(/[^a-z0-9ñ]+/).filter(w=>w.length>3));
+    const hidden = carriers.filter(c=>!_srObviousSource(a, c.n)
+      && !_srNorm(c.n).split(/[^a-z0-9ñ]+/).some(w=>w.length>3 && _dishToks.has(w)));
     if(!hidden.length) continue;
     const correct = _simPick(hidden);
     // Distractores NO portadores de a: los del propio plato primero (trampa
@@ -16878,6 +16883,31 @@ function buildAllergenQuestions(cat) {
     if (!allergens.length) continue;
 
     const dishDisplay = LANG === 'en' ? (DISHES_EN.find(x=>x.id===dish.id)?.name || dish.name) : dish.name;
+    // FASE 4 — un ~30% de las preguntas son de PROCEDENCIA, reutilizando los
+    // mismos builders del Repaso Inteligente (DISH_COMPONENTS, filtro
+    // anti-obviedad, distractores verificados). Mismo generador, misma
+    // calidad medida, mismo guard de CI que los ejecuta.
+    if (typeof DISH_COMPONENTS !== 'undefined' && DISH_COMPONENTS[dish.id] && Math.random() < 0.3) {
+      const _pvFn = Math.random() < 0.6 ? _scenarioAllergenSource : _scenarioComponentAllergen;
+      const pv = _pvFn(dish, { name: dishDisplay }, LANG === 'en');
+      if (pv) {
+        questions.push({
+          dish, dishDisplay, declaredAllergen: '', enAllergen: '',
+          situation: pv.q,
+          prompt: _pvFn === _scenarioAllergenSource
+            ? (LANG === 'en' ? 'Choose the component:' : 'Elige el componente:')
+            : (LANG === 'en' ? 'Choose the allergen:' : 'Elige el alérgeno:'),
+          correct: pv.options[pv.correctIdx],
+          choices: pv.options,
+          correctIdx: pv.correctIdx,
+          explain: pv.explain,
+          color: getCatColor(dish.cat),
+          icon: CAT_ICONS[dish.cat] || '',
+          catLabel: dish.cat
+        });
+        continue;
+      }
+    }
     // A third of the time the declared allergen is NOT in the dish — the
     // waiter must recognize it can be served as-is (replaces old Type 2).
     const _allInPool = [...new Set(pool.flatMap(x => x.allergens || []))];
@@ -17009,7 +17039,7 @@ function renderAllergenQuestion() {
         <div style="font-size:.95rem;color:var(--parchment);line-height:1.55;font-weight:500">${q.situation}</div>
 
       </div>
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">${LANG==='en'?'Choose the correct action:':'Elige la acción correcta:'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">${q.prompt || (LANG==='en'?'Choose the correct action:':'Elige la acción correcta:')}</div>
       <div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:.5rem">
         ${q.choices.map((ch,i)=>`<button class="duel-answer-btn" id="atb${i}" onclick="answerAllergenTest(${i})">${letters[i]}. ${ch}</button>`).join('')}
       </div>
@@ -17037,10 +17067,13 @@ function answerAllergenTest(idx) {
   const fb = document.getElementById('atFeedback');
   if (fb) {
     const allergenInfo = (q.dish.allergens||[]).join(', ');
+    // Las preguntas de procedencia traen su propia explicación (qué
+    // componente(s) aportan el alérgeno según la base) — se muestra siempre.
+    const explainLine = q.explain ? `<br><span style="font-size:.72rem;color:var(--parch2)">${q.explain}</span>` : '';
     if (ok) {
-      fb.innerHTML = `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span><br><span style="font-size:.7rem;color:var(--parch3)">${LANG==='en'?'Allergens:':'Alérgenos:'} ${allergenInfo||'—'}</span>`;
+      fb.innerHTML = `<span style="color:var(--sage)">✓ ${LANG==='en'?'Correct!':'¡Correcto!'}</span>${explainLine}<br><span style="font-size:.7rem;color:var(--parch3)">${LANG==='en'?'Allergens:':'Alérgenos:'} ${allergenInfo||'—'}</span>`;
     } else {
-      fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Incorrect.':'Incorrecto.'}</span><br><span style="font-size:.75rem;color:var(--parch2)">${q.correct}</span><br><span style="font-size:.7rem;color:var(--parch3)">${LANG==='en'?'Allergens:':'Alérgenos:'} ${allergenInfo||'—'}</span>`;
+      fb.innerHTML = `<span style="color:var(--rose)">✗ ${LANG==='en'?'Incorrect.':'Incorrecto.'}</span><br><span style="font-size:.75rem;color:var(--parch2)">${q.correct}</span>${explainLine}<br><span style="font-size:.7rem;color:var(--parch3)">${LANG==='en'?'Allergens:':'Alérgenos:'} ${allergenInfo||'—'}</span>`;
     }
   }
   allergenTestState.index++;

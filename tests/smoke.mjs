@@ -678,10 +678,27 @@ test('smart review provenance: DISH_COMPONENTS-driven, executed, anti-obvious', 
           `malformed provenance question for dish ${d.id}: ${q.q}`);
         assert(new Set(q.options.map(o => o.toLowerCase())).size === 4,
           `duplicate options for dish ${d.id}: ${q.options.join(' | ')}`);
+        // Anti-fuga de nombre: la correcta de "¿qué componente lo aporta?"
+        // no puede compartir palabra con el nombre del plato (Focaccia ↔
+        // "Focaccia con vegetales" se respondía leyendo el enunciado).
+        if (fn === _scenarioAllergenSource) {
+          const dt = new Set(_srNorm(d.name).split(/[^a-z0-9ñ]+/).filter(w => w.length > 3));
+          const leak = _srNorm(q.options[q.correctIdx]).split(/[^a-z0-9ñ]+/).some(w => w.length > 3 && dt.has(w));
+          assert(!leak, `name leak: dish "${d.name}" answer "${q.options[q.correctIdx]}"`);
+        }
       }
     }
   }
   assert(made >= 400, `provenance yield collapsed (${made} questions from 4 rounds)`);
+  // El Simulacro de Alérgenos mezcla los MISMOS builders (~30% procedencia):
+  // misma calidad medida en las dos superficies, sin generador duplicado.
+  const drill = html.slice(html.indexOf('function buildAllergenQuestions'), html.indexOf('function startAllergenTest'));
+  assert(/_scenarioAllergenSource/.test(drill) && /_scenarioComponentAllergen/.test(drill),
+    'allergen drill must mix the provenance builders');
+  const rq = html.slice(html.indexOf('function renderAllergenQuestion'), html.indexOf('function answerAllergenTest'));
+  assert(/q\.prompt \|\|/.test(rq), 'drill renderer must honour per-question prompt label');
+  const aq = html.slice(html.indexOf('function answerAllergenTest'), html.indexOf('function renderAllergenResults'));
+  assert(/q\.explain/.test(aq), 'drill feedback must show the provenance explanation');
 });
 
 test('pairingExplanations: every entry matches a dish still on the menu', () => {
