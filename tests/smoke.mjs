@@ -481,13 +481,13 @@ test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () 
   for (const [key, e] of Object.entries(base.ingredientes)) {
     assert(Array.isArray(e.alergenos) && e.alergenos.every(a => canon.has(a)),
       `ingredient "${key}" carries a tag outside the EU-14 canon`);
-    assert(['certeza culinaria', 'notas del plato', 'pendiente'].includes(e.fuente),
+    assert(['certeza culinaria', 'notas del plato', 'deducido de la carta', 'propuesta', 'pendiente', 'confirmado por propietario'].includes(e.fuente),
       `ingredient "${key}" has invalid fuente`);
   }
-  // Ratchet at ZERO: the owner confirmed and fixed the three first-pass
-  // findings (ravioli+Huevos, trifasi+Mostaza, pámpano+Gluten, Jul 2026).
-  // From here on, ANY dish whose tagged ingredients imply an allergen the
-  // dish does not declare fails CI immediately.
+  // Ratchet at ZERO: every phase-1 and phase-2 finding is owner-resolved
+  // (ravioli+Huevos, trifasi+Mostaza, pámpano+Gluten, pincho+Gluten,
+  // coca+Sulfitos — Jul 2026). ANY dish whose tagged ingredients imply an
+  // allergen the dish does not declare fails CI immediately.
   const audit = JSON.parse(execSync('node tests/allergen-audit.mjs --json', { cwd: ROOT }).toString());
   for (const f of audit.no_declarado) {
     assert(false,

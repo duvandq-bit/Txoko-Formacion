@@ -49,7 +49,9 @@ for (const d of dishes) {
   for (const t of d.tokens) {
     const e = ING[norm(t)];
     if (!e) continue;
-    if (e.fuente === 'pendiente') { results.pendientes_usados.add(norm(t)); continue; }
+    // 'pendiente' y 'propuesta' NO son autoritativas: no computan alérgenos
+    // (una propuesta espera la palabra del propietario).
+    if (e.fuente === 'pendiente' || e.fuente === 'propuesta') { results.pendientes_usados.add(norm(t)); continue; }
     for (const a of e.alergenos) {
       if (!computed.has(a)) computed.set(a, []);
       computed.get(a).push(e.nombre);
