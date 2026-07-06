@@ -1,0 +1,44 @@
+# Despliega la edge function send-push (supabase/functions/send-push/) en el
+# proyecto Supabase de TXOKO. Se lanza a mano (workflow_dispatch) con un token
+# personal de Supabase que debe REVOCARSE tras el deploy. La clave VAPID
+# privada se guarda como secreto de la función (Edge Functions → Secrets),
+# nunca en el repo; el índice desplegado la lee de Deno.env.
+name: Deploy Supabase send-push
+
+on:
+  workflow_dispatch:
+    inputs:
+      sb_token:
+        description: 'Supabase personal access token (revocar después del deploy)'
+        required: true
+      vapid_private:
+        description: 'VAPID private key (opcional: se sube como secreto VAPID_PRIVATE_KEY)'
+        required: false
+        default: ''
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Mask inputs in logs
+        run: |
+          echo "::add-mask::${{ inputs.sb_token }}"
+          if [ -n "${{ inputs.vapid_private }}" ]; then echo "::add-mask::${{ inputs.vapid_private }}"; fi
+
+      - name: Upload VAPID_PRIVATE_KEY secret
+        if: ${{ inputs.vapid_private != '' }}
+        run: |
+          curl -sS -f -X POST "https://api.supabase.com/v1/projects/advkoujfgbrrjvqexrcu/secrets" \
+            -H "Authorization: Bearer ${{ inputs.sb_token }}" \
+            -H "Content-Type: application/json" \
+            -d "[{\"name\":\"VAPID_PRIVATE_KEY\",\"value\":\"${{ inputs.vapid_private }}\"}]"
+          echo "Secreto VAPID_PRIVATE_KEY actualizado"
+
+      - name: Deploy send-push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ inputs.sb_token }}
+        run: |
+          npx --yes supabase@latest functions deploy send-push \
+            --project-ref advkoujfgbrrjvqexrcu --no-verify-jwt
