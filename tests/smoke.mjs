@@ -639,6 +639,45 @@ test('DISH_COMPONENTS: dish allergens derive exactly from components, zero drift
   assert(/'From':'Por'/.test(detail), 'allergen provenance line missing from dish detail');
 });
 
+test('pairingExplanations: every entry matches a dish still on the menu', () => {
+  // Los mapas indexados por nombre de plato quedan huérfanos en silencio
+  // cuando un plato sale de la carta (pasó con el Rejo de pulpo): la entrada
+  // nunca se ejecuta pero envejece como dato muerto. Candado: cada clave del
+  // mapa de narrativas de maridaje debe corresponder a un plato actual.
+  const iP = html.indexOf('const pairingExplanations = {');
+  assert(iP !== -1, 'pairingExplanations map missing');
+  // fin del mapa: la primera '};' a nivel de indentación 2
+  const jP = html.indexOf('\n  };', iP);
+  const mapSrc = html.slice(iP, jP);
+  const keys = [...mapSrc.matchAll(/\n    '((?:[^'\\]|\\.)*)': \{/g)].map(m => m[1].replace(/\\'/g, "'"));
+  assert(keys.length >= 10, `pairing map suspiciously small (${keys.length} keys)`);
+  const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const iEs = html.indexOf('const DISHES = ['), jEs = html.indexOf('\n];', iEs);
+  const names = new Set([...html.slice(iEs, jEs).matchAll(/name:'((?:[^'\\]|\\.)*)'/g)]
+    .map(m => norm(m[1].replace(/\\'/g, "'").replace(/ \((Almuerzo|Cena)\)$/i, ''))));
+  // match laxo: todas las palabras significativas de la clave aparecen en el
+  // nombre de algún plato ('pluma ibérica' ↔ 'Pluma de cerdo Ibérico').
+  const STOP = new Set(['de', 'del', 'la', 'el', 'con', 'al', 'a', 'y', 'en']);
+  const stem = w => w.replace(/(os|as|es)$/, '').replace(/[ao]$/, '');
+  const toks = s2 => norm(s2).split(/[^a-z0-9ñ]+/).filter(w => w && !STOP.has(w)).map(stem);
+  const nameToks = [...names].map(n => new Set(toks(n)));
+  // PENDIENTE DEL PROPIETARIO (jul 2026): las narrativas de cortes de carne y
+  // el helado no casan con ningún plato de la carta de formación. Puede ser
+  // carta de parrilla real no modelada o restos de una carta antigua — hasta
+  // su palabra, quedan en allowlist. Si confirma que ya no existen, se vacía
+  // esta lista y se limpian también los ~240 maridajes de wines.json.
+  const PENDING_OWNER = new Set(['entrecot de angus', 'entrecot de wagyu',
+    'cowboy de black angus', 'txuleta de rubia gallega', 'tomahawk de hereford',
+    't-bone de wagyu', 'lomo bajo de simmental', 'chateaubriand de vaca holstein',
+    'helados ben and jerrys']);
+  for (const k of keys) {
+    if (PENDING_OWNER.has(norm(k))) continue;
+    const kt = toks(k);
+    assert(nameToks.some(nt => kt.every(w => nt.has(w))),
+      `pairing narrative for "${k}" matches no dish on the menu (orphan — dish removed?)`);
+  }
+});
+
 test('ES and EN dish twins declare identical allergens', () => {
   // The EN cards are hand-written too — a divergent twin misinforms staff
   // using the app in English (found live: EN Croquettes missing Molluscs and
