@@ -29,16 +29,22 @@ const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase
 const i0 = html.indexOf('const DISHES = [');
 const i1 = html.indexOf('\n];', i0);
 const block = html.slice(i0, i1);
-const dishRe = /\{id:(\d+),cat:'([^']*)',name:'((?:[^'\\]|\\.)*)',allergens:\[([^\]]*)\],(?:baseAllergens:\[[^\]]*\],)?(?:variants:\[.*?\],)?ingredients:'((?:[^'\\]|\\.)*)'/g;
+const dishRe = /\{id:(\d+),cat:'([^']*)',name:'((?:[^'\\]|\\.)*)',allergens:\[([^\]]*)\],(?:baseAllergens:\[([^\]]*)\],)?(?:variants:\[(.*?)\],)?ingredients:'((?:[^'\\]|\\.)*)'/g;
 const dishes = [];
 let m;
 while ((m = dishRe.exec(block)) !== null) {
-  const [, id, cat, name, alg, ings] = m;
+  const [, id, cat, name, alg, baseA, variants, ings] = m;
   const declared = [...alg.matchAll(/'([^']+)'/g)].map(x => x[1]);
   const tokens = ings.split(/[,.:;]/)
     .map(t => t.replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim())
     .filter(t => t.length > 2 && t.length < 40);
-  dishes.push({ id: +id, cat, name, declared, tokens });
+  // Multi-variant dishes (Croquetas): the declaration is base + union of the
+  // variants' extra allergens — structured data, part of the computed side.
+  const variantAllergens = [];
+  if (baseA) for (const x of baseA.matchAll(/'([^']+)'/g)) variantAllergens.push(x[1]);
+  if (variants) for (const x of variants.matchAll(/extra:\[([^\]]*)\]/g))
+    for (const y of x[1].matchAll(/'([^']+)'/g)) variantAllergens.push(y[1]);
+  dishes.push({ id: +id, cat, name, declared, tokens, variantAllergens });
 }
 
 const ING = base.ingredientes;
@@ -46,6 +52,10 @@ const results = { no_declarado: [], sin_origen: [], pendientes_usados: new Set()
 
 for (const d of dishes) {
   const computed = new Map(); // alérgeno -> [ingredientes que lo aportan]
+  for (const a of d.variantAllergens) {
+    if (!computed.has(a)) computed.set(a, []);
+    computed.get(a).push('variantes del plato');
+  }
   for (const t of d.tokens) {
     const e = ING[norm(t)];
     if (!e) continue;

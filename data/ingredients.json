@@ -147,8 +147,10 @@
   },
   "vinagre de manzana": {
    "nombre": "Vinagre de manzana",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "notas del plato"
   },
   "vainilla": {
    "nombre": "Vainilla",
@@ -308,9 +310,11 @@
   "pan brioche": {
    "nombre": "Pan brioche",
    "alergenos": [
-    "Gluten"
+    "Gluten",
+    "Huevos",
+    "Lácteos"
    ],
-   "fuente": "certeza culinaria"
+   "fuente": "notas del plato"
   },
   "soja": {
    "nombre": "Soja",
@@ -660,7 +664,8 @@
   "ponzu": {
    "nombre": "Ponzu",
    "alergenos": [
-    "Soja"
+    "Soja",
+    "Pescado"
    ],
    "fuente": "certeza culinaria"
   },
@@ -683,8 +688,10 @@
   },
   "laminas de rabanitos encurtidas": {
    "nombre": "Láminas de rabanitos encurtidas",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "deducido de la carta"
   },
   "espuma de remolacha": {
    "nombre": "Espuma de remolacha",
@@ -762,8 +769,10 @@
   },
   "manzana encurtida": {
    "nombre": "Manzana encurtida",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "notas del plato"
   },
   "aderezo": {
    "nombre": "Aderezo",
@@ -1035,8 +1044,10 @@
   },
   "chistorra": {
    "nombre": "Chistorra",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "deducido de la carta"
   },
   "tinta de txipiron": {
    "nombre": "Tinta de Txipiron",
@@ -1342,13 +1353,17 @@
   },
   "morcilla": {
    "nombre": "Morcilla",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "deducido de la carta"
   },
   "chorizo": {
    "nombre": "Chorizo",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "deducido de la carta"
   },
   "brotes de guisantes": {
    "nombre": "Brotes de guisantes",
@@ -1727,7 +1742,8 @@
   "pasta fresca": {
    "nombre": "Pasta fresca",
    "alergenos": [
-    "Gluten"
+    "Gluten",
+    "Huevos"
    ],
    "fuente": "certeza culinaria"
   },
@@ -1795,9 +1811,11 @@
   "salsa tartara": {
    "nombre": "Salsa tártara",
    "alergenos": [
-    "Huevos"
+    "Huevos",
+    "Mostaza",
+    "Sulfitos"
    ],
-   "fuente": "certeza culinaria"
+   "fuente": "notas del plato"
   },
   "huevo duro": {
    "nombre": "Huevo duro",
@@ -1956,8 +1974,10 @@
   },
   "granadina vinagre de manzana": {
    "nombre": "Granadina Vinagre de manzana",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "notas del plato"
   },
   "porto vinagre de jerez": {
    "nombre": "Porto Vinagre de jerez",
@@ -2045,8 +2065,10 @@
   },
   "paletilla iberica de bellota": {
    "nombre": "Paletilla ibérica de bellota",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "deducido de la carta"
   },
   "proteina de soja": {
    "nombre": "Proteína de soja",
@@ -2401,7 +2423,8 @@
   "pasta linguini fresca harina": {
    "nombre": "Pasta linguini fresca harina",
    "alergenos": [
-    "Gluten"
+    "Gluten",
+    "Huevos"
    ],
    "fuente": "certeza culinaria"
   },
