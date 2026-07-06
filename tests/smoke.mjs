@@ -557,6 +557,59 @@ test('dish detail + immersive journey read verdicts from DISH_ACTIONS', () => {
   assert(!/Posiblemente eliminable bajo petición/.test(html), 'heuristic "maybe removable" chip must stay retired');
 });
 
+test('DISH_COMPONENTS: dish allergens derive exactly from components, zero drift vs base', () => {
+  // FASE 4: cada plato = lista de componentes y sus alérgenos se CALCULAN
+  // como la unión de los de sus componentes — la declaración manual queda
+  // como espejo verificado, no como fuente editable. Tres candados:
+  //   1. unión(componentes) == allergens declarados, EXACTA, por plato;
+  //   2. cada componente existe en data/ingredients.json con el MISMO set
+  //      de alérgenos (la base única sigue siendo la única fuente);
+  //   3. el rol m=1 (modificable) coincide con DISH_ACTIONS (r=1 en todos
+  //      sus alérgenos), y la ficha de plato muestra la procedencia.
+  const iC = html.indexOf('const DISH_COMPONENTS = {');
+  assert(iC !== -1, 'DISH_COMPONENTS missing');
+  const jC = html.indexOf('};', iC);
+  const C = new Function(html.slice(iC, jC + 2) + '; return DISH_COMPONENTS;')(); // eslint-disable-line no-new-func
+  const iM = html.indexOf('const DISH_ACTIONS = {');
+  const M = JSON.parse(html.slice(iM + 'const DISH_ACTIONS = '.length, html.indexOf('};', iM) + 1));
+  const base = JSON.parse(read('data/ingredients.json')).ingredientes;
+  const byName = {};
+  for (const e of Object.values(base)) byName[e.nombre] = e.alergenos;
+  // Pseudo-components (multi-variant dishes): allergens that depend on the
+  // chosen variant — real provenance, but no single base ingredient and no
+  // per-comanda role, so locks 2 and 3 don't apply to them.
+  const PSEUDO = new Set(['Base de todas las variantes', 'Según la variante elegida']);
+  const iEs = html.indexOf('const DISHES = ['), jEs = html.indexOf('\n];', iEs);
+  let checked = 0, modeled = 0;
+  for (const m of html.slice(iEs, jEs).matchAll(/\{id:(\d+),cat:'[^']*',name:'((?:[^'\\]|\\.)*)',allergens:\[([^\]]*)\]/g)) {
+    const id = m[1], name = m[2];
+    const declared = [...m[3].matchAll(/'([^']+)'/g)].map(x => x[1]).sort();
+    checked++;
+    if (!declared.length) continue;
+    const comps = C[id];
+    assert(comps && comps.length, `dish ${id} "${name}" declares allergens but has no components`);
+    modeled++;
+    const union = [...new Set(comps.flatMap(c => c.a))].sort();
+    assert(JSON.stringify(union) === JSON.stringify(declared),
+      `dish ${id} "${name}": derived [${union}] != declared [${declared}]`);
+    for (const c of comps) {
+      if (PSEUDO.has(c.n)) continue;
+      assert(byName[c.n], `dish ${id}: component "${c.n}" not in ingredient base`);
+      assert(JSON.stringify([...c.a].sort()) === JSON.stringify([...byName[c.n]].sort()),
+        `dish ${id}: component "${c.n}" allergens drifted from base`);
+      const allRemovable = c.a.every(a => M[id] && M[id][a] && M[id][a].r === 1);
+      assert((c.m === 1) === allRemovable,
+        `dish ${id}: component "${c.n}" role m=${c.m} contradicts DISH_ACTIONS`);
+    }
+  }
+  assert(checked >= 85 && modeled >= 75, `coverage shrank (dishes=${checked}, modeled=${modeled})`);
+  // Runtime derivation + service-facing provenance in the dish card.
+  assert(/function computeDishAllergens/.test(html), 'computeDishAllergens helper missing');
+  const detail = html.slice(html.indexOf('function renderRepasoDishDetail'), html.indexOf('function changeRepasoTopic'));
+  assert(/DISH_COMPONENTS\[dish\.id\]/.test(detail), 'dish detail must read DISH_COMPONENTS for provenance');
+  assert(/'From':'Por'/.test(detail), 'allergen provenance line missing from dish detail');
+});
+
 test('ES and EN dish twins declare identical allergens', () => {
   // The EN cards are hand-written too — a divergent twin misinforms staff
   // using the app in English (found live: EN Croquettes missing Molluscs and

@@ -25,26 +25,32 @@ const base = JSON.parse(readFileSync(join(root, 'data/ingredients.json'), 'utf-8
 
 const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 
-// ── Extrae DISHES (mismo criterio de tokenización que el builder de la base) ──
+// ── Extrae DISHES: parse por objeto, tolerante al orden de campos ──
+// El regex antiguo exigía ingredients justo después de allergens; los platos
+// con history por delante (Rejo de pulpo, id 74) quedaban FUERA del audit en
+// silencio. Ahora cada objeto se delimita por su `{id:N,` y los campos se
+// extraen de forma independiente, en cualquier orden.
 const i0 = html.indexOf('const DISHES = [');
 const i1 = html.indexOf('\n];', i0);
 const block = html.slice(i0, i1);
-const dishRe = /\{id:(\d+),cat:'([^']*)',name:'((?:[^'\\]|\\.)*)',allergens:\[([^\]]*)\],(?:baseAllergens:\[([^\]]*)\],)?(?:variants:\[(.*?)\],)?ingredients:'((?:[^'\\]|\\.)*)'/g;
 const dishes = [];
-let m;
-while ((m = dishRe.exec(block)) !== null) {
-  const [, id, cat, name, alg, baseA, variants, ings] = m;
-  const declared = [...alg.matchAll(/'([^']+)'/g)].map(x => x[1]);
-  const tokens = ings.split(/[,.:;]/)
+const starts = [...block.matchAll(/\{id:(\d+),/g)];
+for (let k = 0; k < starts.length; k++) {
+  const obj = block.slice(starts[k].index, k + 1 < starts.length ? starts[k + 1].index : block.length);
+  const field = (fname) => { const fm = obj.match(new RegExp(fname + ":'((?:[^'\\\\]|\\\\.)*)'")); return fm ? fm[1] : ''; };
+  const algM = obj.match(/(?<!base)allergens:\[([^\]]*)\]/);
+  const declared = algM ? [...algM[1].matchAll(/'([^']+)'/g)].map(x => x[1]) : [];
+  const tokens = field('ingredients').split(/[,.:;]/)
     .map(t => t.replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim())
     .filter(t => t.length > 2 && t.length < 40);
   // Multi-variant dishes (Croquetas): the declaration is base + union of the
   // variants' extra allergens — structured data, part of the computed side.
   const variantAllergens = [];
-  if (baseA) for (const x of baseA.matchAll(/'([^']+)'/g)) variantAllergens.push(x[1]);
-  if (variants) for (const x of variants.matchAll(/extra:\[([^\]]*)\]/g))
+  const baseM = obj.match(/baseAllergens:\[([^\]]*)\]/);
+  if (baseM) for (const x of baseM[1].matchAll(/'([^']+)'/g)) variantAllergens.push(x[1]);
+  for (const x of obj.matchAll(/extra:\[([^\]]*)\]/g))
     for (const y of x[1].matchAll(/'([^']+)'/g)) variantAllergens.push(y[1]);
-  dishes.push({ id: +id, cat, name, declared, tokens, variantAllergens });
+  dishes.push({ id: +starts[k][1], cat: field('cat'), name: field('name'), declared, tokens, variantAllergens });
 }
 
 const ING = base.ingredientes;

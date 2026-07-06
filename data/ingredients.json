@@ -2740,6 +2740,13 @@
    "nombre": "Zanahorias",
    "alergenos": [],
    "fuente": "certeza culinaria"
+  },
+  "fumet caldo de pescado": {
+   "nombre": "Fumet (caldo de pescado)",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
   }
  }
 }
