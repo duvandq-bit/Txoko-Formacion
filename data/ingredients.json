@@ -1031,10 +1031,8 @@
   },
   "dry age": {
    "nombre": "Dry Age",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "notas del plato"
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "mermelada de piparra": {
    "nombre": "mermelada de piparra",
@@ -1046,7 +1044,7 @@
    "alergenos": [
     "Sulfitos"
    ],
-   "fuente": "notas del plato"
+   "fuente": "confirmado por propietario"
   },
   "cogollo de lechuga": {
    "nombre": "cogollo de lechuga",
