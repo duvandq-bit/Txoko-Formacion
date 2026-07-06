@@ -6001,6 +6001,7 @@ function _sfDaysInactive(emp){
 }
 
 function _sfShouldTrigger(emp){
+  if(!window.__SF_ENABLED) return false; // feature eliminada (jul 2026)
   return _sfDaysInactive(emp) >= 7;
 }
 
@@ -6153,6 +6154,10 @@ function _sfGenerateQuestions(count){
 var _sfState = null;
 
 function launchServicioFantasma(emp){
+  // ELIMINADO por el propietario (jul 2026): la intercepción por inactividad
+  // no debe ejecutarse NUNCA, llame quien llame (cachés viejas, código
+  // futuro). Para reactivar: window.__SF_ENABLED = true antes de llamar.
+  if(!window.__SF_ENABLED) return false;
   var diff = _sfDifficulty(emp);
   var questions = _sfGenerateQuestions(diff.questions);
   if(!questions.length) return false;
@@ -7411,7 +7416,7 @@ const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Protocolo de Servicio',title_en:'Service Protocol',text_es:'Consulta las reglas de servicio del restaurante: orden de servicio, manejo de alergias, presentación de platos, atención al huésped VIP y situaciones especiales. Todo lo que necesitas saber para dar un servicio impecable.',text_en:'Browse the restaurant\'s service rules: service order, allergy management, dish presentation, VIP guest service and special situations. Everything you need for impeccable service.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Duelos',title_en:'Games & Duels',text_es:'Modo supervivencia "Mr. Shoesmith" en la mesa 501, repasa tus puntos débiles en Modo Error, reta a compañeros en Duelos 1v1 remotos, y diviértete con la Ruleta Txoko. Compite por el ranking global y desbloquea logros.',text_en:'Survival mode "Mr. Shoesmith" at table 501, review your weak spots in Error Mode, challenge colleagues in remote 1v1 Duels, and have fun with the Txoko Roulette. Compete for the global ranking and unlock achievements.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/><circle cx="12" cy="12" r="2" fill="#fff" opacity=".8"/></svg>`,color:'#5a9ab8',title_es:'Quiz en Vivo y Retos',title_en:'Live Quiz & Challenges',text_es:'El supervisor puede lanzar un Quiz en Vivo para todo el equipo en tiempo real. Cada semana hay un Reto Semanal con un tema diferente. Recibirás notificaciones en tu móvil cuando haya actividad.',text_en:'The supervisor can launch a Live Quiz for the whole team in real time. Each week there\'s a Weekly Challenge with a different topic. You\'ll receive mobile notifications when there\'s activity.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11z" fill="none" stroke="#fff" stroke-width="1.5"/><polygon points="12,7 15,11 12,15 9,11" fill="#fff" opacity=".6"/></svg>`,color:'#c49a3c',title_es:'¡Comienza tu aventura!',title_en:'Start your adventure!',text_es:'Practica todos los días para mantener tu racha, sube de nivel ganando XP y escala en el ranking. Si no te conectas, el Servicio Fantasma te pondrá a prueba cuando vuelvas. ¡Buena suerte!',text_en:'Practice every day to keep your streak, level up by earning XP and climb the ranking. If you don\'t log in, the Ghost Service will test you when you return. Good luck!'}
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11z" fill="none" stroke="#fff" stroke-width="1.5"/><polygon points="12,7 15,11 12,15 9,11" fill="#fff" opacity=".6"/></svg>`,color:'#c49a3c',title_es:'¡Comienza tu aventura!',title_en:'Start your adventure!',text_es:'Practica todos los días para mantener tu racha, sube de nivel ganando XP y escala en el ranking. ¡Buena suerte!',text_en:'Practice every day to keep your streak, level up by earning XP and climb the ranking. Good luck!'}
 ];
 let onboardingStep = 0;
 function showOnboarding(){onboardingStep = 0;renderOnboardingStep();}

@@ -655,6 +655,22 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('ghost inactivity interceptor stays dead: no callers + kill-switch', () => {
+  // El propietario eliminó el Servicio Fantasma por inactividad; se siguió
+  // viendo en dispositivos con la build ANTIGUA cacheada (justo los
+  // inactivos). Triple candado en la build actual: (1) cero llamadas a
+  // launchServicioFantasma/_sfShouldTrigger, (2) kill-switch dentro de la
+  // propia función, (3) el onboarding ya no promete la intercepción.
+  const launches = (html.match(/launchServicioFantasma\(/g) || []).length;
+  assert(launches === 1, `launchServicioFantasma has ${launches - 1} caller(s) — must have none (definition only)`);
+  const triggers = (html.match(/_sfShouldTrigger\(/g) || []).length;
+  assert(triggers === 1, `_sfShouldTrigger has ${triggers - 1} caller(s) — must have none`);
+  assert(/if\(!window\.__SF_ENABLED\) return false;[\s\S]{0,120}_sfDifficulty/.test(html),
+    'launchServicioFantasma kill-switch missing');
+  assert(!/Servicio Fantasma te pondrá a prueba/.test(html) && !/Ghost Service will test you/.test(html),
+    'onboarding still promises the removed inactivity interceptor');
+});
+
 test('offer rules: kids menu and Vegetariano never recommended to generic guests', () => {
   // Reglas del propietario (jul 2026, reporte en vivo): el Fish and chips de
   // la CENA es solo del menú infantil y los platos Vegetariano solo se
