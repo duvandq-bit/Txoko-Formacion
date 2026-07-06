@@ -4805,6 +4805,123 @@ function _scenarioIngredientWhere(dish, dd, _en){
   return null;
 }
 
+
+// ═══ FASE 4 — Procedencia de alérgenos desde DISH_COMPONENTS ═══
+// La correcta es un componente portador REAL del alérgeno en ESTE plato; los
+// distractores son componentes verificados NO portadores (primero del propio
+// plato — la trampa inteligente — y después del resto de la carta). Filtro
+// anti-obviedad: si el nombre del componente delata el alérgeno por texto o
+// por clasificación común (mantequilla→Lácteos, atún→Pescado), el par se
+// descarta — la pregunta debe exigir conocer la ficha, no saber clasificar.
+const _SR_OBVIOUS = {
+  'Gluten': /harina|\bpan\b|pan |brioche|panko|masa|hojaldre|trigo|pasta|ravioli|linguini|gluten/,
+  'Lácteos': /\bleche\b|mantequilla|queso|nata|yogur|lacte|bechamel/,
+  'Huevos': /huevo/,
+  'Pescado': /pescado|atun|lubina|\bmero\b|anchoa|ventresca|bacalao|merluza|boqueron|salmon|pampano|caballa|sardina|fumet/,
+  'Crustáceos': /langostino|gamba|cangrejo|bogavante|carabinero|crustace|marisco/,
+  'Moluscos': /mejillon|pulpo|calamar|txipiron|chipiron|ostra|almeja|sepia|lapa|molusco/,
+  'Soja': /soja|edamame|tofu/,
+  'Mostaza': /mostaza/,
+  'Apio': /apio/,
+  'Sulfitos': /sulfito/,
+  'Granos de sésamo': /sesamo|tahini/,
+  'Frutos secos': /almendra|avellana|\bnuez\b|nueces|anacardo|pistacho|frutos secos/,
+  'Cacahuete': /cacahuete|\bmani\b/,
+  'Altramuces': /altramuz|altramuc/
+};
+function _srNorm(s){ return (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
+function _srCap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+function _srObviousSource(a, name){
+  const n = _srNorm(name);
+  if(n.includes(_srNorm(a))) return true;
+  const rx = _SR_OBVIOUS[a];
+  return !!(rx && rx.test(n));
+}
+// "¿Dónde está exactamente el alérgeno en este plato?"
+function _scenarioAllergenSource(dish, dd, _en){
+  const comps = (typeof DISH_COMPONENTS!=='undefined' && DISH_COMPONENTS[dish.id]) || null;
+  if(!comps || !comps.length) return null;
+  const real = comps.filter(c=>!c.v); // pseudo-componentes de variantes fuera
+  for(const a of _djShuffle([...(dish.allergens||[])])){
+    const carriers = real.filter(c=>c.a.includes(a));
+    if(!carriers.length) continue;
+    const hidden = carriers.filter(c=>!_srObviousSource(a, c.n));
+    if(!hidden.length) continue;
+    const correct = _simPick(hidden);
+    // Distractores NO portadores de a: los del propio plato primero (trampa
+    // inteligente: "el plato lo lleva, pero no por ahí"), luego el resto de
+    // la carta. Cada candidato viene con sus alérgenos de la base — un
+    // homónimo portador (Vinagre↔Sulfitos en otro plato) queda excluido por
+    // sus propios datos, y la morfología delatora también.
+    const carrierNames = new Set(carriers.map(c=>_srNorm(c.n)));
+    const seen = new Set([_srNorm(correct.n)]);
+    const wrongs = [];
+    const consider = (n)=>{
+      const k = _srNorm(n);
+      if(wrongs.length>=3 || seen.has(k) || carrierNames.has(k)) return;
+      if(_srObviousSource(a, n)) return;
+      seen.add(k); wrongs.push(n);
+    };
+    _djShuffle(real.filter(c=>!c.a.includes(a))).forEach(c=>consider(c.n));
+    if(wrongs.length<3 && typeof DISH_COMPONENTS!=='undefined'){
+      const pool = [];
+      for(const oid of Object.keys(DISH_COMPONENTS)){
+        if(String(oid)===String(dish.id)) continue;
+        for(const c of DISH_COMPONENTS[oid]) if(!c.v && !c.a.includes(a)) pool.push(c.n);
+      }
+      _djShuffle(pool).forEach(consider);
+    }
+    if(wrongs.length<3) continue;
+    const options = _djShuffle([correct.n, ...wrongs].map(_srCap));
+    const aLbl = _simAllergenLabel(a,_en);
+    const allSrc = carriers.map(c=>c.n).join(_en?' and ':' y ');
+    return {
+      q: _en ? `A guest allergic to ${aLbl} asks about ${dd.name}: "Where exactly is it in the dish?" Which component brings it?`
+             : `Huésped alérgico a ${aLbl} pregunta por ${dd.name}: "¿En qué parte del plato está exactamente?" ¿Qué componente lo aporta?`,
+      options,
+      correctIdx: options.indexOf(_srCap(correct.n)),
+      explain: _en ? `Per the ingredient base, ${aLbl} in this dish comes from: ${allSrc}. The other options carry none.`
+                   : `Según la base de ingredientes, ${aLbl} en este plato viene de: ${allSrc}. Las otras opciones no lo aportan.`,
+      type:'provenance'
+    };
+  }
+  return null;
+}
+// Inversa: el componente es conocido; el alérgeno que aporta, no.
+function _scenarioComponentAllergen(dish, dd, _en){
+  const comps = (typeof DISH_COMPONENTS!=='undefined' && DISH_COMPONENTS[dish.id]) || null;
+  if(!comps || !comps.length) return null;
+  const cands = comps.filter(c=>!c.v && c.a.length===1 && !_srObviousSource(c.a[0], c.n));
+  for(const c of _djShuffle(cands)){
+    const a = c.a[0];
+    // Distractores: alérgenos que este componente NO lleva (c.a es exhaustivo
+    // en la base). Prioriza los que SÍ están en el plato por otros componentes
+    // — la trampa clásica: "el plato lo lleva, pero no por aquí".
+    const inDish = (dish.allergens||[]).filter(x=>x!==a);
+    const pool14 = ['Gluten','Lácteos','Huevos','Pescado','Crustáceos','Moluscos','Soja','Mostaza','Apio','Sulfitos','Granos de sésamo','Frutos secos'];
+    const seen = new Set([a]);
+    const wrongs = [];
+    for(const x of [..._djShuffle(inDish), ..._djShuffle(pool14)]){
+      if(seen.has(x)) continue;
+      seen.add(x); wrongs.push(x);
+      if(wrongs.length>=3) break;
+    }
+    if(wrongs.length<3) continue;
+    const shuffled = _djShuffle([a, ...wrongs]);
+    const options = shuffled.map(x=>_simAllergenLabel(x,_en));
+    return {
+      q: _en ? `Reviewing the ${dd.name} card, a trainee asks you: "${c.n} — which allergen does it bring to the dish?"`
+             : `Repasando la ficha de ${dd.name}, un compañero en formación te pregunta: "${c.n}, ¿qué alérgeno aporta al plato?"`,
+      options,
+      correctIdx: shuffled.indexOf(a),
+      explain: _en ? `${c.n} carries ${_simAllergenLabel(a,_en)} — that is its tag in the ingredient base every card derives from.`
+                   : `${c.n} aporta ${_simAllergenLabel(a,_en)} — así está etiquetado en la base de ingredientes de la que derivan todas las fichas.`,
+      type:'provenance'
+    };
+  }
+  return null;
+}
+
 // ═══ Main generator: picks 3-4 scenarios weighted by available data ═══
 function _srGenerateQuiz(dish, difficulty){
   const _en = LANG==='en';
@@ -4840,6 +4957,12 @@ function _srGenerateQuiz(dish, difficulty){
   if(dish.allergens && dish.allergens.length>0) tryAdd(()=>_scenarioWhichAdaptable(dish, dd, _en), 2);
   tryAdd(()=>_scenarioWaitTime(dish, dd, _en), 2);
   tryAdd(()=>_scenarioIngredientWhere(dish, dd, _en), 2);
+  // FASE 4 — procedencia desde DISH_COMPONENTS (base única validada): dónde
+  // está el alérgeno dentro del plato y qué aporta cada componente.
+  if(typeof DISH_COMPONENTS!=='undefined' && DISH_COMPONENTS[dish.id]){
+    tryAdd(()=>_scenarioAllergenSource(dish, dd, _en), 3);
+    tryAdd(()=>_scenarioComponentAllergen(dish, dd, _en), 2);
+  }
   tryAdd(()=>_scenarioPregnancy(dish, dd, _en), 1);
   tryAdd(()=>_scenarioChildFriendly(dish, dd, _en), 1);
   tryAdd(()=>_scenarioSpicy(dish, dd, _en), 1);

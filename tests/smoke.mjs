@@ -639,6 +639,51 @@ test('DISH_COMPONENTS: dish allergens derive exactly from components, zero drift
   assert(/'From':'Por'/.test(detail), 'allergen provenance line missing from dish detail');
 });
 
+test('smart review provenance: DISH_COMPONENTS-driven, executed, anti-obvious', () => {
+  // FASE 4 en el entrenamiento: las preguntas de procedencia derivan de
+  // DISH_COMPONENTS (base única validada). El guard EJECUTA los builders con
+  // los datos reales: bien formadas, sin opciones duplicadas y la correcta
+  // nunca delata el alérgeno por morfología (mantequilla→Lácteos prohibido
+  // como correcta: la pregunta exige conocer la ficha, no saber clasificar).
+  const cut = (start, endMark) => {
+    const i = html.indexOf(start); assert(i !== -1, 'missing: ' + start);
+    return html.slice(i, html.indexOf(endMark, i));
+  };
+  const dishesSrc = cut('const DISHES = [', '\n];') + '\n];';
+  const compsSrc = cut('const DISH_COMPONENTS = {', '};') + '};';
+  const buildersSrc = cut('const _SR_OBVIOUS = {', '// ═══ Main generator');
+  assert(/DISH_COMPONENTS\[dish\.id\]/.test(buildersSrc), 'builders must read DISH_COMPONENTS');
+  const gen = html.slice(html.indexOf('function _srGenerateQuiz'), html.indexOf('function _srGenerateQuiz') + 3500);
+  assert(/_scenarioAllergenSource/.test(gen) && /_scenarioComponentAllergen/.test(gen),
+    'provenance builders missing from the Smart Review rotation');
+  const stubs = "const LANG='es';" +
+    "function _djShuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;}" +
+    "function _simPick(a){return a[Math.floor(Math.random()*a.length)];}" +
+    "function _simAllergenLabel(a,en){return a;}";
+  const f = new Function(stubs + dishesSrc + compsSrc + buildersSrc + // eslint-disable-line no-new-func
+    "return {DISHES, _scenarioAllergenSource, _scenarioComponentAllergen, _srNorm, _srObviousSource};");
+  const { DISHES, _scenarioAllergenSource, _scenarioComponentAllergen, _srNorm, _srObviousSource } = f();
+  assert(_srNorm('Lácteos') === 'lacteos', '_srNorm must strip diacritics (combining-class regex intact)');
+  assert(_srObviousSource('Lácteos', 'Mantequilla') && _srObviousSource('Pescado', 'Atún')
+    && !_srObviousSource('Sulfitos', 'Mirim'), 'obviousness filter broken');
+  let made = 0;
+  for (let round = 0; round < 4; round++) {
+    for (const d of DISHES) {
+      for (const fn of [_scenarioAllergenSource, _scenarioComponentAllergen]) {
+        const q = fn(d, d, false);
+        if (!q) continue;
+        made++;
+        assert(q.options.length === 4 && q.correctIdx >= 0 && q.correctIdx < 4
+          && q.options.filter(o => o === q.options[q.correctIdx]).length === 1,
+          `malformed provenance question for dish ${d.id}: ${q.q}`);
+        assert(new Set(q.options.map(o => o.toLowerCase())).size === 4,
+          `duplicate options for dish ${d.id}: ${q.options.join(' | ')}`);
+      }
+    }
+  }
+  assert(made >= 400, `provenance yield collapsed (${made} questions from 4 rounds)`);
+});
+
 test('pairingExplanations: every entry matches a dish still on the menu', () => {
   // Los mapas indexados por nombre de plato quedan huérfanos en silencio
   // cuando un plato sale de la carta (pasó con el Rejo de pulpo): la entrada
