@@ -484,12 +484,11 @@ test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () 
     assert(['certeza culinaria', 'notas del plato', 'deducido de la carta', 'propuesta', 'pendiente', 'confirmado por propietario'].includes(e.fuente),
       `ingredient "${key}" has invalid fuente`);
   }
-  // Ratchet: phase-2 sweep surfaced two findings awaiting the owner's word
-  // (Coca de tomate + aceto balsámico → Sulfitos; Pincho Moruno + cous cous
-  // → Gluten). They are the ONLY tolerated mismatches; anything new fails.
-  // Once the owner answers, fix the data and empty this allowlist again.
+  // Ratchet: ONE finding still awaits the owner's word (Coca de tomate +
+  // aceto balsámico → Sulfitos). It is the ONLY tolerated mismatch; anything
+  // new fails. Pincho+Gluten was owner-confirmed and fixed (Jul 2026).
   const audit = JSON.parse(execSync('node tests/allergen-audit.mjs --json', { cwd: ROOT }).toString());
-  const allowed = new Set(['81|Sulfitos', '93|Gluten']);
+  const allowed = new Set(['81|Sulfitos']);
   for (const f of audit.no_declarado) {
     assert(allowed.has(`${f.id}|${f.alergeno}`),
       `UNDECLARED allergen: dish ${f.id} "${f.plato}" is missing ${f.alergeno} (from: ${f.por.join(', ')})`);

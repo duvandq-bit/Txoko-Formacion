@@ -597,6 +597,11 @@
    ],
    "fuente": "certeza culinaria"
   },
+  "granizado de gazpacho": {
+   "nombre": "Granizado de gazpacho",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
+  },
   "oporto": {
    "nombre": "Oporto",
    "alergenos": [
@@ -1462,9 +1467,10 @@
   "pure de apiobola mantequilla": {
    "nombre": "Puré de apiobola mantequilla",
    "alergenos": [
-    "Lácteos"
+    "Lácteos",
+    "Apio"
    ],
-   "fuente": "certeza culinaria"
+   "fuente": "confirmado por propietario"
   },
   "cordero": {
    "nombre": "Cordero",
@@ -2234,7 +2240,7 @@
    "alergenos": [
     "Apio"
    ],
-   "fuente": "deducido de la carta"
+   "fuente": "propuesta"
   },
   "laurel": {
    "nombre": "Laurel",
@@ -2274,6 +2280,18 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "ras al hanout": {
+   "nombre": "Ras al hanout",
+   "alergenos": [
+    "Granos de sésamo",
+    "Mostaza",
+    "Cacahuete",
+    "Apio",
+    "Crustáceos",
+    "Soja"
+   ],
+   "fuente": "confirmado por propietario"
+  },
   "cous cous": {
    "nombre": "Cous Cous",
    "alergenos": [
@@ -2305,7 +2323,7 @@
    "alergenos": [
     "Apio"
    ],
-   "fuente": "deducido de la carta"
+   "fuente": "propuesta"
   },
   "demi de carne contiene apio": {
    "nombre": "Demi de carne Contiene Apio",
@@ -2471,7 +2489,7 @@
     "Lácteos",
     "Soja"
    ],
-   "fuente": "propuesta"
+   "fuente": "confirmado por propietario"
   },
   "chocolate fudge brownie": {
    "nombre": "Chocolate Fudge Brownie",
@@ -2481,7 +2499,7 @@
     "Lácteos",
     "Soja"
    ],
-   "fuente": "propuesta"
+   "fuente": "confirmado por propietario"
   },
   "strawberry tarta de queso": {
    "nombre": "Strawberry Tarta de queso",
@@ -2497,7 +2515,7 @@
     "Lácteos",
     "Huevos"
    ],
-   "fuente": "propuesta"
+   "fuente": "confirmado por propietario"
   },
   "flan": {
    "nombre": "Flan",
@@ -2505,7 +2523,7 @@
     "Huevos",
     "Lácteos"
    ],
-   "fuente": "propuesta"
+   "fuente": "confirmado por propietario"
   },
   "flan de chocolate": {
    "nombre": "Flan de Chocolate",
@@ -2513,7 +2531,7 @@
     "Huevos",
     "Lácteos"
    ],
-   "fuente": "propuesta"
+   "fuente": "confirmado por propietario"
   },
   "almibar": {
    "nombre": "Almíbar",
@@ -2610,11 +2628,6 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
-  "granizado de gazpacho": {
-   "nombre": "Granizado de gazpacho",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
   "cacao": {
    "nombre": "Cacao",
    "alergenos": [],
@@ -2642,11 +2655,6 @@
   },
   "espuma de pil pil": {
    "nombre": "Espuma de pil pil",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "ras al hanout": {
-   "nombre": "Ras al hanout",
    "alergenos": [],
    "fuente": "pendiente"
   },
