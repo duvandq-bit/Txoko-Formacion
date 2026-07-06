@@ -1903,9 +1903,7 @@
   },
   "demi glace": {
    "nombre": "Demi glace",
-   "alergenos": [
-    "Apio"
-   ],
+   "alergenos": [],
    "fuente": "confirmado por propietario"
   },
   "huesos de pollo": {
