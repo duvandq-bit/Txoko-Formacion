@@ -7465,6 +7465,40 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   display:flex;flex-direction:column;align-items:center;
   gap:.8rem;margin-top:1.5rem;
 }
+/* ── Login compacto en móvil: todo a la vista, sin scroll ──
+   (petición del propietario: no arrastrar para ver Compartir/Actualizar) */
+@media (max-width:520px){
+  #screenLogin{padding:1rem .9rem .8rem}
+  .login-eyebrow{margin-bottom:.55rem}
+  .login-logo{margin-bottom:.2rem}
+  .login-logo h1{font-size:2.35rem}
+  .login-logo-line{margin:.35rem auto .3rem}
+  .login-logo em{font-size:.56rem;margin-top:.2rem}
+  .login-venue{margin:0 0 .6rem}
+  .login-card{padding:1rem 1rem .85rem}
+  .login-mode-toggle{margin-bottom:.8rem}
+  .login-field{margin-top:.55rem!important}
+  .login-input{padding:.6rem .8rem}
+  .login-remember{margin:.6rem 0 .6rem}
+  .login-submit-btn{padding:.7rem}
+  .login-newuser-hint{margin-top:.6rem}
+  #disclaimerText{font-size:.5rem;line-height:1.35}
+  .login-footer{gap:.35rem;margin-top:.3rem}
+  /* el hueco del error solo cuando hay error */
+  .login-error:empty{min-height:0;margin-top:0}
+  .login-eyebrow{margin-bottom:.45rem}
+  .login-card{padding:.9rem .95rem .8rem}
+  .login-remember{margin:.45rem 0 .5rem}
+  .login-newuser-hint{margin-top:.45rem}
+}
+/* Pantallas muy bajas (iPhone SE): cae lo decorativo, no lo funcional */
+@media (max-width:520px) and (max-height:720px){
+  .login-eyebrow{display:none}
+  .login-logo h1{font-size:1.9rem}
+  .login-logo em{display:none}
+  .login-logo-line{margin:.25rem auto .2rem}
+  #disclaimerText{display:none}
+}
 .login-lang-pills{
   display:flex;align-items:center;gap:.5rem;
 }
