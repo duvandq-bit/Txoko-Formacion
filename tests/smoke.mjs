@@ -539,6 +539,18 @@ test('DISH_ACTIONS matrix: full coverage, comandas present, Trifasi fix locked',
   assert(/DISH_ACTIONS\[dish\.id\]/.test(drill), 'allergen drill comanda must read DISH_ACTIONS first');
 });
 
+test('dish detail + immersive journey read verdicts from DISH_ACTIONS', () => {
+  // The service-facing surfaces must show the MATRIX verdict (adaptable with
+  // its exact comanda / structural), never the old word-sniffing heuristic
+  // ("Posiblemente eliminable bajo petición" guessed from notes keywords).
+  const detail = html.slice(html.indexOf('function renderRepasoDishDetail'), html.indexOf('function changeRepasoTopic'));
+  assert(/DISH_ACTIONS\[dish\.id\]/.test(detail), 'dish detail panel must read DISH_ACTIONS');
+  assert(/SE ADAPTA/.test(detail) && /ESTRUCTURAL/.test(detail), 'dish detail must show both verdicts');
+  const dj = html.slice(html.indexOf('function _djPhaseAllergens'), html.indexOf('function _djPhaseAllergens') + 7000);
+  assert(/DISH_ACTIONS\[dish\.id\]/.test(dj), 'immersive journey allergen cards must read DISH_ACTIONS');
+  assert(!/Posiblemente eliminable bajo petición/.test(html), 'heuristic "maybe removable" chip must stay retired');
+});
+
 test('ES and EN dish twins declare identical allergens', () => {
   // The EN cards are hand-written too — a divergent twin misinforms staff
   // using the app in English (found live: EN Croquettes missing Molluscs and
