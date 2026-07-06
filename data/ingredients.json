@@ -1,0 +1,2540 @@
+{
+ "version": 1,
+ "_descripcion": "Base única de ingredientes → alérgenos (UE-14, nombres de la app). Cada ingrediente se etiqueta UNA vez aquí; los alérgenos de un plato se derivan de sus componentes. fuente: certeza culinaria = hecho universal; notas del plato = lo afirma una ficha del menú; pendiente = sin etiquetar, requiere revisión del propietario.",
+ "eu14": [
+  {
+   "app": "Gluten",
+   "eu": "Cereales con gluten"
+  },
+  {
+   "app": "Crustáceos",
+   "eu": "Crustáceos"
+  },
+  {
+   "app": "Huevos",
+   "eu": "Huevos"
+  },
+  {
+   "app": "Pescado",
+   "eu": "Pescado"
+  },
+  {
+   "app": "Cacahuete",
+   "eu": "Cacahuetes"
+  },
+  {
+   "app": "Soja",
+   "eu": "Soja"
+  },
+  {
+   "app": "Lácteos",
+   "eu": "Leche y derivados (lactosa)"
+  },
+  {
+   "app": "Frutos secos",
+   "eu": "Frutos de cáscara"
+  },
+  {
+   "app": "Apio",
+   "eu": "Apio"
+  },
+  {
+   "app": "Mostaza",
+   "eu": "Mostaza"
+  },
+  {
+   "app": "Granos de sésamo",
+   "eu": "Granos de sésamo"
+  },
+  {
+   "app": "Sulfitos",
+   "eu": "Dióxido de azufre y sulfitos"
+  },
+  {
+   "app": "Altramuces",
+   "eu": "Altramuces"
+  },
+  {
+   "app": "Moluscos",
+   "eu": "Moluscos"
+  }
+ ],
+ "ingredientes": {
+  "sal": {
+   "nombre": "Sal",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "huevo": {
+   "nombre": "Huevo",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "azucar": {
+   "nombre": "Azúcar",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "nata": {
+   "nombre": "Nata",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "ajo": {
+   "nombre": "Ajo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "aceite de oliva": {
+   "nombre": "Aceite de Oliva",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mantequilla": {
+   "nombre": "Mantequilla",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "harina": {
+   "nombre": "Harina",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "leche": {
+   "nombre": "Leche",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "agua": {
+   "nombre": "Agua",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "zanahoria": {
+   "nombre": "Zanahoria",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "cebolleta": {
+   "nombre": "Cebolleta",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta": {
+   "nombre": "Pimienta",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "tomate": {
+   "nombre": "Tomate",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "cebolla": {
+   "nombre": "Cebolla",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "vinagre de manzana": {
+   "nombre": "Vinagre de manzana",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "vainilla": {
+   "nombre": "Vainilla",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "limon": {
+   "nombre": "Limón",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "aceite": {
+   "nombre": "Aceite",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "jengibre": {
+   "nombre": "Jengibre",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "caldo de pollo": {
+   "nombre": "Caldo de pollo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "levadura": {
+   "nombre": "Levadura",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "tabasco": {
+   "nombre": "Tabasco",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "lechuga": {
+   "nombre": "Lechuga",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "cebollino": {
+   "nombre": "Cebollino",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "papa": {
+   "nombre": "Papa",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "vinagre de jerez": {
+   "nombre": "Vinagre de Jerez",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "lima": {
+   "nombre": "Lima",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "naranja": {
+   "nombre": "Naranja",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "panko": {
+   "nombre": "Panko",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pepinillo": {
+   "nombre": "Pepinillo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "aceite de girasol": {
+   "nombre": "Aceite de girasol",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "puerro": {
+   "nombre": "Puerro",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "zumo de limon": {
+   "nombre": "Zumo de limón",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "anchoas": {
+   "nombre": "Anchoas",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "aguacate": {
+   "nombre": "Aguacate",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "cilantro": {
+   "nombre": "Cilantro",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "miel": {
+   "nombre": "Miel",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "yema de huevo": {
+   "nombre": "Yema de huevo",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "salsa perrins": {
+   "nombre": "Salsa Perrins",
+   "alergenos": [
+    "Pescado",
+    "Sulfitos"
+   ],
+   "fuente": "notas del plato"
+  },
+  "guindilla": {
+   "nombre": "Guindilla",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta negra": {
+   "nombre": "Pimienta negra",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mostaza dijon": {
+   "nombre": "Mostaza Dijon",
+   "alergenos": [
+    "Mostaza"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pan brioche": {
+   "nombre": "Pan brioche",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "soja": {
+   "nombre": "Soja",
+   "alergenos": [
+    "Soja"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tomillo": {
+   "nombre": "Tomillo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "perejil": {
+   "nombre": "Perejil",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "calabacin": {
+   "nombre": "Calabacín",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "queso parmesano": {
+   "nombre": "Queso parmesano",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "cerveza": {
+   "nombre": "Cerveza",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tomates": {
+   "nombre": "Tomates",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "queso de cabra": {
+   "nombre": "Queso de cabra",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "mostaza antigua": {
+   "nombre": "Mostaza antigua",
+   "alergenos": [
+    "Mostaza"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "almendras": {
+   "nombre": "Almendras",
+   "alergenos": [
+    "Frutos secos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "huevo de codorniz": {
+   "nombre": "Huevo de Codorniz",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "brotes de mostaza": {
+   "nombre": "Brotes de mostaza",
+   "alergenos": [
+    "Mostaza"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "mayonesa": {
+   "nombre": "Mayonesa",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "atun": {
+   "nombre": "Atún",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "jamon iberico": {
+   "nombre": "Jamón ibérico",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pan tostado": {
+   "nombre": "Pan tostado",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "manzana": {
+   "nombre": "Manzana",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mostaza savora apio": {
+   "nombre": "Mostaza savora apio",
+   "alergenos": [
+    "Apio",
+    "Mostaza"
+   ],
+   "fuente": "notas del plato"
+  },
+  "sake": {
+   "nombre": "Sake",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "aji": {
+   "nombre": "Ají",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "apio": {
+   "nombre": "Apio",
+   "alergenos": [
+    "Apio"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pimenton": {
+   "nombre": "Pimentón",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "vino tinto": {
+   "nombre": "Vino tinto",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "patatas locales": {
+   "nombre": "Patatas locales",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "brandy": {
+   "nombre": "Brandy",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "mascarpone": {
+   "nombre": "Mascarpone",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "vino blanco": {
+   "nombre": "Vino blanco",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "oregano": {
+   "nombre": "Orégano",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "cayena": {
+   "nombre": "Cayena",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mostaza": {
+   "nombre": "Mostaza",
+   "alergenos": [
+    "Mostaza"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "gelatina": {
+   "nombre": "Gelatina",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "langostino": {
+   "nombre": "Langostino",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "boletus": {
+   "nombre": "Boletus",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pollo": {
+   "nombre": "Pollo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "calamar": {
+   "nombre": "Calamar",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "oporto": {
+   "nombre": "Oporto",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "queso azul": {
+   "nombre": "Queso azul",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "papa paja": {
+   "nombre": "Papa paja",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mayonesa de wasabi": {
+   "nombre": "Mayonesa de wasabi",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "ponzu": {
+   "nombre": "Ponzu",
+   "alergenos": [
+    "Soja"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "crujiente de pan": {
+   "nombre": "Crujiente de pan",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "remolacha": {
+   "nombre": "Remolacha",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "aceite dauro": {
+   "nombre": "Aceite Dauro",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "tapenade": {
+   "nombre": "Tapenade",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "stracciatella": {
+   "nombre": "Stracciatella",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tostas de pan carasau": {
+   "nombre": "Tostas de pan carasau",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "batata": {
+   "nombre": "Batata",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "chalota": {
+   "nombre": "Chalota",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "tomate deshidratado": {
+   "nombre": "Tomate deshidratado",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "huevos": {
+   "nombre": "Huevos",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "leche condensada": {
+   "nombre": "Leche condensada",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "platano": {
+   "nombre": "Plátano",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pan rallado": {
+   "nombre": "Pan rallado",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "berenjena": {
+   "nombre": "Berenjena",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "caldo de verduras": {
+   "nombre": "Caldo de verduras",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "parmesano rayado": {
+   "nombre": "Parmesano rayado",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "bacalao": {
+   "nombre": "Bacalao",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "harina floja": {
+   "nombre": "Harina floja",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "trisol": {
+   "nombre": "Trisol",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "levadura prensada": {
+   "nombre": "Levadura prensada",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "burrata": {
+   "nombre": "Burrata",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "canela": {
+   "nombre": "Canela",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "clavo": {
+   "nombre": "Clavo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "comino": {
+   "nombre": "Comino",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "menta": {
+   "nombre": "Menta",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "harina fuerte": {
+   "nombre": "Harina fuerte",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "panceta": {
+   "nombre": "Panceta",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "aji amarillo": {
+   "nombre": "Ají Amarillo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "zumo de lima": {
+   "nombre": "Zumo de lima",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "langostinos": {
+   "nombre": "Langostinos",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "jamon": {
+   "nombre": "Jamón",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "txipiron": {
+   "nombre": "Txipiron",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tartar de txipiron": {
+   "nombre": "tartar de txipiron",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "americana y tartar de langostino": {
+   "nombre": "americana y tartar de langostino",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "cogollo de lechuga": {
+   "nombre": "cogollo de lechuga",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "chistorra": {
+   "nombre": "Chistorra",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "tinta de txipiron": {
+   "nombre": "Tinta de Txipiron",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "ventresca": {
+   "nombre": "Ventresca",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "huevas de salmon": {
+   "nombre": "Huevas de salmón",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pan de algas": {
+   "nombre": "Pan de algas",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pera": {
+   "nombre": "Pera",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "espuma de queso de cabra nata": {
+   "nombre": "Espuma de queso de cabra Nata",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "migas de iberico ibericos y miga de pan": {
+   "nombre": "Migas de Ibérico Ibéricos y miga de pan",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "vinagreta de mostaza aceite de oliva": {
+   "nombre": "Vinagreta de mostaza Aceite de oliva",
+   "alergenos": [
+    "Mostaza"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "brotes de mostaza y mezclum": {
+   "nombre": "Brotes de mostaza y mézclum",
+   "alergenos": [
+    "Mostaza"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tataki de atun": {
+   "nombre": "Tataki de atún",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "judias": {
+   "nombre": "Judías",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "ventresca de lata": {
+   "nombre": "Ventresca de lata",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "alcaparra frita": {
+   "nombre": "Alcaparra frita",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "ostras numero 2": {
+   "nombre": "Ostras número 2",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "wasabi": {
+   "nombre": "Wasabi",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pan carasau": {
+   "nombre": "Pan carasau",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "lomo de atun rojo": {
+   "nombre": "Lomo de atún rojo",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "teriyaki": {
+   "nombre": "Teriyaki",
+   "alergenos": [
+    "Soja"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "claras de huevo y gelatina": {
+   "nombre": "claras de huevo y gelatina",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "yema de huevo curada en soja": {
+   "nombre": "Yema de huevo curada en soja",
+   "alergenos": [
+    "Huevos",
+    "Soja"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "katsuobusi": {
+   "nombre": "Katsuobusi",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "mostaza savora": {
+   "nombre": "Mostaza savora",
+   "alergenos": [
+    "Mostaza",
+    "Apio"
+   ],
+   "fuente": "notas del plato"
+  },
+  "trufa negra": {
+   "nombre": "Trufa negra",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "morcillo": {
+   "nombre": "Morcillo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pulpo": {
+   "nombre": "Pulpo",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "col blanca y morada": {
+   "nombre": "Col blanca y morada",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "morcilla": {
+   "nombre": "Morcilla",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "chorizo": {
+   "nombre": "Chorizo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "dextrosa": {
+   "nombre": "Dextrosa",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "cardamomo": {
+   "nombre": "Cardamomo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta rosa": {
+   "nombre": "Pimienta rosa",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "calabaza": {
+   "nombre": "Calabaza",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "papaya verde": {
+   "nombre": "Papaya verde",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "champinon": {
+   "nombre": "Champiñón",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "conac": {
+   "nombre": "Coñac",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "porto": {
+   "nombre": "Porto",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pure de apiobola mantequilla": {
+   "nombre": "Puré de apiobola mantequilla",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "cordero": {
+   "nombre": "Cordero",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta y sal": {
+   "nombre": "Pimienta y Sal",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "vinagre de cabernet": {
+   "nombre": "Vinagre de cabernet",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "azucar moscovado": {
+   "nombre": "Azúcar moscovado",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "curry verde": {
+   "nombre": "Curry verde",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pomelo": {
+   "nombre": "Pomelo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "alcachofas nacionales": {
+   "nombre": "Alcachofas nacionales",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "tomates ecologicos": {
+   "nombre": "Tomates ecológicos",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "papa canaria": {
+   "nombre": "Papa canaria",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta blanca": {
+   "nombre": "Pimienta blanca",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "esparragos blancos": {
+   "nombre": "Espárragos blancos",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta verde": {
+   "nombre": "Pimienta verde",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "hongos": {
+   "nombre": "Hongos",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "leche entera": {
+   "nombre": "Leche entera",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "avellanas": {
+   "nombre": "Avellanas",
+   "alergenos": [
+    "Frutos secos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "harina de avellanas": {
+   "nombre": "Harina de avellanas",
+   "alergenos": [
+    "Frutos secos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "xantana": {
+   "nombre": "Xantana",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "almendras tostadas": {
+   "nombre": "Almendras tostadas",
+   "alergenos": [
+    "Frutos secos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "glucosa": {
+   "nombre": "Glucosa",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "judias verdes": {
+   "nombre": "Judías verdes",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "salsa de tomate": {
+   "nombre": "Salsa de tomate",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "judia": {
+   "nombre": "judía",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pasta fresca": {
+   "nombre": "Pasta fresca",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "espinaca fresca": {
+   "nombre": "Espinaca fresca",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "nuez moscada": {
+   "nombre": "Nuez moscada",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "espuma de parmesano": {
+   "nombre": "Espuma de parmesano",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "esparragos": {
+   "nombre": "Espárragos",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "miel de palma": {
+   "nombre": "Miel de palma",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "ali-oli": {
+   "nombre": "Ali-oli",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "huevo duro": {
+   "nombre": "Huevo duro",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "alcaparra": {
+   "nombre": "Alcaparra",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "estragon": {
+   "nombre": "Estragón",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mejillones": {
+   "nombre": "Mejillones",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "boquerones": {
+   "nombre": "Boquerones",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "rucula": {
+   "nombre": "Rúcula",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "parmesano": {
+   "nombre": "Parmesano",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta molida": {
+   "nombre": "Pimienta molida",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "huesos de pollo": {
+   "nombre": "Huesos de pollo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mero": {
+   "nombre": "Mero",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tomate tumaka": {
+   "nombre": "Tomate Tumaka",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "tomate rallado": {
+   "nombre": "Tomate rallado",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "caldo/gelatina de pescado": {
+   "nombre": "Caldo/Gelatina de pescado",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "porto vinagre de jerez": {
+   "nombre": "Porto Vinagre de jerez",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "sake vinagre de cabernet": {
+   "nombre": "Sake Vinagre de cabernet",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "papaya": {
+   "nombre": "Papaya",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta de jamaica": {
+   "nombre": "Pimienta de Jamaica",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "vinagreta de mostaza antigua y miel": {
+   "nombre": "Vinagreta de Mostaza antigua y Miel",
+   "alergenos": [
+    "Mostaza"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "romero": {
+   "nombre": "Romero",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "queso mozzarella": {
+   "nombre": "Queso mozzarella",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "quesos": {
+   "nombre": "Quesos",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "higos": {
+   "nombre": "Higos",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "aceituna kalamata": {
+   "nombre": "Aceituna Kalamata",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "proteina de soja": {
+   "nombre": "Proteína de soja",
+   "alergenos": [
+    "Soja"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "guisantes": {
+   "nombre": "Guisantes",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pan de semillas": {
+   "nombre": "Pan de semillas",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pan bao": {
+   "nombre": "Pan Bao",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pimenton ahumado": {
+   "nombre": "Pimentón ahumado",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mostaza savora contiene apio": {
+   "nombre": "Mostaza Savora Contiene Apio",
+   "alergenos": [
+    "Apio",
+    "Mostaza"
+   ],
+   "fuente": "notas del plato"
+  },
+  "espinaca alinada": {
+   "nombre": "Espinaca aliñada",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "pimenton rojo": {
+   "nombre": "Pimentón rojo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "bacon": {
+   "nombre": "Bacon",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "jamon cocido": {
+   "nombre": "Jamón cocido",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "queso emmental": {
+   "nombre": "Queso Emmental",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "huevo frito": {
+   "nombre": "Huevo frito",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "mayonesa japonesa": {
+   "nombre": "Mayonesa japonesa",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "bogavante/langostinos": {
+   "nombre": "Bogavante/Langostinos",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "col morada": {
+   "nombre": "Col morada",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "col blanca": {
+   "nombre": "Col blanca",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "salsa de mantequilla": {
+   "nombre": "Salsa de mantequilla",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "queso trufado": {
+   "nombre": "Queso trufado",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "alino de queso azul": {
+   "nombre": "Aliño de queso azul",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "bisque caldo de langostino": {
+   "nombre": "Bisque Caldo de Langostino",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "laurel": {
+   "nombre": "Laurel",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "ali-oli clasico y con tinta de calamar": {
+   "nombre": "Ali-oli clásico y con Tinta de calamar",
+   "alergenos": [
+    "Huevos",
+    "Moluscos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "azafran": {
+   "nombre": "Azafrán",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "demi de carne contiene apio": {
+   "nombre": "Demi de carne Contiene Apio",
+   "alergenos": [
+    "Apio"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pimienta de espellet": {
+   "nombre": "Pimienta de Espellet",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "crujiente de parmesano": {
+   "nombre": "Crujiente de Parmesano",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "pasta linguini fresca harina": {
+   "nombre": "Pasta linguini fresca harina",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "gambas": {
+   "nombre": "Gambas",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "emulsion final con mantequilla": {
+   "nombre": "Emulsión final con Mantequilla",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tartar de langostino crudo": {
+   "nombre": "Tartar de langostino crudo",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "lomo de lubina": {
+   "nombre": "Lomo de Lubina",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "mayonesa de leche de tigre": {
+   "nombre": "Mayonesa de leche de tigre",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "mayonesa huevo": {
+   "nombre": "Mayonesa Huevo",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "leche de tigre fumet": {
+   "nombre": "Leche de Tigre Fumet",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "recortes de lubina": {
+   "nombre": "Recortes de Lubina",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "aji limo": {
+   "nombre": "Ají Limo",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "bizcocho": {
+   "nombre": "Bizcocho",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "strawberry tarta de queso": {
+   "nombre": "Strawberry Tarta de queso",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "tarta de queso": {
+   "nombre": "Tarta de queso",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "queso san millan": {
+   "nombre": "Queso San Millán",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "yogurt natural": {
+   "nombre": "Yogurt natural",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "yema": {
+   "nombre": "Yema",
+   "alergenos": [
+    "Huevos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "fresa": {
+   "nombre": "Fresa",
+   "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "salsa americana": {
+   "nombre": "Salsa americana",
+   "alergenos": [
+    "Crustáceos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "vinagre": {
+   "nombre": "Vinagre",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "rebozado": {
+   "nombre": "Rebozado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "granadina": {
+   "nombre": "Granadina",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pimiento palmero": {
+   "nombre": "Pimiento palmero",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "vinagreta de cabernet": {
+   "nombre": "Vinagreta de cabernet",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "vinagreta de tomate fresco": {
+   "nombre": "Vinagreta de tomate fresco",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cebolla morada": {
+   "nombre": "Cebolla morada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pimientos del padron": {
+   "nombre": "Pimientos del padrón",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "brotes": {
+   "nombre": "Brotes",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "polvo de aceituna calamata": {
+   "nombre": "Polvo de aceituna calamata",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "manzana confitada": {
+   "nombre": "manzana confitada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "aderezo cesar": {
+   "nombre": "aderezo césar",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "granizado de gazpacho": {
+   "nombre": "Granizado de gazpacho",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "vinagreta de cabernet sauvignon": {
+   "nombre": "Vinagreta de Cabernet Sauvignon",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pimiento rojo": {
+   "nombre": "Pimiento rojo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "huevas de tobiko": {
+   "nombre": "Huevas de Tobiko",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pimiento asado": {
+   "nombre": "Pimiento asado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "salsa de citricos": {
+   "nombre": "Salsa de cítricos",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "sorbete de manzana verde": {
+   "nombre": "Sorbete de manzana verde",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "laminas de rabanitos encurtidas": {
+   "nombre": "Láminas de rabanitos encurtidas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "espuma de remolacha": {
+   "nombre": "Espuma de remolacha",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "alino": {
+   "nombre": "Aliño",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cebollino picado": {
+   "nombre": "Cebollino picado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "polvo de aceitunas": {
+   "nombre": "Polvo de aceitunas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "polvo de tomate": {
+   "nombre": "Polvo de tomate",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "hojas de albahaca": {
+   "nombre": "Hojas de albahaca",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "polvo de tomate deshidratado": {
+   "nombre": "Polvo de tomate deshidratado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pimiento rojo asado": {
+   "nombre": "Pimiento rojo asado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "aceite girasol": {
+   "nombre": "Aceite girasol",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "manzana encurtida": {
+   "nombre": "Manzana encurtida",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "aderezo": {
+   "nombre": "Aderezo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "coliflor": {
+   "nombre": "Coliflor",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pimiento rojo y verde": {
+   "nombre": "Pimiento rojo y verde",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cacao": {
+   "nombre": "Cacao",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "gofio": {
+   "nombre": "Gofio",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "ron": {
+   "nombre": "Ron",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "maizena": {
+   "nombre": "Maizena",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "arroz bomba": {
+   "nombre": "Arroz bomba",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "brocoli": {
+   "nombre": "brócoli",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chips de papa": {
+   "nombre": "Chips de papa",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "mojo rojo": {
+   "nombre": "Mojo rojo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chalotas": {
+   "nombre": "Chalotas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "mojo verde de aguacate": {
+   "nombre": "Mojo verde de Aguacate",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "ralladura de limon": {
+   "nombre": "Ralladura de limón",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "loncha de jamon": {
+   "nombre": "loncha de jamón",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "dry age": {
+   "nombre": "Dry Age",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "mermelada de piparra": {
+   "nombre": "mermelada de piparra",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "tartar de dry y piparra": {
+   "nombre": "tartar de Dry y piparra",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cebolla roja": {
+   "nombre": "Cebolla roja",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pampano": {
+   "nombre": "Pámpano",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "naranja confitada": {
+   "nombre": "Naranja confitada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chips de kale": {
+   "nombre": "Chips de kale",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "presa iberica": {
+   "nombre": "Presa Ibérica",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "salsa tonnata": {
+   "nombre": "Salsa tonnata",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "hojas de capuchina": {
+   "nombre": "Hojas de capuchina",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "mirim": {
+   "nombre": "Mirim",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "azucar moreno": {
+   "nombre": "Azúcar moreno",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "wakame y daikon": {
+   "nombre": "Wakame y daikon",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "perlas de fruta de la pasion": {
+   "nombre": "Perlas de fruta de la pasión",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "salchichon iberico": {
+   "nombre": "Salchichón ibérico",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chorizo iberico": {
+   "nombre": "Chorizo ibérico",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "lomo iberico": {
+   "nombre": "Lomo ibérico",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cecina de wagyu premium": {
+   "nombre": "Cecina de Wagyu Premium",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "solomillo vacuno": {
+   "nombre": "Solomillo vacuno",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "espuma de tomate agua de tomate": {
+   "nombre": "Espuma de tomate Agua de tomate",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "brotes de cilantro y cebolleta verde": {
+   "nombre": "Brotes de cilantro y cebolleta verde",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "aceite de girasol y de oliva": {
+   "nombre": "Aceite de girasol y de oliva",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "carne de wagyu madurada dry": {
+   "nombre": "Carne de Wagyu madurada dry",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crujiente de papa": {
+   "nombre": "Crujiente de papa",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "licuado de pimiento": {
+   "nombre": "Licuado de pimiento",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "panceta iberica": {
+   "nombre": "Panceta ibérica",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "brotes de guisantes": {
+   "nombre": "Brotes de guisantes",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "gelatinas": {
+   "nombre": "Gelatinas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "piel de limon": {
+   "nombre": "Piel de limón",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "gajos de pomelo": {
+   "nombre": "Gajos de pomelo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "huevas de aceite oliva": {
+   "nombre": "Huevas de aceite oliva",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "hojas de cilantro": {
+   "nombre": "Hojas de cilantro",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "laminas de aji amarillo": {
+   "nombre": "Láminas de ají Amarillo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "1 pularda": {
+   "nombre": "1 Pularda",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "sal y pimienta": {
+   "nombre": "Sal y pimienta",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "tocineta curada": {
+   "nombre": "Tocineta curada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "foie": {
+   "nombre": "Foie",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "puerros": {
+   "nombre": "Puerros",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "espuma de hongo y papas": {
+   "nombre": "Espuma de hongo y papas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crudite de esparragos": {
+   "nombre": "Crudité de espárragos",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cerdo iberico": {
+   "nombre": "Cerdo ibérico",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "hinojo encurtido": {
+   "nombre": "Hinojo encurtido",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cebollas": {
+   "nombre": "Cebollas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "demi de jarrete": {
+   "nombre": "Demi de jarrete",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "leche de coco": {
+   "nombre": "Leche de coco",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "ajo laminado": {
+   "nombre": "Ajo laminado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "piel de naranja": {
+   "nombre": "Piel de naranja",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cafe": {
+   "nombre": "Café",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "claras": {
+   "nombre": "Claras",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chocolate negro": {
+   "nombre": "Chocolate negro",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cremoso de chocolate blanco": {
+   "nombre": "Cremoso de chocolate blanco",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "helado de chocolate": {
+   "nombre": "Helado de chocolate",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crema de mandarina": {
+   "nombre": "Crema de mandarina",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "sal maldon": {
+   "nombre": "Sal maldon",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "glucosa atomizada": {
+   "nombre": "Glucosa atomizada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "platano osmotizado": {
+   "nombre": "Plátano osmotizado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "toffe": {
+   "nombre": "Toffe",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "hinojo": {
+   "nombre": "Hinojo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cremodan": {
+   "nombre": "Cremodan",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "boletus hongo": {
+   "nombre": "Boletus hongo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pisto manchego": {
+   "nombre": "Pisto manchego",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pimiento rojo confitado": {
+   "nombre": "Pimiento rojo confitado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "guarnicion": {
+   "nombre": "Guarnición",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "aceite virgen extra": {
+   "nombre": "Aceite virgen extra",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "relleno": {
+   "nombre": "Relleno",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "ricota": {
+   "nombre": "Ricota",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "alitas de pollo": {
+   "nombre": "Alitas de pollo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "caldo de verduras cebolla": {
+   "nombre": "Caldo de verduras Cebolla",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "calabaza y garbanzos": {
+   "nombre": "Calabaza y Garbanzos",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "salsa tartara": {
+   "nombre": "Salsa tártara",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "tempura": {
+   "nombre": "Tempura",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "refrito": {
+   "nombre": "Refrito",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "berro": {
+   "nombre": "Berro",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "picana": {
+   "nombre": "Picaña",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "piparras": {
+   "nombre": "Piparras",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "vinagreta": {
+   "nombre": "Vinagreta",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "agua de tomate": {
+   "nombre": "Agua de tomate",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "espuma": {
+   "nombre": "Espuma",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "espuma de papa": {
+   "nombre": "Espuma de papa",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "caldo": {
+   "nombre": "Caldo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "demi glace": {
+   "nombre": "Demi glace",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cebolla encurtida": {
+   "nombre": "Cebolla encurtida",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "espuma de pil pil": {
+   "nombre": "Espuma de pil pil",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cebollas encurtidas": {
+   "nombre": "Cebollas encurtidas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "granadina vinagre de manzana": {
+   "nombre": "Granadina Vinagre de manzana",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "huevas de aceite": {
+   "nombre": "Huevas de aceite",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "mermelada de papaya": {
+   "nombre": "Mermelada de papaya",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pinones": {
+   "nombre": "Piñones",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "aceto balsamico": {
+   "nombre": "Aceto balsámico",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "paletilla iberica de bellota": {
+   "nombre": "Paletilla ibérica de bellota",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chimichurri": {
+   "nombre": "Chimichurri",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "brisket corte de pechuga delantera": {
+   "nombre": "Brisket corte de pechuga delantera",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "sazonador": {
+   "nombre": "Sazonador",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crema agria": {
+   "nombre": "Crema agria",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "guindilla roja": {
+   "nombre": "Guindilla roja",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "focaccia": {
+   "nombre": "Focaccia",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "frutos secos": {
+   "nombre": "Frutos secos",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "contramuslo de pollo": {
+   "nombre": "Contramuslo de pollo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "aceite de colza": {
+   "nombre": "Aceite de colza",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "antioxidantes": {
+   "nombre": "Antioxidantes",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "potenciador de sabor": {
+   "nombre": "Potenciador de sabor",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "180 grs de carne de buey": {
+   "nombre": "180 grs de carne de buey",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "masa madre": {
+   "nombre": "Masa madre",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pedro ximenez": {
+   "nombre": "Pedro Ximénez",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "taco de foie": {
+   "nombre": "Taco de foie",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cebolla blanca": {
+   "nombre": "Cebolla blanca",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "fondo": {
+   "nombre": "Fondo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crujiente de arroz": {
+   "nombre": "Crujiente de arroz",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "carne de cordero": {
+   "nombre": "Carne de cordero",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "marinada": {
+   "nombre": "Marinada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "semillas de cilantro": {
+   "nombre": "Semillas de cilantro",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "anis estrellado": {
+   "nombre": "Anís estrellado",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "ras al hanout": {
+   "nombre": "Ras al hanout",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cous cous": {
+   "nombre": "Cous Cous",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pasas de uva": {
+   "nombre": "Pasas de uva",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "escabeche": {
+   "nombre": "Escabeche",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "veal jus": {
+   "nombre": "Veal jus",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "zanahoria asada": {
+   "nombre": "Zanahoria asada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crema de escabeche de zanahoria": {
+   "nombre": "Crema de escabeche de zanahoria",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pechuga de pollo": {
+   "nombre": "Pechuga de pollo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crujiente de bacon": {
+   "nombre": "Crujiente de Bacon",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "ralladura de lima": {
+   "nombre": "Ralladura de Lima",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pico de gallo": {
+   "nombre": "Pico de gallo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "polvo para hornear": {
+   "nombre": "Polvo para hornear",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chantilly": {
+   "nombre": "Chantilly",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "bano": {
+   "nombre": "Baño",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crema pastelera": {
+   "nombre": "Crema Pastelera",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "sabores disponibles": {
+   "nombre": "Sabores disponibles",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "cookie dough": {
+   "nombre": "Cookie Dough",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chocolate fudge brownie": {
+   "nombre": "Chocolate Fudge Brownie",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "vainilla pecan brittle": {
+   "nombre": "Vainilla Pecan Brittle",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "flan": {
+   "nombre": "Flan",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "flan de chocolate": {
+   "nombre": "Flan de Chocolate",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "chocolate": {
+   "nombre": "Chocolate",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crema de platano": {
+   "nombre": "Crema de Plátano",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "almibar": {
+   "nombre": "Almíbar",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "sable": {
+   "nombre": "Sablé",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "azucar glass": {
+   "nombre": "Azúcar glass",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "flor de sal": {
+   "nombre": "Flor de sal",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "confitura de frutos rojos": {
+   "nombre": "Confitura de frutos rojos",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "crema de calabaza": {
+   "nombre": "Crema de calabaza",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "calabaza confitada": {
+   "nombre": "Calabaza confitada",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "guindillas": {
+   "nombre": "Guindillas",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "pinones garrapinados": {
+   "nombre": "Piñones garrapiñados",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "caldo concentrado de manitas de cerdo": {
+   "nombre": "Caldo concentrado de manitas de cerdo",
+   "alergenos": [],
+   "fuente": "pendiente"
+  },
+  "zanahorias": {
+   "nombre": "Zanahorias",
+   "alergenos": [],
+   "fuente": "pendiente"
+  }
+ }
+}
