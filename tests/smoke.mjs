@@ -492,16 +492,15 @@ test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () 
     assert(false,
       `UNDECLARED allergen: dish ${f.id} "${f.plato}" is missing ${f.alergeno} (from: ${f.por.join(', ')})`);
   }
-  // Direction 2: every declared allergen must have a component origin. The
-  // ONLY tolerated exceptions are the 14 declaration/ingredient gaps awaiting
-  // the kitchen (Jul 2026) — this list only shrinks; anything new fails.
-  const pendingKitchen = new Set([
-    '5|Sulfitos', '7|Sulfitos', '46|Sulfitos', '10|Sulfitos', '10|Crustáceos',
-    '19|Sulfitos', '19|Lácteos', '38|Sulfitos', '52|Sulfitos', '52|Lácteos',
-    '87|Sulfitos', '41|Lácteos', '41|Gluten', '22|Pescado'
-  ]);
+  // Direction 2 at ZERO: every declared allergen has a component origin.
+  // The kitchen (Mónica, Jul 2026) resolved the final 14 gaps — vinegars in
+  // mojo/citrus mayo, wine in fillings and mushroom sauce, the demi butter
+  // (removable!), the tocinillo crisps, the sea bass added to its own list,
+  // and three over-declarations removed (oysters are MOLLUSCS not
+  // crustaceans; pisto and bao carry no sulphites). Declared ≡ computed is
+  // now total, both directions, no exceptions.
   for (const f of audit.sin_origen) {
-    assert(pendingKitchen.has(`${f.id}|${f.alergeno}`),
+    assert(false,
       `ORPHAN declaration: dish ${f.id} "${f.plato}" declares ${f.alergeno} but no tagged ingredient explains it`);
   }
 });

@@ -167,6 +167,13 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "vinagre": {
+   "nombre": "Vinagre",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "deducido de la carta"
+  },
   "jengibre": {
    "nombre": "Jengibre",
    "alergenos": [],
@@ -181,13 +188,6 @@
    "nombre": "Levadura",
    "alergenos": [],
    "fuente": "certeza culinaria"
-  },
-  "vinagre": {
-   "nombre": "Vinagre",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "deducido de la carta"
   },
   "tabasco": {
    "nombre": "Tabasco",
@@ -275,6 +275,13 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "vinagreta de cabernet": {
+   "nombre": "Vinagreta de cabernet",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
   "yema de huevo": {
    "nombre": "Yema de huevo",
    "alergenos": [
@@ -323,9 +330,23 @@
    ],
    "fuente": "certeza culinaria"
   },
+  "vino tinto": {
+   "nombre": "Vino tinto",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
   "tomillo": {
    "nombre": "Tomillo",
    "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "vino blanco": {
+   "nombre": "Vino blanco",
+   "alergenos": [
+    "Sulfitos"
+   ],
    "fuente": "certeza culinaria"
   },
   "perejil": {
@@ -416,13 +437,6 @@
    ],
    "fuente": "certeza culinaria"
   },
-  "vinagreta de cabernet": {
-   "nombre": "Vinagreta de cabernet",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "certeza culinaria"
-  },
   "atun": {
    "nombre": "Atún",
    "alergenos": [
@@ -486,13 +500,6 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
-  "vino tinto": {
-   "nombre": "Vino tinto",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "certeza culinaria"
-  },
   "cebolla morada": {
    "nombre": "Cebolla morada",
    "alergenos": [],
@@ -525,13 +532,6 @@
   "brotes": {
    "nombre": "Brotes",
    "alergenos": [],
-   "fuente": "certeza culinaria"
-  },
-  "vino blanco": {
-   "nombre": "Vino blanco",
-   "alergenos": [
-    "Sulfitos"
-   ],
    "fuente": "certeza culinaria"
   },
   "oregano": {
@@ -646,8 +646,11 @@
   },
   "salsa de citricos": {
    "nombre": "Salsa de cítricos",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos",
+    "Huevos"
+   ],
+   "fuente": "confirmado por propietario"
   },
   "papa paja": {
    "nombre": "Papa paja",
@@ -665,7 +668,8 @@
    "nombre": "Ponzu",
    "alergenos": [
     "Soja",
-    "Pescado"
+    "Pescado",
+    "Sulfitos"
    ],
    "fuente": "certeza culinaria"
   },
@@ -755,6 +759,13 @@
   "pimiento rojo asado": {
    "nombre": "Pimiento rojo asado",
    "alergenos": [],
+   "fuente": "certeza culinaria"
+  },
+  "mantequilla de la demi glace": {
+   "nombre": "Mantequilla de la demi glace",
+   "alergenos": [
+    "Lácteos"
+   ],
    "fuente": "certeza culinaria"
   },
   "batata": {
@@ -1380,6 +1391,13 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "lubina": {
+   "nombre": "Lubina",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
   "cardamomo": {
    "nombre": "Cardamomo",
    "alergenos": [],
@@ -1609,6 +1627,29 @@
    "nombre": "Avellanas",
    "alergenos": [
     "Frutos secos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "crujiente de cafe": {
+   "nombre": "Crujiente de café",
+   "alergenos": [
+    "Lácteos",
+    "Gluten"
+   ],
+   "fuente": "confirmado por propietario"
+  },
+  "crujiente de cacao": {
+   "nombre": "Crujiente de cacao",
+   "alergenos": [
+    "Lácteos",
+    "Gluten"
+   ],
+   "fuente": "confirmado por propietario"
+  },
+  "espuma de yogur": {
+   "nombre": "Espuma de yogur",
+   "alergenos": [
+    "Lácteos"
    ],
    "fuente": "certeza culinaria"
   },
