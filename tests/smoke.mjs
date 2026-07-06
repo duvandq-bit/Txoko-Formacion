@@ -697,6 +697,14 @@ test('app header respects the iOS notch (safe-area inset)', () => {
   assert(/padding:env\(safe-area-inset-top/.test(hdr), 'header padding must push content below the status bar');
   assert(/viewport-fit=cover/.test(html) && /black-translucent/.test(html),
     'iOS viewport/status-bar metas changed — re-audit safe-area handling');
+
+  // Y debe CABER en un iPhone estrecho: el reporte "los botones no responden
+  // y no pueden cambiar el idioma" era la fila desbordando — EN y Salir
+  // quedaban fuera de pantalla a 375-390px. Compresión responsiva medida en
+  // headless a 375px: todos los controles (ES, EN, Salir) dentro del ancho.
+  assert(/@media \(max-width:520px\)\{\s*\n?\s*\.app-header\{padding-left:\.7rem/.test(css.replace(/\r/g,'')),
+    'narrow-screen header compression missing');
+  assert(/\.header-uname\{display:none\}/.test(css), 'username must hide on narrow screens (avatar identifies)');
 });
 
 test('force-update escape hatch + APP_VERSION synced to the SW', () => {

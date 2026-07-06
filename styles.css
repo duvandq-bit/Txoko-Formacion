@@ -1384,6 +1384,29 @@ body::after{
   animation:ri-cursor 1.1s steps(1) infinite}
 @keyframes ri-cursor{ 0%,49%{opacity:1} 50%,100%{opacity:0} }
 
+/* ── Cabecera en pantallas estrechas (iPhone 375-430px) ──
+   El propietario reportó (iOS de sala): "los botones de arriba no responden
+   y no pueden cambiar el idioma". Causa real: la fila desbordaba el ancho —
+   ES quedaba cortado en el borde y EN/Salir directamente FUERA de pantalla.
+   Compresión: paddings y huecos menores, nombre de usuario oculto (el
+   avatar identifica), logo contenido. Todo botón debe caber a 375px. */
+@media (max-width:520px){
+  .app-header{padding-left:.7rem;padding-right:.7rem;gap:.5rem}
+  .header-logo{font-size:.98rem;max-width:32vw;letter-spacing:.12em}
+  .header-user{gap:.3rem;min-width:0}
+  .header-uname{display:none}
+  .app-header #helpBtn{margin-right:0!important;padding:6px 7px!important}
+  .app-header #appLangEs,.app-header #appLangEn{padding:6px 6px!important}
+  .app-header #notifBell{min-width:32px!important;min-height:32px!important;padding:4px!important}
+  .btn-logout{padding:.35rem .45rem;font-size:.6rem}
+}
+@media (max-width:380px){
+  .app-header{padding-left:.5rem;padding-right:.5rem;gap:.35rem}
+  .header-logo{font-size:.88rem;max-width:26vw}
+  .header-logo sup{display:none}
+}
+
+
 /* ── Briefing de simulación (Pip-Boy): qué es el Repaso Inteligente ── */
 .ri-console .ri-brief{
   margin:.1rem 1rem .8rem;padding:.6rem .8rem;position:relative;z-index:2;
