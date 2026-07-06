@@ -639,6 +639,22 @@ test('DISH_COMPONENTS: dish allergens derive exactly from components, zero drift
   assert(/'From':'Por'/.test(detail), 'allergen provenance line missing from dish detail');
 });
 
+test('smart review console: simulation briefing with terminal typing', () => {
+  // El propietario pidió una introducción que haga sentir que se entra en
+  // una simulación. El briefing vive en el terminal Pip-Boy, se teclea la
+  // primera vez por sesión y respeta prefers-reduced-motion (aparece
+  // completo, sin animación).
+  const sr = html.slice(html.indexOf("c.innerHTML = `\n    <div class=\"ri-console\">"), html.indexOf('function _riSetDifficulty'));
+  assert(/ri-brief/.test(sr) && /riBriefText/.test(sr), 'simulation briefing block missing from the console');
+  assert(/BRIEFING DE SIMULACIÓN/.test(sr) && /SIMULATION BRIEFING/.test(sr), 'briefing header must exist in both languages');
+  assert(/turno virtual de Txoko/.test(sr) && /virtual Txoko shift/.test(sr), 'briefing copy missing');
+  assert(/prefers-reduced-motion/.test(sr), 'typing effect must respect reduced motion');
+  assert(/_srBriefTyped/.test(sr), 'typing must run once per session (sessionStorage gate)');
+  const css = read('styles.css');
+  assert(/\.ri-brief-text\.typing::after/.test(css), 'typing cursor style missing');
+  assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
+});
+
 test('smart review provenance: DISH_COMPONENTS-driven, executed, anti-obvious', () => {
   // FASE 4 en el entrenamiento: las preguntas de procedencia derivan de
   // DISH_COMPONENTS (base única validada). El guard EJECUTA los builders con

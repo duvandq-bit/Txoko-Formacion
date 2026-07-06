@@ -5208,6 +5208,14 @@ function renderSmartReview(){
         </div>
       </div>
 
+      <!-- Briefing de simulación: sitúa al camarero antes de entrar. El texto
+           se teclea (efecto terminal) la primera vez por sesión; con
+           prefers-reduced-motion o en visitas siguientes aparece completo. -->
+      <div class="ri-brief">
+        <div class="ri-brief-head" aria-hidden="true">// ${_en?'SIMULATION BRIEFING':'BRIEFING DE SIMULACIÓN'}</div>
+        <p class="ri-brief-text" id="riBriefText"></p>
+      </div>
+
       <div class="ri-pad">
         <div class="ri-cta-wrap">
           <button onclick="_startSmartSession()" class="ri-cta" aria-label="${_en?'Enter simulation':'Entrar en simulación'}">
@@ -5234,6 +5242,26 @@ function renderSmartReview(){
     </div>
   `;
 
+  // ── Briefing con efecto de terminal ──
+  const briefTxt = _en
+    ? 'You are entering a virtual Txoko shift. Guests with real allergies, questions and requests from our menu — every case is generated from the dish cards and decided exactly as on the floor. Here you can get it wrong; in front of the guest, you cannot.'
+    : 'Vas a entrar en un turno virtual de Txoko. Huéspedes con alergias, dudas y peticiones reales de nuestra carta — cada caso se genera desde las fichas y se decide igual que en sala. Aquí puedes equivocarte; delante del huésped, no.';
+  const briefEl = document.getElementById('riBriefText');
+  if(briefEl){
+    const _reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(_reduce || sessionStorage.getItem('_srBriefTyped')){
+      briefEl.textContent = briefTxt;
+    } else {
+      sessionStorage.setItem('_srBriefTyped','1');
+      briefEl.classList.add('typing');
+      let _i = 0;
+      const _t = setInterval(()=>{
+        _i += 3;
+        briefEl.textContent = briefTxt.slice(0, _i);
+        if(_i >= briefTxt.length){ clearInterval(_t); briefEl.classList.remove('typing'); briefEl.textContent = briefTxt; }
+      }, 26);
+    }
+  }
 }
 
 // ── Manual difficulty selection ──
