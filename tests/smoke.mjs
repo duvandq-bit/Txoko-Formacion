@@ -484,13 +484,14 @@ test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () 
     assert(['certeza culinaria', 'notas del plato', 'pendiente'].includes(e.fuente),
       `ingredient "${key}" has invalid fuente`);
   }
-  // Ratchet: the ONLY allowed computed-but-undeclared mismatches are the three
-  // findings pending the owner's confirmation (Jul 2026). Anything new fails.
+  // Ratchet at ZERO: the owner confirmed and fixed the three first-pass
+  // findings (ravioli+Huevos, trifasi+Mostaza, pámpano+Gluten, Jul 2026).
+  // From here on, ANY dish whose tagged ingredients imply an allergen the
+  // dish does not declare fails CI immediately.
   const audit = JSON.parse(execSync('node tests/allergen-audit.mjs --json', { cwd: ROOT }).toString());
-  const allowed = new Set(['5|Gluten', '54|Huevos', '89|Mostaza']);
   for (const f of audit.no_declarado) {
-    assert(allowed.has(`${f.id}|${f.alergeno}`),
-      `NEW undeclared allergen: dish ${f.id} "${f.plato}" is missing ${f.alergeno} (from: ${f.por.join(', ')})`);
+    assert(false,
+      `UNDECLARED allergen: dish ${f.id} "${f.plato}" is missing ${f.alergeno} (from: ${f.por.join(', ')})`);
   }
 });
 
