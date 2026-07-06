@@ -484,14 +484,51 @@ test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () 
     assert(['certeza culinaria', 'notas del plato', 'deducido de la carta', 'propuesta', 'pendiente', 'confirmado por propietario'].includes(e.fuente),
       `ingredient "${key}" has invalid fuente`);
   }
-  // Ratchet at ZERO: every phase-1 and phase-2 finding is owner-resolved
-  // (ravioli+Huevos, trifasi+Mostaza, pámpano+Gluten, pincho+Gluten,
-  // coca+Sulfitos — Jul 2026). ANY dish whose tagged ingredients imply an
-  // allergen the dish does not declare fails CI immediately.
+  // PHASE-3 LOCK (partial): declared === computed, both directions.
+  // Direction 1 at ZERO tolerance: any dish whose tagged ingredients imply
+  // an allergen it does not declare fails CI immediately.
   const audit = JSON.parse(execSync('node tests/allergen-audit.mjs --json', { cwd: ROOT }).toString());
   for (const f of audit.no_declarado) {
     assert(false,
       `UNDECLARED allergen: dish ${f.id} "${f.plato}" is missing ${f.alergeno} (from: ${f.por.join(', ')})`);
+  }
+  // Direction 2: every declared allergen must have a component origin. The
+  // ONLY tolerated exceptions are the 14 declaration/ingredient gaps awaiting
+  // the kitchen (Jul 2026) — this list only shrinks; anything new fails.
+  const pendingKitchen = new Set([
+    '5|Sulfitos', '7|Sulfitos', '46|Sulfitos', '10|Sulfitos', '10|Crustáceos',
+    '19|Sulfitos', '19|Lácteos', '38|Sulfitos', '52|Sulfitos', '52|Lácteos',
+    '87|Sulfitos', '41|Lácteos', '41|Gluten', '22|Pescado'
+  ]);
+  for (const f of audit.sin_origen) {
+    assert(pendingKitchen.has(`${f.id}|${f.alergeno}`),
+      `ORPHAN declaration: dish ${f.id} "${f.plato}" declares ${f.alergeno} but no tagged ingredient explains it`);
+  }
+});
+
+test('ES and EN dish twins declare identical allergens', () => {
+  // The EN cards are hand-written too — a divergent twin misinforms staff
+  // using the app in English (found live: EN Croquettes missing Molluscs and
+  // Mustard). Locked: every twin must match through the vocabulary map.
+  const MAP = { 'Lácteos':'Dairy','Huevos':'Eggs','Pescado':'Fish','Crustáceos':'Crustaceans',
+    'Moluscos':'Molluscs','Sulfitos':'Sulphites','Frutos secos':'Tree nuts',
+    'Granos de sésamo':'Sesame seeds','Cacahuete':'Peanut','Apio':'Celery',
+    'Mostaza':'Mustard','Soja':'Soy','Gluten':'Gluten','Altramuces':'Lupin' };
+  const parse = (block) => {
+    const out = {};
+    for (const m of block.matchAll(/\{id:(\d+)(?:,cat:'[^']*')?,name:'((?:[^'\\]|\\.)*)',allergens:\[([^\]]*)\]/g)) {
+      out[m[1]] = { name: m[2], alg: [...m[3].matchAll(/'([^']+)'/g)].map(x => x[1]).sort() };
+    }
+    return out;
+  };
+  const iEn = html.indexOf('const DISHES_EN = ['), jEn = html.indexOf('\n];', iEn);
+  const iEs = html.indexOf('const DISHES = ['), jEs = html.indexOf('\n];', iEs);
+  const EN = parse(html.slice(iEn, jEn)), ES = parse(html.slice(iEs, jEs));
+  for (const id of Object.keys(ES)) {
+    assert(EN[id], `dish ${id} "${ES[id].name}" has no EN twin`);
+    const expected = ES[id].alg.map(a => MAP[a] || `??${a}`).sort();
+    assert(JSON.stringify(expected) === JSON.stringify(EN[id].alg),
+      `dish ${id} "${ES[id].name}": EN twin allergens diverge (ES→${expected.join(',')} vs EN ${EN[id].alg.join(',')})`);
   }
 });
 
