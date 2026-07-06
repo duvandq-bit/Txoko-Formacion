@@ -655,6 +655,31 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('avatar system: branded SVG medallions, no emojis, self-styled picker', () => {
+  // Reporte del propietario: el selector salía como texto crudo (las clases
+  // avatar-picker-* nunca existieron en styles.css) y las opciones eran
+  // letras/símbolos pobres. Ahora: medallones SVG de marca, sin emojis, y el
+  // modal lleva TODOS sus estilos inline (no puede renderizar desnudo).
+  const iA = html.indexOf('const AVATAR_ICONS = {');
+  assert(iA !== -1, 'AVATAR_ICONS missing');
+  const icons = html.slice(iA, html.indexOf('function _avatarSvg', iA));
+  const count = (icons.match(/\{c:'#/g) || []).length;
+  assert(count >= 18, `avatar icon set shrank (${count})`);
+  assert(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(icons), 'emoji found in avatar icons — owner banned them');
+  assert(!/const AVATAR_OPTIONS/.test(html), 'legacy letter/symbol AVATAR_OPTIONS must stay retired');
+  // Ambos renderers entienden icon:
+  const rsa = html.slice(html.indexOf('function renderSmallAvatar'), html.indexOf('function renderSmallAvatar') + 2400);
+  assert(/indexOf\('icon:'\)/.test(rsa) && /_avatarSvg/.test(rsa), 'renderSmallAvatar must render icon: avatars');
+  const rha = html.slice(html.indexOf('function _renderHeaderAvatar'), html.indexOf('function getEmpAvatar'));
+  assert(/indexOf\('icon:'\)/.test(rha), 'header avatar must render icon: avatars');
+  // El picker es autosuficiente: estilos inline, sin depender de clases CSS
+  const pk = html.slice(html.indexOf('function openAvatarPicker'), html.indexOf('function selectAvatar'));
+  assert(/overlay\.style\.cssText = 'position:fixed/.test(pk), 'picker overlay must carry inline styles');
+  assert(!/class="avatar-grid"/.test(pk) && !/class="avatar-picker-modal"/.test(pk),
+    'picker must not depend on the never-defined avatar-picker CSS classes');
+  assert(/safe-area-inset-top/.test(pk), 'picker must respect the iOS notch');
+});
+
 test('app header respects the iOS notch (safe-area inset)', () => {
   // black-translucent + viewport-fit=cover extienden la página bajo la barra
   // de estado de iOS: con height fija la cabecera quedaba DEBAJO del reloj y
