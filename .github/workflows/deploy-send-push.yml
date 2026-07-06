@@ -1,0 +1,51 @@
+# Despliega la edge function send-push (supabase/functions/send-push/) en el
+# proyecto Supabase de TXOKO. Se lanza a mano (workflow_dispatch), sin inputs:
+# el token viene del secreto de repositorio SUPABASE_ACCESS_TOKEN (crear en
+# Settings → Secrets and variables → Actions; borrar el secreto y revocar el
+# token en Supabase tras el deploy). La clave VAPID privada no viaja por
+# GitHub: el workflow la extrae de la versión actualmente desplegada de la
+# función y la sube como secreto de la función (Edge Functions → Secrets),
+# de donde la lee el index.ts del repo vía Deno.env.
+name: Deploy Supabase send-push
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_REF: advkoujfgbrrjvqexrcu
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check token secret exists
+        run: |
+          if [ -z "${{ secrets.SUPABASE_ACCESS_TOKEN }}" ]; then
+            echo "::error::Falta el secreto de repositorio SUPABASE_ACCESS_TOKEN"; exit 1
+          fi
+
+      - name: Carry VAPID key over from the deployed function
+        run: |
+          BODY=$(curl -sS -f "https://api.supabase.com/v1/projects/$PROJECT_REF/functions/send-push/body" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}")
+          KEY=$(echo "$BODY" | grep -o "VAPID_PRIVATE = '[^']*'" | head -1 | sed "s/.*'\(.*\)'/\1/")
+          if [ -z "$KEY" ]; then
+            # Ya desplegada la versión env-based: el secreto debe existir ya
+            echo "No inline VAPID key found (already env-based) — skipping secret upload"
+            exit 0
+          fi
+          echo "::add-mask::$KEY"
+          curl -sS -f -X POST "https://api.supabase.com/v1/projects/$PROJECT_REF/secrets" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "[{\"name\":\"VAPID_PRIVATE_KEY\",\"value\":\"$KEY\"}]"
+          echo "Secreto VAPID_PRIVATE_KEY actualizado desde la versión desplegada"
+
+      - name: Deploy send-push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          npx --yes supabase@latest functions deploy send-push \
+            --project-ref $PROJECT_REF --no-verify-jwt
