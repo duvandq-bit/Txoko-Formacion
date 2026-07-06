@@ -3058,15 +3058,23 @@ function _djPhaseAllergens(dish, dd, _en){
     return `<div class="dj-safe-card"><div style="font-size:2.5rem;margin-bottom:.5rem">✅</div><div class="dj-safe-text">${_en?'This dish contains no declared allergens!':'¡Este plato no contiene alérgenos declarados!'}</div></div>`;
   }
 
-  // Parse notes for removable info
-  const notesLow = notes.toLowerCase();
+  // FASE 3b: el veredicto sale de la matriz DISH_ACTIONS (dato validado por
+  // cocina), no de rastrear palabras en las notas. Con comanda exacta.
+  const _acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS[dish.id]) || {};
   const cards = allergens.map((a,i)=>{
     const data = allergenData[a]||{icon:'⚠️',color:'#c49a3c',en:a,desc_en:'Be cautious.',desc_es:'Precaución.'};
-    const isRemovable = notesLow.includes(a.toLowerCase()) && (notesLow.includes('sin '+a.toLowerCase()) || notesLow.includes('remov') || notesLow.includes('quitar') || notesLow.includes('opcional'));
+    const act = _acts[a];
+    let verdict = '';
+    if(act && act.r === 1){
+      const cmd = _en ? (act.c_en || act.c) : act.c;
+      verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#6b8f71;background:rgba(77,138,94,.08);padding:.2rem .4rem;border-radius:6px;display:inline-block">✓ ${_en?'Adaptable':'Se adapta'}${cmd?` — ${_en?'order':'comandar'} <b>${escapeHTML(cmd)}</b>`:''}</div>`;
+    } else if(act && act.r === 0){
+      verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#a86868;background:rgba(160,72,72,.07);padding:.2rem .4rem;border-radius:6px;display:inline-block">■ ${_en?'Structural — not suitable for this allergy':'Estructural — no apto para esta alergia'}</div>`;
+    }
     return `<div class="dj-allerg-card" style="--delay:${0.15+i*0.12}s;border-left:4px solid ${data.color}">
       <div class="dj-allerg-name">${data.icon} ${_en?data.en:a}</div>
       <div class="dj-allerg-info">${_en?data.desc_en:data.desc_es}</div>
-      ${isRemovable?`<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#6b8f71;background:rgba(77,138,94,.08);padding:.2rem .4rem;border-radius:6px;display:inline-block">♻ ${_en?'May be removable on request':'Posiblemente eliminable bajo petición'}</div>`:''}
+      ${verdict}
     </div>`;
   }).join('');
 
@@ -15503,7 +15511,32 @@ function renderRepasoDishDetail(dishId){
   const cx = plateSize/2, cy = plateSize/2;
 
 
-  const allergenHtml = dish.allergens.map(a => `<span style="display:inline-block;padding:.18rem .45rem;border-radius:20px;font-family:'DM Mono',monospace;font-size:.55rem;background:${allergenColors[a]||'var(--gold)'}18;color:${allergenColors[a]||'var(--gold)'};border:1px solid ${allergenColors[a]||'var(--gold)'}30">${escapeHTML(a)}</span>`).join('');
+  // FASE 3b — panel de adaptaciones: cada alérgeno con su veredicto y comanda
+  // exacta desde DISH_ACTIONS (la matriz validada), no desde heurísticas.
+  const _acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS[dish.id]) || {};
+  const _aEn = {'Lácteos':'Dairy','Huevos':'Eggs','Pescado':'Fish','Crustáceos':'Crustaceans','Moluscos':'Molluscs','Sulfitos':'Sulphites','Frutos secos':'Tree nuts','Granos de sésamo':'Sesame','Cacahuete':'Peanut','Apio':'Celery','Mostaza':'Mustard','Soja':'Soy','Gluten':'Gluten'};
+  const allergenHtml = dish.allergens.map(a => {
+    const col = allergenColors[a]||'var(--gold)';
+    const act = _acts[a];
+    const label = LANG==='en' ? (_aEn[a]||a) : a;
+    let status;
+    if(act && act.r === 1){
+      const cmd = LANG==='en' ? (act.c_en || act.c) : act.c;
+      status = `<span style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--green-deep);font-weight:700;letter-spacing:.06em">✓ ${LANG==='en'?'ADAPTABLE':'SE ADAPTA'}</span>`
+        + (cmd ? `<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch2);margin-top:.15rem">${LANG==='en'?'Order':'Comandar'}: <b>${escapeHTML(cmd)}</b></div>` : '')
+        + (act.sub && LANG!=='en' ? `<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);margin-top:.1rem">↺ ${escapeHTML(act.sub)}</div>` : '')
+        + (act.sub_en && LANG==='en' ? `<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);margin-top:.1rem">↺ ${escapeHTML(act.sub_en)}</div>` : '');
+    } else {
+      status = `<span style="font-family:'DM Mono',monospace;font-size:.52rem;color:#a04848;font-weight:700;letter-spacing:.06em">■ ${LANG==='en'?'STRUCTURAL — not suitable':'ESTRUCTURAL — no apto'}</span>`;
+    }
+    return `<div style="display:flex;align-items:flex-start;gap:.6rem;padding:.5rem 0;border-bottom:1px solid rgba(28,42,34,.08)">
+      <span style="width:8px;height:8px;transform:rotate(45deg);background:${col};flex-shrink:0;margin-top:.3rem"></span>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700;color:var(--parchment)">${escapeHTML(label)}</div>
+        ${status}
+      </div>
+    </div>`;
+  }).join('');
 
   const ingredientHtml = ingredientList.map(ing => `<span style="padding:.2rem .5rem;background:rgba(0,0,0,.03);border-radius:20px;font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch2)">${escapeHTML(ing)}</span>`).join('');
 
@@ -15532,9 +15565,9 @@ function renderRepasoDishDetail(dishId){
 
     <div style="margin-bottom:.75rem">
       <div class="card" style="padding:.9rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">⚠ ${LANG==='en'?'Allergens':'Alérgenos'}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:.25rem">
-          ${allergenHtml}
+        <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">⚠ ${LANG==='en'?'Allergens & adaptations':'Alérgenos y adaptaciones'}</div>
+        <div>
+          ${allergenHtml || `<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--green-deep)">✓ ${LANG==='en'?'No declared allergens':'Sin alérgenos declarados'}</div>`}
         </div>
       </div>
     </div>
