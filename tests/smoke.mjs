@@ -397,14 +397,14 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
     'www.youtube.com'                   // video embeds (frame-src)
   ];
   for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
-  // La Terraza chat needs the realtime WebSocket + storage images.
+  // The team chat needs the realtime WebSocket + storage images.
   assert(/wss:\/\/advkoujfgbrrjvqexrcu\.supabase\.co/.test(csp),
     'CSP connect-src must allow the Supabase realtime WebSocket (wss) for the chat');
   assert(/img-src[^;]*advkoujfgbrrjvqexrcu\.supabase\.co/.test(csp),
     'CSP img-src must allow Supabase storage so chat photos (and wine images) render');
 });
 
-test('La Terraza chat: nav wired, realtime teardown, safe render, moderation', () => {
+test('Team chat: nav wired, realtime teardown, safe render, moderation', () => {
   // Nav button + route so the tab is reachable and renders.
   assert(/showTab\('chat'\)/.test(html) && html.includes('navChat'), 'chat nav entry missing');
   assert(/chat:renderChat/.test(html), 'chat route not registered in renderMap');
@@ -424,7 +424,7 @@ test('La Terraza chat: nav wired, realtime teardown, safe render, moderation', (
     'chat photo downscale-to-webp missing');
 });
 
-test('La Terraza chat: WhatsApp features (mentions, replies, reactions, typing)', () => {
+test('Team chat: WhatsApp features (mentions, replies, reactions, typing)', () => {
   // @Mentions: autocomplete + parse + notify (in-app bell AND lock-screen push)
   assert(/function _chatMentionScan\(/.test(html) && /function _chatParseMentions\(/.test(html),
     'mention autocomplete/parse missing');
@@ -460,7 +460,7 @@ test('push notifications: raster icons, deep links, rich payload', () => {
   // Android renders an SVG notification icon as a generic grey circle — the
   // logo must be raster (icon-192.png) plus a white-on-transparent status-bar
   // badge (badge-96.png). Taps deep-link into the app (chat pushes land in
-  // La Terraza), mentions re-alert through a coalesced tag, photo messages
+  // the chat tab), mentions re-alert through a coalesced tag, photo messages
   // show the picture itself. Deep link works even through the v2 send-push
   // fn (title/body/tag only): the SW infers data.tab from tag === 'chat'.
   const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
