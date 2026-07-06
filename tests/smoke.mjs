@@ -661,12 +661,10 @@ test('pairingExplanations: every entry matches a dish still on the menu', () => 
   const stem = w => w.replace(/(os|as|es)$/, '').replace(/[ao]$/, '');
   const toks = s2 => norm(s2).split(/[^a-z0-9ñ]+/).filter(w => w && !STOP.has(w)).map(stem);
   const nameToks = [...names].map(n => new Set(toks(n)));
-  // PENDIENTE DEL PROPIETARIO (jul 2026): el Entrecot de Wagyu y los helados
-  // Ben & Jerry's no están en la carta de cena vigente ni en DISHES; el resto
-  // de cortes ya son fichas reales (110-116). Cuando confirme si estos dos
-  // siguen sirviéndose (¿almuerzo?), o se añaden o se limpian narrativa y
-  // maridajes de wines.json.
-  const PENDING_OWNER = new Set(['entrecot de wagyu', 'helados ben and jerrys']);
+  // Allowlist VACÍA: el propietario cerró todas las dudas (jul 2026) — los
+  // 8 cortes son fichas reales y la narrativa de Ben & Jerry's se eliminó
+  // junto a sus maridajes. Cualquier huérfano nuevo debe fallar aquí.
+  const PENDING_OWNER = new Set([]);
   for (const k of keys) {
     if (PENDING_OWNER.has(norm(k))) continue;
     const kt = toks(k);
