@@ -1158,6 +1158,13 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "mirim": {
+   "nombre": "Mirim",
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "confirmado por propietario"
+  },
   "azucar moreno": {
    "nombre": "Azúcar moreno",
    "alergenos": [],
@@ -1916,7 +1923,7 @@
   "espuma de pil pil": {
    "nombre": "Espuma de pil pil",
    "alergenos": [
-    "Moluscos"
+    "Pescado"
    ],
    "fuente": "confirmado por propietario"
   },
@@ -2642,11 +2649,6 @@
   },
   "cacao": {
    "nombre": "Cacao",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "mirim": {
-   "nombre": "Mirim",
    "alergenos": [],
    "fuente": "pendiente"
   },
