@@ -2767,6 +2767,21 @@
     "Lácteos"
    ],
    "fuente": "certeza culinaria"
+  },
+  "fettuccine al huevo": {
+   "nombre": "Fettuccine al huevo",
+   "alergenos": [
+    "Gluten",
+    "Huevos"
+   ],
+   "fuente": "confirmado por propietario"
+  },
+  "sorbete 2% lactosa": {
+   "nombre": "Sorbete (2% lactosa)",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "confirmado por propietario"
   }
  }
 }
