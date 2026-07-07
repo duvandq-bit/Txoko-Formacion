@@ -683,6 +683,22 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   assert(/\.sup-live-dot\{/.test(css) && /prefers-reduced-motion:reduce\)\{\.sup-live-dot\{animation:none\}/.test(css.replace(/\s+/g, '')),
     'live dot pulse must respect reduced motion');
   assert(/\.sup-emp-card\{background:transparent/.test(css), 'employee cards must be de-boxed (ledger rows)');
+
+  // Reorganización (petición del propietario: "hay que deslizar mucho"):
+  // 4 secciones con pestañas y fichas de empleado PLEGADAS (details/summary).
+  // El estado (sección activa + fichas abiertas) sobrevive al refresco EN VIVO.
+  assert(/class="sup-seg"/.test(html) && (html.match(/_supSetSection\('/g) || []).length >= 4,
+    'segmented control with 4 sections missing');
+  for (const sec of ['hoy', 'equipo', 'analisis', 'acciones']) {
+    assert(html.includes(`data-sec="${sec}"`), `section ${sec} missing`);
+  }
+  assert(/<details class="sup-emp-card"/.test(html) && /<summary class="sup-emp-header">/.test(html),
+    'employee cards must be collapsible details/summary');
+  assert(/_supOpenEmps/.test(html) && /_supApplySection\(\)/.test(html),
+    'section + open-cards state must survive silent refreshes');
+  const css2 = read('styles.css');
+  assert(/\.sup-sec\{display:none\}/.test(css2) && /\.sup-seg button\.active/.test(css2),
+    'section visibility CSS missing');
 });
 
 test('notification panel: fixed header, 44px close, mark-all-read', () => {

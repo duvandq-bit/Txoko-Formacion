@@ -6214,6 +6214,25 @@ body::after{
   padding:.28rem .7rem;border:1px solid rgba(136,176,131,.4);border-radius:20px;
   background:rgba(136,176,131,.1);font-family:'DM Mono',monospace;font-size:.58rem;
   letter-spacing:.12em;color:#8fc499;position:relative;z-index:2}
+/* segmented control del panel — mismo lenguaje que las pestañas de la app */
+.sup-seg{display:flex;gap:.35rem;margin-bottom:1rem;padding:.3rem;
+  background:rgba(28,42,34,.05);border:1px solid rgba(196,154,60,.14);border-radius:14px}
+.sup-seg button{flex:1;padding:.5rem .3rem;background:transparent;border:none;border-radius:10px;
+  font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--parch3);cursor:pointer;transition:all .2s;min-height:38px}
+.sup-seg button.active{background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  color:var(--gold-deep);font-weight:700;border:1px solid rgba(196,154,60,.3);
+  box-shadow:0 1px 4px rgba(28,42,34,.08)}
+.sup-sec{display:none}
+.sup-sec.active{display:block;animation:loginFadeIn .25s ease}
+/* fichas plegables: el summary es la fila, el chevron gira al abrir */
+.sup-emp-card summary{list-style:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sup-emp-card summary::-webkit-details-marker{display:none}
+.sup-emp-chev{font-size:.7rem;color:var(--parch4);transition:transform .2s;margin-left:.15rem}
+.sup-emp-card[open] .sup-emp-chev{transform:rotate(180deg)}
+.sup-emp-card[open]{padding-bottom:1.15rem;background:rgba(196,154,60,.025)}
+@media (prefers-reduced-motion:reduce){.sup-sec.active{animation:none}.sup-emp-chev{transition:none}}
+
 .sup-live-dot{width:7px;height:7px;border-radius:50%;background:#6fd48a;
   box-shadow:0 0 6px rgba(111,212,138,.8);animation:supLivePulse 2s ease-in-out infinite}
 @keyframes supLivePulse{0%,100%{opacity:1}50%{opacity:.3}}
