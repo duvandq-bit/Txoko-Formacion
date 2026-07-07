@@ -727,6 +727,22 @@ test('notification panel: fixed header, 44px close, mark-all-read', () => {
     'mark-all must persist locally, sync to Supabase and clear the badge');
 });
 
+test('wine detail: opaque overlay, dark hero band, SVG bottle by type', () => {
+  // "El diseño es pobre" (propietario): el overlay al 97% dejaba sangrar el
+  // dashboard como texto fantasma y la botella era una caja pálida con un
+  // icono diminuto. Ahora: fondo opaco INLINE (a prueba de CSS viejo), banda
+  // hero TUNIC oscura y botella SVG dibujada por tipo.
+  assert(/overlay\.style\.background = '#f4ede2'/.test(html), 'wine overlay must be opaque inline');
+  assert(/function _wineBottleSvg/.test(html), 'SVG bottle renderer missing');
+  const b = html.slice(html.indexOf('function _wineBottleSvg'), html.indexOf('function _wineImgHtml'));
+  for (const t of ['tinto', 'blanco', 'rosado', 'espumoso', 'dulce']) assert(b.includes(t), `bottle color for ${t} missing`);
+  assert(/class="wd-hero"/.test(html), 'dark hero band missing from wine detail');
+  const hero = html.slice(html.indexOf('class="wd-hero"') - 40, html.indexOf('class="wd-hero"') + 600);
+  assert(/var\(--brand-ink\)/.test(hero), 'hero band must use the brand token background');
+  assert(/background:transparent;border:none;box-shadow:none/.test(html.slice(html.indexOf('function _wineImgHtml'), html.indexOf('function _wineImgHtml') + 1600)),
+    'bottle wrap must be transparent (no pale box on the dark band)');
+});
+
 test('logo taps home + persistent search pill under the nav', () => {
   // Peticiones del propietario: el logo TXOKO vuelve al inicio (accesible:
   // role button + Enter/Espacio) y la búsqueda global vive a UN toque bajo
