@@ -456,6 +456,21 @@ test('Team chat: WhatsApp features (mentions, replies, reactions, typing)', () =
     'chat animations need a reduced-motion gate');
 });
 
+test('update push is silent (no vibration/sound) — quiet banner only', () => {
+  // Petición del propietario: el aviso de actualización lo más discreto
+  // posible. iOS obliga a mostrar un banner en todo push, pero podemos
+  // callarlo: sin vibración, sin sonido, sin re-alerta para tag 'app-update'.
+  const sw = read('sw.js');
+  assert(/const _quiet = data\.tag === 'app-update'/.test(sw), 'update push must be flagged quiet');
+  assert(/silent: _quiet/.test(sw), 'update push must set silent');
+  assert(/vibrate: _quiet \? \[\]/.test(sw), 'update push must not vibrate');
+  assert(/renotify: _quiet \? false/.test(sw), 'update push must not re-alert');
+  assert(/tag:'app-update', renotify:false/.test(html), 'sender must not request renotify for updates');
+  // los avisos de chat/menciones conservan su vibración (no rompimos eso)
+  assert(/data\.renotify \? \[200, 100, 200, 100, 200\] : \[200, 100, 200\]/.test(sw),
+    'chat/mention notifications must keep their vibration');
+});
+
 test('push notifications: raster icons, deep links, rich payload', () => {
   // Android renders an SVG notification icon as a generic grey circle — the
   // logo must be raster (icon-192.png) plus a white-on-transparent status-bar
@@ -471,8 +486,8 @@ test('push notifications: raster icons, deep links, rich payload', () => {
   const sw = read('sw.js');
   assert(sw.includes("'./icon-192.png'") && sw.includes("'./badge-96.png'"), 'SW must use raster icon + badge');
   assert(/icon-192\.png/.test(sw.match(/const SHELL_URLS = \[[^\]]*\]/)[0]), 'raster icons must be pre-cached in the shell');
-  assert(/renotify: data\.renotify/.test(sw) && /options\.image = data\.image/.test(sw),
-    'SW push handler must support renotify + big-picture image');
+  assert(/renotify: _quiet \? false : data\.renotify/.test(sw) && /options\.image = data\.image/.test(sw),
+    'SW push handler must support renotify (chat) + big-picture image');
   assert(/data\.tag === 'chat'\) data\.data\.tab = 'chat'/.test(sw), 'chat tag must infer the deep link (v2 fn compatibility)');
   assert(/postMessage\(\{ type: 'openTab', tab \}\)/.test(sw), 'notification click must deep-link an open window');
   assert(sw.includes("'#tab=' + encodeURIComponent(tab)"), 'cold-start deep link (#tab= hash) missing from click handler');
