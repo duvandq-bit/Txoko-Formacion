@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.128';
+const VERSION = 'v7.129';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
@@ -137,13 +137,18 @@ self.addEventListener('push', (e) => {
   // taps land in La Terraza even through the v2 fn (title/body/tag only).
   if (!data.data.tab && data.tag === 'chat') data.data.tab = 'chat';
 
+  // El aviso de actualización (tag 'app-update') es lo más discreto que iOS
+  // permite en un push: sin vibración, sin sonido, sin re-alerta — un banner
+  // callado. Los demás avisos (chat, menciones) mantienen su vibración.
+  const _quiet = data.tag === 'app-update';
   const options = {
     body: data.body,
     icon: './icon-192.png',
     badge: './badge-96.png',
     tag: data.tag,
-    renotify: data.renotify,
-    vibrate: data.renotify ? [200, 100, 200, 100, 200] : [200, 100, 200],
+    renotify: _quiet ? false : data.renotify,
+    silent: _quiet,
+    vibrate: _quiet ? [] : (data.renotify ? [200, 100, 200, 100, 200] : [200, 100, 200]),
     requireInteraction: false,
     data: data.data,
     actions: [{ action: 'open', title: data.data.tab === 'chat' ? 'Abrir chat' : 'Abrir' }]
