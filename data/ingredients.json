@@ -2782,6 +2782,14 @@
     "Lácteos"
    ],
    "fuente": "confirmado por propietario"
+  },
+  "mayonesa de citricos": {
+   "nombre": "Mayonesa de cítricos",
+   "alergenos": [
+    "Huevos",
+    "Sulfitos"
+   ],
+   "fuente": "confirmado por propietario"
   }
  }
 }
