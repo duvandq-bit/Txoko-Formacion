@@ -796,6 +796,24 @@ test('update push: SW pre-installs new build on tag app-update', () => {
   assert(/onclick="sendAppUpdatePush\(\)"/.test(html), 'supervisor panel button missing');
 });
 
+test('every dish has a story in ES and EN (journey Chapter I is never empty)', () => {
+  // El Capítulo I del Viaje Inmersivo muestra dish.history; 26 platos lo
+  // tenían vacío (relleno "no disponible"). Redactados desde su ficha + el
+  // producto local canario. Candado: ninguna ficha sin historia, en ningún
+  // idioma — así el Viaje nunca abre con un capítulo hueco.
+  for (const arr of ['DISHES', 'DISHES_EN']) {
+    const i = html.indexOf('const ' + arr + ' = [');
+    const j = html.indexOf('\n];', i);
+    const blk = html.slice(i, j);
+    const starts = [...blk.matchAll(/\{id:(\d+),/g)];
+    for (let k = 0; k < starts.length; k++) {
+      const obj = blk.slice(starts[k].index, k + 1 < starts.length ? starts[k + 1].index : blk.length);
+      const h = obj.match(/history:'((?:[^'\\]|\\.)*)'/);
+      assert(h && h[1].trim().length > 0, `${arr} dish ${starts[k][1]} has no story`);
+    }
+  }
+});
+
 test('dish journey: overlay persists across phases (no white flash)', () => {
   // Reporte del propietario: pantallazos blancos al pulsar "Continuar" en el
   // Viaje Inmersivo. Causa: _djRender destruía el overlay oscuro y creaba uno
