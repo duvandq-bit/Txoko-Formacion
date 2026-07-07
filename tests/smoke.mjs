@@ -721,8 +721,15 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   // herramientas envueltas con toast de error.
   assert(/window\._supLastHash === _hash/.test(html), 'silent refresh must skip re-render when data is unchanged');
   assert(/window\._supLastTouch\|\|0\) < 1200/.test(html), 'refresh must yield to a recent touch');
-  assert(/function _supTool/.test(html) && (html.match(/_supTool\('/g) || []).length >= 6,
+  // 5 herramientas envueltas: carta, analítica, aviso, quiz en vivo, stats LQA.
+  // (La antigua "Stats Protocolo" se retiró: su examen de protocolo backed-by-Supabase
+  // se eliminó al fusionar Protocolo→LQA, dejando el botón sin datos ni handler.)
+  assert(/function _supTool/.test(html) && (html.match(/_supTool\('/g) || []).length >= 5,
     'supervisor tools must go through the error-surfacing wrapper');
+  assert(/function renderSupLqaStats/.test(html),
+    'the LQA Stats supervisor view (renderSupLqaStats) must be defined');
+  assert(!/renderSupProtocolStats/.test(html),
+    'dead renderSupProtocolStats reference must not linger (Protocolo was removed)');
 });
 
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
