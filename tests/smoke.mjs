@@ -662,6 +662,29 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('supervisor panel: realtime employees channel + silent refresh + live pill', () => {
+  // Reporte del propietario: el panel cargaba de la nube UNA vez y quedaba
+  // congelado. Ahora: canal realtime sobre employees (tabla añadida a la
+  // publicación supabase_realtime), refresco silencioso con debounce, sondeo
+  // de respaldo, desconexión al salir, y el refresco NUNCA saca al
+  // supervisor de una subpantalla (guard por presencia de supLivePill).
+  assert(/function _supConnectLive/.test(html) && /table:'employees'/.test(html),
+    'realtime subscription to employees missing');
+  assert(/function _supDisconnect/.test(html), '_supDisconnect missing');
+  const q = html.slice(html.indexOf('function _supQueueRefresh'), html.indexOf('function _supQueueRefresh') + 900);
+  assert(/supLivePill/.test(q) && /renderSupDashboard\(true\)/.test(q) && /4000/.test(q),
+    'silent refresh must be debounced and gated on the dashboard view');
+  assert(/function renderSupDashboard\(silent\)/.test(html), 'renderSupDashboard must accept silent mode');
+  assert(/currentTab==='supervisor' && tab!=='supervisor'/.test(html), 'showTab must tear down the supervisor channel');
+  assert(/currentTab==='supervisor'\) _supDisconnect\(\)/.test(html.replace(/typeof _supDisconnect==='function'\) _supDisconnect/g, "currentTab==='supervisor') _supDisconnect")) || /pagehide/.test(html),
+    'pagehide must drop the supervisor channel');
+  assert(/id="supLivePill"/.test(html) && /_supStampLive/.test(html), 'live pill + timestamp missing');
+  const css = read('styles.css');
+  assert(/\.sup-live-dot\{/.test(css) && /prefers-reduced-motion:reduce\)\{\.sup-live-dot\{animation:none\}/.test(css.replace(/\s+/g, '')),
+    'live dot pulse must respect reduced motion');
+  assert(/\.sup-emp-card\{background:transparent/.test(css), 'employee cards must be de-boxed (ledger rows)');
+});
+
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
   // Reporte del propietario (iOS/Android): la ✕ vivía DENTRO del área con
   // scroll (desaparecía al desplazarse), sin área táctil ni safe-area, y no

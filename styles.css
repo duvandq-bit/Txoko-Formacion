@@ -6208,6 +6208,22 @@ body::after{
   background:linear-gradient(135deg,var(--ink3),var(--ink4));
   display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
 .sup-emp-name{font-weight:600;font-size:.88rem;color:var(--parchment);flex:1;}
+
+/* ── Supervisor 2026: EN VIVO + fichas de-boxed (lenguaje del dashboard) ── */
+.sup-live-pill{display:inline-flex;align-items:center;gap:.4rem;margin-top:.55rem;
+  padding:.28rem .7rem;border:1px solid rgba(136,176,131,.4);border-radius:20px;
+  background:rgba(136,176,131,.1);font-family:'DM Mono',monospace;font-size:.58rem;
+  letter-spacing:.12em;color:#8fc499;position:relative;z-index:2}
+.sup-live-dot{width:7px;height:7px;border-radius:50%;background:#6fd48a;
+  box-shadow:0 0 6px rgba(111,212,138,.8);animation:supLivePulse 2s ease-in-out infinite}
+@keyframes supLivePulse{0%,100%{opacity:1}50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.sup-live-dot{animation:none}}
+/* fichas de empleado: de caja pergamino a filas de libro mayor con hairline */
+.sup-emp-card{background:transparent;border:none;border-bottom:1px solid rgba(28,42,34,.1);
+  border-radius:0;padding:1.05rem .35rem;margin-bottom:0;box-shadow:none}
+.sup-emp-card::before{display:none}
+.sup-emp-card:hover{transform:none;box-shadow:none;background:rgba(196,154,60,.035)}
+
 .sup-emp-level{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);
   background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.1rem .5rem;}
 .sup-emp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.5rem;}
