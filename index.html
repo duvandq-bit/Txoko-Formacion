@@ -1415,7 +1415,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.117';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.118';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16667,6 +16667,8 @@ function _supResetEmployeePin(name) {
 // ocurre con el DASHBOARD a la vista (supLivePill presente) — nunca saca al
 // supervisor de una subpantalla (Enviar aviso, analítica, quiz en vivo).
 let _supChannel = null, _supPollTimer = null, _supRefreshQueued = false, _supLastRefresh = 0;
+document.addEventListener('touchstart', ()=>{ window._supLastTouch = Date.now(); }, {passive:true});
+document.addEventListener('pointerdown', ()=>{ window._supLastTouch = Date.now(); }, {passive:true});
 function _supConnectLive(){
   if(!_supPollTimer) _supPollTimer = setInterval(()=>_supQueueRefresh(), 60000);
   if(_supChannel) return;
@@ -16685,13 +16687,30 @@ function _supQueueRefresh(){
   if(!document.getElementById('supLivePill')) return; // subpantalla abierta
   const wait = Math.max(0, 4000 - (Date.now() - _supLastRefresh));
   _supRefreshQueued = true;
-  setTimeout(()=>{
+  setTimeout(function retry(){
+    // Si hubo un toque hace <1.2 s, esperar: reemplazar el DOM bajo el dedo
+    // se come el tap en iOS (touchstart → click con el nodo ya destruido).
+    if(Date.now() - (window._supLastTouch||0) < 1200){ setTimeout(retry, 1200); return; }
     _supRefreshQueued = false;
     if(currentTab !== 'supervisor' || !supAuthenticated) return;
     if(!document.getElementById('supLivePill')) return;
     _supLastRefresh = Date.now();
     renderSupDashboard(true);
   }, wait);
+}
+// Envoltorio de las herramientas: cualquier excepción se muestra como
+// toast (un botón que "no hace nada" sin pista era indepurable en sala).
+function _supTool(k){
+  try{
+    ({ carta: ()=>renderCartaEditor(),
+       analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
+       aviso: ()=>renderSupNotifSender(window._supEmpNames),
+       quiz: ()=>renderLiveQuizHost(window._supEmpNames),
+       protocolo: ()=>renderSupProtocolStats(),
+       lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
+  }catch(e){
+    if(typeof showToast==='function') showToast('Error: '+e.message, 'warning', 6000);
+  }
 }
 function _supSetSection(s){
   window._supSection = s;
@@ -16750,6 +16769,18 @@ function renderSupDashboard(silent){
     // Expose globally so supervisor action buttons can access them
     window._supAllEmps = allEmps;
     window._supEmpNames = empNames;
+    // El refresco EN VIVO destruía y recreaba TODO el DOM aunque nada
+    // hubiera cambiado — en iOS eso se comía los toques (reporte del
+    // propietario: "los botones no funcionan" con el equipo activo, un
+    // re-render cada ~4 s). Hash de lo que se pinta: sin cambios → solo
+    // se actualiza el sello de hora.
+    const _hash = JSON.stringify(empNames.map(n => {
+      const e = allEmps[n];
+      return [n, e.xp||0, e.streak||0, e.lastStudyDay||'', (e.sessions||[]).length, e.lastLoginTs||'',
+        Object.keys(e.knownDishes||{}).length, JSON.stringify(e.topicScores||{})];
+    }));
+    if(silent && window._supLastHash === _hash){ _supStampLive(); return; }
+    window._supLastHash = _hash;
     if(empNames.length === 0){
       document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
       return;
@@ -16978,27 +17009,27 @@ function renderSupDashboard(silent){
         <div style="border-top:none;margin-top:.25rem;padding-top:.25rem">
           <div class="tunic-divider"><span>${LANG==='en'?'Supervisor Tools':'Herramientas'}</span></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.75rem">
-            <button onclick="renderCartaEditor()" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #c49a3c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+            <button onclick="_supTool('carta')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #c49a3c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#a47a2c);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Edit menu':'Editar carta'}</span>
             </button>
-            <button onclick="renderSupAnalytics(_supAllEmps,_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #4888a0;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+            <button onclick="_supTool('analitica')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #4888a0;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#4888a0,#2e6878);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Analytics':'Analítica'}</span>
             </button>
-            <button onclick="renderSupNotifSender(_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #d4944c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+            <button onclick="_supTool('aviso')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #d4944c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4944c,#b47430);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Send alert':'Enviar aviso'}</span>
             </button>
-            <button onclick="renderLiveQuizHost(_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(77,138,94,.06),rgba(77,138,94,.02));border:1.5px solid rgba(77,138,94,.2);border-left:3px solid #4d8a5e;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+            <button onclick="_supTool('quiz')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(77,138,94,.06),rgba(77,138,94,.02));border:1.5px solid rgba(77,138,94,.2);border-left:3px solid #4d8a5e;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--sage),var(--green-deep));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'Live quiz':'Quiz en vivo'}</span>
             </button>
-            <button onclick="renderSupProtocolStats()" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #7a6aaa;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+            <button onclick="_supTool('protocolo')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #7a6aaa;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#7a6aaa,#5a4a8a);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Protocol Stats':'Stats Protocolo'}</span>
             </button>
-            <button onclick="renderSupLqaStats(_supAllEmps,_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+            <button onclick="_supTool('lqa')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
             </button>

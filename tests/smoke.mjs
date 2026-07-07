@@ -699,6 +699,15 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   const css2 = read('styles.css');
   assert(/\.sup-sec\{display:none\}/.test(css2) && /\.sup-seg button\.active/.test(css2),
     'section visibility CSS missing');
+
+  // iOS se comía los toques: el refresco EN VIVO reemplazaba el DOM cada ~4 s
+  // con el equipo activo, destruyendo el botón bajo el dedo. Tres candados:
+  // hash (sin cambios → solo sello), guard de toque (<1.2 s → esperar) y
+  // herramientas envueltas con toast de error.
+  assert(/window\._supLastHash === _hash/.test(html), 'silent refresh must skip re-render when data is unchanged');
+  assert(/window\._supLastTouch\|\|0\) < 1200/.test(html), 'refresh must yield to a recent touch');
+  assert(/function _supTool/.test(html) && (html.match(/_supTool\('/g) || []).length >= 6,
+    'supervisor tools must go through the error-surfacing wrapper');
 });
 
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
