@@ -2745,6 +2745,28 @@
     "Pescado"
    ],
    "fuente": "certeza culinaria"
+  },
+  "anchoas en salazon": {
+   "nombre": "Anchoas en salazón",
+   "alergenos": [
+    "Pescado"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "boquerones en vinagre": {
+   "nombre": "Boquerones en vinagre",
+   "alergenos": [
+    "Pescado",
+    "Sulfitos"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "helado de crema varios sabores": {
+   "nombre": "Helado de crema (varios sabores)",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "certeza culinaria"
   }
  }
 }
