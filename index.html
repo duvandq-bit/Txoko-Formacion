@@ -1425,7 +1425,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.120';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.121';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1524,16 +1524,39 @@ function _wineImgUrl(wine){
   return WINE_IMG_BASE + _wineSlug(wine.name) + '.webp';
 }
 const _wineImgCache = {};
+// Botella dibujada por tipo — el placeholder era una caja pálida con un
+// icono diminuto ("el diseño es pobre", propietario). Silueta con corcho,
+// hombros, etiqueta y brillo; burbujas si es espumoso.
+function _wineBottleSvg(type, h){
+  const fills = { tinto:'#5e2732', blanco:'#d9c47e', rosado:'#d98fa2', espumoso:'#c9a648', dulce:'#b97f3a' };
+  const fill = fills[type] || fills.tinto;
+  const bubbles = type === 'espumoso'
+    ? '<circle cx="20" cy="26" r="1.6" fill="rgba(228,190,104,.8)"/><circle cx="42" cy="18" r="1.2" fill="rgba(228,190,104,.65)"/><circle cx="36" cy="30" r="1" fill="rgba(228,190,104,.5)"/>'
+    : '';
+  return `<svg width="${Math.round(h*0.42)}" height="${h}" viewBox="0 0 60 160" fill="none" aria-hidden="true">
+    ${bubbles}
+    <rect x="25" y="7" width="10" height="8" rx="1.5" fill="#7a5a3a"/>
+    <path d="M26 15h8v20c0 9 7 13 7 24v84a8 8 0 01-8 8H27a8 8 0 01-8-8V59c0-11 7-15 7-24V15z" fill="${fill}" stroke="rgba(228,190,104,.45)" stroke-width="1.2"/>
+    <path d="M24 52c-2.5 4-5 7-5 14v70" stroke="rgba(255,255,255,.22)" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="21" y="88" width="26" height="26" rx="2.5" fill="rgba(244,237,226,.92)"/>
+    <path d="M34 93l6 8-6 8-6-8z" fill="none" stroke="rgba(164,122,44,.75)" stroke-width="1.1"/>
+    <path d="M25 109h18" stroke="rgba(164,122,44,.4)" stroke-width="1"/>
+  </svg>`;
+}
 function _wineImgHtml(wine, size){
   const cls = size === 'detail' ? 'detail-size' : 'card-size';
   const typeIconsSvg = {blanco:TXKO_ICONS.wBlanco,tinto:TXKO_ICONS.wTinto,rosado:TXKO_ICONS.wRosado,espumoso:TXKO_ICONS.wEspumoso,dulce:TXKO_ICONS.wDulce};
   const icon = typeIconsSvg[wine.type] || TXKO_ICONS.wTinto;
   const url = _wineImgUrl(wine);
-  const placeholder = `<div class="wine-bottle-placeholder"><div class="icon" style="font-size:2rem;line-height:1">${icon}</div><div class="label">${escapeHTML(wine.type||'')}</div></div>`;
+  const _h = size === 'detail' ? 128 : 64;
+  const placeholder = `<div class="wine-bottle-placeholder" style="display:flex;align-items:center;justify-content:center;background:transparent;border:none;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35))">${_wineBottleSvg(wine.type, _h)}</div>`;
+  // El wrap heredaba una caja pálida del CSS — sobre la banda hero oscura
+  // parecía un marco vacío. Transparente inline en ambos tamaños.
+  const _wrapStyle = 'style="background:transparent;border:none;box-shadow:none;height:auto;padding:.4rem 0"';
   if(_wineImgCache[wine.id] === false){
-    return `<div class="wine-bottle-wrap ${cls}">${placeholder}</div>`;
+    return `<div class="wine-bottle-wrap ${cls}" ${_wrapStyle}>${placeholder}</div>`;
   }
-  return `<div class="wine-bottle-wrap ${cls}">
+  return `<div class="wine-bottle-wrap ${cls}" ${_wrapStyle}>
     <img class="wine-bottle-img" src="${url}" alt="${escapeHTML(wine.name)}"
       loading="lazy" decoding="async" fetchpriority="low"
       onerror="_wineImgCache[${wine.id}]=false;this.style.display='none';this.nextElementSibling.style.display='flex'"
@@ -13443,6 +13466,9 @@ function _showWineDetail(id, list, direction){
   const overlay = document.createElement('div');
   overlay.id = 'wineDetailOverlay';
   overlay.className = 'wine-detail-overlay';
+  // Fondo opaco INLINE: con rgba(.97) la tarjeta oscura del dashboard
+  // sangraba por detrás como texto fantasma (reporte del propietario).
+  overlay.style.background = '#f4ede2';
   overlay.innerHTML = `<div class="wine-detail-inner">
     <button onclick="document.getElementById('wineDetailOverlay').remove()" class="wine-detail-back">◇ ${_en?'Back':'Volver'}</button>
 
@@ -13459,19 +13485,20 @@ function _showWineDetail(id, list, direction){
       ${hasNext ? '<span class="wsp-arrow right">▷</span>' : '<span style="width:.6rem;display:inline-block"></span>'}
     </div>` : ''}
 
-    <div class="wc-top" style="margin-bottom:.8rem">
-      <span class="wc-type"><span class="wc-type-dot" style="background:${({blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'})[w.type]||'var(--gold)'}"></span>${typeLabels[w.type]||w.type}</span>
-      <span class="wc-badges">
-        ${w.recommended?'<span class="wc-rec">★ '+(_en?'RECOMMENDED':'RECOMENDADO')+'</span>':''}
-        ${w.vegaSicilia?'<span class="wc-rec" style="color:#8b6914;border-color:rgba(139,105,20,.2);background:rgba(139,105,20,.08)">◆ VEGA SICILIA</span>':''}
-        ${w.kosher?'<span class="wc-rec" style="color:rgba(28,42,34,.55)">✡ KOSHER</span>':''}
-      </span>
+    <div class="wd-hero" style="position:relative;overflow:hidden;background:linear-gradient(155deg,var(--brand-ink) 0%,#2a3530 55%,#18251d 100%);border:1px solid rgba(228,190,104,.25);border-radius:18px;padding:1rem 1.1rem 1.2rem;margin-bottom:1rem;box-shadow:0 10px 30px rgba(28,42,34,.25), inset 0 1px 0 rgba(228,190,104,.12);text-align:center">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%, rgba(228,190,104,.14), transparent 60%);pointer-events:none"></div>
+      <div class="wc-top" style="margin-bottom:.7rem;position:relative">
+        <span class="wc-type" style="color:var(--gold3);border-color:rgba(228,190,104,.35);background:rgba(228,190,104,.08)"><span class="wc-type-dot" style="background:${({blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'})[w.type]||'var(--gold)'}"></span>${typeLabels[w.type]||w.type}</span>
+        <span class="wc-badges">
+          ${w.recommended?'<span class="wc-rec" style="color:var(--gold3);border-color:rgba(228,190,104,.4);background:rgba(228,190,104,.1)">★ '+(_en?'RECOMMENDED':'RECOMENDADO')+'</span>':''}
+          ${w.vegaSicilia?'<span class="wc-rec" style="color:var(--gold3);border-color:rgba(228,190,104,.35);background:rgba(228,190,104,.08)">◆ VEGA SICILIA</span>':''}
+          ${w.kosher?'<span class="wc-rec" style="color:rgba(244,237,226,.7);border-color:rgba(244,237,226,.25)">✡ KOSHER</span>':''}
+        </span>
+      </div>
+      ${_wineImgHtml(w, 'detail')}
+      <div class="wine-detail-title" style="color:#f4edd8;position:relative;text-shadow:0 1px 10px rgba(0,0,0,.35);margin-top:.6rem">${escapeHTML(w.name)}</div>
+      ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.14em;color:rgba(228,190,104,.85);position:relative;margin-top:.2rem">AÑADA ${w.year}</div>`:''}
     </div>
-
-    ${_wineImgHtml(w, 'detail')}
-
-    <div class="wine-detail-title">${escapeHTML(w.name)}</div>
-    ${w.year?`<div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3)">Añada ${w.year}</div>`:''}
 
     <div class="wine-price-box">
       <div>
