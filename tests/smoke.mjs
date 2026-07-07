@@ -721,8 +721,15 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   // herramientas envueltas con toast de error.
   assert(/window\._supLastHash === _hash/.test(html), 'silent refresh must skip re-render when data is unchanged');
   assert(/window\._supLastTouch\|\|0\) < 1200/.test(html), 'refresh must yield to a recent touch');
-  assert(/function _supTool/.test(html) && (html.match(/_supTool\('/g) || []).length >= 6,
+  // 5 herramientas envueltas: carta, analítica, aviso, quiz en vivo, stats LQA.
+  // (La antigua "Stats Protocolo" se retiró: su examen de protocolo backed-by-Supabase
+  // se eliminó al fusionar Protocolo→LQA, dejando el botón sin datos ni handler.)
+  assert(/function _supTool/.test(html) && (html.match(/_supTool\('/g) || []).length >= 5,
     'supervisor tools must go through the error-surfacing wrapper');
+  assert(/function renderSupLqaStats/.test(html),
+    'the LQA Stats supervisor view (renderSupLqaStats) must be defined');
+  assert(!/renderSupProtocolStats/.test(html),
+    'dead renderSupProtocolStats reference must not linger (Protocolo was removed)');
 });
 
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
@@ -796,7 +803,7 @@ test('update push: SW pre-installs new build on tag app-update', () => {
   assert(/onclick="sendAppUpdatePush\(\)"/.test(html), 'supervisor panel button missing');
 });
 
-test('every dish has a story in ES and EN (journey Chapter I is never empty)', () => {
+test('every dish has name, ingredients and story in ES and EN', () => {
   // El Capítulo I del Viaje Inmersivo muestra dish.history; 26 platos lo
   // tenían vacío (relleno "no disponible"). Redactados desde su ficha + el
   // producto local canario. Candado: ninguna ficha sin historia, en ningún
@@ -810,6 +817,13 @@ test('every dish has a story in ES and EN (journey Chapter I is never empty)', (
       const obj = blk.slice(starts[k].index, k + 1 < starts.length ? starts[k + 1].index : blk.length);
       const h = obj.match(/history:'((?:[^'\\]|\\.)*)'/);
       assert(h && h[1].trim().length > 0, `${arr} dish ${starts[k][1]} has no story`);
+      // Los ingredientes se muestran en flashcards/ficha en AMBOS idiomas —
+      // 6 platos los tenían vacíos en EN (reporte del propietario). Nunca
+      // más un plato sin ingredientes, en ningún idioma.
+      const ing = obj.match(/ingredients:'((?:[^'\\]|\\.)*)'/);
+      assert(ing && ing[1].trim().length > 0, `${arr} dish ${starts[k][1]} has no ingredients`);
+      const nm = obj.match(/name:'((?:[^'\\]|\\.)*)'/);
+      assert(nm && nm[1].trim().length > 0, `${arr} dish ${starts[k][1]} has no name`);
     }
   }
 });
@@ -967,6 +981,11 @@ test('app header respects the iOS notch (safe-area inset)', () => {
   assert(/@media \(max-width:520px\)\{\s*\n?\s*\.app-header\{padding-left:\.7rem/.test(css.replace(/\r/g,'')),
     'narrow-screen header compression missing');
   assert(/\.header-uname\{display:none\}/.test(css), 'username must hide on narrow screens (avatar identifies)');
+  // Android estrecho (Galaxy S20 = 360px CSS): "Salir" se cortaba por la
+  // derecha. Tiers de compresión extra a ≤400px y ≤340px; medido en headless:
+  // Salir dentro del ancho a 412/360/320px.
+  assert(/@media \(max-width:400px\)/.test(css) && /@media \(max-width:340px\)/.test(css),
+    'narrow-Android header compression tiers (400px/340px) missing');
 });
 
 test('force-update escape hatch + APP_VERSION synced to the SW', () => {

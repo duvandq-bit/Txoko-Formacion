@@ -1402,10 +1402,29 @@ body::after{
   .app-header #notifBell{min-width:32px!important;min-height:32px!important;padding:4px!important}
   .btn-logout{padding:.35rem .45rem;font-size:.6rem}
 }
-@media (max-width:380px){
-  .app-header{padding-left:.5rem;padding-right:.5rem;gap:.35rem}
-  .header-logo{font-size:.88rem;max-width:26vw}
+@media (max-width:400px){
+  /* Android estrecho (Galaxy S20 = 360px CSS): la fila de botones desbordaba
+     y "Salir" se cortaba. Compresión agresiva del clúster derecho para que
+     TODO quepa con margen hasta 320px. */
+  .app-header{padding-left:.4rem;padding-right:.4rem;gap:.25rem}
+  .header-logo{font-size:.82rem;max-width:22vw;letter-spacing:.06em}
   .header-logo sup{display:none}
+  .header-user{gap:.2rem}
+  .app-header #helpBtn{padding:5px 4px!important;min-width:26px!important}
+  .app-header #appLangEs,.app-header #appLangEn{padding:5px 4px!important}
+  .app-header #pushEnableBtn{padding:4px 4px!important;min-width:26px!important}
+  .app-header #notifBell{min-width:28px!important;min-height:28px!important;padding:3px!important}
+  .header-avatar{width:26px!important;height:26px!important}
+  .btn-logout{padding:.28rem .38rem;font-size:.55rem}
+}
+@media (max-width:340px){
+  /* Móviles muy estrechos (320px): apretón final para que "Salir" no se corte. */
+  .app-header{padding-left:.3rem;padding-right:.3rem;gap:.18rem}
+  .header-logo{font-size:.76rem;max-width:20vw;letter-spacing:.04em}
+  .header-user{gap:.15rem}
+  .app-header #helpBtn{padding:5px 3px!important;min-width:24px!important}
+  .app-header #appLangEs,.app-header #appLangEn{padding:5px 3px!important;font-size:.55rem!important}
+  .btn-logout{padding:.26rem .32rem;font-size:.52rem}
 }
 
 
