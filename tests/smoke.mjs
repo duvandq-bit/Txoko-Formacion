@@ -876,12 +876,27 @@ test('shift change refreshes in place without the fade flicker', () => {
   assert(/function showTab\(tab, instant\)/.test(html), 'showTab must accept an instant flag');
   assert(/if\(instant\)\{[\s\S]{0,120}no-entrance-anim/.test(html), 'instant path must suppress entrance animation');
   assert(/setTimeout\(_doRender, 120\)/.test(html), 'normal tab change keeps its fade');
+  // El recuadro verde (héroe) parpadeaba porque el path instantáneo QUITABA
+  // no-entrance-anim de forma síncrona, y quitar animation:none re-dispara la
+  // animación slideUp del héroe. El fix: dejar la clase puesta (return sin
+  // remove) y retirarla solo en la siguiente navegación real.
+  const stBody = html.slice(html.indexOf('function showTab(tab, instant)'), html.indexOf('function showTab(tab, instant)') + 5200);
+  const _instStart = stBody.indexOf('if(instant){');
+  const instBlock = stBody.slice(_instStart, stBody.indexOf('return;', _instStart) + 7);
+  assert(!/classList\.remove\('no-entrance-anim'\)/.test(instBlock),
+    'instant path must NOT remove no-entrance-anim (removing it re-triggers the hero slideUp = flicker)');
+  assert(/classList\.remove\('no-entrance-anim'\)/.test(stBody),
+    'the non-instant path must clear no-entrance-anim so real navigations animate');
   const ss = html.slice(html.indexOf('function _setStudyShift'), html.indexOf('function _setStudyShift') + 700);
   assert(/showTab\(currentTab, true\)/.test(ss), 'shift change must refresh instantly');
   assert(/_shiftTabs = \{ dashboard:1/.test(ss), 'shift refresh must be limited to shift-dependent tabs');
   const css = read('styles.css');
   assert(/#appContent\.no-entrance-anim [^{]*\{animation:none!important/.test(css.replace(/\s+/g,' ')),
     'no-entrance-anim must disable animations for the instant refresh');
+  // El brillo decorativo del héroe se exime para que no se congele mientras la
+  // clase permanece puesta entre un cambio de turno y la siguiente navegación.
+  assert(/#appContent\.no-entrance-anim \.dash-hero-shine::after\{animation:dashHeroShine/.test(css.replace(/\s+/g,' ')),
+    'hero shine must keep looping while no-entrance-anim lingers');
 });
 
 test('study shift filter: DISH_SERVICE complete + all generators route by shift', () => {
