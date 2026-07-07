@@ -727,6 +727,20 @@ test('notification panel: fixed header, 44px close, mark-all-read', () => {
     'mark-all must persist locally, sync to Supabase and clear the badge');
 });
 
+test('logo taps home + persistent search pill under the nav', () => {
+  // Peticiones del propietario: el logo TXOKO vuelve al inicio (accesible:
+  // role button + Enter/Espacio) y la búsqueda global vive a UN toque bajo
+  // la barra de Inicio (antes estaba escondida dentro del desplegable).
+  const logo = html.slice(html.indexOf('id="headerLogo"') - 40, html.indexOf('id="headerLogo"') + 400);
+  assert(/onclick="showTab\('dashboard'\)"/.test(logo) && /role="button"/.test(logo) && /onkeydown/.test(logo),
+    'header logo must navigate home, accessibly');
+  const pill = html.slice(html.indexOf('id="globalSearchPill"') - 40, html.indexOf('id="globalSearchPill"') + 700);
+  assert(/onclick="openGlobalSearch\(\)"/.test(pill), 'search pill must open the global search');
+  assert(/min-height:40px/.test(pill), 'search pill needs a touch-friendly height');
+  assert(/globalSearchPillLbl/.test(html.slice(html.indexOf('const _gsLbl'), html.indexOf('const _gsLbl') + 600)),
+    'pill label must be localized with the rest');
+});
+
 test('update push: SW pre-installs new build on tag app-update', () => {
   // "¿Qué se necesita para enviar la actualización a los dispositivos?" —
   // el push despierta al SW aunque la app esté cerrada: con tag 'app-update'
