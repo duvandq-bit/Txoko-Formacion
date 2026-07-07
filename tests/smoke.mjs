@@ -796,7 +796,7 @@ test('update push: SW pre-installs new build on tag app-update', () => {
   assert(/onclick="sendAppUpdatePush\(\)"/.test(html), 'supervisor panel button missing');
 });
 
-test('every dish has a story in ES and EN (journey Chapter I is never empty)', () => {
+test('every dish has name, ingredients and story in ES and EN', () => {
   // El Capítulo I del Viaje Inmersivo muestra dish.history; 26 platos lo
   // tenían vacío (relleno "no disponible"). Redactados desde su ficha + el
   // producto local canario. Candado: ninguna ficha sin historia, en ningún
@@ -810,6 +810,13 @@ test('every dish has a story in ES and EN (journey Chapter I is never empty)', (
       const obj = blk.slice(starts[k].index, k + 1 < starts.length ? starts[k + 1].index : blk.length);
       const h = obj.match(/history:'((?:[^'\\]|\\.)*)'/);
       assert(h && h[1].trim().length > 0, `${arr} dish ${starts[k][1]} has no story`);
+      // Los ingredientes se muestran en flashcards/ficha en AMBOS idiomas —
+      // 6 platos los tenían vacíos en EN (reporte del propietario). Nunca
+      // más un plato sin ingredientes, en ningún idioma.
+      const ing = obj.match(/ingredients:'((?:[^'\\]|\\.)*)'/);
+      assert(ing && ing[1].trim().length > 0, `${arr} dish ${starts[k][1]} has no ingredients`);
+      const nm = obj.match(/name:'((?:[^'\\]|\\.)*)'/);
+      assert(nm && nm[1].trim().length > 0, `${arr} dish ${starts[k][1]} has no name`);
     }
   }
 });
