@@ -796,6 +796,23 @@ test('update push: SW pre-installs new build on tag app-update', () => {
   assert(/onclick="sendAppUpdatePush\(\)"/.test(html), 'supervisor panel button missing');
 });
 
+test('dish journey: overlay persists across phases (no white flash)', () => {
+  // Reporte del propietario: pantallazos blancos al pulsar "Continuar" en el
+  // Viaje Inmersivo. Causa: _djRender destruía el overlay oscuro y creaba uno
+  // nuevo en cada fase → se veía el fondo claro del dashboard entre medias, y
+  // el fade de 0.4s se repetía. Fix: el overlay se crea UNA vez; los cambios
+  // de fase solo refrescan el contenedor interior.
+  const dj = html.slice(html.indexOf('function _djRender'), html.indexOf('function _djNext'));
+  assert(/const existing = document\.getElementById\('djOverlay'\);/.test(dj), '_djRender must look for existing overlay');
+  assert(/cont\.innerHTML = containerHtml;\s*return;/.test(dj),
+    'phase change must update the container in place and return (never recreate the overlay)');
+  // La destrucción incondicional del overlay (el bug) no debe volver.
+  assert(!/const existing = document\.getElementById\('djOverlay'\);\s*\n\s*if\(existing\) existing\.remove\(\);\s*\n\s*const overlay/.test(dj),
+    'unconditional overlay remove+recreate is back — the flash bug returns');
+  assert(/overlay\.innerHTML = `<div class="dj-container">\$\{containerHtml\}<\/div>`/.test(dj),
+    'first open must wrap the container once');
+});
+
 test('study shift filter: DISH_SERVICE complete + all generators route by shift', () => {
   // Petición del propietario: estudiar los platos de almuerzo con los de
   // almuerzo y los de cena con los de cena, en TODO (exámenes, flashcards,
