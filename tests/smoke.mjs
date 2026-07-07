@@ -846,7 +846,7 @@ test('audit fixes: exam empty-pool guard + journey/txoko option de-dup', () => {
   assert(/realIngPool\.length >= 3/.test(dj) && /_seenIng\.has\(il\)/.test(dj),
     'journey Q3 must require 3 unique real ingredients');
   // Guard 3 — Juego Txoko: dedupe por display truncado, no por texto completo:
-  const tx = html.slice(html.indexOf('const seenDisplay=new Set'), html.indexOf('const seenDisplay=new Set') + 500);
+  const tx = html.slice(html.indexOf('const seenDisplay=new Set'), html.indexOf('const seenDisplay=new Set') + 700);
   assert(/seenDisplay\.has\(dn\)/.test(tx), 'txoko game must de-dup on the truncated display');
 });
 
@@ -934,6 +934,76 @@ test('study shift filter: DISH_SERVICE complete + all generators route by shift'
   assert(/\['a',[^\]]*\], \['c',[^\]]*\], \['todo',/.test(rsb) && /onclick="_setStudyShift/.test(rsb),
     'shift bar must offer Lunch/Dinner/All');
   assert(/localStorage\.setItem\('txoko_shift'/.test(html), 'shift choice must persist');
+});
+
+test('study shift filter: subject AND distractor pools route by shift (no wrong-shift leaks)', () => {
+  // Regresión (jul 2026): el propietario detectó que, con turno almuerzo/cena,
+  // algunos generadores mostraban platos del OTRO turno como opción-distractor
+  // o como sugerencia. El sujeto ya iba filtrado; el pool de distractores no.
+  // Guards estructurales por cada fuga corregida + guard empírico en txBuildQuestion.
+
+  // #1 txBuildQuestion — distractores por turno con fallback seguro (≥3)
+  assert(/const _wpShift=_shiftDishes\(_wpBase\)/.test(html) &&
+    /const wrongPool=_lqaShuffle\(_wpShift\.length>=3\?_wpShift:_wpBase\)/.test(html),
+    'txBuildQuestion distractor pool must be shift-filtered with a safe fallback');
+  // #2 Dish Journey — sugerencia de próximo plato por turno con fallback
+  assert(/const _sameCatSh = _shiftDishes\(_sameCatAll\)/.test(html) &&
+    /const _anyUnSh   = _shiftDishes\(_anyUnAll\)/.test(html),
+    'journey next-dish suggestion must be shift-filtered with a fallback');
+  // #3 renderRepasoTopic — lista por categoría por turno + estado vacío
+  assert(/const _repAll=DISHES\.filter\(d=>d\.cat===repasoCat\);\s*\n\s*const dishes=_shiftDishes\(_repAll\)/.test(html),
+    'renderRepasoTopic per-category list must be shift-filtered');
+  assert(/\$\{dishes\.length\?rows:/.test(html),
+    'renderRepasoTopic must show an empty state when the shift leaves no dishes');
+  // #4 Live Quiz Host — pool de sujetos por turno con fallback a ≥5
+  assert(/const _lqShift = _shiftDishes\(DISHES\);\s*\n\s*const pool = _lqaShuffle\(_lqShift\.length>=5 \? _lqShift : DISHES\)\.slice\(0,5\)/.test(html),
+    'Live Quiz host subject pool must be shift-filtered with a fallback');
+  // #5 Servicio Fantasma — los fallbacks mantienen el turno antes de relajarlo
+  assert(/if\(!safe\.length\) safe = DISHES\.filter\(function\(d\)\{ return _shiftDishOk\(d\) && _sfOfr\(d\)/.test(html),
+    'Ghost service "safe" fallback must keep shift before dropping it');
+  assert(/if\(!dangerDish\.length\) dangerDish = DISHES\.filter\(function\(d\)\{return _shiftDishOk\(d\) && _sfOfr\(d\)/.test(html),
+    'Ghost service "danger" fallback must keep shift before dropping it');
+  assert(/var safeAlt = safeDishes\.length \? safeDishes\[0\] : \(DISHES\.find\(function\(d\)\{return _shiftDishOk\(d\)/.test(html),
+    'Ghost service "safeAlt" fallback must keep shift before dropping it');
+
+  // Guard empírico: extraer txBuildQuestion real y comprobar que en modo a/c
+  // ninguna opción-distractor pertenece EXCLUSIVAMENTE a platos de otro turno.
+  const cut = (a, b) => { const i = html.indexOf(a); assert(i !== -1, 'missing ' + a); return html.slice(i, html.indexOf(b, i) + b.length); };
+  const fn = (name) => { const sig = 'function ' + name + '('; const i = html.indexOf(sig); let depth = 0, j = html.indexOf('{', i), k = j;
+    while (true) { const ch = html[k]; if (ch === '{') depth++; else if (ch === '}') { depth--; if (depth === 0) return html.slice(i, k + 1); } k++; } };
+  const dishesSrc = cut('const DISHES = [', '\n];');
+  const svcSrc = cut('const DISH_SERVICE = {', '};') + ';';
+  const helpers = html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'));
+  const stub = 'function _renderShiftBar(){} var localStorage={getItem:()=>null,setItem:()=>{}};'
+    + 'var LANG="es"; function getDish(d){return d;} function allergenLocal(a){return a;} function t(k){return k;}'
+    + 'function _isDishQuizableForTopic(d,tk){ if(d.cat===\'Guarniciones y Salsas\') return tk===\'history\'; return true; }'
+    + 'var DISHES_EN=[]; var TOPICS=[{key:"allergens",label:"al"},{key:"ingredients",label:"in"},{key:"history",label:"hi"}];'
+    + 'var WAITER_MSGS={allergens:[n=>n],ingredients:[n=>n],history:[n=>n]};';
+  const M = new Function(stub + dishesSrc + svcSrc + helpers + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion') // eslint-disable-line no-new-func
+    + 'return {DISHES, DISH_SERVICE, txBuildQuestion, txGetAnswer, txTruncate, txNorm, setShift:(s)=>{_studyShift=s;}};')();
+  const svc = M.DISH_SERVICE;
+  const optDishes = (optText, shift) => {
+    const on = M.txNorm(optText); const res = [];
+    for (const d of M.DISHES) for (const tk of ['allergens', 'ingredients', 'history']) {
+      const raw = M.txGetAnswer(d, tk); if (!raw) continue;
+      const disp = (tk === 'ingredients' || tk === 'history') ? M.txTruncate(raw, 90) : raw;
+      if (M.txNorm(disp) === on) { res.push(d); break; }
+    }
+    return res;
+  };
+  for (const shift of ['a', 'c']) {
+    M.setShift(shift);
+    let n = 0, leak = 0;
+    for (let i = 0; i < 1500; i++) {
+      const q = M.txBuildQuestion(); if (!q) continue; n++;
+      for (const o of (q.choices || [])) {
+        const cand = optDishes(o, shift); if (!cand.length) continue;
+        if (cand.every(d => { const s = svc[d.id]; return s !== 'ambos' && s !== shift; })) leak++;
+      }
+    }
+    assert(n > 1000, `txBuildQuestion produced too few questions in shift ${shift} (${n}) — over-filtered?`);
+    assert(leak === 0, `txBuildQuestion leaked ${leak} wrong-shift distractor options in shift ${shift}`);
+  }
 });
 
 test('login fits one phone screen; Share/Update buttons prominent', () => {

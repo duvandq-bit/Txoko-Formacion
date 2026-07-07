@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.138';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.139';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3607,8 +3607,14 @@ function _djPhaseMastery(dish, dd, _en){
 
   // Next dish suggestion — prefer same category not yet mastered, fall back to any unmastered
   const _jmAll = (getEmp(currentUser) && getEmp(currentUser).journeyMastered) || {};
-  const _sameCat = DISHES.filter(x => x.cat === dish.cat && x.id !== dish.id && !_jmAll[x.id]);
-  const _anyUn  = DISHES.filter(x => x.id !== dish.id && !_jmAll[x.id]);
+  // Sugerencia de próximo plato: respeta el turno de estudio activo (a/c);
+  // si el turno se queda sin candidatos, cae al pool completo.
+  const _sameCatAll = DISHES.filter(x => x.cat === dish.cat && x.id !== dish.id && !_jmAll[x.id]);
+  const _anyUnAll  = DISHES.filter(x => x.id !== dish.id && !_jmAll[x.id]);
+  const _sameCatSh = _shiftDishes(_sameCatAll);
+  const _anyUnSh   = _shiftDishes(_anyUnAll);
+  const _sameCat = _sameCatSh.length ? _sameCatSh : _sameCatAll;
+  const _anyUn   = _anyUnSh.length   ? _anyUnSh   : _anyUnAll;
   const _nextDish = _sameCat[Math.floor(Math.random()*_sameCat.length)] || _anyUn[Math.floor(Math.random()*_anyUn.length)] || null;
   const _nextDd = _nextDish ? getDish(_nextDish) : null;
   const nextHtml = _nextDish ? `
@@ -6282,10 +6288,12 @@ function _sfGenerateQuestions(count){
       // (solo vegetarianos) como distractor, en una pregunta de entrantes.
       var _sfOfr = function(d){ return (typeof _simOfferable==='function') ? _simOfferable(d) : true; };
       var safe = DISHES.filter(function(d){ return _shiftDishOk(d) && d.cat==='Entrantes' && _sfOfr(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id; });
+      if(!safe.length) safe = DISHES.filter(function(d){ return _shiftDishOk(d) && _sfOfr(d) && !(d.allergens||[]).includes(allergen); });
       if(!safe.length) safe = DISHES.filter(function(d){ return _sfOfr(d) && !(d.allergens||[]).includes(allergen); });
       var safeDish = safe.length ? safe[Math.floor(Math.random()*safe.length)] : null;
       var safeName = safeDish ? ((LANG==='en')?((DISHES_EN.find(function(d2){return d2.id===safeDish.id;})||{}).name||safeDish.name):safeDish.name) : 'Ensalada';
       var dangerDish = DISHES.filter(function(d){return _shiftDishOk(d) && d.cat==='Entrantes' && _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
+      if(!dangerDish.length) dangerDish = DISHES.filter(function(d){return _shiftDishOk(d) && _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
       if(!dangerDish.length) dangerDish = DISHES.filter(function(d){return _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
       var danger1 = dangerDish.length ? dangerDish[Math.floor(Math.random()*dangerDish.length)] : dish;
       var danger2 = dangerDish.length>1 ? dangerDish[(Math.floor(Math.random()*dangerDish.length)+1)%dangerDish.length] : dish;
@@ -6338,7 +6346,7 @@ function _sfGenerateQuestions(count){
     } else if(sc.type==='alternativa'){
       var _sfKid = function(d){ return d.cat!=='Vegetariano' && (typeof _simIsSideNamed!=='function' || !_simIsSideNamed(d)); };
       var safeDishes = DISHES.filter(function(d){return _shiftDishOk(d) && d.cat===dish.cat && _sfKid(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id;});
-      var safeAlt = safeDishes.length ? safeDishes[0] : DISHES.find(function(d){return _sfKid(d) && !(d.allergens||[]).includes(allergen);});
+      var safeAlt = safeDishes.length ? safeDishes[0] : (DISHES.find(function(d){return _shiftDishOk(d) && _sfKid(d) && !(d.allergens||[]).includes(allergen);}) || DISHES.find(function(d){return _sfKid(d) && !(d.allergens||[]).includes(allergen);}));
       var safeAltName = safeAlt ? safeAlt.name : 'Ensalada de temporada';
       q.options = [
         (LANG==='en'?'I suggest "'+safeAltName+'", free of '+allergen:'Sugiero "'+safeAltName+'", libre de '+allergen),
@@ -15958,7 +15966,10 @@ function renderRepasoTopic(){
   if(!repasoCat){ repasoView='cats'; return renderRepasoCats(); }
   const emp=getEmp(currentUser);
   const known=emp.knownDishes||{};
-  const dishes=DISHES.filter(d=>d.cat===repasoCat);
+  // El repaso por categoría respeta el turno de estudio activo (a/c). Si no hay
+  // platos de este turno en la categoría, se muestra un estado vacío limpio.
+  const _repAll=DISHES.filter(d=>d.cat===repasoCat);
+  const dishes=_shiftDishes(_repAll);
   const topic=TOPICS.find(t=>t.key===repasoTopic)||TOPICS[0];
 
   const pills=TOPICS.map(tp=>`<button class="topic-pill${tp.key===repasoTopic?' active':''}" onclick="changeRepasoTopic('${tp.key}')">${tp.label}</button>`).join('');
@@ -15998,7 +16009,7 @@ function renderRepasoTopic(){
     <button class="btn-back" onclick="repasoView='cats';renderRepaso()">${t('back')}</button>
     <div class="section-eyebrow">${CAT_ICONS[repasoCat]} ${catLocal(repasoCat)}</div>
     <div class="topic-pills">${pills}</div>
-    <div class="repaso-list">${rows}</div>
+    <div class="repaso-list">${dishes.length?rows:`<div style="text-align:center;padding:2.2rem 1rem;color:var(--parch3);font-family:'Quicksand',sans-serif;font-size:.82rem;line-height:1.5">${LANG==='en'?'No dishes from the selected service in this category. Change the shift from the top bar to see them.':'No hay platos de este turno en esta categoría. Cambia el turno en la barra superior para verlos.'}</div>`}</div>
   `;
 }
 
@@ -17940,7 +17951,11 @@ function renderLiveQuizHost(empNames){
   // Build 5 random questions
   // F-P2-3 + F-P2-5: Fisher-Yates instead of biased Math.random()-.5 sort.
   // Also avoids mutating the global DISHES array, which the previous .sort() did in place.
-  const pool = _lqaShuffle(DISHES).slice(0,5);
+  // El anfitrión del Live Quiz respeta su turno de estudio activo (a/c); si el
+  // turno deja menos de 5 platos, se completa con el pool general para no quedar
+  // corto de preguntas.
+  const _lqShift = _shiftDishes(DISHES);
+  const pool = _lqaShuffle(_lqShift.length>=5 ? _lqShift : DISHES).slice(0,5);
   const questions = pool.map(d => {
     const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
     const correct = (topic.a(d)||'').trim();
@@ -21965,7 +21980,10 @@ function txBuildQuestion(){
   const wrongDisplays=[];
   const wrongNorms=new Set([correctAnswer]);
   const seenDisplay=new Set([txNorm(correctDisplay)]);
-  const wrongPool=_lqaShuffle(DISHES.filter(x=>x.id!==chosenDish.id));
+  // Distractores por turno (a/c); fallback al pool completo si <3.
+  const _wpBase=DISHES.filter(x=>x.id!==chosenDish.id);
+  const _wpShift=_shiftDishes(_wpBase);
+  const wrongPool=_lqaShuffle(_wpShift.length>=3?_wpShift:_wpBase);
 
   for(const o of wrongPool){
     if(wrongDisplays.length>=3) break;
