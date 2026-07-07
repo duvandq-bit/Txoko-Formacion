@@ -5729,7 +5729,8 @@ body::after{
 /* ── Chips TUNIC v4 — paleta restringida, solo gold + parchment ── */
 .wine-similar-card-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.35rem;align-items:center}
 .wine-similar-card-chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:500;padding:.22rem .55rem;border-radius:10px;background:transparent;border:1px solid rgba(196,154,60,.28);color:#5b461c;letter-spacing:.01em;white-space:nowrap;line-height:1.2;transition:all .15s}
-.wine-similar-card-chip .chip-ico{font-size:.72rem;opacity:.7;line-height:1;color:#a08b56}
+.wine-similar-card-chip .chip-ico{font-size:.72rem;opacity:.8;line-height:1;color:#a08b56;display:inline-flex;align-items:center}
+.wine-similar-card-chip .chip-ico svg{display:block}
 /* Tres niveles de jerarquía gold — sin colores divergentes */
 .wine-similar-card-chip.c-gold-strong{border-color:rgba(196,154,60,.55);background:rgba(196,154,60,.07);color:#4a3712;font-weight:600}
 .wine-similar-card-chip.c-grape{border-color:rgba(196,154,60,.45);color:#5b461c;font-weight:600}

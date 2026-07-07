@@ -741,6 +741,12 @@ test('wine detail: opaque overlay, dark hero band, SVG bottle by type', () => {
   assert(/var\(--brand-ink\)/.test(hero), 'hero band must use the brand token background');
   assert(/background:transparent;border:none;box-shadow:none/.test(html.slice(html.indexOf('function _wineImgHtml'), html.indexOf('function _wineImgHtml') + 1600)),
     'bottle wrap must be transparent (no pale box on the dark band)');
+
+  // Los chips de "Vinos similares" llevaban emojis (🍇, 🛢) — fuera:
+  // micro-SVGs monolínea con currentColor.
+  assert(/CHIP_ICO_GRAPE/.test(html) && /CHIP_ICO_TANK/.test(html), 'chip SVG icons missing');
+  const chips = html.slice(html.indexOf('function _consolidateChips'), html.indexOf('function _renderSimilarWinesSection'));
+  assert(!/[\u{1F347}\u{1F6E2}]/u.test(chips), 'emoji found in similar-wine chips — banned');
 });
 
 test('logo taps home + persistent search pill under the nav', () => {
