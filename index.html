@@ -1423,7 +1423,13 @@ function _setStudyShift(s){
   _studyShift = s;
   try { localStorage.setItem('txoko_shift', s); } catch(_){}
   if(typeof _renderShiftBar === 'function') _renderShiftBar();
-  if(typeof currentTab !== 'undefined' && typeof showTab === 'function') showTab(currentTab);
+  // Refresco INSTANTÁNEO (sin parpadeo) solo de las pantallas cuyo contenido
+  // depende del turno; el resto no se re-renderiza — el nuevo turno se aplica
+  // al abrir cualquier actividad.
+  const _shiftTabs = { dashboard:1, aprender:1, flashcards:1, repaso:1, smart:1 };
+  if(typeof currentTab !== 'undefined' && _shiftTabs[currentTab] && typeof showTab === 'function'){
+    showTab(currentTab, true);
+  }
 }
 
 function computeDishAllergens(dishId){
@@ -1465,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.133';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.134';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7809,7 +7815,7 @@ document.addEventListener('keydown', function(e){
   }
 });
 
-function showTab(tab){
+function showTab(tab, instant){
   // Tear down the chat realtime channel + presence when navigating away, so we
   // don't leak the socket or leave a stale "online" marker for this user.
   if(currentTab==='chat' && tab!=='chat'){
@@ -7845,27 +7851,33 @@ function showTab(tab){
   const _navDD = document.getElementById('mainNavDD');
   if(_navDD) _navDD.classList.remove('open');
   const c=document.getElementById('appContent');
-  c.style.opacity='0';
-  c.style.transform='translateY(-5px)';
-  c.style.transition='opacity .12s ease, transform .12s ease';
-  setTimeout(()=>{
+  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
     c.style.opacity='1';
     c.style.transform='translateY(0)';
-    try {
-      // Route sub-tabs through their parent so the sub-tab bar is always rendered
-      const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
-      renderMap[tab]();
-    } catch(e) {
+    try { renderMap[tab](); }
+    catch(e) {
       const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+escapeHtml(e.stack)+'</pre>' : '';
       c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+escapeHtml(tab)+':</b><br>'+escapeHtml(e.message)+_stackHtml+'</div>';
       console.error('showTab error:', e);
     }
-    c.classList.remove('tab-entering');
+    if(!instant){ c.classList.remove('tab-entering'); void c.offsetWidth; c.classList.add('tab-entering'); }
+  };
+  // instant: refresco en el sitio SIN fundido ni re-animación de entrada
+  // (cambio de turno) — evita el parpadeo de re-renderizar la misma pantalla.
+  if(instant){
+    c.classList.add('no-entrance-anim');
+    _doRender();
     void c.offsetWidth;
-    c.classList.add('tab-entering');
-  }, 120);
+    c.classList.remove('no-entrance-anim');
+    return;
+  }
+  c.style.opacity='0';
+  c.style.transform='translateY(-5px)';
+  c.style.transition='opacity .12s ease, transform .12s ease';
+  setTimeout(_doRender, 120);
 }
 
 // ═══ SUB-TAB HELPERS ═══

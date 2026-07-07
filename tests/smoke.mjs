@@ -853,6 +853,23 @@ test('dish journey: overlay persists across phases (no white flash)', () => {
     'first open must wrap the container once');
 });
 
+test('shift change refreshes in place without the fade flicker', () => {
+  // Reporte del propietario: cambiar de turno hacía parpadear el dashboard.
+  // Causa: _setStudyShift llamaba a showTab(currentTab), que hace un fundido
+  // de salida a blanco (120ms) + re-anima la entrada. Fix: showTab(tab, true)
+  // refresca en el sitio, sin fundido ni re-entrada, y solo en las pantallas
+  // que dependen del turno.
+  assert(/function showTab\(tab, instant\)/.test(html), 'showTab must accept an instant flag');
+  assert(/if\(instant\)\{[\s\S]{0,120}no-entrance-anim/.test(html), 'instant path must suppress entrance animation');
+  assert(/setTimeout\(_doRender, 120\)/.test(html), 'normal tab change keeps its fade');
+  const ss = html.slice(html.indexOf('function _setStudyShift'), html.indexOf('function _setStudyShift') + 700);
+  assert(/showTab\(currentTab, true\)/.test(ss), 'shift change must refresh instantly');
+  assert(/_shiftTabs = \{ dashboard:1/.test(ss), 'shift refresh must be limited to shift-dependent tabs');
+  const css = read('styles.css');
+  assert(/#appContent\.no-entrance-anim [^{]*\{animation:none!important/.test(css.replace(/\s+/g,' ')),
+    'no-entrance-anim must disable animations for the instant refresh');
+});
+
 test('study shift filter: DISH_SERVICE complete + all generators route by shift', () => {
   // Petición del propietario: estudiar los platos de almuerzo con los de
   // almuerzo y los de cena con los de cena, en TODO (exámenes, flashcards,

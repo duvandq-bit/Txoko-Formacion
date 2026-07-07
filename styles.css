@@ -1086,6 +1086,8 @@ body::after{
 /* Card entrance animation */
 @keyframes cardSlideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .card-animate{animation:cardSlideUp .4s cubic-bezier(.22,1,.36,1) both}
+/* Refresco instantáneo (cambio de turno): sin animación de entrada → sin parpadeo */
+#appContent.no-entrance-anim, #appContent.no-entrance-anim *, #appContent.no-entrance-anim *::before, #appContent.no-entrance-anim *::after{animation:none!important;transition:none!important}
 .card-animate:nth-child(1){animation-delay:.05s}
 .card-animate:nth-child(2){animation-delay:.1s}
 .card-animate:nth-child(3){animation-delay:.15s}
