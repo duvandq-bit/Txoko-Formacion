@@ -662,6 +662,23 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('notification panel: fixed header, 44px close, mark-all-read', () => {
+  // Reporte del propietario (iOS/Android): la ✕ vivía DENTRO del área con
+  // scroll (desaparecía al desplazarse), sin área táctil ni safe-area, y no
+  // existía "marcar todas como leídas".
+  const p = html.slice(html.indexOf('async function renderNotifPanel'), html.indexOf('async function markNotifRead'));
+  assert(/flex-direction:column/.test(p) && /flex-shrink:0/.test(p) && /id="notifList"[^>]*flex:1;overflow-y:auto/.test(p),
+    'panel header must be fixed with only the list scrolling');
+  assert(/min-width:44px;min-height:44px/.test(p), 'close button needs a 44px touch target');
+  assert(/env\(safe-area-inset-top/.test(p), 'panel header must respect the notch');
+  assert(/min\(340px,86vw\)/.test(p), 'drawer must always leave a tappable backdrop strip');
+  assert(/markAllNotifsRead\(\)/.test(p) && /function markAllNotifsRead/.test(html),
+    'mark-all-read button/function missing');
+  const f = html.slice(html.indexOf('async function markAllNotifsRead'), html.indexOf('async function markAllNotifsRead') + 1200);
+  assert(/readNotifIds/.test(f) && /Promise\.allSettled/.test(f) && /notifBadge/.test(f),
+    'mark-all must persist locally, sync to Supabase and clear the badge');
+});
+
 test('update push: SW pre-installs new build on tag app-update', () => {
   // "¿Qué se necesita para enviar la actualización a los dispositivos?" —
   // el push despierta al SW aunque la app esté cerrada: con tag 'app-update'
