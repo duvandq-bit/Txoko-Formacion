@@ -814,6 +814,28 @@ test('every dish has a story in ES and EN (journey Chapter I is never empty)', (
   }
 });
 
+test('audit fixes: exam empty-pool guard + journey/txoko option de-dup', () => {
+  // Auditoría jul 2026 (55k preguntas ejecutadas). Tres arreglos de robustez:
+  // 1) el Examen crasheaba con pool vacío (categoría mono-turno en el turno
+  //    contrario — Hamburguesas en Cena — o Guarniciones + tema≠historia);
+  // 2) el quiz del Viaje daba opciones duplicadas (ingredientes repetidos) y
+  //    3 opciones (Chateaubriand: su nombre largo no cabe);
+  // 3) el Juego Txoko duplicaba opciones al truncar el display a 90 car.
+  // Guard 1 — Examen protege el pool vacío en vez de pintar roto:
+  const se = html.slice(html.indexOf('function startExam'), html.indexOf('function renderExamQuestion'));
+  assert(/if\(validQuestions\.length === 0\)\{/.test(se), 'startExam must guard empty pool');
+  assert(/renderExam\(\);\s*\n\s*return;/.test(se), 'startExam must return to setup on empty pool');
+  const rq = html.slice(html.indexOf('function renderExamQuestion'), html.indexOf('function renderExamQuestion') + 400);
+  assert(/!examDishes\[examIndex\]/.test(rq), 'renderExamQuestion must guard missing question');
+  // Guard 2 — Viaje: pool de ingredientes reales ÚNICOS, exige 3:
+  const dj = html.slice(html.indexOf('const _seenIng = new Set()'), html.indexOf('const _seenIng = new Set()') + 700);
+  assert(/realIngPool\.length >= 3/.test(dj) && /_seenIng\.has\(il\)/.test(dj),
+    'journey Q3 must require 3 unique real ingredients');
+  // Guard 3 — Juego Txoko: dedupe por display truncado, no por texto completo:
+  const tx = html.slice(html.indexOf('const seenDisplay=new Set'), html.indexOf('const seenDisplay=new Set') + 500);
+  assert(/seenDisplay\.has\(dn\)/.test(tx), 'txoko game must de-dup on the truncated display');
+});
+
 test('dish journey: overlay persists across phases (no white flash)', () => {
   // Reporte del propietario: pantallazos blancos al pulsar "Continuar" en el
   // Viaje Inmersivo. Causa: _djRender destruía el overlay oscuro y creaba uno
