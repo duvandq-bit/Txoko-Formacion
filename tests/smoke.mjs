@@ -839,6 +839,11 @@ test('force-update escape hatch + APP_VERSION synced to the SW', () => {
   const swv = read('sw.js').match(/const VERSION = 'v([\d.]+)';/)[1];
   const appv = html.match(/const APP_VERSION='([\d.]+)'/)[1];
   assert(swv === appv, `APP_VERSION (${appv}) must match sw.js VERSION (${swv}) — bump both together`);
+
+  // El botón también avisa si el servidor tiene versión más nueva que la
+  // cacheada (fetch de sw.js con no-store y comparación).
+  const scv = html.slice(html.indexOf('_showCachedVersion'), html.indexOf('_showCachedVersion') + 1600);
+  assert(/cache: 'no-store'/.test(scv) && /!== local/.test(scv), 'update button must detect a newer published version');
 });
 
 test('ghost inactivity interceptor stays dead: no callers + kill-switch', () => {
