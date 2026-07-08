@@ -5637,14 +5637,17 @@ body::after{
 .ruleta-back:hover{background:rgba(182,161,105,.08)}
 
 /* Unified "back to games" control — SAME look, position and behaviour on every
-   game screen (Duelo, Ruleta, Mr. Shoesmith). A gold enamel pill reads clearly
-   on both the light parchment screens and the dark rubber-hose ones. */
-.game-back{display:inline-flex;align-items:center;gap:.35rem;min-height:44px;padding:.5rem 1rem;
-  border-radius:12px;border:2px solid #1c2a22;background:linear-gradient(180deg,#e8c46a,var(--gold));
-  color:#241a12;font-family:'Cinzel',serif;font-weight:800;font-size:.78rem;letter-spacing:.03em;
-  cursor:pointer;margin-bottom:1rem;box-shadow:0 3px 0 rgba(28,20,10,.5);
-  -webkit-tap-highlight-color:transparent;transition:transform .06s,box-shadow .06s}
-.game-back:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(28,20,10,.5)}
+   game screen (Duelo, Ruleta, Mr. Shoesmith). A slim TUNIC-style pill: dark
+   green with soft gold text + hairline gold border. Reads cleanly on both the
+   light parchment screens and the dark ones, and stays discreet (it's a
+   secondary control, not a call to action). */
+.game-back{display:inline-flex;align-items:center;gap:.4rem;min-height:40px;padding:.45rem .95rem;
+  border-radius:100px;border:1px solid rgba(196,154,60,.5);
+  background:linear-gradient(180deg,#31413a,#263029);color:#ecdca6;
+  font-family:'Cinzel',serif;font-weight:600;font-size:.74rem;letter-spacing:.05em;
+  cursor:pointer;margin:0 0 1rem;box-shadow:0 2px 7px rgba(0,0,0,.22);
+  -webkit-tap-highlight-color:transparent;transition:opacity .18s,transform .06s}
+.game-back:active{opacity:.75;transform:translateY(1px)}
 .ruleta-score{display:flex;justify-content:center;gap:1.2rem;margin:.6rem 0;font-size:.65rem;color:rgba(28,42,34,.4)}
 .ruleta-score-item{display:flex;flex-direction:column;align-items:center;gap:.1rem}
 .ruleta-score-num{font-size:1.1rem;font-weight:700;color:var(--gold)}
