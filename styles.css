@@ -6775,11 +6775,14 @@ body::after{
   text-align:center;letter-spacing:.02em}
 .et-order em{color:var(--et-gold);font-style:normal}
 
+/* Floating joystick: the base disc used to be a big dark circle that covered
+   the player (owner disliked it). Now the base is invisible — only a small,
+   subtle translucent thumb follows the finger for light touch feedback. */
 #etJoy{position:absolute;z-index:6;width:120px;height:120px;border-radius:50%;
-  border:3px solid rgba(244,228,193,.5);background:radial-gradient(circle,rgba(20,13,5,.25),rgba(20,13,5,.5));
-  box-shadow:0 0 0 2px rgba(20,13,5,.35), inset 0 0 20px rgba(0,0,0,.3);display:none;pointer-events:none}
-#etJoyk{position:absolute;width:54px;height:54px;border-radius:50%;left:33px;top:33px;
-  background:radial-gradient(circle at 40% 35%,var(--et-paper),var(--et-sepia));border:3px solid var(--et-ink);box-shadow:0 3px 10px rgba(0,0,0,.6)}
+  border:none;background:none;box-shadow:none;display:none;pointer-events:none}
+#etJoyk{position:absolute;width:38px;height:38px;border-radius:50%;left:41px;top:41px;
+  background:radial-gradient(circle at 40% 35%,rgba(244,228,193,.55),rgba(244,228,193,.18));
+  border:2px solid rgba(244,228,193,.45);box-shadow:0 1px 4px rgba(0,0,0,.25)}
 
 .et-screen{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:24px;gap:14px;

@@ -2697,6 +2697,21 @@ test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spaw
   assert(/#etLow\.on\{[^}]*etLowPulse/.test(css) && /@keyframes etLowPulse/.test(css), 'styles.css must define the pulsing low-HP danger vignette');
 });
 
+test('Camarero Survivors UX: invisible joystick base + plain-language upgrade descriptions', () => {
+  // Petición del propietario: no mostrar el círculo oscuro del joystick al
+  // mover, y una breve explicación de lo que hace cada habilidad al escoger.
+  const css = read('styles.css');
+  const joy = css.slice(css.indexOf('#etJoy{'), css.indexOf('#etJoy{') + 220);
+  assert(/border:none/.test(joy) && /background:none/.test(joy) && /box-shadow:none/.test(joy),
+    'the joystick base (#etJoy) must be invisible — no dark disc over the player');
+  const i = html.indexOf('const UPGRADES=[');
+  const ups = html.slice(i, i + 1400);
+  // upgrade blurbs must be full sentences, not terse tokens like "+1 bandeja"
+  assert(/Lanzas una bandeja más a la vez/.test(ups), 'upgrade descriptions must explain what the ability does in plain language');
+  assert(/Cuchillos que orbitan y cortan al tocar/.test(ups) && /Te mueves \+14% más rápido/.test(ups),
+    'each upgrade must carry its plain-language explanation');
+});
+
 test('EL TURNO markup/CSS is fully scoped under an et- prefix — no collision with app-wide selectors', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');
