@@ -2675,6 +2675,28 @@ test('EL TURNO scene: bright furnished restaurant background (not the old dark s
     '#etStage must use the bright warm dining-room gradient, not the old dark sepia');
 });
 
+test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
+  // Cinco mejoras de la auditoría de daño (petición del propietario: "cómo lo
+  // podemos mejorar" → "aplica todo"). Guardan que cada mecánica sigue cableada.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 60000);
+  // (1) health pickups: dropped on kill, collected to heal, drawn, and in game state
+  assert(/pickups:\[\]/.test(body), 'game state must include a pickups[] array (health drops)');
+  assert(/G\.pickups\.push\(\{x:e\.x,y:e\.y,heal:/.test(body), 'enemies must be able to drop a health pickup on death');
+  assert(/G\.hp=Math\.min\(G\.maxhp,G\.hp\+p\.heal\)/.test(body), 'collecting a pickup must heal (capped at maxhp)');
+  // (2) spawn grace: fresh spawns can't damage for a beat
+  assert(/grace:18/.test(body) && /grace:24/.test(body), 'enemies and boss must spawn with an invulnerability-grace window');
+  assert(/e\.grace<=0/.test(body), 'contact damage must be gated behind the spawn-grace check');
+  // (3) knockback on hit
+  assert(/knockback/.test(body) && /o\.x\+=\(o\.x-G\.px\)\/od\*push/.test(body), 'taking a hit must knock nearby enemies back so the player can escape');
+  // (4) damage curve (not a flat 8/18 anymore)
+  assert(/damage curve/.test(body) && /Math\.min\(e\.boss\?9:6, G\.time\*0\.05\)/.test(body), 'contact damage must ramp with time (fair curve), not a flat constant');
+  // (5) low-HP warning element toggled + CSS pulse
+  assert(/lowEl\.classList\.toggle\('on'/.test(body) && /G\.hp<25/.test(body), 'the low-HP danger overlay must toggle under 25 HP');
+  const css = read('styles.css');
+  assert(/#etLow\.on\{[^}]*etLowPulse/.test(css) && /@keyframes etLowPulse/.test(css), 'styles.css must define the pulsing low-HP danger vignette');
+});
+
 test('EL TURNO markup/CSS is fully scoped under an et- prefix — no collision with app-wide selectors', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');

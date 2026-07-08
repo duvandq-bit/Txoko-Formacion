@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.149';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.150';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -22946,11 +22946,13 @@ function launchElTurno(){
       </div>
 
       <div class="et-flash" id="etFlash"></div>
+      <div id="etLow" aria-hidden="true"></div>
     </div></div>`;
   document.body.appendChild(overlay);
 
   const cv=document.getElementById('etCv'), ctx=cv.getContext('2d');
   const stage=document.getElementById('etStage');
+  const lowEl=document.getElementById('etLow'); // low-HP danger pulse (toggled each frame)
   let W=0,H=0,DPR=Math.min(2,window.devicePixelRatio||1);
   function resize(){ const r=stage.getBoundingClientRect(); W=r.width; H=r.height;
     cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
@@ -23006,7 +23008,7 @@ function launchElTurno(){
         fireT:0, fireInt:44, proj:1, dmg:10, pspeed:6.4, pickR:70, spread:0,
         magnet:1, aura:0, auraT:0, face:1, moving:0,
         knives:0, knifeAng:0, cava:0, cavaT:150,
-        enemies:[], bullets:[], gems:[], parts:[], bombs:[], explosions:[], dmgs:[],
+        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[],
         spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
         target:null, targetT:0, kills:0, nextBoss:38, shake:0 };
     pickTarget(true);
@@ -23071,13 +23073,14 @@ function launchElTurno(){
     let r=15, spd=0.55+Math.random()*0.5+G.time*0.006, hpMul=1;
     if(kind==='fast'){ r=12; spd*=1.7; hpMul=0.55; }
     else if(kind==='tank'){ r=23; spd*=0.62; hpMul=3; }
-    const hp=(6+G.time*0.9)*hpMul;
-    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r,spd,kind:kind||'norm',flash:0});
+    const hp=(5+G.time*0.8)*hpMul;
+    // grace: ~0.3s where a fresh spawn can't damage the player (no "appeared on top of me")
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r,spd,kind:kind||'norm',flash:0,grace:18});
   }
   function spawnBoss(){
     const p=edgePos(); const a=G.roster[Math.floor(Math.random()*G.roster.length)];
     const hp=130+G.time*11;
-    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:46,spd:0.5,kind:'boss',flash:0,boss:true});
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:46,spd:0.5,kind:'boss',flash:0,boss:true,grace:24});
     flash('¡JEFE: '+a.name+'!','#e8735a'); sfx('boss'); G.shake=8;
   }
 
@@ -23175,8 +23178,15 @@ function launchElTurno(){
     // enemies move + collide
     for(const e of G.enemies){
       if(e.flash>0) e.flash-=dt;
+      if(e.grace>0) e.grace-=dt;
       const d=Math.hypot(G.px-e.x,G.py-e.y)||1; e.x+=(G.px-e.x)/d*e.spd*dt; e.y+=(G.py-e.y)/d*e.spd*dt;
-      if(d<G.pr+e.r && G.ifr<=0){ G.hp-=e.boss?18:8; G.ifr=e.boss?40:32; G.shake=Math.max(G.shake,e.boss?9:5); burst(G.px,G.py,'#a3372c',8); sfx('hurt');
+      if(d<G.pr+e.r && G.ifr<=0 && e.grace<=0){
+        // damage curve: gentle at the start of the shift, ramps up, capped so it stays fair
+        const dmg=(e.boss?15:5)+Math.min(e.boss?9:6, G.time*0.05);
+        G.hp-=dmg; G.ifr=e.boss?40:32; G.shake=Math.max(G.shake,e.boss?9:5); burst(G.px,G.py,'#a3372c',8); sfx('hurt');
+        // knockback: shove the attacker (and the small pile around you) away so you can escape
+        for(const o of G.enemies){ if(o.boss) continue; const od=Math.hypot(o.x-G.px,o.y-G.py)||1;
+          if(od<G.pr+o.r+22){ const push=(od<G.pr+e.r?38:18); o.x+=(o.x-G.px)/od*push; o.y+=(o.y-G.py)/od*push; } }
         if(G.hp<=0){ return gameOver(); } }
       for(const b of G.bullets){ if(b.life<=0) continue; if((b.x-e.x)**2+(b.y-e.y)**2 < (e.r+5)**2){ hurtEnemy(e,b.dmg); b.life=0; burst(e.x,e.y,'#f4e4c1',4); } }
     }
@@ -23186,6 +23196,9 @@ function launchElTurno(){
       if(e.boss){ for(let g=0;g<10;g++) G.gems.push({x:e.x+(Math.random()-.5)*44,y:e.y+(Math.random()-.5)*44,val:3,col:'#e0a02c'});
         G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; flash('¡JEFE ABATIDO!','#4fd0c0'); }
       else G.gems.push({x:e.x,y:e.y,val:isTarget?2:1,col:isTarget?'#e0a02c':'#4fd0c0'});
+      // health pickup: an allergen-free dish drops now and then (sustain for long runs).
+      // Tanks are the reliable source; the boss keeps its own instant heal above.
+      if(!e.boss && Math.random() < (e.kind==='tank'?0.34:0.06)) G.pickups.push({x:e.x,y:e.y,heal:18,life:620});
       burst(e.x,e.y,e.a.col,e.boss?26:10); G.enemies.splice(i,1); G.score++; G.kills++; sfx('kill');
       if(isTarget && !e.boss) G.hp=Math.min(G.maxhp,G.hp+2);
     }}
@@ -23194,6 +23207,12 @@ function launchElTurno(){
       if(d<G.pickR){ g.x+=(G.px-g.x)/d*6*G.magnet*dt*0.5+(G.px-g.x)/d*2; g.y+=(G.py-g.y)/d*6*G.magnet*dt*0.5+(G.py-g.y)/d*2; }
       if(d<G.pr+8){ G.xp+=g.val; G.gems.splice(i,1); sfx('coin');
         if(G.xp>=G.xpNext){ G.xp-=G.xpNext; G.level++; G.xpNext=Math.round(G.xpNext*1.45+2); sfx('level'); showLevelUp(); flash('NIVEL '+G.level,'#4fd0c0'); } } }
+    // health pickups: magnet in (only when hurt), collect to heal, expire if left behind
+    for(let i=G.pickups.length-1;i>=0;i--){ const p=G.pickups[i]; p.life-=dt;
+      const d=Math.hypot(G.px-p.x,G.py-p.y)||1;
+      if(d<G.pickR && G.hp<G.maxhp){ p.x+=(G.px-p.x)/d*3.2*dt; p.y+=(G.py-p.y)/d*3.2*dt; }
+      if(d<G.pr+11 && G.hp<G.maxhp){ G.hp=Math.min(G.maxhp,G.hp+p.heal); flash('+'+p.heal+' ❤','#6ad46a'); burst(G.px,G.py,'rgba(106,212,106,.75)',9); sfx('coin'); G.pickups.splice(i,1); continue; }
+      if(p.life<=0) G.pickups.splice(i,1); }
     // damage numbers + particles + shake decay
     for(let i=G.dmgs.length-1;i>=0;i--){ const n=G.dmgs[i]; n.y-=dt*0.7; n.life-=dt*0.045; if(n.life<=0) G.dmgs.splice(i,1); }
     for(let i=G.parts.length-1;i>=0;i--){ const p=G.parts[i]; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vx*=0.92; p.vy*=0.92; p.life-=dt*0.04; if(p.life<=0) G.parts.splice(i,1); }
@@ -23245,6 +23264,15 @@ function launchElTurno(){
     // gems
     for(const g of G.gems){ ctx.fillStyle=g.col; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
       ctx.beginPath();ctx.moveTo(g.x,g.y-5);ctx.lineTo(g.x+5,g.y);ctx.lineTo(g.x,g.y+5);ctx.lineTo(g.x-5,g.y);ctx.closePath();ctx.fill();ctx.stroke(); }
+    // health pickups — a covered dish that heals (blinks in its last ~1.3s before expiring)
+    for(const p of G.pickups){ if(p.life<80 && Math.floor(p.life/6)%2===0) continue;
+      const bob=Math.sin(G.time*5+p.x*0.1)*1.6;
+      ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(p.x,p.y+9,9,3,0,0,6.29); ctx.fill();
+      ctx.fillStyle='#f4ecd8'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.arc(p.x,p.y+bob,9,Math.PI,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p.x-11,p.y+bob); ctx.lineTo(p.x+11,p.y+bob); ctx.stroke();
+      ctx.fillStyle='#c33'; ctx.font='9px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('❤',p.x,p.y+bob-3); }
+    ctx.textBaseline='alphabetic';
     // enemies — Cuphead-style allergen monsters (colour + emblem = what to learn)
     ctx.textAlign='center'; ctx.textBaseline='middle';
     for(const e of G.enemies){
@@ -23299,6 +23327,8 @@ function launchElTurno(){
     for(const n of G.dmgs){ ctx.globalAlpha=Math.max(0,n.life); ctx.strokeStyle='#241a12'; ctx.strokeText(n.val,n.x,n.y); ctx.fillStyle='#fff'; ctx.fillText(n.val,n.x,n.y); }
     ctx.globalAlpha=1;
     ctx.restore();
+    // low-HP danger: pulsing red vignette while alive and under 25 HP
+    lowEl.classList.toggle('on', running && G.hp>0 && G.hp<25);
   }
 
   // ── HUD sync ──
