@@ -2577,6 +2577,27 @@ test('dashboard mascot: shared SVG const, decorative-only, never breaks hero lay
     '.dash-mascot must be position:absolute + pointer-events:none (decorative, layout-safe)');
 });
 
+test('Mr. Shoesmith: reactive face sprites wired, intro framed (no hex crop)', () => {
+  // El juego Txoko usa el personaje Mr. Shoesmith (asset del propietario) con 5
+  // caras reactivas por vidas + un plano para el intro, incrustados como imagen.
+  assert(/const SHOESMITH_FACES\s*=\s*\[/.test(html), 'SHOESMITH_FACES array missing');
+  assert((html.match(/data:image\/jpeg;base64,/g) || []).length >= 6,
+    'expected the 5 mood faces + intro embedded as data-URIs');
+  // txClientFace must return the sprite image (not the old inline SVG faces).
+  const i = html.indexOf('function txClientFace(lives, pct)');
+  assert(i !== -1, 'txClientFace not found');
+  const body = html.slice(i, html.indexOf('\n}', i) + 2);
+  assert(/SHOESMITH_FACES\[mood\]/.test(body) && /tx-shoe-face/.test(body),
+    'txClientFace must return an <img class="tx-shoe-face"> from SHOESMITH_FACES');
+  assert(!/return \[f0,f1,f2,f3,f4\]/.test(body), 'old inline-SVG faces must be gone');
+  // Intro portrait uses the framed photo, not the hexagon clip-path crop.
+  const intro = html.slice(html.indexOf('function txShowIntro'), html.indexOf('function txShowIntro') + 3000);
+  assert(/SHOESMITH_INTRO/.test(intro), 'intro must render SHOESMITH_INTRO');
+  assert(!/clip-path:polygon\(50% 0%,100% 25%/.test(intro), 'intro portrait must not use the hexagon crop');
+  const css = read('styles.css').replace(/\s+/g,' ');
+  assert(/\.tx-shoe-face\{[^}]*object-fit:cover/.test(css), '.tx-shoe-face needs object-fit:cover framing');
+});
+
 test('EL TURNO markup/CSS is fully scoped under an et- prefix — no collision with app-wide selectors', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');

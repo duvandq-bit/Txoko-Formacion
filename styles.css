@@ -4656,6 +4656,10 @@ body::after{
 .shoe-angry #txokoClientFace svg { animation:shoeShake .5s ease-in-out; }
 
 .txoko-game{padding:.75rem;max-width:480px;margin:0 auto;}
+/* Mr. Shoesmith reactive face sprite (framed portrait) */
+.tx-shoe-face{width:60px;height:70px;object-fit:cover;object-position:50% 12%;
+  border-radius:11px;border:2.5px solid var(--gold);background:#241a12;
+  box-shadow:0 3px 8px rgba(0,0,0,.3);display:block;vertical-align:middle}
 .txoko-hud{
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:.75rem;
