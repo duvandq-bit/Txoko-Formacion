@@ -4866,11 +4866,6 @@ body::after{
 
 /* top row: exit + table placard + streak + score chip */
 .tx-rh-trow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:9px}
-.tx-rh-back{flex-shrink:0;background:var(--tx-rh-paper);border:2.5px solid var(--tx-rh-ink);border-radius:9px;
-  padding:.35rem .75rem;min-height:40px;font-family:'Cinzel',serif;font-weight:800;color:var(--tx-rh-oxblood);
-  box-shadow:0 3px 0 var(--tx-rh-ink);font-size:.72rem;letter-spacing:.02em;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;transition:transform .06s,box-shadow .06s}
-.tx-rh-back:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tx-rh-ink)}
 .tx-rh-mesa{background:var(--tx-rh-paper);border:3px solid var(--tx-rh-ink);border-radius:9px;padding:.3rem .9rem;
   font-family:'Cinzel',serif;font-weight:900;color:var(--tx-rh-oxblood);box-shadow:0 3px 0 var(--tx-rh-ink);
   font-size:.82rem;letter-spacing:.03em;white-space:nowrap}
@@ -5640,6 +5635,16 @@ body::after{
 .ruleta-history-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .ruleta-back{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;border-radius:14px;border:1px solid rgba(182,161,105,.3);background:transparent;font-size:.72rem;color:var(--olive);cursor:pointer;margin-bottom:.8rem;transition:all .2s}
 .ruleta-back:hover{background:rgba(182,161,105,.08)}
+
+/* Unified "back to games" control — SAME look, position and behaviour on every
+   game screen (Duelo, Ruleta, Mr. Shoesmith). A gold enamel pill reads clearly
+   on both the light parchment screens and the dark rubber-hose ones. */
+.game-back{display:inline-flex;align-items:center;gap:.35rem;min-height:44px;padding:.5rem 1rem;
+  border-radius:12px;border:2px solid #1c2a22;background:linear-gradient(180deg,#e8c46a,var(--gold));
+  color:#241a12;font-family:'Cinzel',serif;font-weight:800;font-size:.78rem;letter-spacing:.03em;
+  cursor:pointer;margin-bottom:1rem;box-shadow:0 3px 0 rgba(28,20,10,.5);
+  -webkit-tap-highlight-color:transparent;transition:transform .06s,box-shadow .06s}
+.game-back:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(28,20,10,.5)}
 .ruleta-score{display:flex;justify-content:center;gap:1.2rem;margin:.6rem 0;font-size:.65rem;color:rgba(28,42,34,.4)}
 .ruleta-score-item{display:flex;flex-direction:column;align-items:center;gap:.1rem}
 .ruleta-score-num{font-size:1.1rem;font-weight:700;color:var(--gold)}

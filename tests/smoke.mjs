@@ -2558,23 +2558,27 @@ test('EL TURNO teardown fully unmounts: cancels rAF, removes all its listeners, 
   assert(/overlay\.remove\(\)/.test(td), 'teardown does not remove the overlay element from the DOM');
 });
 
-test('both games have an in-game exit: Mr. Shoesmith question screen + Camarero Survivors overlay', () => {
-  // Petición del propietario: los juegos no tenían botón para volver atrás.
-  // (1) Mr. Shoesmith question screen (txRender) — a back button that stops the
-  //     patience timer and returns to the hub.
-  const r = html.indexOf('function txRender(');
-  const rbody = html.slice(r, html.indexOf('\nfunction ', r + 10));
-  assert(/class="tx-rh-back"[^>]*onclick="txQuit\(\)"/.test(rbody),
-    'the Mr. Shoesmith question screen must render a back/exit button wired to txQuit()');
+test('every game has a uniform, working "back to games" control', () => {
+  // Petición del propietario: los juegos no tenían botón de volver uniforme (o
+  // no funcionaba). Ahora todos usan la misma píldora .game-back → showTab('txoko').
+  // (1) shared style exists
+  assert(/\.game-back\{/.test(read('styles.css')), 'the shared .game-back button style must exist');
+  // (2) Duelo, Ruleta, Mr. Shoesmith intro + question screen all carry .game-back
+  for (const fn of ['renderDuel(', 'renderRuleta(', 'txShowIntro(', 'txRender(']) {
+    const i = html.indexOf('function ' + fn);
+    assert(i !== -1, `${fn} not found`);
+    const body = html.slice(i, html.indexOf('\nfunction ', i + 10));
+    assert(/class="game-back"/.test(body), `${fn} must render the unified .game-back control`);
+  }
+  // (3) Mr. Shoesmith mid-run exit stops the patience timer, then navigates
   const q = html.indexOf('function txQuit(');
   assert(q !== -1, 'txQuit() must exist');
-  const qbody = html.slice(q, q + 160);
-  assert(/clearInterval\(txokoTimer\)/.test(qbody) && /renderTxoko\(\)/.test(qbody),
+  const qbody = html.slice(q, q + 180);
+  assert(/clearInterval\(txokoTimer\)/.test(qbody) && /showTab\('txoko'\)/.test(qbody),
     'txQuit() must stop the patience timer and return to the games hub');
-  // (2) Camarero Survivors overlay keeps its exit button
+  // (4) Camarero Survivors (overlay) keeps its own exit button
   const e = html.indexOf('function launchElTurno(');
-  const ebody = html.slice(e, e + 60000);
-  assert(/id="etExitBtn"/.test(ebody), 'Camarero Survivors must keep its in-game exit button');
+  assert(/id="etExitBtn"/.test(html.slice(e, e + 60000)), 'Camarero Survivors must keep its in-game exit button');
 });
 
 test('character sprite: shared const stays, dashboard mascot removed', () => {
@@ -2640,9 +2644,12 @@ test('Games hub: Mr. Shoesmith card shows the real character photo, not the old 
   assert(!/Mini Mr\. Shoesmith face/.test(hub), 'the old placeholder SVG face (ellipse/path sketch) must be gone');
   assert(hub.includes('class="txoko-wrap tx-rh-hub"'), 'the hub wrapper must carry the tx-rh-hub rubber-hose scope');
   // structure/behaviour untouched — every card must still be present and wired
-  for (const onclick of ['txStart()', 'startErrorMode()', 'renderDuel()', 'renderRuleta()', 'launchElTurno()']) {
+  // Puntos Débiles (startErrorMode) fue retirado del hub a petición del
+  // propietario: los exámenes ya cubren el repaso de fallos.
+  for (const onclick of ['txStart()', 'renderDuel()', 'renderRuleta()', 'launchElTurno()']) {
     assert(hub.includes(onclick), `hub must still wire up ${onclick} — reskin must not drop a game card`);
   }
+  assert(!hub.includes('startErrorMode()'), 'Puntos Débiles card must be removed from the games hub');
 });
 
 test('tx-rh rubber-hose CSS exists, is scoped, and covers every class the markup uses', () => {
