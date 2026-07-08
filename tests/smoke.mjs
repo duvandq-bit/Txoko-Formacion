@@ -2558,6 +2558,25 @@ test('EL TURNO teardown fully unmounts: cancels rAF, removes all its listeners, 
   assert(/overlay\.remove\(\)/.test(td), 'teardown does not remove the overlay element from the DOM');
 });
 
+test('dashboard mascot: shared SVG const, decorative-only, never breaks hero layout', () => {
+  // El personaje (manos en bolsillos) vive en UN solo sitio (TXOKO_MASCOT_SVG)
+  // y lo comparten el juego EL TURNO y la decoración del dashboard, para que
+  // no se desincronicen.
+  assert((html.match(/const TXOKO_MASCOT_SVG\s*=/g) || []).length === 1,
+    'TXOKO_MASCOT_SVG must be defined exactly once (single source of truth)');
+  assert(/const HERO_SVG\s*=\s*TXOKO_MASCOT_SVG;/.test(html),
+    'EL TURNO must reuse TXOKO_MASCOT_SVG so the game sprite and the dashboard mascot stay identical');
+  // Dashboard uses it as a data-URI image inside the hero.
+  assert(/class="dash-mascot"[^>]*src="data:image\/svg\+xml,\$\{encodeURIComponent\(TXOKO_MASCOT_SVG\)\}"/.test(html),
+    'dashboard hero must render the mascot from TXOKO_MASCOT_SVG');
+  // Decorative-only: the mascot must be absolutely positioned and non-interactive
+  // so it can never push or capture taps in the hero card.
+  const css = read('styles.css').replace(/\s+/g,' ');
+  const rule = (css.match(/\.dash-mascot\{[^}]*\}/) || [''])[0];
+  assert(/position:absolute/.test(rule) && /pointer-events:none/.test(rule),
+    '.dash-mascot must be position:absolute + pointer-events:none (decorative, layout-safe)');
+});
+
 test('EL TURNO markup/CSS is fully scoped under an et- prefix — no collision with app-wide selectors', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');

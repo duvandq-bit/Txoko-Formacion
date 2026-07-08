@@ -6700,6 +6700,15 @@ button.et-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--et-ink)}
   position:absolute;left:8%;right:8%;bottom:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(196,154,60,.35) 30%,rgba(196,154,60,.55) 50%,rgba(196,154,60,.35) 70%,transparent);
 }
+/* Decorative mascot — absolute + pointer-events:none so it never affects the
+   hero layout. Sits discreetly in the bottom-right corner. */
+.dash-hero-mascot-pad{padding-right:56px}
+.dash-mascot{
+  position:absolute;right:6px;bottom:-2px;width:52px;height:auto;
+  pointer-events:none;opacity:.9;z-index:2;
+  filter:drop-shadow(0 4px 0 rgba(0,0,0,.22));
+}
+@media (max-width:360px){ .dash-mascot{width:44px} }
 .dash-hero-shine{
   position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;
 }
