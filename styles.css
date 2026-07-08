@@ -6585,6 +6585,91 @@ body::after{
 .game-card:hover .game-card-arrow::before{transform:scale(1.08) rotate(6deg)}
 .game-card-arrow svg{position:relative;z-index:1;transition:transform .3s ease}
 .game-card:hover .game-card-arrow svg{transform:translateX(2px)}
+
+/* ═══ EL TURNO — survivors mini-game overlay ═══
+   Fully scoped under #etOverlay (et- prefix on every class/id) so nothing
+   here can collide with app selectors like .screen, .card, .pill, .row. */
+#etOverlay{
+  position:fixed;inset:0;z-index:100000;touch-action:none;overscroll-behavior:none;
+  background:#0e0a07;font-family:Georgia,'Times New Roman',serif;
+}
+#etOverlay *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+#etWrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#etStage{
+  position:relative;width:100%;height:100%;max-width:520px;margin:0 auto;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 18%,#3a2616 0%,#241609 55%,#160d05 100%);
+  box-shadow:0 0 60px rgba(0,0,0,.6) inset;
+  --et-ink:#241a12;--et-paper:#f4e4c1;--et-paper2:#e9d3a4;
+  --et-gold:#e0a02c;--et-oxblood:#a3372c;--et-teal:#2f6b63;--et-sepia:#b98a4e;
+}
+#etCv{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:optimizeQuality}
+#etGrain{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:.10;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+#etVig{position:absolute;inset:0;pointer-events:none;z-index:4;box-shadow:inset 0 0 120px 30px rgba(15,8,3,.8)}
+
+#etExitBtn{
+  position:absolute;top:calc(.6rem + env(safe-area-inset-top,0px));right:.6rem;z-index:8;
+  min-width:44px;min-height:44px;padding:.4rem .8rem;display:flex;align-items:center;gap:.3rem;
+  background:rgba(20,13,5,.62);color:var(--et-paper);border:2px solid rgba(244,228,193,.5);
+  border-radius:12px;font-family:Georgia,serif;font-weight:bold;font-size:.85rem;cursor:pointer;
+}
+
+#etHud{position:absolute;inset:0;z-index:6;pointer-events:none;font-family:Georgia,serif}
+.et-topbar{position:absolute;top:0;left:0;right:0;padding:calc(.6rem + env(safe-area-inset-top,0px)) 3.4rem 8px 12px;display:flex;flex-direction:column;gap:7px}
+.et-row{display:flex;align-items:center;gap:8px}
+.et-hpwrap{flex:1;height:15px;background:repeating-linear-gradient(90deg,#3a2a18 0 4px,#4a3620 4px 8px);
+  border:2.5px solid var(--et-ink);border-radius:20px;overflow:hidden;box-shadow:0 3px 0 var(--et-ink)}
+.et-hpfill{height:100%;width:100%;background:linear-gradient(180deg,#e8735a,#a3372c);transition:width .12s linear;box-shadow:inset 0 2px 0 rgba(255,255,255,.3)}
+.et-pill{background:var(--et-paper);border:2.5px solid var(--et-ink);border-radius:20px;padding:2px 10px;
+  font-weight:bold;color:var(--et-ink);box-shadow:0 3px 0 var(--et-ink);white-space:nowrap;font-size:13px;
+  font-variant-numeric:tabular-nums}
+.et-pill b{color:var(--et-oxblood)}
+.et-xpwrap{height:8px;background:#2a1c0e;border:2px solid var(--et-ink);border-radius:10px;overflow:hidden;margin-top:1px}
+.et-xpfill{height:100%;width:0;background:linear-gradient(90deg,#4fd0c0,#2f6b63);transition:width .15s}
+.et-order{align-self:center;background:var(--et-ink);border:2.5px solid var(--et-gold);border-radius:12px;
+  padding:5px 14px;color:var(--et-paper);font-weight:bold;font-size:13px;box-shadow:0 3px 0 rgba(0,0,0,.4);
+  text-align:center;letter-spacing:.02em}
+.et-order em{color:var(--et-gold);font-style:normal}
+
+#etJoy{position:absolute;z-index:6;width:120px;height:120px;border-radius:50%;
+  border:3px solid rgba(244,228,193,.5);background:radial-gradient(circle,rgba(20,13,5,.25),rgba(20,13,5,.5));
+  box-shadow:0 0 0 2px rgba(20,13,5,.35), inset 0 0 20px rgba(0,0,0,.3);display:none;pointer-events:none}
+#etJoyk{position:absolute;width:54px;height:54px;border-radius:50%;left:33px;top:33px;
+  background:radial-gradient(circle at 40% 35%,var(--et-paper),var(--et-sepia));border:3px solid var(--et-ink);box-shadow:0 3px 10px rgba(0,0,0,.6)}
+
+.et-screen{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:24px;gap:14px;
+  background:radial-gradient(120% 90% at 50% 30%,rgba(58,38,22,.55),rgba(22,13,5,.92))}
+.et-card{background:var(--et-paper);border:3px solid var(--et-ink);border-radius:12px;padding:10px 22px 12px;
+  box-shadow:0 6px 0 var(--et-ink),0 8px 14px rgba(0,0,0,.4)}
+.et-title{font-size:clamp(34px,11vw,58px);font-weight:bold;color:var(--et-oxblood);line-height:.95;
+  text-shadow:2px 2px 0 var(--et-paper2),4px 4px 0 var(--et-ink);letter-spacing:.02em}
+.et-sub{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.32em;color:var(--et-sepia);text-transform:uppercase;font-weight:bold}
+.et-kick{color:var(--et-paper);font-size:15px;max-width:340px;line-height:1.5}
+.et-kick b{color:var(--et-gold)}
+button.et-big{pointer-events:auto;cursor:pointer;font-family:Georgia,serif;font-weight:bold;font-size:22px;
+  color:var(--et-paper);background:linear-gradient(180deg,#b8451f,#7d1f11);border:3px solid var(--et-ink);
+  border-radius:14px;padding:12px 40px;box-shadow:0 6px 0 var(--et-ink);letter-spacing:.06em;text-transform:uppercase;
+  transition:transform .06s,box-shadow .06s;min-height:44px}
+button.et-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--et-ink)}
+.et-legend{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;max-width:360px;margin-top:2px}
+.et-lg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--et-paper);font-family:ui-monospace,monospace}
+.et-lg span{font-family:Georgia,serif}
+
+.et-lvlhead{font-size:26px;font-weight:bold;color:var(--et-gold);text-shadow:2px 2px 0 var(--et-ink);letter-spacing:.04em}
+.et-picks{display:flex;flex-direction:column;gap:11px;width:100%;max-width:340px}
+.et-pick{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:13px;text-align:left;
+  background:var(--et-paper);border:3px solid var(--et-ink);border-radius:13px;padding:12px 14px;box-shadow:0 5px 0 var(--et-ink);
+  transition:transform .06s,box-shadow .06s;min-height:44px}
+.et-pick:active{transform:translateY(3px);box-shadow:0 2px 0 var(--et-ink)}
+.et-pick-ic{width:44px;height:44px;flex-shrink:0;display:grid;place-items:center;font-size:26px;
+  border:2.5px solid var(--et-ink);border-radius:10px;background:var(--et-paper2)}
+.et-pick-tx b{display:block;color:var(--et-ink);font-size:16px}
+.et-pick-tx span{font-family:ui-monospace,monospace;font-size:11px;color:#6b4a24}
+.et-flash{position:absolute;z-index:9;left:50%;top:34%;transform:translate(-50%,-50%);pointer-events:none;
+  font-weight:bold;color:var(--et-gold);text-shadow:2px 2px 0 var(--et-ink);opacity:0}
+@media (prefers-reduced-motion:reduce){#etOverlay *{animation:none!important;transition:none!important}}
+
 /* ═══ DASHBOARD — TUNIC CEREMONIAL ═══ */
 .dash-hero{
   position:relative;overflow:hidden;

@@ -2509,6 +2509,71 @@ test('Servicio Fantasma inactivity trigger stays disabled', () => {
     `launchServicioFantasma is invoked ${allRefs - defs} time(s) — the inactivity drill trigger is back; the owner disabled it`);
 });
 
+// ─── 6y. EL TURNO — survivors mini-game overlay guards ──────────
+// New full-screen game overlay (canvas + joystick + WebAudio). Guards its
+// three risk areas: (1) it exists and is entry-pointed from the games hub,
+// (2) it never leaks — every listener/rAF/AudioContext it opens must be
+// torn down on exit, (3) it stays scoped — no unprefixed id/class collides
+// with pre-existing app selectors (.screen, .card, .pill, .row, #stage...).
+console.log('\nEL TURNO mini-game guards');
+
+test('launchElTurno() is defined exactly once', () => {
+  const defs = (html.match(/function\s+launchElTurno\s*\(\)/g) || []).length;
+  assert(defs === 1, `expected exactly 1 launchElTurno definition, found ${defs}`);
+});
+
+test('games hub (renderTxoko) has a card launching EL TURNO', () => {
+  const hubStart = html.indexOf('function renderTxoko(');
+  const hubEnd = html.indexOf('function renderTxTop10(');
+  assert(hubStart !== -1 && hubEnd > hubStart, 'could not locate renderTxoko body');
+  const hub = html.slice(hubStart, hubEnd);
+  assert(hub.includes('launchElTurno()'), 'no game-card in renderTxoko() calls launchElTurno()');
+  assert(hub.includes('EL TURNO'), 'EL TURNO card title missing from games hub');
+});
+
+test('launchElTurno() is idempotent (guards against a second overlay)', () => {
+  const i = html.indexOf('function launchElTurno(');
+  assert(i !== -1, 'launchElTurno not found');
+  const body = html.slice(i, html.indexOf('\nfunction ', i + 10));
+  assert(/if\(document\.getElementById\('etOverlay'\)\)\s*return;/.test(body),
+    'launchElTurno lacks an early-return guard when #etOverlay already exists — re-invoking it (e.g. a double tap on the card) would mount a second game on top of the first');
+});
+
+test('EL TURNO teardown fully unmounts: cancels rAF, removes all its listeners, closes AudioContext, removes overlay', () => {
+  const i = html.indexOf('function launchElTurno(');
+  assert(i !== -1, 'launchElTurno not found');
+  const end = html.indexOf('\n// ── Game flow', i);
+  const body = html.slice(i, end > i ? end : i + 40000);
+  const teardownMatch = body.match(/function teardown\(\)\{[\s\S]*?\n  \}/);
+  assert(teardownMatch, 'no teardown() function found inside launchElTurno');
+  const td = teardownMatch[0];
+  assert(/cancelAnimationFrame\(rafId\)/.test(td), 'teardown does not cancel the game rAF loop — it would keep running after exit');
+  assert(/window\.removeEventListener\('resize'/.test(td), 'teardown does not remove the window resize listener');
+  assert(/window\.removeEventListener\('keydown'/.test(td), 'teardown does not remove the window keydown listener');
+  assert(/window\.removeEventListener\('keyup'/.test(td), 'teardown does not remove the window keyup listener');
+  assert(/stage\.removeEventListener\('touchstart'/.test(td), 'teardown does not remove the stage touchstart listener');
+  assert(/stage\.removeEventListener\('touchmove'/.test(td), 'teardown does not remove the stage touchmove listener');
+  assert(/stage\.removeEventListener\('touchend'/.test(td), 'teardown does not remove the stage touchend listener');
+  assert(/AC\.close\(\)/.test(td), 'teardown does not close the AudioContext — it would leak an open audio node per play session');
+  assert(/overlay\.remove\(\)/.test(td), 'teardown does not remove the overlay element from the DOM');
+});
+
+test('EL TURNO markup/CSS is fully scoped under an et- prefix — no collision with app-wide selectors', () => {
+  const i = html.indexOf('function launchElTurno(');
+  assert(i !== -1, 'launchElTurno not found');
+  const end = html.indexOf('\n// ── Game flow', i);
+  const body = html.slice(i, end > i ? end : i + 40000);
+  // every id/class the overlay creates must carry the et prefix
+  const bareIds = body.match(/id="(?!et[A-Z])[a-zA-Z][^"]*"/g) || [];
+  assert(bareIds.length === 0, `unprefixed id(s) inside launchElTurno risk colliding with existing app ids: ${bareIds.slice(0,5).join(', ')}`);
+  assert(body.includes("overlay.id = 'etOverlay'"), 'overlay root id missing');
+  assert(body.includes("class=\"et-screen\""), 'et-screen class missing — game screens are not scoped');
+  // the CSS file must define #etOverlay scoped at high z-index, not a bare .screen/.card that would hit app-wide rules
+  const css = read('styles.css');
+  assert(css.includes('#etOverlay{'), 'styles.css has no #etOverlay rule');
+  assert(!/^\.screen\{[^}]*100000/m.test(css), 'the game overlay z-index leaked onto the generic .screen rule');
+});
+
 // ─── 6z. Correctness audit guards (owner-reported, Jul 2026) ────
 // Five owner reports in one week, all the same two defect classes:
 // multiple-correct options and false claims from regex heuristics.

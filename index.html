@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.142';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.143';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -22781,6 +22781,22 @@ function renderTxoko(){
         <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
       </div>
 
+      <!-- EL TURNO — survivors mini-game (BETA) -->
+      <div role="button" tabindex="0" aria-label="${_en?'El Turno, allergen survivors game, beta':'El Turno, survivors de alérgenos, beta'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="launchElTurno()" style="--gc-accent:#c4693c;--gc-accent2:#a3502a;--gc-glow:rgba(196,105,60,.2)">
+        ${_gcDeco}
+        <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,105,60,.08),rgba(196,105,60,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(196,105,60,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(196,105,60,.06)"/><circle cx="20" cy="18" r="7" fill="#c4693c" opacity=".85"/><path d="M14 32c0-4 3-7 6-7s6 3 6 7" fill="none" stroke="#c4693c" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="game-card-body">
+          <div class="game-card-label">SURVIVORS · BETA</div>
+          <div class="game-card-title">EL TURNO</div>
+          <div class="game-card-desc">${_en?'Dodge and clear allergen-monsters all shift long. Auto-fire, level-up cards, boss waves.':'Esquiva y despacha alérgenos-monstruo durante todo el turno. Disparo automático, cartas de mejora, jefes.'}</div>
+          <div class="game-card-meta">
+            <span class="game-card-badge">${_en?'Survivors of allergens':'Survivors de alérgenos'}</span>
+            <span class="game-card-badge">BETA</span>
+          </div>
+        </div>
+        <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+      </div>
+
       <!-- TOP 10 at bottom — loads after games -->
       <div id="txTop10Wrap" style="margin-top:.5rem">${renderTxTop10()}</div>
     </div>`;
@@ -22845,6 +22861,479 @@ function refreshTxTop10(){
     if(wrap) wrap.innerHTML=buildTxTop10Html(sorted);
     else if(container){ const parent=container.parentNode; if(parent) parent.insertAdjacentHTML('afterbegin',buildTxTop10Html(sorted)); container.remove(); }
   });
+}
+
+// ── EL TURNO — survivors mini-game (BETA) ──────────────
+// Full-screen overlay, entirely self-scoped (et- prefix, closure-local
+// state). launchElTurno() is the only global it introduces. Every
+// listener/rAF/AudioContext it opens is torn down by teardown() so
+// entering and leaving repeatedly never leaks or double-fires.
+function launchElTurno(){
+  if(document.getElementById('etOverlay')) return; // already running — no duplicate instances
+  const _en = LANG==='en';
+
+  const overlay = document.createElement('div');
+  overlay.id = 'etOverlay';
+  overlay.setAttribute('role','dialog');
+  overlay.setAttribute('aria-modal','true');
+  overlay.setAttribute('aria-label', _en?'El Turno, allergen survivors game':'El Turno, survivors de alérgenos');
+  overlay.innerHTML = `
+    <div id="etWrap"><div id="etStage">
+      <canvas id="etCv"></canvas>
+      <div id="etGrain"></div><div id="etVig"></div>
+      <div id="etJoy"><div id="etJoyk"></div></div>
+      <button id="etExitBtn" aria-label="${_en?'Exit game':'Salir del juego'}">✕ Salir</button>
+
+      <div id="etHud">
+        <div class="et-topbar">
+          <div class="et-row">
+            <div class="et-hpwrap"><div class="et-hpfill" id="etHpfill"></div></div>
+            <div class="et-pill" id="etTimePill">0:00</div>
+          </div>
+          <div class="et-row">
+            <div class="et-pill" id="etLvlPill">Nv <b>1</b></div>
+            <div style="flex:1" class="et-xpwrap"><div class="et-xpfill" id="etXpfill"></div></div>
+            <div class="et-pill" id="etScorePill">0 <b>comandas</b></div>
+          </div>
+          <div class="et-order" id="etOrderBanner" style="display:none"></div>
+        </div>
+      </div>
+
+      <div class="et-screen" id="etStart">
+        <div class="et-sub">Ritz-Carlton Abama · Txoko</div>
+        <div class="et-card"><div class="et-title">EL TURNO</div></div>
+        <div class="et-kick">Sobrevive al servicio. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta lo máximo. <b>Conócelas y sobrevivirás.</b></div>
+        <div class="et-legend" id="etLegend"></div>
+        <button class="et-big" id="etPlayBtn">Empezar turno</button>
+        <div class="et-sub" style="opacity:.75">👆 Arrastra el dedo para moverte · disparo automático</div>
+      </div>
+
+      <div class="et-screen" id="etLevelup" style="display:none">
+        <div class="et-lvlhead">¡SUBES DE NIVEL!</div>
+        <div class="et-sub">Elige una mejora</div>
+        <div class="et-picks" id="etPicks"></div>
+      </div>
+
+      <div class="et-screen" id="etOver" style="display:none">
+        <div class="et-sub" id="etOverSub">Fin del servicio</div>
+        <div class="et-card"><div class="et-title" id="etOverTitle" style="font-size:44px">SE ACABÓ</div></div>
+        <div class="et-kick" id="etOverStats"></div>
+        <button class="et-big" id="etAgainBtn">Otra vez</button>
+      </div>
+
+      <div class="et-flash" id="etFlash"></div>
+    </div></div>`;
+  document.body.appendChild(overlay);
+
+  const cv=document.getElementById('etCv'), ctx=cv.getContext('2d');
+  const stage=document.getElementById('etStage');
+  let W=0,H=0,DPR=Math.min(2,window.devicePixelRatio||1);
+  function resize(){ const r=stage.getBoundingClientRect(); W=r.width; H=r.height;
+    cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
+  window.addEventListener('resize',resize); resize();
+
+  // ── Allergen roster (standard EU allergens — generic knowledge, not menu data) ──
+  const ALLERGENS=[
+    {key:'gluten', name:'Gluten',       emoji:'🌾', col:'#c98a3a'},
+    {key:'lacteos',name:'Lácteos',      emoji:'🥛', col:'#dcd0b8'},
+    {key:'frutos', name:'Frutos secos', emoji:'🥜', col:'#9a5a2a'},
+    {key:'crust',  name:'Crustáceos',   emoji:'🦐', col:'#d0603a'},
+    {key:'huevo',  name:'Huevos',       emoji:'🥚', col:'#e8d48a'},
+    {key:'pescado',name:'Pescado',      emoji:'🐟', col:'#5a97a8'},
+    {key:'soja',   name:'Soja',         emoji:'🫛', col:'#7a9a4a'},
+    {key:'sulfitos',name:'Sulfitos',    emoji:'🍷', col:'#8a3a5a'}
+  ];
+  document.getElementById('etLegend').innerHTML=ALLERGENS.slice(0,6).map(a=>
+    `<div class="et-lg"><span>${a.emoji}</span>${a.name}</div>`).join('');
+
+  // ── HERO SPRITE: the protagonist (Cuphead/Funko style) ──
+  const HERO_SVG=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 152'>
+  <defs>
+    <radialGradient id='sk' cx='45%' cy='38%'><stop offset='0%' stop-color='#f6d3a8'/><stop offset='100%' stop-color='#e0b183'/></radialGradient>
+    <linearGradient id='bz' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='#2b46a8'/><stop offset='100%' stop-color='#1a2f78'/></linearGradient>
+    <linearGradient id='tr' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='#2740a0'/><stop offset='100%' stop-color='#1c2f78'/></linearGradient>
+    <linearGradient id='hr' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='#2a2836'/><stop offset='100%' stop-color='#12111a'/></linearGradient>
+  </defs>
+  <g stroke='#1c1512' stroke-width='4' stroke-linejoin='round' stroke-linecap='round'>
+    <ellipse cx='60' cy='149' rx='30' ry='5' fill='#1c1512' stroke='none' opacity='.28'/>
+    <path d='M50,116 L45,140 L57,140 L59,120 Z' fill='url(#tr)'/>
+    <path d='M70,116 L75,140 L63,140 L61,120 Z' fill='url(#tr)'/>
+    <ellipse cx='49' cy='141' rx='11' ry='5.5' fill='#191921'/>
+    <ellipse cx='71' cy='141' rx='11' ry='5.5' fill='#191921'/>
+    <path d='M45,88 Q60,82 75,88 L73,118 L47,118 Z' fill='#5a8fd8'/>
+    <path d='M42,84 L37,122 L53,119 L57,92 Z' fill='url(#bz)'/>
+    <path d='M78,84 L83,122 L67,119 L63,92 Z' fill='url(#bz)'/>
+    <path d='M60,86 L57,116 L63,116 Z' fill='#3f6cc0' stroke-width='2.5'/>
+    <rect x='47' y='113' width='26' height='6' rx='1' fill='#191921'/>
+    <path d='M42,90 Q32,102 39,116' fill='url(#bz)'/>
+    <path d='M78,90 Q88,102 81,116' fill='url(#bz)'/>
+    <rect x='53' y='73' width='14' height='13' rx='3' fill='#e3ad7e'/>
+    <ellipse cx='60' cy='48' rx='35' ry='33' fill='url(#sk)'/>
+    <ellipse cx='26' cy='50' rx='6.5' ry='9.5' fill='url(#sk)'/>
+    <ellipse cx='94' cy='50' rx='6.5' ry='9.5' fill='url(#sk)'/>
+    <path d='M30,43 Q27,34 34,32 Q46,28 55,31 Q66,28 78,33 Q85,35 82,43 Q92,41 93,30 Q100,17 87,11 Q79,4 68,9 Q61,2 52,7 Q43,1 35,7 Q25,13 23,28 Q22,38 30,43 Z' fill='url(#hr)'/>
+    <path d='M32,24 Q47,15 66,11 M33,30 Q49,21 70,17 M38,35 Q55,27 76,23 M40,13 Q53,8 67,10' fill='none' stroke='#423e52' stroke-width='2' stroke-linecap='round'/>
+    <path d='M34,19 Q47,11 62,9' fill='none' stroke='#565064' stroke-width='1.5' stroke-linecap='round' opacity='.75'/>
+    <path d='M35,46 Q44,41 55,45 Q54,48 45,47 Q39,48 35,46 Z' fill='#141019' stroke-width='2'/>
+    <path d='M85,46 Q76,41 65,45 Q66,48 75,47 Q81,48 85,46 Z' fill='#141019' stroke-width='2'/>
+    <ellipse cx='48' cy='58' rx='6.5' ry='8.5' fill='#0f0b13'/>
+    <ellipse cx='72' cy='58' rx='6.5' ry='8.5' fill='#0f0b13'/>
+    <path d='M60,60 Q56,66 61,68' fill='none' stroke-width='2.5'/>
+    <path d='M54,73 Q60,75 66,73' fill='none' stroke-width='2.5'/>
+  </g></svg>`;
+  const HERO=new Image(); let heroReady=false;
+  HERO.onload=()=>{heroReady=true;}; HERO.src='data:image/svg+xml,'+encodeURIComponent(HERO_SVG);
+
+  // ── Sound: generated tones (no files, CSP-safe) ──
+  let AC=null; const _sfxLast={};
+  function sfx(type){
+    try{
+      if(['coin','kill','hit'].includes(type)){ const n=performance.now(); if(n-(_sfxLast[type]||0)<55) return; _sfxLast[type]=n; }
+      if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+      if(AC.state==='suspended') AC.resume();
+      const t=AC.currentTime, o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(AC.destination);
+      let f=440,dur=.08,vol=.05,ty='square',up=0;
+      if(type==='hit'){f=240;dur=.05;vol=.035;}
+      else if(type==='kill'){f=520;dur=.06;vol=.04;ty='triangle';}
+      else if(type==='hurt'){f=150;dur=.16;vol=.09;ty='sawtooth';up=-.5;}
+      else if(type==='coin'){f=880;dur=.06;vol=.04;up=1.6;}
+      else if(type==='level'){f=620;dur=.2;vol=.08;ty='triangle';up=1.9;}
+      else if(type==='boss'){f=85;dur=.55;vol=.12;ty='sawtooth';up=-.5;}
+      o.type=ty; o.frequency.setValueAtTime(f,t);
+      if(up>0) o.frequency.exponentialRampToValueAtTime(f*up,t+dur);
+      if(up<0) o.frequency.exponentialRampToValueAtTime(f*(1+up),t+dur);
+      g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      o.start(t); o.stop(t+dur+.02);
+    }catch(e){}
+  }
+
+  // ── Game state ──
+  let G=null, running=false, paused=false, last=0, rafId=0;
+  function newGame(){
+    G={ px:W/2, py:H/2, pr:16, hp:100, maxhp:100, speed:2.6, ifr:0,
+        level:1, xp:0, xpNext:6, score:0, time:0,
+        fireT:0, fireInt:44, proj:1, dmg:10, pspeed:6.4, pickR:70, spread:0,
+        magnet:1, aura:0, auraT:0, face:1, moving:0,
+        knives:0, knifeAng:0, cava:0, cavaT:150,
+        enemies:[], bullets:[], gems:[], parts:[], bombs:[], explosions:[], dmgs:[],
+        spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
+        target:null, targetT:0, kills:0, nextBoss:38, shake:0 };
+    pickTarget(true);
+  }
+
+  // ── Input: drag joystick + keyboard ──
+  const keys={};
+  function onKeyDown(e){ if(e.key==='Escape'){ teardown(); return; } keys[e.key.toLowerCase()]=true; }
+  function onKeyUp(e){ keys[e.key.toLowerCase()]=false; }
+  window.addEventListener('keydown',onKeyDown);
+  window.addEventListener('keyup',onKeyUp);
+  const joy=document.getElementById('etJoy'), joyk=document.getElementById('etJoyk');
+  let touchId=null, jcx=0,jcy=0, jdx=0,jdy=0;
+  function toLocal(t){ const r=stage.getBoundingClientRect(); return {x:t.clientX-r.left,y:t.clientY-r.top}; }
+  function onTouchStart(e){
+    if(!running||paused) return;
+    const t=e.changedTouches[0]; if(touchId!==null) return;
+    touchId=t.identifier; const p=toLocal(t); jcx=p.x; jcy=p.y;
+    joy.style.display='block'; joy.style.left=(jcx-60)+'px'; joy.style.top=(jcy-60)+'px';
+    joyk.style.left='33px'; joyk.style.top='33px'; jdx=0; jdy=0;
+  }
+  function onTouchMove(e){
+    if(touchId===null) return;
+    for(const t of e.changedTouches){ if(t.identifier!==touchId) continue;
+      const p=toLocal(t); let dx=p.x-jcx, dy=p.y-jcy; let d=Math.hypot(dx,dy)||1;
+      // trailing base: pushing past the ring drags the joystick along → infinite travel
+      if(d>46){ jcx+=dx-dx/d*46; jcy+=dy-dy/d*46; joy.style.left=(jcx-60)+'px'; joy.style.top=(jcy-60)+'px'; dx=p.x-jcx; dy=p.y-jcy; d=Math.hypot(dx,dy)||1; }
+      const nx=dx/d, ny=dy/d, md=Math.min(d,46);
+      joyk.style.left=(33+nx*md)+'px'; joyk.style.top=(33+ny*md)+'px';
+      let mag=(md-7)/(46-7); if(mag<0) mag=0; if(mag>1) mag=1;   // 7px dead zone + smooth ramp
+      jdx=nx*mag; jdy=ny*mag; }
+  }
+  function onTouchEnd(e){ for(const t of e.changedTouches){ if(t.identifier===touchId){ touchId=null; jdx=0; jdy=0; joy.style.display='none'; } } }
+  stage.addEventListener('touchstart',onTouchStart,{passive:true});
+  stage.addEventListener('touchmove',onTouchMove,{passive:true});
+  stage.addEventListener('touchend',onTouchEnd,{passive:true});
+  stage.addEventListener('touchcancel',onTouchEnd,{passive:true});
+
+  function moveVec(){
+    let mx=jdx, my=jdy;
+    if(keys['a']||keys['arrowleft']) mx-=1; if(keys['d']||keys['arrowright']) mx+=1;
+    if(keys['w']||keys['arrowup']) my-=1; if(keys['s']||keys['arrowdown']) my+=1;
+    const d=Math.hypot(mx,my); if(d>1){ mx/=d; my/=d; } return {mx,my};
+  }
+
+  // ── Learning: rotating "order" — clear a specific allergen for bonus ──
+  function pickTarget(first){
+    const a=G.roster[Math.floor(Math.random()*G.roster.length)];
+    G.target=a; G.targetT=first?9999:0;
+    const b=document.getElementById('etOrderBanner');
+    b.style.display='block';
+    b.innerHTML=`El chef: retira <em>${a.name} ${a.emoji}</em> · x2 XP`;
+  }
+
+  // ── Spawning ──
+  function edgePos(){ const edge=Math.floor(Math.random()*4);
+    if(edge===0) return {x:-20,y:Math.random()*H}; if(edge===1) return {x:W+20,y:Math.random()*H};
+    if(edge===2) return {x:Math.random()*W,y:-20}; return {x:Math.random()*W,y:H+20}; }
+  function spawnEnemy(kind){
+    const p=edgePos();
+    const a=G.roster[Math.floor(Math.random()*G.roster.length)];
+    let r=15, spd=0.55+Math.random()*0.5+G.time*0.006, hpMul=1;
+    if(kind==='fast'){ r=12; spd*=1.7; hpMul=0.55; }
+    else if(kind==='tank'){ r=23; spd*=0.62; hpMul=3; }
+    const hp=(6+G.time*0.9)*hpMul;
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r,spd,kind:kind||'norm',flash:0});
+  }
+  function spawnBoss(){
+    const p=edgePos(); const a=G.roster[Math.floor(Math.random()*G.roster.length)];
+    const hp=130+G.time*11;
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:46,spd:0.5,kind:'boss',flash:0,boss:true});
+    flash('¡JEFE: '+a.name+'!','#e8735a'); sfx('boss'); G.shake=8;
+  }
+
+  // ── Upgrades ──
+  const UPGRADES=[
+    {ic:'🍽️',t:'Más bandejas',s:'+1 bandeja',fn:g=>{g.proj++;g.spread+=0.12;}},
+    {ic:'⚡',t:'Servicio rápido',s:'-16% recarga',fn:g=>{g.fireInt=Math.max(11,g.fireInt*0.84);}},
+    {ic:'🔪',t:'Filo del chef',s:'+6 daño bandeja',fn:g=>{g.dmg+=6;}},
+    {ic:'🗡️',t:'Cuchillos',s:g=>g.knives?'+1 cuchillo giratorio':'orbitan y cortan',fn:g=>{g.knives++;}},
+    {ic:'🍾',t:'Botella de cava',s:g=>g.cava?'+radio y daño':'explosión de área',fn:g=>{g.cava++;}},
+    {ic:'🌀',t:'Aroma',s:g=>g.aura?'+radio y daño':'pulso de área',fn:g=>{g.aura++;}},
+    {ic:'👟',t:'Pies ligeros',s:'+14% velocidad',fn:g=>{g.speed*=1.14;}},
+    {ic:'🧲',t:'Buen ojo',s:'+imán de propinas',fn:g=>{g.pickR+=34;g.magnet+=0.5;}},
+    {ic:'❤️',t:'Aguante',s:'+25 vida máx',fn:g=>{g.maxhp+=25;g.hp+=25;}},
+    {ic:'🎯',t:'Puntería',s:'+18% vel. bandeja',fn:g=>{g.pspeed*=1.18;}}
+  ];
+  function showLevelUp(){
+    paused=true;
+    const pool=UPGRADES.slice(); const picks=[];
+    while(picks.length<3 && pool.length){ picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]); }
+    const el=document.getElementById('etPicks');
+    el.innerHTML=picks.map((u,i)=>`<button class="et-pick" data-i="${i}"><div class="et-pick-ic">${u.ic}</div><div class="et-pick-tx"><b>${u.t}</b><span>${typeof u.s==='function'?u.s(G):u.s}</span></div></button>`).join('');
+    el.querySelectorAll('.et-pick').forEach(btn=>btn.onclick=()=>{
+      picks[+btn.dataset.i].fn(G);
+      // every 3 levels widen the allergen roster (more to learn)
+      if(G.level%3===0 && G.roster.length<ALLERGENS.length) G.roster.push(ALLERGENS[G.roster.length]);
+      document.getElementById('etLevelup').style.display='none'; paused=false; last=performance.now();
+    });
+    document.getElementById('etLevelup').style.display='flex';
+  }
+
+  function flash(txt,col){ const f=document.getElementById('etFlash'); f.textContent=txt; f.style.color=col||'var(--et-gold)';
+    f.style.fontSize='30px'; f.style.transition='none'; f.style.opacity='1'; f.style.transform='translate(-50%,-50%) scale(1.3)';
+    requestAnimationFrame(()=>{ f.style.transition='opacity .7s,transform .7s'; f.style.opacity='0'; f.style.transform='translate(-50%,-90%) scale(1)'; });
+  }
+  function burst(x,y,col,n){ for(let i=0;i<n;i++){ const a=Math.random()*6.28,s=1+Math.random()*3;
+    G.parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,col}); } }
+  function hurtEnemy(e,amt,silent){ e.hp-=amt; e.flash=6;
+    if(!silent && amt>=1) G.dmgs.push({x:e.x,y:e.y-e.r,val:Math.round(amt),life:1}); }
+
+  // ── Update ──
+  function update(dt){
+    G.time+=dt/60;
+    // player move
+    const mv=moveVec();
+    if(mv.mx<-0.05) G.face=-1; else if(mv.mx>0.05) G.face=1;
+    G.moving=(Math.abs(mv.mx)+Math.abs(mv.my))>0.05?1:0;
+    G.px=Math.max(G.pr,Math.min(W-G.pr,G.px+mv.mx*G.speed*dt));
+    G.py=Math.max(G.pr,Math.min(H-G.pr,G.py+mv.my*G.speed*dt));
+    if(G.ifr>0) G.ifr-=dt;
+
+    // spawn (archetypes ramp in over time)
+    G.spawnT-=dt;
+    const si=Math.max(8,G.spawnInt-G.time*0.35);
+    if(G.spawnT<=0){ G.spawnT=si; const rr=Math.random();
+      let kind='norm'; if(G.time>45&&rr<0.15) kind='tank'; else if(G.time>20&&rr<0.5) kind='fast';
+      spawnEnemy(kind); if(G.time>25&&Math.random()<0.5) spawnEnemy(Math.random()<0.4?'fast':'norm'); }
+    // boss wave every 40s
+    if(G.time>=G.nextBoss){ G.nextBoss+=40; spawnBoss(); }
+
+    // rotate order every ~22s
+    G.targetT+=dt/60; if(G.targetT>22) pickTarget(false);
+
+    // WEAPON — bandeja: auto-throw at nearest
+    G.fireT-=dt;
+    if(G.fireT<=0 && G.enemies.length){
+      G.fireT=G.fireInt;
+      let best=null,bd=1e9;
+      for(const e of G.enemies){ const d=(e.x-G.px)**2+(e.y-G.py)**2; if(d<bd){bd=d;best=e;} }
+      if(best){ const base=Math.atan2(best.y-G.py,best.x-G.px);
+        for(let i=0;i<G.proj;i++){ const off=(i-(G.proj-1)/2)*(G.spread||0.001);
+          const ang=base+off; G.bullets.push({x:G.px,y:G.py,vx:Math.cos(ang)*G.pspeed,vy:Math.sin(ang)*G.pspeed,life:70,dmg:G.dmg}); } }
+    }
+    // WEAPON — aroma: area pulse
+    if(G.aura>0){ G.auraT-=dt; if(G.auraT<=0){ G.auraT=90;
+      for(const e of G.enemies){ const d=Math.hypot(e.x-G.px,e.y-G.py); if(d<70+G.aura*14){ hurtEnemy(e,G.aura*5); } }
+      burst(G.px,G.py,'rgba(79,208,192,.6)',10); } }
+    // WEAPON — cava: lob a bomb, AoE explosion
+    if(G.cava>0){ G.cavaT-=dt; if(G.cavaT<=0 && G.enemies.length){ G.cavaT=Math.max(70,150-G.cava*12);
+      const tgt=G.enemies[Math.floor(Math.random()*G.enemies.length)];
+      G.bombs.push({tx:tgt.x,ty:tgt.y,ox:G.px,oy:G.py,cx:G.px,cy:G.py,t:0,dur:26}); } }
+    for(let i=G.bombs.length-1;i>=0;i--){ const b=G.bombs[i]; b.t+=dt; const k=Math.min(1,b.t/b.dur);
+      b.cx=b.ox+(b.tx-b.ox)*k; b.cy=b.oy+(b.ty-b.oy)*k-Math.sin(k*Math.PI)*42;
+      if(k>=1){ const R=55+G.cava*9, D=22+G.cava*10;
+        for(const e of G.enemies){ if(Math.hypot(e.x-b.cx,e.y-b.cy)<R+e.r) hurtEnemy(e,D); }
+        G.explosions.push({x:b.cx,y:b.cy,r:10,max:R,life:1}); burst(b.cx,b.cy,'#e8c44c',18); G.shake=Math.max(G.shake,7); sfx('hit'); G.bombs.splice(i,1); } }
+    for(let i=G.explosions.length-1;i>=0;i--){ const x=G.explosions[i]; x.r+=(x.max-x.r)*0.28*dt; x.life-=dt*0.06; if(x.life<=0) G.explosions.splice(i,1); }
+    // WEAPON — cuchillos giratorios
+    if(G.knives>0){ G.knifeAng+=dt*0.09;
+      for(let k=0;k<G.knives;k++){ const ang=G.knifeAng+k*(6.283/G.knives), kx=G.px+Math.cos(ang)*48, ky=G.py+Math.sin(ang)*48;
+        for(const e of G.enemies){ if((e.x-kx)**2+(e.y-ky)**2<(e.r+8)**2) hurtEnemy(e,(5+G.knives*2)*dt*0.5,true); } } }
+
+    // bullets
+    for(const b of G.bullets){ b.x+=b.vx*dt; b.y+=b.vy*dt; b.life-=dt; }
+    // enemies move + collide
+    for(const e of G.enemies){
+      if(e.flash>0) e.flash-=dt;
+      const d=Math.hypot(G.px-e.x,G.py-e.y)||1; e.x+=(G.px-e.x)/d*e.spd*dt; e.y+=(G.py-e.y)/d*e.spd*dt;
+      if(d<G.pr+e.r && G.ifr<=0){ G.hp-=e.boss?18:8; G.ifr=e.boss?40:32; G.shake=Math.max(G.shake,e.boss?9:5); burst(G.px,G.py,'#a3372c',8); sfx('hurt');
+        if(G.hp<=0){ return gameOver(); } }
+      for(const b of G.bullets){ if(b.life<=0) continue; if((b.x-e.x)**2+(b.y-e.y)**2 < (e.r+5)**2){ hurtEnemy(e,b.dmg); b.life=0; burst(e.x,e.y,'#f4e4c1',4); } }
+    }
+    // kill + drops
+    for(let i=G.enemies.length-1;i>=0;i--){ const e=G.enemies[i]; if(e.hp<=0){
+      const isTarget=G.target&&e.a.key===G.target.key;
+      if(e.boss){ for(let g=0;g<10;g++) G.gems.push({x:e.x+(Math.random()-.5)*44,y:e.y+(Math.random()-.5)*44,val:3,col:'#e0a02c'});
+        G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; flash('¡JEFE ABATIDO!','#4fd0c0'); }
+      else G.gems.push({x:e.x,y:e.y,val:isTarget?2:1,col:isTarget?'#e0a02c':'#4fd0c0'});
+      burst(e.x,e.y,e.a.col,e.boss?26:10); G.enemies.splice(i,1); G.score++; G.kills++; sfx('kill');
+      if(isTarget && !e.boss) G.hp=Math.min(G.maxhp,G.hp+2);
+    }}
+    // gems magnet + collect
+    for(let i=G.gems.length-1;i>=0;i--){ const g=G.gems[i]; const d=Math.hypot(G.px-g.x,G.py-g.y)||1;
+      if(d<G.pickR){ g.x+=(G.px-g.x)/d*6*G.magnet*dt*0.5+(G.px-g.x)/d*2; g.y+=(G.py-g.y)/d*6*G.magnet*dt*0.5+(G.py-g.y)/d*2; }
+      if(d<G.pr+8){ G.xp+=g.val; G.gems.splice(i,1); sfx('coin');
+        if(G.xp>=G.xpNext){ G.xp-=G.xpNext; G.level++; G.xpNext=Math.round(G.xpNext*1.45+2); sfx('level'); showLevelUp(); flash('NIVEL '+G.level,'#4fd0c0'); } } }
+    // damage numbers + particles + shake decay
+    for(let i=G.dmgs.length-1;i>=0;i--){ const n=G.dmgs[i]; n.y-=dt*0.7; n.life-=dt*0.045; if(n.life<=0) G.dmgs.splice(i,1); }
+    for(let i=G.parts.length-1;i>=0;i--){ const p=G.parts[i]; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vx*=0.92; p.vy*=0.92; p.life-=dt*0.04; if(p.life<=0) G.parts.splice(i,1); }
+    if(G.shake>0){ G.shake-=dt*0.6; if(G.shake<0) G.shake=0; }
+    // cap enemies
+    if(G.enemies.length>150) G.enemies.splice(0,G.enemies.length-150);
+  }
+
+  // ── Render ──
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.save();
+    if(G.shake>0.4){ ctx.translate((Math.random()-.5)*G.shake, (Math.random()-.5)*G.shake); }
+    // vintage checkerboard floor (subtle parallax drift)
+    const TS=48, ox=((-G.px*0.03)%(TS*2)+TS*2)%(TS*2), oy=((-G.py*0.03)%(TS*2)+TS*2)%(TS*2);
+    ctx.fillStyle='rgba(224,160,44,.05)';
+    for(let gx=-2;gx*TS<W+TS*2;gx++){ for(let gy=-2;gy*TS<H+TS*2;gy++){
+      if(((gx+gy)&1)===0) continue;
+      ctx.fillRect(gx*TS-TS*2+ox, gy*TS-TS*2+oy, TS, TS);
+    }}
+    // gems
+    for(const g of G.gems){ ctx.fillStyle=g.col; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(g.x,g.y-5);ctx.lineTo(g.x+5,g.y);ctx.lineTo(g.x,g.y+5);ctx.lineTo(g.x-5,g.y);ctx.closePath();ctx.fill();ctx.stroke(); }
+    // enemies — Cuphead-style allergen monsters (colour + emblem = what to learn)
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    for(const e of G.enemies){
+      const wob=Math.sin(G.time*6+e.x*0.05)*0.10;
+      ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(e.x,e.y+e.r*0.95,e.r*0.85,e.r*0.32,0,0,6.29); ctx.fill();
+      ctx.save(); ctx.translate(e.x,e.y); ctx.scale(1+wob,1-wob);
+      ctx.beginPath(); ctx.fillStyle=e.a.col; ctx.strokeStyle='#1c1512'; ctx.lineWidth=e.boss?5:3.5; ctx.arc(0,0,e.r,0,6.29); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.fillStyle='rgba(255,255,255,.16)'; ctx.arc(-e.r*0.3,-e.r*0.32,e.r*0.42,0,6.29); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.strokeStyle='#1c1512'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(-e.r*0.33,-e.r*0.16,e.r*0.29,0,6.29); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(e.r*0.33,-e.r*0.16,e.r*0.29,0,6.29); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#1c1512';
+      ctx.beginPath(); ctx.arc(-e.r*0.26,-e.r*0.10,e.r*0.13,0,6.29); ctx.fill();
+      ctx.beginPath(); ctx.arc(e.r*0.40,-e.r*0.10,e.r*0.13,0,6.29); ctx.fill();
+      ctx.strokeStyle='#1c1512'; ctx.lineWidth=3; ctx.beginPath();
+      ctx.moveTo(-e.r*0.66,-e.r*0.52); ctx.lineTo(-e.r*0.06,-e.r*0.26);
+      ctx.moveTo(e.r*0.66,-e.r*0.52); ctx.lineTo(e.r*0.06,-e.r*0.26); ctx.stroke();
+      ctx.font=Math.round(e.r*0.85)+'px Georgia'; ctx.fillText(e.a.emoji,0,e.r*0.52);
+      if(e.flash>0){ ctx.globalAlpha=Math.min(0.75,e.flash/6); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,e.r,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
+      ctx.restore();
+      const bw=e.boss?60:26;
+      if(e.hp<e.maxhp){ ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw,e.boss?5:3); ctx.fillStyle=e.boss?'#e0a02c':'#e8735a'; ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw*Math.max(0,e.hp/e.maxhp),e.boss?5:3); }
+    }
+    // explosions (cava)
+    for(const x of G.explosions){ ctx.globalAlpha=Math.max(0,x.life)*0.5; ctx.strokeStyle='#e8c44c'; ctx.lineWidth=4; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.stroke(); ctx.globalAlpha=Math.max(0,x.life)*0.18; ctx.fillStyle='#e8a02c'; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
+    // flying cava bottles
+    ctx.font='20px Georgia'; for(const b of G.bombs){ ctx.fillText('🍾',b.cx,b.cy); }
+    // bullets (plates)
+    for(const b of G.bullets){ if(b.life<=0)continue; ctx.fillStyle='#f4e4c1'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(b.x,b.y,5,0,6.29); ctx.fill(); ctx.stroke(); }
+    // particles
+    for(const p of G.parts){ ctx.globalAlpha=Math.max(0,p.life); ctx.fillStyle=p.col; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,6.29); ctx.fill(); }
+    ctx.globalAlpha=1;
+    // player — the protagonist (Cuphead sprite); bobs while moving, flips by facing
+    const bob=G.moving?Math.sin(G.time*13)*2.2:Math.sin(G.time*3)*1;
+    const flick=G.ifr>0 && Math.floor(G.time*20)%2===0;
+    ctx.fillStyle='rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(G.px,G.py+22,17,5,0,0,6.29); ctx.fill();
+    if(!flick){
+      const w=46,h=58;
+      if(heroReady){ ctx.save(); ctx.translate(G.px,G.py+bob); ctx.scale(G.face,1);
+        ctx.drawImage(HERO,-w/2,-h/2-6,w,h); ctx.restore(); }
+      else { ctx.fillStyle='#213a8a'; ctx.strokeStyle='#1c1512'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(G.px,G.py,14,0,6.29); ctx.fill(); ctx.stroke(); }
+    }
+    // orbiting knives
+    if(G.knives>0){ for(let k=0;k<G.knives;k++){ const ang=G.knifeAng+k*(6.283/G.knives), kx=G.px+Math.cos(ang)*48, ky=G.py+Math.sin(ang)*48;
+      ctx.save(); ctx.translate(kx,ky); ctx.rotate(ang+1.57); ctx.fillStyle='#e8e8ee'; ctx.strokeStyle='#241a12'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(0,-9); ctx.lineTo(3.5,5); ctx.lineTo(-3.5,5); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); } }
+    // aura ring
+    if(G.aura>0){ ctx.globalAlpha=.25; ctx.strokeStyle='#4fd0c0'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(G.px,G.py,70+G.aura*14-(G.auraT/90)*20,0,6.29); ctx.stroke(); ctx.globalAlpha=1; }
+    // damage numbers
+    ctx.font='bold 13px Georgia'; ctx.textAlign='center'; ctx.lineWidth=3;
+    for(const n of G.dmgs){ ctx.globalAlpha=Math.max(0,n.life); ctx.strokeStyle='#241a12'; ctx.strokeText(n.val,n.x,n.y); ctx.fillStyle='#fff'; ctx.fillText(n.val,n.x,n.y); }
+    ctx.globalAlpha=1;
+    ctx.restore();
+  }
+
+  // ── HUD sync ──
+  function syncHUD(){
+    document.getElementById('etHpfill').style.width=Math.max(0,G.hp/G.maxhp*100)+'%';
+    const m=Math.floor(G.time/60), s=Math.floor(G.time%60);
+    document.getElementById('etTimePill').textContent=m+':'+(s<10?'0':'')+s;
+    document.getElementById('etLvlPill').innerHTML='Nv <b>'+G.level+'</b>';
+    document.getElementById('etScorePill').innerHTML=G.score+' <b>comandas</b>';
+    document.getElementById('etXpfill').style.width=(G.xp/G.xpNext*100)+'%';
+  }
+
+  // ── Loop ──
+  function loop(t){
+    rafId=requestAnimationFrame(loop);
+    if(!running) return;
+    let dt=(t-last)/16.67; last=t; if(dt>3) dt=3; if(dt<0) dt=0;
+    if(!paused){ update(dt); }
+    draw(); syncHUD();
+  }
+
+  function start(){
+    document.getElementById('etStart').style.display='none';
+    document.getElementById('etOver').style.display='none';
+    newGame(); running=true; paused=false; last=performance.now();
+    if(!rafId) rafId=requestAnimationFrame(loop);
+  }
+  function gameOver(){
+    running=false;
+    const m=Math.floor(G.time/60), s=Math.floor(G.time%60);
+    document.getElementById('etOverStats').innerHTML=
+      `Aguantaste <b>${m}:${s<10?'0':''}${s}</b> · <b>${G.score}</b> comandas servidas · Nivel <b>${G.level}</b>`;
+    document.getElementById('etOver').style.display='flex';
+  }
+  document.getElementById('etPlayBtn').onclick=start;
+  document.getElementById('etAgainBtn').onclick=start;
+  // idle canvas so it isn't blank behind the start screen
+  ctx.fillStyle='rgba(0,0,0,0)'; ctx.fillRect(0,0,W,H);
+
+  // ── Teardown: fully unmounts the game so re-entering never leaks ──
+  function teardown(){
+    running=false;
+    if(rafId) cancelAnimationFrame(rafId);
+    window.removeEventListener('resize',resize);
+    window.removeEventListener('keydown',onKeyDown);
+    window.removeEventListener('keyup',onKeyUp);
+    stage.removeEventListener('touchstart',onTouchStart);
+    stage.removeEventListener('touchmove',onTouchMove);
+    stage.removeEventListener('touchend',onTouchEnd);
+    stage.removeEventListener('touchcancel',onTouchEnd);
+    if(AC){ try{ AC.close(); }catch(_){} AC=null; }
+    overlay.remove();
+  }
+  document.getElementById('etExitBtn').onclick=teardown;
 }
 
 // ── Game flow ────────────────────────────────────────
