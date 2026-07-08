@@ -6731,15 +6731,19 @@ body::after{
 #etWrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 #etStage{
   position:relative;width:100%;height:100%;max-width:520px;margin:0 auto;overflow:hidden;
-  background:radial-gradient(120% 90% at 50% 18%,#3a2616 0%,#241609 55%,#160d05 100%);
-  box-shadow:0 0 60px rgba(0,0,0,.6) inset;
+  background:
+    radial-gradient(75% 42% at 50% -4%, rgba(255,236,180,.85) 0%, rgba(255,214,150,.35) 42%, transparent 72%),
+    radial-gradient(60% 40% at 18% 88%, rgba(255,208,140,.28), transparent 60%),
+    radial-gradient(60% 40% at 82% 30%, rgba(255,208,140,.24), transparent 60%),
+    linear-gradient(180deg, #dcbc8a 0%, #d1ac78 28%, #c39c64 62%, #b58a52 100%);
+  box-shadow:0 0 40px rgba(90,55,20,.25) inset;
   --et-ink:#241a12;--et-paper:#f4e4c1;--et-paper2:#e9d3a4;
   --et-gold:#e0a02c;--et-oxblood:#a3372c;--et-teal:#2f6b63;--et-sepia:#b98a4e;
 }
 #etCv{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:optimizeQuality}
 #etGrain{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:.10;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
-#etVig{position:absolute;inset:0;pointer-events:none;z-index:4;box-shadow:inset 0 0 120px 30px rgba(15,8,3,.8)}
+#etVig{position:absolute;inset:0;pointer-events:none;z-index:4;box-shadow:inset 0 0 70px 8px rgba(110,72,32,.28)}
 
 #etExitBtn{
   position:absolute;top:calc(.6rem + env(safe-area-inset-top,0px));right:.6rem;z-index:8;
