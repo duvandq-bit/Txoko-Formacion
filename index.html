@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.145';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.146';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -22730,7 +22730,7 @@ function renderTxoko(){
     :(_en?failedCount+' dishes to review':failedCount+' platos a repasar');
   const _gcDeco = `<span class="gc-strip"></span><span class="gc-corner tl"></span><span class="gc-corner tr"></span><span class="gc-corner bl"></span><span class="gc-corner br"></span><span class="gc-shine"></span>`;
   document.getElementById('appContent').innerHTML=`
-    <div class="txoko-wrap">
+    <div class="txoko-wrap tx-rh-hub">
       <div class="games-header">
         <span class="games-header-shine"></span>
         <div class="games-header-crown"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg></div>
@@ -22743,30 +22743,7 @@ function renderTxoko(){
         <span class="gc-recommended-badge">★ ${_en?'Recommended':'Recomendado'}</span>
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03))">
-          <svg viewBox="0 0 60 70" width="48" height="56">
-            <!-- Hex frame -->
-            <polygon points="30,2 56,16 56,46 30,60 4,46 4,16" fill="none" stroke="rgba(196,154,60,.2)" stroke-width=".8"/>
-            <polygon points="30,6 52,18 52,44 30,56 8,44 8,18" fill="rgba(196,154,60,.06)"/>
-            <!-- Mini Mr. Shoesmith face -->
-            <ellipse cx="30" cy="28" rx="14" ry="16" fill="#fce4c8"/>
-            <path d="M16,24 Q14,12 22,8 Q28,5 30,6 Q32,5 38,8 Q46,12 44,24" fill="#d8d2ca"/>
-            <path d="M18,22 Q16,14 24,10 Q29,7 30,8 Q31,7 36,10 Q44,14 42,22" fill="#d0cac2"/>
-            <path d="M23,25 Q27,22 31,25" stroke="#3a2515" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <path d="M29,25 Q33,22 37,25" stroke="#3a2515" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <path d="M22,21 Q27,19 31,21" stroke="#8a7060" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-            <path d="M29,21 Q33,19 38,21" stroke="#8a7060" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-            <path d="M25,36 Q28,39 30,38 Q32,39 35,36" stroke="#6a5040" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <path d="M26,40 Q30,44 34,40" stroke="#b86050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-            <!-- Wine glass -->
-            <g transform="translate(44,18) rotate(-15) scale(.7)">
-              <ellipse cx="6" cy="4" rx="5" ry="7" fill="none" stroke="#888" stroke-width="1"/>
-              <ellipse cx="6" cy="5" rx="4" ry="4.5" fill="#7a1030" opacity=".5"/>
-              <line x1="6" y1="11" x2="6" y2="18" stroke="#888" stroke-width="1.2"/>
-            </g>
-            <!-- VIP badge -->
-            <rect x="14" y="50" width="32" height="8" rx="4" fill="#c49a3c" opacity=".9"/>
-            <text x="30" y="56" text-anchor="middle" font-family="'DM Mono',monospace" font-size="5" fill="#fff" font-weight="600">VIP 501</text>
-          </svg>
+          <div class="tx-rh-hero-frame"><img src="${SHOESMITH_FACES[0]}" alt="Mr. Shoesmith"></div>
         </div>
         <div class="game-card-body">
           <div class="game-card-label">${_en?'SURVIVAL':'SUPERVIVENCIA'}</div>
@@ -23365,8 +23342,9 @@ function txShowIntro(){
   // Use the calm face (5 lives) as the portrait
   const portrait = txClientFace(5, 100);
 
-  c.innerHTML = `<div class="txoko-wrap" style="animation:fadeIn .5s ease">
-    <div style="max-width:400px;margin:0 auto;padding:0;text-align:center">
+  c.innerHTML = `<div class="txoko-wrap tx-rh-intro-bg" style="animation:fadeIn .5s ease">
+    <div class="tx-rh-grain"></div><div class="tx-rh-vig"></div>
+    <div class="tx-rh-wrap" style="max-width:400px;margin:0 auto;padding:0;text-align:center">
 
       <!-- Dark TUNIC header panel -->
       <div style="background:linear-gradient(160deg,#2a3530 0%,var(--parchment) 40%,#243028 100%);border-radius:var(--r) var(--r) 0 0;padding:1.5rem 1.25rem 1.8rem;position:relative;overflow:hidden">
@@ -23626,43 +23604,45 @@ function txRender(){
   const letters=['A','B','C','D'];
   const pct=patienceLeft/patienceMax*100;
   const col=pct>50?'#4d8a5e':pct>25?'#d4aa4c':'#c47068';
+  const _en=LANG==='en';
 
   document.getElementById('appContent').innerHTML=`
-    <div class="txoko-game">
-      ${streak>=3?`<div style="display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.35rem .7rem;margin-bottom:.4rem;background:linear-gradient(135deg,rgba(200,169,110,.12),rgba(196,154,60,.05));border:1px solid var(--gold-a);border-radius:var(--r2);animation:pulse 1.5s infinite;pointer-events:none">
-        <span style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:bold;color:var(--gold)">${streak}x</span>
-        <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--gold);text-transform:uppercase">COMBO${streak>=7?' ●':streak>=5?' »':' ✨'}</span>
+    <div class="txoko-game tx-rh-stage">
+      <div class="tx-rh-grain"></div><div class="tx-rh-vig"></div>
+      <div class="tx-rh-wrap">
+      ${streak>=3?`<div class="tx-rh-combo" style="animation:pulse 1.5s infinite">
+        <span class="tx-rh-combo-n">${streak}x</span>
+        <span class="tx-rh-combo-lbl">COMBO${streak>=7?' ●':streak>=5?' »':' ✨'}</span>
       </div>`:''}
-      <div class="txoko-hud" style="display:flex;align-items:center;gap:.5rem">
-        <span id="txokoClientFace" style="display:flex;align-items:center;transition:all .3s">${txClientFace(lives,pct)}</span>
-        <span class="txoko-streak" id="txokoStreak" style="flex:1">${streak>1?(`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg> `+(LANG==='en'?'Streak':'Racha')+' x'+streak):''}</span>
-        <span class="txoko-score-hud">${score} <span class="txoko-diff ${lvl.cls}">${txLevelName(lvl)}</span></span>
+      <div class="tx-rh-trow">
+        <div class="tx-rh-mesa">${_en?'TABLE 501':'MESA 501'}</div>
+        <span class="txoko-streak" id="txokoStreak">${streak>1?(`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg> `+(_en?'Streak':'Racha')+' x'+streak):''}</span>
+        <div class="tx-rh-chip"><span class="txoko-diff ${lvl.cls}">${txLevelName(lvl)}</span> · ${score}</div>
       </div>
-      <div class="txoko-patience-wrap">
-        <div class="txoko-patience-label">
-          <span>⏱ ${LANG==='en'?"Guest's patience":'Paciencia del huésped'}</span>
-          <span id="txokoTimeLeft">${Math.ceil(patienceLeft)}s</span>
-        </div>
-        <div class="txoko-patience-track">
-          <div class="txoko-patience-fill" id="txokoPatienceFill" style="width:${pct}%;background:${col}"></div>
-        </div>
+      <div class="tx-rh-gauge">
+        <span class="tx-rh-gauge-lbl">${_en?'PATIENCE':'PACIENCIA'}</span>
+        <span class="tx-rh-gauge-track"><span class="tx-rh-gauge-fill" id="txokoPatienceFill" style="width:${pct}%;background:${col}"></span></span>
+        <span class="tx-rh-gauge-t" id="txokoTimeLeft">${Math.ceil(patienceLeft)}s</span>
       </div>
-      <div class="txoko-scene">
-        <div class="txoko-waiter">
-          <div class="txoko-waiter-avatar"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 11v2M10 13h4"/></svg></div>
-          <div class="txoko-waiter-bubble">
-            ${q.msg}
-            <div><span class="txoko-dish-badge">◇ ${q.topicLabel}</span></div>
-          </div>
+      <div class="tx-rh-panel">
+        <div class="tx-rh-face-frame">
+          <span id="txokoClientFace" style="display:block;width:100%;height:100%">${txClientFace(lives,pct)}</span>
+          <div class="tx-rh-face-tag">MR. SHOESMITH</div>
+        </div>
+        <div class="tx-rh-bubble">
+          <div class="tx-rh-who">${_en?'Demands to know':'Exige saber'}</div>
+          <div class="tx-rh-q">${q.msg}</div>
+          <span class="txoko-dish-badge">◇ ${q.topicLabel}</span>
         </div>
       </div>
       <div class="txoko-choices" id="txokoChoices">
         ${q.choices.map((c,i)=>`
           <button class="txoko-choice" onclick="txAnswer(${i})">
-            <span class="txoko-choice-letter">${letters[i]}.</span>${c}
+            <span class="txoko-choice-letter tx-rh-opt-k">${letters[i]}</span><span class="tx-rh-opt-txt">${c}</span>
           </button>`).join('')}
       </div>
       <div class="txoko-feedback" id="txokoFeedback"></div>
+      </div>
     </div>`;
 }
 
@@ -23678,7 +23658,9 @@ function txGameOver(){
   const lvl=txLevel(txokoState.score);
 
   document.getElementById('appContent').innerHTML=`
-    <div class="txoko-wrap">
+    <div class="txoko-wrap tx-rh-intro-bg">
+      <div class="tx-rh-grain"></div><div class="tx-rh-vig"></div>
+      <div class="tx-rh-wrap">
       <div class="txoko-gameover">
         <div class="txoko-gameover-icon" style="font-size:unset">${isRecord?'★':txClientFace(1,0)}</div>
         <div class="txoko-gameover-title">${isRecord?(LANG==='en'?'New record!':'¡Nuevo récord!'):(LANG==='en'?'Service over':'Servicio terminado')}</div>
@@ -23691,6 +23673,7 @@ function txGameOver(){
         </div>
         <button class="btn-primary" onclick="txStart(true)" style="width:100%;margin-bottom:.75rem">${LANG==='en'?'Try again →':'Volver a intentarlo →'}</button>
         <button onclick="renderTxoko()" style="width:100%;padding:.85rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:500;color:var(--parch2);cursor:pointer;letter-spacing:.04em">${LANG==='en'?'← Main menu':'← Menú principal'}</button>
+      </div>
       </div>
     </div>`;
   // F-P1-1: belt-and-braces — also fire here in case the run ended without a record bump.

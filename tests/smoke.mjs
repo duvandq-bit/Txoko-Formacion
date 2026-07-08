@@ -2598,6 +2598,73 @@ test('Mr. Shoesmith: reactive face sprites wired, intro framed (no hex crop)', (
   assert(/\.tx-shoe-face\{[^}]*object-fit:cover/.test(css), '.tx-shoe-face needs object-fit:cover framing');
 });
 
+test('Txoko question screen (txRender) shows Mr. Shoesmith BIG, not the old generic waiter icon', () => {
+  // Owner redesign: rubber-hose/Cuphead-vintage skin. The reactive face must
+  // be large and framed next to the question bubble — the small HUD icon and
+  // the generic <svg> waiter avatar are gone.
+  const i = html.indexOf('function txRender(');
+  assert(i !== -1, 'txRender not found');
+  const body = html.slice(i, html.indexOf('\nfunction txGameOver', i));
+  assert(/class="tx-rh-face-frame"/.test(body), 'txRender must wrap the big face in .tx-rh-face-frame');
+  assert(/id="txokoClientFace"[^>]*>\$\{txClientFace\(lives,\s*pct\)\}/.test(body),
+    'txRender must render the reactive face via txClientFace(lives, pct) into #txokoClientFace');
+  assert(!/txoko-waiter-avatar/.test(body), 'the old generic <svg> waiter avatar must be removed — the real face replaces it');
+  assert(/class="txoko-game tx-rh-stage"/.test(body), 'txRender root must carry the tx-rh-stage rubber-hose scope');
+  // Structural ids the game loop depends on (txTick/txAnswer) must survive the reskin.
+  for (const id of ['txokoPatienceFill', 'txokoTimeLeft', 'txokoStreak', 'txokoChoices', 'txokoFeedback']) {
+    assert(body.includes(`id="${id}"`), `txRender must keep id="${id}" — the game loop reads/writes it directly`);
+  }
+});
+
+test('Games hub: Mr. Shoesmith card shows the real character photo, not the old placeholder SVG face', () => {
+  const hubStart = html.indexOf('function renderTxoko(');
+  const hubEnd = html.indexOf('function renderTxTop10(');
+  assert(hubStart !== -1 && hubEnd > hubStart, 'could not locate renderTxoko body');
+  const hub = html.slice(hubStart, hubEnd);
+  assert(/class="tx-rh-hero-frame"><img src="\$\{SHOESMITH_FACES\[0\]\}"/.test(hub),
+    'the Mr. Shoesmith game-card must render SHOESMITH_FACES[0] inside .tx-rh-hero-frame');
+  assert(!/Mini Mr\. Shoesmith face/.test(hub), 'the old placeholder SVG face (ellipse/path sketch) must be gone');
+  assert(hub.includes('class="txoko-wrap tx-rh-hub"'), 'the hub wrapper must carry the tx-rh-hub rubber-hose scope');
+  // structure/behaviour untouched — every card must still be present and wired
+  for (const onclick of ['txStart()', 'startErrorMode()', 'renderDuel()', 'renderRuleta()', 'launchElTurno()']) {
+    assert(hub.includes(onclick), `hub must still wire up ${onclick} — reskin must not drop a game card`);
+  }
+});
+
+test('tx-rh rubber-hose CSS exists, is scoped, and covers every class the markup uses', () => {
+  const css = read('styles.css');
+  // Every tx-rh-* class name referenced by the JS templates must have a rule.
+  const usedClasses = new Set();
+  for (const m of html.matchAll(/class="([^"]*tx-rh-[^"]*)"/g)) {
+    for (const c of m[1].split(/\s+/)) if (c.startsWith('tx-rh-')) usedClasses.add(c);
+  }
+  assert(usedClasses.size >= 15, `expected many tx-rh- classes in the markup, found ${usedClasses.size}`);
+  const missing = [...usedClasses].filter(c => !css.includes('.' + c));
+  assert(missing.length === 0, `tx-rh- classes used in markup but never styled: ${missing.join(', ')}`);
+  // Scoping: every rule the TX-RH section adds for a shared/legacy class name
+  // (txoko-choice, txoko-streak, txoko-dish-badge, txoko-feedback, game-card,
+  // games-header) must be nested under .tx-rh-stage or .tx-rh-hub, so none of
+  // it can leak into any other screen. Only look at CSS added after the
+  // section marker — the original base rules for these classes predate this
+  // redesign and are intentionally left as-is.
+  const markerIdx = css.indexOf('TX-RH —');
+  const endIdx = css.indexOf('/TX-RH', markerIdx);
+  assert(markerIdx !== -1, 'TX-RH rubber-hose CSS section marker not found in styles.css');
+  assert(endIdx !== -1 && endIdx > markerIdx, 'TX-RH rubber-hose CSS section end marker (/TX-RH) not found');
+  const rhLines = css.slice(markerIdx, endIdx).split('\n').filter(l => l.includes('{'));
+  for (const legacy of ['txoko-choice', 'txoko-streak', 'txoko-dish-badge', 'txoko-feedback', 'game-card', 'games-header']) {
+    const wordBoundary = new RegExp(`\\.${legacy}\\b(?!-)`);
+    const hits = rhLines.filter(l => wordBoundary.test(l));
+    assert(hits.length > 0, `expected the TX-RH section to restyle .${legacy}`);
+    const unscoped = hits.filter(l => !l.trim().startsWith('.tx-rh-stage') && !l.trim().startsWith('.tx-rh-hub'));
+    assert(unscoped.length === 0, `.${legacy} rubber-hose override must be scoped under .tx-rh-stage/.tx-rh-hub, found unscoped: ${unscoped.join(' | ')}`);
+  }
+  // Tap targets: option buttons must clear the 44px touch minimum.
+  const rhBlock = css.slice(markerIdx, endIdx);
+  assert(/\.tx-rh-stage\s+\.txoko-choice\{[^}]*min-height:44px/.test(rhBlock),
+    'rubber-hose option buttons must keep a 44px minimum tap target');
+});
+
 test('EL TURNO markup/CSS is fully scoped under an et- prefix — no collision with app-wide selectors', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');

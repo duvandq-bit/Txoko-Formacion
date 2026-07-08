@@ -4832,6 +4832,136 @@ body::after{
 
 .exam-correct-flash{animation:greenFlash .6s ease both}
 .exam-wrong-flash{animation:redFlash .5s ease both}
+
+/* ═══ TX-RH — rubber-hose / Cuphead-vintage skin for the Txoko game + hub ═══
+   Owner-requested visual reskin of Mr. Shoesmith's game (question screen,
+   intro, game-over) and the Games hub. Presentation only — no game logic,
+   scoring, question, or content changes. Everything new lives under the
+   tx-rh- prefix, or is scoped as ".tx-rh-stage .foo" / ".tx-rh-hub .foo" so
+   it can never bleed into the parchment/TUNIC skin used elsewhere. Ids the
+   game JS reads by getElementById (txokoPatienceFill, txokoTimeLeft,
+   txokoClientFace, txokoStreak, txokoChoices, txokoFeedback) are untouched
+   structurally — only restyled inside this scope. */
+:root{
+  --tx-rh-ink:#241a12; --tx-rh-paper:#f4e4c1; --tx-rh-paper2:#e9d3a4;
+  --tx-rh-gold:#e0a02c; --tx-rh-oxblood:#a3372c; --tx-rh-teal:#2f6b63; --tx-rh-purple:#7a5a9a;
+}
+.tx-rh-stage,.tx-rh-intro-bg{
+  position:relative;border-radius:20px;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 10%,#5a4028 0%,#3a2616 45%,#241609 100%);
+}
+.tx-rh-stage{padding:.9rem .85rem 1.1rem}
+.tx-rh-intro-bg{padding:.6rem}
+.tx-rh-grain{position:absolute;inset:0;pointer-events:none;opacity:.1;mix-blend-mode:overlay;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+.tx-rh-vig{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 90px 24px rgba(15,8,3,.7);z-index:1}
+.tx-rh-wrap{position:relative;z-index:2}
+
+/* combo / streak pulse banner */
+.tx-rh-combo{display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.3rem .7rem;margin-bottom:.5rem;
+  background:linear-gradient(135deg,var(--tx-rh-gold),#a47a2c);border:2.5px solid var(--tx-rh-ink);border-radius:20px;
+  box-shadow:0 3px 0 var(--tx-rh-ink);pointer-events:none}
+.tx-rh-combo-n{font-family:'Cinzel',serif;font-weight:900;font-size:1rem;color:var(--tx-rh-ink)}
+.tx-rh-combo-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--tx-rh-ink);text-transform:uppercase;font-weight:700}
+
+/* top row: table placard + streak + score chip */
+.tx-rh-trow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:9px}
+.tx-rh-mesa{background:var(--tx-rh-paper);border:3px solid var(--tx-rh-ink);border-radius:9px;padding:.3rem .9rem;
+  font-family:'Cinzel',serif;font-weight:900;color:var(--tx-rh-oxblood);box-shadow:0 3px 0 var(--tx-rh-ink);
+  font-size:.82rem;letter-spacing:.03em;white-space:nowrap}
+.tx-rh-stage .txoko-streak{flex:1;text-align:right;min-width:0;background:transparent;border:none;padding:0;
+  color:var(--tx-rh-paper2);font-family:'Cinzel',serif;font-weight:700;font-size:.62rem;box-shadow:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-rh-chip{background:var(--tx-rh-teal);border:2.5px solid var(--tx-rh-ink);border-radius:20px;
+  color:var(--tx-rh-paper);font-family:'Cinzel',serif;font-weight:800;font-size:.62rem;letter-spacing:.05em;
+  padding:.25rem .8rem;box-shadow:0 3px 0 var(--tx-rh-ink);white-space:nowrap}
+.tx-rh-chip .txoko-diff{background:transparent;border:none;padding:0;box-shadow:none;font-family:'Cinzel',serif;font-weight:800}
+
+/* segmented patience gauge */
+.tx-rh-gauge{background:var(--tx-rh-paper);border:3px solid var(--tx-rh-ink);border-radius:26px;padding:.35rem .6rem;
+  display:flex;align-items:center;gap:8px;box-shadow:0 3px 0 var(--tx-rh-ink);margin-bottom:.7rem}
+.tx-rh-gauge-lbl{font-family:'Cinzel',serif;font-weight:800;font-size:.46rem;letter-spacing:.08em;color:var(--tx-rh-ink);
+  white-space:nowrap;flex-shrink:0}
+.tx-rh-gauge-track{flex:1;height:12px;background:repeating-linear-gradient(90deg,#3a2a18 0 3px,#4a3620 3px 6px);
+  border:2.5px solid var(--tx-rh-ink);border-radius:20px;overflow:hidden;min-width:0}
+.tx-rh-gauge-fill{display:block;height:100%;box-shadow:inset 0 2px 0 rgba(255,255,255,.3);
+  transition:width .1s linear,background .3s ease}
+.tx-rh-gauge-fill.low{animation:patiencePulse .6s ease-in-out infinite}
+.tx-rh-gauge-t{font-family:'Cinzel',serif;font-weight:900;font-size:.78rem;color:var(--tx-rh-oxblood);
+  flex-shrink:0;min-width:1.6em;text-align:right}
+
+/* Mr. Shoesmith big face + speech bubble */
+.tx-rh-panel{display:flex;gap:10px;align-items:flex-start;margin-bottom:.75rem}
+.tx-rh-face-frame{width:104px;min-height:118px;flex-shrink:0;border-radius:14px;overflow:hidden;position:relative;
+  border:4px solid var(--tx-rh-ink);box-shadow:0 5px 0 var(--tx-rh-ink),0 6px 12px rgba(0,0,0,.4);background:#241a12}
+.tx-rh-face-frame .tx-shoe-face{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block;
+  border:none;border-radius:0;box-shadow:none;background:transparent}
+.tx-rh-face-tag{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);background:var(--tx-rh-gold);
+  border:2.5px solid var(--tx-rh-ink);border-radius:6px;font-family:'Cinzel',serif;font-weight:800;font-size:.38rem;
+  letter-spacing:.04em;color:var(--tx-rh-ink);padding:1px 6px;white-space:nowrap}
+.tx-rh-bubble{flex:1;position:relative;background:var(--tx-rh-paper);border:3.5px solid var(--tx-rh-ink);border-radius:14px;
+  padding:.6rem .7rem;box-shadow:0 5px 0 var(--tx-rh-ink);color:var(--tx-rh-ink);min-height:100px;min-width:0}
+.tx-rh-bubble:before{content:'';position:absolute;left:-12px;top:24px;width:15px;height:15px;background:var(--tx-rh-paper);
+  border-left:3.5px solid var(--tx-rh-ink);border-bottom:3.5px solid var(--tx-rh-ink);transform:rotate(45deg)}
+.tx-rh-who{font-family:'Cinzel',serif;font-weight:800;font-size:.46rem;letter-spacing:.1em;color:var(--tx-rh-oxblood);
+  text-transform:uppercase;margin-bottom:.25rem}
+.tx-rh-q{font-family:'Quicksand',sans-serif;font-weight:700;font-size:.86rem;line-height:1.32}
+.tx-rh-stage .txoko-dish-badge{display:inline-block;margin-top:.5rem;background:var(--tx-rh-gold);
+  border:2.5px solid var(--tx-rh-ink);border-radius:20px;font-family:'Cinzel',serif;font-weight:800;font-size:.44rem;
+  letter-spacing:.05em;padding:2px 10px;color:var(--tx-rh-ink);box-shadow:0 2px 0 var(--tx-rh-ink)}
+
+/* enamel-plaque option buttons */
+.tx-rh-stage .txoko-choices{gap:.55rem}
+.tx-rh-stage .txoko-choice{display:flex;align-items:center;gap:11px;background:var(--tx-rh-paper);
+  border:3.5px solid var(--tx-rh-ink);border-radius:13px;padding:.7rem .8rem;box-shadow:0 5px 0 var(--tx-rh-ink);
+  min-height:44px;font-size:1rem;color:var(--tx-rh-ink);line-height:1.3;transition:transform .1s,box-shadow .1s}
+.tx-rh-stage .txoko-choice::before{content:none}
+.tx-rh-stage .txoko-choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--tx-rh-ink)}
+.tx-rh-stage .txoko-choice:hover:not(:disabled){transform:none;background:var(--tx-rh-paper);border-color:var(--tx-rh-ink)}
+.tx-rh-stage .txoko-choice.correct{background:#d8ead0;border-color:#2f6b3f;box-shadow:0 5px 0 #2f6b3f;color:#1a3d2a}
+.tx-rh-stage .txoko-choice.wrong{background:#f0d2ce;border-color:var(--tx-rh-oxblood);box-shadow:0 5px 0 var(--tx-rh-oxblood);color:#5a1a1a}
+.tx-rh-stage .tx-rh-opt-k{width:28px;height:28px;flex-shrink:0;display:grid;place-items:center;border:2.5px solid var(--tx-rh-ink);
+  border-radius:50%;background:var(--tx-rh-teal);color:var(--tx-rh-paper);font-family:'Cinzel',serif;font-weight:900;
+  font-size:.82rem;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25);margin:0}
+.tx-rh-stage .txoko-choice:nth-of-type(2) .tx-rh-opt-k{background:var(--tx-rh-oxblood)}
+.tx-rh-stage .txoko-choice:nth-of-type(3) .tx-rh-opt-k{background:var(--tx-rh-gold);color:var(--tx-rh-ink)}
+.tx-rh-stage .txoko-choice:nth-of-type(4) .tx-rh-opt-k{background:var(--tx-rh-purple)}
+.tx-rh-opt-txt{font-family:'Quicksand',sans-serif;font-weight:600;font-size:.82rem;line-height:1.25;text-align:left}
+
+/* feedback plaque */
+.tx-rh-stage .txoko-feedback{background:var(--tx-rh-paper);border:3px solid var(--tx-rh-ink);border-radius:12px;
+  box-shadow:0 4px 0 var(--tx-rh-ink);font-family:'Cinzel',serif;font-weight:700;text-align:center;
+  padding:0;max-height:0;overflow:hidden;opacity:0;margin-bottom:0;transition:all .25s}
+.tx-rh-stage .txoko-feedback.show{opacity:1;padding:.55rem;max-height:60px;margin-top:.15rem;margin-bottom:.5rem}
+.tx-rh-stage .txoko-feedback.ok{color:#2f6b3f;border-color:#2f6b3f;background:var(--tx-rh-paper)}
+.tx-rh-stage .txoko-feedback.ko{color:var(--tx-rh-oxblood);border-color:var(--tx-rh-oxblood);background:var(--tx-rh-paper)}
+
+/* ═══ Games hub — rubber-hose plaques ═══ */
+.tx-rh-hub .games-header{
+  background:radial-gradient(120% 80% at 50% 0%,#5a4028 0%,#3a2616 55%,#241609 100%);
+  border:3px solid var(--tx-rh-ink);border-bottom:none;
+}
+.tx-rh-hub .games-header::before,.tx-rh-hub .games-header::after{opacity:0}
+.tx-rh-hub .games-header-crown{background:linear-gradient(135deg,var(--tx-rh-gold) 0%,#a47a2c 100%);
+  border:2.5px solid var(--tx-rh-ink);box-shadow:0 3px 0 var(--tx-rh-ink)}
+.tx-rh-hub .games-header-title{color:var(--tx-rh-gold);text-shadow:0 2px 0 var(--tx-rh-ink)}
+.tx-rh-hub .games-header-sub{color:rgba(224,160,44,.8)}
+.tx-rh-hub .games-header-sub::before,.tx-rh-hub .games-header-sub::after{background:rgba(224,160,44,.4)}
+.tx-rh-hub .game-card{background:var(--tx-rh-paper);border:3px solid var(--tx-rh-ink);border-radius:14px;
+  box-shadow:0 5px 0 var(--tx-rh-ink),0 2px 10px rgba(0,0,0,.15);transition:transform .15s,box-shadow .15s}
+.tx-rh-hub .game-card::before,.tx-rh-hub .game-card::after{opacity:0}
+.tx-rh-hub .game-card:hover{transform:translateY(-2px);border-color:var(--tx-rh-ink);
+  box-shadow:0 6px 0 var(--tx-rh-ink),0 4px 16px rgba(0,0,0,.2)}
+.tx-rh-hub .game-card:active{transform:translateY(2px);box-shadow:0 2px 0 var(--tx-rh-ink)}
+.tx-rh-hub .game-card-title{color:var(--tx-rh-ink);text-shadow:none}
+.tx-rh-hub .game-card-desc{color:rgba(36,26,18,.68)}
+.tx-rh-hub .game-card-badge{border:1.5px solid var(--tx-rh-ink);box-shadow:none}
+.tx-rh-hub .gc-recommended-badge{border:2px solid var(--tx-rh-ink);box-shadow:0 3px 0 var(--tx-rh-ink)}
+.tx-rh-hub .game-card-arrow::before{border:2px solid var(--tx-rh-ink);box-shadow:0 3px 0 var(--tx-rh-ink)}
+/* Mr. Shoesmith hub card photo (replaces the old placeholder SVG face) */
+.tx-rh-hero-frame{width:72px;height:84px;border-radius:12px;overflow:hidden;border:3px solid var(--tx-rh-ink);
+  box-shadow:0 4px 0 var(--tx-rh-ink);background:#241a12;margin:0 auto}
+.tx-rh-hero-frame img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
+/* ═══ /TX-RH ═══ */
 .xp-burst{
   position:fixed;pointer-events:none;z-index:9999;
   font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;
