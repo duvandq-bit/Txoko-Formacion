@@ -974,35 +974,49 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
   const dishesSrc = cut('const DISHES = [', '\n];');
   const svcSrc = cut('const DISH_SERVICE = {', '};') + ';';
   const helpers = html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'));
+  // ingredients/history son ahora preguntas INVERTIDAS (fix legibilidad jul 2026):
+  // el pasaje va en la burbuja y las opciones son NOMBRES DE PLATO. El generador
+  // real usa _examRedact/_examNameTokens/_EXAM_STOP y WAITER_MSGS_REV/_txRevBubble,
+  // así que hay que extraerlos e integrarlos aquí (antes solo truncaba texto).
+  const wmRev = cut('const WAITER_MSGS_REV={', '  ]};');
+  const examStop = cut('const _EXAM_STOP = new Set', ']);') + ';';
   const stub = 'function _renderShiftBar(){} var localStorage={getItem:()=>null,setItem:()=>{}};'
     + 'var LANG="es"; function getDish(d){return d;} function allergenLocal(a){return a;} function t(k){return k;}'
+    + 'function escapeHTML(s){return String(s);}'
     + 'function _isDishQuizableForTopic(d,tk){ if(d.cat===\'Guarniciones y Salsas\') return tk===\'history\'; return true; }'
     + 'var DISHES_EN=[]; var TOPICS=[{key:"allergens",label:"al"},{key:"ingredients",label:"in"},{key:"history",label:"hi"}];'
     + 'var WAITER_MSGS={allergens:[n=>n],ingredients:[n=>n],history:[n=>n]};';
-  const M = new Function(stub + dishesSrc + svcSrc + helpers + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion') // eslint-disable-line no-new-func
+  const M = new Function(stub + dishesSrc + svcSrc + helpers + wmRev + examStop // eslint-disable-line no-new-func
+    + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion')
     + 'return {DISHES, DISH_SERVICE, txBuildQuestion, txGetAnswer, txTruncate, txNorm, setShift:(s)=>{_studyShift=s;}};')();
   const svc = M.DISH_SERVICE;
-  const optDishes = (optText, shift) => {
+  // Mapea una opción a los platos que la producen. Las opciones invertidas son
+  // NOMBRES DE PLATO; las de alérgenos son la cadena de alérgenos.
+  const optDishes = (optText) => {
     const on = M.txNorm(optText); const res = [];
-    for (const d of M.DISHES) for (const tk of ['allergens', 'ingredients', 'history']) {
-      const raw = M.txGetAnswer(d, tk); if (!raw) continue;
-      const disp = (tk === 'ingredients' || tk === 'history') ? M.txTruncate(raw, 90) : raw;
-      if (M.txNorm(disp) === on) { res.push(d); break; }
-    }
+    for (const d of M.DISHES) { if (M.txNorm(d.name) === on) res.push(d); }         // ing/history → nombre
+    for (const d of M.DISHES) { const raw = M.txGetAnswer(d, 'allergens'); if (raw && M.txNorm(raw) === on && !res.includes(d)) res.push(d); } // alérgenos
     return res;
   };
   for (const shift of ['a', 'c']) {
     M.setShift(shift);
-    let n = 0, leak = 0;
+    let n = 0, leak = 0, trunc = 0, tooLong = 0;
     for (let i = 0; i < 1500; i++) {
       const q = M.txBuildQuestion(); if (!q) continue; n++;
       for (const o of (q.choices || [])) {
-        const cand = optDishes(o, shift); if (!cand.length) continue;
+        // Guard de legibilidad (fix jul 2026): ninguna opción puede quedar
+        // truncada con «...» ni, en preguntas invertidas, exceder 60 car.
+        if (/(\.\.\.|…)\s*$/.test(o)) trunc++;
+        if ((q.topicKey === 'ingredients' || q.topicKey === 'history') && o.length > 60) tooLong++;
+        const cand = optDishes(o); if (!cand.length) continue;
         if (cand.every(d => { const s = svc[d.id]; return s !== 'ambos' && s !== shift; })) leak++;
       }
     }
     assert(n > 1000, `txBuildQuestion produced too few questions in shift ${shift} (${n}) — over-filtered?`);
     assert(leak === 0, `txBuildQuestion leaked ${leak} wrong-shift distractor options in shift ${shift}`);
+    assert(trunc === 0, `txBuildQuestion produced ${trunc} truncated «...» options in shift ${shift} — options must stay short & fully legible`);
+    assert(tooLong === 0, `txBuildQuestion produced ${tooLong} over-long (>60 char) inverted options in shift ${shift}`);
   }
 });
 

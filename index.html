@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.141';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.142';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -21883,6 +21883,27 @@ const WAITER_MSGS={
     d=>LANG==='en'?`The guest asks: why is <strong>${d}</strong> special?`:`El huésped pregunta: ¿qué hace especial a <strong>${d}</strong>?`,
     d=>LANG==='en'?`Table 402 asks about the provenance of <strong>${d}</strong>`:`Mesa 402 pregunta por el origen y proveedores de <strong>${d}</strong>`,
   ]};
+// Mensajes para las preguntas INVERTIDAS (ingredientes/historia): el pasaje
+// largo se muestra en la burbuja y las opciones son NOMBRES DE PLATO, así que
+// el enunciado NO debe nombrar el plato (filtraría la respuesta). Sin ${d}.
+const WAITER_MSGS_REV={
+  ingredients:[
+    ()=>LANG==='en'?`A guest describes a dish by its ingredients. Which one is it?`:`Un huésped describe un plato por sus ingredientes. ¿Cuál es?`,
+    ()=>LANG==='en'?`Table 305 recites what a dish contains — which dish?`:`Mesa 305 recita lo que lleva un plato — ¿cuál es?`,
+    ()=>LANG==='en'?`The kitchen reads out these ingredients. Which dish do they belong to?`:`Cocina te dicta estos ingredientes. ¿A qué plato pertenecen?`,
+    ()=>LANG==='en'?`Mr. Shoesmith lists what he was served. Which dish is it?`:`Mr. Shoesmith enumera lo que le sirvieron. ¿Qué plato es?`,
+  ],
+  history:[
+    ()=>LANG==='en'?`You overhear this story about a dish. Which dish does it belong to?`:`Escuchas contar esta historia de un plato. ¿A qué plato pertenece?`,
+    ()=>LANG==='en'?`Table 402 shares this origin — which dish is it?`:`Mesa 402 comparte este origen — ¿de qué plato es?`,
+    ()=>LANG==='en'?`A colleague tells this storytelling. Which dish does it match?`:`Un compañero cuenta este storytelling. ¿A qué plato corresponde?`,
+    ()=>LANG==='en'?`This is the tale we tell at the table. Which dish is it about?`:`Esta es la historia que contamos en mesa. ¿De qué plato habla?`,
+  ]};
+// Burbuja del camarero para preguntas invertidas: prompt corto + el pasaje
+// largo como bloque legible (una sola vez, con scroll si es muy largo).
+function _txRevBubble(prompt, passage){
+  return `${prompt}<div style="margin-top:.5rem;padding:.5rem .65rem;background:rgba(0,0,0,.14);border-left:3px solid var(--gold-a);border-radius:6px;font-style:italic;font-size:.82rem;line-height:1.5;max-height:9.5rem;overflow-y:auto">${escapeHTML(passage)}</div>`;
+}
 const WAITER_OK_ES=['¡Perfecto, gracias! ','¡Eso es! ','¡Correcto! ▲','¡Excelente! ','¡Muy bien! '];
 const WAITER_OK_EN=['Perfect, thank you! ','Exactly right! ','Correct! ▲','Excellent! ','Well done! '];
 const WAITER_OK=()=>LANG==='en'?WAITER_OK_EN:WAITER_OK_ES;
@@ -21972,15 +21993,56 @@ function txBuildQuestion(){
   }
   if(!chosenDish) return null;
 
-  // Correct answer display (truncated if needed) — se calcula ANTES para
-  // sembrar el dedupe con SU forma visible.
-  const _txTrunc = (chosenTopicKey==='ingredients'||chosenTopicKey==='history');
-  const rawCorrect = txGetAnswer(chosenDish, chosenTopicKey);
-  const correctDisplay = _txTrunc ? txTruncate(rawCorrect,90) : rawCorrect;
+  const topicObj = TOPICS.find(t=>t.key===chosenTopicKey);
+  const topicLabel = topicObj ? topicObj.label : chosenTopicKey;
 
-  // Build 3 unique wrong answers. Deduplicar por el DISPLAY (truncado), no por
-  // el texto completo: si no, dos listas que comparten los primeros 90 car.
-  // producían una opción repetida o una doble-correcta (auditoría jul 2026).
+  // ── ingredients / history: dirección INVERTIDA (fix legibilidad jul 2026). ─
+  // El texto largo (lista de ingredientes o párrafo de historia) es ILEGIBLE
+  // como opción: se truncaba a 90 car. con «...» y salían párrafos cortados a
+  // media frase, imposibles de comparar bajo el temporizador de paciencia.
+  // Igual que el Examen IA, mostramos el pasaje UNA vez en la burbuja (bloque
+  // legible, con los nombres de TODOS los candidatos enmascarados) y las 4
+  // opciones son NOMBRES DE PLATO (cortos). Correcto = el plato del pasaje.
+  if(chosenTopicKey==='ingredients' || chosenTopicKey==='history'){
+    const rawPassage = txGetAnswer(chosenDish, chosenTopicKey);
+    const _twNorm = s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+    const _passNorm = _twNorm(rawPassage);
+    const dd0 = getDish(chosenDish);
+    // Twin guard: rechaza distractores con el MISMO pasaje (embutidos/jamón/
+    // cecina comparten historia; gemelos almuerzo/cena comparten ingredientes)
+    // o el MISMO nombre visible → evita doble-correcta.
+    const _seenNames = new Set([_twNorm(dd0.name)]);
+    // Distractores por turno (a/c) con fallback seguro al pool completo (≥3).
+    const _wpBase=DISHES.filter(x=>x.id!==chosenDish.id);
+    const _wpShift=_shiftDishes(_wpBase);
+    const namePool=_lqaShuffle(_wpShift.length>=3?_wpShift:_wpBase).filter(o=>{
+      const a=txGetAnswer(o, chosenTopicKey);
+      if(!a) return false;
+      if(_twNorm(a)===_passNorm) return false;
+      const nm=_twNorm(getDish(o).name);
+      if(_seenNames.has(nm)) return false;
+      _seenNames.add(nm);
+      return true;
+    }).slice(0,3);
+    if(namePool.length<3) return null;
+    const candidates=[chosenDish,...namePool];
+    const passage=_examRedact(rawPassage, candidates);
+    const pool=_lqaShuffle(candidates.map(c=>({display:getDish(c).name, isCorrect:c.id===chosenDish.id})));
+    const revPrompts=WAITER_MSGS_REV[chosenTopicKey];
+    const promptFn=revPrompts[Math.floor(Math.random()*revPrompts.length)];
+    return {
+      dishName:   dd0.name,
+      topicKey:   chosenTopicKey,
+      topicLabel: topicLabel,
+      msg:        _txRevBubble(promptFn(), passage),
+      choices:    pool.map(x=>x.display),
+      correctIdx: pool.findIndex(x=>x.isCorrect),
+      correctNorm:_twNorm(dd0.name)};
+  }
+
+  // ── allergens: dirección directa. Opciones = cadenas de alérgenos, ya cortas
+  // y legibles (medido: se leen perfecto). Sin truncar.
+  const correctDisplay = txGetAnswer(chosenDish, chosenTopicKey);
   const wrongDisplays=[];
   const wrongNorms=new Set([correctAnswer]);
   const seenDisplay=new Set([txNorm(correctDisplay)]);
@@ -21995,11 +22057,10 @@ function txBuildQuestion(){
     if(!w) continue;
     const wn = txNorm(w);
     if(!wn || wrongNorms.has(wn)) continue;
-    const disp = _txTrunc ? txTruncate(w,90) : w;
-    const dn = txNorm(disp);
-    if(seenDisplay.has(dn)) continue; // mismo texto visible tras truncar
+    const dn = txNorm(w);
+    if(seenDisplay.has(dn)) continue;
     wrongNorms.add(wn); seenDisplay.add(dn);
-    wrongDisplays.push(disp);
+    wrongDisplays.push(w);
   }
   if(wrongDisplays.length<3) return null;
 
@@ -22009,15 +22070,8 @@ function txBuildQuestion(){
     ...wrongDisplays.map(w=>({display:w, isCorrect:false}))
   ]);
 
-  const correctIdx = pool.findIndex(x=>x.isCorrect);
-  const choices = pool.map(x=>x.display);
-
   const dd = getDish(chosenDish);
-  // Use EN dish name if available
-  const ddEn = LANG==='en' ? (DISHES_EN.find(x=>x.id===chosenDish.id)||dd) : dd;
-  const dishNameDisplay = ddEn.name || dd.name;
-  const topicObj = TOPICS.find(t=>t.key===chosenTopicKey);
-  const topicLabel = topicObj ? topicObj.label : chosenTopicKey;
+  const dishNameDisplay = dd.name;
   const msgs = WAITER_MSGS[chosenTopicKey]||WAITER_MSGS.allergens;
   const msgFn = msgs[Math.floor(Math.random()*msgs.length)];
 
@@ -22026,8 +22080,8 @@ function txBuildQuestion(){
     topicKey:   chosenTopicKey,
     topicLabel: topicLabel,
     msg:        msgFn(dd.name),
-    choices:    choices,
-    correctIdx: correctIdx,
+    choices:    pool.map(x=>x.display),
+    correctIdx: pool.findIndex(x=>x.isCorrect),
     correctNorm:correctAnswer};
 }
 
