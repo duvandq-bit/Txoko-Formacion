@@ -4864,8 +4864,13 @@ body::after{
 .tx-rh-combo-n{font-family:'Cinzel',serif;font-weight:900;font-size:1rem;color:var(--tx-rh-ink)}
 .tx-rh-combo-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--tx-rh-ink);text-transform:uppercase;font-weight:700}
 
-/* top row: table placard + streak + score chip */
+/* top row: exit + table placard + streak + score chip */
 .tx-rh-trow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:9px}
+.tx-rh-back{flex-shrink:0;background:var(--tx-rh-paper);border:2.5px solid var(--tx-rh-ink);border-radius:9px;
+  padding:.35rem .75rem;min-height:40px;font-family:'Cinzel',serif;font-weight:800;color:var(--tx-rh-oxblood);
+  box-shadow:0 3px 0 var(--tx-rh-ink);font-size:.72rem;letter-spacing:.02em;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;transition:transform .06s,box-shadow .06s}
+.tx-rh-back:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tx-rh-ink)}
 .tx-rh-mesa{background:var(--tx-rh-paper);border:3px solid var(--tx-rh-ink);border-radius:9px;padding:.3rem .9rem;
   font-family:'Cinzel',serif;font-weight:900;color:var(--tx-rh-oxblood);box-shadow:0 3px 0 var(--tx-rh-ink);
   font-size:.82rem;letter-spacing:.03em;white-space:nowrap}

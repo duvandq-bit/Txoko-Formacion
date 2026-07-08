@@ -2558,6 +2558,25 @@ test('EL TURNO teardown fully unmounts: cancels rAF, removes all its listeners, 
   assert(/overlay\.remove\(\)/.test(td), 'teardown does not remove the overlay element from the DOM');
 });
 
+test('both games have an in-game exit: Mr. Shoesmith question screen + Camarero Survivors overlay', () => {
+  // Petición del propietario: los juegos no tenían botón para volver atrás.
+  // (1) Mr. Shoesmith question screen (txRender) — a back button that stops the
+  //     patience timer and returns to the hub.
+  const r = html.indexOf('function txRender(');
+  const rbody = html.slice(r, html.indexOf('\nfunction ', r + 10));
+  assert(/class="tx-rh-back"[^>]*onclick="txQuit\(\)"/.test(rbody),
+    'the Mr. Shoesmith question screen must render a back/exit button wired to txQuit()');
+  const q = html.indexOf('function txQuit(');
+  assert(q !== -1, 'txQuit() must exist');
+  const qbody = html.slice(q, q + 160);
+  assert(/clearInterval\(txokoTimer\)/.test(qbody) && /renderTxoko\(\)/.test(qbody),
+    'txQuit() must stop the patience timer and return to the games hub');
+  // (2) Camarero Survivors overlay keeps its exit button
+  const e = html.indexOf('function launchElTurno(');
+  const ebody = html.slice(e, e + 60000);
+  assert(/id="etExitBtn"/.test(ebody), 'Camarero Survivors must keep its in-game exit button');
+});
+
 test('character sprite: shared const stays, dashboard mascot removed', () => {
   // TXOKO_MASCOT_SVG sigue siendo la fuente única del sprite del protagonista,
   // que usa el juego EL TURNO. La mascota DECORATIVA del dashboard se retiró
