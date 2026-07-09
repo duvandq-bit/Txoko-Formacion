@@ -9524,7 +9524,11 @@ body.chat-open .sound-toggle{ display:none !important; }
 .empl-ov-adapt.ok span{color:var(--green-deep)}
 .empl-ov-adapt.ok em{font-style:normal;color:var(--parch2);font-weight:700}
 .empl-ov-adapt.no span{color:#a04848}
+.empl-ov-adapt.unk span{color:#a8823c}
 .empl-ov-adapt.free{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--green-deep);border-bottom:none}
+/* Hero sin foto: la ficha ampliada abre igual — la información no depende de la foto */
+.empl-ov-nophoto{display:grid;place-items:center;aspect-ratio:4/3;background:#efe8d8}
+.empl-ov-nophoto svg{width:64px;height:64px;opacity:.55}
 .empl-ov-note{margin-top:.55rem;padding:.5rem .7rem;background:rgba(196,154,60,.06);border-left:2px solid var(--gold-a);
   border-radius:0 8px 8px 0;font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left}
 .empl-ov-ficha{width:100%;margin-top:.7rem;min-height:42px;border-radius:11px;cursor:pointer;

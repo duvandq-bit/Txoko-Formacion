@@ -2942,7 +2942,7 @@ test('Fotos del equipo: subida con moderación (guía completa, ficha "foto mejo
   // ampliada muestra la matriz validada de adaptaciones con comanda exacta
   // (DISH_ACTIONS), las notas de servicio y el salto a la ficha completa —
   // la foto puede quedar vieja; la ficha es la fuente de verdad.
-  const ov = html.slice(html.indexOf('function _emplOpen('), html.indexOf('function _emplOpen(') + 3500);
+  const ov = html.slice(html.indexOf('function _emplOpen('), html.indexOf('function _emplOpen(') + 5000);
   assert(/DISH_ACTIONS\[d\.id\]/.test(ov) && /empl-ov-adapt/.test(ov),
     'the overlay must render the validated adaptation matrix, not just allergen chips');
   assert(/act\.r===1/.test(ov) && /Se adapta/.test(ov) && /Estructural/.test(ov),
@@ -2959,6 +2959,38 @@ test('Fotos del equipo: subida con moderación (guía completa, ficha "foto mejo
   for (const sel of ['.empl-card-nophoto{', '.empl-upload-btn{', '.sup-photo-card{', '.sup-photo-actions button.rej{']) {
     assert(css.includes(sel), `styles.css must style ${sel}`);
   }
+});
+
+test('Ficha ampliada: la información vital no se pierde ni se tergiversa (jul 2026)', () => {
+  // «Que no se pierda información vital» (propietario, jul 2026). Tres cierres:
+  const i = html.indexOf('function _emplOpen(');
+  const ov = html.slice(i, i + 5000);
+  // (1) La matriz se consulta con los alérgenos CANÓNICOS (d.allergens, ES).
+  //     dd.allergens llega TRADUCIDO en modo inglés («Dairy» vs clave «Lácteos»):
+  //     el lookup fallaba siempre y 61 alérgenos adaptables se mostraban como
+  //     «Structural — not suitable» — dato de seguridad FALSO. Nunca más.
+  assert(/d\.allergens&&d\.allergens\.length/.test(ov) && /d\.allergens\.map/.test(ov),
+    'overlay must key DISH_ACTIONS with canonical d.allergens (ES)');
+  assert(!/dd\.allergens\.map/.test(ov),
+    'localized dd.allergens must NEVER key the matrix (EN-mode false "not suitable" verdicts)');
+  // (2) Sin dato en la matriz NO se inventa veredicto: «estructural» exige
+  //     r===0 explícito; el hueco se manda a cocina, no se afirma.
+  assert(/act&&act\.r===0/.test(ov), 'structural verdict requires explicit r===0');
+  assert(/empl-ov-adapt unk/.test(ov) && /Consultar con cocina/.test(ov) && /Check with the kitchen/.test(ov),
+    'missing matrix data must render "consultar con cocina", never an invented verdict');
+  // (3) La ficha abre AUNQUE el plato no tenga foto — la información construida
+  //     no depende de la foto (y las tarjetas sin foto también la abren).
+  assert(!/if\(!d\|\|!DISH_PHOTOS\) return/.test(ov), 'overlay must not require a photo to open');
+  assert(/empl-ov-nophoto/.test(ov), 'photo-less dishes get a placeholder hero with the info intact');
+  const grid = html.slice(html.indexOf('function _emplRender('), i);
+  const noph = grid.slice(grid.indexOf('empl-card-nophoto'));
+  assert(/onclick="_emplOpen\(\$\{d\.id\}\)"/.test(noph) && /role="button"/.test(noph),
+    'no-photo cards must open the expanded sheet too');
+  assert(/event\.stopPropagation\(\);_dishPhotoPick/.test(noph),
+    'the upload button inside the card must not also trigger the overlay');
+  const css = read('styles.css');
+  assert(css.includes('.empl-ov-adapt.unk') && css.includes('.empl-ov-nophoto{'),
+    'styles.css must style the unknown verdict + the photo-less hero');
 });
 
 test('Dashboard: tarjeta de acceso directo a la Guía de Emplatado (1 toque desde el inicio)', () => {
