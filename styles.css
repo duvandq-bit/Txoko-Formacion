@@ -6764,6 +6764,52 @@ body::after{
 @keyframes etLowPulse{0%,100%{opacity:.42}50%{opacity:.92}}
 @media (prefers-reduced-motion:reduce){#etLow.on{animation:none;opacity:.7}}
 
+/* ── Camarero Survivors: controles AAA (pausa, sonido, dash) ── */
+#etCtrls{position:absolute;top:calc(3.6rem + env(safe-area-inset-top,0px));right:.6rem;z-index:8;
+  display:flex;flex-direction:column;gap:.45rem}
+#etCtrls button{width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:1.05rem;line-height:1;
+  background:rgba(20,13,5,.62);color:var(--et-paper);border:2px solid rgba(244,228,193,.5)}
+#etDashBtn{position:absolute;right:1rem;bottom:calc(1.6rem + env(safe-area-inset-bottom,0px));z-index:7;
+  width:74px;height:74px;border-radius:50%;cursor:pointer;font-size:1.9rem;line-height:1;
+  color:var(--et-paper);border:3px solid var(--et-ink);
+  background:radial-gradient(circle at 38% 32%,#e8c46a,var(--et-gold) 70%);
+  box-shadow:0 5px 0 var(--et-ink),0 8px 18px rgba(0,0,0,.3)}
+#etDashBtn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--et-ink)}
+#etDashBtn.et-cool{color:rgba(244,228,193,.55);
+  background:conic-gradient(rgba(90,60,25,.9) calc(var(--cd)*360deg), #b98a34 0)}
+/* barra de vida del jefe */
+#etBossbar{margin-top:6px;pointer-events:none}
+#etBossName{display:block;font-family:ui-monospace,Menlo,monospace;font-size:10px;font-weight:bold;
+  letter-spacing:.22em;color:#ffd9c4;text-shadow:1px 1px 0 var(--et-ink);margin-bottom:3px;text-align:center}
+.et-bosstrack{height:9px;border:2.5px solid var(--et-ink);border-radius:7px;background:rgba(20,10,5,.55);overflow:hidden}
+.et-bossfill{height:100%;width:100%;border-radius:4px;
+  background:linear-gradient(90deg,#c43a2c,#e0a02c);transition:width .18s}
+/* racha de comandas */
+#etCombo{position:absolute;right:.7rem;top:36%;pointer-events:none;
+  flex-direction:column;align-items:center;gap:1px;padding:.5rem .65rem;border-radius:14px;
+  border:2.5px solid var(--et-ink);color:var(--et-ink);font-family:Georgia,serif;font-weight:bold;
+  background:linear-gradient(180deg,#ffe9b0 calc(var(--k,1)*100%),rgba(244,228,193,.55) 0);
+  box-shadow:0 3px 0 var(--et-ink);font-size:13px}
+#etCombo b{font-size:21px;line-height:1}
+#etCombo span{font-family:ui-monospace,monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase}
+#etCombo.et-hot{border-color:#7d1f11;color:#7d1f11;animation:etHot .5s ease-in-out infinite}
+@keyframes etHot{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+@media (prefers-reduced-motion:reduce){#etCombo.et-hot{animation:none}}
+/* carta de evolución (dorada) en el level-up */
+.et-pick.et-evo{background:linear-gradient(135deg,#ffe9b0,#e0a02c);
+  box-shadow:0 5px 0 var(--et-ink),0 0 22px rgba(224,160,44,.55)}
+.et-pick.et-evo .et-pick-tx span{color:#5a3a10;font-weight:bold}
+/* grid de estadísticas del fin de servicio */
+.et-statgrid{display:grid;grid-template-columns:repeat(3,minmax(86px,1fr));gap:9px;max-width:340px;width:100%}
+.et-st{background:var(--et-paper);border:2.5px solid var(--et-ink);border-radius:11px;
+  padding:.5rem .3rem;box-shadow:0 3px 0 var(--et-ink);text-align:center}
+.et-st b{display:block;font-family:Georgia,serif;font-size:19px;color:var(--et-oxblood);line-height:1.15}
+.et-st span{font-family:ui-monospace,monospace;font-size:8.5px;letter-spacing:.14em;color:#6b4a24;text-transform:uppercase}
+/* botón secundario de las pantallas del juego */
+button.et-mini{pointer-events:auto;cursor:pointer;background:transparent;border:none;
+  color:var(--et-paper);opacity:.75;font-family:ui-monospace,monospace;font-size:12px;
+  letter-spacing:.14em;text-transform:uppercase;padding:.55rem 1rem;min-height:44px;text-decoration:underline}
+
 #etExitBtn{
   position:absolute;top:calc(.6rem + env(safe-area-inset-top,0px));right:.6rem;z-index:8;
   min-width:44px;min-height:44px;padding:.4rem .8rem;display:flex;align-items:center;gap:.3rem;

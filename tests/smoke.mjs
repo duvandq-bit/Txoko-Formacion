@@ -2723,6 +2723,47 @@ test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spaw
   assert(/#etLow\.on\{[^}]*etLowPulse/.test(css) && /@keyframes etLowPulse/.test(css), 'styles.css must define the pulsing low-HP danger vignette');
 });
 
+test('Camarero Survivors AAA: dash, racha, élites, oleadas, jefe con embestida, evoluciones, música y pausa', () => {
+  // Pasada "estudio AAA" (petición del propietario): fija cada sistema nuevo
+  // para que ninguna refactorización futura los deje caer en silencio.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 90000);
+  // (1) esquiva: helper con cooldown + botón táctil + tecla espacio
+  assert(/function tryDash\(\)/.test(body) && /G\.dashCd>0\) return/.test(body), 'dash: tryDash() with cooldown gate must exist');
+  assert(/id="etDashBtn"/.test(body), 'dash: the touch button must be in the overlay markup');
+  assert(/e\.key===' '.*tryDash\(\)/.test(body), 'dash: Space must trigger the dash on keyboard');
+  // (2) racha de comandas: contador, ventana de decaimiento y gemas extra
+  assert(/G\.combo\+\+; G\.comboT=150/.test(body), 'combo: kills must extend the chain window');
+  assert(/if\(G\.comboT<=0\) G\.combo=0/.test(body), 'combo: the chain must reset when the window dries up');
+  // (3) élites y oleadas del director de ritmo
+  assert(/function spawnEnemy\(kind,elite,pos\)/.test(body) && /elite:!!elite/.test(body), 'elites: spawnEnemy must support the elite variant');
+  assert(/function surge\(\)/.test(body) && /G\.nextSurge\+=55/.test(body), 'surges: the telegraphed ring wave must exist');
+  assert(/const lull=/.test(body), 'pacing: the breather window (lull) must modulate spawn pressure');
+  // (4) jefe con embestida telegrafiada
+  assert(/e\.tele-=dt/.test(body) && /e\.dashing=32/.test(body), 'boss: the telegraphed lunge state machine must exist');
+  // (5) evoluciones de arma (cartas doradas condicionales)
+  assert(/const EVOS=\[/.test(body) && /evoPierce/.test(body) && /evoKnives/.test(body) && /evoCava/.test(body), 'evolutions: the EVOS pool and its three flags must exist');
+  assert(/et-evo/.test(body), 'evolutions: the gold card class must be applied in the level-up render');
+  // (6) música + silencio + limpieza en teardown
+  assert(/function musicTick\(\)/.test(body) && /musicIv=setInterval\(musicTick,138\)/.test(body), 'music: the WebAudio sequencer must start with the run');
+  assert(/clearInterval\(musicIv\)/.test(body), 'music: teardown must stop the sequencer');
+  assert(/if\(muted\) return;/.test(body), 'audio: the mute flag must gate sfx');
+  // (7) pausa (botón + auto-pausa al ir a segundo plano, listener limpiado)
+  assert(/id="etPause"/.test(body) && /function setPaused\(/.test(body), 'pause: the pause screen and helper must exist');
+  assert(/document\.addEventListener\('visibilitychange',onVis\)/.test(body) && /document\.removeEventListener\('visibilitychange',onVis\)/.test(body),
+    'pause: the visibilitychange listener must be added and removed in teardown');
+  // (8) hit-stop + haptics + HUD de jefe
+  assert(/G\.hitStop/.test(body) && /function vibe\(/.test(body), 'juice: hit-stop and haptics helpers must exist');
+  assert(/id="etBossbar"/.test(body), 'HUD: the boss health bar must be in the overlay markup');
+  // (9) fin de servicio con estadísticas + mejor turno persistente
+  assert(/etBestTime/.test(body) && /Mejor racha/.test(body), 'game over: run stats + persistent best time must render');
+  // CSS de los sistemas nuevos
+  const css = read('styles.css');
+  for (const sel of ['#etDashBtn', '#etCombo', '#etBossbar', '.et-pick.et-evo', '.et-statgrid']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
 test('Camarero Survivors UX: invisible joystick base + plain-language upgrade descriptions', () => {
   // Petición del propietario: no mostrar el círculo oscuro del joystick al
   // mover, y una breve explicación de lo que hace cada habilidad al escoger.
