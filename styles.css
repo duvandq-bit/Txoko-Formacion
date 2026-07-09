@@ -3147,9 +3147,13 @@ body::after{
 .fc-ribbon-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.35),transparent);border-radius:inherit}
 
 /* The card itself */
-.fc-scene{cursor:pointer;margin-bottom:1.5rem;position:relative;perspective:1200px;width:100%;max-width:460px;margin:0 auto;min-height:340px}
+/* Altura FIJA: la cara delantera y la trasera miden lo mismo, así el volteo
+   nunca empuja el layout (queja del propietario) — el contenido largo de
+   ingredientes scrollea DENTRO de la tarjeta y los botones quedan siempre
+   a la vista sin deslizar la página. */
+.fc-scene{cursor:pointer;margin-bottom:1rem;position:relative;perspective:1200px;width:100%;max-width:460px;margin:0 auto;height:clamp(280px,44vh,400px)}
 .fc-card{
-  width:100%;min-height:340px;position:relative;
+  width:100%;height:100%;position:relative;
   filter:drop-shadow(0 8px 28px rgba(0,0,0,.09));
 }
 @keyframes fcFlipOut{
@@ -3167,7 +3171,7 @@ body::after{
   border:1.5px solid rgba(196,154,60,.18);border-radius:16px;
   padding:1.4rem 1.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;
   box-shadow:0 4px 16px rgba(28,42,34,.08);overflow:hidden;
-  min-height:340px;max-height:72vh;overflow-y:auto;
+  height:100%;min-height:0;overflow:hidden;   /* el scroll vive en el contenido trasero */
   scrollbar-width:thin;scrollbar-color:rgba(196,154,60,.3) transparent;
 }
 .fc-face::-webkit-scrollbar{width:6px}
