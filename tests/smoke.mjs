@@ -2938,6 +2938,18 @@ test('Fotos del equipo: subida con moderación (guía completa, ficha "foto mejo
     'the guide must show placeholder cards with upload button / in-review state');
   // (4) ficha ampliada: "¿tienes una foto mejor?"
   assert(/empl-ov-upload/.test(html), 'the dish overlay must offer submitting a better photo');
+  // (4b) LA INFORMACIÓN CONSTRUIDA MANDA (propietario, jul 2026): la ficha
+  // ampliada muestra la matriz validada de adaptaciones con comanda exacta
+  // (DISH_ACTIONS), las notas de servicio y el salto a la ficha completa —
+  // la foto puede quedar vieja; la ficha es la fuente de verdad.
+  const ov = html.slice(html.indexOf('function _emplOpen('), html.indexOf('function _emplOpen(') + 3500);
+  assert(/DISH_ACTIONS\[d\.id\]/.test(ov) && /empl-ov-adapt/.test(ov),
+    'the overlay must render the validated adaptation matrix, not just allergen chips');
+  assert(/act\.r===1/.test(ov) && /Se adapta/.test(ov) && /Estructural/.test(ov),
+    'each allergen must show its verdict (adaptable + comanda / structural)');
+  assert(/empl-ov-note/.test(ov), 'service notes must surface in the overlay when present');
+  assert(/empl-ov-ficha/.test(ov) && /repasoView='dish'/.test(ov),
+    'the overlay must link to the full dish sheet (the built knowledge)');
   // (5) panel supervisor: cola de moderación cableada
   assert(/fotos: \(\)=>renderSupPhotoQueue\(\)/.test(html) && /_supTool\('fotos'\)/.test(html),
     'the supervisor panel must expose the photo moderation queue');
