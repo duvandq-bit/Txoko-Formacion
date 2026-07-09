@@ -2853,6 +2853,10 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   assert(/loading="lazy"/.test(html), 'grid images must lazy-load');
   assert(/_shiftDishes\(DISHES\)/.test(html.slice(html.indexOf('function _emplRender'), html.indexOf('function _emplRender') + 800)),
     'the guide must respect the active shift filter');
+  // y el selector de turno debe REFRESCARLA al instante (bug real: emplatado
+  // faltaba en la lista blanca de _setStudyShift y el cambio no se veía)
+  assert(/const _shiftTabs = \{[^}]*emplatado:1/.test(html),
+    "_setStudyShift's instant-refresh whitelist must include 'emplatado'");
   // el aviso de platos sin foto es SOLO para el propietario (dispositivo que
   // ha desbloqueado el panel de supervisor con PIN)
   assert(/missing\.length && _isSupDevice\(\)/.test(html),
