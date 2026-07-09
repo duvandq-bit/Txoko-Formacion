@@ -133,7 +133,7 @@ test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   assert(/escapeHtml\(v\.name \|\| ''\)/.test(html), 'venue name must go through escapeHtml');
   // Dropdown shape: trigger + panel, closes on outside tap like the other dropdowns.
   assert(/id="loginVenueTrigger"/.test(html), 'venue dropdown trigger missing');
-  assert(/\.login-venue-dd\.open, \.tunic-dd\.open|\.tunic-dd\.open, \.nav-dd\.open, \.login-venue-dd\.open/.test(html),
+  assert(/\.nav-dd\.open, \.login-venue-dd\.open/.test(html),
     'click-outside handler must also close the venue dropdown');
   // Locked venues: rendered with a padlock + aria-disabled, and selectVenue
   // only accepts enabled venues (registry is the gate, not just the styling).
@@ -1717,8 +1717,7 @@ test('dropdown triggers use a clear chevron-chip (not a subtle glyph)', () => {
     'nav chevron must be a bordered chip containing an SVG');
   assert(/class="nav-dd-chev"[^>]*><svg/.test(html),
     'main nav trigger chevron must be an SVG, not a ▾ glyph');
-  assert(/class="tunic-dd-chev"[^>]*><svg/.test(html),
-    'sub-tab trigger chevron must be an SVG, not a ▾ glyph');
+  // (la sub-navegación pasó a chips visibles — solo el nav principal es desplegable)
 });
 
 test('achievement toasts stack and stay readable', () => {
@@ -1793,12 +1792,12 @@ test('vinos carta premium port: fonts, search, pills, card, light sub-trigger', 
     assert(css.includes(`.${cls}`) && html.includes(`class="${cls}`),
       `card class .${cls} missing from CSS or markup`);
   }
-  // Sub-tab trigger is light (hierarchy: dark main nav → light sub-selector);
-  // the green Pip-Boy variant must still override it to dark.
-  assert(/\.tunic-dd-trigger\{[^}]*background:#faf6ee/.test(css),
-    'sub-tab trigger must be the light variant');
-  assert(/\.tunic-dd--green \.tunic-dd-trigger\{[^}]*#0c3a22/.test(css),
-    'green variant must keep its dark Pip-Boy trigger');
+  // Chips claros sobre nav oscuro (jerarquía); el activo de Repaso Inteligente
+  // conserva su verde Pip-Boy oscuro.
+  assert(/\.subtab-chip\{[^}]*background:#faf6ee/.test(css),
+    'sub-tab chips must be the light variant');
+  assert(/\.subtab-chip\.on\.subtab-chip--green\{[^}]*#0c3a22/.test(css),
+    'green active chip must keep its dark Pip-Boy look');
 });
 
 test('wine detail speaks the premium carta language', () => {
@@ -1836,8 +1835,8 @@ test('editorial TUNIC DNA: left headers, pull-quotes, crisp radii, slim bars', (
     'sommelier hub title must be editorial');
   assert(/\.wine-hex-medallion\{display:none;/.test(css) && !/\.wine-hex-medallion\{display:none;[^}]*display:flex/.test(css),
     'hub medallion must be retired without a later display override');
-  assert(/\.nav-dd-trigger\{[^}]*min-height:44px/.test(css) && /\.tunic-dd-trigger\{[^}]*min-height:44px/.test(css),
-    'both nav bars must be the slim 44px variant');
+  assert(/\.nav-dd-trigger\{[^}]*min-height:44px/.test(css) && /\.subtab-chip\{[^}]*min-height:40px/.test(css),
+    'nav stays slim 44px and sub-nav chips stay tappable (40px)');
 });
 
 test('vinos sweep 3: sommelier index, maridaje rows, frases rows', () => {
@@ -2180,14 +2179,15 @@ test('sub-tab navigation is VISIBLE chips (owner: the dropdown hid the subsectio
     '_subTabBar must render the visible chips row');
   assert(!/return _subTabDropdown\(tabs, activeTab,/.test(html),
     '_subTabBar must NOT delegate to the closed dropdown anymore');
-  assert(/_subTabDropdown\(tabs, sub, id=>`_vinoSubTab/.test(html),
-    'the Vinos bar keeps its dropdown (unchanged scope)');
+  assert(/_chipsBar\(tabs, sub, id=>`_vinoSubTab/.test(html),
+    'the Vinos bar must use the SAME chips language (uniform design, owner request)');
+  assert(!/_subTabDropdown\(/.test(html), 'the dead dropdown component must be fully removed');
   const css = read('styles.css');
   assert(/\.subtab-chips\{[^}]*overflow-x:auto/.test(css), 'chips row must scroll horizontally');
   assert(/\.subtab-chip\.on\{[^}]*var\(--gold\)/.test(css), 'active chip must be gold-filled');
   assert(/\.subtab-chip\.on\.subtab-chip--green\{[^}]*#0c3a22/.test(css),
     'Repaso Inteligente active chip keeps its Pip-Boy green');
-  assert(/parentTab==='aprender' && id==='smart'/.test(html),
+  assert(/parentTab==='aprender' && activeTab==='smart' \? 'smart' : null/.test(html),
     'green variant must be scoped to Repaso Inteligente only');
 });
 

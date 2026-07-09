@@ -2085,57 +2085,7 @@ body::after{
   opacity:0;transition:opacity .22s;
 }
 
-/* ─────────────────────────────────────────────────
-   SUB-TAB BAR — TUNIC Divine Aura v4 (manuscript panel)
-───────────────────────────────────────────────── */
-/* ── Sub-tab dropdown — replaces the horizontal scroller so every option
-   is reachable without swiping (no more "scroll blindness") ── */
-/* Tenet-style: solid trigger + a panel of big stacked options, the active
-   one marked with a left accent bar. Gold by default; green variant only
-   on Repaso Inteligente to match the Pip-Boy console. */
-.tunic-dd{position:relative;z-index:20;max-width:100%;margin:0 auto 1.6rem}
-/* Sub-tab trigger is LIGHT so hierarchy reads at a glance: dark main nav →
-   light sub-section selector. (Was a second dark slab identical to the nav.)
-   The green Pip-Boy variant below overrides this and stays dark by design. */
-.tunic-dd-trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:44px;
-  border-radius:10px;padding:.55rem 1rem;cursor:pointer;border:1px solid rgba(196,154,60,.3);
-  font-family:'Cinzel',serif;font-weight:600;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--gold-deep);background:#faf6ee;
-  box-shadow:0 1px 4px rgba(28,42,34,.06)}
-.tunic-dd-trigger:active{transform:translateY(1px)}
-.tunic-dd-cur{display:flex;align-items:center;gap:.45rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* Chevron rendered as a bordered chip so it clearly reads as a tap-to-open
-   control (a bare ▾ glyph was too subtle to signal the menu expands). */
-.tunic-dd-chev{display:inline-flex;align-items:center;justify-content:center;
-  width:28px;height:28px;flex-shrink:0;border-radius:8px;color:var(--gold);
-  background:rgba(196,154,60,.15);border:1px solid rgba(196,154,60,.32);
-  transition:transform .24s ease,background .2s ease}
-.tunic-dd-chev svg{width:15px;height:15px;stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.tunic-dd.open .tunic-dd-chev{transform:rotate(180deg);background:rgba(196,154,60,.28)}
-.tunic-dd-list{position:absolute;top:calc(100% + .4rem);left:0;right:0;z-index:30;
-  display:none;flex-direction:column;overflow:hidden;
-  background:#faf6ee;border:1px solid rgba(196,154,60,.3);border-radius:14px;
-  box-shadow:0 12px 30px rgba(28,42,34,.22)}
-.tunic-dd.open .tunic-dd-list{display:flex;animation:ddIn .18s ease both}
-@keyframes ddIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.tunic-dd-item{display:flex;align-items:center;gap:.7rem;width:100%;min-height:58px;padding:1rem 1.1rem;
-  font-family:'Cinzel',serif;font-weight:500;font-size:.84rem;letter-spacing:.03em;text-transform:none;
-  color:rgba(28,42,34,.72);background:transparent;border:none;border-left:4px solid transparent;
-  text-align:left;cursor:pointer}
-.tunic-dd-item + .tunic-dd-item{border-top:1px solid rgba(196,154,60,.14)}
-.tunic-dd-item:active{background:rgba(196,154,60,.08)}
-.tunic-dd-item.on{color:var(--gold-deep);background:rgba(196,154,60,.1);border-left-color:var(--gold);font-weight:600}
-.tunic-dd-ico{display:inline-flex;font-size:.9rem;flex-shrink:0}
-
-/* green variant — Repaso Inteligente only */
-.tunic-dd--green .tunic-dd-trigger{color:#8fffbe;border-color:rgba(34,255,136,.3);background:linear-gradient(145deg,#0c3a22,#08301b)}
-.tunic-dd--green .tunic-dd-chev{color:#5dffa0;background:rgba(34,255,136,.12);border-color:rgba(34,255,136,.32)}
-.tunic-dd--green.open .tunic-dd-chev{background:rgba(34,255,136,.24)}
-.tunic-dd--green .tunic-dd-list{background:#04140b;border-color:rgba(34,255,136,.2)}
-.tunic-dd--green .tunic-dd-item{color:rgba(200,255,224,.72)}
-.tunic-dd--green .tunic-dd-item + .tunic-dd-item{border-top-color:rgba(34,255,136,.12)}
-.tunic-dd--green .tunic-dd-item:active{background:rgba(34,255,136,.08)}
-.tunic-dd--green .tunic-dd-item.on{color:#c8ffe0;background:rgba(34,255,136,.08);border-left-color:#22ff88}
+/* (la sub-navegación vive en .subtab-chips — lenguaje único de la app) */
 
 /* ── Main nav as a dropdown (same Tenet pattern, always gold) ── */
 .nav-dd{position:relative;z-index:95;background:#25352b;padding:.4rem .8rem}
@@ -4212,22 +4162,21 @@ body::after{
   opacity:.85;filter:blur(1.5px)
 }
 
-/* topic section */
-.topic-pills{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+/* topic section — mismo lenguaje de chips que la sub-navegación (uniformidad) */
+.topic-pills{display:flex;gap:.45rem;margin-bottom:1.5rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:.3rem}
+.topic-pills::-webkit-scrollbar{display:none}
 .topic-pill{
-  position:relative;background:transparent;border:1px solid var(--line);border-radius:20px;
-  padding:.4rem .95rem;font-family:'DM Mono',monospace;font-size:.6rem;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--parch3);
-  cursor:pointer;transition:all .25s cubic-bezier(.22,1,.36,1);
-  overflow:visible;
+  flex-shrink:0;position:relative;background:#faf6ee;border:1.5px solid var(--ink3);border-radius:100px;
+  min-height:38px;padding:.4rem .9rem;font-family:'Quicksand',sans-serif;font-weight:600;font-size:.74rem;
+  color:var(--parch2);box-shadow:0 2px 0 var(--ink4);
+  cursor:pointer;transition:all .15s;white-space:nowrap;-webkit-tap-highlight-color:transparent;
 }
 .topic-pill:hover{border-color:var(--line2);color:var(--parch2);background:rgba(196,154,60,.05)}
 .topic-pill.active{
-  border-color:color-mix(in srgb,var(--gold) 55%,transparent);
-  color:var(--parchment);
-  background:linear-gradient(155deg,rgba(196,154,60,.14),rgba(196,154,60,.05));
-  transform:scale(1.03);
-  box-shadow:0 2px 0 color-mix(in srgb,var(--gold) 30%,transparent),0 4px 10px rgba(196,154,60,.12)
+  border-color:var(--gold);
+  color:#1c1508;font-weight:700;
+  background:var(--gold);
+  box-shadow:0 2px 0 var(--ink4)
 }
 .topic-pill.active::after{
   content:'';position:absolute;left:18%;right:18%;bottom:-3px;height:2px;
