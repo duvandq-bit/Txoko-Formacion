@@ -2796,6 +2796,30 @@ test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por err
     'the angry poses (m3/m4) need their own framing — a single crop leaves them off-centre');
 });
 
+test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñido, grito alternado)', () => {
+  // Hoja de 5 fotogramas del propietario (jul 2026). El personaje alterna
+  // poses reales: parpadea en calma, habla al dictar la pregunta, guiña al
+  // acierto, mastica su rabia a 2 vidas y grita alternando A/B a 1 vida.
+  assert(/const SHOESMITH_ANIM=\{/.test(html), 'SHOESMITH_ANIM frame set missing');
+  for (const k of ['blink:', 'talk:', 'wink:', 'growl:', 'scream:']) {
+    assert(html.includes(k + "'data:image/jpeg;base64,"), `SHOESMITH_ANIM must embed the ${k.slice(0,-1)} frame as a data-URI`);
+  }
+  const i = html.indexOf('function txAnimTick(');
+  assert(i !== -1, 'txAnimTick scheduler missing');
+  const body = html.slice(i, i + 2200);
+  assert(/img\.setAttribute\('src',src\)/.test(html.slice(html.indexOf('function _txSetFrame'), html.indexOf('function _txSetFrame') + 300)),
+    'frame swaps must touch img.src only (innerHTML would reset the CSS animations)');
+  assert(/st\.lives<=1/.test(body) && /SHOESMITH_ANIM\.scream/.test(body), 'at 1 life he must scream alternating A/B');
+  assert(/st\.lives===2/.test(body) && /SHOESMITH_ANIM\.growl/.test(body), 'at 2 lives he must chew his rage in a loop');
+  assert(/_nextBlink/.test(body), 'at calm he must blink occasionally');
+  assert(/txAnimTick\(\);/.test(html.slice(html.indexOf('function txTick('), html.indexOf('function txAnswer('))),
+    'txTick must drive the frame scheduler');
+  assert(/SHOESMITH_ANIM\.wink/.test(html.slice(html.indexOf('function txAnswer('), html.indexOf('function txAnswer(') + 4200)),
+    'a correct answer must show the wink frame');
+  assert(/txAnimOnce\(\['talk'/.test(html.slice(html.indexOf('function txNext('), html.indexOf('function txTick('))),
+    'a new question must trigger the talking sequence');
+});
+
 test('Camarero Survivors UX: invisible joystick base + plain-language upgrade descriptions', () => {
   // Petición del propietario: no mostrar el círculo oscuro del joystick al
   // mover, y una breve explicación de lo que hace cada habilidad al escoger.
