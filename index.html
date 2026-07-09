@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.156';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.157';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23746,8 +23746,7 @@ function txTick(){
     const oldMood = faceEl.dataset.mood||'5';
     const newMood = String(txokoState.lives);
     if(oldMood !== newMood){
-      faceEl.innerHTML=txClientFace(txokoState.lives,pct);
-      faceEl.dataset.mood = newMood;
+      txApplyMood(faceEl,txokoState.lives,pct);
     }
     // tensión: con la paciencia al límite, Mr. Shoesmith tiembla
     const _frame=faceEl.closest('.tx-rh-face-frame');
@@ -23807,8 +23806,7 @@ function txAnswer(idx){
     // reacciona (fogonazo + sacudida + zoom) sin esperar al siguiente tick.
     const faceEl=document.getElementById('txokoClientFace');
     if(faceEl){
-      faceEl.innerHTML=txClientFace(txokoState.lives, txokoState.patienceLeft/txokoState.patienceMax*100);
-      faceEl.dataset.mood=String(txokoState.lives);
+      txApplyMood(faceEl,txokoState.lives, txokoState.patienceLeft/txokoState.patienceMax*100);
       const _fr=faceEl.closest('.tx-rh-face-frame');
       if(_fr){ _fr.classList.remove('tx-face-bad'); void _fr.offsetWidth; _fr.classList.add('tx-face-bad'); setTimeout(()=>_fr.classList.remove('tx-face-bad'),750); }
     }
@@ -23868,7 +23866,18 @@ function txClientFace(lives, pct){
   else if(lives===3) mood=2;
   else if(lives===2) mood=3;
   else mood=4;
-  return '<img class="tx-shoe-face" alt="Mr. Shoesmith" src="'+SHOESMITH_FACES[mood]+'">';
+  // tx-shoe-mN: encuadre por pose — en los sprites enfadados la cabeza es más
+  // pequeña y está descentrada, así que cada humor lleva su propio recorte.
+  return '<img class="tx-shoe-face tx-shoe-m'+mood+'" alt="Mr. Shoesmith" src="'+SHOESMITH_FACES[mood]+'">';
+}
+// Clase de comportamiento del marco según el humor: en calma respira lento,
+// molesto se inquieta, furioso hierve — el personaje VIVE, no solo cambia de foto.
+function txMoodClass(lives){ return lives>=4?'tx-mood-calm':lives===3?'tx-mood-mid':'tx-mood-mad'; }
+function txApplyMood(faceEl,lives,pct){
+  faceEl.innerHTML=txClientFace(lives,pct);
+  faceEl.dataset.mood=String(lives);
+  const fr=faceEl.closest('.tx-rh-face-frame');
+  if(fr){ fr.classList.remove('tx-mood-calm','tx-mood-mid','tx-mood-mad'); fr.classList.add(txMoodClass(lives)); }
 }
 
 function txRender(){
@@ -23899,8 +23908,8 @@ function txRender(){
         <span class="tx-rh-gauge-t" id="txokoTimeLeft">${Math.ceil(patienceLeft)}s</span>
       </div>
       <div class="tx-rh-panel">
-        <div class="tx-rh-face-frame">
-          <span id="txokoClientFace" style="display:block;width:100%;height:100%">${txClientFace(lives,pct)}</span>
+        <div class="tx-rh-face-frame ${txMoodClass(lives)}">
+          <span id="txokoClientFace" data-mood="${lives}" style="display:block;width:100%;height:100%">${txClientFace(lives,pct)}</span>
           <div class="tx-rh-face-tag">MR. SHOESMITH</div>
         </div>
         <div class="tx-rh-bubble">

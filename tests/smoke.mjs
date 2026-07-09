@@ -2623,7 +2623,7 @@ test('Txoko question screen (txRender) shows Mr. Shoesmith BIG, not the old gene
   const i = html.indexOf('function txRender(');
   assert(i !== -1, 'txRender not found');
   const body = html.slice(i, html.indexOf('\nfunction txGameOver', i));
-  assert(/class="tx-rh-face-frame"/.test(body), 'txRender must wrap the big face in .tx-rh-face-frame');
+  assert(/class="tx-rh-face-frame[ "]/.test(body), 'txRender must wrap the big face in .tx-rh-face-frame');
   assert(/id="txokoClientFace"[^>]*>\$\{txClientFace\(lives,\s*pct\)\}/.test(body),
     'txRender must render the reactive face via txClientFace(lives, pct) into #txokoClientFace');
   assert(!/txoko-waiter-avatar/.test(body), 'the old generic <svg> waiter avatar must be removed — the real face replaces it');
@@ -2770,24 +2770,30 @@ test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por err
   // desde que el rostro es <img>); este guard fija el sistema vivo.
   // (1) el tick NO reemplaza la imagen cada 100ms (mataría las animaciones CSS)
   const tick = html.slice(html.indexOf('function txTick('), html.indexOf('function txAnswer('));
-  assert(/if\(oldMood !== newMood\)\{\s*[\r\n]+\s*faceEl\.innerHTML=txClientFace/.test(tick),
+  assert(/if\(oldMood !== newMood\)\{\s*[\r\n]+\s*txApplyMood\(faceEl/.test(tick),
     'txTick must only swap the face img when the mood actually changes');
   assert(/tx-face-tense'?,\s*pct<=30\)/.test(tick), 'txTick must toggle the low-patience tremble class');
   // (2) el error cambia la cara AL INSTANTE y dispara la reacción de enfado
   const ans = html.slice(html.indexOf('function txAnswer('), html.indexOf('function txAnswer(') + 4000);
-  assert(/playSound\('wrong'\)[\s\S]*?faceEl\.innerHTML=txClientFace\(txokoState\.lives/.test(ans),
+  assert(/playSound\('wrong'\)[\s\S]*?txApplyMood\(faceEl,txokoState\.lives/.test(ans),
     'a wrong answer must swap to the angrier face immediately (not wait for the next tick)');
   assert(/tx-face-bad/.test(ans), 'a wrong answer must trigger the tx-face-bad rage reaction');
   assert(/tx-face-ok/.test(ans), 'a correct answer must trigger the tx-face-ok celebration');
   assert(!/shoe-mood-change/.test(html), 'the dead shoe-mood-change hook must be gone');
   // (3) CSS: marioneta viva y sin selectores muertos sobre svg
   const css = read('styles.css');
-  assert(/\.tx-rh-face-frame \.tx-shoe-face\{animation:shoeIdle/.test(css),
-    'the face must breathe at rest (shoeIdle) — and WITHOUT an #id in the selector, or the state animations (tremble/nod/rage) lose the specificity war and never run');
-  for (const kf of ['@keyframes shoeIdle', '@keyframes shoeRage', '@keyframes shoeNod', '@keyframes shoeTremble', '@keyframes shoeFlash']) {
+  assert(/\.tx-rh-face-frame\.tx-mood-calm \.tx-shoe-face\{animation:shoeIdle/.test(css),
+    'the face must breathe at rest (shoeIdle via tx-mood-calm) — and WITHOUT an #id in the selector, or the state animations (tremble/nod/rage) lose the specificity war and never run');
+  for (const kf of ['@keyframes shoeIdle', '@keyframes shoeFidget', '@keyframes shoeFume', '@keyframes shoeBoil', '@keyframes shoeRage', '@keyframes shoeNod', '@keyframes shoeTremble', '@keyframes shoeFlash']) {
     assert(css.includes(kf), `styles.css must define ${kf}`);
   }
   assert(!/#txokoClientFace svg/.test(css), 'dead svg-based animation selectors must be removed');
+  // (4) el humor cambia el COMPORTAMIENTO (calm/mid/mad) y el ENCUADRE (m3/m4)
+  assert(/function txMoodClass\(lives\)/.test(html) && /function txApplyMood\(/.test(html),
+    'mood-tier helpers (txMoodClass/txApplyMood) must exist');
+  assert(/tx-shoe-m'\+mood/.test(html), 'txClientFace must tag the sprite with its per-mood crop class');
+  assert(/\.tx-rh-face-frame \.tx-shoe-m3\{/.test(css) && /\.tx-rh-face-frame \.tx-shoe-m4\{/.test(css),
+    'the angry poses (m3/m4) need their own framing — a single crop leaves them off-centre');
 });
 
 test('Camarero Survivors UX: invisible joystick base + plain-language upgrade descriptions', () => {
