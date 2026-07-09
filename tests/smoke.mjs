@@ -2844,6 +2844,12 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   assert(/loading="lazy"/.test(html), 'grid images must lazy-load');
   assert(/_shiftDishes\(DISHES\)/.test(html.slice(html.indexOf('function _emplRender'), html.indexOf('function _emplRender') + 800)),
     'the guide must respect the active shift filter');
+  // el aviso de platos sin foto es SOLO para el propietario (dispositivo que
+  // ha desbloqueado el panel de supervisor con PIN)
+  assert(/missing\.length && _isSupDevice\(\)/.test(html),
+    'the missing-photos notice must be gated behind _isSupDevice()');
+  assert(/function _isSupDevice\(/.test(html) && /txk_sup_device/.test(html),
+    '_isSupDevice must exist and persist via the supervisor-PIN device mark');
   const css = read('styles.css');
   for (const sel of ['.empl-grid{', '.empl-card{', '.empl-ov-card{', '.empl-chip{']) {
     assert(css.includes(sel), `styles.css must style ${sel}`);
