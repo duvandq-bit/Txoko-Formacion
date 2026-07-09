@@ -2822,6 +2822,36 @@ test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñid
     'a new question must trigger the talking sequence');
 });
 
+test('Acceso en 1 toque: sesión deslizante 90d, banner de instalación, hoja iOS, atajos del manifest', () => {
+  // Fricción reportada por el propietario (jul 2026): el personal leía el PDF
+  // porque abrir la app costaba. Este guard fija el paquete anti-fricción.
+  // (1) sesión deslizante: 90 días y renovación del sello en cada apertura
+  const al = html.slice(html.indexOf('(function autoLogin('), html.indexOf('(function autoLogin(') + 1400);
+  assert(/90\*24\*60\*60\*1000/.test(al), 'session must be valid for 90 days (was 30 — monthly re-login killed the habit)');
+  assert(/txoko_session', JSON\.stringify\(\{user, hash, ts: Date\.now\(\)\}\)/.test(al),
+    'auto-login must RENEW the session timestamp on each open (sliding session)');
+  // (2) banner de instalación en el dashboard, con snooze y detección standalone
+  assert(/function renderInstallBanner\(/.test(html) && /\$\{renderInstallBanner\(\)\}/.test(html),
+    'the dashboard must render the install banner');
+  assert(/function _isStandalone\(/.test(html) && /display-mode: standalone/.test(html),
+    'the banner must hide when already installed (standalone detection)');
+  assert(/txk_install_snooze/.test(html) && /14\*24\*60\*60\*1000/.test(html),
+    'dismissing the banner must snooze it for 14 days (not forever, not never)');
+  // (3) hoja visual de pasos (iOS no tiene prompt nativo; el alert() era hostil)
+  assert(/function showInstallSheet\(/.test(html) && /Añadir a pantalla de inicio/.test(html),
+    'the iOS/generic install sheet with visual steps must exist');
+  assert(!/alert\(LANG==='en'\s*\?\s*'On iPhone/.test(html), 'the old hostile alert() fallback must be gone');
+  // (4) atajos del icono (long-press) via #tab= (el boot ya los procesa)
+  const mf = read('manifest.json');
+  assert(/"shortcuts"\s*:/.test(mf) && /#tab=aprender/.test(mf) && /#tab=txoko/.test(mf),
+    'manifest.json must define home-screen shortcuts deep-linking via #tab=');
+  // CSS del banner y la hoja
+  const css = read('styles.css');
+  for (const sel of ['.install-banner{', '.install-sheet{', '.install-step{']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
 test('Camarero Survivors UX: invisible joystick base + plain-language upgrade descriptions', () => {
   // Petición del propietario: no mostrar el círculo oscuro del joystick al
   // mover, y una breve explicación de lo que hace cada habilidad al escoger.
