@@ -2824,6 +2824,13 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   const map = JSON.parse(read('data/dish-photos.json'));
   const keys = Object.keys(map);
   assert(keys.length >= 50, `expected ≥50 dish photos, found ${keys.length}`);
+  // Regresión (jul 2026, reporte del propietario): el emparejador difuso por
+  // nombre de página coló dos fotos de OTROS platos por coincidencia parcial
+  // de palabras ("Tarta de limón"→"Tarta de queso" id 105, "Salsa Bearnesa"→
+  // "Salsa de hongos" id 38). Ninguno de los dos tiene foto real en los PDF
+  // originales — deben quedar sin foto, no con una equivocada.
+  assert(!('38' in map), 'dish 38 (Salsa de hongos) must stay photo-less — its only PDF match was a mislabeled Salsa Bearnesa photo');
+  assert(!('105' in map), 'dish 105 (Tarta de queso) must stay photo-less — its only PDF match was a mislabeled Tarta de limón photo');
   // cada ruta del mapa debe existir físicamente en el repo
   for (const [id, p] of Object.entries(map)) {
     assert(/^img\/platos\/[a-z0-9-]+\.webp$/.test(p), `photo path malformed for dish ${id}: ${p}`);
