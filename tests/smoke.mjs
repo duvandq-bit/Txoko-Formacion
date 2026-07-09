@@ -2172,44 +2172,40 @@ test('global search: entry, overlay and deep-link wiring', () => {
     'search must fold accents for allergen/name matching');
 });
 
-test('sub-tab navigation is a dropdown, not a horizontal scroller', () => {
-  // The scrolling .tunic-subtabs bar hid off-screen options. Both the
-  // shared _subTabBar and the Vinos bar now render a .tunic-dd dropdown
-  // via _subTabDropdown, so every option is reachable without swiping.
-  assert(/function _subTabDropdown\(/.test(html),
-    '_subTabDropdown helper missing');
-  assert(/return _subTabDropdown\(tabs, activeTab,/.test(html),
-    '_subTabBar must delegate to the dropdown helper');
+test('sub-tab navigation is VISIBLE chips (owner: the dropdown hid the subsections)', () => {
+  // Jul 2026: el desplegable cerrado parecía un título y nadie descubría
+  // Emplatado/Flashcards/Videos. _subTabBar renderiza ahora chips visibles
+  // con scroll horizontal. Vinos conserva su desplegable propio.
+  assert(/class="subtab-chips" role="tablist"/.test(html),
+    '_subTabBar must render the visible chips row');
+  assert(!/return _subTabDropdown\(tabs, activeTab,/.test(html),
+    '_subTabBar must NOT delegate to the closed dropdown anymore');
   assert(/_subTabDropdown\(tabs, sub, id=>`_vinoSubTab/.test(html),
-    'the Vinos bar must also use the dropdown helper');
+    'the Vinos bar keeps its dropdown (unchanged scope)');
   const css = read('styles.css');
-  assert(/\.tunic-dd\.open \.tunic-dd-list\{display:flex/.test(css),
-    'the dropdown open-state CSS is missing');
-  // Tenet-style: active item gets a left accent bar; green variant exists
-  // and is applied only on Repaso Inteligente (smart tab of Aprender).
-  assert(/\.tunic-dd-item\.on\{[^}]*border-left-color:var\(--gold\)/.test(css),
-    'active dropdown item must have the gold left accent bar (Tenet style)');
-  assert(/\.tunic-dd--green /.test(css),
-    'the green dropdown variant is missing');
-  assert(/parentTab==='aprender' && activeTab==='smart'\) \? 'green'/.test(html),
+  assert(/\.subtab-chips\{[^}]*overflow-x:auto/.test(css), 'chips row must scroll horizontally');
+  assert(/\.subtab-chip\.on\{[^}]*var\(--gold\)/.test(css), 'active chip must be gold-filled');
+  assert(/\.subtab-chip\.on\.subtab-chip--green\{[^}]*#0c3a22/.test(css),
+    'Repaso Inteligente active chip keeps its Pip-Boy green');
+  assert(/parentTab==='aprender' && id==='smart'/.test(html),
     'green variant must be scoped to Repaso Inteligente only');
 });
 
-test('Aprender sub-tabs lead with Smart Review, then Explore', () => {
-  // Owner request: Repaso Inteligente (smart) comes before Explorar
-  // (repaso) in the Aprender sub-tab bar, and is the default sub-tab.
+test('Aprender lands on Emplatado and lists it first (owner request, jul 2026)', () => {
+  // La guía visual es lo más consultado en servicio: primera opción y
+  // subtab por defecto.
   const bar = html.match(/_subTabBar\(\[\s*([\s\S]*?)\]\s*,\s*sub\s*,\s*'aprender'\)/);
   assert(bar, 'aprender _subTabBar call not found');
+  const empIdx = bar[1].indexOf("'emplatado'");
   const smartIdx = bar[1].indexOf("'smart'");
-  const repasoIdx = bar[1].indexOf("'repaso'");
-  assert(smartIdx !== -1 && repasoIdx !== -1, 'smart/repaso tabs missing');
-  assert(smartIdx < repasoIdx, 'Smart Review must come before Explore in the Aprender sub-tabs');
-  assert(/_subTab\.aprender\s*\|\|\s*'smart'/.test(html),
-    "Aprender default sub-tab must be 'smart' so the first tab is active on open");
-  // the initial _subTab state must also be 'smart' — '|| smart' never fires
-  // because _subTab.aprender is always truthy once initialised
-  assert(/let _subTab = \{ aprender:'smart'/.test(html),
-    "_subTab must initialise aprender to 'smart', else Explore stays the active default");
+  assert(empIdx !== -1 && smartIdx !== -1, 'emplatado/smart tabs missing');
+  assert(empIdx < smartIdx, 'Emplatado must be the FIRST Aprender sub-tab');
+  assert(/_subTab\.aprender\s*\|\|\s*'emplatado'/.test(html),
+    "Aprender default sub-tab must be 'emplatado'");
+  // el inicializador manda: '|| emplatado' nunca dispara porque _subTab.aprender
+  // siempre es truthy una vez inicializado
+  assert(/let _subTab = \{ aprender:'emplatado'/.test(html),
+    "_subTab must initialise aprender to 'emplatado', else the old default wins");
 });
 
 test('smart review leads with the simulation CTA, no live-case block', () => {
