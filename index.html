@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.161';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.162';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6859,11 +6859,65 @@ function installApp(){
       if(btn) btn.style.display = 'none';
     });
   } else {
-    // Fallback for iOS — show instructions
-    alert(LANG==='en'
-      ? 'On iPhone: tap Safari\'s share button (square with arrow) and select "Add to Home Screen".'
-      : 'En iPhone: pulsa el botón compartir de Safari (cuadrado con flecha) y selecciona "Añadir a pantalla de inicio".');
+    showInstallSheet();
   }
+}
+
+// ── Acceso en 1 toque (fricción reportada por el propietario) ──────────
+// El personal acababa leyendo el PDF porque abrir la app costaba: URL en el
+// navegador + login. Remedios: sesión deslizante (90d), banner de instalación
+// tras el login, y hoja visual de pasos para iOS (donde no hay prompt nativo).
+function _isStandalone(){
+  try{ return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }
+  catch(_){ return false; }
+}
+function _installSnoozed(){
+  try{ const t=+localStorage.getItem('txk_install_snooze')||0; return (Date.now()-t) < 14*24*60*60*1000; }
+  catch(_){ return false; }
+}
+function dismissInstallBanner(){
+  try{ localStorage.setItem('txk_install_snooze', String(Date.now())); }catch(_){}
+  const b=document.getElementById('installBanner'); if(b) b.remove();
+}
+function renderInstallBanner(){
+  if(_isStandalone() || _installSnoozed()) return '';
+  const _en=LANG==='en';
+  return `<div class="install-banner" id="installBanner" role="region" aria-label="${_en?'Install the app':'Instalar la app'}">
+    <div class="install-banner-ic">⚡</div>
+    <div class="install-banner-tx">
+      <b>${_en?'1-tap access':'Acceso en 1 toque'}</b>
+      <span>${_en?'Add TXOKO to your home screen — opens instantly, works offline':'Añade TXOKO a tu pantalla de inicio: abre al instante y funciona sin conexión'}</span>
+    </div>
+    <button class="install-banner-btn" onclick="promptInstallSmart()">${_en?'Install':'Instalar'}</button>
+    <button class="install-banner-x" onclick="dismissInstallBanner()" aria-label="${_en?'Dismiss':'Descartar'}">✕</button>
+  </div>`;
+}
+function promptInstallSmart(){
+  if(deferredInstallPrompt){ installApp(); dismissInstallBanner(); return; }
+  showInstallSheet();
+}
+function showInstallSheet(){
+  if(document.getElementById('installSheet')) return;
+  const _en=LANG==='en';
+  const isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const steps = isIos
+    ? [ ['1','⬆️', _en?'Tap the <b>Share</b> button in Safari (square with an arrow, bottom bar)':'Pulsa el botón <b>Compartir</b> de Safari (cuadrado con flecha, barra inferior)'],
+        ['2','➕', _en?'Scroll and choose <b>“Add to Home Screen”</b>':'Baja y elige <b>«Añadir a pantalla de inicio»</b>'],
+        ['3','✅', _en?'Tap <b>Add</b> — TXOKO appears as an app':'Pulsa <b>Añadir</b> — TXOKO aparece como una app'] ]
+    : [ ['1','⋮', _en?'Open your browser menu (three dots)':'Abre el menú del navegador (tres puntos)'],
+        ['2','➕', _en?'Choose <b>“Add to Home screen”</b> or <b>“Install app”</b>':'Elige <b>«Añadir a pantalla de inicio»</b> o <b>«Instalar aplicación»</b>'],
+        ['3','✅', _en?'Confirm — TXOKO appears as an app':'Confirma — TXOKO aparece como una app'] ];
+  const sheet=document.createElement('div');
+  sheet.id='installSheet';
+  sheet.innerHTML=`<div class="install-sheet-scrim" onclick="document.getElementById('installSheet').remove()"></div>
+    <div class="install-sheet" role="dialog" aria-modal="true" aria-label="${_en?'How to install':'Cómo instalar'}">
+      <div class="install-sheet-grab"></div>
+      <div class="install-sheet-title">${_en?'Install TXOKO on your phone':'Instala TXOKO en tu móvil'}</div>
+      <div class="install-sheet-sub">${_en?'30 seconds, once — then it opens in 1 tap':'30 segundos, una vez — luego abre en 1 toque'}</div>
+      ${steps.map(s=>`<div class="install-step"><div class="install-step-n">${s[0]}</div><div class="install-step-ic">${s[1]}</div><div class="install-step-tx">${s[2]}</div></div>`).join('')}
+      <button class="btn-primary" style="width:100%;margin-top:.6rem" onclick="document.getElementById('installSheet').remove()">${_en?'Got it':'Entendido'}</button>
+    </div>`;
+  document.body.appendChild(sheet);
 }
 function shareApp(){
   const url = 'https://duvandq-bit.github.io/Txoko-Formacion/';
@@ -15083,6 +15137,9 @@ function renderDashboard(){
       <!-- XP bar (also shows level title — no need to duplicate it in the badge above) -->
       ${renderXPBar()}
     </div>
+
+    <!-- ── ACCESO EN 1 TOQUE: banner de instalación (solo si no está instalada) ── -->
+    ${renderInstallBanner()}
 
     <!-- ── PLAN DE HOY (SRS due + next rank + top weakness) ── -->
     ${(_srsDue>0 || _rankProg || _weakDisplay) ? `
@@ -25073,11 +25130,14 @@ document.addEventListener('visibilitychange', ()=>{
     const sess = localStorage.getItem('txoko_session');
     if(sess){
       const {user, hash, ts} = JSON.parse(sess);
-      // Session valid for 30 days
-      if(user && hash && ts && (Date.now() - ts) < 30*24*60*60*1000){
+      // Sesión DESLIZANTE de 90 días: cada apertura renueva el plazo, así el
+      // personal que usa la app nunca vuelve a ver el login (fricción de
+      // acceso reportada por el propietario: acababan leyendo el PDF).
+      if(user && hash && ts && (Date.now() - ts) < 90*24*60*60*1000){
         const emp = getEmp(user);
         if(emp && emp.pin && emp.pin === hash){
-          // Auto-login success
+          // Auto-login success — renueva el sello de tiempo (deslizante)
+          localStorage.setItem('txoko_session', JSON.stringify({user, hash, ts: Date.now()}));
           localStorage.setItem('txoko_last_user', user);
           pinTarget = user;
           closePinAndEnter();

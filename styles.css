@@ -9427,3 +9427,31 @@ body.chat-open .sound-toggle{ display:none !important; }
   position:absolute; top:1rem; right:1rem; width:40px; height:40px; border-radius:50%;
   background:rgba(244,237,226,.12); color:#fff; border:none; font-size:1.1rem; cursor:pointer;
 }
+
+/* ── Acceso en 1 toque: banner de instalación + hoja de pasos ── */
+.install-banner{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem;padding:.75rem .85rem;
+  background:linear-gradient(155deg,rgba(196,154,60,.12),rgba(196,154,60,.04));
+  border:1.5px solid rgba(196,154,60,.4);border-radius:var(--r2);animation:slideUp .4s ease both}
+.install-banner-ic{font-size:1.3rem;flex-shrink:0}
+.install-banner-tx{flex:1;min-width:0}
+.install-banner-tx b{display:block;font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold)}
+.install-banner-tx span{font-size:.7rem;color:var(--parch3);line-height:1.35;display:block}
+.install-banner-btn{flex-shrink:0;min-height:40px;padding:.45rem .95rem;border-radius:10px;cursor:pointer;
+  background:var(--gold);color:#1c1508;border:none;font-family:'Cinzel',serif;font-weight:700;font-size:.76rem}
+.install-banner-x{flex-shrink:0;width:34px;height:34px;background:transparent;border:none;color:var(--parch4);
+  font-size:.85rem;cursor:pointer;border-radius:50%}
+#installSheet{position:fixed;inset:0;z-index:100001}
+.install-sheet-scrim{position:absolute;inset:0;background:rgba(10,8,4,.55);backdrop-filter:blur(2px)}
+.install-sheet{position:absolute;left:0;right:0;bottom:0;background:var(--ink);border-radius:22px 22px 0 0;
+  padding:1rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom,0px));border-top:1.5px solid rgba(196,154,60,.4);
+  animation:sheetUp .28s ease both}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.install-sheet-grab{width:44px;height:4px;border-radius:2px;background:rgba(196,154,60,.4);margin:0 auto .8rem}
+.install-sheet-title{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);text-align:center}
+.install-sheet-sub{font-size:.72rem;color:var(--parch3);text-align:center;margin:.25rem 0 .9rem}
+.install-step{display:flex;align-items:center;gap:.7rem;padding:.55rem 0;border-top:1px solid var(--line)}
+.install-step-n{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  background:rgba(196,154,60,.15);color:var(--gold);font-family:'Cinzel',serif;font-weight:700;font-size:.8rem}
+.install-step-ic{font-size:1.15rem;flex-shrink:0}
+.install-step-tx{font-size:.8rem;color:var(--parchment);line-height:1.4}
+.install-step-tx b{color:var(--gold)}
