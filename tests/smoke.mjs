@@ -2891,6 +2891,34 @@ test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + a
   }
 });
 
+test('Fotos del equipo: subida con moderación (guía completa, ficha "foto mejor", cola del supervisor)', () => {
+  // Jul 2026: cualquier camarero sube la foto desde el pase; el supervisor
+  // aprueba desde su panel; la aprobada pisa a la del repo al instante.
+  // (1) subida: picker + compresión + storage + insert pending
+  assert(/function _dishPhotoPick\(/.test(html) && /function _dishPhotoUpload\(/.test(html), 'upload helpers missing');
+  assert(/_chatDownscale\(file,1100/.test(html), 'uploads must compress client-side (reuses the chat downscaler)');
+  assert(/storage\/v1\/object\/dish-photos\//.test(html), 'uploads must go to the dish-photos bucket');
+  assert(/rest\/v1\/dish_photo_submissions/.test(html), 'submissions must be recorded in dish_photo_submissions');
+  // (2) merge en runtime: aprobadas pisan al repo; pendientes marcadas
+  const lp = html.slice(html.indexOf('async function loadDishPhotos('), html.indexOf('async function loadDishPhotos(') + 1600);
+  assert(/status=in\.\(pending,approved\)/.test(lp) && /DISH_PHOTO_PENDING/.test(lp),
+    'loadDishPhotos must merge approved submissions and track pending ones');
+  // (3) guía: TODOS los platos — placeholder con botón de subir o "en revisión"
+  assert(/empl-card-nophoto/.test(html) && /empl-upload-btn/.test(html) && /empl-pend/.test(html),
+    'the guide must show placeholder cards with upload button / in-review state');
+  // (4) ficha ampliada: "¿tienes una foto mejor?"
+  assert(/empl-ov-upload/.test(html), 'the dish overlay must offer submitting a better photo');
+  // (5) panel supervisor: cola de moderación cableada
+  assert(/fotos: \(\)=>renderSupPhotoQueue\(\)/.test(html) && /_supTool\('fotos'\)/.test(html),
+    'the supervisor panel must expose the photo moderation queue');
+  assert(/function renderSupPhotoQueue\(/.test(html) && /function _supPhotoModerate\(/.test(html), 'moderation functions missing');
+  assert(/status=eq\.pending/.test(html) && /reviewed_at/.test(html), 'moderation must PATCH status + reviewed_at');
+  const css = read('styles.css');
+  for (const sel of ['.empl-card-nophoto{', '.empl-upload-btn{', '.sup-photo-card{', '.sup-photo-actions button.rej{']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
 test('Dashboard: tarjeta de acceso directo a la Guía de Emplatado (1 toque desde el inicio)', () => {
   // La guía es consulta, no formación: debe estar a 1 toque de abrir la app.
   // Tarjeta premium con abanico de fotos reales, cableada por la ruta enrutada.

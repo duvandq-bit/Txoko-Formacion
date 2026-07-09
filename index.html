@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.169';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.170';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8257,10 +8257,58 @@ function _isSupDevice(){
   try{ return supAuthenticated || localStorage.getItem('txk_sup_device')==='1'; }
   catch(_){ return supAuthenticated; }
 }
+let DISH_PHOTO_PENDING=null;   // ids de plato con foto del equipo en revisión
 async function loadDishPhotos(){
   if(DISH_PHOTOS) return DISH_PHOTOS;
-  DISH_PHOTOS = await loadLazyData('data/dish-photos.json', LANG==='en'?'plating photos':'fotos de emplatado', {silent:true}) || {};
+  const base = await loadLazyData('data/dish-photos.json', LANG==='en'?'plating photos':'fotos de emplatado', {silent:true}) || {};
+  // Fotos del EQUIPO (Supabase): las aprobadas pisan a las del repo (la más
+  // reciente gana); las pendientes se marcan para mostrar "en revisión".
+  try{
+    const r = await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions?status=in.(pending,approved)&select=dish_id,url,status,created_at&order=created_at.desc`,
+      { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } });
+    if(r.ok){
+      const rows = await r.json();
+      DISH_PHOTO_PENDING = new Set();
+      const seen = new Set();
+      for(const row of rows){
+        if(row.status==='approved'){ if(!seen.has(row.dish_id)){ base[String(row.dish_id)] = row.url; seen.add(row.dish_id); } }
+        else DISH_PHOTO_PENDING.add(row.dish_id);
+      }
+    }
+  }catch(_){ /* sin red: la guía funciona con las fotos del repo */ }
+  DISH_PHOTOS = base;
   return DISH_PHOTOS;
+}
+
+// ── Subida de fotos por el equipo (con moderación del supervisor) ──────────
+function _dishPhotoPick(dishId){
+  let inp=document.getElementById('dishPhotoInput');
+  if(!inp){ inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.id='dishPhotoInput'; inp.style.display='none'; document.body.appendChild(inp); }
+  inp.value=''; inp.onchange=()=>_dishPhotoUpload(dishId,inp); inp.click();
+}
+async function _dishPhotoUpload(dishId, inputEl){
+  const file=inputEl.files&&inputEl.files[0]; if(!file) return;
+  const _en=LANG==='en';
+  showToast(_en?'Uploading photo…':'Subiendo foto…','info',2000);
+  try{
+    const blob=await _chatDownscale(file,1100,0.8);   // compresión en el móvil, mismo helper del chat
+    const path=`${dishId}-${Date.now()}-${Math.random().toString(36).slice(2,7)}.webp`;
+    const up=await fetch(`${SUPA_URL}/storage/v1/object/dish-photos/${path}`,{
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'image/webp', 'x-upsert':'false' },
+      body:blob });
+    if(!up.ok) throw new Error('upload');
+    const url=`${SUPA_URL}/storage/v1/object/public/dish-photos/${path}`;
+    const ins=await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions`,{
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
+      body:JSON.stringify({ dish_id:dishId, url, author:currentUser||null }) });
+    if(!ins.ok) throw new Error('insert');
+    if(DISH_PHOTO_PENDING) DISH_PHOTO_PENDING.add(dishId);
+    showToast(_en?'Photo sent — pending supervisor approval':'Foto enviada — pendiente de aprobación del supervisor','success',3200);
+    const ov=document.getElementById('emplOverlay'); if(ov) ov.remove();
+    if((_subTab.aprender||'')==='emplatado'){ const s=document.getElementById('emplSearch'); if(s) _emplRender(s.value||''); }
+  }catch(_){ showToast(_en?'Could not upload the photo':'No se pudo subir la foto','warning',3000); }
 }
 // Foto de un plato (o null): usable en cualquier superficie de CONSULTA.
 // El mapa (~2KB) se precarga al entrar, así los renders síncronos la tienen.
@@ -8284,26 +8332,36 @@ function _emplRender(q){
   const _en=LANG==='en';
   q=(q||'').trim().toLowerCase();
   const pool=(typeof _shiftDishes==='function')?_shiftDishes(DISHES):DISHES;   // respeta el turno activo
-  const byCat={}; let nPhoto=0; const missing=[];
+  const byCat={}; let nAny=0; const missing=[];
   for(const d of pool){
     const dd=getDish(d);
     if(q && !dd.name.toLowerCase().includes(q) && !(dd.cat||'').toLowerCase().includes(q)) continue;
-    if(DISH_PHOTOS[String(d.id)]){ (byCat[dd.cat]=byCat[dd.cat]||[]).push(d); nPhoto++; }
-    else missing.push(dd.name);
+    (byCat[dd.cat]=byCat[dd.cat]||{w:[],wo:[]});
+    if(DISH_PHOTOS[String(d.id)]) byCat[dd.cat].w.push(d); else { byCat[dd.cat].wo.push(d); missing.push(dd.name); }
+    nAny++;
   }
-  if(!nPhoto){
+  if(!nAny){
     body.innerHTML=`<div style="text-align:center;padding:2rem;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--parch3)">${_en?'No dishes found':'Sin resultados'}</div>`;
     return;
   }
-  body.innerHTML=Object.entries(byCat).map(([cat,ds])=>`
+  const pend=id=>DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(id);
+  body.innerHTML=Object.entries(byCat).map(([cat,g])=>`
     <div class="tunic-divider"><span>${escapeHtml(cat)}</span></div>
     <div class="empl-grid">
-      ${ds.map(d=>{ const dd=getDish(d); return `
+      ${g.w.map(d=>{ const dd=getDish(d); return `
         <div class="empl-card" role="button" tabindex="0" onclick="_emplOpen(${d.id})"
           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
           aria-label="${escapeHtml(dd.name)}">
           <img loading="lazy" src="${DISH_PHOTOS[String(d.id)]}" alt="${escapeHtml(dd.name)}">
           <div class="empl-card-name">${escapeHtml(dd.name)}</div>
+        </div>`; }).join('')}
+      ${g.wo.map(d=>{ const dd=getDish(d); return `
+        <div class="empl-card empl-card-nophoto" aria-label="${escapeHtml(dd.name)}">
+          <div class="empl-nophoto">${CAT_ICONS[dd.cat]||'📷'}</div>
+          <div class="empl-card-name">${escapeHtml(dd.name)}</div>
+          ${pend(d.id)
+            ?`<div class="empl-pend">🕒 ${_en?'In review':'En revisión'}</div>`
+            :`<button class="empl-upload-btn" onclick="_dishPhotoPick(${d.id})">📷 ${_en?'Upload photo':'Subir foto'}</button>`}
         </div>`; }).join('')}
     </div>`).join('')
     + ((missing.length && _isSupDevice())?`<div class="empl-missing">📷 ${_en?'No photo yet':'Sin foto aún'} (${_en?'only you see this':'solo tú ves este aviso'}): ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.join(' · '))}</div>`:'');
@@ -8324,9 +8382,67 @@ function _emplOpen(id){
         <div class="empl-ov-name">${escapeHtml(dd.name)}</div>
         ${al?`<div class="empl-ov-al">${al}</div>`:''}
         ${dd.ingredients?`<div class="empl-ov-ing">${escapeHtml(dd.ingredients)}</div>`:''}
+        ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
+          ?`<div class="empl-pend" style="margin-top:.7rem">🕒 ${_en?'A new photo is in review':'Hay una foto nueva en revisión'}</div>`
+          :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})">📷 ${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}</button>`}
       </div>
     </div>`;
   document.body.appendChild(ov);
+}
+
+// ── Moderación (Panel de Supervisor): aprobar/rechazar fotos del equipo ────
+async function renderSupPhotoQueue(){
+  const c=document.getElementById('appContent');
+  const _en=LANG==='en';
+  c.innerHTML=`<div class="sup-wrap">
+    <button onclick="renderSupDashboard()" class="btn-secondary" style="width:100%;margin-bottom:.75rem">← ${_en?'Back to panel':'Volver al panel'}</button>
+    <div class="sup-hero">
+      <div class="sup-hero-icon">📷</div>
+      <div class="sup-hero-title">${_en?'Dish photos':'Fotos de platos'}</div>
+      <div class="sup-hero-sub">${_en?'pending your approval':'pendientes de tu aprobación'}</div>
+    </div>
+    <div id="supPhotoList" style="display:flex;flex-direction:column;gap:.8rem"><div style="text-align:center;padding:1.5rem;color:var(--parch3)">⏳</div></div>
+  </div>`;
+  let rows=[];
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions?status=eq.pending&select=*&order=created_at.asc`,
+      { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } });
+    if(r.ok) rows=await r.json();
+  }catch(_){}
+  const list=document.getElementById('supPhotoList'); if(!list) return;
+  if(!rows.length){
+    list.innerHTML=`<div style="text-align:center;padding:1.6rem;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--green-deep)">✓ ${_en?'No photos pending':'No hay fotos pendientes'}</div>`;
+    return;
+  }
+  list.innerHTML=rows.map(row=>{
+    const d=DISHES.find(x=>x.id===row.dish_id);
+    const nm=d?getDish(d).name:((_en?'Dish ':'Plato ')+row.dish_id);
+    const cur=d&&typeof dishPhotoSrc==='function'?dishPhotoSrc(d.id):null;
+    return `<div class="sup-photo-card">
+      <img src="${escapeHtml(row.url)}" loading="lazy" alt="">
+      <div class="sup-photo-meta">
+        <b>${escapeHTML(nm)}</b>
+        <span>${escapeHTML(row.author||'—')} · ${new Date(row.created_at).toLocaleDateString()}${cur?` · ${_en?'replaces current photo':'sustituye a la foto actual'}`:''}</span>
+        <div class="sup-photo-actions">
+          <button onclick="_supPhotoModerate('${row.id}','approved')">✓ ${_en?'Approve':'Aprobar'}</button>
+          <button class="rej" onclick="_supPhotoModerate('${row.id}','rejected')">✕ ${_en?'Reject':'Rechazar'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function _supPhotoModerate(id,status){
+  const _en=LANG==='en';
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions?id=eq.${encodeURIComponent(id)}`,{
+      method:'PATCH',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
+      body:JSON.stringify({ status, reviewed_at:new Date().toISOString() }) });
+    if(!r.ok) throw new Error('patch');
+    DISH_PHOTOS=null; DISH_PHOTO_PENDING=null; loadDishPhotos();   // recarga el mapa fusionado
+    showToast(status==='approved'?(_en?'Photo approved — live for the whole team':'Foto aprobada — ya visible para el equipo'):(_en?'Photo rejected':'Foto rechazada'),'success',2800);
+    renderSupPhotoQueue();
+  }catch(_){ showToast(_en?'Moderation failed':'Error al moderar','warning',3000); }
 }
 
 function renderAprender(){
@@ -17123,6 +17239,7 @@ function _supTool(k){
        analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
        quiz: ()=>renderLiveQuizHost(window._supEmpNames),
+       fotos: ()=>renderSupPhotoQueue(),
        lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
   }catch(e){
     if(typeof showToast==='function') showToast('Error: '+e.message, 'warning', 6000);
@@ -17436,6 +17553,11 @@ function renderSupDashboard(silent){
             <button onclick="_supTool('aviso')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #d4944c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4944c,#b47430);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Send alert':'Enviar aviso'}</span>
+            </button>
+            <button onclick="_supTool('fotos')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #b8860b;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+              <span style="font-size:1.05rem">📷</span>
+              <span style="flex:1;text-align:left;font-size:.78rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Dish photos':'Fotos de platos'}<br><span style="font-size:.6rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'approve team submissions':'aprobar fotos del equipo'}</span></span>
+              <span style="color:var(--parch4)">›</span>
             </button>
             <button onclick="_supTool('quiz')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(77,138,94,.06),rgba(77,138,94,.02));border:1.5px solid rgba(77,138,94,.2);border-left:3px solid #4d8a5e;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--sage),var(--green-deep));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>

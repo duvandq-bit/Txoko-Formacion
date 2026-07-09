@@ -9539,3 +9539,27 @@ body.chat-open .sound-toggle{ display:none !important; }
 .fc-photo{width:calc(100% - 1.2rem);max-width:300px;height:150px;border-radius:14px;object-fit:cover;
   margin:0 auto 1.1rem;display:block;border:1px solid rgba(196,154,60,.5);box-shadow:0 8px 20px rgba(28,42,34,.2)}
 .gs-hit-ph{width:38px;height:38px;object-fit:cover;border-radius:9px;border:1px solid rgba(196,154,60,.4);display:block}
+
+/* ── Subida de fotos por el equipo + cola de moderación ── */
+.empl-card-nophoto{display:flex;flex-direction:column;align-items:stretch;border-style:dashed;
+  border-color:rgba(196,154,60,.45);background:linear-gradient(155deg,#faf6ee,#f3ecdc)}
+.empl-nophoto{display:grid;place-items:center;aspect-ratio:1/1;color:rgba(196,154,60,.55);background:rgba(196,154,60,.05)}
+.empl-nophoto svg{width:34px;height:34px}
+.empl-upload-btn{margin:.15rem .5rem .55rem;min-height:38px;border-radius:10px;cursor:pointer;
+  background:var(--gold);border:none;color:#1c1508;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.7rem}
+.empl-pend{margin:.15rem .5rem .55rem;text-align:center;font-family:'DM Mono',monospace;font-size:.6rem;
+  letter-spacing:.06em;color:#8a6a3a;background:rgba(196,154,60,.12);border-radius:10px;padding:.45rem .3rem}
+.empl-ov-upload{width:100%;margin-top:.8rem;min-height:42px;border-radius:11px;cursor:pointer;
+  background:transparent;border:1.5px dashed rgba(196,154,60,.55);color:#8a6a3a;
+  font-family:'Quicksand',sans-serif;font-weight:600;font-size:.76rem}
+.sup-photo-card{display:flex;gap:.75rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid rgba(196,154,60,.18);border-radius:12px;padding:.6rem;align-items:center}
+.sup-photo-card img{width:96px;height:96px;object-fit:cover;border-radius:9px;flex-shrink:0;
+  border:1px solid rgba(196,154,60,.4);background:#241a12}
+.sup-photo-meta{flex:1;min-width:0}
+.sup-photo-meta b{display:block;font-family:'Quicksand',sans-serif;font-size:.82rem;color:var(--parchment)}
+.sup-photo-meta span{display:block;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3);margin:.15rem 0 .45rem}
+.sup-photo-actions{display:flex;gap:.45rem}
+.sup-photo-actions button{flex:1;min-height:38px;border-radius:9px;cursor:pointer;border:none;
+  background:var(--green-deep,#3f7a50);color:#fff;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.7rem}
+.sup-photo-actions button.rej{background:transparent;border:1.5px solid rgba(196,112,104,.55);color:#a04848}
