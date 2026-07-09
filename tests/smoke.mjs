@@ -2822,6 +2822,34 @@ test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñid
     'a new question must trigger the talking sequence');
 });
 
+test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y CSS', () => {
+  // El personal leía el PDF del plating guide; esta sección lo sustituye con
+  // las fotos reales del propietario. Guard: integridad del mapa + cableado.
+  const map = JSON.parse(read('data/dish-photos.json'));
+  const keys = Object.keys(map);
+  assert(keys.length >= 50, `expected ≥50 dish photos, found ${keys.length}`);
+  // cada ruta del mapa debe existir físicamente en el repo
+  for (const [id, p] of Object.entries(map)) {
+    assert(/^img\/platos\/[a-z0-9-]+\.webp$/.test(p), `photo path malformed for dish ${id}: ${p}`);
+    assert(existsSync(join(ROOT, p)), `mapped photo file missing on disk: ${p}`);
+  }
+  // cada clave debe ser un plato real de DISHES
+  const ids = new Set([...html.matchAll(/\{id:(\d+),cat:'/g)].map(m => m[1]));
+  for (const id of keys) assert(ids.has(id), `dish-photos.json maps unknown dish id ${id}`);
+  // sección cableada como subtab de Aprender + overlay + búsqueda
+  assert(/\['emplatado',_en\?'Plating':'Emplatado'/.test(html), 'Emplatado subtab missing from Aprender hub');
+  assert(/emplatado:renderEmplatado/.test(html), 'renderEmplatado not wired into the Aprender dispatch');
+  assert(/function renderEmplatado\(/.test(html) && /function _emplOpen\(/.test(html), 'guide renderer/overlay functions missing');
+  assert(/loadLazyData\('data\/dish-photos\.json'/.test(html), 'photo map must lazy-load like other data files');
+  assert(/loading="lazy"/.test(html), 'grid images must lazy-load');
+  assert(/_shiftDishes\(DISHES\)/.test(html.slice(html.indexOf('function _emplRender'), html.indexOf('function _emplRender') + 800)),
+    'the guide must respect the active shift filter');
+  const css = read('styles.css');
+  for (const sel of ['.empl-grid{', '.empl-card{', '.empl-ov-card{', '.empl-chip{']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
 test('Acceso en 1 toque: sesión deslizante 90d, banner de instalación, hoja iOS, atajos del manifest', () => {
   // Fricción reportada por el propietario (jul 2026): el personal leía el PDF
   // porque abrir la app costaba. Este guard fija el paquete anti-fricción.

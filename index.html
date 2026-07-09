@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.162';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.163';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8235,6 +8235,81 @@ function _gsShowLqaSituation(id){
   document.body.appendChild(ov);
 }
 
+// ── GUÍA DE EMPLATADO — el sustituto del PDF que leía el personal ──────────
+// Fotos reales de los plating guides del propietario (jul 2026), una por
+// plato, servidas como ficheros webp (img/platos/) con carga perezosa; el
+// service worker las cachea al verlas → funcionan sin conexión después.
+// Reemplazar una foto = sobrescribir su fichero; el mapa vive en
+// data/dish-photos.json (id de plato → ruta).
+let DISH_PHOTOS=null;
+async function loadDishPhotos(){
+  if(DISH_PHOTOS) return DISH_PHOTOS;
+  DISH_PHOTOS = await loadLazyData('data/dish-photos.json', LANG==='en'?'plating photos':'fotos de emplatado', {silent:true}) || {};
+  return DISH_PHOTOS;
+}
+function renderEmplatado(){
+  const c=document.getElementById('appContent');
+  const _en=LANG==='en';
+  c.innerHTML=`<div class="empl-wrap">
+    <div class="empl-search">
+      <input id="emplSearch" type="search" autocomplete="off"
+        placeholder="${_en?'Search a dish…':'Buscar un plato…'}"
+        oninput="_emplRender(this.value)">
+    </div>
+    <div id="emplBody"><div style="text-align:center;padding:2rem;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--parch3)">⏳</div></div>
+  </div>`;
+  loadDishPhotos().then(()=>{ const s=document.getElementById('emplSearch'); if(s) _emplRender(s.value||''); });
+}
+function _emplRender(q){
+  const body=document.getElementById('emplBody'); if(!body||!DISH_PHOTOS) return;
+  const _en=LANG==='en';
+  q=(q||'').trim().toLowerCase();
+  const pool=(typeof _shiftDishes==='function')?_shiftDishes(DISHES):DISHES;   // respeta el turno activo
+  const byCat={}; let nPhoto=0; const missing=[];
+  for(const d of pool){
+    const dd=getDish(d);
+    if(q && !dd.name.toLowerCase().includes(q) && !(dd.cat||'').toLowerCase().includes(q)) continue;
+    if(DISH_PHOTOS[String(d.id)]){ (byCat[dd.cat]=byCat[dd.cat]||[]).push(d); nPhoto++; }
+    else missing.push(dd.name);
+  }
+  if(!nPhoto){
+    body.innerHTML=`<div style="text-align:center;padding:2rem;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--parch3)">${_en?'No dishes found':'Sin resultados'}</div>`;
+    return;
+  }
+  body.innerHTML=Object.entries(byCat).map(([cat,ds])=>`
+    <div class="tunic-divider"><span>${escapeHtml(cat)}</span></div>
+    <div class="empl-grid">
+      ${ds.map(d=>{ const dd=getDish(d); return `
+        <div class="empl-card" role="button" tabindex="0" onclick="_emplOpen(${d.id})"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
+          aria-label="${escapeHtml(dd.name)}">
+          <img loading="lazy" src="${DISH_PHOTOS[String(d.id)]}" alt="${escapeHtml(dd.name)}">
+          <div class="empl-card-name">${escapeHtml(dd.name)}</div>
+        </div>`; }).join('')}
+    </div>`).join('')
+    + (missing.length?`<div class="empl-missing">📷 ${_en?'No photo yet':'Sin foto aún'}: ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.slice(0,4).join(' · '))}${missing.length>4?' …':''}</div>`:'');
+}
+function _emplOpen(id){
+  const d=DISHES.find(x=>x.id===id); if(!d||!DISH_PHOTOS) return;
+  const dd=getDish(d); const _en=LANG==='en';
+  const al=(dd.allergens||[]).map(a=>`<span class="empl-chip">${escapeHtml(typeof allergenLocal==='function'?allergenLocal(a):a)}</span>`).join('');
+  const ov=document.createElement('div');
+  ov.id='emplOverlay'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label',dd.name);
+  ov.innerHTML=`
+    <div class="empl-ov-scrim" onclick="document.getElementById('emplOverlay').remove()"></div>
+    <div class="empl-ov-card">
+      <button class="empl-ov-x" onclick="document.getElementById('emplOverlay').remove()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+      <img src="${DISH_PHOTOS[String(d.id)]}" alt="${escapeHtml(dd.name)}">
+      <div class="empl-ov-body">
+        <div class="empl-ov-cat">${escapeHtml(dd.cat||'')}</div>
+        <div class="empl-ov-name">${escapeHtml(dd.name)}</div>
+        ${al?`<div class="empl-ov-al">${al}</div>`:''}
+        ${dd.ingredients?`<div class="empl-ov-ing">${escapeHtml(dd.ingredients)}</div>`:''}
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
 function renderAprender(){
   const c=document.getElementById('appContent');
   const sub = _subTab.aprender || 'smart';
@@ -8243,10 +8318,11 @@ function renderAprender(){
   const bar = _subTabBar([
     ['smart',_en?'Smart Review':'Repaso Inteligente',_srsCount>0?'🟢':'🧠'],
     ['repaso',_en?'Explore':'Explorar',''],
+    ['emplatado',_en?'Plating':'Emplatado','📷'],
     ['flashcards','Flashcards',''],
     ['videos',_en?'Videos':'Videos','']
   ], sub, 'aprender');
-  ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos})[sub]();
+  ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos, emplatado:renderEmplatado})[sub]();
   // Global quick search — only on Flashcards & Smart Review (Explore already has its own search, Videos doesn't need it)
   const _showSearch = (sub === 'flashcards');
   const searchBar = _showSearch ? `
