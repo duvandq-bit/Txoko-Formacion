@@ -9523,3 +9523,12 @@ body.chat-open .sound-toggle{ display:none !important; }
   transform:translateX(-120%);animation:dashPlatingShine 6.5s ease-in-out infinite}
 @keyframes dashPlatingShine{0%,64%{transform:translateX(-120%)}84%,100%{transform:translateX(120%)}}
 @media (prefers-reduced-motion:reduce){.dash-plating-shine{animation:none}}
+
+/* ── Fotos de platos en toda la app (superficies de consulta) ── */
+.repaso-row-icon img{width:100%;height:100%;object-fit:cover}   /* foto recortada en el hexágono */
+.dish-hero-photo{width:220px;height:220px;border-radius:50%;overflow:hidden;
+  border:3px solid rgba(196,154,60,.5);box-shadow:0 8px 26px rgba(28,42,34,.25), inset 0 0 0 6px rgba(255,255,255,.85)}
+.dish-hero-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.fc-photo{width:104px;height:104px;border-radius:50%;object-fit:cover;margin:0 auto 1rem;display:block;
+  border:2.5px solid rgba(196,154,60,.5);box-shadow:0 5px 14px rgba(28,42,34,.22)}
+.gs-hit-ph{width:34px;height:34px;object-fit:cover;border-radius:8px;border:1px solid rgba(196,154,60,.4);display:block}

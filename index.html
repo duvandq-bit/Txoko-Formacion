@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.167';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.168';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7698,6 +7698,9 @@ function closePinAndEnter(){
 
   currentUser=pinTarget;
   resetSessionTimer();
+  // Precarga el mapa de fotos de platos (~2KB): las miniaturas de Explorar,
+  // flashcards y búsquedas renderizan síncronas con él ya en memoria.
+  if(typeof loadDishPhotos==='function') loadDishPhotos();
   // Track login timestamp
   const _loginEmp = getEmp(pinTarget);
   if(_loginEmp){ _loginEmp.lastLoginTs = new Date().toISOString(); saveDB(); }
@@ -8121,8 +8124,9 @@ function _gsRender(raw){
       const nm = en?it.nameEn:it.name;
       const alg = (it.allergens||[]).map(a=>typeof allergenLocal==='function'?allergenLocal(a):a).join(', ');
       const sub = [it.cat, alg].filter(Boolean).join(' · ');
+      const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(it.id):null;
       return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'dish\','+it.id+')">'
-        + '<span class="gs-hit-ic">'+_GS_ICON_DISH+'</span>'
+        + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" src="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'
         + '<span class="gs-hit-body"><span class="gs-hit-name">'+_gsMark(nm,tokens)+'</span><span class="gs-hit-sub">'+escapeHtml(sub)+'</span></span>'
         + '<span class="gs-hit-go">›</span></button>';
     }).join('');
@@ -8258,6 +8262,10 @@ async function loadDishPhotos(){
   DISH_PHOTOS = await loadLazyData('data/dish-photos.json', LANG==='en'?'plating photos':'fotos de emplatado', {silent:true}) || {};
   return DISH_PHOTOS;
 }
+// Foto de un plato (o null): usable en cualquier superficie de CONSULTA.
+// El mapa (~2KB) se precarga al entrar, así los renders síncronos la tienen.
+// OJO: no usar en exámenes/juegos donde el nombre del plato sea la respuesta.
+function dishPhotoSrc(id){ return (DISH_PHOTOS && DISH_PHOTOS[String(id)]) || null; }
 function renderEmplatado(){
   const c=document.getElementById('appContent');
   const _en=LANG==='en';
@@ -8388,7 +8396,7 @@ function _aprenderGlobalSearch(query){
     const cat = (typeof catLocal==='function') ? catLocal(dd.cat) : dd.cat;
     const allergens = (dd.allergens||[]).slice(0,3).map(a => `<span style="display:inline-block;padding:.08rem .35rem;border-radius:8px;background:rgba(196,112,104,.1);color:#a8564c;font-size:.55rem;font-family:'DM Mono',monospace;margin-right:.25rem">${escapeHTML(a)}</span>`).join('');
     return `<div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="_aprenderOpenDish(${d.id})" style="display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;cursor:pointer;border-bottom:1px solid var(--ink3);transition:background .15s" onmouseover="this.style.background='rgba(196,154,60,.08)'" onmouseout="this.style.background='transparent'">
-      <div style="width:4px;height:32px;background:${catCol};border-radius:2px;flex-shrink:0"></div>
+      ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(d.id))?`<img loading="lazy" src="${dishPhotoSrc(d.id)}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:9px;border:1.5px solid rgba(196,154,60,.45);flex-shrink:0">`:`<div style="width:4px;height:32px;background:${catCol};border-radius:2px;flex-shrink:0"></div>`}
       <div style="flex:1;min-width:0">
         <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(dd.name)}${isKnown?' <span style="color:var(--sage);font-size:.7rem">◈</span>':''}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.04em;margin-top:.15rem">${escapeHTML(cat)} ${allergens?'· '+allergens:''}</div>
@@ -15466,6 +15474,8 @@ function renderFcCard(){
       <span style="display:inline-flex;align-items:center;color:${_catColor}">${CAT_ICONS[dd.cat]||''}</span>
       <span>${escapeHTML(catLocal(dd.cat)||'')}</span>
     </div>
+    <!-- Foto real del plato (si existe): memoria visual + verbal a la vez -->
+    ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(d.id))?`<img class="fc-photo" loading="lazy" src="${dishPhotoSrc(d.id)}" alt="">`:''}
     <!-- Dish name LARGE (primary focus of the card) -->
     <div class="fc-dish" style="font-size:1.85rem;line-height:1.15;padding:0 .6rem;text-align:center">${escapeHTML(dd.name)}</div>
     <div class="fc-flip-hint" style="margin-top:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg> ${_en?'Tap to see ingredients & allergens':'Toca para ver ingredientes y alérgenos'}</div>
@@ -16204,8 +16214,9 @@ function renderRepasoTopic(){
     const catCol=CAT_COLORS[dd.cat]||'var(--gold)';
     const allergenHtml=topic.key==='allergens'
       ?`<div class="repaso-allergen-row">${allergenN===0?`<span class="allergen-tag safe">✓ ${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">⚠ ${allergenLocal(a)}</span>`).join('')}</div>`:'';
+    const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(d.id):null;
     return `<div class="repaso-row${isMastered?' mastered':''}" id="ritem${d.id}" style="--cat-color:${catCol}">
-      <div class="repaso-row-icon">${CAT_ICONS[dd.cat]||''}</div>
+      <div class="repaso-row-icon">${_ph?`<img loading="lazy" src="${_ph}" alt="">`:(CAT_ICONS[dd.cat]||'')}</div>
       <div class="repaso-row-body">
         <div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}" class="repaso-row-name" onclick="repasoDishId=${d.id};repasoView='dish';renderRepaso()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="cursor:pointer">${escapeHTML(dd.name)}</div>
         <div class="repaso-row-chips">
@@ -16294,6 +16305,9 @@ function renderRepasoDishDetail(dishId){
     </div>
 
     <div style="display:flex;justify-content:center;margin-bottom:1.2rem">
+      ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(dish.id))?`
+      <div class="dish-hero-photo"><img src="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dish.name)}"></div>
+      `:`
       <svg width="${plateSize}" height="${plateSize}" viewBox="0 0 ${plateSize} ${plateSize}" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">
         <circle cx="${cx}" cy="${cy}" r="${cx-5}" fill="none" stroke="var(--gold-a)" stroke-width="1"/>
         <circle cx="${cx}" cy="${cy}" r="${cx-8}" fill="rgba(255,255,255,.95)" stroke="rgba(196,154,60,.15)" stroke-width=".5"/>
@@ -16303,7 +16317,7 @@ function renderRepasoDishDetail(dishId){
           ${escapeHTML(dish.name.length > 24 ? dish.name.substring(0,22)+'…' : dish.name)}
         </text>
         <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6.5" fill="var(--parch4)" letter-spacing=".08em">${escapeHTML(dish.cat.toUpperCase())}</text>
-      </svg>
+      </svg>`}
     </div>
 
     <div style="margin-bottom:.75rem">

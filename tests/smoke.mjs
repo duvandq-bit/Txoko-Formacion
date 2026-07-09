@@ -2865,6 +2865,32 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   }
 });
 
+test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + ambas búsquedas', () => {
+  // Petición del propietario (jul 2026): fotos en todas las superficies de
+  // CONSULTA. Nunca en exámenes/juegos donde el nombre del plato sea la
+  // respuesta (chivarían la solución).
+  assert(/function dishPhotoSrc\(id\)/.test(html), 'dishPhotoSrc helper missing');
+  assert(/loadDishPhotos\(\);/.test(html.slice(html.indexOf('function closePinAndEnter('), html.indexOf('function closePinAndEnter(') + 900)),
+    'the photo map must preload on login so sync renders can use it');
+  // Explorar: la foto vive dentro del hexágono de la fila
+  const topic = html.slice(html.indexOf('function renderRepasoTopic('), html.indexOf('function renderRepasoDishDetail('));
+  assert(/repaso-row-icon">\$\{_ph\?`<img loading="lazy"/.test(topic), 'Explorar rows must show the dish photo in the hex icon');
+  // Ficha: foto-plato circular con respaldo al plato SVG decorativo
+  const det = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function renderRepasoDishDetail(') + 9000);
+  assert(/dish-hero-photo/.test(det) && /`:`[\s\S]{0,40}<svg width="\$\{plateSize\}"/.test(det),
+    'dish detail must show the real photo with the SVG plate as fallback');
+  // Flashcard: foto circular sobre el nombre
+  assert(/class="fc-photo"/.test(html), 'flashcard front must show the dish photo when available');
+  // Búsqueda global + búsqueda de Aprender: miniaturas
+  assert(/gs-hit-ph/.test(html), 'global search dish hits must show photo thumbnails');
+  assert(/_aprenderOpenDish\(\$\{d\.id\}\)/.test(html) && /dishPhotoSrc\(d\.id\)\)\?`<img loading="lazy"[^`]*width:36px/.test(html),
+    'Aprender quick-search results must show photo thumbnails');
+  const css = read('styles.css');
+  for (const sel of ['.repaso-row-icon img{', '.dish-hero-photo{', '.fc-photo{', '.gs-hit-ph{']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
 test('Dashboard: tarjeta de acceso directo a la Guía de Emplatado (1 toque desde el inicio)', () => {
   // La guía es consulta, no formación: debe estar a 1 toque de abrir la app.
   // Tarjeta premium con abanico de fotos reales, cableada por la ruta enrutada.
