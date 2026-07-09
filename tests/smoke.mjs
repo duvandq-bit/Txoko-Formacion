@@ -2811,6 +2811,8 @@ test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñid
     'frame swaps must touch img.src only (innerHTML would reset the CSS animations)');
   assert(/st\.lives<=1/.test(body) && /SHOESMITH_ANIM\.scream/.test(body), 'at 1 life he must scream alternating A/B');
   assert(/st\.lives===2/.test(body) && /SHOESMITH_ANIM\.growl/.test(body), 'at 2 lives he must chew his rage in a loop');
+  assert(/SHOESMITH_ANIM\.bored/.test(body) && /SHOESMITH_ANIM\.irked/.test(body),
+    'at 4/3 lives he must run the slow idle micro-loop (same-camera video frames)');
   assert(/_nextBlink/.test(body), 'at calm he must blink occasionally');
   assert(/txAnimTick\(\);/.test(html.slice(html.indexOf('function txTick('), html.indexOf('function txAnswer('))),
     'txTick must drive the frame scheduler');
