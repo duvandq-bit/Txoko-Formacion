@@ -9485,3 +9485,16 @@ body.chat-open .sound-toggle{ display:none !important; }
 .empl-chip{font-family:'DM Mono',monospace;font-size:.6rem;padding:.2rem .55rem;border-radius:12px;
   background:rgba(196,112,104,.14);border:1px solid rgba(196,112,104,.4);color:#a35048}
 .empl-ov-ing{font-size:.8rem;line-height:1.5;color:var(--parch2)}
+
+/* ── Subsecciones como CHIPS visibles (descubribilidad; antes desplegable) ── */
+.subtab-chips{display:flex;gap:.45rem;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  padding:.15rem .1rem .55rem;margin-bottom:.55rem;scrollbar-width:none}
+.subtab-chips::-webkit-scrollbar{display:none}
+.subtab-chip{flex-shrink:0;display:inline-flex;align-items:center;gap:.35rem;min-height:40px;
+  padding:.45rem .9rem;border-radius:100px;cursor:pointer;white-space:nowrap;
+  background:#faf6ee;border:1.5px solid var(--ink3);box-shadow:0 2px 0 var(--ink4);
+  font-family:'Quicksand',sans-serif;font-weight:600;font-size:.78rem;color:var(--parch2);
+  transition:all .15s;-webkit-tap-highlight-color:transparent}
+.subtab-chip .subtab-chip-ico{font-size:.9rem;line-height:1}
+.subtab-chip.on{background:var(--gold);border-color:var(--gold);color:#1c1508;font-weight:700}
+.subtab-chip.on.subtab-chip--green{background:#0c3a22;border-color:#0c3a22;color:#7de8a0}
