@@ -4628,19 +4628,6 @@ body::after{
 .txoko-record-val{font-family:'Quicksand',sans-serif;font-size:1.6rem;font-weight:800;color:var(--candy-orange);}
 
 /* game screen */
-/* ═══ MR. SHOESMITH ADVANCED ANIMATIONS ═══ */
-/* Blinking animation for SVG eyes */
-@keyframes shoeBlink { 0%,92%,100%{transform:scaleY(1)} 95%{transform:scaleY(0.05)} }
-/* Subtle breathing for the character */
-@keyframes shoeBreathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-1.5px)} }
-/* Face transition on mood change */
-@keyframes shoeFadeSwap { 0%{opacity:0;transform:scale(0.92)} 100%{opacity:1;transform:scale(1)} }
-/* Angry shake */
-@keyframes shoeShake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-3px) rotate(-1deg)} 30%{transform:translateX(3px) rotate(1deg)} 45%{transform:translateX(-2px)} 60%{transform:translateX(2px)} 75%{transform:translateX(-1px)} }
-/* Steam rising from ears when furious */
-@keyframes steamRise { 0%{opacity:.7;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-18px) scale(1.6)} }
-/* Wine glass gentle sway (calm state) */
-@keyframes glassSway { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(2deg)} }
 /* Eyebrow twitch (suspicious state) */
 @keyframes browTwitch { 0%,90%,100%{transform:translateY(0)} 93%{transform:translateY(-1.5px)} 96%{transform:translateY(0)} }
 /* Correct answer sparkle */
@@ -4650,10 +4637,32 @@ body::after{
 /* Patience bar pulse when low */
 @keyframes patiencePulse { 0%,100%{opacity:1} 50%{opacity:.6} }
 
-#txokoClientFace svg { animation:shoeBreathe 3s ease-in-out infinite; }
-#txokoClientFace { transition:all .4s cubic-bezier(.4,0,.2,1); }
-.shoe-mood-change #txokoClientFace { animation:shoeFadeSwap .35s ease-out; }
-.shoe-angry #txokoClientFace svg { animation:shoeShake .5s ease-in-out; }
+/* ── Mr. Shoesmith VIVO (marioneta Cuphead sobre los 5 sprites de humor) ──
+   Reposo: respira y se balancea; un brillo barre el marco de vez en cuando.
+   ERROR: fogonazo + sacudida + zoom mientras cambia a la cara más enfadada.
+   ACIERTO: botecito satisfecho. PACIENCIA <30%: temblor nervioso.
+   (Las reglas antiguas apuntaban a `svg` y quedaron muertas al pasar a <img>.) */
+.tx-rh-face-frame .tx-shoe-face{animation:shoeIdle 3.4s ease-in-out infinite;transform-origin:50% 88%}
+@keyframes shoeIdle{0%,100%{transform:scale(1) rotate(0deg)}30%{transform:scale(1.025,.985) rotate(-.5deg)}70%{transform:scale(.99,1.015) rotate(.6deg)}}
+.tx-rh-face-frame::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,236,190,.26) 46%,transparent 60%);
+  transform:translateX(-120%);animation:shoeSheen 7s ease-in-out infinite}
+@keyframes shoeSheen{0%,72%{transform:translateX(-120%)}86%,100%{transform:translateX(120%)}}
+.tx-rh-face-frame.tx-face-tense .tx-shoe-face{animation:shoeTremble .35s linear infinite}
+@keyframes shoeTremble{0%,100%{transform:translate(0)}25%{transform:translate(-1px,.5px) rotate(-.6deg)}50%{transform:translate(1px,-.5px) rotate(.5deg)}75%{transform:translate(-.5px,-.5px)}}
+.tx-rh-face-frame.tx-face-ok .tx-shoe-face{animation:shoeNod .6s cubic-bezier(.34,1.56,.64,1);filter:brightness(1.12)}
+@keyframes shoeNod{0%{transform:scale(1)}30%{transform:scale(1.09,.92)}60%{transform:scale(.97,1.06)}100%{transform:scale(1)}}
+.tx-rh-face-frame.tx-face-bad{animation:shoeRage .65s cubic-bezier(.36,.07,.19,.97)}
+.tx-rh-face-frame.tx-face-bad .tx-shoe-face{animation:shoeRageZoom .65s ease-out}
+.tx-rh-face-frame.tx-face-bad::before{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:rgba(255,244,230,.95);animation:shoeFlash .65s ease-out forwards}
+@keyframes shoeRage{0%,100%{transform:translate(0)}10%{transform:translate(-5px,2px) rotate(-3deg)}25%{transform:translate(5px,-2px) rotate(3deg)}40%{transform:translate(-4px,-1px) rotate(-2deg)}55%{transform:translate(4px,1px) rotate(2deg)}70%{transform:translate(-2px,0)}85%{transform:translate(2px,0)}}
+@keyframes shoeRageZoom{0%{transform:scale(1.32)}100%{transform:scale(1)}}
+@keyframes shoeFlash{0%{opacity:1}35%{opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .tx-rh-face-frame .tx-shoe-face,.tx-rh-face-frame::after,
+  .tx-rh-face-frame.tx-face-tense .tx-shoe-face{animation:none}
+}
 
 .txoko-game{padding:.75rem;max-width:480px;margin:0 auto;}
 /* Mr. Shoesmith reactive face sprite (framed portrait) */

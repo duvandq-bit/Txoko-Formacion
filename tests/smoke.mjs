@@ -2764,6 +2764,32 @@ test('Camarero Survivors AAA: dash, racha, élites, oleadas, jefe con embestida,
   }
 });
 
+test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
+  // Petición del propietario: el personaje debe estar animado y cambiar de
+  // humor con cada error. Las animaciones antiguas apuntaban a `svg` (muertas
+  // desde que el rostro es <img>); este guard fija el sistema vivo.
+  // (1) el tick NO reemplaza la imagen cada 100ms (mataría las animaciones CSS)
+  const tick = html.slice(html.indexOf('function txTick('), html.indexOf('function txAnswer('));
+  assert(/if\(oldMood !== newMood\)\{\s*[\r\n]+\s*faceEl\.innerHTML=txClientFace/.test(tick),
+    'txTick must only swap the face img when the mood actually changes');
+  assert(/tx-face-tense'?,\s*pct<=30\)/.test(tick), 'txTick must toggle the low-patience tremble class');
+  // (2) el error cambia la cara AL INSTANTE y dispara la reacción de enfado
+  const ans = html.slice(html.indexOf('function txAnswer('), html.indexOf('function txAnswer(') + 4000);
+  assert(/playSound\('wrong'\)[\s\S]*?faceEl\.innerHTML=txClientFace\(txokoState\.lives/.test(ans),
+    'a wrong answer must swap to the angrier face immediately (not wait for the next tick)');
+  assert(/tx-face-bad/.test(ans), 'a wrong answer must trigger the tx-face-bad rage reaction');
+  assert(/tx-face-ok/.test(ans), 'a correct answer must trigger the tx-face-ok celebration');
+  assert(!/shoe-mood-change/.test(html), 'the dead shoe-mood-change hook must be gone');
+  // (3) CSS: marioneta viva y sin selectores muertos sobre svg
+  const css = read('styles.css');
+  assert(/\.tx-rh-face-frame \.tx-shoe-face\{animation:shoeIdle/.test(css),
+    'the face must breathe at rest (shoeIdle) — and WITHOUT an #id in the selector, or the state animations (tremble/nod/rage) lose the specificity war and never run');
+  for (const kf of ['@keyframes shoeIdle', '@keyframes shoeRage', '@keyframes shoeNod', '@keyframes shoeTremble', '@keyframes shoeFlash']) {
+    assert(css.includes(kf), `styles.css must define ${kf}`);
+  }
+  assert(!/#txokoClientFace svg/.test(css), 'dead svg-based animation selectors must be removed');
+});
+
 test('Camarero Survivors UX: invisible joystick base + plain-language upgrade descriptions', () => {
   // Petición del propietario: no mostrar el círculo oscuro del joystick al
   // mover, y una breve explicación de lo que hace cada habilidad al escoger.

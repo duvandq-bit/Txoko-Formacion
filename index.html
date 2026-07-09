@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.155';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.156';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23740,12 +23740,18 @@ function txTick(){
   if(lbl) lbl.textContent=Math.ceil(txokoState.patienceLeft)+'s';
   const faceEl=document.getElementById('txokoClientFace');
   if(faceEl){
-    const pctFace=txokoState.patienceLeft/txokoState.patienceMax*100;
+    // Solo tocar el DOM cuando el humor CAMBIA: si el tick reemplaza la imagen
+    // cada 100ms, las animaciones CSS (respiración, temblor) nunca llegan a
+    // correr — era la razón de que el personaje se viera muerto.
     const oldMood = faceEl.dataset.mood||'5';
-    faceEl.innerHTML=txClientFace(txokoState.lives,pctFace);
     const newMood = String(txokoState.lives);
-    if(oldMood !== newMood){ faceEl.classList.add('shoe-mood-change'); setTimeout(()=>faceEl.classList.remove('shoe-mood-change'),400); }
-    faceEl.dataset.mood = newMood;
+    if(oldMood !== newMood){
+      faceEl.innerHTML=txClientFace(txokoState.lives,pct);
+      faceEl.dataset.mood = newMood;
+    }
+    // tensión: con la paciencia al límite, Mr. Shoesmith tiembla
+    const _frame=faceEl.closest('.tx-rh-face-frame');
+    if(_frame) _frame.classList.toggle('tx-face-tense', pct<=30);
     // Add steam particles when lives <= 2
     if(txokoState.lives<=2 && !document.getElementById('shoeSteam')){
       const steam=document.createElement('div');steam.id='shoeSteam';
@@ -23775,9 +23781,10 @@ function txAnswer(idx){
     const _dish=DISHES.find(d=>getDish(d).name===txokoState.question.dishName);
     burstEmoji(_catSimple[_dish?.cat]||'⭐');
     txokoState.score++; txokoState.streak++;
-    // Sparkle effect on Mr. Shoesmith face
+    // Mr. Shoesmith celebra: botecito satisfecho (animación en el marco)
     const _faceOk=document.getElementById('txokoClientFace');
-    if(_faceOk){ _faceOk.style.filter='brightness(1.15)'; setTimeout(()=>_faceOk.style.filter='',400); }
+    const _frOk=_faceOk&&_faceOk.closest('.tx-rh-face-frame');
+    if(_frOk){ _frOk.classList.remove('tx-face-ok'); void _frOk.offsetWidth; _frOk.classList.add('tx-face-ok'); setTimeout(()=>_frOk.classList.remove('tx-face-ok'),700); }
     const xpAmt = txokoState.streak>=5?15:txokoState.streak>=3?10:7;
     awardXP(xpAmt,LANG==='en'?'Correct order ':'Comanda correcta ');
 
@@ -23796,15 +23803,14 @@ function txAnswer(idx){
       gameEl.style.animation='shake .3s, wrongFlash .4s ease-out';
       setTimeout(()=>gameEl.style.animation='',450);
     }
-    // Trigger angry face animation
+    // Mr. Shoesmith se enfada AL INSTANTE: cambia a la cara más enfadada y
+    // reacciona (fogonazo + sacudida + zoom) sin esperar al siguiente tick.
     const faceEl=document.getElementById('txokoClientFace');
     if(faceEl){
-      faceEl.classList.add('shoe-mood-change');
-      if(txokoState.lives<=2) faceEl.closest('.txoko-game')?.classList.add('shoe-angry');
-      setTimeout(()=>{
-        faceEl.classList.remove('shoe-mood-change');
-        faceEl.closest('.txoko-game')?.classList.remove('shoe-angry');
-      }, 500);
+      faceEl.innerHTML=txClientFace(txokoState.lives, txokoState.patienceLeft/txokoState.patienceMax*100);
+      faceEl.dataset.mood=String(txokoState.lives);
+      const _fr=faceEl.closest('.tx-rh-face-frame');
+      if(_fr){ _fr.classList.remove('tx-face-bad'); void _fr.offsetWidth; _fr.classList.add('tx-face-bad'); setTimeout(()=>_fr.classList.remove('tx-face-bad'),750); }
     }
   }
 
