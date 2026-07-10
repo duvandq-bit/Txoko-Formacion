@@ -2953,13 +2953,16 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
   // Las claves del mapa deben cubrir EXACTAMENTE el roster de ALLERGENS del juego.
-  const roster = [...body.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
+  // roster = SOLO el array ALLERGENS (EL CHEF también define {key:'chef',...}
+  // como pseudo-alérgeno y no debe contarse aquí)
+  const rosterSrc = body.slice(body.indexOf('const ALLERGENS=['), body.indexOf('];', body.indexOf('const ALLERGENS=[')));
+  const roster = [...rosterSrc.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
   assert(roster.length === 8, `expected 8 allergen foes in the roster, found ${roster.length}`);
   for (const k of roster) assert(spriteKeys.includes(k), `foe sprite missing for allergen '${k}'`);
   assert(spriteKeys.length === roster.length, 'ET_FOE_SPRITES must not carry unused sprites');
   // Cableado: loader por clave, dibujo del sprite con squash heredado y respaldo íntegro.
   assert(/FOES\[a\.key\]=img/.test(body), 'per-key foe image loader missing');
-  assert(/_sp=\(_bsp&&_bsp\._ok\)\?_bsp:FOES\[e\.a\.key\]/.test(body) && /ctx\.drawImage\(_sp,-_sw\/2,-_sh\/2,_sw,_sh\)/.test(body),
+  assert(/\(_bsp&&_bsp\._ok\)\?_bsp:FOES\[e\.a\.key\]/.test(body) && /ctx\.drawImage\(_sp,-_sw\/2,-_sh\/2,_sw,_sh\)/.test(body),
     'enemy draw must render the sprite scaled to the body radius');
   assert(/\} else \{[\s\S]{0,80}ctx\.beginPath\(\); ctx\.fillStyle=e\.a\.col/.test(body),
     'the code-drawn circle body must remain as the not-yet-loaded fallback');
@@ -2983,16 +2986,44 @@ test('Camarero Survivors: JEFES alérgeno con arte propio y más grandes (jul 20
   const bossKeys = [...mapSrc.matchAll(/^\s{2}([a-z]+):'data:image\/webp;base64,/gm)].map(m => m[1]);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
-  const roster = [...body.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
+  // roster = SOLO el array ALLERGENS (EL CHEF también define {key:'chef',...}
+  // como pseudo-alérgeno y no debe contarse aquí)
+  const rosterSrc = body.slice(body.indexOf('const ALLERGENS=['), body.indexOf('];', body.indexOf('const ALLERGENS=[')));
+  const roster = [...rosterSrc.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
   assert(roster.length === 8 && bossKeys.length === 8, 'boss sprite map must cover the 8-allergen roster exactly');
   for (const k of roster) assert(bossKeys.includes(k), `boss sprite missing for allergen '${k}'`);
   // Cableado: loader propio + el dibujo del jefe PREFIERE su sprite de jefe.
   assert(/BOSSES\[a\.key\]=img/.test(body), 'per-key boss image loader missing');
-  assert(/const _bsp=e\.boss\?BOSSES\[e\.a\.key\]:null;/.test(body) && /const _sp=\(_bsp&&_bsp\._ok\)\?_bsp:FOES\[e\.a\.key\]/.test(body),
+  assert(/const _bsp=e\.boss&&!e\.chef\?BOSSES\[e\.a\.key\]:null;/.test(body) && /\(_bsp&&_bsp\._ok\)\?_bsp:FOES\[e\.a\.key\]/.test(body),
     'boss draw must prefer the boss sprite, falling back to the regular foe sprite');
   // Tamaño: el jefe nace con r=54.
   assert(/kind:'boss',flash:0,boss:true/.test(body) && /r:54,spd:0\.5,kind:'boss'/.test(body),
     'boss must spawn at r=54 (owner: "un poco más grandes")');
+});
+
+test('Camarero Survivors: EL CHEF, jefe final desde la foto del propietario (jul 2026)', () => {
+  // Jefe final único: la persona de la foto del propietario convertida a
+  // rubber hose (parecido iterado en Grok: complexión real, botones a punto
+  // de explotar, barriga a la vista). Entra en el minuto 3 y cada 3 minutos.
+  assert(/const ET_CHEF_SPRITES=\{/.test(html), 'ET_CHEF_SPRITES missing');
+  const mapSrc = html.slice(html.indexOf('const ET_CHEF_SPRITES={'), html.indexOf('};', html.indexOf('const ET_CHEF_SPRITES={')));
+  assert(/calm:'data:image\/webp;base64,/.test(mapSrc) && /attack:'data:image\/webp;base64,/.test(mapSrc),
+    'the chef needs his two poses (calm patrol / ladle attack) embedded');
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 120000);
+  assert(/CHEF_SPR\[k\]=img/.test(body), 'chef sprite loader missing');
+  // Aparición: minuto 3, y cada 180s después. Más grande y más duro que un jefe.
+  assert(/nextChef:180/.test(body), 'chef timer must start at 180s (minute 3)');
+  assert(/if\(G\.time>=G\.nextChef\)\{ G\.nextChef\+=180; spawnChef\(\); \}/.test(body), 'chef must respawn every 180s');
+  assert(/function spawnChef\(/.test(body) && /r:64/.test(body) && /\*1\.9\)/.test(body) && /chef:true/.test(body),
+    'spawnChef must create the bigger (r=64), tougher (×1.9 hp) final boss');
+  assert(/¡EL CHEF!/.test(body), 'the chef needs his own announcement banner');
+  // Poses: furioso con el cucharón al telegrafiar/embestir; imponente si no.
+  assert(/const _csp=e\.chef\?CHEF_SPR\[\(e\.tele>0\|\|e\.dashing>0\)\?'attack':'calm'\]:null;/.test(body),
+    'chef must swap to the attack pose while telegraphing/lunging');
+  // Sin corona (se le reconoce) y con rótulo propio en la barra de jefe.
+  assert(/if\(e\.boss&&!e\.chef\)\{ \/\/ corona/.test(body), 'the crown must be skipped for the chef');
+  assert(/boss\.chef\?'★ EL CHEF ★'/.test(body), 'the boss bar must carry the chef\'s own label');
 });
 
 test('Camarero Survivors: propinas como monedas y bandejas de plata con estela (jul 2026)', () => {
