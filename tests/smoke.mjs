@@ -2919,20 +2919,31 @@ test('tx-rh rubber-hose CSS exists, is scoped, and covers every class the markup
     'rubber-hose option buttons must keep a 44px minimum tap target');
 });
 
-test('EL TURNO scene: comedor rubber hose ilustrado con paralaje (lámina del propietario, jul 2026)', () => {
-  // Evolución del fondo: sepia oscuro → retícula procedural luminosa → LÁMINA
-  // ilustrada rubber hose (generada con Grok anclando el estilo con el sprite
-  // del héroe). La retícula procedural de muebles se retiró; el ajedrezado
-  // queda SOLO como respaldo mientras carga la lámina (primer arranque offline).
+test('EL TURNO scene: escenarios rubber hose que rotan por nivel, con fundido (jul 2026)', () => {
+  // Evolución del fondo: sepia oscuro → retícula procedural → lámina única →
+  // TRES escenarios ilustrados ("qué tal cambiar de escenario después de X
+  // niveles"): comedor → cocina (nv 5) → bodega (nv 10), rotando en niveles
+  // altos, con fundido de ~1s y banner al cambiar. El ajedrezado queda SOLO
+  // como respaldo mientras carga la lámina activa.
   const i = html.indexOf('function launchElTurno(');
-  const body = html.slice(i, i + 60000);
-  assert(/ET_BG\.src='img\/et-comedor\.webp'/.test(body),
-    'the dining-room artwork must load from img/et-comedor.webp (repo file, not base64)');
-  assert(existsSync(join(ROOT, 'img/et-comedor.webp')), 'img/et-comedor.webp must exist on disk');
-  assert(/if\(etBgReady\)\{/.test(body) && /ctx\.drawImage\(ET_BG,bx,by,bw,bh\)/.test(body),
-    'the draw loop must render the artwork when loaded');
+  const body = html.slice(i, i + 130000);
+  for (const f of ['et-comedor', 'et-cocina', 'et-bodega']) {
+    assert(body.includes(`img/${f}.webp`), `scene artwork img/${f}.webp must be wired`);
+    assert(existsSync(join(ROOT, `img/${f}.webp`)), `img/${f}.webp must exist on disk`);
+  }
+  assert(/const ET_BGS=\[/.test(body) && /b\.img\.src=b\.src/.test(body), 'scene loader array missing');
+  // Selección por nivel + fundido + banner.
+  assert(/Math\.floor\(G\.level\/5\)%ET_BGS\.length/.test(body), 'active scene must derive from level bands of 5, cycling');
+  assert(/G\.bgPrev=G\.bgIdx; G\.bgIdx=_si; G\.bgFade=1; flash\(ET_BGS\[_si\]\.banner/.test(body),
+    'scene switch must start the crossfade and announce the new room');
+  assert(/¡A LA COCINA!/.test(body) && /¡A LA BODEGA!/.test(body) && /¡DE VUELTA AL COMEDOR!/.test(body),
+    'each scene needs its banner');
+  assert(/G\.bgFade-=dt\*0\.02/.test(body), 'the crossfade must decay over ~1s');
+  // Render: lámina activa con paralaje; la anterior encima desvaneciéndose.
   assert(/\*1\.07/.test(body) && /\(G\.px-W\/2\)\*0\.05/.test(body),
     'the artwork must render with the 7% cover margin and the soft parallax offset');
+  assert(/ctx\.globalAlpha=Math\.min\(1,G\.bgFade\); _bgDraw\(_bgOld\.img\)/.test(body),
+    'the previous scene must fade out on top of the new one');
   assert(/\} else \{[\s\S]{0,120}const TS=54/.test(body),
     'the warm checkerboard must remain ONLY as the not-yet-loaded fallback');
   assert(!/furnished dining room: orderly grid/.test(body) && !/const CELL=178/.test(body),
