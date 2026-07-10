@@ -2785,18 +2785,41 @@ test('every game has a uniform, working "back to games" control', () => {
   assert(/id="etExitBtn"/.test(html.slice(e, e + 60000)), 'Camarero Survivors must keep its in-game exit button');
 });
 
-test('character sprite: shared const stays, dashboard mascot removed', () => {
-  // TXOKO_MASCOT_SVG sigue siendo la fuente única del sprite del protagonista,
-  // que usa el juego EL TURNO. La mascota DECORATIVA del dashboard se retiró
-  // (petición del propietario: no capturaba la esencia Funko).
-  assert((html.match(/const TXOKO_MASCOT_SVG\s*=/g) || []).length === 1,
-    'TXOKO_MASCOT_SVG must be defined exactly once (still used by EL TURNO)');
-  assert(/const HERO_SVG\s*=\s*TXOKO_MASCOT_SVG;/.test(html),
-    'EL TURNO must still reuse TXOKO_MASCOT_SVG as its player sprite');
+test('character sprite: dashboard mascot removed, no stray SVG mascot leftovers', () => {
+  // La mascota DECORATIVA del dashboard se retiró (petición del propietario:
+  // no capturaba la esencia Funko). El sprite vectorial TXOKO_MASCOT_SVG que
+  // usaba EL TURNO fue reemplazado por fotogramas reales (ver test del ciclo
+  // de carrera) y se eliminó por completo — dead code, no relicto sin usar.
+  assert(!/TXOKO_MASCOT_SVG/.test(html), 'TXOKO_MASCOT_SVG must be fully removed (replaced by the real run-cycle sprite)');
   assert(!/class="dash-mascot"/.test(html),
     'the decorative dashboard mascot must be removed from the hero');
   assert(!/\.dash-mascot\{/.test(read('styles.css')),
     'the .dash-mascot CSS rule must be removed');
+});
+
+test('Camarero Survivors: héroe con ciclo de carrera de fotogramas reales (jul 2026)', () => {
+  // Segunda mejora gráfica pedida por el propietario (tras La Crítica): el
+  // protagonista era una mascota vectorial estática; ahora corre con 2
+  // fotogramas reales (vídeo Grok, cámara fija) sincronizados con el rebote
+  // vertical ya existente — sin tocar la mecánica de dash (reutiliza el mismo
+  // fotograma vía _etHeroFrame, con estela fantasma coherente).
+  assert(/const ET_HERO_RUN=\[/.test(html), 'ET_HERO_RUN frame array missing');
+  const arrSrc = html.slice(html.indexOf('const ET_HERO_RUN=['), html.indexOf('];', html.indexOf('const ET_HERO_RUN=[')));
+  // PNG, no JPEG (jul 2026): el JPEG no tiene canal alfa y dejaba una caja de
+  // fondo visible sobre el suelo del comedor — bug real detectado en vivo.
+  assert((arrSrc.match(/data:image\/png;base64,/g) || []).length === 2, 'ET_HERO_RUN must embed exactly 2 transparent-PNG run-cycle frames');
+  const e = html.indexOf('function launchElTurno(');
+  const loaderSrc = html.slice(e, e + 60000);
+  assert(/const HERO=ET_HERO_RUN\.map\(/.test(loaderSrc), 'HERO must be built from the ET_HERO_RUN frames, not a single SVG image');
+  assert(/function _etHeroFrame\(G\)\{ return G\.moving\?\(Math\.sin\(G\.time\*13\)>=0\?0:1\):0; \}/.test(loaderSrc),
+    'the frame picker must sync leg-swap to the existing vertical bob phase, and hold frame 0 when idle');
+  // Ambos puntos de dibujo (jugador + estela del dash) deben indexar el array,
+  // no dibujar un HERO a secas — y la estela debe fijar el fotograma al empujar
+  // el punto (para no desincronizarse mientras la estela se desvanece).
+  assert(/ctx\.drawImage\(HERO\[_etHeroFrame\(G\)\]/.test(loaderSrc), 'the main player draw must pick the active run-cycle frame');
+  assert(/G\.trail\.push\(\{x:G\.px,y:G\.py,life:1,face:G\.face,frame:_etHeroFrame\(G\)\}\)/.test(loaderSrc),
+    'dash trail points must capture the frame active at push time');
+  assert(/ctx\.drawImage\(HERO\[t\.frame\|\|0\]/.test(loaderSrc), 'the ghost trail must draw the frame captured for that point');
 });
 
 test('Mr. Shoesmith: reactive face sprites wired, intro framed (no hex crop)', () => {
