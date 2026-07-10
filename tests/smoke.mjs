@@ -2919,19 +2919,28 @@ test('tx-rh rubber-hose CSS exists, is scoped, and covers every class the markup
     'rubber-hose option buttons must keep a 44px minimum tap target');
 });
 
-test('EL TURNO scene: bright furnished restaurant background (not the old dark sepia)', () => {
-  // Petición del propietario: el fondo se veía triste. Ahora es un comedor
-  // luminoso y AMUEBLADO (retícula ordenada de mesa+sillas + aparadores).
+test('EL TURNO scene: comedor rubber hose ilustrado con paralaje (lámina del propietario, jul 2026)', () => {
+  // Evolución del fondo: sepia oscuro → retícula procedural luminosa → LÁMINA
+  // ilustrada rubber hose (generada con Grok anclando el estilo con el sprite
+  // del héroe). La retícula procedural de muebles se retiró; el ajedrezado
+  // queda SOLO como respaldo mientras carga la lámina (primer arranque offline).
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 60000);
-  assert(/furnished dining room: orderly grid/.test(body),
-    'the game floor must draw the furnished dining-room grid (tables + chairs + sideboards)');
-  assert(/const CELL=178/.test(body) && /id%5===4/.test(body),
-    'furniture must be an orderly world-tiled grid with periodic sideboards');
+  assert(/ET_BG\.src='img\/et-comedor\.webp'/.test(body),
+    'the dining-room artwork must load from img/et-comedor.webp (repo file, not base64)');
+  assert(existsSync(join(ROOT, 'img/et-comedor.webp')), 'img/et-comedor.webp must exist on disk');
+  assert(/if\(etBgReady\)\{/.test(body) && /ctx\.drawImage\(ET_BG,bx,by,bw,bh\)/.test(body),
+    'the draw loop must render the artwork when loaded');
+  assert(/\*1\.07/.test(body) && /\(G\.px-W\/2\)\*0\.05/.test(body),
+    'the artwork must render with the 7% cover margin and the soft parallax offset');
+  assert(/\} else \{[\s\S]{0,120}const TS=54/.test(body),
+    'the warm checkerboard must remain ONLY as the not-yet-loaded fallback');
+  assert(!/furnished dining room: orderly grid/.test(body) && !/const CELL=178/.test(body),
+    'the old procedural furniture grid must be gone (the artwork brings its own tables)');
   const css = read('styles.css');
   const stage = css.slice(css.indexOf('#etStage{'), css.indexOf('#etStage{') + 500);
   assert(/rgba\(255,236,180/.test(stage) && !/#3a2616 0%,#241609/.test(stage),
-    '#etStage must use the bright warm dining-room gradient, not the old dark sepia');
+    '#etStage must keep the bright warm gradient, not the old dark sepia');
 });
 
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
