@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.184';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.185';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23944,9 +23944,25 @@ function launchElTurno(){
     for(const t of G.trail){ if(!heroReady) break; ctx.globalAlpha=Math.max(0,t.life)*0.3;
       ctx.save(); ctx.translate(t.x,t.y); ctx.scale(t.face,1); ctx.drawImage(HERO[t.frame||0],-23,-35,46,58); ctx.restore(); }
     ctx.globalAlpha=1;
-    // gems
-    for(const g of G.gems){ ctx.fillStyle=g.col; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
-      ctx.beginPath();ctx.moveTo(g.x,g.y-5);ctx.lineTo(g.x+5,g.y);ctx.lineTo(g.x,g.y+5);ctx.lineTo(g.x-5,g.y);ctx.closePath();ctx.fill();ctx.stroke(); }
+    // propinas — MONEDAS que giran y flotan (jul 2026): oro = alérgeno objetivo
+    // del chef / élite / jefe (x2-x3 XP), plata = normal. El giro es una elipse
+    // cuya anchura oscila (moneda vista de canto→de frente) y el tamaño crece
+    // con el valor. Sustituye al rombo abstracto de color.
+    for(const g of G.gems){
+      const gold=g.col==='#e0a02c';
+      const R=4.5+(g.val||1)*0.9;
+      const ph=G.time*5+g.x*0.13, sqz=0.28+0.72*Math.abs(Math.sin(ph));
+      const bob=Math.sin(G.time*4+g.x*0.1)*1.5;
+      ctx.save(); ctx.translate(g.x,g.y+bob);
+      ctx.fillStyle='rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(0,R+3-bob,R*0.8,2.2,0,0,6.29); ctx.fill();
+      ctx.fillStyle=gold?'#e8b83a':'#ccd4dc'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(0,0,R*sqz,R,0,0,6.29); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle=gold?'rgba(138,98,16,.85)':'rgba(90,106,120,.85)'; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.ellipse(0,0,R*0.58*sqz,R*0.58,0,0,6.29); ctx.stroke();
+      ctx.fillStyle=gold?'rgba(255,224,138,.95)':'rgba(242,246,250,.95)';
+      ctx.beginPath(); ctx.ellipse(-R*0.3*sqz,-R*0.34,R*0.24*sqz,R*0.24,0,0,6.29); ctx.fill();
+      ctx.restore();
+    }
     // health pickups — a covered dish that heals (blinks in its last ~1.3s before expiring)
     for(const p of G.pickups){ if(p.life<80 && Math.floor(p.life/6)%2===0) continue;
       const bob=Math.sin(G.time*5+p.x*0.1)*1.6;
@@ -24019,14 +24035,25 @@ function launchElTurno(){
     for(const x of G.explosions){ ctx.globalAlpha=Math.max(0,x.life)*0.5; ctx.strokeStyle='#e8c44c'; ctx.lineWidth=4; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.stroke(); ctx.globalAlpha=Math.max(0,x.life)*0.18; ctx.fillStyle='#e8a02c'; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
     // flying cava bottles
     ctx.font='20px Georgia'; for(const b of G.bombs){ ctx.fillText('🍾',b.cx,b.cy); }
-    // bullets — platos que giran en vuelo (elipse pulsante + borde)
+    // bandejas — plata de camarero girando en vuelo (jul 2026): estela de dos
+    // fantasmas tras la trayectoria, plato plateado con aro interior y REFLEJO
+    // que rota con el giro. Las perforantes (evolución) siguen siendo doradas.
     for(const b of G.bullets){ if(b.life<=0)continue;
       const sq=0.35+0.65*Math.abs(Math.sin(b.rot));
-      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(Math.atan2(b.vy,b.vx));
-      ctx.fillStyle=b.pierce>0?'#ffe9b0':'#f4e4c1'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.ellipse(0,0,5.5,5.5*sq,0,0,6.29); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle='rgba(160,120,70,.55)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.ellipse(0,0,3.2,3.2*sq,0,0,6.29); ctx.stroke();
+      const gold=b.pierce>0;
+      const ang=Math.atan2(b.vy,b.vx);
+      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(ang);
+      // estela: dos ecos desvanecidos detrás del plato
+      for(let k=1;k<=2;k++){ ctx.globalAlpha=0.22/k; ctx.fillStyle=gold?'#ffe9b0':'#dde3e8';
+        ctx.beginPath(); ctx.ellipse(-k*7,0,6.5,6.5*sq,0,0,6.29); ctx.fill(); }
+      ctx.globalAlpha=1;
+      ctx.fillStyle=gold?'#ffe9b0':'#dde3e8'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(0,0,6.5,6.5*sq,0,0,6.29); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle=gold?'rgba(160,120,40,.6)':'rgba(110,125,140,.6)'; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.ellipse(0,0,4,4*sq,0,0,6.29); ctx.stroke();
+      // reflejo que gira con el plato
+      ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.lineWidth=1.4;
+      ctx.beginPath(); ctx.ellipse(0,0,5.4,5.4*sq,0,b.rot*1.7,b.rot*1.7+0.9); ctx.stroke();
       ctx.restore(); }
     // particles
     for(const p of G.parts){ ctx.globalAlpha=Math.max(0,p.life); ctx.fillStyle=p.col; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,6.29); ctx.fill(); }

@@ -2995,6 +2995,25 @@ test('Camarero Survivors: JEFES alérgeno con arte propio y más grandes (jul 20
     'boss must spawn at r=54 (owner: "un poco más grandes")');
 });
 
+test('Camarero Survivors: propinas como monedas y bandejas de plata con estela (jul 2026)', () => {
+  // Quinta pieza gráfica: los pickups de XP dejan el rombo abstracto y pasan a
+  // MONEDAS que giran (oro = objetivo del chef/élite/jefe, plata = normal — el
+  // color seguía significando algo y la metáfora ahora es de camarero), y los
+  // proyectiles son bandejas de plata con reflejo giratorio y estela.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 95000);
+  assert(/const gold=g\.col==='#e0a02c'/.test(body),
+    'coin tint must derive from the existing gem color signal (gold = bonus XP)');
+  assert(/const R=4\.5\+\(g\.val\|\|1\)\*0\.9/.test(body), 'coin size must grow with gem value');
+  assert(/ctx\.ellipse\(0,0,R\*sqz,R,0,0,6\.29\)/.test(body), 'coins must spin via the squashed-ellipse phase');
+  assert(!/ctx\.moveTo\(g\.x,g\.y-5\)/.test(body), 'the old abstract diamond gem must be gone');
+  assert(/estela: dos ecos desvanecidos/.test(body) && /ctx\.ellipse\(-k\*7,0,6\.5,6\.5\*sq,0,0,6\.29\)/.test(body),
+    'trays must leave a two-ghost motion trail');
+  assert(/ctx\.ellipse\(0,0,5\.4,5\.4\*sq,0,b\.rot\*1\.7,b\.rot\*1\.7\+0\.9\)/.test(body),
+    'trays must carry the rotating glint arc');
+  assert(/b\.pierce>0/.test(body) && /#ffe9b0/.test(body), 'piercing trays must stay golden (evolution signal)');
+});
+
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
   // Cinco mejoras de la auditoría de daño (petición del propietario: "cómo lo
   // podemos mejorar" → "aplica todo"). Guardan que cada mecánica sigue cableada.
