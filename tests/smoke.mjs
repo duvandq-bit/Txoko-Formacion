@@ -3012,6 +3012,15 @@ test('Camarero Survivors: propinas como monedas y bandejas de plata con estela (
   assert(/ctx\.ellipse\(0,0,5\.4,5\.4\*sq,0,b\.rot\*1\.7,b\.rot\*1\.7\+0\.9\)/.test(body),
     'trays must carry the rotating glint arc');
   assert(/b\.pierce>0/.test(body) && /#ffe9b0/.test(body), 'piercing trays must stay golden (evolution signal)');
+  // Segunda vuelta a las propinas (propietario, jul 2026): juice de arcade.
+  assert(/halo pulsante SOLO en las de oro/.test(body) && /ctx\.arc\(0,0,R\*1\.9,0,6\.29\)/.test(body),
+    'gold coins must carry the pulsing halo (they are the valuable ones)');
+  assert(/if\(sqz>0\.78\)\{/.test(body), 'the TXOKO diamond engraving must show only when the coin faces the player');
+  assert(/const tw=Math\.sin\(G\.time\*7\+g\.x\*1\.7\+g\.y\*0\.9\)/.test(body) && /tw>0\.9/.test(body),
+    'coins must twinkle intermittently (arcade sparkle)');
+  assert(/G\.dmgs\.push\(\{x:g\.x,y:g\.y-9,val:'\+'\+g\.val,life:1,col:/.test(body),
+    'collecting a coin must float a metal-tinted "+N"');
+  assert(/ctx\.fillStyle=n\.col\|\|'#fff'/.test(body), 'damage-number renderer must honor the per-float color');
 });
 
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {

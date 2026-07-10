@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.185';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.186';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23890,6 +23890,9 @@ function launchElTurno(){
     for(let i=G.gems.length-1;i>=0;i--){ const g=G.gems[i]; const d=Math.hypot(G.px-g.x,G.py-g.y)||1;
       if(d<G.pickR){ g.x+=(G.px-g.x)/d*6*G.magnet*dt*0.5+(G.px-g.x)/d*2; g.y+=(G.py-g.y)/d*6*G.magnet*dt*0.5+(G.py-g.y)/d*2; }
       if(d<G.pr+8){ G.xp+=g.val; G.gems.splice(i,1); sfx('coin');
+        // feedback de recogida: "+N" flotante del color del metal + chispas
+        G.dmgs.push({x:g.x,y:g.y-9,val:'+'+g.val,life:1,col:g.col==='#e0a02c'?'#ffd24d':'#e8eef4'});
+        burst(g.x,g.y,g.col==='#e0a02c'?'rgba(255,214,90,.85)':'rgba(226,236,244,.8)',3);
         if(G.xp>=G.xpNext){ G.xp-=G.xpNext; G.level++; G.xpNext=Math.round(G.xpNext*1.45+2); sfx('level'); showLevelUp(); flash('NIVEL '+G.level,'#4fd0c0'); } } }
     // health pickups: magnet in (only when hurt), collect to heal, expire if left behind
     for(let i=G.pickups.length-1;i>=0;i--){ const p=G.pickups[i]; p.life-=dt;
@@ -23955,12 +23958,23 @@ function launchElTurno(){
       const bob=Math.sin(G.time*4+g.x*0.1)*1.5;
       ctx.save(); ctx.translate(g.x,g.y+bob);
       ctx.fillStyle='rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(0,R+3-bob,R*0.8,2.2,0,0,6.29); ctx.fill();
+      // halo pulsante SOLO en las de oro: son las valiosas y deben llamar la mirada
+      if(gold){ ctx.globalAlpha=.16+.09*Math.sin(G.time*5+g.x); ctx.fillStyle='#ffd24d';
+        ctx.beginPath(); ctx.arc(0,0,R*1.9,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
       ctx.fillStyle=gold?'#e8b83a':'#ccd4dc'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
       ctx.beginPath(); ctx.ellipse(0,0,R*sqz,R,0,0,6.29); ctx.fill(); ctx.stroke();
       ctx.strokeStyle=gold?'rgba(138,98,16,.85)':'rgba(90,106,120,.85)'; ctx.lineWidth=1.2;
       ctx.beginPath(); ctx.ellipse(0,0,R*0.58*sqz,R*0.58,0,0,6.29); ctx.stroke();
+      // grabado: rombo TXOKO visible solo cuando la moneda está de frente
+      if(sqz>0.78){ ctx.strokeStyle=gold?'rgba(138,98,16,.9)':'rgba(90,106,120,.9)'; ctx.lineWidth=1.1;
+        ctx.beginPath(); ctx.moveTo(0,-R*0.34); ctx.lineTo(R*0.3*sqz,0); ctx.lineTo(0,R*0.34); ctx.lineTo(-R*0.3*sqz,0); ctx.closePath(); ctx.stroke(); }
       ctx.fillStyle=gold?'rgba(255,224,138,.95)':'rgba(242,246,250,.95)';
       ctx.beginPath(); ctx.ellipse(-R*0.3*sqz,-R*0.34,R*0.24*sqz,R*0.24,0,0,6.29); ctx.fill();
+      // destello intermitente (twinkle arcade): cruz de 4 puntas un instante
+      const tw=Math.sin(G.time*7+g.x*1.7+g.y*0.9);
+      if(tw>0.9){ const s=(tw-0.9)*10*R*0.9; ctx.strokeStyle='rgba(255,255,255,.95)'; ctx.lineWidth=1.3;
+        ctx.beginPath(); ctx.moveTo(-R*0.45-s,-R*0.5); ctx.lineTo(-R*0.45+s,-R*0.5);
+        ctx.moveTo(-R*0.45,-R*0.5-s); ctx.lineTo(-R*0.45,-R*0.5+s); ctx.stroke(); }
       ctx.restore();
     }
     // health pickups — a covered dish that heals (blinks in its last ~1.3s before expiring)
@@ -24078,7 +24092,7 @@ function launchElTurno(){
     if(G.aura>0){ ctx.globalAlpha=.25; ctx.strokeStyle='#4fd0c0'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(G.px,G.py,70+G.aura*14-(G.auraT/90)*20,0,6.29); ctx.stroke(); ctx.globalAlpha=1; }
     // damage numbers
     ctx.font='bold 13px Georgia'; ctx.textAlign='center'; ctx.lineWidth=3;
-    for(const n of G.dmgs){ ctx.globalAlpha=Math.max(0,n.life); ctx.strokeStyle='#241a12'; ctx.strokeText(n.val,n.x,n.y); ctx.fillStyle='#fff'; ctx.fillText(n.val,n.x,n.y); }
+    for(const n of G.dmgs){ ctx.globalAlpha=Math.max(0,n.life); ctx.strokeStyle='#241a12'; ctx.strokeText(n.val,n.x,n.y); ctx.fillStyle=n.col||'#fff'; ctx.fillText(n.val,n.x,n.y); }
     ctx.globalAlpha=1;
     ctx.restore();
     // low-HP danger: pulsing red vignette while alive and under 25 HP
