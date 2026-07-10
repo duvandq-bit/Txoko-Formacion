@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.188';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.189';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23595,10 +23595,16 @@ function launchElTurno(){
   const HERO=ET_HERO_RUN.map(src=>{ const img=new Image(); img.src=src; return img; });
   let heroReady=false;
   { let n=0; HERO.forEach(img=>{ img.onload=()=>{ n++; if(n===HERO.length) heroReady=true; }; }); }
-  // Lámina del comedor (rubber hose, jul 2026). Archivo webp del repo — como
-  // las fotos de platos — para no engordar el HTML; el SW la cachea al vuelo.
-  const ET_BG=new Image(); let etBgReady=false;
-  ET_BG.onload=()=>{ etBgReady=true; }; ET_BG.src='img/et-comedor.webp';
+  // Escenarios (rubber hose, jul 2026): el turno recorre el restaurante — el
+  // comedor, la cocina (nivel 5) y la bodega (nivel 10), rotando en niveles
+  // altos. Archivos webp del repo — como las fotos de platos — para no
+  // engordar el HTML; el SW los cachea al vuelo.
+  const ET_BGS=[
+    {src:'img/et-comedor.webp', banner:'¡DE VUELTA AL COMEDOR!'},
+    {src:'img/et-cocina.webp',  banner:'¡A LA COCINA!'},
+    {src:'img/et-bodega.webp',  banner:'¡A LA BODEGA!'},
+  ];
+  ET_BGS.forEach(b=>{ b.img=new Image(); b.img.onload=()=>{ b.ready=true; }; b.img.src=b.src; });
   // Monstruos-alérgeno ilustrados (hoja del propietario, jul 2026): un sprite
   // por clave de ALLERGENS. Cada Image marca _ok al cargar; hasta entonces el
   // dibujo por código de siempre (círculo + emoji) hace de respaldo.
@@ -23682,7 +23688,8 @@ function launchElTurno(){
         enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[],
         spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
         nextElite:55, nextSurge:75, bosses:0,
-        target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0 };
+        target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0,
+        bgIdx:0, bgPrev:0, bgFade:0 };
     pickTarget(true);
   }
 
@@ -23896,6 +23903,11 @@ function launchElTurno(){
     // boss wave every 40s
     if(G.time>=G.nextBoss){ G.nextBoss+=40; spawnBoss(); }
     if(G.time>=G.nextChef){ G.nextChef+=180; spawnChef(); }
+    // cambio de escenario por nivel (propietario, jul 2026): comedor →
+    // cocina (nv 5) → bodega (nv 10), rotando en niveles altos. Fundido ~1s.
+    const _si=Math.floor(G.level/5)%ET_BGS.length;
+    if(_si!==G.bgIdx){ G.bgPrev=G.bgIdx; G.bgIdx=_si; G.bgFade=1; flash(ET_BGS[_si].banner,'#e8c44c'); }
+    if(G.bgFade>0){ G.bgFade-=dt*0.02; if(G.bgFade<0) G.bgFade=0; }
 
     // rotate order every ~22s
     G.targetT+=dt/60; if(G.targetT>22) pickTarget(false);
@@ -24007,18 +24019,27 @@ function launchElTurno(){
     ctx.clearRect(0,0,W,H);
     ctx.save();
     if(G.shake>0.4){ ctx.translate((Math.random()-.5)*G.shake, (Math.random()-.5)*G.shake); }
-    // ── comedor ilustrado (rubber hose, lámina del propietario jul 2026):
+    // ── escenario ilustrado (rubber hose, láminas del propietario jul 2026):
     //    cubre el lienzo con un 7% de margen y un paralaje suave opuesto al
-    //    movimiento del jugador. Sustituye al ajedrezado + muebles procedurales
-    //    de antes; si la lámina aún no cargó (primer arranque offline), el
-    //    ajedrezado cálido de siempre hace de respaldo. ──
-    if(etBgReady){
-      const sc=Math.max(W/ET_BG.width,H/ET_BG.height)*1.07;
-      const bw=ET_BG.width*sc, bh=ET_BG.height*sc;
+    //    movimiento. El escenario ACTIVO depende del nivel (comedor → cocina
+    //    → bodega, rotando); al cambiar hay un fundido de ~1s desde el
+    //    anterior. Si la lámina activa aún no cargó, el ajedrezado cálido de
+    //    siempre hace de respaldo. ──
+    const _bgDraw=(im)=>{
+      const sc=Math.max(W/im.width,H/im.height)*1.07;
+      const bw=im.width*sc, bh=im.height*sc;
       const mx=(bw-W)/2, my=(bh-H)/2;
       const bx=Math.max(-2*mx,Math.min(0,-mx-(G.px-W/2)*0.05));
       const by=Math.max(-2*my,Math.min(0,-my-(G.py-H/2)*0.05));
-      ctx.drawImage(ET_BG,bx,by,bw,bh);
+      ctx.drawImage(im,bx,by,bw,bh);
+    };
+    const _bgCur=ET_BGS[G.bgIdx];
+    if(_bgCur&&_bgCur.ready){
+      _bgDraw(_bgCur.img);
+      const _bgOld=ET_BGS[G.bgPrev];
+      if(G.bgFade>0&&_bgOld&&_bgOld.ready&&G.bgPrev!==G.bgIdx){
+        ctx.globalAlpha=Math.min(1,G.bgFade); _bgDraw(_bgOld.img); ctx.globalAlpha=1;
+      }
     } else {
       const TS=54, ox=((-G.px*0.04)%(TS*2)+TS*2)%(TS*2), oy=((-G.py*0.04)%(TS*2)+TS*2)%(TS*2);
       for(let gx=-2;gx*TS<W+TS*2;gx++){ for(let gy=-2;gy*TS<H+TS*2;gy++){
