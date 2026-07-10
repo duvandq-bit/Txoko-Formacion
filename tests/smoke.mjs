@@ -2943,6 +2943,37 @@ test('EL TURNO scene: comedor rubber hose ilustrado con paralaje (lámina del pr
     '#etStage must keep the bright warm gradient, not the old dark sepia');
 });
 
+test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del propietario, jul 2026)', () => {
+  // Tercera mejora gráfica: los 8 enemigos dejan el círculo+emoji por sprites
+  // reales recortados de UNA hoja Grok (estilo anclado con el sprite del héroe).
+  // El dibujo por código queda como respaldo hasta que carga cada imagen.
+  assert(/const ET_FOE_SPRITES=\{/.test(html), 'ET_FOE_SPRITES map missing');
+  const mapSrc = html.slice(html.indexOf('const ET_FOE_SPRITES={'), html.indexOf('};', html.indexOf('const ET_FOE_SPRITES={')));
+  const spriteKeys = [...mapSrc.matchAll(/^\s{2}([a-z]+):'data:image\/webp;base64,/gm)].map(m => m[1]);
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 90000);
+  // Las claves del mapa deben cubrir EXACTAMENTE el roster de ALLERGENS del juego.
+  const roster = [...body.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
+  assert(roster.length === 8, `expected 8 allergen foes in the roster, found ${roster.length}`);
+  for (const k of roster) assert(spriteKeys.includes(k), `foe sprite missing for allergen '${k}'`);
+  assert(spriteKeys.length === roster.length, 'ET_FOE_SPRITES must not carry unused sprites');
+  // Cableado: loader por clave, dibujo del sprite con squash heredado y respaldo íntegro.
+  assert(/FOES\[a\.key\]=img/.test(body), 'per-key foe image loader missing');
+  assert(/const _sp=FOES\[e\.a\.key\]/.test(body) && /ctx\.drawImage\(_sp,-_sw\/2,-_sh\/2,_sw,_sh\)/.test(body),
+    'enemy draw must render the sprite scaled to the body radius');
+  assert(/\} else \{[\s\S]{0,80}ctx\.beginPath\(\); ctx\.fillStyle=e\.a\.col/.test(body),
+    'the code-drawn circle body must remain as the not-yet-loaded fallback');
+  assert(/if\(!\(_sp&&_sp\._ok\)\)\{ ctx\.font=/.test(body),
+    'the emoji emblem must draw ONLY in the fallback (the sprite already carries the identity)');
+  // La leyenda de inicio enseña el sprite real, no el emoji.
+  assert(/et-lg"><img src="\$\{ET_FOE_SPRITES\[a\.key\]\}"/.test(body),
+    'the start-screen legend must show the real sprites');
+  // El lenguaje visual heredado sigue: sombra, aro de élite, corona del jefe, flash.
+  for (const token of ['e.elite', 'corona del jefe', 'e.flash>0']) {
+    assert(body.includes(token), `inherited visual language missing: ${token}`);
+  }
+});
+
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
   // Cinco mejoras de la auditoría de daño (petición del propietario: "cómo lo
   // podemos mejorar" → "aplica todo"). Guardan que cada mecánica sigue cableada.
