@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.177';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.178';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4036,9 +4036,31 @@ function _isQuizableDish(d){
 }
 // Sides are restricted to storytelling only — their ingredients/allergen lists
 // are too sparse to produce meaningful distractors or training value.
+// «Pregunta obvia de carne» (jul 2026, directriz del propietario): en los cortes
+// de Carnes de Autor los ingredientes son solo «corte + peso + sal gruesa», así
+// que la pregunta invertida de ingredientes quedaba vacía tras enmascarar el
+// nombre y el eco del peso («(300 g)» ↔ «300g» del nombre) delataba la respuesta
+// en el 100% de los casos medidos — incluso con doble-correcta plausible
+// (Entrecot de Angus 300g vs Entrecot de Wagyu 300g). Criterio medible y general:
+// si al quitar los tokens del nombre (ES+EN) y los genéricos de cocina quedan
+// ≤2 tokens informativos en cualquiera de los dos idiomas, el plato NO se
+// pregunta por ingredientes — le quedan storytelling y alérgenos.
+const _ING_GENERIC = new Set(['sal','gruesa','fina','agua','aceite','oliva','girasol','pimienta','coarse','salt','water','oil','olive','pepper','steak','corte']);
+function _txIngredientsVacuous(d){
+  const _norm = s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const _informative = (name, ing)=>{
+    const nameTk = new Set(_norm(name).split(/[^a-z0-9]+/).filter(w=>w.length>2).map(w=>w.replace(/(es|s)$/,'')));
+    const toks = _norm(ing).split(/[^a-z]+/).filter(w=>w.length>2 && !_EXAM_STOP.has(w) && !_ING_GENERIC.has(w) && !nameTk.has(w.replace(/(es|s)$/,'')));
+    return new Set(toks.map(w=>w.replace(/(es|s)$/,''))).size;
+  };
+  if(_informative(d.name, d.ingredients) <= 2) return true;
+  const en = (typeof DISHES_EN!=='undefined') ? DISHES_EN.find(x=>x.id===d.id) : null;
+  return !!(en && en.ingredients && _informative(en.name, en.ingredients) <= 2);
+}
 function _isDishQuizableForTopic(d, topicKey){
   if(!_isQuizableDish(d)) return false;
   if(d.cat === 'Guarniciones y Salsas' && topicKey !== 'history') return false;
+  if(topicKey === 'ingredients' && _txIngredientsVacuous(d)) return false;
   return true;
 }
 function _simAllergenLabel(a, _en){ return _en ? (typeof allergenData_en!=='undefined' ? (allergenData_en[a]||a) : a) : a; }
@@ -15976,8 +15998,13 @@ const _EXAM_STOP = new Set(['con','de','del','la','las','los','el','en','al','an
 function _examNameTokens(d){
   const dd = getDish(d);
   const both = (d.name || '') + ' ' + (dd.name || '');
-  return both.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  const toks = both.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .split(/[^a-z0-9]+/).filter(w => w.length > 3 && !_EXAM_STOP.has(w));
+  // Pesos del nombre (\u00ab300g\u00bb, \u00ab700g\u00bb): a\u00f1ade la parte num\u00e9rica como token propio
+  // para que _examRedact tambi\u00e9n enmascare \u00ab(300 g)\u00bb en el pasaje \u2014 ese eco
+  // delataba el corte de carne correcto en el 100% de los casos (medido jul 2026).
+  toks.slice().forEach(w => { const m = w.match(/\d{2,}/g); if(m) m.forEach(n => toks.push(n)); });
+  return toks;
 }
 function _examRedact(text, candidates){
   const stems = new Set();
@@ -22331,6 +22358,37 @@ const WAITER_MSGS_REV={
     ()=>LANG==='en'?`A colleague tells this storytelling. Which dish does it match?`:`Un compañero cuenta este storytelling. ¿A qué plato corresponde?`,
     ()=>LANG==='en'?`This is the tale we tell at the table. Which dish is it about?`:`Esta es la historia que contamos en mesa. ¿De qué plato habla?`,
   ]};
+// ── Voz de Mr. Shoesmith (jul 2026, directriz del propietario) ───────────────
+// En SU juego, Mr. Shoesmith es UN cliente sentado a SU mesa (la 501) que
+// interroga él mismo al camarero, en primera persona: habla de SU pedido, SU
+// plato y las alergias de SU mesa. Nada de «Mesa 304», otros huéspedes ni
+// narración en 3ª persona — rompe la ficción (medido ANTES: 41% de enunciados
+// nombraban otra mesa y 83% no estaban en su voz). WAITER_MSGS/_REV quedan
+// para Duelos y Retos, donde el marco multi-mesa sí tiene sentido.
+const SHOESMITH_MSGS={
+  allergens:[
+    d=>LANG==='en'?`I am considering the <strong>${d}</strong>. What allergens does it contain, exactly?`:`Estoy pensando en pedir <strong>${d}</strong>. ¿Qué alérgenos lleva exactamente?`,
+    d=>LANG==='en'?`My wife has several allergies. What allergens are in the <strong>${d}</strong>?`:`Mi mujer tiene varias alergias. ¿Qué alérgenos contiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`I have ordered the <strong>${d}</strong>. Tell me which allergens you must warn me about.`:`He pedido <strong>${d}</strong>. Dígame de qué alérgenos debe avisarme.`,
+    d=>LANG==='en'?`Before I decide: what allergens does the <strong>${d}</strong> carry?`:`Antes de decidirme: ¿qué alérgenos lleva <strong>${d}</strong>?`,
+    d=>LANG==='en'?`I do not like surprises. What allergens does the <strong>${d}</strong> have?`:`No me gustan las sorpresas. ¿Qué alérgenos tiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`On my last visit nobody could answer me. What allergens are in the <strong>${d}</strong>?`:`En mi última visita nadie supo respondérmelo. ¿Qué alérgenos lleva <strong>${d}</strong>?`,
+  ]};
+// Preguntas invertidas en su voz: el enunciado NO nombra el plato (las opciones
+// son nombres de plato) y el pasaje largo va en la burbuja, como en WAITER_MSGS_REV.
+const SHOESMITH_MSGS_REV={
+  ingredients:[
+    ()=>LANG==='en'?`I shall recite what my chosen dish contains. Do you know which one it is?`:`Le recito lo que lleva el plato que quiero. ¿Sabe usted cuál es?`,
+    ()=>LANG==='en'?`My wife wants the dish that contains exactly this. Which one is it?`:`Mi mujer quiere el plato que lleva exactamente esto. ¿Cuál es?`,
+    ()=>LANG==='en'?`I read this composition on the menu and I have forgotten the name. Which dish is it?`:`He leído esta composición en la carta y he olvidado el nombre. ¿Qué plato es?`,
+    ()=>LANG==='en'?`They served me this at my last dinner here. What is the dish called?`:`En mi última cena aquí me sirvieron esto. ¿Cómo se llama el plato?`,
+  ],
+  history:[
+    ()=>LANG==='en'?`I was told this story on my last visit. Which dish were they speaking of?`:`Me contaron esta historia en mi última visita. ¿De qué plato hablaban?`,
+    ()=>LANG==='en'?`I know this story by heart. Let us see if you do too: which dish is it?`:`Me sé esta historia de memoria. Veamos si usted también: ¿de qué plato es?`,
+    ()=>LANG==='en'?`My wife remembers this story, but not the dish. Which is it?`:`Mi mujer recuerda esta historia, pero no el plato. ¿Cuál es?`,
+    ()=>LANG==='en'?`If you truly know your menu, tell me which dish this story belongs to.`:`Si de verdad conoce su carta, dígame a qué plato pertenece esta historia.`,
+  ]};
 // Burbuja del camarero para preguntas invertidas: prompt corto + el pasaje
 // largo como bloque legible (una sola vez, con scroll si es muy largo).
 function _txRevBubble(prompt, passage){
@@ -22387,7 +22445,9 @@ function txTruncate(s, n){
 
 // ── Core: build one question object ────────────────
 // Returns a fully sealed question or null if impossible.
-function txBuildQuestion(){
+// voice==='shoesmith' → enunciados en primera persona de Mr. Shoesmith (su
+// juego); sin voz → enunciados neutros de sala (Duelos y Retos remotos).
+function txBuildQuestion(voice){
   const topicKeys=['allergens','ingredients','history'];
 
   // Pre-compute all unique answers per topic so we know which are viable
@@ -22460,7 +22520,7 @@ function txBuildQuestion(){
     const candidates=[chosenDish,...namePool];
     const passage=_examRedact(rawPassage, candidates);
     const pool=_lqaShuffle(candidates.map(c=>({display:getDish(c).name, isCorrect:c.id===chosenDish.id})));
-    const revPrompts=WAITER_MSGS_REV[chosenTopicKey];
+    const revPrompts=(voice==='shoesmith'?SHOESMITH_MSGS_REV:WAITER_MSGS_REV)[chosenTopicKey];
     const promptFn=revPrompts[Math.floor(Math.random()*revPrompts.length)];
     return {
       dishName:   dd0.name,
@@ -22504,7 +22564,7 @@ function txBuildQuestion(){
 
   const dd = getDish(chosenDish);
   const dishNameDisplay = dd.name;
-  const msgs = WAITER_MSGS[chosenTopicKey]||WAITER_MSGS.allergens;
+  const msgs = voice==='shoesmith' ? SHOESMITH_MSGS.allergens : (WAITER_MSGS[chosenTopicKey]||WAITER_MSGS.allergens);
   const msgFn = msgs[Math.floor(Math.random()*msgs.length)];
 
   return {
@@ -24091,9 +24151,9 @@ function txShowIntro(){
 function txNext(){
   if(txokoTimer) clearInterval(txokoTimer);
 
-  // Build question — retry up to 20 times synchronously
+  // Build question — retry up to 20 times synchronously (en la voz de Mr. Shoesmith)
   let q=null;
-  for(let i=0;i<20;i++){ q=txBuildQuestion(); if(q) break; }
+  for(let i=0;i<20;i++){ q=txBuildQuestion('shoesmith'); if(q) break; }
   if(!q){ txGameOver(); return; }
 
   const lvl=txLevel(txokoState.score);

@@ -1020,6 +1020,86 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
   }
 });
 
+test('Mr. Shoesmith habla en 1ª persona y las carnes de autor van por storytelling', () => {
+  // Directriz del propietario (jul 2026): Mr. Shoesmith es UN cliente sentado a
+  // SU mesa (la 501) que interroga él mismo al camarero — un enunciado que nombra
+  // «Mesa 304», a otro huésped o que narra en 3ª persona rompe la ficción.
+  // Medido ANTES: 41% de los enunciados nombraban otra mesa y 83% no estaban en
+  // su voz. Además, en los cortes de Carnes de Autor la pregunta invertida de
+  // ingredientes filtraba la respuesta por el eco del peso («(300 g)» ↔ «300g»
+  // del nombre) en el 100% de los casos — incluso con doble-correcta plausible
+  // (Entrecot de Angus 300g vs Entrecot de Wagyu 300g). DESPUÉS: 0 en todo.
+  // (1) El juego pide la voz de Shoesmith; Duelos/Retos conservan la neutra.
+  assert(/q=txBuildQuestion\('shoesmith'\)/.test(html), 'txNext must build questions in the Shoesmith voice');
+  // (2) Gate estructural: platos con ingredientes vacuos no preguntan ingredientes.
+  assert(/topicKey === 'ingredients' && _txIngredientsVacuous\(d\)/.test(html),
+    'vacuous-ingredients gate missing from _isDishQuizableForTopic');
+  // (3) _examNameTokens debe emitir la parte numérica de los pesos del nombre
+  //     para que _examRedact enmascare «(300 g)» en el pasaje (anti-eco).
+  assert(/w\.match\(\/\\d\{2,\}\/g\)/.test(html), '_examNameTokens must emit numeric weight stems');
+  // (4) Empírico con el generador y los pools REALES.
+  const cut = (a, b) => { const i = html.indexOf(a); assert(i !== -1, 'missing ' + a); return html.slice(i, html.indexOf(b, i) + b.length); };
+  const fn = (name) => { const sig = 'function ' + name + '('; const i = html.indexOf(sig); assert(i !== -1, 'missing fn ' + name); let depth = 0, k = html.indexOf('{', i);
+    while (true) { const ch = html[k]; if (ch === '{') depth++; else if (ch === '}') { depth--; if (depth === 0) return html.slice(i, k + 1); } k++; } };
+  const stub = 'function _renderShiftBar(){} var localStorage={getItem:()=>null,setItem:()=>{}};'
+    + 'var LANG="es"; function allergenLocal(a){return a;} function t(k){return k==="noHistory"?"✦ Storytelling próximamente":k;}'
+    + 'function escapeHTML(s){return String(s);}'
+    + 'function getDish(d){ if(LANG!=="en") return d; const en=DISHES_EN.find(x=>x.id===d.id); return en?Object.assign({},d,en):d; }'
+    + 'var TOPICS=[{key:"allergens",label:"al"},{key:"ingredients",label:"in"},{key:"history",label:"hi"}];';
+  const M = new Function(stub // eslint-disable-line no-new-func
+    + cut('const DISHES = [', '\n];') + cut('const DISHES_EN = [', '\n];') + cut('const DISH_SERVICE = {', '};') + ';'
+    + html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'))
+    + cut('const WAITER_MSGS={', '  ]};') + cut('const WAITER_MSGS_REV={', '  ]};')
+    + cut('const SHOESMITH_MSGS={', '  ]};') + cut('const SHOESMITH_MSGS_REV={', '  ]};')
+    + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
+    + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
+    + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion')
+    + 'return {DISHES, SHOESMITH_MSGS, SHOESMITH_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
+    + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
+  // Todo enunciado del pool de Shoesmith, en ambos idiomas, debe estar en SU voz:
+  // sin mesas numeradas, sin terceros (huésped/compañero/cocina) y sin 3ª persona.
+  const NOT_HIS_VOICE = /\b(mesa|table)\s*\d+|hu[eé]sped|guest|compa[ñn]ero|colleague|cocina|kitchen|Mr\.?\s*Shoesmith|VIP/i;
+  for (const lang of ['es', 'en']) {
+    M.setLang(lang);
+    const stems = [
+      ...M.SHOESMITH_MSGS.allergens.map(f => f('PLATO')),
+      ...M.SHOESMITH_MSGS_REV.ingredients.map(f => f()),
+      ...M.SHOESMITH_MSGS_REV.history.map(f => f()),
+    ];
+    assert(stems.length >= 12, `Shoesmith stem pool too small (${stems.length}) — keep variety`);
+    for (const s of stems) assert(!NOT_HIS_VOICE.test(s), `Shoesmith stem out of voice (${lang}): «${s}»`);
+  }
+  // Barrido del generador real (voz shoesmith): el TALLO (antes del pasaje
+  // citado) nunca menciona mesas/terceros, y ninguna pregunta de ingredientes
+  // cae en un plato vacuo ni deja eco de peso hacia la opción correcta.
+  for (const lang of ['es', 'en']) {
+    M.setLang(lang);
+    for (const shift of ['a', 'c']) {
+      M.setShift(shift);
+      let n = 0;
+      for (let i = 0; i < 1200; i++) {
+        const q = M.txBuildQuestion('shoesmith'); if (!q) continue; n++;
+        const stem = String(q.msg).split('<div')[0].replace(/<[^>]+>/g, ' ');
+        assert(!NOT_HIS_VOICE.test(stem), `stem out of Shoesmith voice (${lang}/${shift}): «${stem}»`);
+        if (q.topicKey === 'ingredients') {
+          const dish = M.dishByName(q.dishName);
+          assert(dish && !M._txIngredientsVacuous(dish),
+            `vacuous-ingredients dish reached an ingredients question: ${q.dishName}`);
+          const pass = String(q.msg).replace(/<[^>]+>/g, ' ');
+          const w = pass.match(/(\d[\d.,]{1,})\s*(?:g|kg)\b/i);
+          if (w) {
+            const digits = w[1].replace(/[.,]/g, '');
+            assert(!String(q.choices[q.correctIdx]).replace(/[.,]/g, '').includes(digits),
+              `weight echo leaks the answer (${lang}/${shift}): «${w[0]}» → «${q.choices[q.correctIdx]}»`);
+          }
+        }
+      }
+      assert(n > 800, `Shoesmith voice produced too few questions (${n}) in ${lang}/${shift} — over-filtered?`);
+    }
+  }
+});
+
 test('study shift filter: Error Mode (Puntos Débiles) subject pool routes by shift', () => {
   // Regresión (jul 2026, barrido exhaustivo): startErrorMode elegía el plato-
   // sujeto de getFailedDishes() SIN filtrar por turno — medido: 47% del pool
