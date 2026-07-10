@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.179';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.180';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -22325,10 +22325,12 @@ function renderGhostReport(){
 
 // ── Constants ──────────────────────────────────────
 const TXOKO_LEVELS=[
-  {name:'Calma',    name_en:'Calm',    cls:'calma',    time:13},
-  {name:'Ritmo',    name_en:'Rhythm',  cls:'ritmo',    time:10},
-  {name:'Fuego',    name_en:'Fire',    cls:'fuego',    time:7},
-  {name:'Infierno', name_en:'Inferno', cls:'infierno', time:5},
+  // +1s por nivel (propietario, jul 2026): leer la pregunta ya consume parte
+  // del tiempo — con los valores antiguos apenas quedaba margen para responder.
+  {name:'Calma',    name_en:'Calm',    cls:'calma',    time:14},
+  {name:'Ritmo',    name_en:'Rhythm',  cls:'ritmo',    time:11},
+  {name:'Fuego',    name_en:'Fire',    cls:'fuego',    time:8},
+  {name:'Infierno', name_en:'Inferno', cls:'infierno', time:6},
 ];
 const WAITER_MSGS={
   allergens:[
@@ -22411,27 +22413,29 @@ const SHOESMITH_MSGS_REV={
 // Misma regla que Mr. Shoesmith: ELLA es la única clienta en su mesa y habla en
 // primera persona de SU pedido — nunca menciona otras mesas. Voz propia (no
 // reutiliza "mi mujer" de Shoesmith): notas para su reseña, cuaderno, columna.
+// Tono SARCÁSTICO (petición del propietario tras probarla, jul 2026): elegante
+// pero cortante — duda de ti, no grita.
 const CRITIC_MSGS={
   allergens:[
-    d=>LANG==='en'?`I am noting this for my review: what allergens does the <strong>${d}</strong> contain?`:`Voy a anotar esto en mi reseña: ¿qué alérgenos lleva <strong>${d}</strong>?`,
-    d=>LANG==='en'?`A good waiter knows the menu by heart. What allergens does the <strong>${d}</strong> have?`:`Un buen camarero conoce su carta de memoria. ¿Qué alérgenos tiene <strong>${d}</strong>?`,
-    d=>LANG==='en'?`I have ordered the <strong>${d}</strong> for my column. Tell me which allergens you must warn me about.`:`He pedido <strong>${d}</strong> para mi columna. Dígame de qué alérgenos debe avisarme.`,
-    d=>LANG==='en'?`I do not review careless restaurants. What allergens does the <strong>${d}</strong> carry?`:`No escribo reseñas sobre restaurantes descuidados. ¿Qué alérgenos lleva <strong>${d}</strong>?`,
-    d=>LANG==='en'?`This goes in my notebook, so be precise: what allergens does the <strong>${d}</strong> contain?`:`Esto irá en mi cuaderno, así que sea preciso: ¿qué alérgenos contiene <strong>${d}</strong>?`,
-    d=>LANG==='en'?`In my last review I mentioned a mistake like this. What allergens does the <strong>${d}</strong> have?`:`En mi última crítica mencioné un fallo así. ¿Qué alérgenos tiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`I shall order the <strong>${d}</strong>. Surprise me: do you actually know its allergens?`:`Voy a pedir <strong>${d}</strong>. Sorpréndame: ¿de verdad sabe qué alérgenos lleva?`,
+    d=>LANG==='en'?`How thrilling, another waiter who knows it all. What allergens does the <strong>${d}</strong> have?`:`Qué emoción, otro camarero que se lo sabe todo. ¿Qué alérgenos tiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`I have ordered the <strong>${d}</strong>. Enlighten me with its allergens… if you can.`:`He pedido <strong>${d}</strong>. Ilústreme con sus alérgenos… si puede.`,
+    d=>LANG==='en'?`My last review destroyed a waiter for less. What allergens does the <strong>${d}</strong> carry?`:`Mi última reseña destrozó a un camarero por menos. ¿Qué alérgenos lleva <strong>${d}</strong>?`,
+    d=>LANG==='en'?`Do not make me write "charming staff, utterly lost". What allergens are in the <strong>${d}</strong>?`:`No me obligue a escribir «personal encantador, pero perdido». ¿Qué alérgenos contiene <strong>${d}</strong>?`,
+    d=>LANG==='en'?`I would bet my column you do not know: what allergens does the <strong>${d}</strong> have?`:`Me apuesto mi columna a que no lo sabe: ¿qué alérgenos tiene <strong>${d}</strong>?`,
   ]};
 const CRITIC_MSGS_REV={
   ingredients:[
-    ()=>LANG==='en'?`I shall recite my dish's composition for my review. Do you know which one it is?`:`Voy a recitar la composición de mi plato para mi reseña. ¿Sabe usted cuál es?`,
-    ()=>LANG==='en'?`I am noting down exactly what it contains. Do you recognize the dish?`:`Anoto exactamente lo que lleva. ¿Reconoce usted el plato?`,
-    ()=>LANG==='en'?`I read this composition on the menu and wish to see if you know it just as well. Which dish is it?`:`Leí esta composición en la carta y quiero comprobar si usted la conoce igual de bien. ¿Qué plato es?`,
-    ()=>LANG==='en'?`On my last visit I noted this in my notebook. What is the dish called?`:`En mi última visita anoté esto en mi cuaderno. ¿Cómo se llama el plato?`,
+    ()=>LANG==='en'?`I shall recite what my dish contains. Let us see if you recognize it without peeking at the menu.`:`Le recito lo que lleva mi plato. A ver si lo reconoce sin mirar la carta.`,
+    ()=>LANG==='en'?`I noted this composition down. Can you name the dish, or shall I lend you my notebook?`:`Anoté esta composición en mi cuaderno. ¿Me dice el plato… o le presto el cuaderno?`,
+    ()=>LANG==='en'?`The menu says this. I assume you have read it at least once. Which dish is it?`:`Esto lo pone su carta. Imagino que la habrá leído alguna vez. ¿Qué plato es?`,
+    ()=>LANG==='en'?`I was served this on my last visit. Memorable — the dish, not the service. Which was it?`:`Me sirvieron esto en mi última visita. Memorable… el plato, no el servicio. ¿Cuál era?`,
   ],
   history:[
-    ()=>LANG==='en'?`I researched this story for my review. Which dish am I speaking of?`:`Investigué esta historia para mi reseña. ¿De qué plato hablo?`,
-    ()=>LANG==='en'?`A good restaurant knows the origin of every dish. Which one does this story belong to?`:`Un buen restaurante conoce el origen de cada plato. ¿A cuál pertenece esta historia?`,
-    ()=>LANG==='en'?`I noted this story on my last visit, but not the dish's name. Which is it?`:`Anoté esta historia en mi última visita, pero no el nombre del plato. ¿Cuál es?`,
-    ()=>LANG==='en'?`If you truly know your menu, tell me which dish this story belongs to.`:`Si de verdad conoce su carta, dígame a qué plato pertenece esta historia.`,
+    ()=>LANG==='en'?`I researched this story for my review. Name the dish — no hints from the sommelier.`:`Investigué esta historia para mi reseña. Dígame el plato — sin ayuda del sumiller.`,
+    ()=>LANG==='en'?`A charming story. It would be a pity if you did not know which dish it belongs to.`:`Una historia encantadora. Sería una lástima que usted no supiera de qué plato es.`,
+    ()=>LANG==='en'?`I suspect I know this story better than you do. Which dish is it?`:`Sospecho que me sé esta historia mejor que usted. ¿De qué plato es?`,
+    ()=>LANG==='en'?`If you truly know your menu — allow me to doubt it — which dish does this story belong to?`:`Si de verdad conoce su carta — permítame dudarlo —, ¿a qué plato pertenece esta historia?`,
   ]};
 
 // Registro de personas jugables del juego (Mr. Shoesmith / La Crítica): cada
@@ -22456,8 +22460,8 @@ const TX_PERSONAS={
     name:'La Crítica', name_en:'The Critic',
     title:'Reseñas anónimas · Teme su cuaderno', title_en:'Anonymous reviews · Fear her notebook',
     badge:'INCÓGNITA · MESA 12', badge_en:'INCOGNITO · TABLE 12',
-    quote:'Escribo para los lectores que no perdonan un error. Cada plato que pido, cada alérgeno que omitís, queda anotado.',
-    quote_en:'I write for readers who forgive no mistake. Every dish I order, every allergen you omit, gets written down.',
+    quote:'Escribo para lectores que no perdonan un error. Usted relájese: yo solo anoto todo lo que haga mal.',
+    quote_en:'I write for readers who forgive no mistake. Do relax: I am merely writing down everything you get wrong.',
     warn:'La Crítica anota cada respuesta incorrecta. Falla demasiado y <strong style="color:var(--rose)">publica la reseña</strong>.',
     warn_en:'The Critic notes every wrong answer. Fail too many times and she <strong style="color:var(--rose)">publishes the review</strong>.',
     introPos:'50% 14%', talkTier:4
@@ -22527,6 +22531,10 @@ function txTruncate(s, n){
 // Returns a fully sealed question or null if impossible.
 // voice==='shoesmith' → enunciados en primera persona de Mr. Shoesmith (su
 // juego); sin voz → enunciados neutros de sala (Duelos y Retos remotos).
+// Fuera del juego (propietario, jul 2026): los helados Ben & Jerry's son
+// producto de marca con sabores variables — su ficha real está en el envase,
+// no en la carta. Ni como plato-sujeto ni como opción-distractor.
+function _txDishBanned(d){ return /jerry/i.test(d.name)||/jerry/i.test(getDish(d).name||''); }
 function txBuildQuestion(voice){
   const topicKeys=['allergens','ingredients','history'];
 
@@ -22534,7 +22542,7 @@ function txBuildQuestion(voice){
   // A topic is viable for a dish if there are at least 3 OTHER unique answers
   function getUniqueAnswers(tk){
     const seen=new Set();
-    DISHES.forEach(d=>{ const a=txGetAnswer(d,tk); if(a&&txNorm(a)) seen.add(txNorm(a)); });
+    DISHES.forEach(d=>{ if(_txDishBanned(d)) return; const a=txGetAnswer(d,tk); if(a&&txNorm(a)) seen.add(txNorm(a)); });
     return seen;
   }
 
@@ -22542,7 +22550,7 @@ function txBuildQuestion(voice){
   // Note: F-P2-5 (early-dish bias from break-on-first-match below) is not fully
   // resolved by an unbiased shuffle; that requires reservoir-sampling and is
   // tracked separately in PR-B.
-  const dishes = _lqaShuffle(_shiftDishes(DISHES).length ? _shiftDishes(DISHES) : DISHES);
+  const dishes = _lqaShuffle(_shiftDishes(DISHES).length ? _shiftDishes(DISHES) : DISHES).filter(d=>!_txDishBanned(d));
   const topics  = _lqaShuffle(topicKeys);
 
   let chosenDish=null, chosenTopicKey=null, correctAnswer=null;
@@ -22585,7 +22593,7 @@ function txBuildQuestion(voice){
     // o el MISMO nombre visible → evita doble-correcta.
     const _seenNames = new Set([_twNorm(dd0.name)]);
     // Distractores por turno (a/c) con fallback seguro al pool completo (≥3).
-    const _wpBase=DISHES.filter(x=>x.id!==chosenDish.id);
+    const _wpBase=DISHES.filter(x=>x.id!==chosenDish.id&&!_txDishBanned(x));
     const _wpShift=_shiftDishes(_wpBase);
     const namePool=_lqaShuffle(_wpShift.length>=3?_wpShift:_wpBase).filter(o=>{
       const a=txGetAnswer(o, chosenTopicKey);
@@ -22619,7 +22627,7 @@ function txBuildQuestion(voice){
   const wrongNorms=new Set([correctAnswer]);
   const seenDisplay=new Set([txNorm(correctDisplay)]);
   // Distractores por turno (a/c); fallback al pool completo si <3.
-  const _wpBase=DISHES.filter(x=>x.id!==chosenDish.id);
+  const _wpBase=DISHES.filter(x=>x.id!==chosenDish.id&&!_txDishBanned(x));
   const _wpShift=_shiftDishes(_wpBase);
   const wrongPool=_lqaShuffle(_wpShift.length>=3?_wpShift:_wpBase);
 

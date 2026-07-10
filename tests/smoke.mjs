@@ -989,7 +989,7 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     + 'var TX_VOICE_MSGS={}; var TX_VOICE_MSGS_REV={};';
   const M = new Function(stub + dishesSrc + svcSrc + helpers + wmRev + examStop // eslint-disable-line no-new-func
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txDishBanned') + fn('txBuildQuestion')
     + 'return {DISHES, DISH_SERVICE, txBuildQuestion, txGetAnswer, txTruncate, txNorm, setShift:(s)=>{_studyShift=s;}};')();
   const svc = M.DISH_SERVICE;
   // Mapea una opción a los platos que la producen. Las opciones invertidas son
@@ -1059,7 +1059,7 @@ test('Mr. Shoesmith habla en 1ª persona y las carnes de autor van por storytell
     + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
     + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txDishBanned') + fn('txBuildQuestion')
     + 'return {DISHES, SHOESMITH_MSGS, SHOESMITH_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
     + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
   // Todo enunciado del pool de Shoesmith, en ambos idiomas, debe estar en SU voz:
@@ -1167,7 +1167,7 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
     + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
     + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txDishBanned') + fn('txBuildQuestion')
     + 'return {DISHES, CRITIC_MSGS, CRITIC_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
     + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
   const NOT_HER_VOICE = /\b(mesa|table)\s*\d+|hu[eé]sped|guest|compa[ñn]ero|colleague|cocina|kitchen|mi mujer|my wife|Mr\.?\s*Shoesmith|VIP/i;
@@ -1190,6 +1190,9 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
         const q = M.txBuildQuestion('critic'); if (!q) continue; n++;
         const stem = String(q.msg).split('<div')[0].replace(/<[^>]+>/g, ' ');
         assert(!NOT_HER_VOICE.test(stem), `stem out of Critic voice (${lang}/${shift}): «${stem}»`);
+        // Veto Ben & Jerry's (propietario, jul 2026): ni sujeto ni opción.
+        assert(!/jerry/i.test(q.dishName), `Ben & Jerry's reached a question as subject (${lang}/${shift})`);
+        for (const o of (q.choices || [])) assert(!/jerry/i.test(o), `Ben & Jerry's leaked as an option (${lang}/${shift}): «${o}»`);
         if (q.topicKey === 'ingredients') {
           const dish = M.dishByName(q.dishName);
           assert(dish && !M._txIngredientsVacuous(dish),
@@ -1198,6 +1201,30 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
       }
       assert(n > 800, `Critic voice produced too few questions (${n}) in ${lang}/${shift} — over-filtered?`);
     }
+  }
+});
+
+test('La Crítica sarcástica + veto Ben & Jerry\'s + un segundo más por nivel (jul 2026)', () => {
+  // Tres ajustes del propietario tras probar el juego:
+  // (1) Tono sarcástico: anclamos dos frases características para que una
+  //     reescritura futura no la devuelva al tono neutro sin querer.
+  assert(html.includes('Sorpréndame: ¿de verdad sabe qué alérgenos lleva?'),
+    'critic voice must keep its sarcastic edge (allergens stem)');
+  assert(html.includes('permítame dudarlo'), 'critic voice must keep its sarcastic edge (history stem)');
+  assert(html.includes('yo solo anoto todo lo que haga mal'), 'critic intro quote must stay sarcastic');
+  // (2) Ben & Jerry's fuera del generador del juego: filtro estructural en el
+  //     pool de sujetos, en AMBOS pools de distractores y en el recuento de
+  //     respuestas únicas (el barrido empírico vive en el test de La Crítica).
+  assert(/function _txDishBanned\(d\)\{ return \/jerry\/i\.test\(d\.name\)/.test(html), '_txDishBanned helper missing');
+  assert(/const dishes = _lqaShuffle\([^)]*\)\.filter\(d=>!_txDishBanned\(d\)\)/.test(html.replace(/_shiftDishes\(DISHES\)\.length \? _shiftDishes\(DISHES\) : DISHES/g, 'P')),
+    'subject pool must exclude banned dishes');
+  assert((html.match(/x\.id!==chosenDish\.id&&!_txDishBanned\(x\)/g) || []).length === 2,
+    'BOTH distractor pools must exclude banned dishes');
+  assert(/if\(_txDishBanned\(d\)\) return;/.test(html), 'unique-answer viability count must skip banned dishes');
+  // (3) +1s por nivel: leer la pregunta ya consume tiempo. Valores exactos.
+  const lv = html.slice(html.indexOf('const TXOKO_LEVELS=['), html.indexOf('];', html.indexOf('const TXOKO_LEVELS=[')));
+  for (const t of ['time:14', 'time:11', 'time:8', 'time:6']) {
+    assert(lv.includes(t), `TXOKO_LEVELS must carry the +1s budgets (missing ${t})`);
   }
 });
 
