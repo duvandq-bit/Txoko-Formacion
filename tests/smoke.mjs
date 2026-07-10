@@ -2959,7 +2959,7 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   assert(spriteKeys.length === roster.length, 'ET_FOE_SPRITES must not carry unused sprites');
   // Cableado: loader por clave, dibujo del sprite con squash heredado y respaldo íntegro.
   assert(/FOES\[a\.key\]=img/.test(body), 'per-key foe image loader missing');
-  assert(/const _sp=FOES\[e\.a\.key\]/.test(body) && /ctx\.drawImage\(_sp,-_sw\/2,-_sh\/2,_sw,_sh\)/.test(body),
+  assert(/_sp=\(_bsp&&_bsp\._ok\)\?_bsp:FOES\[e\.a\.key\]/.test(body) && /ctx\.drawImage\(_sp,-_sw\/2,-_sh\/2,_sw,_sh\)/.test(body),
     'enemy draw must render the sprite scaled to the body radius');
   assert(/\} else \{[\s\S]{0,80}ctx\.beginPath\(\); ctx\.fillStyle=e\.a\.col/.test(body),
     'the code-drawn circle body must remain as the not-yet-loaded fallback');
@@ -2972,6 +2972,27 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   for (const token of ['e.elite', 'corona del jefe', 'e.flash>0']) {
     assert(body.includes(token), `inherited visual language missing: ${token}`);
   }
+});
+
+test('Camarero Survivors: JEFES alérgeno con arte propio y más grandes (jul 2026)', () => {
+  // Cuarta mejora gráfica: cada jefe es la versión monstruosa (estilo jefes de
+  // Cuphead) de su alérgeno — no un utensilio genérico (descartado por el
+  // propietario) — y sale más grande (r 46→54, "un poco más grandes").
+  assert(/const ET_BOSS_SPRITES=\{/.test(html), 'ET_BOSS_SPRITES map missing');
+  const mapSrc = html.slice(html.indexOf('const ET_BOSS_SPRITES={'), html.indexOf('};', html.indexOf('const ET_BOSS_SPRITES={')));
+  const bossKeys = [...mapSrc.matchAll(/^\s{2}([a-z]+):'data:image\/webp;base64,/gm)].map(m => m[1]);
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 90000);
+  const roster = [...body.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
+  assert(roster.length === 8 && bossKeys.length === 8, 'boss sprite map must cover the 8-allergen roster exactly');
+  for (const k of roster) assert(bossKeys.includes(k), `boss sprite missing for allergen '${k}'`);
+  // Cableado: loader propio + el dibujo del jefe PREFIERE su sprite de jefe.
+  assert(/BOSSES\[a\.key\]=img/.test(body), 'per-key boss image loader missing');
+  assert(/const _bsp=e\.boss\?BOSSES\[e\.a\.key\]:null;/.test(body) && /const _sp=\(_bsp&&_bsp\._ok\)\?_bsp:FOES\[e\.a\.key\]/.test(body),
+    'boss draw must prefer the boss sprite, falling back to the regular foe sprite');
+  // Tamaño: el jefe nace con r=54.
+  assert(/kind:'boss',flash:0,boss:true/.test(body) && /r:54,spd:0\.5,kind:'boss'/.test(body),
+    'boss must spawn at r=54 (owner: "un poco más grandes")');
 });
 
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
