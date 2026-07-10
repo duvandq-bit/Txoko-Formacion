@@ -3096,6 +3096,24 @@ test('Camarero Survivors: ranking rubber-hose de mejores turnos (jul 2026)', () 
     'medal coins must come in gold/silver/bronze');
 });
 
+test('Camarero Survivors: la botella de cava SE VE (diana, volteo, burbujas, onda larga) (jul 2026)', () => {
+  // Reporte del propietario: "la botella de cava no hace nada". Verificado
+  // empíricamente que SÍ dispara y daña (26 dibujos por vuelo, instrumentando
+  // fillText) — el fallo era de percepción: emoji de 20px volando 0,4s y onda
+  // de 0,28s, invisibles sobre la lámina. Arreglo de presencia visual:
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 130000);
+  assert(/ctx\.arc\(b\.tx,b\.ty,26-10\*k,0,6\.29\)/.test(body), 'each bomb must show its dashed landing target');
+  assert(/ctx\.rotate\(k\*7\)/.test(body) && /ctx\.font='26px Georgia'; ctx\.fillText\('🍾'/.test(body),
+    'the bottle must tumble mid-air at 26px');
+  assert(/vy:-0\.5-Math\.random\(\),life:0\.6,col:'#ffe9b0'/.test(body), 'the bottle must trail golden bubbles');
+  assert(/x\.life-=dt\*0\.03/.test(body), 'the blast ring must last ~0.55s (was 0.28s, gone before the eye caught it)');
+  assert(/ctx\.arc\(x\.x,x\.y,x\.r\*0\.7,0,6\.29\)/.test(body), 'the blast must carry the inner white ring');
+  // La mecánica en sí no se toca: cadencia, daño en área y evolución intactos.
+  assert(/G\.cavaT=Math\.max\(70,150-G\.cava\*12\)/.test(body) && /const R=55\+G\.cava\*9, D=22\+G\.cava\*10/.test(body),
+    'cava cadence and AoE damage formulas must stay untouched');
+});
+
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
   // Cinco mejoras de la auditoría de daño (petición del propietario: "cómo lo
   // podemos mejorar" → "aplica todo"). Guardan que cada mecánica sigue cableada.

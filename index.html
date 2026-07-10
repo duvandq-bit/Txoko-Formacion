@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.189';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.190';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23936,7 +23936,9 @@ function launchElTurno(){
       if(k>=1){ const R=55+G.cava*9, D=22+G.cava*10;
         for(const e of G.enemies){ if(Math.hypot(e.x-b.cx,e.y-b.cy)<R+e.r) hurtEnemy(e,D); }
         G.explosions.push({x:b.cx,y:b.cy,r:10,max:R,life:1}); burst(b.cx,b.cy,'#e8c44c',18); G.shake=Math.max(G.shake,7); sfx('hit'); G.bombs.splice(i,1); } }
-    for(let i=G.explosions.length-1;i>=0;i--){ const x=G.explosions[i]; x.r+=(x.max-x.r)*0.28*dt; x.life-=dt*0.06; if(x.life<=0) G.explosions.splice(i,1); }
+    // la onda dura ~0,55s (antes 0,28s: se desvanecía antes de que el ojo la
+    // registrara — parte del "no hace nada" del propietario)
+    for(let i=G.explosions.length-1;i>=0;i--){ const x=G.explosions[i]; x.r+=(x.max-x.r)*0.28*dt; x.life-=dt*0.03; if(x.life<=0) G.explosions.splice(i,1); }
     // WEAPON — cuchillos giratorios (evolución: órbita más ancha y doble filo)
     if(G.knives>0){ G.knifeAng+=dt*0.09;
       const kR=G.evoKnives?66:48, kD=(5+G.knives*2)*(G.evoKnives?2:1);
@@ -24161,9 +24163,27 @@ function launchElTurno(){
       if(e.hp<e.maxhp&&!e.boss){ ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw,3); ctx.fillStyle=e.elite?'#e0a02c':'#e8735a'; ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw*Math.max(0,e.hp/e.maxhp),3); }
     }
     // explosions (cava)
-    for(const x of G.explosions){ ctx.globalAlpha=Math.max(0,x.life)*0.5; ctx.strokeStyle='#e8c44c'; ctx.lineWidth=4; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.stroke(); ctx.globalAlpha=Math.max(0,x.life)*0.18; ctx.fillStyle='#e8a02c'; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
-    // flying cava bottles
-    ctx.font='20px Georgia'; for(const b of G.bombs){ ctx.fillText('🍾',b.cx,b.cy); }
+    for(const x of G.explosions){ ctx.globalAlpha=Math.max(0,x.life)*0.65; ctx.strokeStyle='#e8c44c'; ctx.lineWidth=5; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.stroke();
+      ctx.globalAlpha=Math.max(0,x.life)*0.35; ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(x.x,x.y,x.r*0.7,0,6.29); ctx.stroke();
+      ctx.globalAlpha=Math.max(0,x.life)*0.2; ctx.fillStyle='#e8a02c'; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
+    // botellas de cava en vuelo (jul 2026: "no hace nada" — sí hacía, pero era
+    // invisible: emoji de 20px durante 0,4s. Ahora: diana punteada en el punto
+    // de caída, botella grande que VOLTEA en el aire y estela de burbujas).
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    for(const b of G.bombs){
+      const k=Math.min(1,b.t/b.dur);
+      // diana de caída: anillo punteado que se encoge según se acerca
+      ctx.globalAlpha=.5+.3*Math.sin(G.time*10);
+      ctx.strokeStyle='#e8c44c'; ctx.lineWidth=2.5; ctx.setLineDash([5,4]);
+      ctx.beginPath(); ctx.arc(b.tx,b.ty,26-10*k,0,6.29); ctx.stroke(); ctx.setLineDash([]);
+      ctx.globalAlpha=1;
+      // burbujas doradas tras la botella
+      if(Math.random()<0.5){ G.parts.push({x:b.cx,y:b.cy,vx:(Math.random()-.5)*0.8,vy:-0.5-Math.random(),life:0.6,col:'#ffe9b0'}); }
+      // la botella voltea en el aire
+      ctx.save(); ctx.translate(b.cx,b.cy); ctx.rotate(k*7);
+      ctx.font='26px Georgia'; ctx.fillText('🍾',0,0); ctx.restore();
+    }
+    ctx.textBaseline='alphabetic';
     // bandejas — plata de camarero girando en vuelo (jul 2026): estela de dos
     // fantasmas tras la trayectoria, plato plateado con aro interior y REFLEJO
     // que rota con el giro. Las perforantes (evolución) siguen siendo doradas.
