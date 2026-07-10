@@ -985,7 +985,8 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     + 'function escapeHTML(s){return String(s);}'
     + 'function _isDishQuizableForTopic(d,tk){ if(d.cat===\'Guarniciones y Salsas\') return tk===\'history\'; return true; }'
     + 'var DISHES_EN=[]; var TOPICS=[{key:"allergens",label:"al"},{key:"ingredients",label:"in"},{key:"history",label:"hi"}];'
-    + 'var WAITER_MSGS={allergens:[n=>n],ingredients:[n=>n],history:[n=>n]};';
+    + 'var WAITER_MSGS={allergens:[n=>n],ingredients:[n=>n],history:[n=>n]};'
+    + 'var TX_VOICE_MSGS={}; var TX_VOICE_MSGS_REV={};';
   const M = new Function(stub + dishesSrc + svcSrc + helpers + wmRev + examStop // eslint-disable-line no-new-func
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
     + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion')
@@ -1029,8 +1030,11 @@ test('Mr. Shoesmith habla en 1ª persona y las carnes de autor van por storytell
   // ingredientes filtraba la respuesta por el eco del peso («(300 g)» ↔ «300g»
   // del nombre) en el 100% de los casos — incluso con doble-correcta plausible
   // (Entrecot de Angus 300g vs Entrecot de Wagyu 300g). DESPUÉS: 0 en todo.
-  // (1) El juego pide la voz de Shoesmith; Duelos/Retos conservan la neutra.
-  assert(/q=txBuildQuestion\('shoesmith'\)/.test(html), 'txNext must build questions in the Shoesmith voice');
+  // (1) El juego pide la voz de la persona activa (Shoesmith por defecto si no
+  //     hay ninguna sembrada); Duelos/Retos conservan la neutra sin voz.
+  const txNextSrc = html.slice(html.indexOf('function txNext('), html.indexOf('function txAnimTick('));
+  assert(/const _voice=\(txokoState\.persona\)\|\|'shoesmith'/.test(txNextSrc) && /q=txBuildQuestion\(_voice\)/.test(txNextSrc),
+    'txNext must build questions in the active persona\'s voice (defaulting to Shoesmith)');
   // (2) Gate estructural: platos con ingredientes vacuos no preguntan ingredientes.
   assert(/topicKey === 'ingredients' && _txIngredientsVacuous\(d\)/.test(html),
     'vacuous-ingredients gate missing from _isDishQuizableForTopic');
@@ -1051,6 +1055,7 @@ test('Mr. Shoesmith habla en 1ª persona y las carnes de autor van por storytell
     + html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'))
     + cut('const WAITER_MSGS={', '  ]};') + cut('const WAITER_MSGS_REV={', '  ]};')
     + cut('const SHOESMITH_MSGS={', '  ]};') + cut('const SHOESMITH_MSGS_REV={', '  ]};')
+    + 'var TX_VOICE_MSGS={shoesmith:SHOESMITH_MSGS}; var TX_VOICE_MSGS_REV={shoesmith:SHOESMITH_MSGS_REV};'
     + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
     + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
@@ -1096,6 +1101,102 @@ test('Mr. Shoesmith habla en 1ª persona y las carnes de autor van por storytell
         }
       }
       assert(n > 800, `Shoesmith voice produced too few questions (${n}) in ${lang}/${shift} — over-filtered?`);
+    }
+  }
+});
+
+test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin mesas ajenas (jul 2026)', () => {
+  // «vamos con eso» (propietario): un segundo cliente para Mr. Shoesmith, con
+  // su propio set de fotogramas (vídeo Grok) y su propia voz — elegido con un
+  // selector previo (no al azar, no en Camarero Survivors). Misma regla de
+  // ficción que Shoesmith: ella es la única clienta en su mesa.
+  // (1) El motor de humor/animación lee de un registro por persona, no de
+  //     constantes de Shoesmith a secas — así un tercer personaje no exige
+  //     tocar txClientFace/txApplyMood/txAnimTick/txAnswer/txNext.
+  assert(/const TX_PERSONAS=\{/.test(html), 'TX_PERSONAS registry missing');
+  const reg = html.slice(html.indexOf('const TX_PERSONAS={'), html.indexOf('const TX_VOICE_MSGS='));
+  assert(/critic:\{[\s\S]*?talkTier:4/.test(reg), 'critic persona must define its own talkTier (her talk frame lives at a different tier than Shoesmith\'s)');
+  assert(/shoesmith:\{[\s\S]*?blinkTier:5/.test(reg), 'shoesmith persona must keep its blinkTier (regression: engine must stay backward-compatible)');
+  assert(!/critic:\{[^}]*blinkTier/.test(reg), 'critic persona must NOT claim a blinkTier — her source video has no natural blink, and the engine must skip it rather than fake one');
+  // (2) Selector previo: el juego pide ahora el picker, no salta directo a
+  //     ninguna ficha de personaje — y cada tarjeta abre su propia ficha.
+  assert(/onclick="txStart\(\)"/.test(html), 'the Games-hub card must still call bare txStart() — it now opens the persona picker');
+  assert(/function txShowPersonaPicker\(/.test(html), 'txShowPersonaPicker missing');
+  const picker = html.slice(html.indexOf('function txShowPersonaPicker('), html.indexOf('function txShowPersonaPicker(') + 2000);
+  assert(/onclick="txShowIntro\('\$\{p\.id\}'\)"/.test(picker), 'each persona card must open its own ficha via txShowIntro(id)');
+  const introFn = html.slice(html.indexOf('function txShowIntro('), html.indexOf('function txShowPersonaPicker('));
+  assert(/function txShowIntro\(personaId\)/.test(introFn), 'txShowIntro must take a personaId parameter');
+  assert(/onclick="txStart\(true,'\$\{p\.id\}'\)"/.test(introFn), 'the ficha CTA must seed txStart with the chosen persona');
+  assert(/onclick="txShowPersonaPicker\(\)"/.test(introFn), 'the ficha back button must return to the picker, not straight to the games hub');
+  // (2b) La pantalla de juego (txRender) también debe leer el nombre/mesa de la
+  //     persona activa — un tag "MR. SHOESMITH" fijo mientras se juega como La
+  //     Crítica fue un bug real detectado en la verificación con Playwright.
+  const renderFn = html.slice(html.indexOf('function txRender('), html.indexOf('function txGameOver('));
+  assert(!/MR\.\s*SHOESMITH/.test(renderFn) && !/MESA 501/.test(renderFn) && !/TABLE 501/.test(renderFn),
+    'txRender must not hardcode Shoesmith\'s name/table — it must read the active persona');
+  assert(/_pName/.test(renderFn) && /_pMesa/.test(renderFn), 'txRender must derive the face tag and table label from the active persona');
+  // (2c) "Try again" tras Game Over debe conservar la persona con la que se
+  //     jugó — sin esto, reintentar como La Crítica te devolvía a Shoesmith
+  //     en silencio.
+  const overFn = html.slice(html.indexOf('function txGameOver('), html.indexOf('function txGameOver(') + 2200);
+  assert(/txStart\(true,'\$\{txokoState\.persona\|\|'shoesmith'\}'\)/.test(overFn),
+    'Try again must replay with the SAME persona, not silently reset to Shoesmith');
+  // (3) Voz propia: 5 caras + 5 fotogramas de ánimo (sin parpadeo) embebidos.
+  assert(/const CRITIC_FACES=\[/.test(html), 'CRITIC_FACES missing');
+  const facesSrc = html.slice(html.indexOf('const CRITIC_FACES=['), html.indexOf('const CRITIC_INTRO='));
+  assert((facesSrc.match(/data:image\/jpeg;base64,/g) || []).length === 5, 'CRITIC_FACES must have exactly 5 mood faces');
+  assert(/const CRITIC_INTRO='data:image\/jpeg;base64,/.test(html), 'CRITIC_INTRO missing');
+  // (4) Barrido del generador real con la voz de la crítica: mismo estándar que
+  //     Shoesmith — sin mesas/terceros, sin ingredientes en platos vacuos, sin
+  //     eco de peso. Prueba que la voz NO es un simple alias de Shoesmith: sus
+  //     frases son distintas y no dependen de "mi mujer".
+  const cut = (a, b) => { const i = html.indexOf(a); assert(i !== -1, 'missing ' + a); return html.slice(i, html.indexOf(b, i) + b.length); };
+  const fn = (name) => { const sig = 'function ' + name + '('; const i = html.indexOf(sig); assert(i !== -1, 'missing fn ' + name); let depth = 0, k = html.indexOf('{', i);
+    while (true) { const ch = html[k]; if (ch === '{') depth++; else if (ch === '}') { depth--; if (depth === 0) return html.slice(i, k + 1); } k++; } };
+  const stub = 'function _renderShiftBar(){} var localStorage={getItem:()=>null,setItem:()=>{}};'
+    + 'var LANG="es"; function allergenLocal(a){return a;} function t(k){return k==="noHistory"?"✦ Storytelling próximamente":k;}'
+    + 'function escapeHTML(s){return String(s);}'
+    + 'function getDish(d){ if(LANG!=="en") return d; const en=DISHES_EN.find(x=>x.id===d.id); return en?Object.assign({},d,en):d; }'
+    + 'var TOPICS=[{key:"allergens",label:"al"},{key:"ingredients",label:"in"},{key:"history",label:"hi"}];';
+  const M = new Function(stub // eslint-disable-line no-new-func
+    + cut('const DISHES = [', '\n];') + cut('const DISHES_EN = [', '\n];') + cut('const DISH_SERVICE = {', '};') + ';'
+    + html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'))
+    + cut('const WAITER_MSGS={', '  ]};') + cut('const WAITER_MSGS_REV={', '  ]};')
+    + cut('const CRITIC_MSGS={', '  ]};') + cut('const CRITIC_MSGS_REV={', '  ]};')
+    + 'var TX_VOICE_MSGS={critic:CRITIC_MSGS}; var TX_VOICE_MSGS_REV={critic:CRITIC_MSGS_REV};'
+    + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
+    + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
+    + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('txBuildQuestion')
+    + 'return {DISHES, CRITIC_MSGS, CRITIC_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
+    + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
+  const NOT_HER_VOICE = /\b(mesa|table)\s*\d+|hu[eé]sped|guest|compa[ñn]ero|colleague|cocina|kitchen|mi mujer|my wife|Mr\.?\s*Shoesmith|VIP/i;
+  for (const lang of ['es', 'en']) {
+    M.setLang(lang);
+    const stems = [
+      ...M.CRITIC_MSGS.allergens.map(f => f('PLATO')),
+      ...M.CRITIC_MSGS_REV.ingredients.map(f => f()),
+      ...M.CRITIC_MSGS_REV.history.map(f => f()),
+    ];
+    assert(stems.length >= 12, `Critic stem pool too small (${stems.length}) — keep variety`);
+    for (const s of stems) assert(!NOT_HER_VOICE.test(s), `Critic stem out of voice (${lang}): «${s}»`);
+  }
+  for (const lang of ['es', 'en']) {
+    M.setLang(lang);
+    for (const shift of ['a', 'c']) {
+      M.setShift(shift);
+      let n = 0;
+      for (let i = 0; i < 1200; i++) {
+        const q = M.txBuildQuestion('critic'); if (!q) continue; n++;
+        const stem = String(q.msg).split('<div')[0].replace(/<[^>]+>/g, ' ');
+        assert(!NOT_HER_VOICE.test(stem), `stem out of Critic voice (${lang}/${shift}): «${stem}»`);
+        if (q.topicKey === 'ingredients') {
+          const dish = M.dishByName(q.dishName);
+          assert(dish && !M._txIngredientsVacuous(dish),
+            `vacuous-ingredients dish reached an ingredients question: ${q.dishName}`);
+        }
+      }
+      assert(n > 800, `Critic voice produced too few questions (${n}) in ${lang}/${shift} — over-filtered?`);
     }
   }
 });
@@ -2678,15 +2779,21 @@ test('Mr. Shoesmith: reactive face sprites wired, intro framed (no hex crop)', (
   assert((html.match(/data:image\/jpeg;base64,/g) || []).length >= 6,
     'expected the 5 mood faces + intro embedded as data-URIs');
   // txClientFace must return the sprite image (not the old inline SVG faces).
+  // Generalizado por persona (jul 2026, segundo personaje La Crítica): lee
+  // p.faces[mood] desde el registro TX_PERSONAS en vez del array a secas —
+  // el guard fija que la persona Shoesmith siga apuntando al array real.
   const i = html.indexOf('function txClientFace(lives, pct)');
   assert(i !== -1, 'txClientFace not found');
   const body = html.slice(i, html.indexOf('\n}', i) + 2);
-  assert(/SHOESMITH_FACES\[mood\]/.test(body) && /tx-shoe-face/.test(body),
-    'txClientFace must return an <img class="tx-shoe-face"> from SHOESMITH_FACES');
+  assert(/p\.faces\[mood\]/.test(body) && /tx-shoe-face/.test(body) && /const p=txPersona\(\)/.test(body),
+    'txClientFace must return an <img class="tx-shoe-face"> from the active persona\'s faces');
   assert(!/return \[f0,f1,f2,f3,f4\]/.test(body), 'old inline-SVG faces must be gone');
+  assert(/shoesmith:\{[\s\S]*?faces:SHOESMITH_FACES/.test(html), 'the shoesmith persona must still wire SHOESMITH_FACES');
+  assert(/critic:\{[\s\S]*?faces:CRITIC_FACES/.test(html), 'the critic persona must wire CRITIC_FACES');
   // Intro portrait uses the framed photo, not the hexagon clip-path crop.
   const intro = html.slice(html.indexOf('function txShowIntro'), html.indexOf('function txShowIntro') + 3000);
-  assert(/SHOESMITH_INTRO/.test(intro), 'intro must render SHOESMITH_INTRO');
+  assert(/p\.intro/.test(intro), 'intro must render the active persona\'s intro portrait');
+  assert(/shoesmith:\{[\s\S]*?intro:SHOESMITH_INTRO/.test(html), 'the shoesmith persona must still wire SHOESMITH_INTRO');
   assert(!/clip-path:polygon\(50% 0%,100% 25%/.test(intro), 'intro portrait must not use the hexagon crop');
   const css = read('styles.css').replace(/\s+/g,' ');
   assert(/\.tx-shoe-face\{[^}]*object-fit:cover/.test(css), '.tx-shoe-face needs object-fit:cover framing');
@@ -2882,20 +2989,31 @@ test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñid
   }
   const i = html.indexOf('function txAnimTick(');
   assert(i !== -1, 'txAnimTick scheduler missing');
-  const body = html.slice(i, i + 2200);
+  const body = html.slice(i, html.indexOf('\nfunction txRender(', i));
   assert(/img\.setAttribute\('src',src\)/.test(html.slice(html.indexOf('function _txSetFrame'), html.indexOf('function _txSetFrame') + 300)),
     'frame swaps must touch img.src only (innerHTML would reset the CSS animations)');
-  assert(/st\.lives<=1/.test(body) && /SHOESMITH_ANIM\.scream/.test(body), 'at 1 life he must scream alternating A/B');
-  assert(/st\.lives===2/.test(body) && /SHOESMITH_ANIM\.growl/.test(body), 'at 2 lives he must chew his rage in a loop');
-  assert(/SHOESMITH_ANIM\.bored/.test(body) && /SHOESMITH_ANIM\.irked/.test(body),
+  // Generalizado por persona (jul 2026): lee p.anim.xxx desde la persona activa,
+  // con guarda de existencia (La Crítica no trae parpadeo). El guard fija que
+  // CADA fotograma sigue existiendo por su clave y que Shoesmith los tiene todos.
+  assert(/st\.lives<=1 && p\.anim\.scream/.test(body), 'at 1 life he must scream alternating A/B');
+  assert(/st\.lives===2 && p\.anim\.growl/.test(body), 'at 2 lives he must chew his rage in a loop');
+  assert(/p\.anim\.bored/.test(body) && /p\.anim\.irked/.test(body),
     'at 4/3 lives he must run the slow idle micro-loop (same-camera video frames)');
-  assert(/_nextBlink/.test(body), 'at calm he must blink occasionally');
+  assert(/p\.blinkTier && st\.lives===p\.blinkTier && p\.anim\.blink/.test(body), 'at calm he must blink occasionally (only if his persona has a blink frame)');
   assert(/txAnimTick\(\);/.test(html.slice(html.indexOf('function txTick('), html.indexOf('function txAnswer('))),
     'txTick must drive the frame scheduler');
-  assert(/SHOESMITH_ANIM\.wink/.test(html.slice(html.indexOf('function txAnswer('), html.indexOf('function txAnswer(') + 4200)),
-    'a correct answer must show the wink frame');
+  assert(/\w+\.anim\.wink/.test(html.slice(html.indexOf('function txAnswer('), html.indexOf('function txAnswer(') + 4200)),
+    'a correct answer must show the active persona\'s wink frame when available');
   assert(/txAnimOnce\(\['talk'/.test(html.slice(html.indexOf('function txNext('), html.indexOf('function txTick('))),
     'a new question must trigger the talking sequence');
+  // Ambas personas siguen aportando su set completo por la clave (registro).
+  for (const anim of ['SHOESMITH_ANIM', 'CRITIC_ANIM']) {
+    const re = new RegExp('const ' + anim + '=\\{');
+    assert(re.test(html), `${anim} frame set missing`);
+  }
+  for (const k of ['talk:', 'bored:', 'irked:', 'growl:', 'scream:']) {
+    assert(html.includes(k + "'data:image/jpeg;base64,"), `CRITIC_ANIM must embed the ${k.slice(0,-1)} frame as a data-URI`);
+  }
 });
 
 test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y CSS', () => {
