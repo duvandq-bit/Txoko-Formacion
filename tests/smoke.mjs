@@ -2975,6 +2975,10 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   assert(/FOES\[a\.key\]=img/.test(body), 'per-key foe image loader missing');
   assert(/\(_bsp&&_bsp\._ok\)\?_bsp:FOES\[e\.a\.key\]/.test(body) && /ctx\.drawImage\(_sp,-_sw\/2,-_sh\/2,_sw,_sh\)/.test(body),
     'enemy draw must render the sprite scaled to the body radius');
+  // +10% visual solo en enemigos normales (jul 2026, "un poco pequeños"):
+  // el radio de colisión no cambia y jefes/CHEF conservan su escala.
+  assert(/const _sh=e\.r\*\(e\.boss\?2\.55:2\.8\)/.test(body),
+    'normal foes must draw 10% larger while bosses keep their approved scale');
   assert(/\} else \{[\s\S]{0,80}ctx\.beginPath\(\); ctx\.fillStyle=e\.a\.col/.test(body),
     'the code-drawn circle body must remain as the not-yet-loaded fallback');
   assert(/if\(!\(_sp&&_sp\._ok\)\)\{ ctx\.font=/.test(body),
