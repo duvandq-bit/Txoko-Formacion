@@ -2194,7 +2194,7 @@ test('sub-tab navigation is VISIBLE chips (owner: the dropdown hid the subsectio
 test('Aprender lands on Emplatado and lists it first (owner request, jul 2026)', () => {
   // La guía visual es lo más consultado en servicio: primera opción y
   // subtab por defecto.
-  const bar = html.match(/_subTabBar\(\[\s*([\s\S]*?)\]\s*,\s*sub\s*,\s*'aprender'\)/);
+  const bar = html.match(/_subTabBar\(\[\s*([\s\S]*?)\]\s*,\s*_subTab\.aprender \|\| 'emplatado'\s*,\s*'aprender'\)/);
   assert(bar, 'aprender _subTabBar call not found');
   const empIdx = bar[1].indexOf("'emplatado'");
   const smartIdx = bar[1].indexOf("'smart'");
@@ -2846,7 +2846,10 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   // conmuta con showTab('<subkey>'), así que renderMap y parentMap deben
   // conocer todas las claves (bug real en producción: "renderMap[tab] is not
   // a function" al tocar Emplatado).
-  const hubSrc = html.slice(html.indexOf('function renderAprender('), html.indexOf('function renderAprender(') + 1200);
+  // La barra vive en _aprChipsBar (extraída de renderAprender para poder
+  // re-inyectarla tras los re-renders internos — «se desaparecieron las
+  // subcategorías»).
+  const hubSrc = html.slice(html.indexOf('function _aprChipsBar('), html.indexOf('function _aprEnsureChips('));
   const subkeys = [...hubSrc.matchAll(/\['([a-z]+)',/g)].map(m => m[1]);
   assert(subkeys.length >= 5, `expected ≥5 Aprender subtabs, found ${subkeys.length}`);
   const renderMapSrc = html.slice(html.indexOf('const renderMap = {'), html.indexOf('const renderMap = {') + 600);
@@ -2991,6 +2994,32 @@ test('Ficha ampliada: la información vital no se pierde ni se tergiversa (jul 2
   const css = read('styles.css');
   assert(css.includes('.empl-ov-adapt.unk') && css.includes('.empl-ov-nophoto{'),
     'styles.css must style the unknown verdict + the photo-less hero');
+});
+
+test('Aprender: la barra de subcategorías sobrevive a la navegación interna (jul 2026)', () => {
+  // «Se desaparecieron las subcategorías» (propietario, captura): los renderers
+  // internos de Explorar/Flashcards/Repaso Inteligente reescriben appContent
+  // ENTERO al navegar dentro de su subpestaña y borraban la barra de chips.
+  // Dos capas: _aprEnsureChips (re-inyección idempotente) + navegación interna
+  // enrutada por el host (renderAprender).
+  assert(/function _aprChipsBar\(/.test(html) && /function _aprEnsureChips\(/.test(html),
+    'chips bar builder + idempotent re-injector must exist');
+  const ens = html.slice(html.indexOf('function _aprEnsureChips('), html.indexOf('function _aprEnsureChips(') + 600);
+  assert(/querySelector\('\.subtab-chips'\)/.test(ens), '_aprEnsureChips must be idempotent (skip if bar present)');
+  // renderRepaso re-asegura la barra tras CUALQUIER re-render interno de Explorar
+  const rr = html.slice(html.indexOf('function renderRepaso('), html.indexOf('function renderRepaso(') + 700);
+  assert(/_aprEnsureChips\(\)/.test(rr), 'renderRepaso must re-ensure the chips bar');
+  // openRepasoCat entra por renderRepaso (no salta directo a renderRepasoTopic)
+  assert(/function openRepasoCat\(cat\)\{repasoCat=cat;repasoView='topic';renderRepaso\(\);\}/.test(html),
+    'openRepasoCat must route through renderRepaso');
+  // Flashcards y Repaso Inteligente re-renderizan por el host
+  assert(/function changeFcCat\(cat\)\{initFlashcards\(fcTopic,cat\);renderAprender\(\);\}/.test(html)
+      && /function changeFcTopic\(t\)\{fcTopic=t;initFlashcards\(t\);renderAprender\(\);\}/.test(html),
+    'flashcard cat/topic switches must re-render via renderAprender');
+  assert(!/onclick="initFlashcards\(fcTopic,'all'\);renderFlashcards\(\)"/.test(html),
+    'the new-deck button must not call renderFlashcards() directly');
+  assert(!/onclick="renderSmartReview\(\)"/.test(html),
+    'the reshuffle button must not call renderSmartReview() directly');
 });
 
 test('Dashboard: tarjeta de acceso directo a la Guía de Emplatado (1 toque desde el inicio)', () => {

@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.176';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.177';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -5535,7 +5535,7 @@ function renderSmartReview(){
             </span>
             <span class="ri-cta-status">${_en?'READY':'READY'}</span>
           </button>
-          <button onclick="renderSmartReview()" class="ri-secondary">↻ ${_en?'Reshuffle selection':'Regenerar selección'}</button>
+          <button onclick="renderAprender()" class="ri-secondary">↻ ${_en?'Reshuffle selection':'Regenerar selección'}</button>
         </div>
 
         <div class="ri-stats-row">${statsHTML}</div>
@@ -5578,7 +5578,7 @@ function _riSetDifficulty(k){
     emp.pickedDifficulty = k;
   }
   if(typeof saveDB === 'function') saveDB();
-  renderSmartReview();
+  renderAprender();   // vía host: conserva la barra de subcategorías
 }
 
 // ── Session Start ──
@@ -8463,18 +8463,36 @@ async function _supPhotoModerate(id,status){
   }catch(_){ showToast(_en?'Moderation failed':'Error al moderar','warning',3000); }
 }
 
-function renderAprender(){
-  const c=document.getElementById('appContent');
-  const sub = _subTab.aprender || 'emplatado';   // aterrizaje: la guía visual (lo más consultado en servicio)
+// Barra de subcategorías de Aprender. Los renderers internos (Explorar,
+// Flashcards, Repaso Inteligente) reescriben appContent ENTERO al navegar
+// dentro de su subpestaña y se llevaban la barra por delante — las
+// subcategorías «desaparecían». _aprEnsureChips la re-inyecta de forma
+// idempotente; renderRepaso la llama tras cada re-render interno.
+function _aprChipsBar(){
   const _en = LANG==='en';
   const _srsCount = _srsDueCount(getEmp(currentUser));
-  const bar = _subTabBar([
+  return _subTabBar([
     ['emplatado',_en?'Plating':'Emplatado','📷'],
     ['smart',_en?'Smart Review':'Repaso Inteligente',_srsCount>0?'🟢':'🧠'],
     ['repaso',_en?'Explore':'Explorar',''],
     ['flashcards','Flashcards',''],
     ['videos',_en?'Videos':'Videos','']
-  ], sub, 'aprender');
+  ], _subTab.aprender || 'emplatado', 'aprender');
+}
+function _aprEnsureChips(){
+  const APR = ['aprender','repaso','flashcards','smart','videos','emplatado'];
+  if(typeof currentTab!=='undefined' && !APR.includes(currentTab)) return;
+  const c=document.getElementById('appContent'); if(!c) return;
+  if(!c.querySelector('.subtab-chips')) c.insertAdjacentHTML('afterbegin', _aprChipsBar());
+  // El chip activo siempre a la vista (la fila hace scroll horizontal y el
+  // activo podía quedar cortado fuera de pantalla).
+  const on=c.querySelector('.subtab-chip.on');
+  if(on&&on.parentElement) on.parentElement.scrollLeft=Math.max(0,on.offsetLeft-(on.parentElement.clientWidth-on.offsetWidth)/2);
+}
+function renderAprender(){
+  const c=document.getElementById('appContent');
+  const sub = _subTab.aprender || 'emplatado';   // aterrizaje: la guía visual (lo más consultado en servicio)
+  const _en = LANG==='en';
   ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, videos:renderVideos, emplatado:renderEmplatado})[sub]();
   // Global quick search — only on Flashcards & Smart Review (Explore already has its own search, Videos doesn't need it)
   const _showSearch = (sub === 'flashcards');
@@ -8495,8 +8513,12 @@ function renderAprender(){
       <div id="aprenderGlobalSearchResults" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:360px;overflow-y:auto;background:#faf6ee;border:1.5px solid var(--ink3);border-radius:var(--r2);box-shadow:0 8px 24px rgba(28,42,34,.15);z-index:100"></div>
     </div>
   ` : '';
-  if(searchBar) c.insertAdjacentHTML('afterbegin', searchBar);
-  c.insertAdjacentHTML('afterbegin', bar);
+  _aprEnsureChips();   // idempotente: el sub-renderer puede haberla puesto ya
+  if(searchBar){
+    const chips=c.querySelector('.subtab-chips');
+    if(chips) chips.insertAdjacentHTML('afterend', searchBar);
+    else c.insertAdjacentHTML('afterbegin', searchBar);
+  }
 }
 
 // Global quick search available from any Aprender subtab
@@ -15757,15 +15779,17 @@ function fcRate(score){
         <div style="font-family:'Cinzel',serif;font-size:3.5rem;color:var(--gold);margin-bottom:.5rem">✦</div>
         <div style="font-family:'Cinzel',serif;font-size:1.7rem;color:var(--parchment);margin-bottom:.4rem">${t('deckDone')}</div>
         <div style="font-size:.8rem;color:var(--parch3);margin-bottom:2rem">${fcDishes.length} ${t('cardsReviewed')}</div>
-        <button class="btn-primary" onclick="initFlashcards(fcTopic,'all');renderFlashcards()">${t('newDeck')}</button>
+        <button class="btn-primary" onclick="initFlashcards(fcTopic,'all');renderAprender()">${t('newDeck')}</button>
       </div>`;
     checkMissionCompletion();
     checkNewAchievements();
   }
 }
 
-function changeFcCat(cat){initFlashcards(fcTopic,cat);renderFlashcards();}
-function changeFcTopic(t){fcTopic=t;initFlashcards(t);renderFlashcards();}
+// Re-render vía el host (renderAprender): conserva la barra de subcategorías
+// y el buscador rápido, que un renderFlashcards() directo borraba.
+function changeFcCat(cat){initFlashcards(fcTopic,cat);renderAprender();}
+function changeFcTopic(t){fcTopic=t;initFlashcards(t);renderAprender();}
 
 // ═══════ EXAM ═══════
 function renderExam(){
@@ -16223,8 +16247,11 @@ function renderExamResults(){
 
 // ═══════ REPASO ═══════
 function renderRepaso(){
-  if(repasoView==='dish' && repasoDishId) return renderRepasoDishDetail(repasoDishId);
-  repasoView==='topic'?renderRepasoTopic():renderRepasoCats();
+  if(repasoView==='dish' && repasoDishId) renderRepasoDishDetail(repasoDishId);
+  else repasoView==='topic'?renderRepasoTopic():renderRepasoCats();
+  // La navegación interna (abrir plato, volver, dominar) reescribe appContent:
+  // sin esto la barra de subcategorías desaparecía al primer toque.
+  if(typeof _aprEnsureChips==='function') _aprEnsureChips();
 }
 
 function renderRepasoCats(){
@@ -16349,7 +16376,7 @@ function searchRepaso(query) {
     <div class="repaso-list">${rows}</div>
   `;
 }
-function openRepasoCat(cat){repasoCat=cat;repasoView='topic';renderRepasoTopic();}
+function openRepasoCat(cat){repasoCat=cat;repasoView='topic';renderRepaso();}
 
 function renderRepasoTopic(){
   // Safety: if no category selected, fall back to category grid
