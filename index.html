@@ -23890,6 +23890,10 @@ function launchElTurno(){
   // imponente mientras patrulla, furioso con el cucharón al telegrafiar/embestir.
   const CHEF_SPR={};
   for(const k of ['calm','attack']){ const img=new Image(); img.onload=()=>{ img._ok=true; }; img.src=ET_CHEF_SPRITES[k]; CHEF_SPR[k]=img; }
+  // Bandeja ilustrada (Grok del propietario, jul 2026): si el sprite existe,
+  // las bandejas en vuelo lo usan; hasta entonces (o si falla la carga) el
+  // dibujo por código con canapés hace de respaldo. Mismo patrón _ok de todos.
+  const TRAY=new Image(); TRAY.onload=()=>{ TRAY._ok=true; }; TRAY.src='img/sprites/tray.webp';
   // Fase del ciclo: sincronizada con el mismo rebote vertical (bob) del render
   // loop — el cambio de pierna coincide con el pico del rebote, como en un
   // ciclo de carrera 2D convencional. Quieto = siempre el fotograma 0.
@@ -24568,6 +24572,14 @@ function launchElTurno(){
       const gold=b.pierce>0;
       const ang=Math.atan2(b.vy,b.vx), wob=Math.sin(b.rot*2)*0.16;
       ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(ang+wob);
+      if(TRAY._ok){ // sprite ilustrado: ecos del propio sprite + halo si es perforante
+        const tw=27, th=tw*(TRAY.height/TRAY.width);
+        for(let k=1;k<=2;k++){ ctx.globalAlpha=0.18/k; ctx.drawImage(TRAY,-tw/2-k*8,-th/2,tw,th); }
+        ctx.globalAlpha=1;
+        if(gold){ ctx.globalAlpha=.4+.2*Math.sin(G.time*9); ctx.fillStyle='#ffd24d';
+          ctx.beginPath(); ctx.ellipse(0,0,tw*0.62,th*0.62,0,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
+        ctx.drawImage(TRAY,-tw/2,-th/2,tw,th);
+        ctx.restore(); continue; }
       // estela: dos ecos desvanecidos detrás de la bandeja
       for(let k=1;k<=2;k++){ ctx.globalAlpha=0.20/k; ctx.fillStyle=gold?'#ffe9b0':'#dde3e8';
         ctx.beginPath(); ctx.ellipse(-k*8,0,10.5,6.5,0,0,6.29); ctx.fill(); }

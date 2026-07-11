@@ -3203,7 +3203,7 @@ test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spaw
   // Cinco mejoras de la auditoría de daño (petición del propietario: "cómo lo
   // podemos mejorar" → "aplica todo"). Guardan que cada mecánica sigue cableada.
   const i = html.indexOf('function launchElTurno(');
-  const body = html.slice(i, i + 60000);
+  const body = html.slice(i, i + 130000);
   // (1) health pickups: dropped on kill, collected to heal, drawn, and in game state
   assert(/pickups:\[\]/.test(body), 'game state must include a pickups[] array (health drops)');
   assert(/G\.pickups\.push\(\{x:e\.x,y:e\.y,heal:/.test(body), 'enemies must be able to drop a health pickup on death');
@@ -3304,6 +3304,13 @@ test('Camarero Survivors: la bandeja PARECE bandeja y cada jefe tiene habilidad 
     'tray must carry the napkin + canapés that make it read as a tray');
   assert(!/ctx\.ellipse\(0,0,6\.5,6\.5\*sq/.test(body),
     'the old coin-spin tray (edge-on squash) must be gone');
+  // — sprite de bandeja (Grok del propietario): cableado con respaldo. El
+  //   archivo puede llegar después; hasta entonces manda el dibujo por código,
+  //   así que aquí NO se exige que exista en disco —
+  assert(/const TRAY=new Image\(\); TRAY\.onload=\(\)=>\{ TRAY\._ok=true; \}; TRAY\.src='img\/sprites\/tray\.webp'/.test(body),
+    'the illustrated tray loader must be wired (sprite-preferred)');
+  assert(/if\(TRAY\._ok\)\{/.test(body),
+    'tray draw must prefer the sprite and keep the code-drawn platter as fallback');
   // — habilidades de jefe: mapa por alérgeno + las tres familias cableadas —
   assert(/const BOSS_ABIL=\{gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley'\}/.test(body),
     'every allergen family (and the chef) must map to its boss ability');
