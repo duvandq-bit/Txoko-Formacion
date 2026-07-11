@@ -3143,6 +3143,24 @@ test('Dieta del HTML: ningún sprite en base64 inline — siempre archivos del r
     'the persona-sprite warm-up preloader must run when the picker opens');
 });
 
+test('Camarero Survivors: cuchillos orbitales de chef con estela de giro (jul 2026)', () => {
+  // "Mejora las gráficas de los objetos que giran alrededor del héroe": los
+  // triángulos de 9px son ahora cuchillos de chef (hoja curva con línea de
+  // filo, mango con remache) con estela de giro; la evolución dorada y +25%.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 130000);
+  assert(/ctx\.arc\(G\.px,G\.py,kR,ang-0\.55,ang-0\.10\)/.test(body), 'each knife must trail a spin arc on its orbit');
+  assert(/ctx\.quadraticCurveTo\(4\.2,-4,3\.4,3\.6\)/.test(body), 'the blade must be the curved chef-knife shape');
+  assert(/ctx\.fillRect\(-2\.2,4,4\.4,7\)/.test(body) && /ctx\.arc\(0,7\.5,0\.9,0,6\.29\)/.test(body),
+    'the knife needs its wooden handle and brass rivet');
+  assert(/ctx\.moveTo\(1\.6,-7\.5\); ctx\.lineTo\(2\.6,1\.5\)/.test(body), 'the blade needs its bright edge line');
+  assert(/if\(kevo\) ctx\.scale\(1\.25,1\.25\)/.test(body) && /kevo\?'#ffe9b0':'#e4e9ee'/.test(body),
+    'the evolved knives must be golden and 25% larger');
+  assert(!/ctx\.moveTo\(0,-9\); ctx\.lineTo\(3\.5,5\)/.test(body), 'the old 9px triangle must be gone');
+  // La mecánica no cambia: radio de órbita y daño intactos.
+  assert(/const kR=G\.evoKnives\?66:48/.test(body), 'orbit radii must stay untouched');
+});
+
 test('Duelos/Retos: ningún enunciado de alérgenos en formato sí/no (las opciones son listas) (jul 2026)', () => {
   // Anotado por el auditor y aprobado por el propietario ("4 y 5"): tres tallos
   // de WAITER_MSGS preguntaban sí/no («¿Los tiene X?», «…si contiene
