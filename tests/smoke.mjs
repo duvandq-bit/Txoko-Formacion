@@ -3760,6 +3760,71 @@ test('exam reversed questions: identical passages / duplicate names cannot yield
     'startExam reversed twin/duplicate guard missing');
 });
 
+// ─── Navigation restructure (v7.196): clean categories/subcategories ──
+console.log('\nNavigation IA (v7.196)');
+
+test('vinos: Flash+Quiz merged into a single Práctica subtab with mode toggle', () => {
+  // Owner approved merging the two practice chips — the Vinos bar overflowed
+  // with 8 chips and Flash/Quiz are the same activity (practice).
+  assert(!/\['wineFlash','Flash',''\]/.test(html) && !/\['wineQuiz','Quiz',''\]/.test(html),
+    'old wineFlash/wineQuiz chips must be gone from the Vinos bar');
+  assert(/\['practica',_en\?'Practice':'Práctica',''\]/.test(html),
+    'the Práctica chip must exist (ES/EN)');
+  assert(/function _renderWinePractica\(/.test(html) && /sub === 'practica'/.test(html),
+    'renderVinos must dispatch practica to _renderWinePractica');
+  // Legacy deep links ('wineFlash'/'wineQuiz') normalize instead of 404ing
+  // into the carta fallback.
+  assert(/sub==='wineFlash' \|\| sub==='wineQuiz'/.test(html) && /_vinoSubTab = 'practica'/.test(html),
+    'legacy wineFlash/wineQuiz values must normalize to practica');
+  // The toggle is part of the bar string so both renderers keep it on re-render.
+  const wp = html.slice(html.indexOf('function _renderWinePractica'), html.indexOf('function _renderWineFlashcards'));
+  assert(/wine-practice-toggle/.test(wp) && /_renderWineQuiz\(c, bar \+ seg\)/.test(wp) && /_renderWineFlashcards\(c, bar \+ seg\)/.test(wp),
+    'practica must inject the mode toggle into the bar for both modes');
+  // Sommelier quick-access entries route through the merged subtab.
+  assert(/_vinoSubTab='practica';_vinoPractica='flash';renderVinos\(\)/.test(html)
+      && /_vinoSubTab='practica';_vinoPractica='quiz';renderVinos\(\)/.test(html),
+    'quick-access index must deep-link into practica modes');
+  const css = read('styles.css');
+  assert(/\.wine-practice-toggle\{/.test(css) && /\.wp-seg\.on\{/.test(css),
+    'practice toggle styles missing');
+});
+
+test('nav tab renamed LQA → Auditoría (labels only, ids/routes intact)', () => {
+  // "LQA" was internal jargon; the tab is named after what you do there.
+  assert(/<\/svg> Auditoría<\/button>/.test(html), 'nav button label must be Auditoría');
+  assert(!/<\/svg> LQA<\/button>/.test(html), 'nav button must not say LQA anymore');
+  assert(/navProtocolo: LANG==='en'\?'Audit':'Auditoría',/.test(html),
+    'applyLangToApp must localize the tab as Audit/Auditoría');
+  // Internal wiring unchanged — localStorage compat and deep links.
+  assert(/id="navProtocolo" onclick="showTab\('protocolo'\)"/.test(html),
+    'button id and protocolo route must not change');
+  assert(/'Practicar en Auditoría →'/.test(html),
+    'global-search LQA card must point at the renamed tab');
+  // LQA remains as the real standard name INSIDE the section.
+  assert(/Leading Quality Assurance/.test(html), 'the LQA hub hero keeps the standard name');
+});
+
+test('allergen drill moved from Examen to Aprender → Repaso Inteligente', () => {
+  // Training belongs in Aprender; Examen stays pure evaluation.
+  const exam = html.slice(html.indexOf('function renderExamSetup'), html.indexOf('function _examToggleCustom'));
+  assert(!/startAllergenTest/.test(exam), 'renderExamSetup must no longer offer the drill');
+  const smart = html.slice(html.indexOf('function renderSmartReview'), html.indexOf('function _aprenderGlobalSearch'));
+  assert(/class="ri-drill"/.test(smart) && /startAllergenTest\(null\)/.test(smart),
+    'Repaso Inteligente must host the drill as a terminal mission');
+  assert(/SIMULACRO DE ALÉRGENOS/.test(smart) && /ALLERGEN DRILL/.test(smart),
+    'drill card must be bilingual');
+  // Results screen returns to its new home, not to Examen.
+  const res = html.slice(html.indexOf('function renderAllergenResults'), html.indexOf('function renderSupAnalytics'));
+  assert(/_subTab\.aprender='smart';showTab\('aprender'\)/.test(res),
+    'drill results must navigate back to Aprender (smart)');
+  assert(!/renderExam\(\)/.test(res), 'drill results must not route back to Examen');
+  const css = read('styles.css');
+  assert(/\.ri-drill\{/.test(css) && /\.ri-drill-title\{/.test(css),
+    'ri-drill terminal styles missing');
+  assert(/@media \(prefers-reduced-motion:reduce\)\{\.ri-drill-icon\{animation:none\}\}/.test(css),
+    'drill blink must freeze under reduced motion');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

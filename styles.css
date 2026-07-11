@@ -1501,6 +1501,38 @@ body::after{
 .ri-console .ri-secondary:hover{color:#c8ffe0;border-color:rgba(34,255,136,.4);
   box-shadow:0 0 12px rgba(34,255,136,.1)}
 
+/* ── Simulacro de Alérgenos — segunda misión del terminal. Fósforo ámbar de
+   aviso (seguridad) frente al verde de la simulación estándar. ── */
+.ri-drill{
+  display:flex;align-items:center;gap:.85rem;width:100%;min-height:60px;
+  margin-top:.85rem;padding:.85rem 1rem;cursor:pointer;text-align:left;
+  background:rgba(255,176,64,.05);
+  border:1px solid rgba(255,176,64,.28);border-left:3px solid rgba(255,176,64,.75);
+  border-radius:8px;transition:all .2s;
+}
+.ri-drill:hover{background:rgba(255,176,64,.1);border-color:rgba(255,176,64,.5);
+  box-shadow:0 0 14px rgba(255,176,64,.12)}
+.ri-drill-icon{
+  font-size:1.15rem;line-height:1;color:#ffcf80;flex-shrink:0;
+  text-shadow:0 0 8px rgba(255,176,64,.6);
+  animation:ri-drill-blink 2.4s ease-in-out infinite;
+}
+@keyframes ri-drill-blink{0%,100%{opacity:.85}50%{opacity:.45}}
+.ri-drill-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:.22rem}
+.ri-drill-title{
+  font-family:'DM Mono',monospace;font-size:.68rem;font-weight:700;
+  letter-spacing:.14em;color:#ffcf80;text-shadow:0 0 7px rgba(255,176,64,.45);
+}
+.ri-drill-sub{
+  font-family:'DM Mono',monospace;font-size:.56rem;line-height:1.5;
+  letter-spacing:.03em;color:rgba(255,207,128,.65);
+}
+.ri-drill-go{
+  font-size:1.25rem;color:rgba(255,207,128,.7);flex-shrink:0;
+  font-family:'DM Mono',monospace;
+}
+@media (prefers-reduced-motion:reduce){.ri-drill-icon{animation:none}}
+
 /* ── Hero greeting with radial progress ── */
 .ri-hero{
   display:flex;align-items:center;gap:1.1rem;
@@ -2695,6 +2727,24 @@ body::after{
 .wfp-count{font-family:'DM Mono',monospace;font-size:.56rem;font-style:normal;letter-spacing:.04em;
   color:var(--gold-deep);opacity:.8}
 .wine-filter-pill.active .wfp-count{color:rgba(26,15,5,.75);opacity:1}
+
+/* Conmutador Flashcards/Quiz dentro del subtab «Práctica» de Vinos —
+   segmented control dorado, misma familia visual que los filter-pills. */
+.wine-practice-toggle{
+  display:grid;grid-template-columns:1fr 1fr;gap:.3rem;
+  margin:0 0 1rem;padding:.3rem;
+  background:#f0e8d8;border:1px solid rgba(196,154,60,.22);border-radius:999px;
+}
+.wp-seg{
+  min-height:44px;border:none;border-radius:999px;cursor:pointer;
+  font-family:'Quicksand',sans-serif;font-size:.8rem;font-weight:700;
+  color:rgba(28,42,34,.6);background:transparent;transition:all .2s;
+}
+.wp-seg.on{
+  background:linear-gradient(145deg,#d4aa4c,var(--gold));
+  color:#1a0f05;box-shadow:0 2px 8px rgba(196,154,60,.35);
+}
+.wp-seg:not(.on):hover{color:var(--parchment)}
 
 /* Jewel search: full pill, gold hairline, quiet inner shadow. 16px input so
    iOS Safari does not zoom on focus (.82rem used to trigger the zoom trap). */
