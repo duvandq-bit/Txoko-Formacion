@@ -2205,6 +2205,15 @@ body::after{
 .nav-dd-list .nav-btn + .nav-btn{border-top:1px solid rgba(196,154,60,.14)}
 .nav-dd-list .nav-btn svg{width:19px;height:19px;flex-shrink:0}
 .nav-dd-list .nav-btn.active{color:var(--gold-deep);background:rgba(196,154,60,.1);border-left-color:var(--gold);font-weight:600}
+/* Rótulos de grupo (Consulta/Formación/Equipo): 8 opciones planas se leen
+   como 3 grupos — chunking sin añadir toques ni profundidad. */
+.nav-group-lbl{
+  padding:.7rem 1.15rem .3rem;
+  font-family:'DM Mono',monospace;font-size:.55rem;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);
+  opacity:.75;border-top:1px solid rgba(196,154,60,.14);
+}
+.nav-dd-list .nav-group-lbl:first-of-type{border-top:none;padding-top:.35rem}
 
 .tunic-subtabs{
   position:relative;z-index:5;

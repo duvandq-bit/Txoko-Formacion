@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.199';
+const VERSION = 'v7.200';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
@@ -151,7 +151,7 @@ self.addEventListener('push', (e) => {
     vibrate: _quiet ? [] : (data.renotify ? [200, 100, 200, 100, 200] : [200, 100, 200]),
     requireInteraction: false,
     data: data.data,
-    actions: [{ action: 'open', title: data.data.tab === 'chat' ? 'Abrir chat' : 'Abrir' }]
+    actions: [{ action: 'open', title: data.data.tab === 'chat' ? 'Abrir Terraza' : 'Abrir' }]
   };
   if (data.image) options.image = data.image;
 

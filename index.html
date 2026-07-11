@@ -298,14 +298,20 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <span id="navSearchEntryLabel">Buscar plato, vino, alérgeno…</span>
     </button>
+    <!-- Agrupación visual (auditoría UX jul 2026): 8 opciones planas se leen
+         como 3 grupos — chunking sin toques extra. Solo rótulos: ids y rutas
+         showTab() intactos. -->
+    <div class="nav-group-lbl" id="navGrpConsulta" aria-hidden="true">Consulta</div>
     <button class="nav-btn active" id="navDashboard" onclick="showTab('dashboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</button>
+    <div class="nav-group-lbl" id="navGrpFormacion" aria-hidden="true">Formación</div>
     <button class="nav-btn" id="navAprender" onclick="showTab('aprender')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Aprender</button>
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
     <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Auditoría</button>
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
+    <div class="nav-group-lbl" id="navGrpEquipo" aria-hidden="true">Equipo</div>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
-    <button class="nav-btn" id="navChat" onclick="showTab('chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg> Chat</button>
+    <button class="nav-btn" id="navChat" onclick="showTab('chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg> Terraza</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
   </div>
@@ -505,7 +511,7 @@ const T = {
     navDashboard: LANG==='en'?'Home':'Inicio',
     navFlashcards: 'Flashcards',
     navExam: 'Examen',
-    navRepaso: 'Explorar',
+    navRepaso: 'La Carta',
     navStats: 'Estadísticas',
     sessions: 'sesiones',
     sessionsMedia: 'media',
@@ -601,7 +607,7 @@ const T = {
     navDashboard: 'Home',
     navFlashcards: 'Flashcards',
     navExam: 'Exam',
-    navRepaso: 'Review',
+    navRepaso: 'The Menu',
     navStats: 'Statistics',
     sessions: 'sessions',
     sessionsMedia: 'avg',
@@ -1117,6 +1123,10 @@ function applyLangToApp() {
     navVinos: LANG==='en'?'Wines':'Vinos',
     navTxoko: LANG==='en'?'Games':'Juegos',
     navRanking: 'Ranking',
+    // «Terraza» en ambos idiomas: es el nombre propio de la pantalla
+    // (La Terraza) — la pestaña dejó de llamarse «Chat» para no tener dos
+    // nombres para el mismo sitio.
+    navChat: LANG==='en'?'Terrace':'Terraza',
     navSupervisor: 'Sup.'};
   Object.entries(navLabels).forEach(([id, label]) => {
     const el = document.getElementById(id);
@@ -1126,6 +1136,16 @@ function applyLangToApp() {
       el.textContent = ' ' + label;
       if(svg) el.insertBefore(svg, el.firstChild);
     }
+  });
+  // Rótulos de grupo de la hoja de navegación (Consulta/Formación/Equipo)
+  const navGroups = {
+    navGrpConsulta: LANG==='en'?'Browse':'Consulta',
+    navGrpFormacion: LANG==='en'?'Training':'Formación',
+    navGrpEquipo: LANG==='en'?'Team':'Equipo'
+  };
+  Object.entries(navGroups).forEach(([id, label]) => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = label;
   });
   // Global-search entry + input placeholder
   const _gsLbl = document.getElementById('navSearchEntryLabel');
@@ -1473,7 +1493,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.199';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.200';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8006,7 +8026,7 @@ function showTab(tab, instant){
   // Both 'protocolo' and 'lqa' routes target the same nav button (the tab now
   // shows only LQA content after Protocolo deletion; the button id stayed
   // navProtocolo for localStorage compat).
-  const parentMap = { flashcards:'aprender', repaso:'aprender', videos:'aprender', emplatado:'aprender', lqa:'protocolo', stats:'ranking' };
+  const parentMap = { flashcards:'aprender', repaso:'aprender', videos:'aprender', emplatado:'aprender', lqa:'protocolo', stats:'ranking', logros:'ranking' };
   const navTab = parentMap[tab] || tab;
   document.querySelectorAll('.nav-btn').forEach(b=>{
     const btnTab = b.id.replace('nav','').toLowerCase();
@@ -8019,7 +8039,7 @@ function showTab(tab, instant){
   const _navDD = document.getElementById('mainNavDD');
   if(_navDD) _navDD.classList.remove('open');
   const c=document.getElementById('appContent');
-  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -8519,7 +8539,7 @@ function _aprChipsBar(){
   return _subTabBar([
     ['emplatado',_en?'Plating':'Emplatado','📷'],
     ['smart',_en?'Simulation':'Simulación',_srsCount>0?'🟢':'🧠'],
-    ['repaso',_en?'Explore':'Explorar',''],
+    ['repaso',_en?'The Menu':'La Carta',''],
     ['flashcards','Flashcards',''],
     ['videos',_en?'Videos':'Videos','']
   ], _subTab.aprender || 'emplatado', 'aprender');
@@ -8628,10 +8648,19 @@ function renderRankingHub(){
   const sub = _subTab.ranking || 'ranking';
   const bar = _subTabBar([
     ['ranking','Ranking','⭐'],
+    ['logros',LANG==='en'?'Achievements':'Logros','◆'],
     ['stats',LANG==='en'?'Stats':'Estadísticas','◇']
   ], sub, 'ranking');
-  ({ranking:renderRanking, stats:renderStats})[sub]();
+  ({ranking:renderRanking, logros:renderLogros, stats:renderStats})[sub]();
   c.insertAdjacentHTML('afterbegin', bar);
+}
+
+// Los 42 logros vivían enterrados al fondo del scroll de Inicio (único
+// acceso). Ahora son un chip de Ranking — todo lo que celebra tu progreso
+// frente al equipo, en un sitio — y en Inicio queda un resumen de una fila.
+function renderLogros(){
+  const c=document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">${renderAchievementsSection()}</div>`;
 }
 
 // ═══════ VINOS ═══════
@@ -11591,6 +11620,32 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
 
   var mapEl = document.getElementById('wineLeafletMap');
   if(!mapEl) return;
+
+  // Sin conexión (o CDN caído) maplibre-gl no carga y el mapa moría en
+  // silencio. La información sobrevive: nota en el marco y las D.O. de la
+  // carta como lista estática agrupada por región. Las píldoras siguen
+  // filtrando (su fallback re-renderiza y vuelve a entrar aquí).
+  if(typeof maplibregl === 'undefined'){
+    mapEl.innerHTML = '<div style="display:flex;flex-direction:column;gap:.5rem;align-items:center;justify-content:center;height:100%;font-family:\'DM Mono\',monospace;font-size:.68rem;line-height:1.7;color:var(--parch3);text-align:center;padding:2rem">'
+      + '<span style="font-size:1.5rem" aria-hidden="true">📡</span>'
+      + (LANG==='en'?'The interactive map needs a connection.<br>Every region and D.O. is listed below.':'El mapa interactivo necesita conexión.<br>Todas las regiones y D.O. siguen aquí abajo.')
+      + '</div>';
+    var _offList = document.getElementById('wineDOList');
+    if(_offList){
+      var _shownRegions = _mapSelectedOrigin ? regionDots.filter(function(r){ return r.name===_mapSelectedOrigin; }) : regionDots;
+      _offList.innerHTML = _shownRegions.map(function(r){
+        return '<div class="tunic-divider" style="margin-top:1rem"><span>'+escapeHTML(r.name)+' · '+r.wines.length+'</span></div>'
+          + r.wines.map(function(w){
+            return '<div class="dash-row" data-static style="min-height:44px">'
+              + '<span class="dash-row-body"><span class="dash-row-title">'+escapeHTML(w.name)+'</span>'
+              + '<span class="dash-row-sub" style="display:block">'+escapeHTML(w.region||'')+(w.type?' · '+escapeHTML(w.type):'')+'</span></span>'
+              + (w.price?'<span class="dash-row-meta">'+w.price+' €</span>':'')
+              + '</div>';
+          }).join('');
+      }).join('');
+    }
+    return;
+  }
 
   // Check WebGL support (maplibregl.supported() removed in v4 — detect manually)
   var _webglOk = false;
@@ -15542,11 +15597,11 @@ function renderDashboard(){
       </button>
       <button class="dash-index-entry" onclick="showTab('repaso')">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/></svg>
-        <span><span class="dash-index-lbl">${LANG==='en'?'Explore':'Explorar'}</span><span class="dash-index-meta">${LANG==='en'?'the menu':'la carta'}</span></span>
+        <span><span class="dash-index-lbl">${LANG==='en'?'The Menu':'La Carta'}</span><span class="dash-index-meta">${LANG==='en'?'browse the dishes':'explora los platos'}</span></span>
       </button>
       <button class="dash-index-entry" onclick="startPersonalErrorMode()">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/></svg>
-        <span><span class="dash-index-lbl">${LANG==='en'?'Weak spots':'Débiles'}</span><span class="dash-index-meta">${LANG==='en'?'your misses':'tus fallos'}</span></span>
+        <span><span class="dash-index-lbl">${LANG==='en'?'Review misses':'Repasar fallos'}</span><span class="dash-index-meta">${LANG==='en'?'missed dishes':'platos fallados'}</span></span>
       </button>
     </div>
 
@@ -15574,7 +15629,18 @@ function renderDashboard(){
       </div>
     </div>
 
-    ${renderAchievementsSection()}
+    <!-- Logros: resumen de una fila — la galería completa vive en
+         Ranking → Logros (los 42 estaban enterrados al fondo del scroll). -->
+    ${(()=>{ const _u=getUnlockedAchievements(emp).length; return `
+    <div class="tunic-divider"><span>${LANG==='en'?'Achievements':'Logros'}</span></div>
+    <button class="dash-row" style="margin-bottom:1rem" onclick="_subTab.ranking='logros';showTab('logros')" aria-label="${LANG==='en'?`${_u} of ${ACHIEVEMENTS.length} achievements unlocked — view all`:`${_u} de ${ACHIEVEMENTS.length} logros desbloqueados — ver todos`}">
+      <span class="dash-row-num" style="color:var(--gold-deep)" aria-hidden="true">${_u}</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title">${LANG==='en'?'Achievements unlocked':'Logros desbloqueados'}</span>
+        <span class="dash-row-sub" style="display:block">${LANG==='en'?`of ${ACHIEVEMENTS.length} · gem gallery`:`de ${ACHIEVEMENTS.length} · galería de gemas`}</span>
+      </span>
+      <span class="dash-row-go">›</span>
+    </button>` })()}
 
     <!-- live quiz tile (hidden by default) -->
     <div onclick="renderJoinLiveQuiz()" id="liveQuizTile" style="display:none;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--gold-b);border:2px solid var(--gold-a);border-radius:var(--r2);margin-bottom:.5rem;cursor:pointer">
