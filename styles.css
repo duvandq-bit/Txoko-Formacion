@@ -2735,6 +2735,8 @@ body::after{
   margin:0 0 1rem;padding:.3rem;
   background:#f0e8d8;border:1px solid rgba(196,154,60,.22);border-radius:999px;
 }
+.wine-practice-toggle.wp3{grid-template-columns:1fr 1fr 1fr}
+.wp3 .wp-seg{font-size:.72rem}
 .wp-seg{
   min-height:44px;border:none;border-radius:999px;cursor:pointer;
   font-family:'Quicksand',sans-serif;font-size:.8rem;font-weight:700;

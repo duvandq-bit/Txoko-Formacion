@@ -1608,10 +1608,11 @@ test('dashboard: plan first, stats folded into the dark progress panel', () => {
   assert(dashStart !== -1, 'renderDashboard innerHTML template not found');
   const dashEnd = html.indexOf('`;', dashStart);
   const dashTpl = html.slice(dashStart, dashEnd);
-  assert(dashTpl.indexOf('PLAN DE HOY') !== -1, 'PLAN DE HOY section missing');
+  // v7.199: PLAN DE HOY + reto + misiones se fusionaron en la sección «HOY».
+  assert(dashTpl.indexOf('HOY:') !== -1, 'HOY section missing');
   assert(dashTpl.indexOf('STATS STRIP') === -1, 'the boxed stats strip must stay removed');
   assert(/dash-statline/.test(dashTpl), 'stat line must live inside the progress panel');
-  assert(dashTpl.indexOf('PLAN DE HOY') < dashTpl.indexOf('dash-statline'),
+  assert(dashTpl.indexOf('HOY:') < dashTpl.indexOf('dash-statline'),
     'plan (actions) must come before the stats (passive context)');
 });
 
@@ -1887,9 +1888,9 @@ test('main nav is a dropdown, not a horizontal scroller', () => {
     'active nav item must show the gold accent bar');
 });
 
-test('Repaso Inteligente uses a green dot, not a red one', () => {
-  assert(/'Repaso Inteligente',_srsCount>0\?'🟢'/.test(html),
-    'the SRS-due indicator on Repaso Inteligente must be a green dot, not red');
+test('Simulación uses a green dot, not a red one', () => {
+  assert(/'Simulación',_srsCount>0\?'🟢'/.test(html),
+    'the SRS-due indicator on the Simulación chip must be a green dot, not red');
 });
 
 test('nav opens as a thumb-zone bottom sheet with a dim scrim', () => {
@@ -3854,6 +3855,70 @@ test('onboarding guide matches the real Juegos hub (no Modo Error promise)', () 
   assert(!/getFailedDishes|failedLabel/.test(hub), 'renderTxoko must not compute unused failed-dish counters');
   // The mode itself still exists from the dashboard shortcut.
   assert(/onclick="startPersonalErrorMode\(\)"/.test(html), 'dashboard Débiles shortcut must survive');
+});
+
+test('the simulation carries ONE name everywhere: Simulación', () => {
+  // IA audit (A1): the same activity was "Simulación Contextual" in the
+  // guide, "Repaso Inteligente" on the chip and "ENTRAR EN SIMULACIÓN" on
+  // the CTA — three names, zero findability.
+  assert(/\['smart',_en\?'Simulation':'Simulación',_srsCount>0\?'🟢'/.test(html),
+    'Aprender chip must say Simulación/Simulation');
+  assert(/title_es:'Simulación',title_en:'Simulation'/.test(html),
+    'onboarding page must use the same name');
+  assert(/Aprender → Simulación/.test(html) && /Learn → Simulation/.test(html),
+    'onboarding must say WHERE the simulation lives');
+  assert(/\$\{_en\?'SIMULATION':'SIMULACIÓN'\}/.test(html),
+    'the Pip-Boy screen header must match the chip name');
+  assert(!/'Smart Review' : 'Repaso Inteligente'/.test(html),
+    'XP toasts must not use the old name');
+});
+
+test('dashboard: one single «Hoy» section (plan + challenge + missions), no duplicate weakness row', () => {
+  // IA audit (C1+A3): 4 consecutive "what to do today" blocks with three
+  // visual frames, plus TWO weakness rows pointing at different places.
+  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('function checkActiveLiveSession'));
+  assert(/\$\{_en\?'Today':'Hoy'\}/.test(dash), 'the Hoy divider must exist');
+  assert(!/Today\\u2019s plan/.test(dash) && !/'Daily Missions':'Misiones del día'/.test(html),
+    'the old Plan de hoy / Misiones dividers must be gone (fused into Hoy)');
+  assert(!/'Needs practice':'Necesita práctica'/.test(dash),
+    'the redundant weak-topic alert row must be removed');
+  assert(/\$\{renderWeeklyChallenge\(\)\}\s*\$\{_m\.rows\}/.test(dash),
+    'weekly challenge and mission rows must live INSIDE the Hoy ledger');
+  // El IIFE de «Hoy» no puede cerrar con "`;": el guard del dashboard corta
+  // la plantilla en la primera aparición de esa secuencia.
+  assert(!/<\/div>`; \}\)\(\)\}/.test(dash), 'Hoy IIFE must not emit a backtick-semicolon inside the template');
+  assert(/misiones'\} \$\{_m\.done\}\/\$\{_m\.total\}/.test(dash),
+    'the missions counter must survive on the Hoy divider');
+  // renderDailyMissions now returns rows+count (no divider of its own).
+  assert(/return \{ rows, done: doneCount, total: missions\.length \};/.test(html),
+    'renderDailyMissions must return bare rows for the fused section');
+});
+
+test('vinos: Sensorial+Mapa merged under Estudio — the bar holds 5 chips', () => {
+  // IA audit (C2+A2): 7 chips overflowed on a phone and "Aprende" clashed
+  // with the main "Aprender" tab. Estudio = Conceptos · Sensorial · Mapa.
+  assert(!/\['sensorial',_en\?'Sensory':'Sensorial',''\]/.test(html) && !/\['mapa',_en\?'Map':'Mapa',''\]/.test(html),
+    'sensorial/mapa chips must be gone from the Vinos bar');
+  assert(/\['aprende',_en\?'Study':'Estudio',''\]/.test(html),
+    'the Estudio chip must exist (no more Aprende/Aprender clash)');
+  assert(/function _renderWineStudy\(/.test(html) && /sub === 'aprende'\)\{ _renderWineStudy\(c, bar\); \}/.test(html),
+    'renderVinos must dispatch aprende to _renderWineStudy');
+  assert(/sub==='sensorial' \|\| sub==='mapa'/.test(html) && /_vinoAprendeView = sub/.test(html),
+    'legacy sensorial/mapa values must normalize into Estudio');
+  const ws = html.slice(html.indexOf('function _renderWineStudy'), html.indexOf('function _renderWinePractica'));
+  assert(/wine-practice-toggle wp3/.test(ws) && /_renderSensoryMap\(c, bar \+ seg\)/.test(ws)
+      && /_renderWineMap\(c, bar \+ seg\)/.test(ws) && /_renderWineLearn\(c, bar \+ seg\)/.test(ws),
+    'Estudio must delegate to the three views with the toggle in the bar');
+  const css = read('styles.css');
+  assert(/\.wine-practice-toggle\.wp3\{grid-template-columns:1fr 1fr 1fr\}/.test(css),
+    'wp3 three-column toggle style missing');
+});
+
+test('EN mode: stats known-by-category bars are localized', () => {
+  // Same class of bug as the Emplatado dividers (v7.198), other screen.
+  const st = html.slice(html.indexOf('function renderStats()'), html.indexOf('function renderVideos()'));
+  assert(/catLocal\(cat\):cat\}<\/span><div class="t-stat-track">/.test(st),
+    'renderStats category bars must localize via catLocal');
 });
 
 test('EN mode: ranking chips and plating category dividers are localized', () => {
