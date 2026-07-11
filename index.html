@@ -1493,7 +1493,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.200';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.201';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -15548,12 +15548,49 @@ function renderDashboard(){
          UN solo ledger. Antes eran 4 bloques consecutivos de "qué hacer hoy"
          con marcos visuales distintos; la alerta de tema débil (→ Examen) se
          retiró por duplicar la práctica enfocada (→ Simulación). ── -->
-    ${(()=>{ const _m=renderDailyMissions(); return `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.15rem">
-      <div class="tunic-divider" style="flex:1;margin-bottom:0"><span>${_en?'Today':'Hoy'}</span></div>
-      <div style="font-family:'DM Mono',monospace;font-size:.56rem;color:var(--parch4);letter-spacing:.08em;margin-left:.6rem">${_en?'missions':'misiones'} ${_m.done}/${_m.total}</div>
+    ${(()=>{ const _m=renderDailyMissions();
+      const _ch=getCurrentChallenge(); const _chP=getChallengeProgress(_ch); const _chDone=_chP.completed>=_chP.total;
+      const _srsOk=_srsDue===0; const _msDone=_m.done>=_m.total;
+      const _units=[_srsOk,_chDone].concat(_m.list.map(x=>x.done));
+      const _dDone=_units.filter(Boolean).length, _dTot=_units.length;
+      const _dash=(163.4*(1-(_dTot?_dDone/_dTot:0))).toFixed(1);
+      // Regla fija de prioridad para la ÚNICA acción destacada del día:
+      // repaso SRS vencido > práctica débil > reto pendiente > misión más
+      // cercana a completarse. El usuario decide "hacer" o "ver más", no
+      // elige entre 7 filas.
+      let _next=null;
+      if(_srsDue>0) _next={ic:'⚡',t:_en?('Review '+_srsDue+' dishes'):('Repasa '+_srsDue+' platos'),s:_en?'spaced repetition':'repetición espaciada',go:"_subTab.aprender='smart';showTab('aprender')"};
+      else if(_weakDisplay) _next={ic:'🎯',t:(_en?'Focus practice: ':'Práctica enfocada: ')+_weakDisplay.label,s:_en?'start the simulation':'inicia la simulación',go:'_startSmartSession()'};
+      else if(!_chDone) _next={ic:'🏅',t:(_en?'Weekly challenge':'Reto semanal')+': '+(_en?_ch.en:_ch.es),s:_chP.completed+'/'+_chP.total+' '+(_en?'passed':'superado'),go:"startChallengeExam('"+_ch.topic+"','"+_ch.cat+"')"};
+      else { const _pm=_m.list.filter(x=>!x.done&&x.go).sort((a,b)=>(b.current/b.target)-(a.current/a.target))[0];
+        if(_pm) _next={ic:'◆',t:_pm.title,s:'+'+_pm.xp+' XP',go:_pm.go}; }
+      if(!_next) _next={ic:'★',t:_en?'All done for today!':'¡Día completado!',s:_en?'come back tomorrow':'vuelve mañana',go:''};
+      const _pip=(done,lbl)=>'<button type="button" class="hoy-pip'+(done?' done':'')+'" aria-expanded="false" onclick="_hoyToggle()">'+(done?'✓':'◇')+' '+lbl+'</button>';
+      return `
+    <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
+    <div class="hoy-card">
+      <div class="hoy-ring" role="img" aria-label="${_dDone}/${_dTot} ${_en?'tasks done today':'tareas de hoy hechas'}">
+        <svg viewBox="0 0 60 60" aria-hidden="true">
+          <circle class="hoy-ring-track" cx="30" cy="30" r="26"/>
+          <circle class="hoy-ring-fill" cx="30" cy="30" r="26" style="stroke-dashoffset:${_dash}"/>
+        </svg>
+        <div class="hoy-ring-txt"><b>${_dDone}/${_dTot}</b><span>${_en?'today':'hoy'}</span></div>
+      </div>
+      <div class="hoy-main">
+        <div class="hoy-next-lbl">${_en?'NEXT':'SIGUIENTE'} ▸</div>
+        <button type="button" class="hoy-next" ${_next.go?`onclick="${_next.go}"`:'disabled'}>
+          <span class="hoy-next-ic" aria-hidden="true">${_next.ic}</span>
+          <span class="hoy-next-tx"><b>${escapeHTML(_next.t)}</b><span>${_next.s}</span></span>
+        </button>
+      </div>
     </div>
-    <div style="margin-bottom:1rem">
+    <div class="hoy-pips">
+      ${_pip(_srsOk,(_en?'Review':'Repaso')+(_srsOk?'':' '+_srsDue))}
+      ${_pip(_chDone,_en?'Challenge':'Reto')}
+      ${_pip(_msDone,(_en?'Missions':'Misiones')+' '+_m.done+'/'+_m.total)}
+      ${_weakDisplay?_pip(false,_en?'Practice':'Práctica'):''}
+    </div>
+    <div id="hoyDetail" style="display:none;margin-bottom:1rem">
       ${_srsDue>0 ? `
       <button class="dash-row" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
         <span class="dash-row-num" aria-hidden="true">${_srsDue}</span>
@@ -15563,14 +15600,6 @@ function renderDashboard(){
         </span>
         <span class="dash-row-go">›</span>
       </button>` : ''}
-      ${_rankProg ? `
-      <div class="dash-row" data-static aria-label="${_rankProg.overallPct}% ${_en?'progress to next rank':'progreso al siguiente rango'}">
-        <span class="dash-row-num" style="font-size:.95rem;color:var(--gold-deep)" aria-hidden="true">${_rankProg.overallPct}%</span>
-        <span class="dash-row-body">
-          <span class="dash-row-title">${_en?'Next rank':'Próximo rango'}: ${_rankProg.nextLabel}</span>
-          <span class="dash-row-sub" style="display:block">${_rankProg.dishesNeeded>0 ? `${_rankProg.dishesNeeded} ${_en?(_rankProg.dishesNeeded===1?'dish to master':'dishes to master'):(_rankProg.dishesNeeded===1?'plato por dominar':'platos por dominar')}` : (_en?'Mastery reached':'Dominio alcanzado')}${_rankProg.needsAcc ? ` · ${_en?'accuracy':'precisión'} ${_rankProg.curAccuracy}%` : ''}</span>
-        </span>
-      </div>` : ''}
       ${_weakDisplay ? `
       <button class="dash-row" onclick="_startSmartSession()" aria-label="${_en?`Practice weak ${_weakDisplay.type_en}: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'miss':'misses'}`:`Practicar ${_weakDisplay.type_es} débil: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'fallo':'fallos'}`}">
         <span class="dash-row-num" style="color:#a04848" aria-hidden="true">${_weakDisplay.count}</span>
@@ -15607,6 +15636,16 @@ function renderDashboard(){
 
     <!-- ── PROGRESS RINGS ── -->
     <div class="tunic-divider"><span>${LANG==='en'?'Your progress':'Tu progreso'}</span></div>
+    <!-- «Próximo rango» vive con su familia (contexto pasivo, no tarea):
+         antes se colaba en la lista de acciones de «Hoy». -->
+    ${_rankProg ? `
+    <div class="dash-row" data-static style="margin-bottom:.5rem" aria-label="${_rankProg.overallPct}% ${_en?'progress to next rank':'progreso al siguiente rango'}">
+      <span class="dash-row-num" style="font-size:.95rem;color:var(--gold-deep)" aria-hidden="true">${_rankProg.overallPct}%</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title">${_en?'Next rank':'Próximo rango'}: ${_rankProg.nextLabel}</span>
+        <span class="dash-row-sub" style="display:block">${_rankProg.dishesNeeded>0 ? `${_rankProg.dishesNeeded} ${_en?(_rankProg.dishesNeeded===1?'dish to master':'dishes to master'):(_rankProg.dishesNeeded===1?'plato por dominar':'platos por dominar')}` : (_en?'Mastery reached':'Dominio alcanzado')}${_rankProg.needsAcc ? ` · ${_en?'accuracy':'precisión'} ${_rankProg.curAccuracy}%` : ''}</span>
+      </span>
+    </div>` : ''}
     <div class="dash-defer-sm" style="background:linear-gradient(160deg,#2a3530 0%,var(--parchment) 40%,#243028 100%);border:1.5px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1.4rem .8rem 1.1rem;display:block;margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1)">
       <!-- Diamond pattern overlay -->
       <div style="position:absolute;inset:0;background-image:url(${`"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.06)' stroke-width='0.5'/%3E%3C/svg%3E"`});pointer-events:none"></div>
@@ -20539,6 +20578,22 @@ function renderDailyMissions(){
   const today=todayStr();
   const doneCount=missions.filter(m=>claimed[m.id+'_'+today]||m.check(emp)).length;
 
+  // `go`: adónde lleva cada misión cuando es la «siguiente» acción del día.
+  // La racha no tiene destino (es pasiva) — nunca se ofrece como siguiente.
+  const MISSION_GO = {
+    m_fc5: "showTab('flashcards')",
+    m_exam1: "showTab('exam')",
+    m_exam80: "showTab('exam')",
+    m_know3: "_subTab.aprender='repaso';showTab('repaso')"
+  };
+  const list = missions.map(m=>({
+    id: m.id,
+    title: LANG==='en'?m.title_en:m.title,
+    done: !!(claimed[m.id+'_'+today]||m.check(emp)),
+    current: Math.min(m.getCurrent(emp),m.target),
+    target: m.target, xp: m.xp,
+    go: MISSION_GO[m.id]||null
+  }));
   const rows = `${missions.map(m=>{
       const done=claimed[m.id+'_'+today]||m.check(emp);
       const current=Math.min(m.getCurrent(emp),m.target);
@@ -20550,7 +20605,17 @@ function renderDailyMissions(){
         <span class="dash-row-meta">+${m.xp} XP</span>
       </div>`;
     }).join('')}`;
-  return { rows, done: doneCount, total: missions.length };
+  return { rows, done: doneCount, total: missions.length, list };
+}
+
+// Acordeón de la sección «Hoy»: los pips muestran estado; el detalle
+// completo (las filas de siempre) se abre bajo demanda.
+function _hoyToggle(){
+  const d=document.getElementById('hoyDetail');
+  if(!d) return;
+  const open = d.style.display==='none';
+  d.style.display = open ? 'block' : 'none';
+  document.querySelectorAll('.hoy-pip').forEach(p=>p.setAttribute('aria-expanded', String(open)));
 }
 
 // ═══════ GEM SVG GENERATOR — CINEMATIC PRECIOUS STONES ═══════

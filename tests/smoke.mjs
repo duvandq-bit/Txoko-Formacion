@@ -3873,25 +3873,43 @@ test('the simulation carries ONE name everywhere: Simulación', () => {
     'XP toasts must not use the old name');
 });
 
-test('dashboard: one single «Hoy» section (plan + challenge + missions), no duplicate weakness row', () => {
-  // IA audit (C1+A3): 4 consecutive "what to do today" blocks with three
-  // visual frames, plus TWO weakness rows pointing at different places.
+test('dashboard «Hoy»: ring + single next action + pips, detail on demand', () => {
+  // Retention audit (jul 2026): 7 equal-weight ledger rows forced reading
+  // everything. Now: aggregate day-ring, ONE prioritized CTA, status pips;
+  // the full rows live in a collapsed #hoyDetail accordion.
   const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('function checkActiveLiveSession'));
   assert(/\$\{_en\?'Today':'Hoy'\}/.test(dash), 'the Hoy divider must exist');
-  assert(!/Today\\u2019s plan/.test(dash) && !/'Daily Missions':'Misiones del día'/.test(html),
-    'the old Plan de hoy / Misiones dividers must be gone (fused into Hoy)');
-  assert(!/'Needs practice':'Necesita práctica'/.test(dash),
-    'the redundant weak-topic alert row must be removed');
+  assert(/class="hoy-card"/.test(dash) && /class="hoy-ring"/.test(dash) && /hoy-ring-fill/.test(dash),
+    'the day-progress ring must exist');
+  assert(/class="hoy-next"/.test(dash) && /SIGUIENTE/.test(dash),
+    'the single prioritized next-action button must exist');
+  // Priority rule: SRS > weak practice > weekly challenge > closest mission.
+  assert(dash.indexOf('_srsDue>0) _next=') < dash.indexOf('else if(_weakDisplay) _next=')
+      && dash.indexOf('else if(_weakDisplay) _next=') < dash.indexOf('else if(!_chDone) _next='),
+    'next-action priority order broken');
+  assert(/class="hoy-pips"/.test(dash) && /_hoyToggle\(\)/.test(dash),
+    'status pips must toggle the detail accordion');
+  assert(/id="hoyDetail" style="display:none/.test(dash), 'detail must start collapsed');
+  // The old rows survive inside the accordion (SRS, weak, challenge, missions).
   assert(/\$\{renderWeeklyChallenge\(\)\}\s*\$\{_m\.rows\}/.test(dash),
-    'weekly challenge and mission rows must live INSIDE the Hoy ledger');
+    'challenge and mission rows must live inside #hoyDetail');
+  assert(!/'Needs practice':'Necesita práctica'/.test(dash),
+    'the redundant weak-topic alert row must stay removed');
+  // «Próximo rango» is passive context — it moved to «Tu progreso».
+  const hoyEnd = dash.indexOf('id="hoyDetail"');
+  const progIdx = dash.indexOf("'Your progress':'Tu progreso'");
+  const rankIdx = dash.indexOf('_rankProg ? `');
+  assert(progIdx !== -1 && rankIdx > progIdx, 'next-rank row must live under Tu progreso, not in Hoy');
   // El IIFE de «Hoy» no puede cerrar con "`;": el guard del dashboard corta
   // la plantilla en la primera aparición de esa secuencia.
   assert(!/<\/div>`; \}\)\(\)\}/.test(dash), 'Hoy IIFE must not emit a backtick-semicolon inside the template');
-  assert(/misiones'\} \$\{_m\.done\}\/\$\{_m\.total\}/.test(dash),
-    'the missions counter must survive on the Hoy divider');
-  // renderDailyMissions now returns rows+count (no divider of its own).
-  assert(/return \{ rows, done: doneCount, total: missions\.length \};/.test(html),
-    'renderDailyMissions must return bare rows for the fused section');
+  // renderDailyMissions exposes per-mission state for the ring/pips/next.
+  assert(/return \{ rows, done: doneCount, total: missions\.length, list \};/.test(html),
+    'renderDailyMissions must return the per-mission list');
+  assert(/function _hoyToggle\(\)/.test(html), '_hoyToggle accordion missing');
+  const css = read('styles.css');
+  assert(/\.hoy-card\{/.test(css) && /\.hoy-pip\.done\{/.test(css) && /\.hoy-next\{/.test(css),
+    'hoy component styles missing');
 });
 
 test('vinos: Sensorial+Mapa merged under Estudio — the bar holds 5 chips', () => {
