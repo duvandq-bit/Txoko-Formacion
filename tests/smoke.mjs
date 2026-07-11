@@ -1143,9 +1143,12 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
     'Try again must replay with the SAME persona, not silently reset to Shoesmith');
   // (3) Voz propia: 5 caras + 5 fotogramas de ánimo (sin parpadeo) embebidos.
   assert(/const CRITIC_FACES=\[/.test(html), 'CRITIC_FACES missing');
-  const facesSrc = html.slice(html.indexOf('const CRITIC_FACES=['), html.indexOf('const CRITIC_INTRO='));
-  assert((facesSrc.match(/data:image\/jpeg;base64,/g) || []).length === 5, 'CRITIC_FACES must have exactly 5 mood faces');
-  assert(/const CRITIC_INTRO='data:image\/jpeg;base64,/.test(html), 'CRITIC_INTRO missing');
+  for (let k = 0; k < 5; k++) {
+    assert(html.includes(`img/sprites/critic-f${k}.jpg`), `critic face ${k} path missing`);
+    assert(existsSync(join(ROOT, `img/sprites/critic-f${k}.jpg`)), `img/sprites/critic-f${k}.jpg missing on disk`);
+  }
+  assert(html.includes("const CRITIC_INTRO='img/sprites/critic-intro.jpg'") && existsSync(join(ROOT, 'img/sprites/critic-intro.jpg')),
+    'CRITIC_INTRO must point to the repo file');
   // (4) Barrido del generador real con la voz de la crítica: mismo estándar que
   //     Shoesmith — sin mesas/terceros, sin ingredientes en platos vacuos, sin
   //     eco de peso. Prueba que la voz NO es un simple alias de Shoesmith: sus
@@ -2804,10 +2807,11 @@ test('Camarero Survivors: héroe con ciclo de carrera de fotogramas reales (jul 
   // vertical ya existente — sin tocar la mecánica de dash (reutiliza el mismo
   // fotograma vía _etHeroFrame, con estela fantasma coherente).
   assert(/const ET_HERO_RUN=\[/.test(html), 'ET_HERO_RUN frame array missing');
-  const arrSrc = html.slice(html.indexOf('const ET_HERO_RUN=['), html.indexOf('];', html.indexOf('const ET_HERO_RUN=[')));
-  // PNG, no JPEG (jul 2026): el JPEG no tiene canal alfa y dejaba una caja de
-  // fondo visible sobre el suelo del comedor — bug real detectado en vivo.
-  assert((arrSrc.match(/data:image\/png;base64,/g) || []).length === 2, 'ET_HERO_RUN must embed exactly 2 transparent-PNG run-cycle frames');
+  // Transparencia obligatoria (el JPEG dejaba caja de fondo — bug real);
+  // desde jul 2026 son ARCHIVOS webp con alfa, no base64 inline.
+  assert(html.includes("const ET_HERO_RUN=['img/sprites/hero-a.webp','img/sprites/hero-b.webp']"),
+    'ET_HERO_RUN must wire the 2 run-cycle files');
+  for (const f of ['hero-a', 'hero-b']) assert(existsSync(join(ROOT, `img/sprites/${f}.webp`)), `img/sprites/${f}.webp missing on disk`);
   const e = html.indexOf('function launchElTurno(');
   const loaderSrc = html.slice(e, e + 60000);
   assert(/const HERO=ET_HERO_RUN\.map\(/.test(loaderSrc), 'HERO must be built from the ET_HERO_RUN frames, not a single SVG image');
@@ -2826,8 +2830,11 @@ test('Mr. Shoesmith: reactive face sprites wired, intro framed (no hex crop)', (
   // El juego Txoko usa el personaje Mr. Shoesmith (asset del propietario) con 5
   // caras reactivas por vidas + un plano para el intro, incrustados como imagen.
   assert(/const SHOESMITH_FACES\s*=\s*\[/.test(html), 'SHOESMITH_FACES array missing');
-  assert((html.match(/data:image\/jpeg;base64,/g) || []).length >= 6,
-    'expected the 5 mood faces + intro embedded as data-URIs');
+  // Archivos desde jul 2026 (antes base64 inline; el HTML adelgazó ~713KB).
+  for (let k = 0; k < 5; k++) {
+    assert(html.includes(`img/sprites/shoe-f${k}.jpg`), `shoe face ${k} path missing`);
+    assert(existsSync(join(ROOT, `img/sprites/shoe-f${k}.jpg`)), `img/sprites/shoe-f${k}.jpg missing on disk`);
+  }
   // txClientFace must return the sprite image (not the old inline SVG faces).
   // Generalizado por persona (jul 2026, segundo personaje La Crítica): lee
   // p.faces[mood] desde el registro TX_PERSONAS en vez del array a secas —
@@ -2844,6 +2851,8 @@ test('Mr. Shoesmith: reactive face sprites wired, intro framed (no hex crop)', (
   const intro = html.slice(html.indexOf('function txShowIntro'), html.indexOf('function txShowIntro') + 3000);
   assert(/p\.intro/.test(intro), 'intro must render the active persona\'s intro portrait');
   assert(/shoesmith:\{[\s\S]*?intro:SHOESMITH_INTRO/.test(html), 'the shoesmith persona must still wire SHOESMITH_INTRO');
+  assert(html.includes("const SHOESMITH_INTRO='img/sprites/shoe-intro.jpg'") && existsSync(join(ROOT, 'img/sprites/shoe-intro.jpg')),
+    'SHOESMITH_INTRO must point to the repo file');
   assert(!/clip-path:polygon\(50% 0%,100% 25%/.test(intro), 'intro portrait must not use the hexagon crop');
   const css = read('styles.css').replace(/\s+/g,' ');
   assert(/\.tx-shoe-face\{[^}]*object-fit:cover/.test(css), '.tx-shoe-face needs object-fit:cover framing');
@@ -2960,7 +2969,8 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   // El dibujo por código queda como respaldo hasta que carga cada imagen.
   assert(/const ET_FOE_SPRITES=\{/.test(html), 'ET_FOE_SPRITES map missing');
   const mapSrc = html.slice(html.indexOf('const ET_FOE_SPRITES={'), html.indexOf('};', html.indexOf('const ET_FOE_SPRITES={')));
-  const spriteKeys = [...mapSrc.matchAll(/^\s{2}([a-z]+):'data:image\/webp;base64,/gm)].map(m => m[1]);
+  const spriteKeys = [...mapSrc.matchAll(/([a-z]+):'img\/sprites\/foe-([a-z]+)\.webp'/g)].map(m => m[1]);
+  for (const k of spriteKeys) assert(existsSync(join(ROOT, `img/sprites/foe-${k}.webp`)), `img/sprites/foe-${k}.webp missing on disk`);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
   // Las claves del mapa deben cubrir EXACTAMENTE el roster de ALLERGENS del juego.
@@ -2998,7 +3008,8 @@ test('Camarero Survivors: JEFES alérgeno con arte propio y más grandes (jul 20
   // propietario) — y sale más grande (r 46→54, "un poco más grandes").
   assert(/const ET_BOSS_SPRITES=\{/.test(html), 'ET_BOSS_SPRITES map missing');
   const mapSrc = html.slice(html.indexOf('const ET_BOSS_SPRITES={'), html.indexOf('};', html.indexOf('const ET_BOSS_SPRITES={')));
-  const bossKeys = [...mapSrc.matchAll(/^\s{2}([a-z]+):'data:image\/webp;base64,/gm)].map(m => m[1]);
+  const bossKeys = [...mapSrc.matchAll(/([a-z]+):'img\/sprites\/boss-([a-z]+)\.webp'/g)].map(m => m[1]);
+  for (const k of bossKeys) assert(existsSync(join(ROOT, `img/sprites/boss-${k}.webp`)), `img/sprites/boss-${k}.webp missing on disk`);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
   // roster = SOLO el array ALLERGENS (EL CHEF también define {key:'chef',...}
@@ -3022,8 +3033,9 @@ test('Camarero Survivors: EL CHEF, jefe final desde la foto del propietario (jul
   // de explotar, barriga a la vista). Entra en el minuto 3 y cada 3 minutos.
   assert(/const ET_CHEF_SPRITES=\{/.test(html), 'ET_CHEF_SPRITES missing');
   const mapSrc = html.slice(html.indexOf('const ET_CHEF_SPRITES={'), html.indexOf('};', html.indexOf('const ET_CHEF_SPRITES={')));
-  assert(/calm:'data:image\/webp;base64,/.test(mapSrc) && /attack:'data:image\/webp;base64,/.test(mapSrc),
-    'the chef needs his two poses (calm patrol / ladle attack) embedded');
+  assert(/calm:'img\/sprites\/chef-calm\.webp'/.test(mapSrc) && /attack:'img\/sprites\/chef-attack\.webp'/.test(mapSrc),
+    'the chef needs his two pose files wired');
+  for (const f of ['chef-calm', 'chef-attack']) assert(existsSync(join(ROOT, `img/sprites/${f}.webp`)), `img/sprites/${f}.webp missing on disk`);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 120000);
   assert(/CHEF_SPR\[k\]=img/.test(body), 'chef sprite loader missing');
@@ -3116,6 +3128,34 @@ test('Camarero Survivors: la botella de cava SE VE (diana, volteo, burbujas, ond
   // La mecánica en sí no se toca: cadencia, daño en área y evolución intactos.
   assert(/G\.cavaT=Math\.max\(70,150-G\.cava\*12\)/.test(body) && /const R=55\+G\.cava\*9, D=22\+G\.cava\*10/.test(body),
     'cava cadence and AoE damage formulas must stay untouched');
+});
+
+test('Dieta del HTML: ningún sprite en base64 inline — siempre archivos del repo (jul 2026)', () => {
+  // Adelgazamiento aprobado por el propietario ("4 y 5"): los sprites en
+  // base64 engordaron el index.html ~713KB que TODO el equipo pagaba en la
+  // primera carga 4G. Ahora son archivos en img/sprites/ (el SW los cachea al
+  // vuelo y los juegos precargan los suyos). Este guard impide la vuelta
+  // atrás: ni un solo data:image base64 en el HTML.
+  assert(!/data:image\/(jpeg|png|webp);base64,/.test(html),
+    'inline base64 images are banned — ship sprites as repo files under img/sprites/');
+  // La precarga de personas existe (los swaps de animación no esperan a la red).
+  assert(/window\._txSpritesWarm/.test(html) && /Object\.values\(TX_PERSONAS\)\.forEach/.test(html),
+    'the persona-sprite warm-up preloader must run when the picker opens');
+});
+
+test('Duelos/Retos: ningún enunciado de alérgenos en formato sí/no (las opciones son listas) (jul 2026)', () => {
+  // Anotado por el auditor y aprobado por el propietario ("4 y 5"): tres tallos
+  // de WAITER_MSGS preguntaban sí/no («¿Los tiene X?», «…si contiene
+  // crustáceos», «¿tiene alérgenos X?») pero las opciones son SIEMPRE listas
+  // completas de alérgenos — desajuste pregunta/respuesta. Reformulados
+  // conservando la escena; este guard veta el patrón sí/no en todo el pool.
+  const wm = html.slice(html.indexOf('const WAITER_MSGS={'), html.indexOf('const SHOESMITH_MSGS={'));
+  assert(wm.length > 100, 'WAITER_MSGS block not found');
+  for (const bad of ['¿Los tiene', 'pregunta si', '¿tiene alérgenos', 'Does <strong>${d}</strong> contain', 'asks if', 'does <strong>${d}</strong> have allergens']) {
+    assert(!wm.includes(bad), `yes/no-style stem must not return to WAITER_MSGS: «${bad}»`);
+  }
+  assert(wm.includes('Repasa la ficha: ¿qué alérgenos lleva') && wm.includes('recita los alérgenos de'),
+    'the reworded stems must keep the scene while asking for the full list');
 });
 
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
@@ -3218,8 +3258,9 @@ test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñid
   // poses reales: parpadea en calma, habla al dictar la pregunta, guiña al
   // acierto, mastica su rabia a 2 vidas y grita alternando A/B a 1 vida.
   assert(/const SHOESMITH_ANIM=\{/.test(html), 'SHOESMITH_ANIM frame set missing');
-  for (const k of ['blink:', 'talk:', 'wink:', 'growl:', 'scream:']) {
-    assert(html.includes(k + "'data:image/jpeg;base64,"), `SHOESMITH_ANIM must embed the ${k.slice(0,-1)} frame as a data-URI`);
+  for (const k of ['blink', 'talk', 'wink', 'growl', 'scream', 'bored', 'irked']) {
+    assert(html.includes(`${k}:'img/sprites/shoe-${k}.jpg'`), `SHOESMITH_ANIM must wire the ${k} frame file`);
+    assert(existsSync(join(ROOT, `img/sprites/shoe-${k}.jpg`)), `img/sprites/shoe-${k}.jpg missing on disk`);
   }
   const i = html.indexOf('function txAnimTick(');
   assert(i !== -1, 'txAnimTick scheduler missing');
@@ -3245,8 +3286,9 @@ test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñid
     const re = new RegExp('const ' + anim + '=\\{');
     assert(re.test(html), `${anim} frame set missing`);
   }
-  for (const k of ['talk:', 'bored:', 'irked:', 'growl:', 'scream:']) {
-    assert(html.includes(k + "'data:image/jpeg;base64,"), `CRITIC_ANIM must embed the ${k.slice(0,-1)} frame as a data-URI`);
+  for (const k of ['talk', 'bored', 'irked', 'growl', 'scream']) {
+    assert(html.includes(`${k}:'img/sprites/critic-${k}.jpg'`), `CRITIC_ANIM must wire the ${k} frame file`);
+    assert(existsSync(join(ROOT, `img/sprites/critic-${k}.jpg`)), `img/sprites/critic-${k}.jpg missing on disk`);
   }
 });
 
