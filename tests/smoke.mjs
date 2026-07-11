@@ -3304,9 +3304,9 @@ test('Camarero Survivors: la bandeja PARECE bandeja y cada jefe tiene habilidad 
     'tray must carry the napkin + canapés that make it read as a tray');
   assert(!/ctx\.ellipse\(0,0,6\.5,6\.5\*sq/.test(body),
     'the old coin-spin tray (edge-on squash) must be gone');
-  // — sprite de bandeja (Grok del propietario): cableado con respaldo. El
-  //   archivo puede llegar después; hasta entonces manda el dibujo por código,
-  //   así que aquí NO se exige que exista en disco —
+  // — sprite de bandeja (vídeo Grok del propietario, jul 2026 → fotograma
+  //   recortado): preferido en el dibujo, con el respaldo por código detrás —
+  assert(existsSync(join(ROOT, 'img/sprites/tray.webp')), 'img/sprites/tray.webp missing on disk');
   assert(/const TRAY=new Image\(\); TRAY\.onload=\(\)=>\{ TRAY\._ok=true; \}; TRAY\.src='img\/sprites\/tray\.webp'/.test(body),
     'the illustrated tray loader must be wired (sprite-preferred)');
   assert(/if\(TRAY\._ok\)\{/.test(body),
