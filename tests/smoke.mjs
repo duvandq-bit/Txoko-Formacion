@@ -4008,6 +4008,50 @@ test('wine map degrades gracefully without maplibre (offline)', () => {
     'offline guard must run before the WebGL check');
 });
 
+test('Hook F1: record cards, crowns, duel juice and the overtaken trigger', () => {
+  // The social bridge Juegos → Ranking → Terraza: records stop dying on the
+  // player's own screen. 1-tap opt-in sharing; auto-post ONLY when taking #1.
+  assert(/function _refreshChampions\(/.test(html) && /function _txCrownFor\(/.test(html)
+      && /function _txShareRecord\(/.test(html) && /function _txRecordMsg\(/.test(html)
+      && /function _txThroneCheck\(/.test(html) && /function _hoyCheckOvertaken\(/.test(html),
+    'social-loop helpers missing');
+  assert(/_txShareRecord\(_txRecordMsg\('shoesmith',\$\{txokoState\.score\}\),this\)/.test(html),
+    'Mr. Shoesmith record screen must offer the share button');
+  assert(/id="etShareBtn"/.test(html) && /_txRecordMsg\('survivors',_secs,_ord\)/.test(html),
+    'Camarero Survivors game over must offer the share button');
+  assert(/_txRecordMsg\('duelo','\$\{dScore\}-\$\{cScore\}',remoteDuelState\.rivalName\)/.test(html),
+    'duel victory must offer the share button');
+  assert(/if\(isRecord\) _txThroneCheck\('txoko', txokoState\.score\);/.test(html)
+      && /_txThroneCheck\('elturno', Math\.floor\(G\.time\)\)/.test(html),
+    'taking the #1 must auto-post the crown card');
+  // The Terrace dresses [récord] messages as cards and crowns the champions.
+  assert(/chat-record-card/.test(html) && /\[récord\] /.test(html),
+    'chat must style [récord] messages as cards');
+  assert(/chat-author">\$\{_chatEsc\(m\.employee\)\}\$\{_txCrownFor\(m\.employee\)\}/.test(html),
+    'chat authors must wear the champion crown');
+  assert(/\$\{escapeHTML\(emp\.name\)\}\$\{_txCrownFor\(emp\.name\)\}/.test(html),
+    'ranking XP rows must wear the champion crown');
+  assert(/<div class="chat-title">La Terraza<\/div>/.test(html),
+    'the chat screen title must match the tab (La Terraza)');
+  // Duel victory juice: confetti + streak (loss resets, draw keeps it).
+  assert(/if\(iWon && typeof launchConfetti==='function'\) launchConfetti/.test(html),
+    'duel win must fire confetti');
+  assert(/emp\.duelStreak=\(emp\.duelStreak\|\|0\)\+1/.test(html) && /else if\(cWins\)\{ emp\.duelStreak=0; \}/.test(html),
+    'duel streak must grow on win and reset on loss');
+  assert(/duel-victory-ico/.test(html) && /duel-streak/.test(html),
+    'victory trophy/streak visuals missing');
+  // Overtaken trigger on the dashboard.
+  assert(/id="hoyOvertaken"/.test(html) && /_hoyCheckOvertaken\(\);/.test(html),
+    'dashboard must host and fire the overtaken check');
+  const css = read('styles.css');
+  assert(/\.chat-record-card\{/.test(css) && /\.tx-crown\{/.test(css) && /\.tx-share-btn\{/.test(css)
+      && /\.hoy-overtaken\{/.test(css) && /\.duel-victory-ico\{/.test(css),
+    'hook-loop styles missing');
+  // Anti-spam: record cards must NOT blast push notifications.
+  const share = html.slice(html.indexOf('async function _txShareRecord'), html.indexOf('function _txThroneCheck'));
+  assert(!/send-push/.test(share), 'record cards must not send mass push');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

@@ -1493,7 +1493,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.201';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.202';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1797,6 +1797,124 @@ async function supaFetchEtTop() {
     rows.forEach(r => { if(!best[r.employee] || r.score > best[r.employee].secs) best[r.employee] = { employee: r.employee, secs: r.score, orders: r.total || 0 }; });
     return Object.values(best);
   } catch(e) { return null; }
+}
+
+// ═══════ BUCLE SOCIAL DE RÉCORDS (Hook F1, jul 2026) ═══════
+// El puente Juegos → Ranking → Terraza: los récords dejan de morir en la
+// pantalla del jugador. Celebrar hitos raros, no cada partida — publicar
+// es 1 toque opt-in salvo al arrebatar el nº1 (evento de interés general).
+
+// nº1 vigente por juego — {txoko:{name,record}, elturno:{name,secs}}.
+// Fuente: Supabase (verdad entre dispositivos); sin conexión no hay coronas.
+let _txChampions = null;
+let _txChampionsAt = 0;
+async function _refreshChampions(force){
+  if(!force && _txChampions && Date.now()-_txChampionsAt < 5*60*1000) return _txChampions;
+  try{
+    const [shoe, et] = await Promise.all([
+      supaFetchTxokoTop10().catch(()=>null),
+      supaFetchEtTop().catch(()=>null)
+    ]);
+    const out = {};
+    if(shoe && shoe.length){ const t=shoe.slice().sort((a,b)=>(b.record||0)-(a.record||0))[0]; if(t && t.record>0) out.txoko={name:t.employee, record:t.record}; }
+    if(et && et.length){ const t=et.slice().sort((a,b)=>(b.secs||0)-(a.secs||0))[0]; if(t && t.secs>0) out.elturno={name:t.employee, secs:t.secs}; }
+    if(out.txoko || out.elturno){
+      _txChampions = out; _txChampionsAt = Date.now();
+      // memoria local del trono: la usan _txThroneCheck (¿se lo quité a
+      // alguien?) y _hoyCheckOvertaken (¿me lo quitaron a mí?).
+      const emp = (typeof getEmp==='function' && currentUser) ? getEmp(currentUser) : null;
+      if(emp){ emp._champSeen = out; saveDB(); }
+    }
+  }catch(_){}
+  return _txChampions;
+}
+
+// Corona junto al nombre del nº1 vigente (Terraza + Ranking).
+function _txCrownFor(name){
+  if(!_txChampions || !name) return '';
+  const c1 = _txChampions.txoko && _txChampions.txoko.name===name;
+  const c2 = _txChampions.elturno && _txChampions.elturno.name===name;
+  if(!c1 && !c2) return '';
+  const t = [c1?'Mr. Shoesmith':null, c2?'Camarero Survivors':null].filter(Boolean).join(' · ');
+  return ` <span class="tx-crown" title="${LANG==='en'?'Reigning #1':'Nº1 vigente'}: ${t}">👑</span>`;
+}
+
+// Texto de la tarjeta de récord (se construye al hacer clic — los nombres
+// con comillas no viajan por atributos onclick).
+function _txRecordMsg(game, a, b){
+  const _en = LANG==='en';
+  if(game==='shoesmith') return _en?`${currentUser} beat their record with Mr. Shoesmith: ${a} orders!`:`¡${currentUser} batió su récord con Mr. Shoesmith: ${a} comandas!`;
+  if(game==='survivors'){ const m=Math.floor(a/60), s=a%60; return _en?`${currentUser} survived ${m}:${s<10?'0':''}${s} in Camarero Survivors (${b} orders)!`:`¡${currentUser} sobrevivió ${m}:${s<10?'0':''}${s} en Camarero Survivors (${b} comandas)!`; }
+  if(game==='duelo') return _en?`${currentUser} won a duel vs ${b}: ${a}!`:`¡${currentUser} ganó un duelo vs ${b}: ${a}!`;
+  return '';
+}
+
+// Publica una tarjeta [récord] en la Terraza. Sin push masivo — celebrar
+// no es spamear; quien esté en el chat la ve al momento vía realtime.
+async function _txShareRecord(text, btn){
+  if(!text || !currentUser) return;
+  if(btn){ btn.disabled = true; btn.textContent = LANG==='en'?'Posting…':'Publicando…'; }
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages`, {
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
+      body: JSON.stringify({ employee: currentUser, room: CHAT_ROOM, message: '[récord] '+text })
+    });
+    if(!res.ok) throw 0;
+    if(btn) btn.textContent = LANG==='en'?'✓ Posted on the Terrace':'✓ Publicado en la Terraza';
+    if(typeof showToast==='function' && !btn) showToast(LANG==='en'?'👑 Posted on the Terrace':'👑 Publicado en la Terraza','success',3000);
+  }catch(_){
+    if(btn){ btn.disabled = false; btn.textContent = LANG==='en'?'🏆 Boast on the Terrace':'🏆 Presumir en la Terraza'; }
+    if(typeof showToast==='function') showToast(LANG==='en'?'Could not post — check your connection':'No se pudo publicar — revisa la conexión','warning',3500);
+  }
+}
+
+// Al arrebatar el nº1 a un compañero la tarjeta sale sola (evento raro y
+// de interés general). Compara contra el último trono VISTO (memoria
+// local) — sin fetch en caliente durante el fin de partida.
+function _txThroneCheck(game, score){
+  try{
+    const emp = getEmp(currentUser); if(!emp) return;
+    const seen = emp._champSeen && emp._champSeen[game];
+    if(!seen || !seen.name || seen.name===currentUser) return;
+    const beat = game==='txoko' ? score>(seen.record||0) : score>(seen.secs||0);
+    if(!beat) return;
+    const lbl = game==='txoko' ? 'Mr. Shoesmith' : 'Camarero Survivors';
+    const val = game==='txoko' ? score+' '+(LANG==='en'?'orders':'comandas')
+                               : Math.floor(score/60)+':'+String(score%60).padStart(2,'0');
+    _txShareRecord(LANG==='en'
+      ? `👑 ${currentUser} takes the #1 spot in ${lbl} from ${seen.name}: ${val}!`
+      : `👑 ¡${currentUser} le arrebata el nº1 de ${lbl} a ${seen.name}: ${val}!`);
+    emp._champSeen[game] = game==='txoko' ? {name:currentUser, record:score} : {name:currentUser, secs:score};
+    saveDB();
+  }catch(_){}
+}
+
+// Fila «te han superado» de Inicio: si tenía el nº1 y ya no, trigger rojo.
+function _hoyCheckOvertaken(){
+  if(!document.getElementById('hoyOvertaken')) return;
+  _refreshChampions().then(ch=>{
+    const host = document.getElementById('hoyOvertaken');
+    if(!ch || !host || !currentUser) return;
+    const emp = getEmp(currentUser); if(!emp) return;
+    const lost = [];
+    [['txoko','Mr. Shoesmith'],['elturno','Camarero Survivors']].forEach(([k,lbl])=>{
+      const now = ch[k] && ch[k].name;
+      if(emp._wasChamp && emp._wasChamp[k] && now && now!==currentUser) lost.push({lbl, by:now});
+      emp._wasChamp = emp._wasChamp || {};
+      if(now) emp._wasChamp[k] = (now===currentUser);
+    });
+    saveDB();
+    if(lost.length){
+      host.innerHTML = lost.map(l=>`<button type="button" class="dash-row hoy-overtaken" onclick="showTab('txoko')">
+        <span class="dash-row-num" aria-hidden="true">👑</span>
+        <span class="dash-row-body">
+          <span class="dash-row-title">${escapeHTML(l.by)} ${LANG==='en'?'took your #1 in':'te ha quitado el nº1 de'} ${l.lbl}</span>
+          <span class="dash-row-sub" style="display:block">${LANG==='en'?'win it back':'recupéralo'} ›</span>
+        </span>
+      </button>`).join('');
+    }
+  });
 }
 
 // ═══════ SUPABASE EMPLOYEE SYNC ═══════
@@ -15590,6 +15708,7 @@ function renderDashboard(){
       ${_pip(_msDone,(_en?'Missions':'Misiones')+' '+_m.done+'/'+_m.total)}
       ${_weakDisplay?_pip(false,_en?'Practice':'Práctica'):''}
     </div>
+    <div id="hoyOvertaken"></div>
     <div id="hoyDetail" style="display:none;margin-bottom:1rem">
       ${_srsDue>0 ? `
       <button class="dash-row" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
@@ -15695,6 +15814,7 @@ function renderDashboard(){
   startLiveQuizPolling();
   checkMissionCompletion();
   checkNewAchievements();
+  _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
 }
 
 
@@ -17188,7 +17308,8 @@ function renderRanking(){
 
   Promise.all([
     supaFetchAllEmployees(),
-    supaFetchLeaderboard()
+    supaFetchLeaderboard(),
+    _refreshChampions()          // coronas 👑 junto al nº1 vigente de cada juego
   ]).then(([remoteEmps, supaScores]) => {
     // Build unified employee map — remote is source of truth, local fills gaps
     let allEmps = {};
@@ -17265,7 +17386,7 @@ function renderRanking(){
         <div style="width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
         <div style="width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:${isMe?'linear-gradient(135deg,var(--gold),#9a7340)':i===0?'linear-gradient(135deg,var(--gold),#9a7340)':i===1?'linear-gradient(135deg,#e8e8e8,#d0d0d0)':i===2?'linear-gradient(135deg,#d4a574,#b8865c)':'rgba(196,154,60,.15)'};border:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:${i<3||isMe?'#1c2a22':'var(--parch2)'};font-weight:700;flex-shrink:0;overflow:hidden">${renderSmallAvatar(emp.name, 36)}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${escapeHTML(emp.name)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
+          <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${escapeHTML(emp.name)}${_txCrownFor(emp.name)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
           <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;font-weight:500;color:var(--parch3);margin-top:.1rem">${lvl.title} · ${LANG==='en'?'Lvl':'Nv'}.${lvl.level}${streak>1?` · ●${streak}${LANG==='en'?'d':'d'}`:''}</div>
           ${tags.length ? `<div style="font-family:'Quicksand',sans-serif;font-size:.58rem;font-weight:500;color:var(--parch4);margin-top:.15rem">${tags.join(' · ')}</div>` : ''}
         </div>
@@ -19986,7 +20107,14 @@ async function submitDefense() {
   const { cScore, dScore, cWins, dWins, tiebreak } = result;
   const iWon = dWins;
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;
-  if(iWon){ const emp=getEmp(currentUser); emp.duelWins=(emp.duelWins||0)+1; saveDB(); }
+  // Racha de duelos (Hook F1): las victorias seguidas suman; perder la
+  // corta; el empate la conserva. Con 2+ se muestra la llama.
+  let _duelStreak = 0;
+  { const emp=getEmp(currentUser);
+    if(iWon){ emp.duelWins=(emp.duelWins||0)+1; emp.duelStreak=(emp.duelStreak||0)+1; }
+    else if(cWins){ emp.duelStreak=0; }
+    _duelStreak = emp.duelStreak||0; saveDB(); }
+  if(iWon && typeof launchConfetti==='function') launchConfetti(2200);
   awardXP(xpAmt, iWon ? (LANG==='en'?'Duel victory! VS':'¡Victoria en duelo! VS') : cWins ? (LANG==='en'?'Duel lost':'Duelo perdido') : (LANG==='en'?'Duel draw':'Empate en duelo'));
   // F-P1-1: a_duel_win/3/10 fire on duelWins thresholds; was previously delayed.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
@@ -20001,7 +20129,7 @@ async function submitDefense() {
 
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;padding:2rem 1rem">
-      <div style="font-size:3.5rem;margin-bottom:.75rem">${iWon?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8 21h8M12 17v4"/><path d="M7 4H4a2 2 0 000 4c0 2.5 2 4 2 4h12s2-1.5 2-4a2 2 0 000-4h-3"/><path d="M7 4h10v8a5 5 0 01-10 0V4z"/></svg>`:cWins?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M4 11V8l3-3h4l3 3M4 11l4 4h4l4-4M16 11V8"/><path d="M8 15l-1 4h10l-1-4"/></svg>`}</div>
+      <div style="font-size:3.5rem;margin-bottom:.75rem">${iWon?`<svg class="duel-victory-ico" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;filter:drop-shadow(0 3px 8px rgba(196,154,60,.45))"><path d="M8 21h8M12 17v4"/><path d="M7 4H4a2 2 0 000 4c0 2.5 2 4 2 4h12s2-1.5 2-4a2 2 0 000-4h-3"/><path d="M7 4h10v8a5 5 0 01-10 0V4z"/></svg>`:cWins?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M4 11V8l3-3h4l3 3M4 11l4 4h4l4-4M16 11V8"/><path d="M8 15l-1 4h10l-1-4"/></svg>`}</div>
       <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:${iWon?'var(--sage)':cWins?'var(--rose)':'var(--gold)'};margin-bottom:.25rem">
         ${iWon?(LANG==='en'?'You win!':'¡Ganaste!'):cWins?(LANG==='en'?'You lose':'Perdiste'):(LANG==='en'?'Draw!':'¡Empate!')}
       </div>
@@ -20017,7 +20145,9 @@ async function submitDefense() {
           <div style="font-family:'Cinzel',serif;font-size:2rem;color:${dWins?'var(--sage)':'var(--rose)'}">${dScore}</div>
         </div>
       </div>
-      <div style="font-size:.75rem;color:var(--gold);margin-bottom:1.5rem">+${xpAmt} XP</div>
+      <div style="font-size:.75rem;color:var(--gold);margin-bottom:${iWon&&_duelStreak>=2?'.4rem':'1.5rem'}">+${xpAmt} XP</div>
+      ${iWon&&_duelStreak>=2?`<div class="duel-streak">🔥 ${LANG==='en'?`${_duelStreak}-duel win streak!`:`¡Racha de ${_duelStreak} duelos!`}</div>`:''}
+      ${iWon?`<button type="button" class="tx-share-btn" onclick="_txShareRecord(_txRecordMsg('duelo','${dScore}-${cScore}',remoteDuelState.rivalName),this)">🏆 ${LANG==='en'?'Boast on the Terrace':'Presumir en la Terraza'}</button>`:''}
       <button class="btn-primary" onclick="renderDuel()" style="width:100%">${LANG==='en'?'Back to duels':'Volver a duelos'}</button>
     </div>
   </div>`;
@@ -23662,6 +23792,7 @@ function launchElTurno(){
         <div class="et-sub" id="etOverSub">Fin del servicio</div>
         <div class="et-card"><div class="et-title" id="etOverTitle" style="font-size:44px">SE ACABÓ</div></div>
         <div class="et-statgrid" id="etOverStats"></div>
+        <button class="et-mini" id="etShareBtn" style="display:none">🏆 Presumir en la Terraza</button>
         <button class="et-big" id="etAgainBtn">Otra vez</button>
       </div>
 
@@ -24474,18 +24605,30 @@ function launchElTurno(){
     const isRec=Math.floor(G.time)>best;
     if(isRec){ try{ localStorage.setItem('etBestTime',String(Math.floor(G.time))); }catch(_){} }
     // récord POR EMPLEADO para el ranking (jul 2026): local + Supabase
+    let _newEmpRec=false;
     try{
       const _emp=getEmp(currentUser);
       if(_emp){
         const _prev=(_emp.etRecord&&_emp.etRecord.secs)||0;
         if(Math.floor(G.time)>_prev){
+          _newEmpRec=true;
           _emp.etRecord={secs:Math.floor(G.time),orders:G.score};
           saveDB();
           supaInsertEtRecord(currentUser,Math.floor(G.time),G.score);
           _etRenderRank();   // el tablón de inicio ya refleja el récord al volver
+          _txThroneCheck('elturno', Math.floor(G.time));   // ¿arrebaté el nº1? → corona sola
         }
       }
     }catch(_){}
+    // Hook F1: presumir del récord en la Terraza — 1 toque, opt-in.
+    const _shareBtn=document.getElementById('etShareBtn');
+    if(_shareBtn){
+      _shareBtn.style.display=_newEmpRec?'inline-block':'none';
+      _shareBtn.disabled=false;
+      _shareBtn.textContent='🏆 Presumir en la Terraza';
+      const _secs=Math.floor(G.time), _ord=G.score;
+      _shareBtn.onclick=()=>_txShareRecord(_txRecordMsg('survivors',_secs,_ord),_shareBtn);
+    }
     const bT=Math.max(best,Math.floor(G.time)), bm=Math.floor(bT/60), bs=bT%60;
     document.getElementById('etOverTitle').textContent=isRec?'¡RÉCORD!':'SE ACABÓ';
     document.getElementById('etOverSub').textContent=isRec?'Tu mejor turno hasta la fecha':'Fin del servicio';
@@ -25010,6 +25153,7 @@ function txGameOver(){
           <div class="txoko-stat-card"><div class="txoko-stat-num">${timeStr}</div><div class="txoko-stat-lbl">Tiempo</div></div>
           <div class="txoko-stat-card"><div class="txoko-stat-num"><span class="txoko-diff ${lvl.cls}">${lvl.name}</span></div><div class="txoko-stat-lbl">Nivel alcanzado</div></div>
         </div>
+        ${isRecord?`<button type="button" class="tx-share-btn" onclick="_txShareRecord(_txRecordMsg('shoesmith',${txokoState.score}),this)">🏆 ${LANG==='en'?'Boast on the Terrace':'Presumir en la Terraza'}</button>`:''}
         <button class="btn-primary" onclick="txStart(true,'${txokoState.persona||'shoesmith'}')" style="width:100%;margin-bottom:.75rem">${LANG==='en'?'Try again →':'Volver a intentarlo →'}</button>
         <button onclick="renderTxoko()" style="width:100%;padding:.85rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:500;color:var(--parch2);cursor:pointer;letter-spacing:.04em">${LANG==='en'?'← Main menu':'← Menú principal'}</button>
       </div>
@@ -25018,6 +25162,8 @@ function txGameOver(){
   // F-P1-1: belt-and-braces — also fire here in case the run ended without a record bump.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
   if(typeof checkMissionCompletion==='function') checkMissionCompletion();
+  // Hook F1: si además le arrebaté el nº1 a un compañero, la corona sale sola.
+  if(isRecord) _txThroneCheck('txoko', txokoState.score);
 }
 
 
@@ -25476,7 +25622,7 @@ function renderChat(){
       <div class="chat-head">
         <div class="chat-head-main">
           <div class="chat-eyebrow">${_en?'STAFF ROOM':'SALA DEL EQUIPO'}</div>
-          <div class="chat-title">Chat</div>
+          <div class="chat-title">La Terraza</div>
         </div>
         <button class="chat-presence-toggle" id="chatPresenceToggle" onclick="_chatTogglePresence()" aria-label="${_en?'Who is online':'Quién está conectado'}">
           <span class="chat-online-dot"></span>
@@ -25520,6 +25666,8 @@ function renderChat(){
   document.body.classList.add('chat-open');
   _chatFit();
   _chatConnect();
+  // Coronas (Hook F1): al llegar los nº1 vigentes, re-pintar los nombres.
+  _refreshChampions().then(ch=>{ if(ch && currentTab==='chat') _chatRenderStream(); });
 }
 
 // Size the chat to the live viewport (header/nav/padding vary by device) so the
@@ -25700,6 +25848,10 @@ function _chatRenderStream(forceScroll){
     } else if(m.image_url){
       body = `<img class="chat-photo" src="${_chatEsc(m.image_url)}" alt="foto" loading="lazy" onclick="event.stopPropagation();_chatOpenPhoto('${_chatEsc(m.image_url)}')">`
            + (m.message ? `<div class="chat-caption">${_chatDecorateMentions(_chatEsc(m.message), mentions)}</div>` : '');
+    } else if(/^\[récord\] /.test(m.message||'')){
+      // Tarjeta de récord (Hook F1): publicada desde el fin de partida de
+      // los juegos con el marcador [récord] — aquí se viste de gala.
+      body = `<div class="chat-record-card"><span class="chat-record-ico" aria-hidden="true">🏆</span><span>${_chatDecorateMentions(_chatEsc(m.message.replace(/^\[récord\] /,'')), mentions)}</span></div>`;
     } else {
       body = `<div class="chat-text">${_chatDecorateMentions(_chatEsc(m.message), mentions)}</div>`;
     }
@@ -25733,7 +25885,7 @@ function _chatRenderStream(forceScroll){
     html += `<div class="chat-row ${mine?'mine':'other'}${grouped?' grouped':''}${mentionsMe?' mentioned':''}" data-id="${m.id}">
       ${(!mine && !grouped) ? `<span class="chat-avatar">${renderSmallAvatar(m.employee, 30)}</span>` : `<span class="chat-avatar-spacer"></span>`}
       <div class="chat-bubble-wrap">
-        ${(!grouped) ? `<div class="chat-meta">${mine?'':`<span class="chat-author">${_chatEsc(m.employee)}</span>`}<span class="chat-ts">${_chatTime(m.created_at)}</span></div>` : ''}
+        ${(!grouped) ? `<div class="chat-meta">${mine?'':`<span class="chat-author">${_chatEsc(m.employee)}${_txCrownFor(m.employee)}</span>`}<span class="chat-ts">${_chatTime(m.created_at)}</span></div>` : ''}
         <div class="chat-bubble" onclick="_chatBubbleTap(this)">${quote}${body}</div>
         ${actions}${reactsHtml}
       </div>

@@ -7330,6 +7330,42 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .hoy-pip.done{background:rgba(77,138,94,.1);border-color:rgba(77,138,94,.3);color:var(--green-deep)}
 .hoy-pip:active{transform:scale(.96)}
 
+/* ── Hook F1 (jul 2026): el bucle Juegos → Ranking → Terraza ── */
+/* Tarjeta [récord] en la Terraza — el hito se viste de gala */
+.chat-record-card{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;
+  background:linear-gradient(145deg,rgba(212,170,76,.16),rgba(196,154,60,.06));
+  border:1px solid rgba(196,154,60,.5);border-radius:11px;
+  font-weight:600;font-size:.86rem;line-height:1.45}
+.chat-record-ico{font-size:1.25rem;flex-shrink:0;
+  filter:drop-shadow(0 2px 5px rgba(196,154,60,.5));
+  animation:txRecordPop .7s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes txRecordPop{0%{transform:scale(.3) rotate(-12deg)}70%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(1)}}
+/* Corona del nº1 vigente (Terraza + Ranking) */
+.tx-crown{font-size:.85em;cursor:help}
+/* Botón «Presumir en la Terraza» (fin de partida / victoria de duelo) */
+.tx-share-btn{display:block;width:100%;min-height:48px;margin-bottom:.75rem;padding:.7rem;
+  cursor:pointer;border:1px solid rgba(196,154,60,.5);border-radius:var(--r2);
+  background:linear-gradient(145deg,rgba(212,170,76,.2),rgba(196,154,60,.08));
+  font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;color:var(--gold-deep);
+  letter-spacing:.02em;transition:all .2s}
+.tx-share-btn:active{transform:scale(.98)}
+.tx-share-btn[disabled]{opacity:.75;cursor:default}
+/* Fila roja «te han quitado el nº1» en Inicio → Hoy */
+.hoy-overtaken{background:rgba(196,112,104,.08);border:1px solid rgba(196,112,104,.3)!important;
+  border-radius:11px;margin-bottom:.55rem;padding:.5rem .7rem;
+  animation:hoyOvertakenIn .4s ease both}
+@keyframes hoyOvertakenIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.hoy-overtaken .dash-row-title{color:#a8564c}
+/* Trofeo de victoria de duelo + racha */
+.duel-victory-ico{animation:duelTrophyPop .8s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes duelTrophyPop{0%{transform:scale(.2) rotate(-15deg);opacity:0}60%{transform:scale(1.18) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.duel-streak{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.08em;
+  color:#c4693c;margin-bottom:1.1rem;
+  animation:hoyOvertakenIn .5s ease .3s both}
+@media (prefers-reduced-motion:reduce){
+  .chat-record-ico,.duel-victory-ico,.hoy-overtaken,.duel-streak{animation:none}
+}
+
 /* study index: 2 columns split by a hairline cross */
 .dash-index{display:grid;grid-template-columns:1fr 1fr;position:relative;margin-bottom:1rem}
 .dash-index::before{content:'';position:absolute;top:8%;bottom:8%;left:50%;width:1px;background:rgba(28,42,34,.1)}
