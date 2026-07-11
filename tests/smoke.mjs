@@ -3825,6 +3825,37 @@ test('allergen drill moved from Examen to Aprender → Repaso Inteligente', () =
     'drill blink must freeze under reduced motion');
 });
 
+test('ranking hub aggregates game records (local-first + Supabase merge)', () => {
+  // Owner: "toda la competición en un solo sitio" — the Ranking tab now
+  // aggregates the Mr. Shoesmith and Camarero Survivors boards; the
+  // in-context boards (Juegos hub, game start screen) stay where they are.
+  assert(/function _renderRankingGames\(/.test(html), '_renderRankingGames missing');
+  assert(/id="rankingGames"/.test(html), 'renderRanking must include the games host div');
+  const fn = html.slice(html.indexOf('function _renderRankingGames'), html.indexOf('function renderRanking()'));
+  assert(/supaFetchTxokoTop10/.test(fn) && /supaFetchEtTop/.test(fn),
+    'both game leaderboards must be fetched');
+  // Local paint must happen BEFORE the remote fetch resolves (instant UI).
+  assert(fn.indexOf('paint(shoeLocal, etLocal)') < fn.indexOf('Promise.all'),
+    'must paint local records before awaiting Supabase');
+  assert(/if\(!document\.getElementById\('rankingGames'\)\) return;/.test(fn),
+    'remote repaint must bail if the user navigated away');
+  assert(/class="tx-top10"/.test(fn), 'boards must reuse the tx-top10 style');
+});
+
+test('onboarding guide matches the real Juegos hub (no Modo Error promise)', () => {
+  // The guide promised "Modo Error" inside Juegos but the mode only lives in
+  // the dashboard "Débiles" shortcut; the games page now lists what exists.
+  assert(!/Modo Error/.test(html) && !/Error Mode/.test(html),
+    'guide must not promise Modo Error anywhere');
+  const games = html.slice(html.indexOf("title_es:'Juegos y Duelos'"), html.indexOf("title_es:'Juegos y Duelos'") + 900);
+  assert(/Camarero Survivors/.test(games), 'games guide page must mention Camarero Survivors');
+  // Dead leftovers of the removed Modo Error card must stay gone.
+  const hub = html.slice(html.indexOf('function renderTxoko()'), html.indexOf('function renderTxTop10()'));
+  assert(!/getFailedDishes|failedLabel/.test(hub), 'renderTxoko must not compute unused failed-dish counters');
+  // The mode itself still exists from the dashboard shortcut.
+  assert(/onclick="startPersonalErrorMode\(\)"/.test(html), 'dashboard Débiles shortcut must survive');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

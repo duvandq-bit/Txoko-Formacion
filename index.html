@@ -1473,7 +1473,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.196';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.197';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7808,7 +7808,7 @@ const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Inspección Fantasma. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Ghost Inspection. You can also browse every service standard by category.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Duelos',title_en:'Games & Duels',text_es:'Modo supervivencia "Mr. Shoesmith" en la mesa 501, repasa tus puntos débiles en Modo Error, reta a compañeros en Duelos 1v1 remotos, y diviértete con la Ruleta Txoko. Compite por el ranking global y desbloquea logros.',text_en:'Survival mode "Mr. Shoesmith" at table 501, review your weak spots in Error Mode, challenge colleagues in remote 1v1 Duels, and have fun with the Txoko Roulette. Compete for the global ranking and unlock achievements.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Duelos',title_en:'Games & Duels',text_es:'Modo supervivencia "Mr. Shoesmith" en la mesa 501, esquiva alérgenos-monstruo en Camarero Survivors, reta a compañeros en Duelos 1v1 remotos y diviértete con la Ruleta Txoko. Compite por el ranking global y desbloquea logros.',text_en:'Survival mode "Mr. Shoesmith" at table 501, dodge allergen-monsters in Camarero Survivors, challenge colleagues in remote 1v1 Duels, and have fun with the Txoko Roulette. Compete for the global ranking and unlock achievements.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/><circle cx="12" cy="12" r="2" fill="#fff" opacity=".8"/></svg>`,color:'#5a9ab8',title_es:'Quiz en Vivo y Retos',title_en:'Live Quiz & Challenges',text_es:'El supervisor puede lanzar un Quiz en Vivo para todo el equipo en tiempo real. Cada semana hay un Reto Semanal con un tema diferente. Recibirás notificaciones en tu móvil cuando haya actividad.',text_en:'The supervisor can launch a Live Quiz for the whole team in real time. Each week there\'s a Weekly Challenge with a different topic. You\'ll receive mobile notifications when there\'s activity.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11z" fill="none" stroke="#fff" stroke-width="1.5"/><polygon points="12,7 15,11 12,15 9,11" fill="#fff" opacity=".6"/></svg>`,color:'#c49a3c',title_es:'¡Comienza tu aventura!',title_en:'Start your adventure!',text_es:'Practica todos los días para mantener tu racha, sube de nivel ganando XP y escala en el ranking. ¡Buena suerte!',text_en:'Practice every day to keep your streak, level up by earning XP and climb the ranking. Good luck!'}
 ];
@@ -17021,6 +17021,48 @@ function renderVideoDishInfo(dishName, cat) {
   ).join('');
 }
 
+// Récords de juegos dentro de la pestaña Ranking (propietario: «toda la
+// competición en un solo sitio»). Los tablones en contexto (hub de Juegos,
+// pantalla de inicio de Camarero Survivors) se mantienen; esto los agrega.
+// Mismo esquema local-primero de esos tablones: pinta con DB.employees al
+// instante y re-pinta al llegar Supabase. Reutiliza el estilo .tx-top10.
+function _renderRankingGames(){
+  const host=document.getElementById('rankingGames'); if(!host) return;
+  const _en=LANG==='en';
+  const fmtT=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+  const board=(title, rows, scoreOf)=>{
+    const top=rows.slice(0,5);
+    const inner = top.length ? top.map((e,i)=>{
+      const me=e.employee===currentUser;
+      const posCls=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      return '<div class="tx-top10-row">'
+        +'<span class="tx-top10-pos '+posCls+'">'+(i+1)+'</span>'
+        +'<span class="tx-top10-name'+(me?' me':'')+'">'+escapeHTML(e.employee)+(me?(_en?' (you)':' (tú)'):'')+'</span>'
+        +'<span class="tx-top10-score">'+scoreOf(e)+'</span></div>';
+    }).join('') : '<div style="text-align:center;font-size:.72rem;color:var(--parch3);padding:.7rem">'+(_en?'No one has played yet':'Nadie ha jugado todavía')+'</div>';
+    return '<div class="tx-top10" style="margin-top:.7rem"><div class="tx-top10-title">★ '+title+'</div>'+inner+'</div>';
+  };
+  const paint=(shoe, et)=>{
+    const h=document.getElementById('rankingGames'); if(!h) return;
+    h.innerHTML =
+      '<div class="tunic-divider" style="margin-top:1.1rem"><span>'+(_en?'Game records':'Récords de juegos')+'</span></div>'
+      + board('Mr. Shoesmith · '+(_en?'Best Services':'Mejores Servicios'), shoe, e=>e.record+' '+(_en?(e.record===1?'order':'orders'):(e.record===1?'comanda':'cmdas')))
+      + board('Camarero Survivors · '+(_en?'Best Shifts':'Mejores Turnos'), et, e=>fmtT(e.secs)+' · '+e.orders+' cmd');
+  };
+  const shoeLocal=Object.values(DB.employees).filter(e=>e.txokoRecord>0)
+    .map(e=>({employee:e.name,record:e.txokoRecord})).sort((a,b)=>b.record-a.record);
+  const etLocal=Object.values(DB.employees).filter(e=>e.etRecord&&e.etRecord.secs>0)
+    .map(e=>({employee:e.name,secs:e.etRecord.secs,orders:e.etRecord.orders||0})).sort((a,b)=>b.secs-a.secs);
+  paint(shoeLocal, etLocal);
+  Promise.all([supaFetchTxokoTop10().catch(()=>null), supaFetchEtTop().catch(()=>null)]).then(([rShoe,rEt])=>{
+    if(!document.getElementById('rankingGames')) return; // el usuario ya navegó a otra pestaña
+    let shoe=shoeLocal, et=etLocal;
+    if(rShoe&&rShoe.length){ const m={}; shoeLocal.forEach(r=>{m[r.employee]=r;}); rShoe.forEach(r=>{ if(!m[r.employee]||r.record>m[r.employee].record) m[r.employee]=r; }); shoe=Object.values(m).sort((a,b)=>b.record-a.record); }
+    if(rEt&&rEt.length){ const m={}; etLocal.forEach(r=>{m[r.employee]=r;}); rEt.forEach(r=>{ if(!m[r.employee]||r.secs>m[r.employee].secs) m[r.employee]=r; }); et=Object.values(m).sort((a,b)=>b.secs-a.secs); }
+    paint(shoe, et);
+  });
+}
+
 function renderRanking(){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
@@ -17030,10 +17072,12 @@ function renderRanking(){
       <div class="sup-hero-sub">${LANG==='en'?'All activity · Exams · Tests · Duels':'Toda la actividad · Exámenes · Alérgenos · Duelos'}</div>
     </div>
     <div id="rankingContent" style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">—</div>
+    <div id="rankingGames"></div>
   </div>`;
 
   // Force sync current user before loading ranking
   supaUpsertEmployee(currentUser);
+  _renderRankingGames();
 
   Promise.all([
     supaFetchAllEmployees(),
@@ -23268,10 +23312,6 @@ function renderTxoko(){
   const _en=LANG==='en';
   const emp=getEmp(currentUser);
   const record=emp.txokoRecord||0;
-  const failedCount=getFailedDishes().length;
-  const failedLabel=failedCount===0
-    ?(_en?'No errors yet':'Sin fallos aún')
-    :(_en?failedCount+' dishes to review':failedCount+' platos a repasar');
   const _gcDeco = `<span class="gc-strip"></span><span class="gc-corner tl"></span><span class="gc-corner tr"></span><span class="gc-corner bl"></span><span class="gc-corner br"></span><span class="gc-shine"></span>`;
   document.getElementById('appContent').innerHTML=`
     <div class="txoko-wrap tx-rh-hub">
