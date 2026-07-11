@@ -3143,6 +3143,26 @@ test('Dieta del HTML: ningún sprite en base64 inline — siempre archivos del r
     'the persona-sprite warm-up preloader must run when the picker opens');
 });
 
+test('Camarero Survivors: la campana de salud SE RECOGE al contacto y parece una campana (jul 2026)', () => {
+  // Reporte del propietario: "cuando pasas por los objetos que dan salud, el
+  // personaje no los recoge" — solo se recogían estando herido. Ahora el
+  // contacto recoge SIEMPRE: cura si falta vida; a tope de vida da +2 XP con
+  // su flotante verde (nunca se siente muerto). Y el rediseño aprovechado:
+  // campana de plata con halo, vapor, plato base, pomo y corazón.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 130000);
+  assert(/if\(d<G\.pr\+14\)\{/.test(body), 'contact radius must collect regardless of health');
+  assert(/G\.xp\+=2; G\.dmgs\.push\(\{x:p\.x,y:p\.y-9,val:'\+2',life:1,col:'#6ad46a'\}\)/.test(body),
+    'full-health pickup must convert to a small XP bonus with its green float');
+  assert(/G\.hp=Math\.min\(G\.maxhp,G\.hp\+p\.heal\)/.test(body), 'healing when hurt must stay untouched');
+  assert(/d<G\.pickR && G\.hp<G\.maxhp/.test(body), 'the magnet must still pull only when hurt');
+  // Rediseño: halo, vapor, plato base, cúpula, pomo, corazón.
+  assert(/ctx\.arc\(p\.x,p\.y\+bob-2,15,0,6\.29\)/.test(body), 'pickup needs its pulsing green halo');
+  assert(/quadraticCurveTo\(p\.x\+sx\+Math\.sin\(ph\)\*3/.test(body), 'pickup needs its wavy steam wisps');
+  assert(/ctx\.ellipse\(p\.x,p\.y\+bob\+1,13,3\.6,0,0,6\.29\)/.test(body), 'pickup needs its base plate');
+  assert(/ctx\.arc\(p\.x,p\.y\+bob-11,2\.4,0,6\.29\)/.test(body), 'pickup needs its brass knob');
+});
+
 test('Camarero Survivors: cuchillos orbitales de chef con estela de giro (jul 2026)', () => {
   // "Mejora las gráficas de los objetos que giran alrededor del héroe": los
   // triángulos de 9px son ahora cuchillos de chef (hoja curva con línea de
