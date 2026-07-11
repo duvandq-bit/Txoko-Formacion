@@ -1473,7 +1473,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.198';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.199';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -5530,7 +5530,7 @@ function renderSmartReview(){
           </div>
         </div>
         <div class="ri-greet">
-          <div class="ri-greet-hi">${_en?'SMART REVIEW':'REPASO INTELIGENTE'}</div>
+          <div class="ri-greet-hi">${_en?'SIMULATION':'SIMULACIÓN'}</div>
           <div class="ri-greet-name">${greeting}${empName?', '+empName:''}</div>
           <span class="ri-greet-rank">
             <span class="ri-greet-rank-icon">${rank.icon}</span>
@@ -6003,7 +6003,7 @@ function _renderSmartSummary(){
   const totalXP = Math.round(rawXP * _practiceMult);
   const _isReviewHeavy = _queueMastered > 0 && (_queueMastered / _queueLen) >= 0.5;
 
-  if(totalXP > 0) awardXP(totalXP, _en ? 'Smart Review' : 'Repaso Inteligente', 'smart');
+  if(totalXP > 0) awardXP(totalXP, _en ? 'Simulation' : 'Simulación', 'smart');
   // F-P1-5: SRS-related missions/achievements never unlocked because these checks were missing.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
   if(typeof checkMissionCompletion==='function') checkMissionCompletion();
@@ -7804,7 +7804,7 @@ function closePinAndEnter(){
 const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui en el Ritz-Carlton, Abama. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui at the Ritz-Carlton, Abama. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Simulación Contextual',title_en:'Contextual Simulation',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. Practica exactamente lo que ocurre en sala con respuestas adaptadas a cada escenario.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Practice exactly what happens on the floor with answers adapted to each situation.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Simulación',title_en:'Simulation',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. Practica exactamente lo que ocurre en sala con respuestas adaptadas a cada escenario. La encontrarás en Aprender → Simulación.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Practice exactly what happens on the floor with answers adapted to each situation. You\'ll find it under Learn → Simulation.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Inspección Fantasma. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Ghost Inspection. You can also browse every service standard by category.'},
@@ -8518,7 +8518,7 @@ function _aprChipsBar(){
   const _srsCount = _srsDueCount(getEmp(currentUser));
   return _subTabBar([
     ['emplatado',_en?'Plating':'Emplatado','📷'],
-    ['smart',_en?'Smart Review':'Repaso Inteligente',_srsCount>0?'🟢':'🧠'],
+    ['smart',_en?'Simulation':'Simulación',_srsCount>0?'🟢':'🧠'],
     ['repaso',_en?'Explore':'Explorar',''],
     ['flashcards','Flashcards',''],
     ['videos',_en?'Videos':'Videos','']
@@ -8643,6 +8643,7 @@ let _wineSearch = '';
 let _wineView = 'grid';
 let _vinoSubTab = 'carta';
 let _vinoPractica = 'flash';   // modo dentro del subtab «Práctica»: 'flash' | 'quiz'
+let _vinoAprendeView = 'conceptos';  // vista dentro de «Estudio»: 'conceptos' | 'sensorial' | 'mapa'
 
 // ═══ SENSORY MAP DATA ═══
 let _snsMode = 'wheel'; // wheel | wines | dishes
@@ -10263,18 +10264,18 @@ async function renderVinos(){
     // out — otherwise we'd overwrite their current view with the wine list.
     if(currentTab !== _startTab) return;
   }
-  // Los antiguos subtabs 'wineFlash'/'wineQuiz' se fusionaron en 'practica'
-  // (la barra desbordaba con 8 chips). Cualquier acceso directo con los
-  // valores viejos se normaliza aquí conservando el modo elegido.
+  // Los antiguos subtabs 'wineFlash'/'wineQuiz' (→ 'practica') y
+  // 'sensorial'/'mapa' (→ 'aprende') se fusionaron para que la barra no
+  // desborde (de 8 chips a 5). Cualquier acceso directo con los valores
+  // viejos se normaliza aquí conservando la vista elegida.
   let sub = _vinoSubTab || 'carta';
   if(sub==='wineFlash' || sub==='wineQuiz'){ _vinoPractica = (sub==='wineQuiz')?'quiz':'flash'; sub = _vinoSubTab = 'practica'; }
+  if(sub==='sensorial' || sub==='mapa'){ _vinoAprendeView = sub; sub = _vinoSubTab = 'aprende'; }
   const _en = LANG==='en';
   const tabs = [
     ['carta',_en?'Menu':'Carta',''],
     ['sommelier','Sommelier',''],
-    ['sensorial',_en?'Sensory':'Sensorial',''],
-    ['mapa',_en?'Map':'Mapa',''],
-    ['aprende',_en?'Learn':'Aprende',''],
+    ['aprende',_en?'Study':'Estudio',''],
     ['practica',_en?'Practice':'Práctica',''],
     ['servicio',_en?'Service':'Servicio','']
   ];
@@ -10283,9 +10284,7 @@ async function renderVinos(){
   try {
     if(sub === 'sommelier'){ _renderSommelier(c, bar); }
     else if(sub === 'carta'){ renderVinosCarta(); c.insertAdjacentHTML('afterbegin', bar); }
-    else if(sub === 'sensorial'){ _renderSensoryMap(c, bar); }
-    else if(sub === 'mapa'){ _renderWineMap(c, bar); }
-    else if(sub === 'aprende'){ _renderWineLearn(c, bar); }
+    else if(sub === 'aprende'){ _renderWineStudy(c, bar); }
     else if(sub === 'practica'){ _renderWinePractica(c, bar); }
     else if(sub === 'servicio'){ _renderWineService(c, bar); }
   } catch(e) {
@@ -10417,9 +10416,9 @@ function _renderSommelier(c, bar){
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg>
         <span><span class="dash-index-lbl">${_en?'Full Menu':'Carta Completa'}</span><span class="dash-index-meta">${WINES.length} ${_en?'wines':'vinos'}</span></span>
       </button>
-      <button class="dash-index-entry" onclick="_vinoSubTab='aprende';renderVinos()">
+      <button class="dash-index-entry" onclick="_vinoSubTab='aprende';_vinoAprendeView='conceptos';renderVinos()">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        <span><span class="dash-index-lbl">${_en?'Learn':'Aprende'}</span><span class="dash-index-meta">${WINE_CONCEPTS.length} ${_en?'concepts':'conceptos'}</span></span>
+        <span><span class="dash-index-lbl">${_en?'Study':'Estudio'}</span><span class="dash-index-meta">${WINE_CONCEPTS.length} ${_en?'concepts':'conceptos'}</span></span>
       </button>
       <button class="dash-index-entry" onclick="_vinoSubTab='practica';_vinoPractica='flash';renderVinos()">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
@@ -14421,6 +14420,23 @@ function _renderWineLearn(c, bar){
 }
 
 let _wfIdx=0, _wfFlipped=false, _wfCat='all';
+// «Estudio» agrupa Conceptos, Sensorial y Mapa bajo un solo chip (la barra
+// de Vinos desbordaba con 7). Mismo patrón que «Práctica»: el conmutador
+// viaja como parte de la barra para que los renderers internos (que hacen
+// c.innerHTML = bar + …) lo mantengan al re-renderizar.
+function _renderWineStudy(c, bar){
+  const _en = LANG==='en';
+  const v = _vinoAprendeView==='sensorial'||_vinoAprendeView==='mapa' ? _vinoAprendeView : 'conceptos';
+  const seg = `<div class="wine-practice-toggle wp3" role="tablist" aria-label="${_en?'Study view':'Vista de estudio'}">
+    <button type="button" role="tab" aria-selected="${v==='conceptos'}" class="wp-seg${v==='conceptos'?' on':''}" onclick="_vinoAprendeView='conceptos';renderVinos()">◇ ${_en?'Concepts':'Conceptos'}</button>
+    <button type="button" role="tab" aria-selected="${v==='sensorial'}" class="wp-seg${v==='sensorial'?' on':''}" onclick="_vinoAprendeView='sensorial';renderVinos()">✦ ${_en?'Sensory':'Sensorial'}</button>
+    <button type="button" role="tab" aria-selected="${v==='mapa'}" class="wp-seg${v==='mapa'?' on':''}" onclick="_vinoAprendeView='mapa';renderVinos()">◈ ${_en?'Map':'Mapa'}</button>
+  </div>`;
+  if(v==='sensorial') _renderSensoryMap(c, bar + seg);
+  else if(v==='mapa') _renderWineMap(c, bar + seg);
+  else _renderWineLearn(c, bar + seg);
+}
+
 // «Práctica» agrupa Flashcards y Quiz bajo un solo chip. El conmutador se
 // inyecta como parte de la barra para que ambos renderers (que hacen
 // c.innerHTML = bar + …) lo mantengan al re-renderizar. El estado del quiz
@@ -15258,8 +15274,8 @@ function renderDashboard(){
     const pct=s.total?Math.round(s.correct/s.total*100):0;
     return {label:tp.label, pct, key:tp.key};
   });
-  const weakTopic = topicArr.filter(t=>t.pct>0).sort((a,b)=>a.pct-b.pct)[0];
-  const bestTopic = topicArr.filter(t=>t.pct>0).sort((a,b)=>b.pct-a.pct)[0];
+  // weakTopic/bestTopic ya no se calculan aquí: la alerta de tema débil del
+  // inicio se retiró (duplicaba la práctica enfocada de la sección «Hoy»).
 
   // Progress rings for topics — TUNIC crystalline hex badges
   const TOPIC_RING_COLORS = { allergens:'#c47068',  ingredients:'#4888a0', history:'#7a6aaa', mixed:'#4d8a5e' };
@@ -15473,9 +15489,15 @@ function renderDashboard(){
       <span class="dash-plating-shine" aria-hidden="true"></span>
     </div>
 
-    <!-- ── PLAN DE HOY (SRS due + next rank + top weakness) ── -->
-    ${(_srsDue>0 || _rankProg || _weakDisplay) ? `
-    <div class="tunic-divider"><span>${_en?'Today\u2019s plan':'Plan de hoy'}</span></div>
+    <!-- ── HOY: plan (SRS · rango · debilidad) + reto semanal + misiones en
+         UN solo ledger. Antes eran 4 bloques consecutivos de "qué hacer hoy"
+         con marcos visuales distintos; la alerta de tema débil (→ Examen) se
+         retiró por duplicar la práctica enfocada (→ Simulación). ── -->
+    ${(()=>{ const _m=renderDailyMissions(); return `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.15rem">
+      <div class="tunic-divider" style="flex:1;margin-bottom:0"><span>${_en?'Today':'Hoy'}</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:.56rem;color:var(--parch4);letter-spacing:.08em;margin-left:.6rem">${_en?'missions':'misiones'} ${_m.done}/${_m.total}</div>
+    </div>
     <div style="margin-bottom:1rem">
       ${_srsDue>0 ? `
       <button class="dash-row" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
@@ -15499,33 +15521,13 @@ function renderDashboard(){
         <span class="dash-row-num" style="color:#a04848" aria-hidden="true">${_weakDisplay.count}</span>
         <span class="dash-row-body">
           <span class="dash-row-title">${_en?'Focus practice':'Práctica enfocada'}: ${escapeHTML(_weakDisplay.label)}</span>
-          <span class="dash-row-sub" style="display:block">${_en?'start smart review':'inicia repaso inteligente'}</span>
+          <span class="dash-row-sub" style="display:block">${_en?'start the simulation':'inicia la simulación'}</span>
         </span>
         <span class="dash-row-go">›</span>
       </button>` : ''}
-    </div>` : ''}
-
-    <!-- ── URGENT ALERT (weak topic) ── -->
-    ${weakTopic && weakTopic.pct < 60 ? `
-    <button class="dash-row" style="margin-bottom:.4rem" onclick="showTab('exam')">
-      <span class="dash-row-num" style="color:#a04848" aria-hidden="true">${weakTopic.pct}%</span>
-      <span class="dash-row-body">
-        <span class="dash-row-title">${LANG==='en'?'Needs practice':'Necesita práctica'}: ${weakTopic.label}</span>
-        <span class="dash-row-sub" style="display:block">${LANG==='en'?'accuracy — tap to practice':'precisión — toca para practicar'}</span>
-      </span>
-      <span class="dash-row-go">›</span>
-    </button>` : bestTopic && bestTopic.pct >= 80 ? `
-    <div class="dash-row" data-static style="margin-bottom:.4rem">
-      <span class="dash-row-num" style="color:var(--green-deep)" aria-hidden="true">${bestTopic.pct}%</span>
-      <span class="dash-row-body">
-        <span class="dash-row-title">${LANG==='en'?'Excellent!':'¡Excelente!'} ${bestTopic.label}</span>
-        <span class="dash-row-sub" style="display:block">${LANG==='en'?'accuracy':'precisión'}</span>
-      </span>
-    </div>` : ''}
-
-    ${renderWeeklyChallenge()}
-
-    ${renderDailyMissions()}
+      ${renderWeeklyChallenge()}
+      ${_m.rows}
+    </div>` })()}
 
     <!-- ── PRIMARY ACTIONS: manual index, no boxes ── -->
     <div class="tunic-divider"><span>${LANG==='en'?'Study':'Estudiar'}</span></div>
@@ -16679,7 +16681,7 @@ function renderStats(){
   const catBars2 = Object.entries(knownByCat).map(([cat,data])=>{
     const pct = data.total ? Math.round(data.known/data.total*100) : 0;
     const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-    return `<div class="t-stat-row"><span class="t-stat-label" style="font-size:.72rem">${cat}</span><div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div><span class="t-stat-pct" style="color:${col}">${data.known}/${data.total}</span></div>`;
+    return `<div class="t-stat-row"><span class="t-stat-label" style="font-size:.72rem">${typeof catLocal==='function'?catLocal(cat):cat}</span><div class="t-stat-track"><div class="t-stat-fill" style="width:${pct}%;background:${col}"></div></div><span class="t-stat-pct" style="color:${col}">${data.known}/${data.total}</span></div>`;
   }).join('');
 
   const recentSessions = [...sessions].reverse().slice(0,5).map(s=>{
@@ -20460,6 +20462,10 @@ function checkMissionCompletion(){
   saveDB();
 }
 
+// Devuelve las filas de misiones SIN divisor propio: viven dentro de la
+// sección única «Hoy» del inicio (antes eran 4 bloques consecutivos de
+// "qué hacer hoy" con marcos distintos — Plan de hoy, alerta de tema,
+// reto semanal y misiones — ahora un solo ledger).
 function renderDailyMissions(){
   const emp=getEmp(currentUser);
   const missions=getTodayMissions();
@@ -20467,12 +20473,7 @@ function renderDailyMissions(){
   const today=todayStr();
   const doneCount=missions.filter(m=>claimed[m.id+'_'+today]||m.check(emp)).length;
 
-  return `<div style="margin-bottom:1rem">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.15rem">
-      <div class="tunic-divider" style="flex:1;margin-bottom:0"><span>${LANG==='en'?'Daily Missions':'Misiones del día'}</span></div>
-      <div style="font-family:'DM Mono',monospace;font-size:.56rem;color:var(--parch4);letter-spacing:.08em;margin-left:.6rem">${doneCount}/${missions.length}</div>
-    </div>
-    ${missions.map(m=>{
+  const rows = `${missions.map(m=>{
       const done=claimed[m.id+'_'+today]||m.check(emp);
       const current=Math.min(m.getCurrent(emp),m.target);
       return `<div class="dash-row ${done?'done':''}" data-static style="min-height:46px">
@@ -20482,8 +20483,8 @@ function renderDailyMissions(){
         <span class="dash-row-title" style="font-weight:500;font-size:.82rem">${LANG==='en'?m.title_en:m.title}${!done&&current>0?` <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(28,42,34,.45)">${current}/${m.target}</span>`:''}</span>
         <span class="dash-row-meta">+${m.xp} XP</span>
       </div>`;
-    }).join('')}
-  </div>`;
+    }).join('')}`;
+  return { rows, done: doneCount, total: missions.length };
 }
 
 // ═══════ GEM SVG GENERATOR — CINEMATIC PRECIOUS STONES ═══════
