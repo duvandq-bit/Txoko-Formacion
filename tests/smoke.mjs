@@ -3933,6 +3933,63 @@ test('EN mode: ranking chips and plating category dividers are localized', () =>
   assert(/CAT_ICONS\[dd\.cat\]/.test(empl), 'CAT_ICONS must keep using the canonical key');
 });
 
+test('nav sheet: grouped into Consulta/Formación/Equipo (labels only)', () => {
+  // UX audit: 8 flat root options read as 3 chunks — no added taps/depth.
+  assert(/id="navGrpConsulta"/.test(html) && /id="navGrpFormacion"/.test(html) && /id="navGrpEquipo"/.test(html),
+    'the three nav group labels must exist');
+  const nav = html.slice(html.indexOf('id="appNav"'), html.indexOf('</nav>'));
+  const order = ['navSearchEntry','navGrpConsulta','navDashboard','navGrpFormacion','navAprender','navExam','navProtocolo','navVinos','navGrpEquipo','navTxoko','navRanking','navChat'];
+  let last = -1;
+  for (const id of order) {
+    const i = nav.indexOf('id="' + id + '"');
+    assert(i > last, 'nav order broken at ' + id);
+    last = i;
+  }
+  assert(/id="navChat" onclick="showTab\('chat'\)"/.test(nav), 'chat route/id must not change');
+  assert(/navGrpFormacion: LANG==='en'\?'Training':'Formación'/.test(html), 'group labels must localize');
+  const css = read('styles.css');
+  assert(/\.nav-group-lbl\{/.test(css), 'nav group label style missing');
+});
+
+test('renames: Terraza / La Carta / Repasar fallos (labels only)', () => {
+  // One place, one name: the tab matches the screen (La Terraza); the dish
+  // browser mirrors Vinos ("Carta"); the error-mode shortcut says what it does.
+  assert(/<\/svg> Terraza<\/button>/.test(html) && !/<\/svg> Chat<\/button>/.test(html),
+    'nav tab must say Terraza');
+  assert(/navChat: LANG==='en'\?'Terrace':'Terraza'/.test(html), 'applyLangToApp must localize Terraza');
+  assert(/\['repaso',_en\?'The Menu':'La Carta',''\]/.test(html), 'Aprender chip must say La Carta');
+  assert(/'Review misses':'Repasar fallos'/.test(html),
+    'dashboard error-mode shortcut must say Repasar fallos');
+  assert(/'Abrir Terraza'/.test(read('sw.js')), 'push action must match the tab name');
+});
+
+test('Logros live as a Ranking chip; Inicio keeps a one-row summary', () => {
+  // The 42-gem gallery was buried at the bottom of the longest screen.
+  assert(/\['logros',LANG==='en'\?'Achievements':'Logros','◆'\]/.test(html),
+    'Logros chip missing from Ranking hub');
+  assert(/logros:renderLogros/.test(html) && /function renderLogros\(/.test(html), 'renderLogros not wired');
+  assert(/logros:renderRankingHub/.test(html), 'logros route missing from renderMap');
+  assert(/stats:'ranking', logros:'ranking'/.test(html), 'logros parent mapping missing (nav highlight breaks)');
+  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('function checkActiveLiveSession'));
+  assert(!/\$\{renderAchievementsSection\(\)\}/.test(dash), 'the full gallery must leave the dashboard');
+  assert(/_subTab\.ranking='logros';showTab\('logros'\)/.test(dash),
+    'dashboard summary row must deep-link to Ranking → Logros');
+  assert(/function renderAchievementsSection\(/.test(html) && /function _toggleAchievements\(/.test(html),
+    'gallery renderer and its toggle must survive (they render inside renderLogros now)');
+});
+
+test('wine map degrades gracefully without maplibre (offline)', () => {
+  // P2: with the CDN unreachable the map died silently; now a note replaces
+  // the frame and the D.O.s render as a static list grouped by region.
+  const idx = html.indexOf('async function _initWineLeafletMap');
+  const init = html.slice(idx, idx + 4500);
+  assert(/typeof maplibregl === 'undefined'/.test(init), 'offline guard missing');
+  assert(/wineDOList/.test(init) && /regionDots\.filter/.test(init),
+    'offline fallback must render the region/D.O. list');
+  assert(init.indexOf("typeof maplibregl === 'undefined'") < init.indexOf('_webglOk'),
+    'offline guard must run before the WebGL check');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
