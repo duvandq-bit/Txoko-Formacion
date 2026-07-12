@@ -721,9 +721,9 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   // herramientas envueltas con toast de error.
   assert(/window\._supLastHash === _hash/.test(html), 'silent refresh must skip re-render when data is unchanged');
   assert(/window\._supLastTouch\|\|0\) < 1200/.test(html), 'refresh must yield to a recent touch');
-  // 5 herramientas envueltas: carta, analítica, aviso, quiz en vivo, stats LQA.
-  // (La antigua "Stats Protocolo" se retiró: su examen de protocolo backed-by-Supabase
-  // se eliminó al fusionar Protocolo→LQA, dejando el botón sin datos ni handler.)
+  // 5 herramientas envueltas: carta, analítica, aviso, fotos, stats LQA.
+  // (La antigua "Stats Protocolo" se retiró al fusionar Protocolo→LQA; el
+  // quiz en vivo se retiró en jul 2026 — lo sustituye el Quiz del Día.)
   assert(/function _supTool/.test(html) && (html.match(/_supTool\('/g) || []).length >= 5,
     'supervisor tools must go through the error-surfacing wrapper');
   assert(/function renderSupLqaStats/.test(html),
@@ -955,9 +955,9 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     'renderRepasoTopic per-category list must be shift-filtered');
   assert(/\$\{dishes\.length\?rows:/.test(html),
     'renderRepasoTopic must show an empty state when the shift leaves no dishes');
-  // #4 Live Quiz Host — pool de sujetos por turno con fallback a ≥5
-  assert(/const _lqShift = _shiftDishes\(DISHES\);\s*\n\s*const pool = _lqaShuffle\(_lqShift\.length>=5 \? _lqShift : DISHES\)\.slice\(0,5\)/.test(html),
-    'Live Quiz host subject pool must be shift-filtered with a fallback');
+  // #4 (Live Quiz Host: retirado en jul 2026 con el quiz de supervisor; su
+  //     sucesor, el Quiz del Día, NO filtra por turno a propósito — la
+  //     competición compartida exige un pool idéntico para todo el equipo)
   // #5 Servicio Fantasma — los fallbacks mantienen el turno antes de relajarlo
   assert(/if\(!safe\.length\) safe = DISHES\.filter\(function\(d\)\{ return _shiftDishOk\(d\) && _sfOfr\(d\)/.test(html),
     'Ghost service "safe" fallback must keep shift before dropping it');
@@ -1661,7 +1661,7 @@ test('async render functions guard against tab-change races', () => {
   // When the user navigates away while a multi-fetch render is awaiting
   // Supabase, the final innerHTML overwrites the new tab. Every async
   // renderTab function must capture currentTab and bail before writing.
-  for (const fn of ['renderVinos', 'renderDuel', 'renderJoinLiveQuiz']) {
+  for (const fn of ['renderVinos', 'renderDuel']) {
     const startIdx = html.search(new RegExp(`async function ${fn}\\(`));
     assert(startIdx !== -1, `${fn} no longer async — guard expectations stale`);
     // The body of the function is bounded by the next top-level function
@@ -1687,7 +1687,8 @@ test('quiz distractor pools prefer same-category dishes', () => {
     '_pickDistractorPool no longer filters by category');
   assert(/sameCat\.length\s*>=?\s*6/.test(helper[0]),
     '_pickDistractorPool fallback threshold removed — small categories like Sugerencias will starve');
-  // 1 definition + 4 callsites (startExam, renderLiveQuizHost, smart review, error mode)
+  // 1 definition + 4 callsites (startExam, smart review, error mode ×2 —
+  // el del quiz en vivo se fue con el quiz en vivo, jul 2026)
   const usages = (html.match(/_pickDistractorPool\(/g) || []).length;
   assert(usages >= 5, `_pickDistractorPool used ${usages-1} times; expected 4 callsites`);
   // No raw `DISHES.filter(x=>x.id!==d.id)` should remain — those bypassed the category filter
@@ -1786,28 +1787,6 @@ test('mobile input font-size avoids iOS Safari auto-zoom trap', () => {
     assert(px >= 16,
       `#${id} inline font-size is ${px}px — iOS Safari auto-zooms <16px inputs on focus`);
   }
-});
-
-test('live quiz answer submission guards against double-tap race', () => {
-  // submitLiveAnswer does a read-modify-write of sess.answers (not an
-  // atomic upsert). On slow restaurant Wi-Fi the round trip can take
-  // seconds; a second tap on another choice before the first resolves
-  // races the first and can silently overwrite it — the camarero's
-  // first (intended) answer gets replaced by whichever network call
-  // resolves last. The handler must disable #liveChoices buttons and
-  // bail on re-entry *before* the first await, synchronously on tap.
-  const startIdx = html.search(/async function submitLiveAnswer\(/);
-  assert(startIdx !== -1, 'submitLiveAnswer not found');
-  const slice = html.slice(startIdx, startIdx + 800);
-  const firstAwaitIdx = slice.search(/\bawait\b/);
-  assert(firstAwaitIdx !== -1, 'submitLiveAnswer has no await — guard expectations stale');
-  const beforeAwait = slice.slice(0, firstAwaitIdx);
-  assert(/#liveChoices button/.test(beforeAwait),
-    'submitLiveAnswer must inspect/disable #liveChoices buttons before the first await');
-  assert(/\.disabled\s*=\s*true/.test(beforeAwait),
-    'submitLiveAnswer must disable choice buttons before the first await — double-tap can overwrite the first answer');
-  assert(/return/.test(beforeAwait),
-    'submitLiveAnswer must bail out early on re-entry (already-disabled buttons) before the first await');
 });
 
 test('pinSubmit guards against re-entrant double-submit', () => {
@@ -3463,9 +3442,12 @@ test('Quiz del día: abierto 24/7 sin supervisor — semilla diaria, avance auto
   // las preguntas». El quiz en vivo exigía sesión del supervisor (sin ella
   // no había ni puerta en el dashboard) y un ▶ manual por pregunta. El Quiz
   // del Día corre solo; el modo con anfitrión sobrevive como modo evento.
-  // — tile SIEMPRE visible (el del vivo sigue oculto salvo sesión activa) —
+  // — tile SIEMPRE visible; el quiz en vivo de supervisor se RETIRÓ entero
+  //   (segunda petición: «ya no hace falta») —
   assert(/id="qdTile"[^>]*style="display:flex/.test(html), 'the daily-quiz tile must be always visible on the dashboard');
-  assert(/id="liveQuizTile" style="display:none/.test(html), 'the hosted live-quiz tile must stay hidden unless a session exists (event mode)');
+  assert(!/renderLiveQuizHost|renderJoinLiveQuiz|supaCreateLiveSession|_supTool\('quiz'\)|id="liveQuizTile"/.test(html),
+    'the supervisor-hosted live quiz (host view, join view, session helpers, panel button, hidden tile) must be gone');
+  assert(!/rest\/v1\/live_sessions/.test(html), 'no code may still read or write the live_sessions table');
   // — mismas 5 preguntas para todos: fecha → mulberry32 → generación local —
   assert(/function _qdRng\(\)/.test(html) && /0x6D2B79F5/.test(html) && /_qdDayKey\(\)\.replace/.test(html),
     'questions must derive from a date-seeded RNG (same questions for everyone, no server)');

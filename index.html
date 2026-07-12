@@ -893,16 +893,9 @@ let allergenTestState = null;
 
 // ═══ ENVIAR AVISO / NOTIFICACIÓN ═══
 
-// ═══ QUIZ EN VIVO ═══
-
-let liveQuizInterval = null;
-
-let liveCurrentQ = 0;
-
-// ═══ PARTICIPAR EN QUIZ EN VIVO (vista empleado) ═══
-
-let livePlayerInterval = null;
-let livePlayerLastQ = -1;
+// ═══ QUIZ EN VIVO — retirado (propietario, jul 2026): lo sustituye el Quiz
+// del Día (abierto 24/7, sin supervisor). La tabla live_sessions de Supabase
+// queda sin lectores; se puede borrar cuando se quiera. ═══
 
 // ═══ CARTA EDITOR ═══
 
@@ -8029,21 +8022,15 @@ function logout(){
     supaUpsertEmployee(currentUser);
     _cleanupPushOnLogout(currentUser); // fire-and-forget
   }
-  stopLiveQuizPolling();
   // ── Clear ALL active timers/intervals to prevent memory leaks ──
   clearTimeout(_sessionTimer); _sessionTimer = null;
   clearInterval(timerInterval); timerInterval = null;
-  clearInterval(_liveCheckInterval); _liveCheckInterval = null;
   clearInterval(_duelTimerInterval); _duelTimerInterval = null;
-  clearInterval(liveQuizInterval); liveQuizInterval = null;
-  clearInterval(livePlayerInterval); livePlayerInterval = null;
-  clearInterval(liveCountdownTimer); liveCountdownTimer = null;
   clearInterval(_qdTimer); _qdTimer = null; _qdState = null;
   clearInterval(txokoTimer); txokoTimer = null;
   // ── Clear supervisor-scope leaks so next user can't read team data from window ──
   supAuthenticated = false;
   try { delete window._supAllEmps; delete window._supEmpNames; } catch(_) {}
-  _liveQuizQuestions = null; _liveHostQuestions = null;
   // F-P2-2: reset ruleta module-level globals so the next user inherits a clean state
   // (player roster, last result pop-up, history, spin angle).
   _ruletaPlayers = []; _ruletaResult = null; _ruletaHistory = [];
@@ -8061,7 +8048,6 @@ function logout(){
 function supExitPanel(){
   supAuthenticated = false;
   try { delete window._supAllEmps; delete window._supEmpNames; } catch(_) {}
-  _liveHostQuestions = null;
   showTab('dashboard');
 }
 
@@ -15813,19 +15799,9 @@ function renderDashboard(){
       <span class="dash-row-go">›</span>
     </div>
 
-    <!-- live quiz tile (hidden by default) -->
-    <div onclick="renderJoinLiveQuiz()" id="liveQuizTile" style="display:none;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--gold-b);border:2px solid var(--gold-a);border-radius:var(--r2);margin-bottom:.5rem;cursor:pointer">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-      <div>
-        <div style="font-size:.85rem;font-weight:500;color:var(--gold)">${LANG==='en'?'Live quiz active':'Quiz en vivo activo'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${LANG==='en'?'Join the supervisor\'s session':'Únete a la sesión del supervisor'}</div>
-      </div>
-    </div>
   `;
   animateCounters();
-  checkActiveLiveSession();
   _qdTileSync();
-  startLiveQuizPolling();
   checkMissionCompletion();
   checkNewAchievements();
   _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
@@ -15833,29 +15809,9 @@ function renderDashboard(){
 
 
 
-async function checkActiveLiveSession(){
-  try {
-    // Check for both 'waiting' and 'active' sessions so employees see the tile as soon as the supervisor creates the quiz
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?state=in.(waiting,active)&order=created_at.desc&limit=1`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
-    if(!res.ok) return;
-    const rows = await res.json();
-    const tile = document.getElementById('liveQuizTile');
-    if(tile) tile.style.display = rows.length ? 'flex' : 'none';
-  } catch(e){}
-}
-
-// Check for live quiz every 15 seconds while on dashboard
-let _liveCheckInterval = null;
-function startLiveQuizPolling(){
-  if(_liveCheckInterval) return;
-  _liveCheckInterval = setInterval(()=>{
-    if(currentTab === 'dashboard') checkActiveLiveSession();
-  }, 15000);
-}
-function stopLiveQuizPolling(){
-  if(_liveCheckInterval){ clearInterval(_liveCheckInterval); _liveCheckInterval = null; }
-}
+// (checkActiveLiveSession + el polling de 15s del quiz en vivo se retiraron
+// con el quiz de supervisor: el Quiz del Día no necesita vigilar nada — su
+// tile es permanente y _qdTileSync solo pinta la participación del día)
 
 // ═══════ FLASHCARDS ═══════
 function initFlashcards(topic,cat){
@@ -17651,7 +17607,6 @@ function _supTool(k){
     ({ carta: ()=>renderCartaEditor(),
        analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
-       quiz: ()=>renderLiveQuizHost(window._supEmpNames),
        fotos: ()=>renderSupPhotoQueue(),
        lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
   }catch(e){
@@ -17972,10 +17927,9 @@ function renderSupDashboard(silent){
               <span style="flex:1;text-align:left;font-size:.78rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Dish photos':'Fotos de platos'}<br><span style="font-size:.6rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'approve team submissions':'aprobar fotos del equipo'}</span></span>
               <span style="color:var(--parch4)">›</span>
             </button>
-            <button onclick="_supTool('quiz')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(77,138,94,.06),rgba(77,138,94,.02));border:1.5px solid rgba(77,138,94,.2);border-left:3px solid #4d8a5e;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--sage),var(--green-deep));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>
-              <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'Live quiz':'Quiz en vivo'}</span>
-            </button>
+            <!-- Quiz en vivo retirado del panel (propietario, jul 2026): el
+                 Quiz del Día del dashboard lo sustituye — abierto 24/7, sin
+                 anfitrión. -->
             <button onclick="_supTool('lqa')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
@@ -18662,453 +18616,12 @@ async function sendNotification(){
   document.getElementById('notifMsg').value = '';
 }
 
-// ═══ QUIZ EN VIVO ═══
-async function supaCreateLiveSession(questions){
-  try {
-    const code = Math.floor(1000+Math.random()*9000).toString();
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
-        'Content-Type': 'application/json', 'Prefer': 'return=representation'
-      },
-      body: JSON.stringify({ code, questions: JSON.stringify(questions), current_q: 0, state: 'waiting', answers: '{}', created_at: new Date().toISOString() })
-    });
-    if(!res.ok) return null;
-    const rows = await res.json();
-    return rows[0] || null;
-  } catch(e){ return null; }
-}
-
-async function supaGetLiveSession(code){
-  try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?code=eq.${code}&select=*`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
-    if(!res.ok) return null;
-    const rows = await res.json();
-    return rows[0] || null;
-  } catch(e){ return null; }
-}
-
-async function supaUpdateLiveSession(code, patch){
-  try {
-    // Remove undefined values
-    const clean = Object.fromEntries(Object.entries(patch).filter(([,v])=>v!==undefined));
-    await fetch(`${SUPA_URL}/rest/v1/live_sessions?code=eq.${code}`, {
-      method: 'PATCH',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(clean)
-    });
-  } catch(e){}
-}
-
-async function supaSubmitLiveAnswer(code, name, qIdx, answer){
-  try {
-    const sess = await supaGetLiveSession(code);
-    if(!sess) return;
-    const answers = jParse(sess.answers, {});
-    if(!answers[qIdx]) answers[qIdx] = {};
-    answers[qIdx][name] = answer;
-    await supaUpdateLiveSession(code, { answers: JSON.stringify(answers) });
-  } catch(e){}
-}
-
-
-
-// Module-level reference — advanceLiveQuiz reads this instead of embedding JSON
-// into the onclick attribute (XSS fix, B1).
-let _liveHostQuestions = null;
-
-function renderLiveQuizHost(empNames){
-  const _lqEn = LANG==='en';
-  // Build 5 random questions
-  // F-P2-3 + F-P2-5: Fisher-Yates instead of biased Math.random()-.5 sort.
-  // Also avoids mutating the global DISHES array, which the previous .sort() did in place.
-  // El anfitrión del Live Quiz respeta su turno de estudio activo (a/c); si el
-  // turno deja menos de 5 platos, se completa con el pool general para no quedar
-  // corto de preguntas.
-  const _lqShift = _shiftDishes(DISHES);
-  const pool = _lqaShuffle(_lqShift.length>=5 ? _lqShift : DISHES).slice(0,5);
-  const questions = pool.map(d => {
-    const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
-    const correct = (topic.a(d)||'').trim();
-    const wrongs = _lqaShuffle(_pickDistractorPool(d)).slice(0,3).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
-    const choices = _lqaShuffle([correct,...wrongs.slice(0,3)]);
-    return { dish: d.name, topic: topic.label, correct, choices, correctIdx: choices.indexOf(correct) };
-  });
-  _liveHostQuestions = questions;
-
-  const c = document.getElementById('appContent');
-  c.innerHTML = `<div class="sup-wrap">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="stopLiveQuiz();renderSupDashboard();" aria-label="${_lqEn?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${_lqEn?'Live Quiz':'Quiz en vivo'}</div>
-    </div>
-    <div id="liveQuizHostContent">
-      <div style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem" role="status" aria-live="polite">⏳ ${_lqEn?'Creating session…':'Creando sesión…'}</div>
-    </div>
-  </div>`;
-
-  supaCreateLiveSession(questions).then(sess => {
-    if(!sess){ document.getElementById('liveQuizHostContent').innerHTML=`<div style="color:var(--rose);text-align:center;padding:1rem" role="alert">${_lqEn?'Could not create session. Check live_sessions table in Supabase.':'Error al crear sesión. Verifica la tabla live_sessions en Supabase.'}</div>`; return; }
-    const code = sess.code;
-    const _safeCode = encodeURIComponent(code);
-    document.getElementById('liveQuizHostContent').innerHTML = `
-      <div style="text-align:center;background:var(--gold-b);border:2px solid var(--gold-a);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">${_lqEn?'Session code':'Código de sesión'}</div>
-        <div style="font-family:'Cinzel',serif;font-size:3rem;color:var(--gold);letter-spacing:.15em;font-weight:700" aria-label="${_lqEn?'Session code':'Código de sesión'} ${escapeHTML(code)}">${escapeHTML(code)}</div>
-        <div style="font-size:.75rem;color:var(--parch3);margin-top:.4rem">${_lqEn?'Staff enter this code in the app':'Los empleados introducen este código en la app'}</div>
-      </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem">${_lqEn?'Connected participants':'Participantes conectados'}</div>
-        <div id="liveParticipants" role="status" aria-live="polite" style="font-size:.82rem;color:var(--parch3);font-style:italic">${_lqEn?'Waiting…':'Esperando…'}</div>
-      </div>
-      <div id="liveQuizProgress" role="status" aria-live="polite" style="margin-bottom:1rem"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;padding:.5rem .75rem;background:var(--ink2);border-radius:var(--r2)">
-        <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.1em">⏱ ${_lqEn?'Time per question':'Tiempo por pregunta'}</span>
-        <span id="liveCountdownHost" role="timer" aria-live="off" style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parch3);font-weight:600;min-width:36px;text-align:right">20s</span>
-      </div>
-      <div style="display:flex;gap:.5rem">
-        <button onclick="advanceLiveQuiz('${_safeCode}')" id="liveNextBtn" class="btn-primary" style="flex:1">▶ ${_lqEn?'Start quiz':'Iniciar quiz'}</button>
-        <button onclick="stopLiveQuiz();supaUpdateLiveSession('${_safeCode}',{state:'ended'});renderSupDashboard();" style="padding:.75rem 1.1rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);cursor:pointer;letter-spacing:.03em">${_lqEn?'End':'Terminar'}</button>
-      </div>`;
-
-    // Poll for participants
-    liveQuizInterval = setInterval(async () => {
-      const s = await supaGetLiveSession(code);
-      if(!s) return;
-      const answers = jParse(s.answers, {});
-      const participants = [...new Set(Object.values(answers).flatMap(q=>Object.keys(q)))];
-      const pEl = document.getElementById('liveParticipants');
-      if(pEl) pEl.innerHTML = participants.length
-        ? participants.map(p=>`<span style="display:inline-block;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.2rem .6rem;font-size:.75rem;color:var(--gold);margin:.15rem">${escapeHTML(p)} ✓</span>`).join('')
-        : `<span style="color:var(--parch3);font-style:italic">${_lqEn?'Waiting for participants…':'Esperando participantes…'}</span>`;
-
-      // Host real-time view: show the CURRENT question being asked (live)
-      // plus results of the PREVIOUS question, if any. Previously only the
-      // previous-question block existed, so the supervisor had zero visibility
-      // into what participants were currently seeing — which led to "no veo
-      // las preguntas en tiempo real" feedback.
-      const qIdx = s.current_q; // 1-indexed
-      const pEl2 = document.getElementById('liveQuizProgress');
-      if(pEl2){
-        const blocks = [];
-        // Current question (active right now)
-        if(qIdx >= 1 && qIdx <= questions.length){
-          const currentQ = questions[qIdx-1];
-          const currentAnswers = answers[qIdx-1] || {};
-          const submittedCount = Object.keys(currentAnswers).length;
-          const correctNow = Object.values(currentAnswers).filter(a=>a===currentQ.correct).length;
-          const choicesHtml = currentQ.choices.map((ch,i) => {
-            const isCorrect = ch === currentQ.correct;
-            return `<div style="display:flex;align-items:center;gap:.5rem;padding:.35rem .55rem;border-radius:var(--r3);background:${isCorrect?'rgba(77,138,94,.08)':'rgba(244,237,226,.04)'};border:1px solid ${isCorrect?'rgba(77,138,94,.35)':'var(--line)'};margin-bottom:.25rem">
-              <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);min-width:14px">${String.fromCharCode(65+i)}.</span>
-              <span style="flex:1;font-size:.78rem;color:var(--parchment)">${escapeHTML(ch||'')}</span>
-              ${isCorrect?`<span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--sage);letter-spacing:.05em">✓ ${_lqEn?'CORRECT':'CORRECTA'}</span>`:''}
-            </div>`;
-          }).join('');
-          blocks.push(`<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--gold-a);border-left:3px solid var(--gold);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.6rem">
-            <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">▶ ${_lqEn?'Live now':'En directo'} · ${_lqEn?'Question':'Pregunta'} ${qIdx} ${_lqEn?'of':'de'} ${questions.length}</div>
-            <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);margin-bottom:.15rem">${escapeHTML(currentQ.dish||'')}</div>
-            <div style="font-size:.65rem;color:var(--parch3);margin-bottom:.55rem">${escapeHTML(currentQ.topic||'')}</div>
-            ${choicesHtml}
-            <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.55rem;font-family:'DM Mono',monospace;font-size:.66rem">
-              <span style="color:var(--parch3)">${submittedCount}/${participants.length} ${_lqEn?'answered':'respondidas'}</span>
-              <span style="color:${correctNow/Math.max(1,submittedCount)>=.7?'var(--sage)':correctNow>0?'var(--gold)':'var(--parch4)'}">${correctNow} ${_lqEn?'correct':'correctas'}</span>
-            </div>
-          </div>`);
-        }
-        // Previous question results (only after at least one question has finished)
-        if(qIdx >= 2 && answers[qIdx-2]){
-          const prevQ = questions[qIdx-2];
-          const prevAnswers = answers[qIdx-2];
-          const prevCorrect = Object.values(prevAnswers).filter(a=>a===prevQ.correct).length;
-          const prevTotal = Object.values(prevAnswers).length;
-          blocks.push(`<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:.7rem 1rem;opacity:.85">
-            <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem">${_lqEn?'Previous':'Anterior'} · ${_lqEn?'Question':'Pregunta'} ${qIdx-1}</div>
-            <div style="font-size:.78rem;color:var(--parch3);margin-bottom:.3rem">${escapeHTML(prevQ.dish||'')} — <strong>${escapeHTML(prevQ.correct||'')}</strong></div>
-            <div style="font-family:'DM Mono',monospace;font-size:.68rem;color:${prevCorrect/Math.max(1,prevTotal)>=.7?'var(--sage)':'var(--rose)'}">✓ ${prevCorrect}/${prevTotal} ${_lqEn?'correct':'correctos'}</div>
-          </div>`);
-        }
-        pEl2.innerHTML = blocks.join('');
-      }
-    }, 2500);
-  });
-}
-
-
-async function advanceLiveQuiz(code){
-  const _en = LANG==='en';
-  const decoded = decodeURIComponent(code);
-  const questions = _liveHostQuestions;
-  if(!questions){ stopLiveQuiz(); renderSupDashboard(); return; }
-  if(liveCurrentQ >= questions.length){
-    await supaUpdateLiveSession(decoded, { state: 'ended', current_q: liveCurrentQ });
-    stopLiveQuiz();
-    // Show results summary for host
-    const finalSess = await supaGetLiveSession(decoded);
-    const finalAnswers = jParse(finalSess?.answers, {});
-    const participants = [...new Set(Object.values(finalAnswers).flatMap(q=>Object.keys(q)))];
-    const scores = {};
-    participants.forEach(p => { scores[p] = 0; });
-    questions.forEach((q,i) => {
-      Object.entries(finalAnswers[i]||{}).forEach(([p,a]) => { if(a===q.correct) scores[p]++; });
-    });
-    const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-    const medals = [`<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e8c44c,#d4944c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.75rem;font-family:Jost,sans-serif;box-shadow:0 2px 6px rgba(255,200,0,.4);text-shadow:0 1px 2px rgba(0,0,0,.2)">1</div>`,`<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#c0c0c0,#9ca3af);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.75rem;font-family:Jost,sans-serif;box-shadow:0 2px 6px rgba(156,163,175,.4);text-shadow:0 1px 2px rgba(0,0,0,.2)">2</div>`,`<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#cd7c32,#a0522d);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.75rem;font-family:Jost,sans-serif;box-shadow:0 2px 6px rgba(205,124,50,.4);text-shadow:0 1px 2px rgba(0,0,0,.2)">3</div>`];
-    const c = document.getElementById('appContent');
-    c.innerHTML = `<div class="sup-wrap">
-      <div style="text-align:center;margin-bottom:1.5rem">
-        <div style="font-size:2.5rem;margin-bottom:.5rem"></div>
-        <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--parchment)">${_en?'Quiz results':'Resultados del quiz'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);margin-top:.25rem">${participants.length} ${_en?'participants':'participantes'} · ${questions.length} ${_en?'questions':'preguntas'}</div>
-      </div>
-      ${sorted.map(([name,score],i)=>{
-        const pct = Math.round(score/questions.length*100);
-        const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-        return `<div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:${i===0?'var(--gold-b)':'#fff'};border:1px solid ${i===0?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);margin-bottom:.4rem">
-          <span style="font-size:1.2rem">${i<3?medals[i]:`${i+1}.`}</span>
-          <div style="flex:1;font-size:.85rem;color:var(--parchment);font-weight:${i===0?'600':'400'}">${escapeHTML(name)}</div>
-          <span style="font-family:'DM Mono',monospace;font-size:.78rem;font-weight:600;color:${col}">${score}/${questions.length} · ${pct}%</span>
-        </div>`;
-      }).join('')}
-      <div style="margin-top:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem">${_en?'By question':'Por pregunta'}</div>
-        ${questions.map((q,i)=>{
-          const qA = finalAnswers[i]||{};
-          const correct = Object.values(qA).filter(a=>a===q.correct).length;
-          const total = Object.values(qA).length;
-          const pct = total?Math.round(correct/total*100):0;
-          const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-          return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--line)">
-            <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);width:20px">${i+1}</span>
-            <span style="flex:1;font-size:.78rem;color:var(--parchment)">${escapeHTML(q.dish||'')}</span>
-            <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${col}">${correct}/${total}</span>
-          </div>`;
-        }).join('')}
-      </div>
-      <button onclick="renderSupDashboard()" class="btn-primary" style="width:100%;margin-top:1rem">${_en?'Back to panel':'Volver al panel'}</button>
-    </div>`;
-    return;
-  }
-  // First question — send push notification to whole team
-  if(liveCurrentQ === 0){
-    await supaCreateNotification('all', (_en?'Live Quiz active — code: ':'Quiz en vivo activo — código: ')+decoded+(_en?' — Join now from the dashboard!':' — ¡Únete ahora desde el dashboard!'), 'urgent');
-    // Also send real push notification so users with app closed get alerted
-    try {
-      await fetch(`${SUPA_URL}/functions/v1/send-push`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          target: 'all',
-          title: _en?'Live Quiz':'Quiz en vivo',
-          body: _en?`The supervisor has launched a live quiz! Code: ${decoded}. Open the app to join.`:`¡El supervisor ha lanzado un quiz en vivo! Código: ${decoded}. Abre la app para unirte.`,
-          tag: 'live-quiz'
-        })
-      });
-    } catch(e2) { /* non-critical */ }
-  }
-  const deadline = Date.now() + 20000; // 20 seconds
-  // Bug fix: current_q is shared in 1-indexed form (1 = first active question, etc.).
-  // Player reads `qIdx = sess.current_q - 1` (L29878) and host reads `qIdx = s.current_q`
-  // then `qIdx-1` (L29700) — both already 1-indexed. Previously this write used
-  // liveCurrentQ (0-indexed), making the player compute qIdx=-1 on the first
-  // question, which failed the bounds check and never rendered Q1 for participants.
-  await supaUpdateLiveSession(decoded, { state: 'active', current_q: liveCurrentQ + 1, answers: liveCurrentQ===0?'{}':undefined, deadline: new Date(deadline).toISOString() });
-  liveCurrentQ++;
-  const btn = document.getElementById('liveNextBtn');
-  if(btn) btn.textContent = liveCurrentQ >= questions.length ? (_en?'Finish quiz':'Finalizar quiz') : `▶ ${_en?'Question':'Pregunta'} ${liveCurrentQ+1} ${_en?'of':'de'} ${questions.length}`;
-
-  // Host-side countdown display
-  let hostCountdown = 20;
-  const hostTimer = setInterval(()=>{
-    hostCountdown--;
-    const el = document.getElementById('liveCountdownHost');
-    if(el) {
-      el.textContent = hostCountdown + 's';
-      el.style.color = hostCountdown <= 5 ? 'var(--rose)' : 'var(--parch3)';
-    }
-    if(hostCountdown <= 0) clearInterval(hostTimer);
-  }, 1000);
-}
-
-function stopLiveQuiz(){
-  if(liveQuizInterval){ clearInterval(liveQuizInterval); liveQuizInterval=null; }
-  liveCurrentQ = 0;
-}
-
-// ═══ PARTICIPAR EN QUIZ EN VIVO (vista empleado) ═══
-async function renderJoinLiveQuiz(){
-  const c = document.getElementById('appContent');
-  // Same race-guard idea as renderVinos / renderDuel: the auto-detect
-  // fetch can resolve after the user has navigated elsewhere.
-  const _startTab = currentTab;
-  // Try to auto-detect active session so user doesn't need to type a code
-  try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?state=in.(waiting,active)&order=created_at.desc&limit=1`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
-    if(res.ok){
-      const rows = await res.json();
-      if(rows.length > 0){
-        if (currentTab !== _startTab) return;
-        livePlayerLastQ = -1;
-        renderLiveQuizWaiting(rows[0].code, JSON.parse(rows[0].questions||'[]'));
-        return;
-      }
-    }
-  } catch(e){}
-  if (currentTab !== _startTab) return;
-  // Fallback: manual code entry
-  const _en = LANG==='en';
-  c.innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)"> ${_en?'Join quiz':'Unirse al quiz'}</div>
-    </div>
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">${_en?'Session code':'Código de sesión'}</div>
-      <input id="liveCode" maxlength="4" placeholder="1234" inputmode="numeric" style="width:100%;text-align:center;font-family:'Cinzel',serif;font-size:2.5rem;color:var(--gold);border:2px solid var(--gold-a);border-radius:var(--r2);padding:.6rem;letter-spacing:.3em;background:var(--gold-b)">
-    </div>
-    <button onclick="joinLiveQuiz()" class="btn-primary" style="width:100%;padding:.85rem">${_en?'Join →':'Unirse →'}</button>
-    <div id="liveJoinError" style="text-align:center;color:var(--rose);font-size:.75rem;margin-top:.5rem;display:none">${_en?'Code not found or session ended':'Código no encontrado o sesión terminada'}</div>
-  </div>`;
-}
-
-
-
-
-async function joinLiveQuiz(){
-  const code = document.getElementById('liveCode')?.value.trim();
-  if(!code || code.length < 4) return;
-  const sess = await supaGetLiveSession(code);
-  if(!sess || sess.state === 'ended'){
-    const el = document.getElementById('liveJoinError');
-    if(el) el.style.display='block';
-    return;
-  }
-  livePlayerLastQ = -1;
-  renderLiveQuizWaiting(code, jParse(sess.questions, []));
-}
-
-function renderLiveQuizWaiting(code, questions){
-  const c = document.getElementById('appContent');
-  c.innerHTML = `<div style="max-width:420px;margin:0 auto;padding:2rem 1rem;text-align:center">
-    <div style="font-size:3rem;margin-bottom:1rem">⏳</div>
-    <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment);margin-bottom:.5rem">Conectado</div>
-    <div style="font-size:.8rem;color:var(--parch3);margin-bottom:.5rem">Esperando al supervisor...</div>
-    <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.15em">Código: ${code}</div>
-    <div id="livePlayerContent" style="margin-top:1.5rem"></div>
-  </div>`;
-
-  if(livePlayerInterval) clearInterval(livePlayerInterval);
-  livePlayerInterval = setInterval(async () => {
-    const sess = await supaGetLiveSession(code);
-    if(!sess) return;
-    if(sess.state === 'ended'){ clearInterval(livePlayerInterval); renderLiveQuizPlayerEnd(code, questions, jParse(sess.answers, {})); return; }
-    if(sess.state === 'active' && sess.current_q !== livePlayerLastQ){
-      livePlayerLastQ = sess.current_q;
-      const qIdx = sess.current_q - 1;
-      if(qIdx >= 0 && qIdx < questions.length){
-        const dl = sess.deadline ? new Date(sess.deadline).getTime() : null;
-        renderLiveQuizQuestion(code, questions, qIdx, jParse(sess.answers, {}), dl);
-      }
-    }
-  }, 2000);
-}
-
-let liveCountdownTimer = null;
-// Holds the current live-quiz questions so onclick handlers can look up a choice
-// by index instead of embedding unescaped strings/JSON into HTML attributes (XSS fix).
-let _liveQuizQuestions = null;
-
-function renderLiveQuizQuestion(code, questions, qIdx, existingAnswers, deadline){
-  const q = questions[qIdx];
-  _liveQuizQuestions = questions;
-  const myAnswer = existingAnswers[qIdx]?.[currentUser];
-  const pEl = document.getElementById('livePlayerContent') || document.getElementById('appContent');
-  if(liveCountdownTimer){ clearInterval(liveCountdownTimer); liveCountdownTimer=null; }
-  const _safeCode = encodeURIComponent(code);
-  pEl.innerHTML = `
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;text-align:left">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4)">Pregunta ${qIdx+1} de ${questions.length} · ${escapeHTML(q.topic||'')}</div>
-        <div id="liveTimer" style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--gold);min-width:32px;text-align:right">20</div>
-      </div>
-      <div style="width:100%;height:3px;background:var(--ink3);border-radius:2px;margin-bottom:.85rem;overflow:hidden">
-        <div id="liveTimerFill" style="height:100%;background:var(--sage);width:100%;border-radius:2px"></div>
-      </div>
-      <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment);margin-bottom:1rem">${escapeHTML(q.dish||'')}</div>
-      <div id="liveChoices">
-      ${q.choices.map((ch,i)=>`
-        <button onclick="submitLiveAnswer('${_safeCode}',${qIdx},${i})"
-          style="width:100%;text-align:left;padding:.75rem 1rem;margin-bottom:.4rem;border:2px solid ${myAnswer===ch?(ch===q.correct?'var(--sage)':'var(--rose)'):'var(--line)'};border-radius:var(--r2);background:${myAnswer===ch?(ch===q.correct?'rgba(77,138,94,.1)':'rgba(196,112,104,.08)'):'#fff'};font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);cursor:pointer;transition:all .2s"
-          ${myAnswer?'disabled':''}>
-          ${String.fromCharCode(65+i)}. ${escapeHTML(ch||'')}
-        </button>`).join('')}
-      </div>
-      ${myAnswer?`<div style="text-align:center;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch3);margin-top:.5rem">✓ Respuesta enviada · Esperando siguiente pregunta</div>`:''}
-    </div>`;
-  if(!myAnswer && deadline){
-    const totalMs = 20000;
-    function tick(){
-      const remaining = Math.max(0, deadline - Date.now());
-      const secs = Math.ceil(remaining / 1000);
-      const pct = (remaining / totalMs) * 100;
-      const timerEl = document.getElementById('liveTimer');
-      const fillEl = document.getElementById('liveTimerFill');
-      if(timerEl){ timerEl.textContent=secs; timerEl.style.color=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--parch2)'; }
-      if(fillEl){ fillEl.style.width=pct+'%'; fillEl.style.background=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--sage)'; fillEl.style.transition='width 1s linear'; }
-      if(remaining<=0){
-        clearInterval(liveCountdownTimer); liveCountdownTimer=null;
-        document.querySelectorAll('#liveChoices button').forEach(b=>{ b.disabled=true; b.style.opacity='.5'; });
-        const t2=document.getElementById('liveTimer'); if(t2){ t2.textContent='⏰'; t2.style.color='var(--rose)'; }
-      }
-    }
-    tick();
-    liveCountdownTimer = setInterval(tick, 1000);
-  }
-}
-
-async function submitLiveAnswer(code, qIdx, choiceIdx){
-  const decoded = decodeURIComponent(code);
-  const questions = _liveQuizQuestions;
-  if(!questions || !questions[qIdx]) return;
-  const answer = questions[qIdx].choices[choiceIdx];
-  if(typeof answer === 'undefined') return;
-  // Disable all choice buttons immediately so a double-tap (or a second tap
-  // while the round-trip is in flight on slow Wi-Fi) can't overwrite the
-  // first answer before the re-render lands.
-  const choiceBtns = document.querySelectorAll('#liveChoices button');
-  if([...choiceBtns].some(b=>b.disabled)) return;
-  choiceBtns.forEach(b=>{ b.disabled=true; b.style.opacity='.5'; });
-  await supaSubmitLiveAnswer(decoded, currentUser, qIdx, answer);
-  const sess = await supaGetLiveSession(decoded);
-  if(sess) renderLiveQuizQuestion(decoded, questions, qIdx, jParse(sess.answers, {}));
-}
-
-function renderLiveQuizPlayerEnd(code, questions, answers){
-  if(livePlayerInterval){ clearInterval(livePlayerInterval); livePlayerInterval=null; }
-  let correct = 0;
-  questions.forEach((q,i)=>{ if(answers[i]?.[currentUser]===q.correct) correct++; });
-  const pct = Math.round(correct/questions.length*100);
-  const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-  awardXP(correct*5, ' Quiz en vivo', 'live');
-  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:2rem 1rem;text-align:center">
-    <div style="font-size:3rem;margin-bottom:.75rem">${pct>=80?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8 21h8M12 17v4"/><path d="M7 4H4a2 2 0 000 4c0 2.5 2 4 2 4h12s2-1.5 2-4a2 2 0 000-4h-3"/><path d="M7 4h10v8a5 5 0 01-10 0V4z"/></svg>`:pct>=50?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`}</div>
-    <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--parchment);margin-bottom:.25rem">Quiz terminado</div>
-    <div style="font-size:2.5rem;font-family:'Cinzel',serif;color:${col};margin:.5rem 0">${pct}%</div>
-    <div style="font-size:.82rem;color:var(--parch3);margin-bottom:1.5rem">${correct} de ${questions.length} correctas · +${correct*5} XP</div>
-    ${questions.map((q,i)=>{
-      const mine = answers[i]?.[currentUser];
-      const ok = mine===q.correct;
-      return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid ${ok?'rgba(77,138,94,.3)':'rgba(196,112,104,.2)'};border-radius:var(--r2);padding:.75rem 1rem;margin-bottom:.4rem;text-align:left">
-        <div style="font-size:.8rem;color:var(--parchment)">${ok?'✓':'✗'} ${escapeHTML(q.dish||'')}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);margin-top:.2rem">${escapeHTML(mine||'Sin respuesta')} ${!ok?'→ '+escapeHTML(q.correct||''):''}</div>
-      </div>`;
-    }).join('')}
-    <button onclick="showTab('dashboard')" class="btn-primary" style="width:100%;margin-top:1rem">${LANG==='en'?'Back to start':'Volver al inicio'}</button>
-  </div>`;
-}
+// ═══ QUIZ EN VIVO — RETIRADO ENTERO (propietario, jul 2026: «ya no hace
+// falta»). Aquí vivían el anfitrión del panel de supervisor (crear sesión
+// con código, ▶ manual por pregunta) y la vista de empleado (unirse por
+// código, esperar al supervisor). El Quiz del Día — abierto 24/7, semilla
+// diaria compartida, avance automático — lo sustituye. Los helpers de la
+// tabla live_sessions se fueron con él; la tabla queda sin lectores. ═══
 
 // ═══ EL QUIZ DEL DÍA (jul 2026, propietario: «debería ser abierto y que todo
 // el mundo pueda entrar cuando quiera, sin esperar por el supervisor») ═══
