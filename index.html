@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.211">
+<meta name="app-version" content="7.212">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -134,7 +134,7 @@
   <div class="login-vignette" aria-hidden="true"></div>
 
   <!-- Marca neutra Meseo por defecto (rebranding jul 2026): la identidad del
-       restaurante (TXOKO, Ritz-Carlton, Berasategui…) llega SOLO desde el
+       restaurante (TXOKO, Berasategui…) llega SOLO desde el
        venue elegido en data/themes.json — la app ya no se presenta como
        ningún restaurante. Si themes.json no carga (primera visita offline),
        lo que se ve es Meseo, no una marca ajena. -->
@@ -249,7 +249,7 @@
     <div class="legal-modal-content">
       <div class="legal-modal-title" id="legalModalTitle">Aviso Legal</div>
       <p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>
-      <p>Los nombres, logotipos y denominaciones de los restaurantes y grupos que aparecen en la app (incluidos TXOKO, Martín Berasategui, The Ritz-Carlton y Marriott International) son marcas registradas de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
+      <p>Los nombres, logotipos y denominaciones de los restaurantes y personas que aparecen en la app (incluidos TXOKO y Martín Berasategui) son marcas o signos registrados de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
       <p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>
       <button class="legal-modal-close" onclick="document.getElementById('legalModal').style.display='none'">Cerrar</button>
     </div>
@@ -1489,7 +1489,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.211';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.212';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7378,12 +7378,12 @@ function showLegalModal(){
     content.innerHTML = en
       ? '<div class="legal-modal-title">Legal Notice</div>'
         + '<p><strong>Meseo</strong> is an internal training tool for restaurant service teams, for the exclusive use of the staff of registered venues, created solely for educational purposes on a non-profit basis.</p>'
-        + '<p>The names, logos and designations of the restaurants and groups featured in the app (including TXOKO, Martín Berasategui, The Ritz-Carlton and Marriott International) are registered trademarks of their respective owners and are mentioned solely in a training context, to identify the team\'s workplace. Meseo is not affiliated with, sponsored by or officially endorsed by any of these brands.</p>'
+        + '<p>The names, logos and designations of the restaurants and people featured in the app (including TXOKO and Martín Berasategui) are registered trademarks of their respective owners and are mentioned solely in a training context, to identify the team\'s workplace. Meseo is not affiliated with, sponsored by or officially endorsed by any of these brands.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · All rights reserved</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Close</button>'
       : '<div class="legal-modal-title">Aviso Legal</div>'
         + '<p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>'
-        + '<p>Los nombres, logotipos y denominaciones de los restaurantes y grupos que aparecen en la app (incluidos TXOKO, Martín Berasategui, The Ritz-Carlton y Marriott International) son marcas registradas de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
+        + '<p>Los nombres, logotipos y denominaciones de los restaurantes y personas que aparecen en la app (incluidos TXOKO y Martín Berasategui) son marcas o signos registrados de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Cerrar</button>';
   }
@@ -7998,7 +7998,7 @@ function closePinAndEnter(){
 
 // ═══════ TUNIC ONBOARDING GUIDE ═══════
 const ONBOARDING_PAGES = [
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui en el Ritz-Carlton, Abama. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui at the Ritz-Carlton, Abama. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Simulación',title_en:'Simulation',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. Practica exactamente lo que ocurre en sala con respuestas adaptadas a cada escenario. La encontrarás en Aprender → Simulación.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Practice exactly what happens on the floor with answers adapted to each situation. You\'ll find it under Learn → Simulation.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
@@ -15680,7 +15680,7 @@ function renderDashboard(){
       <div class="dash-hero-rune br">${_runeSvg}</div>
       <div class="dash-hero-top">
         <div>
-          <div class="dash-hero-label">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.eyebrow) ? escapeHtml(ACTIVE_VENUE.eyebrow.split(' · ')[0]) : 'Ritz-Carlton Abama'}</div>
+          <div class="dash-hero-label">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.eyebrow) ? escapeHtml(ACTIVE_VENUE.eyebrow.split(' · ')[0]) : 'Tenerife'}</div>
           <div class="dash-hero-greeting">${greeting},</div>
           <div class="dash-hero-name">${escapeHTML(currentUser)}</div>
         </div>
@@ -22994,7 +22994,7 @@ const RULETA_CONTENT = {
       'En Japón existe un vino hecho con uvas Koshu que tiene más de 1.300 años de historia',
       'El primer restaurante del mundo abrió en París en 1765',
       'El queso y el vino hacen buena pareja porque la grasa del queso limpia los taninos',
-      'El Ritz-Carlton Abama tiene su propio microclima que permite cultivar productos únicos',
+      'El sur de Tenerife tiene un microclima singular que permite cultivar productos únicos',
       'Una copa de vino tiene tantas calorías como un vaso de zumo de naranja natural'],
     en:['A bottle of champagne has approximately 49 million bubbles',
       'The oldest red wine in the world is over 8,000 years old and was discovered in Georgia',
@@ -23016,7 +23016,7 @@ const RULETA_CONTENT = {
       'In Japan there\'s a wine made from Koshu grapes with over 1,300 years of history',
       'The world\'s first restaurant opened in Paris in 1765',
       'Cheese and wine pair well because fat cleans the wine\'s tannins',
-      'Ritz-Carlton Abama has its own microclimate allowing unique products to grow',
+      'Southern Tenerife has a singular microclimate that lets unique products grow',
       'A glass of wine has as many calories as a glass of fresh orange juice']
   },
   absurdo: {
@@ -24887,7 +24887,7 @@ function txShowIntro(personaId){
         <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.2rem">
           <svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,0 12,6 6,12 0,6" fill="none" stroke="rgba(196,154,60,.4)" stroke-width=".6"/><polygon points="6,2 10,6 6,10 2,6" fill="rgba(196,154,60,.15)"/></svg>
           <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.6);letter-spacing:.2em;text-transform:uppercase">
-            ${_en?'Ritz-Carlton Abama · Tonight':'Ritz-Carlton Abama · Esta noche'}
+            ${(typeof ACTIVE_VENUE!=='undefined'&&ACTIVE_VENUE&&ACTIVE_VENUE.name?escapeHtml(ACTIVE_VENUE.name):'TXOKO')+' · '+(_en?'Tonight':'Esta noche')}
           </div>
           <svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,0 12,6 6,12 0,6" fill="none" stroke="rgba(196,154,60,.4)" stroke-width=".6"/><polygon points="6,2 10,6 6,10 2,6" fill="rgba(196,154,60,.15)"/></svg>
         </div>
