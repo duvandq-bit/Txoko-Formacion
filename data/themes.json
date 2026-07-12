@@ -1,5 +1,5 @@
 {
- "_readme": "Registro multi-restaurante. Cada 'venue' define identidad (nombre, logo, textos) y los 8 tokens de marca que pintan toda la app. Con UN venue activo (enabled:true) el login va directo, sin selector. En cuanto haya DOS o más activos, el login muestra automáticamente el selector de restaurante — no hay que tocar código. Para estrenar un restaurante: duplica la plantilla, rellena los campos y pon enabled:true.",
+ "_readme": "Registro multi-restaurante. Cada 'venue' define identidad (nombre, logo, textos) y los 8 tokens de marca que pintan la app POR DENTRO tras elegirlo. El héroe del login es SIEMPRE la marca Meseo; el selector de restaurante se muestra en cuanto hay al menos un venue (los 'Próximamente' incluidos). Para estrenar un restaurante: duplica la plantilla, rellena los campos y pon enabled:true.",
  "version": 1,
  "venues": [
   {
