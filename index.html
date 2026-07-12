@@ -1,7 +1,7 @@
 <!--
   ╔══════════════════════════════════════════════════════════════╗
   ║           TXOKO FORMACIÓN — Aplicación de Formación          ║
-  ║         Txoko by Martín Berasategui · Ritz-Carlton Abama     ║
+  ║              Meseo · Formación de equipos de sala             ║
   ╠══════════════════════════════════════════════════════════════╣
   ║  © 2026 Duvan Stiven Ramírez Duque. Todos los derechos    ║
   ║  reservados.                                                  ║
@@ -12,7 +12,7 @@
   ║  autor.                                                       ║
   ║                                                               ║
   ║  Licencia de uso concedida exclusivamente a:                  ║
-  ║  Txoko by Martín Berasategui · Ritz-Carlton Abama · Tenerife  ║
+  ║        Meseo — el oficio se entrena · https://meseo.es        ║
   ║  Uso interno · Fines educativos · Sin ánimo de lucro          ║
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
@@ -42,9 +42,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://advkoujfgbrrjvqexrcu.supabase.co https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>TXOKO · Formación</title>
-<meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
-<meta name="app-version" content="5.8">
+<title>Meseo · Formación de sala</title>
+<meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
+<meta name="app-version" content="7.204">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -133,11 +133,16 @@
 
   <div class="login-vignette" aria-hidden="true"></div>
 
-  <div class="login-eyebrow"><span id="loginEyebrow">Ritz-Carlton Abama · Tenerife</span></div>
+  <!-- Marca neutra Meseo por defecto (rebranding jul 2026): la identidad del
+       restaurante (TXOKO, Ritz-Carlton, Berasategui…) llega SOLO desde el
+       venue elegido en data/themes.json — la app ya no se presenta como
+       ningún restaurante. Si themes.json no carga (primera visita offline),
+       lo que se ve es Meseo, no una marca ajena. -->
+  <div class="login-eyebrow"><span id="loginEyebrow">Formación de sala</span></div>
   <div class="login-logo">
-    <h1 id="loginLogoName">TXOKO</h1>
+    <h1 id="loginLogoName">Meseo</h1>
     <div class="login-logo-line"></div>
-    <em class="login-subtitle" id="loginSubtitle">by Martín Berasategui · Formación de Equipo</em>
+    <em class="login-subtitle" id="loginSubtitle">El oficio se entrena · meseo.es</em>
   </div>
 
   <!-- Multi-restaurant selector (dropdown). Shown whenever the registry lists
@@ -243,8 +248,8 @@
   <div class="legal-modal" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalModalTitle" style="display:none" onclick="if(event.target===this)this.style.display='none'">
     <div class="legal-modal-content">
       <div class="legal-modal-title" id="legalModalTitle">Aviso Legal</div>
-      <p>Esta aplicación es de uso exclusivo para el equipo de <strong>Txoko by Martín Berasategui</strong> y ha sido creada únicamente con fines educativos y formativos internos, sin ánimo de lucro.</p>
-      <p>Marriott International, The Ritz-Carlton y Martín Berasategui son marcas registradas independientes. Sus nombres, logotipos y denominaciones se mencionan únicamente en contexto formativo. Esta aplicación no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
+      <p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>
+      <p>Los nombres, logotipos y denominaciones de los restaurantes y grupos que aparecen en la app (incluidos TXOKO, Martín Berasategui, The Ritz-Carlton y Marriott International) son marcas registradas de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
       <p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>
       <button class="legal-modal-close" onclick="document.getElementById('legalModal').style.display='none'">Cerrar</button>
     </div>
@@ -268,7 +273,7 @@
 <!-- ═══════ APP ═══════ -->
 <div id="screenApp" class="screen">
   <header class="app-header" role="banner">
-    <div class="header-logo" id="headerLogo" role="button" tabindex="0" aria-label="Ir al inicio" title="Ir al inicio" style="cursor:pointer" onclick="showTab('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showTab('dashboard')}">TXOKO<sup>MB</sup></div>
+    <div class="header-logo" id="headerLogo" role="button" tabindex="0" aria-label="Ir al inicio" title="Ir al inicio" style="cursor:pointer" onclick="showTab('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showTab('dashboard')}">Meseo</div>
     <div class="header-spacer"></div>
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
@@ -340,7 +345,7 @@
   </div>
 
   <main class="app-content" id="appContent" aria-live="polite"></main>
-  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
+  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Meseo · Formación de equipos de sala · Fines educativos · Sin ánimo de lucro</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
   <div class="txk-sync-pill" id="syncStatusPill" role="status" aria-live="polite" aria-atomic="true"><span class="dot"></span><span id="syncStatusText">Offline</span></div>
   <!-- Service Mode FAB removed per owner request; _svc* code kept, unreferenced -->
@@ -502,7 +507,7 @@ let LANG = (function(){
 
 const T = {
   es: {
-    subtitle: 'by Martín Berasategui · Formación de Equipo',
+    subtitle: 'El oficio se entrena · meseo.es',
     profileLabel: 'Tu perfil',
     newLabel: 'nuevo perfil',
     enterBtn: 'Entrar',
@@ -598,7 +603,7 @@ const T = {
     lbTitle: 'Mejores Puntuaciones',
     lbNoScores: 'Aún no hay puntuaciones'},
   en: {
-    subtitle: 'by Martín Berasategui · Team Training',
+    subtitle: 'Train the craft · meseo.es',
     profileLabel: 'Your profile',
     newLabel: 'new profile',
     enterBtn: 'Enter',
@@ -893,16 +898,9 @@ let allergenTestState = null;
 
 // ═══ ENVIAR AVISO / NOTIFICACIÓN ═══
 
-// ═══ QUIZ EN VIVO ═══
-
-let liveQuizInterval = null;
-
-let liveCurrentQ = 0;
-
-// ═══ PARTICIPAR EN QUIZ EN VIVO (vista empleado) ═══
-
-let livePlayerInterval = null;
-let livePlayerLastQ = -1;
+// ═══ QUIZ EN VIVO — retirado (propietario, jul 2026): lo sustituye el Quiz
+// del Día (abierto 24/7, sin supervisor). La tabla live_sessions de Supabase
+// queda sin lectores; se puede borrar cuando se quiera. ═══
 
 // ═══ CARTA EDITOR ═══
 
@@ -1493,7 +1491,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.202';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.204';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1537,7 +1535,7 @@ const ET_HERO_RUN=['img/sprites/hero-a.webp','img/sprites/hero-b.webp'];
 // DEBUG flag: only log when running locally or with ?debug=1
 const DEBUG = (location.hostname==='localhost' || location.hostname==='127.0.0.1' || location.search.includes('debug=1'));
 window.DEBUG = DEBUG;
-console.info(`%cTXOKO Formación · v${APP_VERSION} · ${APP_BUILD}`,'background:var(--parchment);color:var(--ink);padding:4px 10px;border-radius:4px;font-weight:600');
+console.info(`%cMeseo · v${APP_VERSION} · ${APP_BUILD}`,'background:var(--parchment);color:var(--ink);padding:4px 10px;border-radius:4px;font-weight:600');
 
 // HTML escape helper — used wherever we interpolate untrusted strings into innerHTML
 function escapeHtml(str){
@@ -7103,8 +7101,8 @@ function showInstallSheet(){
   document.body.appendChild(sheet);
 }
 function shareApp(){
-  const url = 'https://duvandq-bit.github.io/Txoko-Formacion/';
-  const msg = encodeURIComponent('Hola! Te comparto la app de formación de Txoko by Martín Berasategui. Puedes acceder desde el móvil aquí: ' + url);
+  const url = 'https://meseo.es/';
+  const msg = encodeURIComponent('¡Hola! Te comparto Meseo, la app de formación de sala. Puedes entrar desde el móvil aquí: ' + url);
   window.open('https://wa.me/?text=' + msg, '_blank');
 }
 
@@ -7322,8 +7320,8 @@ function showLegalModal(){
         + '<p>© 2026 Duvan Stiven Ramírez Duque · All rights reserved</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Close</button>'
       : '<div class="legal-modal-title">Aviso Legal</div>'
-        + '<p>Esta aplicación es de uso exclusivo para el equipo de <strong>Txoko by Martín Berasategui</strong> y ha sido creada únicamente con fines educativos y formativos internos, sin ánimo de lucro.</p>'
-        + '<p>Marriott International, The Ritz-Carlton y Martín Berasategui son marcas registradas independientes. Sus nombres, logotipos y denominaciones se mencionan únicamente en contexto formativo. Esta aplicación no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
+        + '<p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>'
+        + '<p>Los nombres, logotipos y denominaciones de los restaurantes y grupos que aparecen en la app (incluidos TXOKO, Martín Berasategui, The Ritz-Carlton y Marriott International) son marcas registradas de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Cerrar</button>';
   }
@@ -8029,20 +8027,15 @@ function logout(){
     supaUpsertEmployee(currentUser);
     _cleanupPushOnLogout(currentUser); // fire-and-forget
   }
-  stopLiveQuizPolling();
   // ── Clear ALL active timers/intervals to prevent memory leaks ──
   clearTimeout(_sessionTimer); _sessionTimer = null;
   clearInterval(timerInterval); timerInterval = null;
-  clearInterval(_liveCheckInterval); _liveCheckInterval = null;
   clearInterval(_duelTimerInterval); _duelTimerInterval = null;
-  clearInterval(liveQuizInterval); liveQuizInterval = null;
-  clearInterval(livePlayerInterval); livePlayerInterval = null;
-  clearInterval(liveCountdownTimer); liveCountdownTimer = null;
+  clearInterval(_qdTimer); _qdTimer = null; _qdState = null;
   clearInterval(txokoTimer); txokoTimer = null;
   // ── Clear supervisor-scope leaks so next user can't read team data from window ──
   supAuthenticated = false;
   try { delete window._supAllEmps; delete window._supEmpNames; } catch(_) {}
-  _liveQuizQuestions = null; _liveHostQuestions = null;
   // F-P2-2: reset ruleta module-level globals so the next user inherits a clean state
   // (player roster, last result pop-up, history, spin angle).
   _ruletaPlayers = []; _ruletaResult = null; _ruletaHistory = [];
@@ -8060,7 +8053,6 @@ function logout(){
 function supExitPanel(){
   supAuthenticated = false;
   try { delete window._supAllEmps; delete window._supEmpNames; } catch(_) {}
-  _liveHostQuestions = null;
   showTab('dashboard');
 }
 
@@ -15800,18 +15792,21 @@ function renderDashboard(){
       <span class="dash-row-go">›</span>
     </button>` })()}
 
-    <!-- live quiz tile (hidden by default) -->
-    <div onclick="renderJoinLiveQuiz()" id="liveQuizTile" style="display:none;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--gold-b);border:2px solid var(--gold-a);border-radius:var(--r2);margin-bottom:.5rem;cursor:pointer">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-      <div>
-        <div style="font-size:.85rem;font-weight:500;color:var(--gold)">${LANG==='en'?'Live quiz active':'Quiz en vivo activo'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${LANG==='en'?'Join the supervisor\'s session':'Únete a la sesión del supervisor'}</div>
+    <!-- Quiz del día: SIEMPRE visible — abierto 24/7, sin supervisor ni código
+         (jul 2026; el tile del quiz en vivo de abajo solo aparece si un
+         supervisor monta el modo evento) -->
+    <div onclick="renderQuizDia()" id="qdTile" role="button" tabindex="0" aria-label="${LANG==='en'?'Daily Quiz, open now':'Quiz del día, abierto ahora'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--gold-b);border:2px solid var(--gold-a);border-radius:var(--r2);margin-bottom:.5rem;cursor:pointer">
+      <span style="font-size:1.1rem" aria-hidden="true">🎯</span>
+      <div style="flex:1">
+        <div style="font-size:.85rem;font-weight:500;color:var(--gold)">${LANG==='en'?'Daily Quiz':'Quiz del día'}</div>
+        <div id="qdTileSub" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${LANG==='en'?'5 questions · 20s · same for everyone':'5 preguntas · 20s · las mismas para todos'}</div>
       </div>
+      <span class="dash-row-go">›</span>
     </div>
+
   `;
   animateCounters();
-  checkActiveLiveSession();
-  startLiveQuizPolling();
+  _qdTileSync();
   checkMissionCompletion();
   checkNewAchievements();
   _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
@@ -15819,29 +15814,9 @@ function renderDashboard(){
 
 
 
-async function checkActiveLiveSession(){
-  try {
-    // Check for both 'waiting' and 'active' sessions so employees see the tile as soon as the supervisor creates the quiz
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?state=in.(waiting,active)&order=created_at.desc&limit=1`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
-    if(!res.ok) return;
-    const rows = await res.json();
-    const tile = document.getElementById('liveQuizTile');
-    if(tile) tile.style.display = rows.length ? 'flex' : 'none';
-  } catch(e){}
-}
-
-// Check for live quiz every 15 seconds while on dashboard
-let _liveCheckInterval = null;
-function startLiveQuizPolling(){
-  if(_liveCheckInterval) return;
-  _liveCheckInterval = setInterval(()=>{
-    if(currentTab === 'dashboard') checkActiveLiveSession();
-  }, 15000);
-}
-function stopLiveQuizPolling(){
-  if(_liveCheckInterval){ clearInterval(_liveCheckInterval); _liveCheckInterval = null; }
-}
+// (checkActiveLiveSession + el polling de 15s del quiz en vivo se retiraron
+// con el quiz de supervisor: el Quiz del Día no necesita vigilar nada — su
+// tile es permanente y _qdTileSync solo pinta la participación del día)
 
 // ═══════ FLASHCARDS ═══════
 function initFlashcards(topic,cat){
@@ -17637,7 +17612,6 @@ function _supTool(k){
     ({ carta: ()=>renderCartaEditor(),
        analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
-       quiz: ()=>renderLiveQuizHost(window._supEmpNames),
        fotos: ()=>renderSupPhotoQueue(),
        lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
   }catch(e){
@@ -17958,10 +17932,9 @@ function renderSupDashboard(silent){
               <span style="flex:1;text-align:left;font-size:.78rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Dish photos':'Fotos de platos'}<br><span style="font-size:.6rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'approve team submissions':'aprobar fotos del equipo'}</span></span>
               <span style="color:var(--parch4)">›</span>
             </button>
-            <button onclick="_supTool('quiz')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(77,138,94,.06),rgba(77,138,94,.02));border:1.5px solid rgba(77,138,94,.2);border-left:3px solid #4d8a5e;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--sage),var(--green-deep));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>
-              <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'Live quiz':'Quiz en vivo'}</span>
-            </button>
+            <!-- Quiz en vivo retirado del panel (propietario, jul 2026): el
+                 Quiz del Día del dashboard lo sustituye — abierto 24/7, sin
+                 anfitrión. -->
             <button onclick="_supTool('lqa')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
@@ -18648,455 +18621,211 @@ async function sendNotification(){
   document.getElementById('notifMsg').value = '';
 }
 
-// ═══ QUIZ EN VIVO ═══
-async function supaCreateLiveSession(questions){
+// ═══ QUIZ EN VIVO — RETIRADO ENTERO (propietario, jul 2026: «ya no hace
+// falta»). Aquí vivían el anfitrión del panel de supervisor (crear sesión
+// con código, ▶ manual por pregunta) y la vista de empleado (unirse por
+// código, esperar al supervisor). El Quiz del Día — abierto 24/7, semilla
+// diaria compartida, avance automático — lo sustituye. Los helpers de la
+// tabla live_sessions se fueron con él; la tabla queda sin lectores. ═══
+
+// ═══ EL QUIZ DEL DÍA (jul 2026, propietario: «debería ser abierto y que todo
+// el mundo pueda entrar cuando quiera, sin esperar por el supervisor») ═══
+// El quiz en vivo exigía DOS esperas humanas: que el supervisor crease la
+// sesión (sin sesión, ni siquiera había puerta en el dashboard) y que pulsara
+// ▶ en cada pregunta. El Quiz del Día está abierto 24/7 y corre solo:
+//   · MISMAS 5 preguntas para todo el equipo — semilla por fecha (mulberry32)
+//     → generación determinista en cada dispositivo, sin servidor. A
+//     propósito NO filtra por turno de estudio: una competición compartida
+//     exige un pool idéntico para todos.
+//   · 20s por pregunta con avance AUTOMÁTICO (respondes o expira → siguiente).
+//   · Un intento CLASIFICADO al día por empleado (guard local); el ranking
+//     diario vive en la tabla genérica 'scores' (topic='quizdia',
+//     cat=YYYY-MM-DD — cero migraciones).
+//   · El primero del día en terminar deja aviso al equipo (notificación
+//     in-app ya existente): el quiz se convierte en cita, no en sorpresa.
+// El modo con anfitrión (código + ▶) sobrevive como «modo evento» para
+// reuniones de equipo; solo deja de ser la única puerta.
+let _qdTimer=null, _qdState=null;
+function _qdDayKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function _qdRng(){ // mulberry32 sembrado con la fecha de hoy
+  let a=(+_qdDayKey().replace(/-/g,''))^0x9e3779b9;
+  return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; };
+}
+function _qdShuffle(arr,rng){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function _qdQuestions(){
+  const rng=_qdRng();
+  const pool=_qdShuffle(DISHES,rng).slice(0,5);
+  return pool.map(d=>{
+    const topic=TOPICS[Math.floor(rng()*TOPICS.length)];
+    const correct=(topic.a(d)||'').trim();
+    // distractores: misma categoría preferida (la regla pedagógica de
+    // _pickDistractorPool, que aquí no se puede reutilizar tal cual porque
+    // su filtro de turno rompería el determinismo compartido); con menos de
+    // 6 en la categoría se abre al resto de la carta, como allí
+    const sameCat=DISHES.filter(x=>x.id!==d.id&&x.cat===d.cat);
+    const dpool=sameCat.length>=6?sameCat:DISHES.filter(x => x.id !== d.id);
+    const wrongs=_qdShuffle(dpool,rng).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
+    const uniq=[...new Set(wrongs)].slice(0,3);
+    const choices=_qdShuffle([correct,...uniq],rng);
+    return { dish:d.name, topic:topic.label, q:topic.q(d), correct, choices };
+  });
+}
+function _qdRecKey(){ return 'qd:'+currentUser+':'+_qdDayKey(); }
+function _qdPlayed(){ try{ return JSON.parse(localStorage.getItem(_qdRecKey())||'null'); }catch(_){ return null; } }
+async function supaInsertQdScore(correct,total){
   try {
-    const code = Math.floor(1000+Math.random()*9000).toString();
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions`, {
+    await fetch(`${SUPA_URL}/rest/v1/scores`, {
       method: 'POST',
-      headers: {
-        'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
-        'Content-Type': 'application/json', 'Prefer': 'return=representation'
-      },
-      body: JSON.stringify({ code, questions: JSON.stringify(questions), current_q: 0, state: 'waiting', answers: '{}', created_at: new Date().toISOString() })
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ employee: currentUser, score: correct, total, topic: 'quizdia', cat: _qdDayKey(), time_sec: 0 })
     });
-    if(!res.ok) return null;
-    const rows = await res.json();
-    return rows[0] || null;
-  } catch(e){ return null; }
+  } catch(e) {}
 }
-
-async function supaGetLiveSession(code){
+async function supaFetchQdToday(){
   try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?code=eq.${code}&select=*`,
+    const res = await fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score,total&topic=eq.quizdia&cat=eq.${_qdDayKey()}&order=score.desc&limit=100`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
     if(!res.ok) return null;
     const rows = await res.json();
-    return rows[0] || null;
-  } catch(e){ return null; }
+    if(!Array.isArray(rows)) return null;
+    const best = {};
+    rows.forEach(r => { if(!best[r.employee] || r.score > best[r.employee].score) best[r.employee] = r; });
+    return Object.values(best).sort((a,b)=>b.score-a.score);
+  } catch(e) { return null; }
 }
-
-async function supaUpdateLiveSession(code, patch){
-  try {
-    // Remove undefined values
-    const clean = Object.fromEntries(Object.entries(patch).filter(([,v])=>v!==undefined));
-    await fetch(`${SUPA_URL}/rest/v1/live_sessions?code=eq.${code}`, {
-      method: 'PATCH',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(clean)
-    });
-  } catch(e){}
+// tile del dashboard: siempre visible; el subtítulo cuenta la participación
+async function _qdTileSync(){
+  const el=document.getElementById('qdTileSub'); if(!el) return;
+  const played=_qdPlayed();
+  if(played){ el.textContent=(LANG==='en'?'Done today: ':'Hecho hoy: ')+played.correct+'/'+played.total+(LANG==='en'?' · tap for ranking':' · toca para ver el ranking'); return; }
+  const rows=await supaFetchQdToday();
+  const el2=document.getElementById('qdTileSub'); if(!el2) return;
+  if(rows&&rows.length) el2.textContent=rows.length+(LANG==='en'?(rows.length===1?' teammate already played':' teammates already played'):(rows.length===1?' compañero ya jugó hoy':' compañeros ya jugaron hoy'));
 }
-
-async function supaSubmitLiveAnswer(code, name, qIdx, answer){
-  try {
-    const sess = await supaGetLiveSession(code);
-    if(!sess) return;
-    const answers = jParse(sess.answers, {});
-    if(!answers[qIdx]) answers[qIdx] = {};
-    answers[qIdx][name] = answer;
-    await supaUpdateLiveSession(code, { answers: JSON.stringify(answers) });
-  } catch(e){}
-}
-
-
-
-// Module-level reference — advanceLiveQuiz reads this instead of embedding JSON
-// into the onclick attribute (XSS fix, B1).
-let _liveHostQuestions = null;
-
-function renderLiveQuizHost(empNames){
-  const _lqEn = LANG==='en';
-  // Build 5 random questions
-  // F-P2-3 + F-P2-5: Fisher-Yates instead of biased Math.random()-.5 sort.
-  // Also avoids mutating the global DISHES array, which the previous .sort() did in place.
-  // El anfitrión del Live Quiz respeta su turno de estudio activo (a/c); si el
-  // turno deja menos de 5 platos, se completa con el pool general para no quedar
-  // corto de preguntas.
-  const _lqShift = _shiftDishes(DISHES);
-  const pool = _lqaShuffle(_lqShift.length>=5 ? _lqShift : DISHES).slice(0,5);
-  const questions = pool.map(d => {
-    const topic = TOPICS[Math.floor(Math.random()*TOPICS.length)];
-    const correct = (topic.a(d)||'').trim();
-    const wrongs = _lqaShuffle(_pickDistractorPool(d)).slice(0,3).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
-    const choices = _lqaShuffle([correct,...wrongs.slice(0,3)]);
-    return { dish: d.name, topic: topic.label, correct, choices, correctIdx: choices.indexOf(correct) };
-  });
-  _liveHostQuestions = questions;
-
-  const c = document.getElementById('appContent');
-  c.innerHTML = `<div class="sup-wrap">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="stopLiveQuiz();renderSupDashboard();" aria-label="${_lqEn?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${_lqEn?'Live Quiz':'Quiz en vivo'}</div>
-    </div>
-    <div id="liveQuizHostContent">
-      <div style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem" role="status" aria-live="polite">⏳ ${_lqEn?'Creating session…':'Creando sesión…'}</div>
-    </div>
-  </div>`;
-
-  supaCreateLiveSession(questions).then(sess => {
-    if(!sess){ document.getElementById('liveQuizHostContent').innerHTML=`<div style="color:var(--rose);text-align:center;padding:1rem" role="alert">${_lqEn?'Could not create session. Check live_sessions table in Supabase.':'Error al crear sesión. Verifica la tabla live_sessions en Supabase.'}</div>`; return; }
-    const code = sess.code;
-    const _safeCode = encodeURIComponent(code);
-    document.getElementById('liveQuizHostContent').innerHTML = `
-      <div style="text-align:center;background:var(--gold-b);border:2px solid var(--gold-a);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">${_lqEn?'Session code':'Código de sesión'}</div>
-        <div style="font-family:'Cinzel',serif;font-size:3rem;color:var(--gold);letter-spacing:.15em;font-weight:700" aria-label="${_lqEn?'Session code':'Código de sesión'} ${escapeHTML(code)}">${escapeHTML(code)}</div>
-        <div style="font-size:.75rem;color:var(--parch3);margin-top:.4rem">${_lqEn?'Staff enter this code in the app':'Los empleados introducen este código en la app'}</div>
-      </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem">${_lqEn?'Connected participants':'Participantes conectados'}</div>
-        <div id="liveParticipants" role="status" aria-live="polite" style="font-size:.82rem;color:var(--parch3);font-style:italic">${_lqEn?'Waiting…':'Esperando…'}</div>
-      </div>
-      <div id="liveQuizProgress" role="status" aria-live="polite" style="margin-bottom:1rem"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;padding:.5rem .75rem;background:var(--ink2);border-radius:var(--r2)">
-        <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);text-transform:uppercase;letter-spacing:.1em">⏱ ${_lqEn?'Time per question':'Tiempo por pregunta'}</span>
-        <span id="liveCountdownHost" role="timer" aria-live="off" style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parch3);font-weight:600;min-width:36px;text-align:right">20s</span>
-      </div>
-      <div style="display:flex;gap:.5rem">
-        <button onclick="advanceLiveQuiz('${_safeCode}')" id="liveNextBtn" class="btn-primary" style="flex:1">▶ ${_lqEn?'Start quiz':'Iniciar quiz'}</button>
-        <button onclick="stopLiveQuiz();supaUpdateLiveSession('${_safeCode}',{state:'ended'});renderSupDashboard();" style="padding:.75rem 1.1rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);cursor:pointer;letter-spacing:.03em">${_lqEn?'End':'Terminar'}</button>
-      </div>`;
-
-    // Poll for participants
-    liveQuizInterval = setInterval(async () => {
-      const s = await supaGetLiveSession(code);
-      if(!s) return;
-      const answers = jParse(s.answers, {});
-      const participants = [...new Set(Object.values(answers).flatMap(q=>Object.keys(q)))];
-      const pEl = document.getElementById('liveParticipants');
-      if(pEl) pEl.innerHTML = participants.length
-        ? participants.map(p=>`<span style="display:inline-block;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.2rem .6rem;font-size:.75rem;color:var(--gold);margin:.15rem">${escapeHTML(p)} ✓</span>`).join('')
-        : `<span style="color:var(--parch3);font-style:italic">${_lqEn?'Waiting for participants…':'Esperando participantes…'}</span>`;
-
-      // Host real-time view: show the CURRENT question being asked (live)
-      // plus results of the PREVIOUS question, if any. Previously only the
-      // previous-question block existed, so the supervisor had zero visibility
-      // into what participants were currently seeing — which led to "no veo
-      // las preguntas en tiempo real" feedback.
-      const qIdx = s.current_q; // 1-indexed
-      const pEl2 = document.getElementById('liveQuizProgress');
-      if(pEl2){
-        const blocks = [];
-        // Current question (active right now)
-        if(qIdx >= 1 && qIdx <= questions.length){
-          const currentQ = questions[qIdx-1];
-          const currentAnswers = answers[qIdx-1] || {};
-          const submittedCount = Object.keys(currentAnswers).length;
-          const correctNow = Object.values(currentAnswers).filter(a=>a===currentQ.correct).length;
-          const choicesHtml = currentQ.choices.map((ch,i) => {
-            const isCorrect = ch === currentQ.correct;
-            return `<div style="display:flex;align-items:center;gap:.5rem;padding:.35rem .55rem;border-radius:var(--r3);background:${isCorrect?'rgba(77,138,94,.08)':'rgba(244,237,226,.04)'};border:1px solid ${isCorrect?'rgba(77,138,94,.35)':'var(--line)'};margin-bottom:.25rem">
-              <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);min-width:14px">${String.fromCharCode(65+i)}.</span>
-              <span style="flex:1;font-size:.78rem;color:var(--parchment)">${escapeHTML(ch||'')}</span>
-              ${isCorrect?`<span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--sage);letter-spacing:.05em">✓ ${_lqEn?'CORRECT':'CORRECTA'}</span>`:''}
-            </div>`;
-          }).join('');
-          blocks.push(`<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--gold-a);border-left:3px solid var(--gold);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.6rem">
-            <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">▶ ${_lqEn?'Live now':'En directo'} · ${_lqEn?'Question':'Pregunta'} ${qIdx} ${_lqEn?'of':'de'} ${questions.length}</div>
-            <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);margin-bottom:.15rem">${escapeHTML(currentQ.dish||'')}</div>
-            <div style="font-size:.65rem;color:var(--parch3);margin-bottom:.55rem">${escapeHTML(currentQ.topic||'')}</div>
-            ${choicesHtml}
-            <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.55rem;font-family:'DM Mono',monospace;font-size:.66rem">
-              <span style="color:var(--parch3)">${submittedCount}/${participants.length} ${_lqEn?'answered':'respondidas'}</span>
-              <span style="color:${correctNow/Math.max(1,submittedCount)>=.7?'var(--sage)':correctNow>0?'var(--gold)':'var(--parch4)'}">${correctNow} ${_lqEn?'correct':'correctas'}</span>
-            </div>
-          </div>`);
-        }
-        // Previous question results (only after at least one question has finished)
-        if(qIdx >= 2 && answers[qIdx-2]){
-          const prevQ = questions[qIdx-2];
-          const prevAnswers = answers[qIdx-2];
-          const prevCorrect = Object.values(prevAnswers).filter(a=>a===prevQ.correct).length;
-          const prevTotal = Object.values(prevAnswers).length;
-          blocks.push(`<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:.7rem 1rem;opacity:.85">
-            <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem">${_lqEn?'Previous':'Anterior'} · ${_lqEn?'Question':'Pregunta'} ${qIdx-1}</div>
-            <div style="font-size:.78rem;color:var(--parch3);margin-bottom:.3rem">${escapeHTML(prevQ.dish||'')} — <strong>${escapeHTML(prevQ.correct||'')}</strong></div>
-            <div style="font-family:'DM Mono',monospace;font-size:.68rem;color:${prevCorrect/Math.max(1,prevTotal)>=.7?'var(--sage)':'var(--rose)'}">✓ ${prevCorrect}/${prevTotal} ${_lqEn?'correct':'correctos'}</div>
-          </div>`);
-        }
-        pEl2.innerHTML = blocks.join('');
-      }
-    }, 2500);
-  });
-}
-
-
-async function advanceLiveQuiz(code){
-  const _en = LANG==='en';
-  const decoded = decodeURIComponent(code);
-  const questions = _liveHostQuestions;
-  if(!questions){ stopLiveQuiz(); renderSupDashboard(); return; }
-  if(liveCurrentQ >= questions.length){
-    await supaUpdateLiveSession(decoded, { state: 'ended', current_q: liveCurrentQ });
-    stopLiveQuiz();
-    // Show results summary for host
-    const finalSess = await supaGetLiveSession(decoded);
-    const finalAnswers = jParse(finalSess?.answers, {});
-    const participants = [...new Set(Object.values(finalAnswers).flatMap(q=>Object.keys(q)))];
-    const scores = {};
-    participants.forEach(p => { scores[p] = 0; });
-    questions.forEach((q,i) => {
-      Object.entries(finalAnswers[i]||{}).forEach(([p,a]) => { if(a===q.correct) scores[p]++; });
-    });
-    const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-    const medals = [`<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e8c44c,#d4944c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.75rem;font-family:Jost,sans-serif;box-shadow:0 2px 6px rgba(255,200,0,.4);text-shadow:0 1px 2px rgba(0,0,0,.2)">1</div>`,`<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#c0c0c0,#9ca3af);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.75rem;font-family:Jost,sans-serif;box-shadow:0 2px 6px rgba(156,163,175,.4);text-shadow:0 1px 2px rgba(0,0,0,.2)">2</div>`,`<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#cd7c32,#a0522d);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.75rem;font-family:Jost,sans-serif;box-shadow:0 2px 6px rgba(205,124,50,.4);text-shadow:0 1px 2px rgba(0,0,0,.2)">3</div>`];
-    const c = document.getElementById('appContent');
-    c.innerHTML = `<div class="sup-wrap">
-      <div style="text-align:center;margin-bottom:1.5rem">
-        <div style="font-size:2.5rem;margin-bottom:.5rem"></div>
-        <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--parchment)">${_en?'Quiz results':'Resultados del quiz'}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);margin-top:.25rem">${participants.length} ${_en?'participants':'participantes'} · ${questions.length} ${_en?'questions':'preguntas'}</div>
-      </div>
-      ${sorted.map(([name,score],i)=>{
-        const pct = Math.round(score/questions.length*100);
-        const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-        return `<div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:${i===0?'var(--gold-b)':'#fff'};border:1px solid ${i===0?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);margin-bottom:.4rem">
-          <span style="font-size:1.2rem">${i<3?medals[i]:`${i+1}.`}</span>
-          <div style="flex:1;font-size:.85rem;color:var(--parchment);font-weight:${i===0?'600':'400'}">${escapeHTML(name)}</div>
-          <span style="font-family:'DM Mono',monospace;font-size:.78rem;font-weight:600;color:${col}">${score}/${questions.length} · ${pct}%</span>
-        </div>`;
-      }).join('')}
-      <div style="margin-top:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem">${_en?'By question':'Por pregunta'}</div>
-        ${questions.map((q,i)=>{
-          const qA = finalAnswers[i]||{};
-          const correct = Object.values(qA).filter(a=>a===q.correct).length;
-          const total = Object.values(qA).length;
-          const pct = total?Math.round(correct/total*100):0;
-          const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-          return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--line)">
-            <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);width:20px">${i+1}</span>
-            <span style="flex:1;font-size:.78rem;color:var(--parchment)">${escapeHTML(q.dish||'')}</span>
-            <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${col}">${correct}/${total}</span>
-          </div>`;
-        }).join('')}
-      </div>
-      <button onclick="renderSupDashboard()" class="btn-primary" style="width:100%;margin-top:1rem">${_en?'Back to panel':'Volver al panel'}</button>
-    </div>`;
-    return;
-  }
-  // First question — send push notification to whole team
-  if(liveCurrentQ === 0){
-    await supaCreateNotification('all', (_en?'Live Quiz active — code: ':'Quiz en vivo activo — código: ')+decoded+(_en?' — Join now from the dashboard!':' — ¡Únete ahora desde el dashboard!'), 'urgent');
-    // Also send real push notification so users with app closed get alerted
-    try {
-      await fetch(`${SUPA_URL}/functions/v1/send-push`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          target: 'all',
-          title: _en?'Live Quiz':'Quiz en vivo',
-          body: _en?`The supervisor has launched a live quiz! Code: ${decoded}. Open the app to join.`:`¡El supervisor ha lanzado un quiz en vivo! Código: ${decoded}. Abre la app para unirte.`,
-          tag: 'live-quiz'
-        })
-      });
-    } catch(e2) { /* non-critical */ }
-  }
-  const deadline = Date.now() + 20000; // 20 seconds
-  // Bug fix: current_q is shared in 1-indexed form (1 = first active question, etc.).
-  // Player reads `qIdx = sess.current_q - 1` (L29878) and host reads `qIdx = s.current_q`
-  // then `qIdx-1` (L29700) — both already 1-indexed. Previously this write used
-  // liveCurrentQ (0-indexed), making the player compute qIdx=-1 on the first
-  // question, which failed the bounds check and never rendered Q1 for participants.
-  await supaUpdateLiveSession(decoded, { state: 'active', current_q: liveCurrentQ + 1, answers: liveCurrentQ===0?'{}':undefined, deadline: new Date(deadline).toISOString() });
-  liveCurrentQ++;
-  const btn = document.getElementById('liveNextBtn');
-  if(btn) btn.textContent = liveCurrentQ >= questions.length ? (_en?'Finish quiz':'Finalizar quiz') : `▶ ${_en?'Question':'Pregunta'} ${liveCurrentQ+1} ${_en?'of':'de'} ${questions.length}`;
-
-  // Host-side countdown display
-  let hostCountdown = 20;
-  const hostTimer = setInterval(()=>{
-    hostCountdown--;
-    const el = document.getElementById('liveCountdownHost');
-    if(el) {
-      el.textContent = hostCountdown + 's';
-      el.style.color = hostCountdown <= 5 ? 'var(--rose)' : 'var(--parch3)';
-    }
-    if(hostCountdown <= 0) clearInterval(hostTimer);
-  }, 1000);
-}
-
-function stopLiveQuiz(){
-  if(liveQuizInterval){ clearInterval(liveQuizInterval); liveQuizInterval=null; }
-  liveCurrentQ = 0;
-}
-
-// ═══ PARTICIPAR EN QUIZ EN VIVO (vista empleado) ═══
-async function renderJoinLiveQuiz(){
-  const c = document.getElementById('appContent');
-  // Same race-guard idea as renderVinos / renderDuel: the auto-detect
-  // fetch can resolve after the user has navigated elsewhere.
-  const _startTab = currentTab;
-  // Try to auto-detect active session so user doesn't need to type a code
-  try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/live_sessions?state=in.(waiting,active)&order=created_at.desc&limit=1`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
-    if(res.ok){
-      const rows = await res.json();
-      if(rows.length > 0){
-        if (currentTab !== _startTab) return;
-        livePlayerLastQ = -1;
-        renderLiveQuizWaiting(rows[0].code, JSON.parse(rows[0].questions||'[]'));
-        return;
-      }
-    }
-  } catch(e){}
-  if (currentTab !== _startTab) return;
-  // Fallback: manual code entry
-  const _en = LANG==='en';
-  c.innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
+function _qdStopTimer(){ if(_qdTimer){ clearInterval(_qdTimer); _qdTimer=null; } }
+function renderQuizDia(){
+  _qdStopTimer();
+  const played=_qdPlayed();
+  if(played){ _qdEnd(played.correct, played.total, true); return; }
+  const _en=LANG==='en';
+  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
       <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)"> ${_en?'Join quiz':'Unirse al quiz'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">🎯 ${_en?'Daily Quiz':'Quiz del día'}</div>
     </div>
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">${_en?'Session code':'Código de sesión'}</div>
-      <input id="liveCode" maxlength="4" placeholder="1234" inputmode="numeric" style="width:100%;text-align:center;font-family:'Cinzel',serif;font-size:2.5rem;color:var(--gold);border:2px solid var(--gold-a);border-radius:var(--r2);padding:.6rem;letter-spacing:.3em;background:var(--gold-b)">
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;text-align:center">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem">${_qdDayKey()}</div>
+      <div style="font-size:.85rem;color:var(--parchment);line-height:1.6">${_en
+        ? '<b>5 questions</b> on today\'s menu · <b>20s</b> each, auto-advance.<br>Same questions for the whole team — one ranked attempt per day.'
+        : '<b>5 preguntas</b> de la carta · <b>20s</b> cada una, avance automático.<br>Las mismas para todo el equipo — un intento clasificado al día.'}</div>
     </div>
-    <button onclick="joinLiveQuiz()" class="btn-primary" style="width:100%;padding:.85rem">${_en?'Join →':'Unirse →'}</button>
-    <div id="liveJoinError" style="text-align:center;color:var(--rose);font-size:.75rem;margin-top:.5rem;display:none">${_en?'Code not found or session ended':'Código no encontrado o sesión terminada'}</div>
+    <button onclick="_qdStart()" class="btn-primary" style="width:100%;padding:.85rem">▶ ${_en?'Start now':'Empezar ahora'}</button>
+    <div style="text-align:center;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);margin-top:.6rem">${_en?'No code. No host. No waiting.':'Sin código. Sin supervisor. Sin esperas.'}</div>
   </div>`;
 }
-
-
-
-
-async function joinLiveQuiz(){
-  const code = document.getElementById('liveCode')?.value.trim();
-  if(!code || code.length < 4) return;
-  const sess = await supaGetLiveSession(code);
-  if(!sess || sess.state === 'ended'){
-    const el = document.getElementById('liveJoinError');
-    if(el) el.style.display='block';
-    return;
-  }
-  livePlayerLastQ = -1;
-  renderLiveQuizWaiting(code, jParse(sess.questions, []));
+function _qdStart(){
+  _qdState={ qs:_qdQuestions(), i:0, correct:0, detail:[] };
+  _qdQuestion();
 }
-
-function renderLiveQuizWaiting(code, questions){
-  const c = document.getElementById('appContent');
-  c.innerHTML = `<div style="max-width:420px;margin:0 auto;padding:2rem 1rem;text-align:center">
-    <div style="font-size:3rem;margin-bottom:1rem">⏳</div>
-    <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment);margin-bottom:.5rem">Conectado</div>
-    <div style="font-size:.8rem;color:var(--parch3);margin-bottom:.5rem">Esperando al supervisor...</div>
-    <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.15em">Código: ${code}</div>
-    <div id="livePlayerContent" style="margin-top:1.5rem"></div>
-  </div>`;
-
-  if(livePlayerInterval) clearInterval(livePlayerInterval);
-  livePlayerInterval = setInterval(async () => {
-    const sess = await supaGetLiveSession(code);
-    if(!sess) return;
-    if(sess.state === 'ended'){ clearInterval(livePlayerInterval); renderLiveQuizPlayerEnd(code, questions, jParse(sess.answers, {})); return; }
-    if(sess.state === 'active' && sess.current_q !== livePlayerLastQ){
-      livePlayerLastQ = sess.current_q;
-      const qIdx = sess.current_q - 1;
-      if(qIdx >= 0 && qIdx < questions.length){
-        const dl = sess.deadline ? new Date(sess.deadline).getTime() : null;
-        renderLiveQuizQuestion(code, questions, qIdx, jParse(sess.answers, {}), dl);
-      }
-    }
-  }, 2000);
-}
-
-let liveCountdownTimer = null;
-// Holds the current live-quiz questions so onclick handlers can look up a choice
-// by index instead of embedding unescaped strings/JSON into HTML attributes (XSS fix).
-let _liveQuizQuestions = null;
-
-function renderLiveQuizQuestion(code, questions, qIdx, existingAnswers, deadline){
-  const q = questions[qIdx];
-  _liveQuizQuestions = questions;
-  const myAnswer = existingAnswers[qIdx]?.[currentUser];
-  const pEl = document.getElementById('livePlayerContent') || document.getElementById('appContent');
-  if(liveCountdownTimer){ clearInterval(liveCountdownTimer); liveCountdownTimer=null; }
-  const _safeCode = encodeURIComponent(code);
-  pEl.innerHTML = `
+function _qdQuestion(){
+  _qdStopTimer();
+  const st=_qdState; if(!st) return;
+  const q=st.qs[st.i], _en=LANG==='en';
+  const deadline=Date.now()+20000;
+  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;text-align:left">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4)">Pregunta ${qIdx+1} de ${questions.length} · ${escapeHTML(q.topic||'')}</div>
-        <div id="liveTimer" style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--gold);min-width:32px;text-align:right">20</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4)">${_en?'Question':'Pregunta'} ${st.i+1} ${_en?'of':'de'} ${st.qs.length} · ${escapeHTML(q.topic||'')}</div>
+        <div id="qdTimer" role="timer" style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--gold);min-width:32px;text-align:right">20</div>
       </div>
       <div style="width:100%;height:3px;background:var(--ink3);border-radius:2px;margin-bottom:.85rem;overflow:hidden">
-        <div id="liveTimerFill" style="height:100%;background:var(--sage);width:100%;border-radius:2px"></div>
+        <div id="qdTimerFill" style="height:100%;background:var(--sage);width:100%;border-radius:2px;transition:width 1s linear"></div>
       </div>
-      <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment);margin-bottom:1rem">${escapeHTML(q.dish||'')}</div>
-      <div id="liveChoices">
+      <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);margin-bottom:1rem">${escapeHTML(q.q||q.dish||'')}</div>
+      <div id="qdChoices">
       ${q.choices.map((ch,i)=>`
-        <button onclick="submitLiveAnswer('${_safeCode}',${qIdx},${i})"
-          style="width:100%;text-align:left;padding:.75rem 1rem;margin-bottom:.4rem;border:2px solid ${myAnswer===ch?(ch===q.correct?'var(--sage)':'var(--rose)'):'var(--line)'};border-radius:var(--r2);background:${myAnswer===ch?(ch===q.correct?'rgba(77,138,94,.1)':'rgba(196,112,104,.08)'):'#fff'};font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);cursor:pointer;transition:all .2s"
-          ${myAnswer?'disabled':''}>
+        <button onclick="_qdAnswer(${i})" style="width:100%;text-align:left;padding:.75rem 1rem;margin-bottom:.4rem;border:2px solid var(--line);border-radius:var(--r2);background:#fff;font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);cursor:pointer;transition:all .2s">
           ${String.fromCharCode(65+i)}. ${escapeHTML(ch||'')}
         </button>`).join('')}
       </div>
-      ${myAnswer?`<div style="text-align:center;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch3);margin-top:.5rem">✓ Respuesta enviada · Esperando siguiente pregunta</div>`:''}
-    </div>`;
-  if(!myAnswer && deadline){
-    const totalMs = 20000;
-    function tick(){
-      const remaining = Math.max(0, deadline - Date.now());
-      const secs = Math.ceil(remaining / 1000);
-      const pct = (remaining / totalMs) * 100;
-      const timerEl = document.getElementById('liveTimer');
-      const fillEl = document.getElementById('liveTimerFill');
-      if(timerEl){ timerEl.textContent=secs; timerEl.style.color=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--parch2)'; }
-      if(fillEl){ fillEl.style.width=pct+'%'; fillEl.style.background=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--sage)'; fillEl.style.transition='width 1s linear'; }
-      if(remaining<=0){
-        clearInterval(liveCountdownTimer); liveCountdownTimer=null;
-        document.querySelectorAll('#liveChoices button').forEach(b=>{ b.disabled=true; b.style.opacity='.5'; });
-        const t2=document.getElementById('liveTimer'); if(t2){ t2.textContent='⏰'; t2.style.color='var(--rose)'; }
-      }
-    }
-    tick();
-    liveCountdownTimer = setInterval(tick, 1000);
+    </div>
+  </div>`;
+  _qdTimer=setInterval(()=>{
+    const remaining=Math.max(0,deadline-Date.now()), secs=Math.ceil(remaining/1000);
+    const tEl=document.getElementById('qdTimer'), fEl=document.getElementById('qdTimerFill');
+    if(!tEl){ _qdStopTimer(); return; }   // navegó fuera: el timer muere solo
+    tEl.textContent=secs; tEl.style.color=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--parch2)';
+    if(fEl){ fEl.style.width=(remaining/20000*100)+'%'; fEl.style.background=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--sage)'; }
+    if(remaining<=0) _qdAnswer(-1);       // tiempo agotado: cuenta como fallo y AVANZA SOLO
+  },1000);
+}
+function _qdAnswer(choiceIdx){
+  _qdStopTimer();
+  const st=_qdState; if(!st) return;
+  const q=st.qs[st.i];
+  const answer=choiceIdx>=0?q.choices[choiceIdx]:null;
+  const ok=answer===q.correct;
+  if(ok) st.correct++;
+  st.detail.push({ dish:q.dish, mine:answer, correct:q.correct, ok });
+  // feedback inmediato: verde la correcta, rojo la elegida si falló
+  document.querySelectorAll('#qdChoices button').forEach((b,i)=>{
+    b.disabled=true;
+    const isC=q.choices[i]===q.correct;
+    if(isC){ b.style.borderColor='var(--sage)'; b.style.background='rgba(77,138,94,.1)'; }
+    else if(i===choiceIdx){ b.style.borderColor='var(--rose)'; b.style.background='rgba(196,112,104,.08)'; }
+    else b.style.opacity='.55';
+  });
+  const tEl=document.getElementById('qdTimer'); if(tEl&&choiceIdx<0){ tEl.textContent='⏰'; tEl.style.color='var(--rose)'; }
+  setTimeout(()=>{ st.i++; if(st.i<st.qs.length) _qdQuestion(); else _qdFinish(); }, 1200);
+}
+async function _qdFinish(){
+  const st=_qdState; if(!st) return;
+  const correct=st.correct, total=st.qs.length;
+  try{ localStorage.setItem(_qdRecKey(), JSON.stringify({ correct, total, detail: st.detail })); }catch(_){}
+  awardXP(correct*5, LANG==='en'?'Daily Quiz':'Quiz del día', 'live');
+  supaInsertQdScore(correct, total);
+  _qdEnd(correct, total, false);
+}
+async function _qdEnd(correct, total, revisit){
+  _qdStopTimer(); _qdState=null;
+  const _en=LANG==='en';
+  const pct=Math.round(correct/total*100);
+  const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+  const played=_qdPlayed();
+  const detail=(played&&played.detail)||[];
+  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem;text-align:center">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;text-align:left">
+      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">🎯 ${_en?'Daily Quiz':'Quiz del día'}</div>
+    </div>
+    <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment)">${revisit?(_en?'Your result today':'Tu resultado de hoy'):(_en?'Done!':'¡Hecho!')}</div>
+    <div style="font-size:2.5rem;font-family:'Cinzel',serif;color:${col};margin:.4rem 0">${correct}/${total}</div>
+    ${revisit?'':`<div style="font-size:.8rem;color:var(--parch3);margin-bottom:.5rem">+${correct*5} XP</div>`}
+    ${detail.length?`<div style="margin:1rem 0;text-align:left">${detail.map(d=>`
+      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid ${d.ok?'rgba(77,138,94,.3)':'rgba(196,112,104,.2)'};border-radius:var(--r2);padding:.6rem .9rem;margin-bottom:.35rem">
+        <div style="font-size:.78rem;color:var(--parchment)">${d.ok?'✓':'✗'} ${escapeHTML(d.dish||'')}</div>
+        ${!d.ok?`<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.15rem">${escapeHTML(d.mine||(_en?'No answer':'Sin respuesta'))} → ${escapeHTML(d.correct||'')}</div>`:''}
+      </div>`).join('')}</div>`:''}
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin:1rem 0 .5rem">${_en?'Today\'s ranking':'Ranking de hoy'}</div>
+    <div id="qdBoard" role="status" aria-live="polite" style="font-size:.8rem;color:var(--parch3);font-style:italic">${_en?'Loading…':'Cargando…'}</div>
+    <button onclick="showTab('dashboard')" class="btn-primary" style="width:100%;margin-top:1.25rem">${_en?'Back to start':'Volver al inicio'}</button>
+  </div>`;
+  const rows=await supaFetchQdToday();
+  const bEl=document.getElementById('qdBoard'); if(!bEl) return;
+  if(!rows){ bEl.textContent=_en?'Offline — your score will count when you reconnect.':'Sin conexión — tu resultado contará al reconectar.'; return; }
+  if(!rows.length){ bEl.textContent=_en?'You are the first today!':'¡Eres el primero de hoy!'; }
+  else bEl.innerHTML=rows.slice(0,10).map((r,i)=>{
+    const me=r.employee===currentUser;
+    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem .7rem;margin-bottom:.25rem;background:${me?'var(--gold-b)':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1px solid ${me?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);text-align:left">
+      <span style="font-family:'Cinzel',serif;font-weight:700;font-size:.85rem;color:${i===0?'var(--gold)':'var(--parch3)'};min-width:22px">${i===0?'👑':(i+1)+'.'}</span>
+      <span style="flex:1;font-size:.8rem;color:var(--parchment);font-weight:${me?'700':'400'}">${escapeHTML(r.employee)}${me?(_en?' (you)':' (tú)'):''}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--parch3)">${r.score}/${r.total||total}</span>
+    </div>`;}).join('');
+  // el primero del día que termina avisa al equipo: cita, no sorpresa
+  if(!revisit && rows.length===1 && rows[0].employee===currentUser){
+    supaCreateNotification('all', (_en?'🎯 Daily Quiz is served — ':'🎯 El quiz del día está servido — ')+currentUser+(_en?' opened the board with ':' ha abierto el marcador con ')+correct+'/'+total, 'info');
   }
 }
-
-async function submitLiveAnswer(code, qIdx, choiceIdx){
-  const decoded = decodeURIComponent(code);
-  const questions = _liveQuizQuestions;
-  if(!questions || !questions[qIdx]) return;
-  const answer = questions[qIdx].choices[choiceIdx];
-  if(typeof answer === 'undefined') return;
-  // Disable all choice buttons immediately so a double-tap (or a second tap
-  // while the round-trip is in flight on slow Wi-Fi) can't overwrite the
-  // first answer before the re-render lands.
-  const choiceBtns = document.querySelectorAll('#liveChoices button');
-  if([...choiceBtns].some(b=>b.disabled)) return;
-  choiceBtns.forEach(b=>{ b.disabled=true; b.style.opacity='.5'; });
-  await supaSubmitLiveAnswer(decoded, currentUser, qIdx, answer);
-  const sess = await supaGetLiveSession(decoded);
-  if(sess) renderLiveQuizQuestion(decoded, questions, qIdx, jParse(sess.answers, {}));
-}
-
-function renderLiveQuizPlayerEnd(code, questions, answers){
-  if(livePlayerInterval){ clearInterval(livePlayerInterval); livePlayerInterval=null; }
-  let correct = 0;
-  questions.forEach((q,i)=>{ if(answers[i]?.[currentUser]===q.correct) correct++; });
-  const pct = Math.round(correct/questions.length*100);
-  const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-  awardXP(correct*5, ' Quiz en vivo', 'live');
-  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:2rem 1rem;text-align:center">
-    <div style="font-size:3rem;margin-bottom:.75rem">${pct>=80?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8 21h8M12 17v4"/><path d="M7 4H4a2 2 0 000 4c0 2.5 2 4 2 4h12s2-1.5 2-4a2 2 0 000-4h-3"/><path d="M7 4h10v8a5 5 0 01-10 0V4z"/></svg>`:pct>=50?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`}</div>
-    <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--parchment);margin-bottom:.25rem">Quiz terminado</div>
-    <div style="font-size:2.5rem;font-family:'Cinzel',serif;color:${col};margin:.5rem 0">${pct}%</div>
-    <div style="font-size:.82rem;color:var(--parch3);margin-bottom:1.5rem">${correct} de ${questions.length} correctas · +${correct*5} XP</div>
-    ${questions.map((q,i)=>{
-      const mine = answers[i]?.[currentUser];
-      const ok = mine===q.correct;
-      return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid ${ok?'rgba(77,138,94,.3)':'rgba(196,112,104,.2)'};border-radius:var(--r2);padding:.75rem 1rem;margin-bottom:.4rem;text-align:left">
-        <div style="font-size:.8rem;color:var(--parchment)">${ok?'✓':'✗'} ${escapeHTML(q.dish||'')}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);margin-top:.2rem">${escapeHTML(mine||'Sin respuesta')} ${!ok?'→ '+escapeHTML(q.correct||''):''}</div>
-      </div>`;
-    }).join('')}
-    <button onclick="showTab('dashboard')" class="btn-primary" style="width:100%;margin-top:1rem">${LANG==='en'?'Back to start':'Volver al inicio'}</button>
-  </div>`;
-}
-
-// ═══ CARTA EDITOR ═══
 function renderCartaEditor(){
   const cats = [...new Set(DISHES.map(d=>d.cat))];
   const c = document.getElementById('appContent');
@@ -23766,12 +23495,14 @@ function launchElTurno(){
       </div>
 
       <div class="et-screen" id="etStart">
-        <div class="et-sub">Ritz-Carlton Abama · Txoko</div>
+        <div class="et-sub">${(typeof ACTIVE_VENUE!=='undefined'&&ACTIVE_VENUE&&ACTIVE_VENUE.eyebrow)?escapeHTML(ACTIVE_VENUE.eyebrow):'Meseo'}</div>
         <div class="et-card"><div class="et-title">Camarero<br>Survivors</div></div>
-        <div class="et-kick">Sobrevive al servicio. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta lo máximo. <b>Conócelas y sobrevivirás.</b></div>
+        <div class="et-kick">Sobrevive al servicio hasta el <b>cierre (10:00)</b>. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta. <b>Conócelas y sobrevivirás.</b></div>
+        <div class="et-chars" id="etChars"></div>
+        <div id="etShop"></div>
+        <button class="et-big" id="etPlayBtn">Empezar turno</button>
         <div class="et-legend" id="etLegend"></div>
         <div id="etRank"></div>
-        <button class="et-big" id="etPlayBtn">Empezar turno</button>
         <div class="et-sub" style="opacity:.75">👆 Arrastra para moverte · 🌀 esquiva · disparo automático</div>
       </div>
 
@@ -23786,6 +23517,19 @@ function launchElTurno(){
         <div class="et-lvlhead">¡SUBES DE NIVEL!</div>
         <div class="et-sub">Elige una mejora</div>
         <div class="et-picks" id="etPicks"></div>
+        <button class="et-mini" id="etReroll" style="display:none">🔄 Otra ronda</button>
+      </div>
+
+      <div class="et-screen" id="etChest" style="display:none">
+        <div class="et-sub">El jefe suelta su botín</div>
+        <div class="et-card"><div class="et-title" style="font-size:33px">¡CARRITO DE<br>POSTRES!</div></div>
+        <div class="et-picks" id="etChestSlot"></div>
+        <button class="et-big" id="etChestGo" style="display:none">¡Al turno!</button>
+      </div>
+
+      <div class="et-screen" id="etQuiz" style="display:none">
+        <div class="et-sub">Pregunta de la carta</div>
+        <div id="etQuizCard"></div>
       </div>
 
       <div class="et-screen" id="etOver" style="display:none">
@@ -23794,6 +23538,7 @@ function launchElTurno(){
         <div class="et-statgrid" id="etOverStats"></div>
         <button class="et-mini" id="etShareBtn" style="display:none">🏆 Presumir en la Terraza</button>
         <button class="et-big" id="etAgainBtn">Otra vez</button>
+        <button class="et-mini" id="etShopBtn">💰 Mejoras del oficio</button>
       </div>
 
       <div class="et-flash" id="etFlash"></div>
@@ -23862,6 +23607,57 @@ function launchElTurno(){
   }
   _etRenderRank();
 
+  // ── Meta-progresión (jul 2026, "vamos con todo"): las propinas del turno
+  //    se GUARDAN al morir y compran mejoras permanentes — cada derrota sigue
+  //    siendo progreso, el bucle de retención de Vampire Survivors. Cartera
+  //    por empleado y dispositivo (localStorage, como el mejor turno); los
+  //    récords del ranking no se tocan. ──
+  const ET_PERKS=[
+    {k:'vida',   ic:'❤️', t:'Fondo físico',  s:'+12 vida máxima por nivel',       max:5, fx:(g,n)=>{ g.maxhp+=12*n; g.hp+=12*n; }},
+    {k:'filo',   ic:'🔪', t:'Buen pulso',    s:'+6% daño por nivel',              max:5, fx:(g,n)=>{ g.dmg*=1+0.06*n; }},
+    {k:'piernas',ic:'👟', t:'Zancada',       s:'+4% velocidad por nivel',         max:5, fx:(g,n)=>{ g.speed*=1+0.04*n; }},
+    {k:'iman',   ic:'🧲', t:'Ojo de sala',   s:'+18 de imán por nivel',           max:5, fx:(g,n)=>{ g.pickR+=18*n; }},
+    {k:'recarga',ic:'⚡', t:'Muñeca suelta', s:'−5% recarga por nivel',           max:5, fx:(g,n)=>{ g.fireInt*=Math.pow(0.95,n); }},
+    {k:'ronda',  ic:'🔄', t:'Otra ronda',    s:'+1 cambio de cartas por partida', max:2, fx:(g,n)=>{ g.rerolls+=n; }}
+  ];
+  const ET_PERK_COST=[25,60,140,320,700];
+  function _etMeta(){
+    try{ const m=JSON.parse(localStorage.getItem('etMeta:'+currentUser)||'{}');
+      m.tips=m.tips||0; m.up=m.up||{}; m.char=m.char||'camarero'; return m; }
+    catch(_){ return {tips:0,up:{},char:'camarero'}; }
+  }
+  function _etMetaSave(m){ try{ localStorage.setItem('etMeta:'+currentUser,JSON.stringify(m)); }catch(_){} }
+
+  // ── Oficios de sala (VS: cada personaje arranca distinto): cuatro maneras
+  //    de empezar el turno. Mismo héroe, otro oficio. ──
+  const ET_CHARS=[
+    {k:'camarero',ic:'🤵', t:'Camarero', s:'Equilibrado. La casa de siempre.',       fx:g=>{}},
+    {k:'sumiller',ic:'🍾', t:'Sumiller', s:'Empieza con cava · −10 vida',            fx:g=>{ g.cava=1; g.maxhp-=10; g.hp-=10; }},
+    {k:'cortador',ic:'🗡️', t:'Cortador', s:'Empieza con cuchillo · −3 daño',        fx:g=>{ g.knives=1; g.dmg-=3; }},
+    {k:'maitre',  ic:'🎩', t:'Maître',   s:'+15% velocidad, +30 imán · −20 vida',    fx:g=>{ g.speed*=1.15; g.pickR+=30; g.maxhp-=20; g.hp-=20; }}
+  ];
+  function _etRenderChars(){
+    const m=_etMeta(); const el=document.getElementById('etChars'); if(!el) return;
+    el.innerHTML=ET_CHARS.map(c=>`<button class="et-char${m.char===c.k?' on':''}" data-k="${c.k}" aria-label="${c.t}: ${c.s}"><span class="et-char-ic">${c.ic}</span><b>${c.t}</b><span class="et-char-s">${c.s}</span></button>`).join('');
+    el.querySelectorAll('.et-char').forEach(b=>b.onclick=()=>{
+      const m2=_etMeta(); m2.char=b.dataset.k; _etMetaSave(m2); sfx('coin'); _etRenderChars(); });
+  }
+  function _etRenderShop(){
+    const m=_etMeta(); const el=document.getElementById('etShop'); if(!el) return;
+    el.innerHTML=`<div class="et-shop"><div class="et-shop-title">Mejoras del oficio · <b>💰 ${m.tips}</b></div>`+
+      ET_PERKS.map(p=>{ const lvl=m.up[p.k]||0, cost=ET_PERK_COST[lvl];
+        const pips='●'.repeat(lvl)+'○'.repeat(p.max-lvl);
+        const btn=lvl>=p.max?`<span class="et-shop-max">MAX</span>`
+          :`<button class="et-shop-buy${m.tips<cost?' off':''}" data-k="${p.k}" aria-label="Comprar ${p.t} por ${cost} propinas">💰${cost}</button>`;
+        return `<div class="et-shop-row"><span class="et-shop-ic">${p.ic}</span><span class="et-shop-tx"><b>${p.t}</b> <i>${pips}</i><br><span>${p.s}</span></span>${btn}</div>`; }).join('')+`</div>`;
+    el.querySelectorAll('.et-shop-buy').forEach(b=>b.onclick=()=>{
+      const m2=_etMeta(), k=b.dataset.k, lvl=m2.up[k]||0, cost=ET_PERK_COST[lvl];
+      const perk=ET_PERKS.find(p=>p.k===k);
+      if(!perk||lvl>=perk.max||m2.tips<cost){ sfx('hurt'); return; }
+      m2.tips-=cost; m2.up[k]=lvl+1; _etMetaSave(m2); sfx('level'); vibe(15); _etRenderShop(); });
+  }
+  _etRenderChars(); _etRenderShop();
+
   // ── HERO SPRITE: el protagonista, ciclo de carrera de 2 fotogramas reales
   //    (vídeo del propietario, jul 2026 — reemplaza la mascota vectorial). ──
   const HERO=ET_HERO_RUN.map(src=>{ const img=new Image(); img.src=src; return img; });
@@ -23890,6 +23686,10 @@ function launchElTurno(){
   // imponente mientras patrulla, furioso con el cucharón al telegrafiar/embestir.
   const CHEF_SPR={};
   for(const k of ['calm','attack']){ const img=new Image(); img.onload=()=>{ img._ok=true; }; img.src=ET_CHEF_SPRITES[k]; CHEF_SPR[k]=img; }
+  // Bandeja ilustrada (Grok del propietario, jul 2026): si el sprite existe,
+  // las bandejas en vuelo lo usan; hasta entonces (o si falla la carga) el
+  // dibujo por código con canapés hace de respaldo. Mismo patrón _ok de todos.
+  const TRAY=new Image(); TRAY.onload=()=>{ TRAY._ok=true; }; TRAY.src='img/sprites/tray.webp';
   // Fase del ciclo: sincronizada con el mismo rebote vertical (bob) del render
   // loop — el cambio de pierna coincide con el pico del rebote, como en un
   // ciclo de carrera 2D convencional. Quieto = siempre el fotograma 0.
@@ -23923,31 +23723,87 @@ function launchElTurno(){
     }catch(e){}
   }
 
-  // ── Música: secuenciador WebAudio (loop jazzy de servicio, sin archivos) ──
-  // 16 pasos · bajo caminante + hi-hat + riff pentatónico; sube 2 semitonos
-  // mientras hay un jefe vivo. Se silencia con muted/pausa y muere en teardown.
-  let musicIv=null, mStep=0;
-  const M_BASS=[0,null,3,null,5,null,3,null,0,null,3,null,7,5,3,null];
-  const M_LEAD=[12,null,null,15,null,12,null,10,12,null,15,null,17,null,15,12];
+  // ── Música: secuenciador WebAudio v2 (jul 2026) — sigue sin archivos y
+  // CSP-safe, pero ahora suena a servicio de verdad. El loop viejo eran 16
+  // pasos idénticos cada ~2s con un blip de 2600 Hz por batería; ahora:
+  //   · compás doble (32 pasos) con vamp dorian Am7→D9 y bajo CAMINANTE con
+  //     aproximación cromática al volver al I
+  //   · swing en las corcheas débiles (retraso fijo M_SWING)
+  //   · batería sintetizada: bombo (seno con caída de tono), escobilla
+  //     (ruido bandpass) y ride (ruido highpass), con síncopa en el «y» de 3
+  //   · comping de acordes en contratiempos y una lead pentatónica que
+  //     RESPIRA: calla un loop entero de cada dos
+  //   · con jefe: ostinato de TRITONO en corcheas y bombo a negras; con el
+  //     CIERRE, todo +5 semitonos y ride a semicorcheas (pánico elegante)
+  //   · con vida baja el bombo aprieta; todo pasa por un compresor propio
+  //     para que música y sfx no se pisen
+  let musicIv=null, mStep=0, mLoop=0, mComp=null, mNoiseBuf=null;
+  const M_SWING=0.045;                  // corcheas débiles retrasadas: swing de servicio
+  const M_WALK=[0,3,7,10, 5,9,12,11];   // negras del caminante (11 = cromática hacia A)
+  const M_CHORD=[[12,15,19],[17,21,24]];// Am7 / D9, en semitonos sobre A1=55 Hz
+  const M_PHRASE=[12,null,15,null,17,null,null,15, 19,null,17,15,12,null,null,null,
+                  null,null,12,15,17,null,19,null, 22,null,19,17,15,null,12,null];
+  const M_BOSS_BASS=[0,6];              // tritono: la sala se pone seria
+  const M_BOSS_LEAD=[12,null,11,12,null,15,12,null];
+  function mChain(){
+    if(!mComp){ mComp=AC.createDynamicsCompressor();
+      mComp.threshold.value=-20; mComp.ratio.value=8; mComp.connect(AC.destination); }
+    return mComp;
+  }
   function mNote(freq,dur,ty,vol,when){
-    const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(AC.destination);
+    const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(mChain());
     o.type=ty; o.frequency.value=freq;
     g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(.0001,when+dur);
     o.start(when); o.stop(when+dur+.02);
   }
+  function mDrum(kind,when,vol){
+    if(kind==='kick'){ const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(mChain());
+      o.type='sine'; o.frequency.setValueAtTime(95,when); o.frequency.exponentialRampToValueAtTime(42,when+.09);
+      g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(.0001,when+.11);
+      o.start(when); o.stop(when+.13); return; }
+    if(!mNoiseBuf){ const n=Math.floor(AC.sampleRate*0.3), b=AC.createBuffer(1,n,AC.sampleRate), d=b.getChannelData(0);
+      for(let i=0;i<n;i++) d[i]=Math.random()*2-1; mNoiseBuf=b; }
+    const s=AC.createBufferSource(), f=AC.createBiquadFilter(), g=AC.createGain();
+    s.buffer=mNoiseBuf; s.connect(f); f.connect(g); g.connect(mChain());
+    if(kind==='ride'){ f.type='highpass'; f.frequency.value=7000; }
+    else { f.type='bandpass'; f.frequency.value=1900; f.Q.value=0.9; }   // escobilla
+    const dur=kind==='ride'?0.09:0.05;
+    g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(.0001,when+dur);
+    s.start(when); s.stop(when+dur+.02);
+  }
   function musicTick(){
     try{
       if(muted||!running||paused||!AC||AC.state!=='running') return;
-      const t=AC.currentTime+0.03, st=mStep++%16;
-      const up=(G&&G.enemies.some(e=>e.boss))?2:0;
-      const b=M_BASS[st]; if(b!==null) mNote(82.4*Math.pow(2,(b+up)/12),0.14,'triangle',0.045,t);
-      if(st%4===2) mNote(2600,0.03,'square',0.011,t);
-      const l=M_LEAD[st]; if(l!==null) mNote(329.6*Math.pow(2,(l+up)/12),0.15,'square',0.017,t);
+      const st=mStep%32, bar=Math.floor(st/16), sw=(st%4===2)?M_SWING:0;
+      const t=AC.currentTime+0.03+sw;
+      mStep++; if(st===31) mLoop++;
+      const boss=G&&G.enemies.some(e=>e.boss), closing=G&&G.closed;
+      const panic=G&&G.hp<25;
+      if(boss){ // modo jefe: tritono urgente; en el cierre, +5 y semicorcheas
+        const up=closing?5:0;
+        if(st%2===0) mNote(55*Math.pow(2,(M_BOSS_BASS[(st/2)%2]+up)/12),0.12,'triangle',0.05,t);
+        if(st%4===0) mDrum('kick',t,0.09);
+        if(st%2===0) mDrum('ride',t,closing?0.028:0.02);
+        if(closing&&st%2===1) mDrum('ride',t,0.016);
+        const l=M_BOSS_LEAD[st%8]; if(l!==null&&st%2===0) mNote(220*Math.pow(2,(l+up)/12),0.1,'square',0.016,t);
+        return;
+      }
+      // bajo caminante: negras + pickup swingado al cerrar cada compás
+      if(st%4===0) mNote(55*Math.pow(2,M_WALK[Math.floor(st/4)]/12),0.32,'triangle',0.05,t);
+      if(st===14||st===30) mNote(55*Math.pow(2,(M_WALK[Math.floor(st/4)]+2)/12),0.14,'triangle',0.035,t);
+      // batería: bombo en el 1 y el «y» de 3, escobilla en 2 y 4, ride swingado
+      if(st%16===0||st%16===10) mDrum('kick',t,panic?0.085:0.06);
+      if(st%8===4) mDrum('snare',t,0.03);
+      if(st%4===0) mDrum('ride',t,0.018); if(st%8===6) mDrum('ride',t,0.012);
+      // comping: el acorde del compás, corto, en contratiempos
+      if(st%16===2||st%16===11){ for(const n of M_CHORD[bar]) mNote(110*Math.pow(2,n/12),0.16,'sine',0.014,t); }
+      // lead pentatónica que respira: calla un loop entero de cada dos
+      if(mLoop%2===0){ const l=M_PHRASE[st]; if(l!==null) mNote(220*Math.pow(2,l/12),0.16,'square',0.015,t); }
     }catch(_){}
   }
 
   // ── Game state ──
-  let G=null, running=false, paused=false, last=0, rafId=0;
+  let G=null, running=false, paused=false, last=0, rafId=0, _etChestIv=null;
   function newGame(){
     G={ px:W/2, py:H/2, pr:16, hp:100, maxhp:100, speed:2.6, ifr:0,
         level:1, xp:0, xpNext:6, score:0, time:0,
@@ -23957,11 +23813,17 @@ function launchElTurno(){
         evoPierce:0, evoKnives:0, evoCava:0,
         combo:0, comboT:0, bestCombo:0, hitStop:0,
         dashT:0, dashCd:0, dashVX:0, dashVY:0, trail:[], rings:[],
-        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[],
+        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[], eshots:[], zones:[],
         spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
         nextElite:55, nextSurge:75, bosses:0,
         target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0,
+        rerolls:1, cloche:null, nextClo:50, closed:false, warned:false,
         bgIdx:0, bgPrev:0, bgFade:0 };
+    // lo permanente entra antes de que el turno empiece: mejoras del oficio
+    // compradas con propinas + el oficio elegido (jul 2026, meta-progresión)
+    const _m=_etMeta();
+    for(const p of ET_PERKS){ const n=_m.up[p.k]||0; if(n) p.fx(G,n); }
+    (ET_CHARS.find(c=>c.k===_m.char)||ET_CHARS[0]).fx(G);
     pickTarget(true);
   }
 
@@ -24025,7 +23887,8 @@ function launchElTurno(){
   const pauseBtn=document.getElementById('etPauseBtn'), muteBtn=document.getElementById('etMuteBtn');
   function setPaused(p){
     if(!running) return;
-    if(document.getElementById('etLevelup').style.display!=='none') return; // el level-up manda
+    // los overlays de decisión (level-up, carrito, pregunta) mandan sobre la pausa
+    for(const id of ['etLevelup','etChest','etQuiz']){ const el=document.getElementById(id); if(el&&el.style.display!=='none') return; }
     paused=p;
     document.getElementById('etPause').style.display=p?'flex':'none';
     if(!p) last=performance.now();
@@ -24070,10 +23933,15 @@ function launchElTurno(){
   }
   function spawnBoss(){
     const p=edgePos(); const a=G.roster[Math.floor(Math.random()*G.roster.length)];
-    const hp=130+G.time*11;
+    // Curva del jefe (jul 2026, "los usuarios no pasan del primer jefe"): la
+    // vida crecía solo con el reloj (548 HP en el 0:38 contra un héroe de
+    // nivel ~4 con ~22 DPS = pelea de +30s que se solapaba con élites,
+    // oleadas y el SIGUIENTE jefe). Ahora el primero es abatible (~200 HP)
+    // y cada jefe caído endurece al siguiente.
+    const hp=Math.round((65+G.time*3.5)*(1+G.bosses*0.4));
     // r 46→54 (propietario, jul 2026): "un poco más grandes" — presencia de
     // jefe de verdad ahora que trae su propio arte.
-    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:54,spd:0.5,kind:'boss',flash:0,boss:true,grace:24,lungeT:150,tele:0,dashing:0});
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:54,spd:0.5,kind:'boss',flash:0,boss:true,grace:24,lungeT:150,tele:0,dashing:0,abilT:150,wind:0});
     flash('¡JEFE: '+a.name+'!','#e8735a'); sfx('boss'); G.shake=8; vibe([25,35,25]);
   }
   // EL CHEF — jefe final (propietario, jul 2026): entra en el minuto 3 y cada
@@ -24083,8 +23951,41 @@ function launchElTurno(){
     const p=edgePos();
     const a={key:'chef',name:'El Chef',emoji:'🍳',col:'#f4ecd8'};
     const hp=Math.round((130+G.time*11)*1.9);
-    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:64,spd:0.55,kind:'boss',flash:0,boss:true,chef:true,grace:28,lungeT:130,tele:0,dashing:0});
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:64,spd:0.55,kind:'boss',flash:0,boss:true,chef:true,grace:28,lungeT:130,tele:0,dashing:0,abilT:110,wind:0});
     flash('★ ¡EL CHEF! ★','#e8b83a'); sfx('boss'); G.shake=11; vibe([40,50,40,50,40]);
+  }
+  // CIERRE DEL LOCAL (jul 2026): a los 10:00 el turno tiene final, como la
+  // Muerte de Vampire Survivors a los 30. LA INSPECTORA no se puede matar y
+  // cada segundo corre más — llegar al cierre ES la victoria («SERVICIO
+  // COMPLETO»); lo que aguantes con ella en sala es propina.
+  function spawnInspectora(){
+    const p=edgePos();
+    const a={key:'inspec',name:'La Inspectora',emoji:'📋',col:'#32303c'};
+    G.enemies.push({x:p.x,y:p.y,a,hp:1e9,maxhp:1e9,r:46,spd:1.05,kind:'boss',flash:0,boss:true,inspec:true,grace:30,lungeT:170,tele:0,dashing:0,abilT:1e9,wind:0});
+    flash('★ ¡LA INSPECTORA! ★','#e8eef4'); sfx('boss'); G.shake=12; vibe([50,60,50,60,50]);
+  }
+  // Habilidad especial del jefe (jul 2026, propietario): cada familia de
+  // alérgeno pelea distinto — proyectiles en abanico (gluten/huevo/pescado),
+  // refuerzos mini (frutos secos/crustáceos) o charco que frena y quema
+  // (lácteos/soja/sulfitos). EL CHEF barre la sala en abanico radial. Todas
+  // llegan tras un aviso (aro dorado de carga) y se esquivan con movimiento
+  // o dash — pedagogía intacta: el alérgeno "ataca" con su propia identidad.
+  const BOSS_ABIL={gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley'};
+  function bossAbility(e){
+    const ab=BOSS_ABIL[e.a.key]||'volley';
+    if(ab==='volley'){ // abanico apuntado (radial completo si es EL CHEF)
+      const n=e.chef?10:5, sp=e.chef?1.9:2.1, base=Math.atan2(G.py-e.y,G.px-e.x);
+      for(let i=0;i<n;i++){ const a2=e.chef?(i/n)*6.283+G.time:base+(i-(n-1)/2)*0.24;
+        G.eshots.push({x:e.x,y:e.y,vx:Math.cos(a2)*sp,vy:Math.sin(a2)*sp,life:150,col:e.a.col}); }
+      sfx('boss');
+    } else if(ab==='summon'){ // llama a tres minis de su alérgeno
+      if(G.enemies.length<70) for(let k=0;k<3;k++){ const a2=k/3*6.283+Math.random();
+        spawnMini(e.x+Math.cos(a2)*(e.r+18),e.y+Math.sin(a2)*(e.r+18),e.a); }
+      flash('¡REFUERZOS!','#e8735a'); sfx('surge');
+    } else { // charco bajo los pies del jugador: se arma, luego frena y quema
+      G.zones.push({x:G.px,y:G.py,r:54,arm:40,life:280,col:e.a.col});
+      sfx('hit');
+    }
   }
   // Oleada: anillo de enemigos alrededor del jugador, anunciada a bombo y platillo
   function surge(){
@@ -24132,7 +24033,79 @@ function launchElTurno(){
       if(G.level%3===0 && G.roster.length<ALLERGENS.length) G.roster.push(ALLERGENS[G.roster.length]);
       document.getElementById('etLevelup').style.display='none'; paused=false; last=performance.now();
     });
+    // otra ronda (QoL de Vampire Survivors, jul 2026): si las tres cartas no
+    // sirven, cámbialas — limitado por partida, ampliable en la tienda
+    const rb=document.getElementById('etReroll');
+    rb.style.display=G.rerolls>0?'inline-block':'none';
+    rb.textContent='🔄 Otra ronda ('+G.rerolls+')';
+    rb.onclick=()=>{ if(G.rerolls<=0) return; G.rerolls--; sfx('dash'); vibe(15); showLevelUp(); };
     document.getElementById('etLevelup').style.display='flex';
+  }
+
+  // ── Carrito de postres (jul 2026): el cofre del jefe de Vampire Survivors.
+  //    El jefe abatido suelta un carrito; recogerlo abre la ceremonia
+  //    tragaperras y regala 1 mejora (2 si era EL CHEF, o con suerte). ──
+  function showChest(dbl){
+    paused=true;
+    const el=document.getElementById('etChestSlot'), go=document.getElementById('etChestGo');
+    document.getElementById('etChest').style.display='flex'; go.style.display='none';
+    const n=dbl?2:(Math.random()<0.15?2:1);
+    const pool=UPGRADES.slice(), picks=[];
+    for(let i=0;i<n;i++) picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+    // el texto se congela ANTES de aplicar (u.s puede depender del estado)
+    const cards=picks.map(u=>`<div class="et-pick et-evo"><div class="et-pick-ic">${u.ic}</div><div class="et-pick-tx"><b>${u.t}</b><span>${typeof u.s==='function'?u.s(G):u.s}</span></div></div>`).join('');
+    let spins=0;
+    _etChestIv=setInterval(()=>{
+      spins++;
+      const fake=UPGRADES[Math.floor(Math.random()*UPGRADES.length)];
+      el.innerHTML=`<div class="et-pick et-slot"><div class="et-pick-ic">${fake.ic}</div><div class="et-pick-tx"><b>???</b><span>girando…</span></div></div>`;
+      sfx('hit');
+      if(spins>=12){ clearInterval(_etChestIv); _etChestIv=null;
+        picks.forEach(u=>u.fn(G));
+        el.innerHTML=cards;
+        flash(n>1?'¡DOBLE PREMIO!':'¡PREMIO!','#e0a02c'); sfx('evo'); vibe([20,30,40]);
+        go.style.display='inline-block'; }
+    },95);
+    go.onclick=()=>{ document.getElementById('etChest').style.display='none'; paused=false; last=performance.now(); };
+  }
+
+  // ── Cloche misterioso (jul 2026): pregunta de la carta REAL. Deriva de
+  //    DISHES — los 8 alérgenos del roster usan los mismos nombres que la
+  //    carta — y la mitad de las veces pregunta por uno que SÍ lleva.
+  //    Acierta y la sala te lo paga; falles o no, te llevas la lección. ──
+  function showQuiz(){
+    paused=true;
+    // la pregunta respeta el turno de estudio (comida/cena), como todos los
+    // generadores de la app: al del almuerzo no le caen platos solo-cena
+    const _qPool=_shiftDishes(DISHES);
+    const dish=(_qPool.length?_qPool:DISHES)[Math.floor(Math.random()*(_qPool.length||DISHES.length))];
+    const has=ALLERGENS.filter(a=>(dish.allergens||[]).includes(a.name));
+    const not=ALLERGENS.filter(a=>!(dish.allergens||[]).includes(a.name));
+    const askYes=has.length>0&&(Math.random()<0.5||!not.length);
+    const a=askYes?has[Math.floor(Math.random()*has.length)]:not[Math.floor(Math.random()*not.length)];
+    const card=document.getElementById('etQuizCard');
+    document.getElementById('etQuiz').style.display='flex';
+    card.innerHTML=`<div class="et-quiz-dish">${escapeHTML(dish.name)}</div>
+      <div class="et-quiz-q">¿Lleva <b>${a.name} ${a.emoji}</b>?</div>
+      <div class="et-quiz-btns"><button class="et-big" id="etQz1">SÍ</button><button class="et-big" id="etQz0">NO</button></div>`;
+    const answer=ans=>{
+      const ok=ans===askYes;
+      const full=(dish.allergens||[]).join(', ')||'sin alérgenos declarados';
+      let rw='';
+      if(ok){ const r=Math.floor(Math.random()*3);
+        if(r===0){ for(const e of G.enemies){ if(!e.boss) e.hp=0; } rw='¡LIMPIEZA DE SALA! Todos los enemigos, fuera.'; G.shake=9; }
+        else if(r===1){ for(const g of G.gems){ g.x=G.px; g.y=G.py; } rw='¡PROPINA TOTAL! Todas las monedas, para ti.'; }
+        else { G.hp=Math.min(G.maxhp,G.hp+45); rw='¡BANQUETE! +45 de vida.'; }
+        sfx('evo'); vibe([20,30,40]); }
+      else sfx('hurt');
+      card.innerHTML=`<div class="et-quiz-dish">${ok?'✔ ¡Correcto!':'✘ Casi…'}</div>
+        <div class="et-quiz-q">${escapeHTML(dish.name)}<br>lleva: <b>${escapeHTML(full)}</b></div>
+        <div class="et-quiz-rw">${ok?rw:'Sin premio esta vez — pero esto ya no se te escapa en sala.'}</div>
+        <div class="et-quiz-btns"><button class="et-big" id="etQzGo">Seguir</button></div>`;
+      document.getElementById('etQzGo').onclick=()=>{ document.getElementById('etQuiz').style.display='none'; paused=false; last=performance.now(); };
+    };
+    document.getElementById('etQz1').onclick=()=>answer(true);
+    document.getElementById('etQz0').onclick=()=>answer(false);
   }
 
   function flash(txt,col){ const f=document.getElementById('etFlash'); f.textContent=txt; f.style.color=col||'var(--et-gold)';
@@ -24141,7 +24114,9 @@ function launchElTurno(){
   }
   function burst(x,y,col,n){ for(let i=0;i<n;i++){ const a=Math.random()*6.28,s=1+Math.random()*3;
     G.parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,col}); } }
-  function hurtEnemy(e,amt,silent){ e.hp-=amt; e.flash=6;
+  function hurtEnemy(e,amt,silent){
+    if(e.inspec) return;   // la inspectora no se negocia: inmune a todo
+    e.hp-=amt; e.flash=6;
     if(!silent && amt>=1) G.dmgs.push({x:e.x,y:e.y-e.r,val:Math.round(amt),life:1}); }
 
   // ── Update ──
@@ -24153,6 +24128,8 @@ function launchElTurno(){
     G.moving=(Math.abs(mv.mx)+Math.abs(mv.my))>0.05?1:0;
     G.tilt+=(mv.mx*0.09-G.tilt)*Math.min(1,0.15*dt);
     let pvx=mv.mx*G.speed, pvy=mv.my*G.speed;
+    // charco de alérgeno activo bajo los pies: frena (el dash lo cruza limpio)
+    if(G.zones.some(z=>z.arm<=0&&Math.hypot(G.px-z.x,G.py-z.y)<z.r)){ pvx*=0.6; pvy*=0.6; }
     if(G.dashT>0){ pvx=G.dashVX; pvy=G.dashVY; G.dashT-=dt; G.trail.push({x:G.px,y:G.py,life:1,face:G.face,frame:_etHeroFrame(G)}); }
     if(G.dashCd>0) G.dashCd-=dt;
     G.px=Math.max(G.pr,Math.min(W-G.pr,G.px+pvx*dt));
@@ -24164,17 +24141,42 @@ function launchElTurno(){
     // ── director de ritmo: presión con respiros, arquetipos que entran con el tiempo ──
     G.spawnT-=dt;
     const lull=(G.time%26)>21;   // ~5s de respiro cada 26s
-    const si=Math.max(8,G.spawnInt-G.time*0.35)*(lull?2.6:1);
+    // Con jefe en sala el director afloja (jul 2026): menos morralla = las
+    // bandejas (que apuntan al MÁS CERCANO) llegan de verdad al jefe, y el
+    // jugador pelea contra el jefe, no contra la marea de fondo.
+    const bossUp=G.enemies.some(e=>e.boss);
+    const si=Math.max(8,G.spawnInt-G.time*0.35)*(lull?2.6:1)*(bossUp?1.8:1);
     if(G.spawnT<=0){ G.spawnT=si; const rr=Math.random();
       let kind='norm'; if(G.time>45&&rr<0.15) kind='tank'; else if(G.time>60&&rr<0.28) kind='div'; else if(G.time>20&&rr<0.5) kind='fast';
-      spawnEnemy(kind); if(G.time>25&&Math.random()<0.5) spawnEnemy(Math.random()<0.4?'fast':'norm'); }
+      spawnEnemy(kind); if(!bossUp&&G.time>25&&Math.random()<0.5) spawnEnemy(Math.random()<0.4?'fast':'norm'); }
+    // los eventos programados solo hasta el cierre (10:00): después la sala
+    // es de LA INSPECTORA y solo queda la morralla de fondo
+    if(G.time<600){
     // élite cada ~35s: más grande, brilla, suelta botín garantizado
     if(G.time>=G.nextElite){ G.nextElite+=35; spawnEnemy(Math.random()<0.5?'fast':'norm',true); flash('¡VIP ENFADADO!','#e0a02c'); sfx('surge'); }
     // oleada en anillo cada ~55s
     if(G.time>=G.nextSurge){ G.nextSurge+=55; surge(); }
-    // boss wave every 40s
-    if(G.time>=G.nextBoss){ G.nextBoss+=40; spawnBoss(); }
+    // jefe cada 40s — pero NUNCA dos a la vez (jul 2026): antes el segundo
+    // jefe entraba en el 1:18 aunque el primero siguiera vivo, y el
+    // apilamiento era la sentencia de muerte. Si hay jefe en sala, el
+    // siguiente espera a que caiga.
+    if(G.time>=G.nextBoss){ if(bossUp) G.nextBoss=G.time+8; else { G.nextBoss=G.time+40; spawnBoss(); } }
     if(G.time>=G.nextChef){ G.nextChef+=180; spawnChef(); }
+    }
+    // CIERRE DEL LOCAL: aviso a las 9:30, la inspectora entra a las 10:00
+    if(!G.warned&&G.time>=570){ G.warned=true; flash('¡ÚLTIMA COMANDA! CIERRE EN 30s','#e8b83a'); sfx('surge'); vibe([30,30,30]); }
+    if(!G.closed&&G.time>=600){ G.closed=true; spawnInspectora(); }
+    // cloche misterioso: aparece cada ~50s (nunca pegado al héroe ni en el
+    // tramo final), espera ~14s parpadeando y se esfuma si no lo recoges
+    if(typeof DISHES!=='undefined'&&DISHES.length){
+      if(!G.cloche&&G.time>=G.nextClo&&G.time<560){
+        const mrg=70; let cx=mrg+Math.random()*(W-mrg*2), cy=mrg+Math.random()*(H-mrg*2);
+        if(Math.hypot(cx-G.px,cy-G.py)<130){ cx=W-cx; cy=H-cy; }
+        G.cloche={x:cx,y:cy,life:840}; flash('¡PREGUNTA DE LA CARTA!','#e8c44c'); sfx('coin'); }
+      if(G.cloche){ G.cloche.life-=dt;
+        if(G.cloche.life<=0){ G.cloche=null; G.nextClo=G.time+50; }
+        else if(Math.hypot(G.px-G.cloche.x,G.py-G.cloche.y)<G.pr+20){ G.cloche=null; G.nextClo=G.time+50; showQuiz(); } }
+    }
     // cambio de escenario por nivel (propietario, jul 2026): comedor →
     // cocina (nv 5) → bodega (nv 10), rotando en niveles altos. Fundido ~1s.
     const _si=Math.floor(G.level/5)%ET_BGS.length;
@@ -24219,6 +24221,19 @@ function launchElTurno(){
 
     // bullets
     for(const b of G.bullets){ b.x+=b.vx*dt; b.y+=b.vy*dt; b.life-=dt; b.rot+=dt*0.5; }
+    // proyectiles de jefe: vuelan recto y se esquivan (el dash da i-frames)
+    for(let i=G.eshots.length-1;i>=0;i--){ const s=G.eshots[i]; s.x+=s.vx*dt; s.y+=s.vy*dt; s.life-=dt;
+      if(s.life<=0||s.x<-30||s.x>W+30||s.y<-30||s.y>H+30){ G.eshots.splice(i,1); continue; }
+      if(G.ifr<=0 && Math.hypot(s.x-G.px,s.y-G.py)<G.pr+6){
+        G.hp-=8; G.ifr=30; G.shake=Math.max(G.shake,5); burst(G.px,G.py,'#a3372c',7); sfx('hurt'); vibe(25);
+        G.eshots.splice(i,1); if(G.hp<=0){ return gameOver(); } } }
+    // charcos de alérgeno: se arman (aviso punteado), luego queman de a poco
+    for(let i=G.zones.length-1;i>=0;i--){ const z=G.zones[i];
+      if(z.arm>0){ z.arm-=dt; continue; }
+      z.life-=dt; if(z.life<=0){ G.zones.splice(i,1); continue; }
+      if(Math.hypot(G.px-z.x,G.py-z.y)<z.r){ G.hp-=0.06*dt;
+        if(Math.random()<0.1*dt) burst(G.px,G.py+10,z.col,2);
+        if(G.hp<=0){ return gameOver(); } } }
     // enemies move + collide (cada arquetipo se mueve distinto)
     for(const e of G.enemies){
       if(e.flash>0) e.flash-=dt;
@@ -24227,15 +24242,23 @@ function launchElTurno(){
       let hx=(G.px-e.x)/d, hy=(G.py-e.y)/d, spdMul=1;
       if(e.kind==='fast'&&!e.boss){ const wz=Math.sin(G.time*6.5+(e.ph||0))*0.6; const tx=-hy*wz, ty=hx*wz; hx+=tx; hy+=ty; }
       if(e.boss){ // embestida telegrafiada: se frena, avisa, y carga
-        e.lungeT-=dt;
-        if(e.dashing>0){ e.dashing-=dt; spdMul=4.4; }
+        e.lungeT-=dt; e.abilT-=dt;
+        if(e.inspec) e.spd+=dt*0.0011;   // la inspectora acelera sin tregua: el final siempre llega
+        // jul 2026: aviso 28→42 (~0,7s, en móvil 0,47s no daba para reaccionar)
+        // y carga 4.4→3.8 — se esquiva moviéndose, no solo con el dash.
+        if(e.dashing>0){ e.dashing-=dt; spdMul=3.8; }
         else if(e.tele>0){ e.tele-=dt; spdMul=0.2; if(e.tele<=0){ e.dashing=32; sfx('boss'); G.shake=Math.max(G.shake,4); } }
-        else if(e.lungeT<=0){ e.lungeT=230; e.tele=28; }
+        // habilidad especial: carga (aro dorado, se frena) y suelta
+        else if(e.wind>0){ e.wind-=dt; spdMul=0.15; if(e.wind<=0) bossAbility(e); }
+        else if(e.abilT<=0){ e.abilT=e.chef?240:300; e.wind=30; sfx('surge'); }
+        else if(e.lungeT<=0){ e.lungeT=230; e.tele=42; }
       }
       e.x+=hx*e.spd*spdMul*dt; e.y+=hy*e.spd*spdMul*dt;
       if(d<G.pr+e.r && G.ifr<=0 && e.grace<=0){
         // damage curve: gentle at the start of the shift, ramps up, capped so it stays fair
-        const dmg=(e.boss?15:5)+Math.min(e.boss?9:6, G.time*0.05);
+        // (jul 2026: base del jefe 15→12 — con 100 HP, tres roces del jefe
+        // no deberían ser media vida)
+        const dmg=(e.boss?12:5)+Math.min(e.boss?9:6, G.time*0.05);
         G.hp-=dmg; G.ifr=e.boss?40:32; G.shake=Math.max(G.shake,e.boss?9:5); burst(G.px,G.py,'#a3372c',8); sfx('hurt'); vibe(e.boss?45:25);
         // knockback: shove the attacker (and the small pile around you) away so you can escape
         for(const o of G.enemies){ if(o.boss) continue; const od=Math.hypot(o.x-G.px,o.y-G.py)||1;
@@ -24252,7 +24275,9 @@ function launchElTurno(){
       const cb=G.combo>=25?2:G.combo>=10?1:0;
       if(G.combo===10||G.combo===25||G.combo===50) { flash('¡RACHA ×'+G.combo+'!','#e0a02c'); sfx('surge'); vibe(20); }
       if(e.boss){ for(let g=0;g<10;g++) G.gems.push({x:e.x+(Math.random()-.5)*44,y:e.y+(Math.random()-.5)*44,val:3,col:'#e0a02c'});
-        G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; G.bosses++; G.hitStop=Math.max(G.hitStop,7); flash('¡JEFE ABATIDO!','#4fd0c0'); vibe([30,40,50]); }
+        G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; G.bosses++; G.hitStop=Math.max(G.hitStop,7); flash('¡JEFE ABATIDO!','#4fd0c0'); vibe([30,40,50]);
+        // carrito de postres: el botín ceremonial del jefe (EL CHEF, doble seguro)
+        G.pickups.push({x:e.x,y:e.y,chest:true,dbl:!!e.chef,life:9999}); }
       else G.gems.push({x:e.x,y:e.y,val:(isTarget?2:1)+cb,col:isTarget?'#e0a02c':'#4fd0c0'});
       if(e.elite){ for(let g=0;g<3;g++) G.gems.push({x:e.x+(Math.random()-.5)*30,y:e.y+(Math.random()-.5)*30,val:2,col:'#e0a02c'});
         G.hitStop=Math.max(G.hitStop,4); flash('¡VIP SATISFECHO!','#6ad46a'); }
@@ -24278,6 +24303,8 @@ function launchElTurno(){
     // = recoger; a tope de vida el plato da un bono pequeño de XP).
     for(let i=G.pickups.length-1;i>=0;i--){ const p=G.pickups[i]; p.life-=dt;
       const d=Math.hypot(G.px-p.x,G.py-p.y)||1;
+      // el carrito de postres se recoge al contacto y abre su ceremonia
+      if(p.chest){ if(d<G.pr+22){ G.pickups.splice(i,1); sfx('level'); showChest(p.dbl); } continue; }
       if(d<G.pickR && G.hp<G.maxhp){ p.x+=(G.px-p.x)/d*3.2*dt; p.y+=(G.py-p.y)/d*3.2*dt; }
       if(d<G.pr+14){
         if(G.hp<G.maxhp){ G.hp=Math.min(G.maxhp,G.hp+p.heal); flash('+'+p.heal+' ❤','#6ad46a'); burst(G.px,G.py,'rgba(106,212,106,.75)',9); }
@@ -24337,6 +24364,18 @@ function launchElTurno(){
     for(const r of G.rings){ ctx.globalAlpha=Math.max(0,r.life)*0.55; ctx.strokeStyle=r.col; ctx.lineWidth=2.5;
       ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,6.29); ctx.stroke(); }
     ctx.globalAlpha=1;
+    // charcos de alérgeno (habilidad de jefe): aviso punteado mientras se
+    // arman; charco brillante que burbujea mientras quema
+    for(const z of G.zones){
+      if(z.arm>0){ ctx.globalAlpha=.4+.25*Math.sin(G.time*12); ctx.strokeStyle=z.col; ctx.lineWidth=2.5;
+        ctx.setLineDash([6,5]); ctx.beginPath(); ctx.ellipse(z.x,z.y,z.r,z.r*0.72,0,0,6.29); ctx.stroke(); ctx.setLineDash([]); }
+      else { const zf=Math.min(1,z.life/60);
+        ctx.globalAlpha=.28*zf; ctx.fillStyle=z.col;
+        ctx.beginPath(); ctx.ellipse(z.x,z.y,z.r,z.r*0.72,0,0,6.29); ctx.fill();
+        ctx.globalAlpha=.55*zf; ctx.strokeStyle=z.col; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.ellipse(z.x,z.y,z.r,z.r*0.72,0,0,6.29); ctx.stroke();
+        if(Math.random()<0.3) G.parts.push({x:z.x+(Math.random()-.5)*z.r*1.5,y:z.y+(Math.random()-.5)*z.r*1.0,vx:0,vy:-0.4,life:0.5,col:z.col}); }
+      ctx.globalAlpha=1; }
     // estela fantasma del dash
     for(const t of G.trail){ if(!heroReady) break; ctx.globalAlpha=Math.max(0,t.life)*0.3;
       ctx.save(); ctx.translate(t.x,t.y); ctx.scale(t.face,1); ctx.drawImage(HERO[t.frame||0],-23,-35,46,58); ctx.restore(); }
@@ -24375,6 +24414,22 @@ function launchElTurno(){
     // luna plana). Halo verde pulsante, vapor ondulante, plato base, cúpula
     // con brillo, pomo de latón y el corazón grabado. Parpadea al expirar.
     for(const p of G.pickups){ if(p.life<80 && Math.floor(p.life/6)%2===0) continue;
+      // carrito de postres (botín del jefe): dorado, con ruedas y destellos —
+      // imposible confundirlo con la campana de curar
+      if(p.chest){ const cb=Math.sin(G.time*4+p.x*0.1)*2;
+        ctx.globalAlpha=.22+.12*Math.sin(G.time*6); ctx.fillStyle='#ffd24d';
+        ctx.beginPath(); ctx.arc(p.x,p.y+cb-4,26,0,6.29); ctx.fill(); ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(p.x,p.y+17,18,4.5,0,0,6.29); ctx.fill();
+        ctx.fillStyle='#f4e4c1'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2.5;
+        ctx.fillRect(p.x-14,p.y+cb+3,28,10); ctx.strokeRect(p.x-14,p.y+cb+3,28,10);
+        for(const wx of [-8,8]){ ctx.fillStyle='#3a2a1c'; ctx.beginPath(); ctx.arc(p.x+wx,p.y+cb+15,3.4,0,6.29); ctx.fill(); ctx.stroke(); }
+        ctx.fillStyle='#e8b83a'; ctx.beginPath(); ctx.ellipse(p.x,p.y+cb+2,17,5,0,0,6.29); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#ffe9b0'; ctx.beginPath(); ctx.arc(p.x,p.y+cb,12,Math.PI,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#c9a86a'; ctx.beginPath(); ctx.arc(p.x,p.y+cb-12,2.6,0,6.29); ctx.fill(); ctx.stroke();
+        const ctw=Math.sin(G.time*8+p.x); if(ctw>0.7){ ctx.strokeStyle='rgba(255,255,255,.95)'; ctx.lineWidth=1.4; const s=(ctw-0.7)*14;
+          ctx.beginPath(); ctx.moveTo(p.x-17-s,p.y+cb-10); ctx.lineTo(p.x-17+s,p.y+cb-10);
+          ctx.moveTo(p.x-17,p.y+cb-10-s); ctx.lineTo(p.x-17,p.y+cb-10+s); ctx.stroke(); }
+        continue; }
       const bob=Math.sin(G.time*5+p.x*0.1)*1.6;
       // halo de "esto cura" pulsante
       ctx.globalAlpha=.18+.10*Math.sin(G.time*6+p.x); ctx.fillStyle='#8ae08a';
@@ -24400,6 +24455,20 @@ function launchElTurno(){
       ctx.fillStyle='#c33'; ctx.font='8px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText('❤',p.x,p.y+bob-4); }
     ctx.textBaseline='alphabetic';
+    // cloche misterioso: campana DORADA con interrogante — hay pregunta de la
+    // carta esperando; parpadea cuando está a punto de esfumarse
+    if(G.cloche){ const c=G.cloche;
+      if(!(c.life<150&&Math.floor(c.life/7)%2===0)){
+        const qb=Math.sin(G.time*4.5+c.x*0.1)*2;
+        ctx.globalAlpha=.2+.12*Math.sin(G.time*5.5); ctx.fillStyle='#ffd24d';
+        ctx.beginPath(); ctx.arc(c.x,c.y+qb-3,22,0,6.29); ctx.fill(); ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(c.x,c.y+13,14,3.8,0,0,6.29); ctx.fill();
+        ctx.fillStyle='#e8b83a'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2.5;
+        ctx.beginPath(); ctx.ellipse(c.x,c.y+qb+2,16,4.4,0,0,6.29); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#ffe9b0'; ctx.beginPath(); ctx.arc(c.x,c.y+qb,12.5,Math.PI,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#c9a86a'; ctx.beginPath(); ctx.arc(c.x,c.y+qb-13,2.6,0,6.29); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#241a12'; ctx.font='bold 12px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('?',c.x,c.y+qb-5); ctx.textBaseline='alphabetic'; } }
     // enemies — Cuphead-style allergen monsters (colour + emblem = what to learn)
     ctx.textAlign='center'; ctx.textBaseline='middle';
     for(const e of G.enemies){
@@ -24414,6 +24483,9 @@ function launchElTurno(){
       // jefe en telegrafía: aro rojo que se cierra = va a embestir
       if(e.boss&&e.tele>0){ ctx.globalAlpha=.75; ctx.strokeStyle='#c43a2c'; ctx.lineWidth=4;
         ctx.setLineDash([7,6]); ctx.beginPath(); ctx.arc(e.x,e.y,e.r+8+e.tele*1.6,0,6.29); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=gA; }
+      // jefe cargando su habilidad: aro dorado que vibra = viene el especial
+      if(e.boss&&e.wind>0){ ctx.globalAlpha=.8; ctx.strokeStyle='#e0a02c'; ctx.lineWidth=3.5;
+        ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(e.x,e.y,e.r+6+Math.sin(G.time*14)*4,0,6.29); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=gA; }
       ctx.save(); ctx.translate(e.x,e.y);
       // silueta por arquetipo: rápido=alargado, tanque=achatado, divisor=línea de corte
       if(e.kind==='fast'&&!e.boss) ctx.scale(1.12+wob,0.86-wob);
@@ -24452,7 +24524,7 @@ function launchElTurno(){
       ctx.moveTo(-e.r*0.66,-e.r*0.52); ctx.lineTo(-e.r*0.06,-e.r*0.26);
       ctx.moveTo(e.r*0.66,-e.r*0.52); ctx.lineTo(e.r*0.06,-e.r*0.26); ctx.stroke();
       }
-      if(e.boss&&!e.chef){ // corona del jefe de sala (el chef no la necesita: se le reconoce)
+      if(e.boss&&!e.chef&&!e.inspec){ // corona del jefe de sala (ni el chef ni la inspectora la llevan: se les reconoce)
         ctx.fillStyle='#e0a02c'; ctx.strokeStyle='#1c1512'; ctx.lineWidth=2.5; ctx.beginPath();
         ctx.moveTo(-e.r*0.5,-e.r*0.98); ctx.lineTo(-e.r*0.38,-e.r*1.3); ctx.lineTo(-e.r*0.18,-e.r*1.02);
         ctx.lineTo(0,-e.r*1.36); ctx.lineTo(e.r*0.18,-e.r*1.02); ctx.lineTo(e.r*0.38,-e.r*1.3);
@@ -24486,25 +24558,49 @@ function launchElTurno(){
       ctx.font='26px Georgia'; ctx.fillText('🍾',0,0); ctx.restore();
     }
     ctx.textBaseline='alphabetic';
-    // bandejas — plata de camarero girando en vuelo (jul 2026): estela de dos
-    // fantasmas tras la trayectoria, plato plateado con aro interior y REFLEJO
-    // que rota con el giro. Las perforantes (evolución) siguen siendo doradas.
+    // bandejas — BANDEJA de camarero de verdad (jul 2026, reporte de usuarios:
+    // "parecen platos pequeños o monedas"). El culpable era el giro de canto
+    // (el mismo squash de elipse que usan las propinas): ahora es un óvalo
+    // ancho SIEMPRE, con aro exterior, pocillo interior, servilleta y tres
+    // canapés a bordo — comida encima = bandeja inequívoca. Conserva la
+    // estela de dos ecos y el reflejo giratorio; la perforante sigue dorada.
     for(const b of G.bullets){ if(b.life<=0)continue;
-      const sq=0.35+0.65*Math.abs(Math.sin(b.rot));
       const gold=b.pierce>0;
-      const ang=Math.atan2(b.vy,b.vx);
-      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(ang);
-      // estela: dos ecos desvanecidos detrás del plato
-      for(let k=1;k<=2;k++){ ctx.globalAlpha=0.22/k; ctx.fillStyle=gold?'#ffe9b0':'#dde3e8';
-        ctx.beginPath(); ctx.ellipse(-k*7,0,6.5,6.5*sq,0,0,6.29); ctx.fill(); }
+      const ang=Math.atan2(b.vy,b.vx), wob=Math.sin(b.rot*2)*0.16;
+      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(ang+wob);
+      if(TRAY._ok){ // sprite ilustrado: ecos del propio sprite + halo si es perforante
+        const tw=27, th=tw*(TRAY.height/TRAY.width);
+        for(let k=1;k<=2;k++){ ctx.globalAlpha=0.18/k; ctx.drawImage(TRAY,-tw/2-k*8,-th/2,tw,th); }
+        ctx.globalAlpha=1;
+        if(gold){ ctx.globalAlpha=.4+.2*Math.sin(G.time*9); ctx.fillStyle='#ffd24d';
+          ctx.beginPath(); ctx.ellipse(0,0,tw*0.62,th*0.62,0,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
+        ctx.drawImage(TRAY,-tw/2,-th/2,tw,th);
+        ctx.restore(); continue; }
+      // estela: dos ecos desvanecidos detrás de la bandeja
+      for(let k=1;k<=2;k++){ ctx.globalAlpha=0.20/k; ctx.fillStyle=gold?'#ffe9b0':'#dde3e8';
+        ctx.beginPath(); ctx.ellipse(-k*8,0,10.5,6.5,0,0,6.29); ctx.fill(); }
       ctx.globalAlpha=1;
+      // plato ovalado con borde de tinta
       ctx.fillStyle=gold?'#ffe9b0':'#dde3e8'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.ellipse(0,0,6.5,6.5*sq,0,0,6.29); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle=gold?'rgba(160,120,40,.6)':'rgba(110,125,140,.6)'; ctx.lineWidth=1.2;
-      ctx.beginPath(); ctx.ellipse(0,0,4,4*sq,0,0,6.29); ctx.stroke();
-      // reflejo que gira con el plato
+      ctx.beginPath(); ctx.ellipse(0,0,11,7,0,0,6.29); ctx.fill(); ctx.stroke();
+      // pocillo interior: el aro que dice "bandeja", no "moneda"
+      ctx.strokeStyle=gold?'rgba(160,120,40,.7)':'rgba(110,125,140,.7)'; ctx.lineWidth=1.3;
+      ctx.beginPath(); ctx.ellipse(0,0,8,4.6,0,0,6.29); ctx.stroke();
+      // servilleta + tres canapés a bordo
+      ctx.fillStyle='rgba(255,255,255,.92)'; ctx.beginPath(); ctx.ellipse(0,-0.4,6,3.1,0,0,6.29); ctx.fill();
+      ctx.fillStyle='#c94f38'; ctx.beginPath(); ctx.arc(-3.1,-0.9,1.7,0,6.29); ctx.fill();
+      ctx.fillStyle='#5d8f46'; ctx.beginPath(); ctx.arc(0.4,-1.7,1.6,0,6.29); ctx.fill();
+      ctx.fillStyle='#e0a02c'; ctx.beginPath(); ctx.arc(3.1,-0.5,1.5,0,6.29); ctx.fill();
+      // reflejo que gira con el bamboleo
       ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.lineWidth=1.4;
-      ctx.beginPath(); ctx.ellipse(0,0,5.4,5.4*sq,0,b.rot*1.7,b.rot*1.7+0.9); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0,0,9.6,5.8,0,b.rot*1.7,b.rot*1.7+0.8); ctx.stroke();
+      ctx.restore(); }
+    // proyectiles de jefe: gota del color del alérgeno con contorno y brillo
+    for(const s of G.eshots){
+      ctx.save(); ctx.translate(s.x,s.y); ctx.rotate(Math.atan2(s.vy,s.vx));
+      ctx.fillStyle=s.col; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(0,0,7,5,0,0,6.29); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.7)'; ctx.beginPath(); ctx.arc(-2,-1.5,1.8,0,6.29); ctx.fill();
       ctx.restore(); }
     // particles
     for(const p of G.parts){ ctx.globalAlpha=Math.max(0,p.life); ctx.fillStyle=p.col; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,6.29); ctx.fill(); }
@@ -24570,7 +24666,7 @@ function launchElTurno(){
     // barra de vida del jefe (solo mientras hay jefe en sala)
     const boss=G.enemies.find(e=>e.boss), bb=document.getElementById('etBossbar');
     if(boss){ bb.style.display='block';
-      document.getElementById('etBossName').textContent=boss.chef?'★ EL CHEF ★':'JEFE DE SALA · '+boss.a.name.toUpperCase();
+      document.getElementById('etBossName').textContent=boss.inspec?'★ LA INSPECTORA · CIERRE ★':boss.chef?'★ EL CHEF ★':'JEFE DE SALA · '+boss.a.name.toUpperCase();
       document.getElementById('etBossfill').style.width=Math.max(0,boss.hp/boss.maxhp*100)+'%'; }
     else bb.style.display='none';
     // cooldown del dash pintado como barrido circular
@@ -24592,7 +24688,10 @@ function launchElTurno(){
     document.getElementById('etStart').style.display='none';
     document.getElementById('etOver').style.display='none';
     document.getElementById('etPause').style.display='none';
-    newGame(); running=true; paused=false; last=performance.now(); mStep=0;
+    document.getElementById('etChest').style.display='none';
+    document.getElementById('etQuiz').style.display='none';
+    if(_etChestIv){ clearInterval(_etChestIv); _etChestIv=null; }
+    newGame(); running=true; paused=false; last=performance.now(); mStep=0; mLoop=0;
     sfx('coin');                                    // desbloquea el AudioContext con el gesto
     if(!musicIv) musicIv=setInterval(musicTick,138); // arranca la banda sonora del servicio
     if(!rafId) rafId=requestAnimationFrame(loop);
@@ -24629,9 +24728,14 @@ function launchElTurno(){
       const _secs=Math.floor(G.time), _ord=G.score;
       _shareBtn.onclick=()=>_txShareRecord(_txRecordMsg('survivors',_secs,_ord),_shareBtn);
     }
+    // propinas al bolsillo (meta-progresión, jul 2026): comandas + tiempo +
+    // jefes; bonus gordo por llegar al cierre. Cada derrota sigue sumando.
+    const _mm=_etMeta();
+    const _earn=Math.round(G.score*0.5+Math.floor(G.time)/10+G.bosses*8)+(G.closed?60:0);
+    _mm.tips+=_earn; _etMetaSave(_mm); _etRenderShop();
     const bT=Math.max(best,Math.floor(G.time)), bm=Math.floor(bT/60), bs=bT%60;
-    document.getElementById('etOverTitle').textContent=isRec?'¡RÉCORD!':'SE ACABÓ';
-    document.getElementById('etOverSub').textContent=isRec?'Tu mejor turno hasta la fecha':'Fin del servicio';
+    document.getElementById('etOverTitle').textContent=G.closed?'¡SERVICIO COMPLETO!':isRec?'¡RÉCORD!':'SE ACABÓ';
+    document.getElementById('etOverSub').textContent=(G.closed?'Aguantaste hasta el cierre':isRec?'Tu mejor turno hasta la fecha':'Fin del servicio')+' · +'+_earn+' 💰';
     document.getElementById('etOverStats').innerHTML=
       `<div class="et-st"><b>${tstr}</b><span>Tiempo</span></div>
        <div class="et-st"><b>${G.score}</b><span>Comandas</span></div>
@@ -24643,6 +24747,13 @@ function launchElTurno(){
   }
   document.getElementById('etPlayBtn').onclick=start;
   document.getElementById('etAgainBtn').onclick=start;
+  // desde el fin de servicio se vuelve a la tienda: gastar lo recién ganado
+  // es EL momento (bucle de meta-progresión completo sin salir del juego)
+  document.getElementById('etShopBtn').onclick=()=>{
+    document.getElementById('etOver').style.display='none';
+    _etRenderChars(); _etRenderShop(); _etRenderRank();
+    document.getElementById('etStart').style.display='flex';
+  };
   // idle canvas so it isn't blank behind the start screen
   ctx.fillStyle='rgba(0,0,0,0)'; ctx.fillRect(0,0,W,H);
 
@@ -24651,6 +24762,7 @@ function launchElTurno(){
     running=false;
     if(rafId) cancelAnimationFrame(rafId);
     if(musicIv){ clearInterval(musicIv); musicIv=null; }
+    if(_etChestIv){ clearInterval(_etChestIv); _etChestIv=null; }
     document.removeEventListener('visibilitychange',onVis);
     window.removeEventListener('resize',resize);
     window.removeEventListener('keydown',onKeyDown);

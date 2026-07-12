@@ -1,10 +1,10 @@
-// TXOKO Formación — Service Worker (v5.6)
+// Meseo — Service Worker (v5.6)
 // Lives at the site root (same level as index.html). Provides:
 //   • App-shell cache with stale-while-revalidate for offline support
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.202';
+const VERSION = 'v7.204';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
@@ -117,7 +117,7 @@ self.addEventListener('fetch', (e) => {
 // picture, e.g. a chat photo), renotify (mentions re-alert even when the tag
 // coalesces), data.tab (deep link opened on tap).
 self.addEventListener('push', (e) => {
-  let data = { title: 'TXOKO Formación', body: '', tag: 'txoko', image: null, renotify: false, data: {} };
+  let data = { title: 'Meseo', body: '', tag: 'txoko', image: null, renotify: false, data: {} };
 
   if (e.data) {
     try {

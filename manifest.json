@@ -1,7 +1,7 @@
 {
-  "name": "TXOKO Formación",
-  "short_name": "TXOKO",
-  "description": "Formación del equipo de sala — TXOKO by Martín Berasategui · Ritz-Carlton Abama",
+  "name": "Meseo — Formación de sala",
+  "short_name": "Meseo",
+  "description": "Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -15,9 +15,39 @@
     "lifestyle"
   ],
   "shortcuts": [
-    { "name": "Guía de emplatado", "short_name": "Emplatado", "url": "./#tab=aprender", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
-    { "name": "Hacer un examen", "short_name": "Examen", "url": "./#tab=exam", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
-    { "name": "Juegos", "short_name": "Juegos", "url": "./#tab=txoko", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
+    {
+      "name": "Guía de emplatado",
+      "short_name": "Emplatado",
+      "url": "./#tab=aprender",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Hacer un examen",
+      "short_name": "Examen",
+      "url": "./#tab=exam",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Juegos",
+      "short_name": "Juegos",
+      "url": "./#tab=txoko",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ],
   "icons": [
     {

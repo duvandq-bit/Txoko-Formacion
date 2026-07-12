@@ -6932,6 +6932,44 @@ button.et-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--et-ink)}
   border:2.5px solid var(--et-ink);border-radius:10px;background:var(--et-paper2)}
 .et-pick-tx b{display:block;color:var(--et-ink);font-size:16px}
 .et-pick-tx span{font-family:ui-monospace,monospace;font-size:11px;color:#6b4a24}
+
+/* ── Meta-progresión + oficios + carrito + pregunta (jul 2026, "vamos con
+   todo"): tienda de mejoras permanentes, selector de oficio, ceremonia del
+   carrito de postres y pregunta de la carta — mismo cartel años 30. ── */
+#etStart{overflow-y:auto;justify-content:flex-start;padding-top:30px;padding-bottom:34px}
+.et-chars{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;width:100%;max-width:344px}
+.et-char{pointer-events:auto;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 3px 6px;
+  background:var(--et-paper);border:3px solid var(--et-ink);border-radius:11px;box-shadow:0 4px 0 var(--et-ink);
+  opacity:.6;transition:transform .06s,opacity .12s;font-family:inherit}
+.et-char.on{opacity:1;outline:3px solid var(--et-gold);outline-offset:1px;transform:translateY(-2px)}
+.et-char-ic{font-size:22px;line-height:1.1}
+.et-char b{font-family:Georgia,serif;font-size:11px;color:var(--et-ink)}
+.et-char-s{font-family:ui-monospace,monospace;font-size:8px;line-height:1.3;color:#6b4a24}
+.et-shop{width:100%;max-width:344px;background:var(--et-paper);border:3px solid var(--et-ink);border-radius:14px;
+  padding:8px 12px 10px;box-shadow:0 5px 0 var(--et-ink);transform:rotate(.5deg)}
+.et-shop-title{font-family:Georgia,serif;font-weight:bold;font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--et-ink);text-align:center;margin-bottom:3px}
+.et-shop-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:2px dashed rgba(36,26,18,.28);text-align:left}
+.et-shop-ic{font-size:19px;flex-shrink:0}
+.et-shop-tx{flex:1;font-size:10px;font-family:ui-monospace,monospace;color:var(--et-ink);line-height:1.35}
+.et-shop-tx b{font-family:Georgia,serif;font-size:13px}
+.et-shop-tx i{font-style:normal;color:var(--et-gold);letter-spacing:.14em;text-shadow:0 0 1px var(--et-ink)}
+.et-shop-tx span{opacity:.8}
+.et-shop-buy{pointer-events:auto;cursor:pointer;font-family:Georgia,serif;font-weight:bold;font-size:12px;color:var(--et-ink);
+  background:radial-gradient(circle at 38% 32%,#e8c46a,var(--et-gold) 70%);border:2.5px solid var(--et-ink);border-radius:9px;
+  padding:5px 9px;box-shadow:0 3px 0 var(--et-ink);white-space:nowrap;min-height:32px;flex-shrink:0}
+.et-shop-buy:active{transform:translateY(2px);box-shadow:0 1px 0 var(--et-ink)}
+.et-shop-buy.off{opacity:.45;filter:grayscale(.7)}
+.et-shop-max{font-family:Georgia,serif;font-weight:bold;font-size:12px;color:var(--et-teal);letter-spacing:.08em}
+.et-slot .et-pick-ic{animation:etSlotSpin .1s linear infinite}
+@keyframes etSlotSpin{0%,100%{transform:translateY(-2px)}50%{transform:translateY(2px)}}
+#etQuizCard{display:flex;flex-direction:column;gap:13px;align-items:center;width:100%}
+.et-quiz-dish{font-family:Georgia,serif;font-weight:bold;font-size:21px;color:var(--et-gold);
+  text-shadow:2px 2px 0 var(--et-ink);max-width:330px;line-height:1.2}
+.et-quiz-q{color:var(--et-paper);font-size:16px;max-width:330px;line-height:1.5}
+.et-quiz-q b{color:var(--et-gold)}
+.et-quiz-rw{color:#8ae08a;font-family:ui-monospace,monospace;font-size:12px;max-width:320px;line-height:1.5}
+.et-quiz-btns{display:flex;gap:14px;justify-content:center;margin-top:4px}
 .et-flash{position:absolute;z-index:9;left:50%;top:34%;transform:translate(-50%,-50%);pointer-events:none;
   font-weight:bold;color:var(--et-gold);text-shadow:2px 2px 0 var(--et-ink);opacity:0}
 @media (prefers-reduced-motion:reduce){#etOverlay *{animation:none!important;transition:none!important}}

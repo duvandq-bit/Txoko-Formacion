@@ -1,12 +1,12 @@
-# Txoko-Formacion
+# Meseo
 
-Aplicación interna de formación del equipo de sala — TXOKO by Martín Berasategui · Ritz-Carlton Abama.
+**Meseo** (meseo.es) — formación de equipos de sala, multi-restaurante. Cada restaurante es un *venue* en `data/themes.json` con su propia identidad (nombre, colores, textos); TXOKO es el venue fundador. La marca de la app es Meseo: ningún restaurante presta su nombre al producto.
 
-PWA monolítica (`index.html` + `sw.js`) con sincronización vía Supabase, módulo de vinos con MapLibre, motor RPG ("La Leyenda de Txoko"), y notificaciones push.
+PWA monolítica (`index.html` + `sw.js`) con sincronización vía Supabase, módulo de vinos con MapLibre, juegos de repaso (Mr. Shoesmith, Camarero Survivors), Quiz del Día y notificaciones push.
 
 ## Versión actual
 
-**v5.8 · May 2026**
+**v7.204 · Jul 2026**
 
 La versión se expone en tres sitios sincronizados:
 - `<meta name="app-version">` y `<meta name="app-build">` en el `<head>`

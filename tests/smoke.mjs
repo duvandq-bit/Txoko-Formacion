@@ -721,9 +721,9 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   // herramientas envueltas con toast de error.
   assert(/window\._supLastHash === _hash/.test(html), 'silent refresh must skip re-render when data is unchanged');
   assert(/window\._supLastTouch\|\|0\) < 1200/.test(html), 'refresh must yield to a recent touch');
-  // 5 herramientas envueltas: carta, analítica, aviso, quiz en vivo, stats LQA.
-  // (La antigua "Stats Protocolo" se retiró: su examen de protocolo backed-by-Supabase
-  // se eliminó al fusionar Protocolo→LQA, dejando el botón sin datos ni handler.)
+  // 5 herramientas envueltas: carta, analítica, aviso, fotos, stats LQA.
+  // (La antigua "Stats Protocolo" se retiró al fusionar Protocolo→LQA; el
+  // quiz en vivo se retiró en jul 2026 — lo sustituye el Quiz del Día.)
   assert(/function _supTool/.test(html) && (html.match(/_supTool\('/g) || []).length >= 5,
     'supervisor tools must go through the error-surfacing wrapper');
   assert(/function renderSupLqaStats/.test(html),
@@ -955,9 +955,9 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     'renderRepasoTopic per-category list must be shift-filtered');
   assert(/\$\{dishes\.length\?rows:/.test(html),
     'renderRepasoTopic must show an empty state when the shift leaves no dishes');
-  // #4 Live Quiz Host — pool de sujetos por turno con fallback a ≥5
-  assert(/const _lqShift = _shiftDishes\(DISHES\);\s*\n\s*const pool = _lqaShuffle\(_lqShift\.length>=5 \? _lqShift : DISHES\)\.slice\(0,5\)/.test(html),
-    'Live Quiz host subject pool must be shift-filtered with a fallback');
+  // #4 (Live Quiz Host: retirado en jul 2026 con el quiz de supervisor; su
+  //     sucesor, el Quiz del Día, NO filtra por turno a propósito — la
+  //     competición compartida exige un pool idéntico para todo el equipo)
   // #5 Servicio Fantasma — los fallbacks mantienen el turno antes de relajarlo
   assert(/if\(!safe\.length\) safe = DISHES\.filter\(function\(d\)\{ return _shiftDishOk\(d\) && _sfOfr\(d\)/.test(html),
     'Ghost service "safe" fallback must keep shift before dropping it');
@@ -1661,7 +1661,7 @@ test('async render functions guard against tab-change races', () => {
   // When the user navigates away while a multi-fetch render is awaiting
   // Supabase, the final innerHTML overwrites the new tab. Every async
   // renderTab function must capture currentTab and bail before writing.
-  for (const fn of ['renderVinos', 'renderDuel', 'renderJoinLiveQuiz']) {
+  for (const fn of ['renderVinos', 'renderDuel']) {
     const startIdx = html.search(new RegExp(`async function ${fn}\\(`));
     assert(startIdx !== -1, `${fn} no longer async — guard expectations stale`);
     // The body of the function is bounded by the next top-level function
@@ -1687,7 +1687,8 @@ test('quiz distractor pools prefer same-category dishes', () => {
     '_pickDistractorPool no longer filters by category');
   assert(/sameCat\.length\s*>=?\s*6/.test(helper[0]),
     '_pickDistractorPool fallback threshold removed — small categories like Sugerencias will starve');
-  // 1 definition + 4 callsites (startExam, renderLiveQuizHost, smart review, error mode)
+  // 1 definition + 4 callsites (startExam, smart review, error mode ×2 —
+  // el del quiz en vivo se fue con el quiz en vivo, jul 2026)
   const usages = (html.match(/_pickDistractorPool\(/g) || []).length;
   assert(usages >= 5, `_pickDistractorPool used ${usages-1} times; expected 4 callsites`);
   // No raw `DISHES.filter(x=>x.id!==d.id)` should remain — those bypassed the category filter
@@ -1786,28 +1787,6 @@ test('mobile input font-size avoids iOS Safari auto-zoom trap', () => {
     assert(px >= 16,
       `#${id} inline font-size is ${px}px — iOS Safari auto-zooms <16px inputs on focus`);
   }
-});
-
-test('live quiz answer submission guards against double-tap race', () => {
-  // submitLiveAnswer does a read-modify-write of sess.answers (not an
-  // atomic upsert). On slow restaurant Wi-Fi the round trip can take
-  // seconds; a second tap on another choice before the first resolves
-  // races the first and can silently overwrite it — the camarero's
-  // first (intended) answer gets replaced by whichever network call
-  // resolves last. The handler must disable #liveChoices buttons and
-  // bail on re-entry *before* the first await, synchronously on tap.
-  const startIdx = html.search(/async function submitLiveAnswer\(/);
-  assert(startIdx !== -1, 'submitLiveAnswer not found');
-  const slice = html.slice(startIdx, startIdx + 800);
-  const firstAwaitIdx = slice.search(/\bawait\b/);
-  assert(firstAwaitIdx !== -1, 'submitLiveAnswer has no await — guard expectations stale');
-  const beforeAwait = slice.slice(0, firstAwaitIdx);
-  assert(/#liveChoices button/.test(beforeAwait),
-    'submitLiveAnswer must inspect/disable #liveChoices buttons before the first await');
-  assert(/\.disabled\s*=\s*true/.test(beforeAwait),
-    'submitLiveAnswer must disable choice buttons before the first await — double-tap can overwrite the first answer');
-  assert(/return/.test(beforeAwait),
-    'submitLiveAnswer must bail out early on re-entry (already-disabled buttons) before the first await');
 });
 
 test('pinSubmit guards against re-entrant double-submit', () => {
@@ -2814,7 +2793,7 @@ test('Camarero Survivors: héroe con ciclo de carrera de fotogramas reales (jul 
     'ET_HERO_RUN must wire the 2 run-cycle files');
   for (const f of ['hero-a', 'hero-b']) assert(existsSync(join(ROOT, `img/sprites/${f}.webp`)), `img/sprites/${f}.webp missing on disk`);
   const e = html.indexOf('function launchElTurno(');
-  const loaderSrc = html.slice(e, e + 60000);
+  const loaderSrc = html.slice(e, e + 150000);
   assert(/const HERO=ET_HERO_RUN\.map\(/.test(loaderSrc), 'HERO must be built from the ET_HERO_RUN frames, not a single SVG image');
   assert(/function _etHeroFrame\(G\)\{ return G\.moving\?\(Math\.sin\(G\.time\*13\)>=0\?0:1\):0; \}/.test(loaderSrc),
     'the frame picker must sync leg-swap to the existing vertical bob phase, and hold frame 0 when idle');
@@ -3050,7 +3029,7 @@ test('Camarero Survivors: EL CHEF, jefe final desde la foto del propietario (jul
   assert(/const _csp=e\.chef\?CHEF_SPR\[\(e\.tele>0\|\|e\.dashing>0\)\?'attack':'calm'\]:null;/.test(body),
     'chef must swap to the attack pose while telegraphing/lunging');
   // Sin corona (se le reconoce) y con rótulo propio en la barra de jefe.
-  assert(/if\(e\.boss&&!e\.chef\)\{ \/\/ corona/.test(body), 'the crown must be skipped for the chef');
+  assert(/if\(e\.boss&&!e\.chef&&!e\.inspec\)\{ \/\/ corona/.test(body), 'the crown must be skipped for the chef (and the inspector)');
   assert(/boss\.chef\?'★ EL CHEF ★'/.test(body), 'the boss bar must carry the chef\'s own label');
 });
 
@@ -3066,9 +3045,11 @@ test('Camarero Survivors: propinas como monedas y bandejas de plata con estela (
   assert(/const R=4\.5\+\(g\.val\|\|1\)\*0\.9/.test(body), 'coin size must grow with gem value');
   assert(/ctx\.ellipse\(0,0,R\*sqz,R,0,0,6\.29\)/.test(body), 'coins must spin via the squashed-ellipse phase');
   assert(!/ctx\.moveTo\(g\.x,g\.y-5\)/.test(body), 'the old abstract diamond gem must be gone');
-  assert(/estela: dos ecos desvanecidos/.test(body) && /ctx\.ellipse\(-k\*7,0,6\.5,6\.5\*sq,0,0,6\.29\)/.test(body),
+  // (jul 2026: la bandeja se rediseñó como óvalo fijo — ver el test del
+  // rediseño más abajo — pero la estela y el reflejo giratorio se conservan)
+  assert(/estela: dos ecos desvanecidos/.test(body) && /ctx\.ellipse\(-k\*8,0,10\.5,6\.5,0,0,6\.29\)/.test(body),
     'trays must leave a two-ghost motion trail');
-  assert(/ctx\.ellipse\(0,0,5\.4,5\.4\*sq,0,b\.rot\*1\.7,b\.rot\*1\.7\+0\.9\)/.test(body),
+  assert(/ctx\.ellipse\(0,0,9\.6,5\.8,0,b\.rot\*1\.7,b\.rot\*1\.7\+0\.8\)/.test(body),
     'trays must carry the rotating glint arc');
   assert(/b\.pierce>0/.test(body) && /#ffe9b0/.test(body), 'piercing trays must stay golden (evolution signal)');
   // Segunda vuelta a las propinas (propietario, jul 2026): juice de arcade.
@@ -3201,7 +3182,7 @@ test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spaw
   // Cinco mejoras de la auditoría de daño (petición del propietario: "cómo lo
   // podemos mejorar" → "aplica todo"). Guardan que cada mecánica sigue cableada.
   const i = html.indexOf('function launchElTurno(');
-  const body = html.slice(i, i + 60000);
+  const body = html.slice(i, i + 130000);
   // (1) health pickups: dropped on kill, collected to heal, drawn, and in game state
   assert(/pickups:\[\]/.test(body), 'game state must include a pickups[] array (health drops)');
   assert(/G\.pickups\.push\(\{x:e\.x,y:e\.y,heal:/.test(body), 'enemies must be able to drop a health pickup on death');
@@ -3258,6 +3239,263 @@ test('Camarero Survivors AAA: dash, racha, élites, oleadas, jefe con embestida,
   for (const sel of ['#etDashBtn', '#etCombo', '#etBossbar', '.et-pick.et-evo', '.et-statgrid']) {
     assert(css.includes(sel), `styles.css must style ${sel}`);
   }
+});
+
+test('Camarero Survivors: primer jefe abatible — vida por jefes caídos, sin apilar jefes y con respiro (jul 2026)', () => {
+  // Ajuste de dificultad (propietario: "los usuarios no pasan del primer
+  // jefe"): (1) la vida del jefe ya no crece solo con el reloj (548 HP en el
+  // 0:38) sino con los jefes ya abatidos — el primero ronda 200; (2) nunca
+  // hay dos jefes de sala a la vez; (3) el director suelta menos morralla
+  // durante la pelea para que las bandejas (apuntan al más cercano) lleguen
+  // al jefe; (4) la embestida avisa ~0,7s y carga más lento; (5) el golpe de
+  // contacto del jefe baja de 15 a 12 de base.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 120000);
+  assert(/const hp=Math\.round\(\(65\+G\.time\*3\.5\)\*\(1\+G\.bosses\*0\.4\)\)/.test(body),
+    'boss hp must scale with bosses already defeated, not just the clock (gentle first boss)');
+  assert(/if\(bossUp\) G\.nextBoss=G\.time\+8; else \{ G\.nextBoss=G\.time\+40; spawnBoss\(\); \}/.test(body),
+    'a new room boss must wait while another boss is still alive (no boss stacking)');
+  assert(/const bossUp=G\.enemies\.some\(e=>e\.boss\);/.test(body) && /\(bossUp\?1\.8:1\)/.test(body),
+    'the spawn director must ease off the trash-mob pressure while a boss is alive');
+  assert(/if\(!bossUp&&G\.time>25/.test(body),
+    'the bonus double-spawn must pause during a boss fight');
+  assert(/e\.tele=42/.test(body) && /spdMul=3\.8/.test(body),
+    'the boss lunge must telegraph ~0.7s and charge at 3.8 (was 28 frames / 4.4)');
+  assert(/e\.boss\?12:5/.test(body),
+    'boss contact damage must start at 12 base, not 15');
+});
+
+test('Camarero Survivors: la bandeja PARECE bandeja y cada jefe tiene habilidad especial (jul 2026)', () => {
+  // (1) Reporte de usuarios: "las bandejas parecen platos pequeños o
+  // monedas". El culpable era el giro de canto (el mismo squash de elipse
+  // que usan las propinas-moneda). Ahora la bandeja es un óvalo ancho
+  // SIEMPRE, con pocillo interior, servilleta y tres canapés a bordo.
+  // (2) Habilidades de jefe por familia de alérgeno (propietario): abanico
+  // de proyectiles (gluten/huevo/pescado), refuerzos mini (frutos/crust) o
+  // charco que frena y quema (lácteos/soja/sulfitos); EL CHEF barre en
+  // radial. Todas avisan con un aro dorado de carga y se esquivan.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 130000);
+  // — bandeja: óvalo fijo con comida a bordo; el squash de moneda se fue —
+  assert(/ctx\.ellipse\(0,0,11,7,0,0,6\.29\)/.test(body),
+    'tray must be a wide oval platter (never edge-on like a coin)');
+  assert(/servilleta \+ tres canapés a bordo/.test(body),
+    'tray must carry the napkin + canapés that make it read as a tray');
+  assert(!/ctx\.ellipse\(0,0,6\.5,6\.5\*sq/.test(body),
+    'the old coin-spin tray (edge-on squash) must be gone');
+  // — sprite de bandeja (vídeo Grok del propietario, jul 2026 → fotograma
+  //   recortado): preferido en el dibujo, con el respaldo por código detrás —
+  assert(existsSync(join(ROOT, 'img/sprites/tray.webp')), 'img/sprites/tray.webp missing on disk');
+  assert(/const TRAY=new Image\(\); TRAY\.onload=\(\)=>\{ TRAY\._ok=true; \}; TRAY\.src='img\/sprites\/tray\.webp'/.test(body),
+    'the illustrated tray loader must be wired (sprite-preferred)');
+  assert(/if\(TRAY\._ok\)\{/.test(body),
+    'tray draw must prefer the sprite and keep the code-drawn platter as fallback');
+  // — habilidades de jefe: mapa por alérgeno + las tres familias cableadas —
+  assert(/const BOSS_ABIL=\{gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley'\}/.test(body),
+    'every allergen family (and the chef) must map to its boss ability');
+  assert(/function bossAbility\(e\)/.test(body) && /eshots:\[\], zones:\[\]/.test(body),
+    'bossAbility() and the eshots/zones state arrays must exist');
+  assert(/e\.wind-=dt; spdMul=0\.15; if\(e\.wind<=0\) bossAbility\(e\);/.test(body),
+    'abilities must be telegraphed by a windup that slows the boss');
+  assert(/jefe cargando su habilidad: aro dorado/.test(body),
+    'the golden windup ring must be drawn so the special never comes from nowhere');
+  assert(/G\.eshots\.push\(/.test(body) && /G\.zones\.push\(\{x:G\.px,y:G\.py/.test(body) && /spawnMini\(e\.x\+Math\.cos/.test(body),
+    'the three ability families (volley / zone / summon) must be wired');
+  assert(/G\.hp-=8; G\.ifr=30;/.test(body),
+    'boss shots must deal modest damage and grant i-frames (dodgeable, never a shred-loop)');
+  assert(/pvx\*=0\.6; pvy\*=0\.6;/.test(body) && /G\.hp-=0\.06\*dt/.test(body),
+    'active puddles must slow the player and burn slowly (not instantly kill)');
+  assert(/if\(G\.enemies\.length<70\)/.test(body),
+    'the summon ability must respect an enemy-count cap (no flooding)');
+});
+
+test('Camarero Survivors: meta-progresión — propinas persistentes, tienda, oficios y otra ronda (jul 2026)', () => {
+  // El bucle de retención de Vampire Survivors ("vamos con todo" del
+  // propietario): las propinas se GUARDAN al morir (cada derrota es
+  // progreso), compran mejoras permanentes en la tienda de inicio, hay 4
+  // oficios de sala con arranque distinto y un cambio de cartas por partida
+  // (ampliable en la tienda). Los récords del ranking no se tocan.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  // cartera por empleado y dispositivo + tienda
+  assert(/localStorage\.getItem\('etMeta:'\+currentUser\)/.test(body) && /localStorage\.setItem\('etMeta:'\+currentUser/.test(body),
+    'the tips wallet must persist per employee+device (same pattern as etBestTime)');
+  assert(/const ET_PERKS=\[/.test(body) && /const ET_PERK_COST=\[25,60,140,320,700\]/.test(body),
+    'the permanent-perk catalog and its cost curve must exist');
+  assert(/function _etRenderShop\(\)/.test(body) && /Mejoras del oficio/.test(body),
+    'the shop panel must render on the start screen');
+  // ganancia al morir + botón de tienda en el fin de servicio
+  assert(/_mm\.tips\+=_earn; _etMetaSave\(_mm\); _etRenderShop\(\);/.test(body),
+    'gameOver must bank the earned tips and refresh the shop');
+  assert(/G\.closed\?60:0/.test(body), 'reaching the closing time must pay a fat tip bonus');
+  assert(/id="etShopBtn"/.test(body), 'the game-over screen must link back to the shop');
+  // lo permanente entra en newGame (perks + oficio elegido)
+  assert(/for\(const p of ET_PERKS\)\{ const n=_m\.up\[p\.k\]\|\|0; if\(n\) p\.fx\(G,n\); \}/.test(body),
+    'newGame must apply the purchased perk levels');
+  assert(/const ET_CHARS=\[/.test(body) && /\(ET_CHARS\.find\(c=>c\.k===_m\.char\)\|\|ET_CHARS\[0\]\)\.fx\(G\);/.test(body),
+    'newGame must apply the selected trade (oficio)');
+  const chars = [...body.slice(body.indexOf('const ET_CHARS=['), body.indexOf('];', body.indexOf('const ET_CHARS=['))).matchAll(/\{k:'([a-z]+)'/g)].map(m => m[1]);
+  assert(chars.length === 4 && chars.includes('camarero') && chars.includes('sumiller') && chars.includes('cortador') && chars.includes('maitre'),
+    'there must be exactly 4 trades: camarero/sumiller/cortador/maitre');
+  // otra ronda: botón en el level-up, gastable, ampliable con el perk 'ronda'
+  assert(/id="etReroll"/.test(body) && /G\.rerolls<=0\) return; G\.rerolls--;/.test(body),
+    'the level-up reroll button must exist and burn a charge per use');
+  assert(/\{k:'ronda'/.test(body) && /g\.rerolls\+=n/.test(body), 'the shop must sell extra rerolls');
+  // CSS de tienda y oficios
+  const css = read('styles.css');
+  for (const sel of ['.et-shop{', '.et-shop-buy', '.et-char{', '.et-char.on']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
+test('Camarero Survivors: carrito de postres del jefe y cloche con pregunta de la carta REAL (jul 2026)', () => {
+  // (1) El cofre de VS: el jefe abatido suelta un carrito dorado; recogerlo
+  // abre una ceremonia tragaperras que regala 1 mejora (2 si era EL CHEF).
+  // (2) El cloche misterioso: pregunta Sí/No derivada de DISHES (la carta
+  // real — mismos nombres de alérgeno que el roster del juego); acertar paga
+  // gordo (limpieza/imán/banquete) y fallar deja la lección a la vista.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  // carrito: drop en la muerte del jefe + ceremonia + limpieza del interval
+  assert(/G\.pickups\.push\(\{x:e\.x,y:e\.y,chest:true,dbl:!!e\.chef,life:9999\}\)/.test(body),
+    'a defeated boss must drop the dessert cart (chef: guaranteed double)');
+  assert(/function showChest\(dbl\)/.test(body) && /id="etChest"/.test(body),
+    'the chest ceremony overlay must exist');
+  assert(/_etChestIv=setInterval\(/.test(body) && (body.match(/clearInterval\(_etChestIv\)/g) || []).length >= 3,
+    'the slot-machine interval must be cleaned on settle, on start and in teardown');
+  // cloche: solo con datos de carta, ventana de spawn, pregunta 50/50 honesta
+  assert(/typeof DISHES!=='undefined'&&DISHES\.length/.test(body),
+    'the cloche must only spawn when the real menu data is present');
+  assert(/G\.time>=G\.nextClo&&G\.time<560/.test(body), 'the cloche must not spawn during the closing stretch');
+  assert(/const askYes=has\.length>0&&\(Math\.random\(\)<0\.5\|\|!not\.length\)/.test(body),
+    'the question must be a fair 50/50 between allergens the dish has and lacks');
+  assert(/dish\.allergens\|\|\[\]\)\.includes\(a\.name\)/.test(body),
+    'the answer key must derive from the dish allergen list (same names as the roster)');
+  // recompensas + feedback educativo siempre
+  assert(/¡LIMPIEZA DE SALA!/.test(body) && /¡PROPINA TOTAL!/.test(body) && /¡BANQUETE!/.test(body),
+    'the three cloche rewards must be wired');
+  assert(/lleva: <b>\$\{escapeHTML\(full\)\}/.test(body),
+    'both outcomes must show the dish\'s full allergen list (the lesson always lands)');
+  // los overlays de decisión mandan sobre la pausa
+  assert(/for\(const id of \['etLevelup','etChest','etQuiz'\]\)/.test(body),
+    'pause must defer to the level-up/chest/quiz overlays');
+  const css = read('styles.css');
+  for (const sel of ['.et-quiz-dish', '.et-quiz-btns', '.et-slot .et-pick-ic']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
+test('Camarero Survivors: CIERRE DEL LOCAL a las 10:00 — la inspectora imbatible y SERVICIO COMPLETO (jul 2026)', () => {
+  // El final de partida de VS (la Muerte a los 30:00), versión sala: aviso a
+  // las 9:30, LA INSPECTORA entra a las 10:00 (inmune, acelera sin tregua),
+  // los eventos programados se apagan y llegar al cierre es la victoria.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  assert(/if\(!G\.warned&&G\.time>=570\)/.test(body) && /CIERRE EN 30s/.test(body),
+    'the 30-second warning must fire at 9:30');
+  assert(/if\(!G\.closed&&G\.time>=600\)\{ G\.closed=true; spawnInspectora\(\); \}/.test(body),
+    'the inspector must arrive exactly at closing time');
+  assert(/function spawnInspectora\(\)/.test(body) && /hp:1e9,maxhp:1e9/.test(body) && /inspec:true/.test(body),
+    'the inspector must spawn effectively unkillable');
+  assert(/if\(e\.inspec\) return;\s+\/\/ la inspectora no se negocia/.test(body),
+    'hurtEnemy must ignore the inspector entirely (no damage, no flash)');
+  assert(/if\(e\.inspec\) e\.spd\+=dt\*0\.0011/.test(body),
+    'the inspector must accelerate relentlessly (the end always arrives)');
+  assert(/if\(G\.time<600\)\{/.test(body),
+    'scheduled events (elites/surges/bosses/chef) must stop at closing time');
+  assert(/boss\.inspec\?'★ LA INSPECTORA · CIERRE ★'/.test(body),
+    'the boss bar must announce the inspector');
+  assert(/G\.closed\?'¡SERVICIO COMPLETO!'/.test(body),
+    'surviving to the close must be celebrated as SERVICIO COMPLETO');
+});
+
+test('Camarero Survivors: música v2 — swing, batería sintetizada, lead que respira, modos jefe y cierre (jul 2026)', () => {
+  // El loop viejo eran 16 pasos idénticos con un blip de 2600 Hz por batería.
+  // La v2 sigue sin archivos (CSP-safe) pero suena a servicio: compás doble
+  // Am7→D9 con bajo caminante, swing, bombo/escobilla/ride sintetizados,
+  // comping, lead que calla un loop de cada dos, tritono con jefe y +5
+  // semitonos con ride a semicorcheas en el cierre. Compresor propio.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  assert(/const M_SWING=0\.045/.test(body) && /sw=\(st%4===2\)\?M_SWING:0/.test(body),
+    'weak eighths must be delayed by the swing constant');
+  assert(/const M_WALK=\[0,3,7,10, 5,9,12,11\]/.test(body),
+    'the walking bass must vamp Am7→D9 with a chromatic approach note');
+  assert(/function mDrum\(kind,when,vol\)/.test(body) && /exponentialRampToValueAtTime\(42,when\+\.09\)/.test(body),
+    'the kick must be a pitch-dropping sine, not a beep');
+  assert(/mNoiseBuf=b/.test(body) && /f\.type='highpass'; f\.frequency\.value=7000/.test(body) && /f\.type='bandpass'; f\.frequency\.value=1900/.test(body),
+    'ride and brush must be filtered noise from a generated buffer');
+  assert(/mComp=AC\.createDynamicsCompressor\(\)/.test(body),
+    'music must run through its own compressor so it never fights the sfx');
+  assert(/const M_BOSS_BASS=\[0,6\]/.test(body), 'boss mode must ride the tritone ostinato');
+  assert(/closing\?5:0/.test(body) && /closing&&st%2===1/.test(body),
+    'the closing stretch must transpose up and double the ride to 16ths');
+  assert(/if\(mLoop%2===0\)/.test(body), 'the lead must breathe: silent every other loop');
+  assert(/mStep=0; mLoop=0;/.test(body), 'start() must reset both sequencer counters');
+  assert(/musicIv=setInterval\(musicTick,138\)/.test(body) && /clearInterval\(musicIv\)/.test(body),
+    'the sequencer lifecycle (start with run, die in teardown) must stay intact');
+});
+
+test('Quiz del día: abierto 24/7 sin supervisor — semilla diaria, avance automático y ranking compartido (jul 2026)', () => {
+  // Propietario: «debería ser abierto y que todo el mundo pueda entrar
+  // cuando quiera, sin esperar por el supervisor para entrar o que inicie
+  // las preguntas». El quiz en vivo exigía sesión del supervisor (sin ella
+  // no había ni puerta en el dashboard) y un ▶ manual por pregunta. El Quiz
+  // del Día corre solo; el modo con anfitrión sobrevive como modo evento.
+  // — tile SIEMPRE visible; el quiz en vivo de supervisor se RETIRÓ entero
+  //   (segunda petición: «ya no hace falta») —
+  assert(/id="qdTile"[^>]*style="display:flex/.test(html), 'the daily-quiz tile must be always visible on the dashboard');
+  assert(!/renderLiveQuizHost|renderJoinLiveQuiz|supaCreateLiveSession|_supTool\('quiz'\)|id="liveQuizTile"/.test(html),
+    'the supervisor-hosted live quiz (host view, join view, session helpers, panel button, hidden tile) must be gone');
+  assert(!/rest\/v1\/live_sessions/.test(html), 'no code may still read or write the live_sessions table');
+  // — mismas 5 preguntas para todos: fecha → mulberry32 → generación local —
+  assert(/function _qdRng\(\)/.test(html) && /0x6D2B79F5/.test(html) && /_qdDayKey\(\)\.replace/.test(html),
+    'questions must derive from a date-seeded RNG (same questions for everyone, no server)');
+  assert(/function _qdQuestions\(\)/.test(html) && /_qdShuffle\(DISHES,rng\)/.test(html),
+    'the generator must be a deterministic seeded shuffle over the full shared menu');
+  // — avance automático: deadline de 20s, el timeout cuenta como fallo —
+  assert(/Date\.now\(\)\+20000/.test(html) && /if\(remaining<=0\) _qdAnswer\(-1\)/.test(html),
+    'each question must auto-advance after 20s (no host pressing ▶)');
+  // — un intento clasificado al día + ranking en la tabla genérica scores —
+  assert(/'qd:'\+currentUser\+':'\+_qdDayKey\(\)/.test(html), 'the one-ranked-attempt guard must key on employee+date');
+  assert(/topic: 'quizdia', cat: _qdDayKey\(\)/.test(html) && /topic=eq\.quizdia&cat=eq\./.test(html),
+    'daily scores must reuse the generic scores table (topic=quizdia, cat=day) — zero migrations');
+  // — XP, aviso del primero del día, y limpieza de timers —
+  assert(/awardXP\(correct\*5/.test(html), 'finishing must pay XP like the live quiz did');
+  assert(/rows\.length===1 && rows\[0\]\.employee===currentUser/.test(html) && /quiz del día está servido/.test(html),
+    'the first finisher of the day must ping the team (turns the quiz into a daily rendezvous)');
+  assert(/clearInterval\(_qdTimer\); _qdTimer = null; _qdState = null;/.test(html),
+    'logout must clear the quiz timer/state like every other interval');
+  assert(/if\(!tEl\)\{ _qdStopTimer\(\); return; \}/.test(html),
+    'the question timer must self-kill when the user navigates away mid-question');
+});
+
+test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
+  // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
+  // aparecer como uno de los restaurantes a escoger, pero el nombre de la
+  // app debe ser otro». La identidad del restaurante (TXOKO, Ritz-Carlton,
+  // Berasategui) vive SOLO en data/themes.json (venue) y en el contenido de
+  // los platos; la app se presenta como Meseo (meseo.es) en manifest,
+  // título, icono, login por defecto, créditos, push y compartir.
+  const man = JSON.parse(read('manifest.json'));
+  assert(man.short_name === 'Meseo' && /^Meseo/.test(man.name), 'manifest must carry the Meseo identity');
+  assert(!/txoko|berasategui|ritz/i.test(man.name + man.short_name + man.description),
+    'manifest must not present the app as any restaurant brand');
+  assert(/<title>Meseo · Formación de sala<\/title>/.test(html), 'the base tab title must be Meseo');
+  assert(/id="loginLogoName">Meseo</.test(html) && /id="loginEyebrow">Formación de sala</.test(html),
+    'login defaults must be neutral Meseo — venue identity arrives only via themes.json');
+  assert(!/Uso exclusivo Txoko/.test(html) && /app-credit[^>]*>© 2026 [^<]*Meseo/.test(html),
+    'the footer credit must be Meseo, not a restaurant');
+  assert(/%cMeseo · v/.test(html), 'the console banner must be Meseo');
+  assert(/no está afiliada, patrocinada ni respaldada/.test(html) && /sus respectivos titulares/.test(html),
+    'the legal modal must keep the trademark disclaimer, generalized to all venues');
+  const themes = read('data/themes.json');
+  assert(/"title": "Meseo · TXOKO"/.test(themes), 'venue tab titles must compose app brand + venue');
+  const icon = read('icon.svg');
+  assert(/MESEO/.test(icon) && !/TXOKO/.test(icon), 'the icon must be Meseo-branded');
+  assert(/title: 'Meseo'/.test(read('sw.js')), 'the push fallback title must be Meseo');
+  assert(/https:\/\/meseo\.es\//.test(html) && !/github\.io\/Txoko-Formacion/.test(html),
+    'the share link must point at meseo.es, not the old repo URL');
 });
 
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
