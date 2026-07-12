@@ -23994,26 +23994,82 @@ function launchElTurno(){
     }catch(e){}
   }
 
-  // ── Música: secuenciador WebAudio (loop jazzy de servicio, sin archivos) ──
-  // 16 pasos · bajo caminante + hi-hat + riff pentatónico; sube 2 semitonos
-  // mientras hay un jefe vivo. Se silencia con muted/pausa y muere en teardown.
-  let musicIv=null, mStep=0;
-  const M_BASS=[0,null,3,null,5,null,3,null,0,null,3,null,7,5,3,null];
-  const M_LEAD=[12,null,null,15,null,12,null,10,12,null,15,null,17,null,15,12];
+  // ── Música: secuenciador WebAudio v2 (jul 2026) — sigue sin archivos y
+  // CSP-safe, pero ahora suena a servicio de verdad. El loop viejo eran 16
+  // pasos idénticos cada ~2s con un blip de 2600 Hz por batería; ahora:
+  //   · compás doble (32 pasos) con vamp dorian Am7→D9 y bajo CAMINANTE con
+  //     aproximación cromática al volver al I
+  //   · swing en las corcheas débiles (retraso fijo M_SWING)
+  //   · batería sintetizada: bombo (seno con caída de tono), escobilla
+  //     (ruido bandpass) y ride (ruido highpass), con síncopa en el «y» de 3
+  //   · comping de acordes en contratiempos y una lead pentatónica que
+  //     RESPIRA: calla un loop entero de cada dos
+  //   · con jefe: ostinato de TRITONO en corcheas y bombo a negras; con el
+  //     CIERRE, todo +5 semitonos y ride a semicorcheas (pánico elegante)
+  //   · con vida baja el bombo aprieta; todo pasa por un compresor propio
+  //     para que música y sfx no se pisen
+  let musicIv=null, mStep=0, mLoop=0, mComp=null, mNoiseBuf=null;
+  const M_SWING=0.045;                  // corcheas débiles retrasadas: swing de servicio
+  const M_WALK=[0,3,7,10, 5,9,12,11];   // negras del caminante (11 = cromática hacia A)
+  const M_CHORD=[[12,15,19],[17,21,24]];// Am7 / D9, en semitonos sobre A1=55 Hz
+  const M_PHRASE=[12,null,15,null,17,null,null,15, 19,null,17,15,12,null,null,null,
+                  null,null,12,15,17,null,19,null, 22,null,19,17,15,null,12,null];
+  const M_BOSS_BASS=[0,6];              // tritono: la sala se pone seria
+  const M_BOSS_LEAD=[12,null,11,12,null,15,12,null];
+  function mChain(){
+    if(!mComp){ mComp=AC.createDynamicsCompressor();
+      mComp.threshold.value=-20; mComp.ratio.value=8; mComp.connect(AC.destination); }
+    return mComp;
+  }
   function mNote(freq,dur,ty,vol,when){
-    const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(AC.destination);
+    const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(mChain());
     o.type=ty; o.frequency.value=freq;
     g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(.0001,when+dur);
     o.start(when); o.stop(when+dur+.02);
   }
+  function mDrum(kind,when,vol){
+    if(kind==='kick'){ const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(mChain());
+      o.type='sine'; o.frequency.setValueAtTime(95,when); o.frequency.exponentialRampToValueAtTime(42,when+.09);
+      g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(.0001,when+.11);
+      o.start(when); o.stop(when+.13); return; }
+    if(!mNoiseBuf){ const n=Math.floor(AC.sampleRate*0.3), b=AC.createBuffer(1,n,AC.sampleRate), d=b.getChannelData(0);
+      for(let i=0;i<n;i++) d[i]=Math.random()*2-1; mNoiseBuf=b; }
+    const s=AC.createBufferSource(), f=AC.createBiquadFilter(), g=AC.createGain();
+    s.buffer=mNoiseBuf; s.connect(f); f.connect(g); g.connect(mChain());
+    if(kind==='ride'){ f.type='highpass'; f.frequency.value=7000; }
+    else { f.type='bandpass'; f.frequency.value=1900; f.Q.value=0.9; }   // escobilla
+    const dur=kind==='ride'?0.09:0.05;
+    g.gain.setValueAtTime(vol,when); g.gain.exponentialRampToValueAtTime(.0001,when+dur);
+    s.start(when); s.stop(when+dur+.02);
+  }
   function musicTick(){
     try{
       if(muted||!running||paused||!AC||AC.state!=='running') return;
-      const t=AC.currentTime+0.03, st=mStep++%16;
-      const up=(G&&G.enemies.some(e=>e.boss))?2:0;
-      const b=M_BASS[st]; if(b!==null) mNote(82.4*Math.pow(2,(b+up)/12),0.14,'triangle',0.045,t);
-      if(st%4===2) mNote(2600,0.03,'square',0.011,t);
-      const l=M_LEAD[st]; if(l!==null) mNote(329.6*Math.pow(2,(l+up)/12),0.15,'square',0.017,t);
+      const st=mStep%32, bar=Math.floor(st/16), sw=(st%4===2)?M_SWING:0;
+      const t=AC.currentTime+0.03+sw;
+      mStep++; if(st===31) mLoop++;
+      const boss=G&&G.enemies.some(e=>e.boss), closing=G&&G.closed;
+      const panic=G&&G.hp<25;
+      if(boss){ // modo jefe: tritono urgente; en el cierre, +5 y semicorcheas
+        const up=closing?5:0;
+        if(st%2===0) mNote(55*Math.pow(2,(M_BOSS_BASS[(st/2)%2]+up)/12),0.12,'triangle',0.05,t);
+        if(st%4===0) mDrum('kick',t,0.09);
+        if(st%2===0) mDrum('ride',t,closing?0.028:0.02);
+        if(closing&&st%2===1) mDrum('ride',t,0.016);
+        const l=M_BOSS_LEAD[st%8]; if(l!==null&&st%2===0) mNote(220*Math.pow(2,(l+up)/12),0.1,'square',0.016,t);
+        return;
+      }
+      // bajo caminante: negras + pickup swingado al cerrar cada compás
+      if(st%4===0) mNote(55*Math.pow(2,M_WALK[Math.floor(st/4)]/12),0.32,'triangle',0.05,t);
+      if(st===14||st===30) mNote(55*Math.pow(2,(M_WALK[Math.floor(st/4)]+2)/12),0.14,'triangle',0.035,t);
+      // batería: bombo en el 1 y el «y» de 3, escobilla en 2 y 4, ride swingado
+      if(st%16===0||st%16===10) mDrum('kick',t,panic?0.085:0.06);
+      if(st%8===4) mDrum('snare',t,0.03);
+      if(st%4===0) mDrum('ride',t,0.018); if(st%8===6) mDrum('ride',t,0.012);
+      // comping: el acorde del compás, corto, en contratiempos
+      if(st%16===2||st%16===11){ for(const n of M_CHORD[bar]) mNote(110*Math.pow(2,n/12),0.16,'sine',0.014,t); }
+      // lead pentatónica que respira: calla un loop entero de cada dos
+      if(mLoop%2===0){ const l=M_PHRASE[st]; if(l!==null) mNote(220*Math.pow(2,l/12),0.16,'square',0.015,t); }
     }catch(_){}
   }
 
@@ -24906,7 +24962,7 @@ function launchElTurno(){
     document.getElementById('etChest').style.display='none';
     document.getElementById('etQuiz').style.display='none';
     if(_etChestIv){ clearInterval(_etChestIv); _etChestIv=null; }
-    newGame(); running=true; paused=false; last=performance.now(); mStep=0;
+    newGame(); running=true; paused=false; last=performance.now(); mStep=0; mLoop=0;
     sfx('coin');                                    // desbloquea el AudioContext con el gesto
     if(!musicIv) musicIv=setInterval(musicTick,138); // arranca la banda sonora del servicio
     if(!rafId) rafId=requestAnimationFrame(loop);

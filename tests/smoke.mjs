@@ -3430,6 +3430,33 @@ test('Camarero Survivors: CIERRE DEL LOCAL a las 10:00 — la inspectora imbatib
     'surviving to the close must be celebrated as SERVICIO COMPLETO');
 });
 
+test('Camarero Survivors: música v2 — swing, batería sintetizada, lead que respira, modos jefe y cierre (jul 2026)', () => {
+  // El loop viejo eran 16 pasos idénticos con un blip de 2600 Hz por batería.
+  // La v2 sigue sin archivos (CSP-safe) pero suena a servicio: compás doble
+  // Am7→D9 con bajo caminante, swing, bombo/escobilla/ride sintetizados,
+  // comping, lead que calla un loop de cada dos, tritono con jefe y +5
+  // semitonos con ride a semicorcheas en el cierre. Compresor propio.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  assert(/const M_SWING=0\.045/.test(body) && /sw=\(st%4===2\)\?M_SWING:0/.test(body),
+    'weak eighths must be delayed by the swing constant');
+  assert(/const M_WALK=\[0,3,7,10, 5,9,12,11\]/.test(body),
+    'the walking bass must vamp Am7→D9 with a chromatic approach note');
+  assert(/function mDrum\(kind,when,vol\)/.test(body) && /exponentialRampToValueAtTime\(42,when\+\.09\)/.test(body),
+    'the kick must be a pitch-dropping sine, not a beep');
+  assert(/mNoiseBuf=b/.test(body) && /f\.type='highpass'; f\.frequency\.value=7000/.test(body) && /f\.type='bandpass'; f\.frequency\.value=1900/.test(body),
+    'ride and brush must be filtered noise from a generated buffer');
+  assert(/mComp=AC\.createDynamicsCompressor\(\)/.test(body),
+    'music must run through its own compressor so it never fights the sfx');
+  assert(/const M_BOSS_BASS=\[0,6\]/.test(body), 'boss mode must ride the tritone ostinato');
+  assert(/closing\?5:0/.test(body) && /closing&&st%2===1/.test(body),
+    'the closing stretch must transpose up and double the ride to 16ths');
+  assert(/if\(mLoop%2===0\)/.test(body), 'the lead must breathe: silent every other loop');
+  assert(/mStep=0; mLoop=0;/.test(body), 'start() must reset both sequencer counters');
+  assert(/musicIv=setInterval\(musicTick,138\)/.test(body) && /clearInterval\(musicIv\)/.test(body),
+    'the sequencer lifecycle (start with run, die in teardown) must stay intact');
+});
+
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
   // Petición del propietario: el personaje debe estar animado y cambiar de
   // humor con cada error. Las animaciones antiguas apuntaban a `svg` (muertas
