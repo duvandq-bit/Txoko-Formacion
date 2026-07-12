@@ -3471,6 +3471,30 @@ test('Quiz del día: abierto 24/7 sin supervisor — semilla diaria, avance auto
     'the question timer must self-kill when the user navigates away mid-question');
 });
 
+test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros (jul 2026, pérdida de Alexis)', () => {
+  // Bug real: al entrar en un origen nuevo (meseo.es) sin datos locales, si la
+  // restauración desde la nube fallaba un instante, el login creaba una ficha
+  // a cero y el upsert la subía con merge-duplicates, BORRANDO xp/known/exam
+  // del usuario. El upsert ahora lee la nube primero y fusiona sin reducir.
+  const fn = html.slice(html.indexOf('async function supaUpsertEmployee'), html.indexOf('async function supaFetchAllEmployees'));
+  assert(fn.length > 400, 'supaUpsertEmployee not found');
+  // (1) lee la nube antes de escribir
+  assert(/employees\?name=ilike\.\$\{encodeURIComponent\(name\)\}&select=\*/.test(fn),
+    'the upsert must read the current cloud row before writing');
+  // (2) aborta si no puede leer la nube y la ficha local está vacía
+  assert(/const _localEmpty =/.test(fn) && /if\(!cloudReadOk && _localEmpty\) \{[^}]*return;/.test(fn),
+    'the upsert must abort when the cloud is unreadable AND local is empty (never clobber with zeros)');
+  // (3) fusión monótona: max en números, unión en mapas
+  assert(/xp=Math\.max\(xp, cloud\.xp\|\|0\)/.test(fn) && /_etMergeMap\(JSON\.parse\(cloud\.known_dishes/.test(fn),
+    'numeric fields must take max(local,cloud) and maps must merge (union)');
+  // (4) no anula credenciales sin querer
+  assert(/if\(!pin && cloud\.pin\) pin=cloud\.pin/.test(fn),
+    'the upsert must preserve the cloud pin when local has none (never null out credentials)');
+  // (5) el helper de fusión de mapas existe y hace max por clave
+  assert(/function _etMergeMap\(a, b\)\{/.test(html) && /Math\.max\(av, bv\)/.test(html),
+    'the _etMergeMap helper must do per-key max');
+});
+
 test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
   // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
   // aparecer como uno de los restaurantes a escoger, pero el nombre de la

@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.207">
+<meta name="app-version" content="7.208">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1489,7 +1489,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.207';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.208';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1914,10 +1914,68 @@ function _hoyCheckOvertaken(){
 }
 
 // ═══════ SUPABASE EMPLOYEE SYNC ═══════
+// Fusión MONÓTONA (jul 2026, tras la pérdida de datos de Alexis): el upsert
+// LEE la fila de la nube antes de escribir y NUNCA reduce el progreso
+// acumulado. Una ficha local vacía —primer login en un origen nuevo como
+// meseo.es, o tras un fallo transitorio de la restauración desde la nube— ya
+// no puede pisar una ficha rica en la nube. Antes, un POST ciego con
+// merge-duplicates sobrescribía xp/known_dishes/etc. con ceros y borraba al
+// usuario. Regla: números → max(local, nube); mapas → unión (max por clave);
+// credenciales → se conserva el pin (nunca se anula sin querer).
+function _etMergeMap(a, b){
+  const out = Object.assign({}, a || {});
+  for(const k in (b || {})){
+    const bv = b[k], av = out[k];
+    out[k] = (typeof bv==='number' && typeof av==='number') ? Math.max(av, bv) : (av || bv);
+  }
+  return out;
+}
 async function supaUpsertEmployee(name, retries=2) {
   if(!name) return;
   const emp = DB.employees[name];
   if(!emp) return;
+  // ¿La ficha local está "vacía" (sin progreso que merezca guardarse)?
+  const _localEmpty = !(emp.xp>0)
+    && !(emp.knownDishes && Object.keys(emp.knownDishes).length)
+    && !(emp.examCorrect && Object.keys(emp.examCorrect).length)
+    && !((emp.sessions || []).length);
+  // 1) Leer la fila actual de la nube (para no reducir nada).
+  let cloud = null, cloudReadOk = false;
+  try {
+    const gr = await fetchT(
+      `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } },
+      8000
+    );
+    if(gr.ok){ cloudReadOk = true; const rows = await gr.json(); if(Array.isArray(rows) && rows.length) cloud = rows[0]; }
+  } catch(e){ dbgw('[Txoko] upsert cloud-read error for', name, e.message); }
+  // Si NO pudimos leer la nube y la ficha local está vacía, ABORTAR: escribir
+  // ahora arriesgaría pisar datos buenos con ceros. Nada valioso que perder.
+  if(!cloudReadOk && _localEmpty) { dbgw('[Txoko] upsert abortado: nube ilegible + local vacío para', name); return; }
+  // 2) Fusionar monótonamente local ⊕ nube.
+  let xp=emp.xp||0, streak=emp.streak||0, txr=emp.txokoRecord||0, dw=emp.duelWins||0;
+  let known=emp.knownDishes||{}, exam=emp.examCorrect||{}, topics=emp.topicScores||{};
+  let sess=(emp.sessions||[]).slice(-20), sessCount=(emp.sessions||[]).length;
+  let pin=emp.pin||null, avatar=emp.avatar||null, lastStudy=emp.lastStudyDay||null, lastLogin=emp.lastLoginTs||null;
+  if(cloud){
+    xp=Math.max(xp, cloud.xp||0); streak=Math.max(streak, cloud.streak||0);
+    txr=Math.max(txr, cloud.txoko_record||0); dw=Math.max(dw, cloud.duel_wins||0);
+    try{ known=_etMergeMap(JSON.parse(cloud.known_dishes||'{}'), known); }catch(e){}
+    try{ exam=_etMergeMap(JSON.parse(cloud.exam_correct||'{}'), exam); }catch(e){}
+    try{ topics=_etMergeMap(JSON.parse(cloud.topic_scores||'{}'), topics); }catch(e){}
+    try{ const cs=JSON.parse(cloud.sessions_data||'[]'); if(cs.length>sess.length) sess=cs.slice(-20); }catch(e){}
+    sessCount=Math.max(sessCount, cloud.sessions_count||0, sess.length);
+    if(!pin && cloud.pin) pin=cloud.pin;                 // no anular credenciales
+    if(!avatar && cloud.avatar) avatar=cloud.avatar;
+    if((cloud.last_study_day||'') > (lastStudy||'')) lastStudy=cloud.last_study_day;
+    if(!lastLogin && cloud.last_login) lastLogin=cloud.last_login;
+    // reflejar la fusión en local para que la UI no muestre menos de lo real
+    emp.xp=xp; emp.streak=streak; emp.txokoRecord=txr; emp.duelWins=dw;
+    emp.knownDishes=known; emp.examCorrect=exam; emp.topicScores=topics;
+    if(pin) emp.pin=pin; if(avatar) emp.avatar=avatar; if(lastStudy) emp.lastStudyDay=lastStudy;
+    try{ saveDB(); }catch(e){}
+  }
+  // 3) Escribir la ficha fusionada.
   try {
     const res = await fetch(`${SUPA_URL}/rest/v1/employees`, {
       method: 'POST',
@@ -1929,19 +1987,19 @@ async function supaUpsertEmployee(name, retries=2) {
       },
       body: JSON.stringify({
         name: name,
-        pin: emp.pin || null,
-        xp: emp.xp || 0,
-        streak: emp.streak || 0,
-        last_study_day: emp.lastStudyDay || null,
-        topic_scores: JSON.stringify(emp.topicScores || {}),
-        known_dishes: JSON.stringify(emp.knownDishes || {}),
-        exam_correct: JSON.stringify(emp.examCorrect || {}),
-        sessions_count: (emp.sessions || []).length,
-        sessions_data: JSON.stringify((emp.sessions || []).slice(-20)),
-        txoko_record: emp.txokoRecord || 0,
-        avatar: emp.avatar || null,
-        duel_wins: emp.duelWins || 0,
-        last_login: emp.lastLoginTs || null,
+        pin: pin,
+        xp: xp,
+        streak: streak,
+        last_study_day: lastStudy,
+        topic_scores: JSON.stringify(topics),
+        known_dishes: JSON.stringify(known),
+        exam_correct: JSON.stringify(exam),
+        sessions_count: sessCount,
+        sessions_data: JSON.stringify(sess.slice(-20)),
+        txoko_record: txr,
+        avatar: avatar,
+        duel_wins: dw,
+        last_login: lastLogin,
         updated_at: new Date().toISOString()
       })
     });
