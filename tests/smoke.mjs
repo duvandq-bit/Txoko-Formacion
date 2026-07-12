@@ -3506,6 +3506,17 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
     'applyTheme must not restyle the login hero (it stays Meseo — no more brand flicker)');
   assert(/if\(all\.length\) renderVenuePicker\(all, current\.id\);/.test(html),
     'the venue picker must render even with a single venue (Txoko as a choice, not as the face)');
+  // Tercera vuelta (reporte: «meseo no pertenece a Martín Berasategui»): el
+  // sincronizador de idioma (applyLangToApp) era una SEGUNDA fuente que
+  // re-inyectaba el subtítulo del venue en el héroe, con el mismo gating >1
+  // del selector. El literal del subtítulo del venue no puede existir en el
+  // JS de la app — solo en data/themes.json como dato del venue.
+  assert(!/by Martín Berasategui · Formación de Equipo|by Martín Berasategui · Team Training/.test(html),
+    'no app JS may hardcode a venue subtitle (the login hero is always Meseo)');
+  assert(/if\(_all\.length && ACTIVE_VENUE\) renderVenuePicker\(_all, ACTIVE_VENUE\.id\);/.test(html),
+    'the language re-render must keep the single-venue picker visible too');
+  assert(/is not affiliated with, sponsored by or officially endorsed/.test(html) && /their respective owners/.test(html),
+    'the EN legal modal must carry the generalized multi-venue disclaimer like the ES one');
 });
 
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
