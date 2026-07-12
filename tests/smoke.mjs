@@ -3471,6 +3471,17 @@ test('Quiz del día: abierto 24/7 sin supervisor — semilla diaria, avance auto
     'the question timer must self-kill when the user navigates away mid-question');
 });
 
+test('SW: la recarga por versión nueva no interrumpe una sesión en curso (jul 2026, doble pantalla de carga)', () => {
+  // El handler de controllerchange recargaba la página al activarse un SW
+  // nuevo. Si el auto-login ya había corrido, la carga se veía DOS veces. Se
+  // guarda para no recargar cuando el usuario ya entró (currentUser set).
+  const h = html.slice(html.indexOf("addEventListener('controllerchange'"), html.indexOf("addEventListener('controllerchange'") + 400);
+  assert(/if \(typeof currentUser !== 'undefined' && currentUser\) return;/.test(h),
+    'the controllerchange reload must bail out when a session is already active (no double loading screen)');
+  assert(/if \(_swReloaded\) return;/.test(h) && /_swReloaded = true;/.test(h),
+    'the once-only reload guard must remain');
+});
+
 test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros (jul 2026, pérdida de Alexis)', () => {
   // Bug real: al entrar en un origen nuevo (meseo.es) sin datos locales, si la
   // restauración desde la nube fallaba un instante, el login creaba una ficha
