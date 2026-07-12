@@ -141,11 +141,12 @@ test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   assert(/Próximamente/.test(html), 'locked venues must read Próximamente');
   assert(/const v = _enabledVenues\(\)\.find\(x => x\.id === id\);\s*\n?\s*if\(!v\) return;/.test(html),
     'selectVenue must reject venues that are not enabled');
-  // Long venue names scale down instead of overflowing the login logo.
-  const css = read('styles.css');
-  assert(/\.login-logo h1\.long\{/.test(css) && /classList\.toggle\('long'/.test(html),
-    'long venue names need the .long auto-fit');
-  assert(/\.login-venue-card\.on\{/.test(css), 'selected venue card style missing');
+  // El héroe del login ya no muestra nombres de venue (siempre «Meseo», jul
+  // 2026, arreglo del parpadeo de marca) — el auto-ajuste .long del logo se
+  // fue con esa responsabilidad y no debe volver.
+  assert(!/classList\.toggle\('long'/.test(html),
+    'applyTheme must not scale venue names into the login logo (the hero is always Meseo)');
+  assert(/\.login-venue-card\.on\{/.test(read('styles.css')), 'selected venue card style missing');
 });
 
 test('data/ghost-scenarios.json scenarios have scenes with options', () => {
@@ -3496,6 +3497,15 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
   assert(/title: 'Meseo'/.test(read('sw.js')), 'the push fallback title must be Meseo');
   assert(/https:\/\/meseo\.es\//.test(html) && !/github\.io\/Txoko-Formacion/.test(html),
     'the share link must point at meseo.es, not the old repo URL');
+  // Segunda vuelta (reporte del propietario: «aparece txoko, parpadea meseo
+  // y vuelve a txoko»): el héroe del login ya NO se tematiza con el venue —
+  // la app se presenta SIEMPRE como Meseo y el restaurante vive en el
+  // selector, que ahora se muestra en cuanto hay al menos un venue.
+  const themeFn = html.slice(html.indexOf('function applyTheme'), html.indexOf('function _venueTriggerSync'));
+  assert(!/loginLogoName|loginEyebrow|loginSubtitle/.test(themeFn),
+    'applyTheme must not restyle the login hero (it stays Meseo — no more brand flicker)');
+  assert(/if\(all\.length\) renderVenuePicker\(all, current\.id\);/.test(html),
+    'the venue picker must render even with a single venue (Txoko as a choice, not as the face)');
 });
 
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
