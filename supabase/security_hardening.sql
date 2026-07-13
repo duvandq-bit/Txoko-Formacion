@@ -47,7 +47,11 @@ REVOKE ALL ON public.sup_pin_attempts FROM anon, authenticated;
 -- Cliente: USE_SERVER_EMP_PIN_VERIFY=true; _EMP_COLS excluye pin en las lecturas;
 -- los upserts/beacon no envían pin; centinela '__srv__' para cuentas de la nube.
 --
--- PASO FINAL — cerrar la columna pin a la anon key (tras desplegar el cliente):
+-- PASO FINAL — APLICADO (migración employees_pin_column_lockdown): la columna
+-- pin queda cerrada a la anon key. Verificado en producción: anon no tiene grant
+-- de SELECT/INSERT/UPDATE sobre `pin`, solo sobre las 15 columnas no sensibles;
+-- las RPCs SECURITY DEFINER y el service-role conservan acceso a pin. Login en
+-- vivo confirmado funcionando tras el cierre.
 --   REVOKE SELECT, INSERT, UPDATE ON public.employees FROM anon, authenticated;
 --   GRANT SELECT (name,xp,streak,last_study_day,topic_scores,known_dishes,
 --     exam_correct,sessions_count,txoko_record,updated_at,sessions_data,
