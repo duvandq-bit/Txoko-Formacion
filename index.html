@@ -24623,7 +24623,7 @@ function launchElTurno(){
     // EXPLOTA limpiando la zona (ayuda de la casa). No aparece en el cierre.
     if(!G.manager && G.time>=G.nextMgr && G.time<585 && !G.closed){
       const fromLeft=Math.random()<0.5;
-      G.manager={ x: fromLeft? -70 : W+70, y: 66+Math.random()*90, dir: fromLeft?1:-1,
+      G.manager={ x: fromLeft? -70 : W+70, y: 170+Math.random()*140, dir: fromLeft?1:-1,
                   dropX: W*(0.32+Math.random()*0.36), dropped:false, ph:0 };
       flash('¡LA MÁNAGER! · invita la casa','#7ad0c0'); sfx('coin');
     }
@@ -24947,7 +24947,7 @@ function launchElTurno(){
       ctx.save(); ctx.translate(m.x,m.y+fly);
       if(m.dir<0) ctx.scale(-1,1);
       if(MGR_IMG && MGR_IMG._ok){
-        const hh=96, ww=hh*(MGR_IMG.width/MGR_IMG.height); ctx.drawImage(MGR_IMG,-ww/2,-hh/2,ww,hh);
+        const hh=118, ww=hh*(MGR_IMG.width/MGR_IMG.height); ctx.drawImage(MGR_IMG,-ww/2,-hh/2,ww,hh);
       } else {
         // respaldo: cuerpo con capa + estela de brillo
         ctx.globalAlpha=.35; ctx.fillStyle='#7ad0c0'; ctx.beginPath(); ctx.ellipse(-m.dir*22,4,20,7,0,0,6.29); ctx.fill(); ctx.globalAlpha=1;
