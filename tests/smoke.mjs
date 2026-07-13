@@ -4405,9 +4405,11 @@ test('filtro de turno (DISH_SERVICE) coherente con las cartas reales', () => {
   // lunch-only reales (no deben salir en cena)
   for (const id of [95, 96, 97, 92, 93, 94, 73, 74, 84, 102, 104, 105, 86, 91])
     assert(SV[id] === 'a', `#${id} debe ser solo ALMUERZO`);
-  // dinner-only reales (no deben salir en almuerzo)
-  for (const id of [23, 24, 25, 26, 40, 41, 34, 17, 18, 19, 20, 21, 22, 112])
+  // dinner-only reales (no deben salir en almuerzo) — incluye veg de solo-cena
+  for (const id of [23, 24, 25, 26, 40, 41, 34, 17, 18, 19, 20, 21, 22, 112, 48, 49, 52, 53, 54])
     assert(SV[id] === 'c', `#${id} debe ser solo CENA`);
+  // vegetarianos de solo-almuerzo
+  for (const id of [120, 121]) assert(SV[id] === 'a', `#${id} debe ser solo ALMUERZO`);
   // reparto razonablemente equilibrado (no todo 'ambos')
   const cnt = { a: 0, c: 0, ambos: 0 };
   for (const v of Object.values(SV)) cnt[v]++;
