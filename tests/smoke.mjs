@@ -362,6 +362,24 @@ test('sw.js serves the shell network-first (no HTML/CSS version skew)', () => {
     'update check must run when the app returns to the foreground');
 });
 
+test('sw.js keeps a STABLE runtime cache so updates never drop the images', () => {
+  // Bug "se perdieron los gráficos al actualizar": el activate borraba TODA la
+  // caché por versión (incluidos sprites), y con red floja no se redescargaban.
+  // Los assets perezosos (sprites/data) deben vivir en una caché de nombre FIJO
+  // (sin la versión) que el activate NO borra.
+  const sw = read('sw.js');
+  const m = sw.match(/const RUNTIME_CACHE = '([^']+)'/);
+  assert(m, 'debe existir un RUNTIME_CACHE con nombre estable');
+  assert(!/\$\{VERSION\}|`/.test(m[1]) && !m[1].includes('shell'),
+    'RUNTIME_CACHE debe ser fijo (sin la versión) para sobrevivir a los bumps');
+  // la rama stale-while-revalidate (assets) usa la caché estable, no la del shell
+  assert(/caches\.open\(RUNTIME_CACHE\)/.test(sw),
+    'los assets perezosos deben cachearse en RUNTIME_CACHE');
+  // el activate solo borra cachés de shell → la runtime se conserva
+  assert(/keys\.filter\(k => k\.startsWith\('txoko-shell-'\) && k !== CACHE_NAME\)/.test(sw),
+    'el activate solo debe borrar cachés de shell (conservar la runtime)');
+});
+
 // ─── 6. CDN tags carry crossorigin (SRI prerequisite) ───────────
 console.log('\nSupply chain');
 test('all third-party CDN <script>/<link> tags set crossorigin', () => {

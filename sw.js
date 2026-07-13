@@ -4,8 +4,13 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.225';
+const VERSION = 'v7.226';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
+// Caché ESTABLE para assets perezosos (sprites de img/, data/*.json). A
+// diferencia del shell (versionado), NO se borra al cambiar de versión: así
+// actualizar la app NO vuelve a tirar las imágenes ni obliga a redescargarlas
+// (bug de "se perdieron los gráficos" al subir versión varias veces con 4G).
+const RUNTIME_CACHE = 'txoko-runtime';
 
 // Files cached as the app shell. Keep this list short — large data should be
 // fetched live and cached opportunistically by the runtime handler below.
@@ -35,7 +40,10 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// ─── Activate: drop old caches, take control ────────────────────
+// ─── Activate: drop old SHELL caches (keep the runtime cache), take control ──
+// Solo se borran las cachés de shell antiguas (txoko-shell-<ver>). La caché
+// 'txoko-runtime' (sprites, data) se CONSERVA entre versiones → actualizar no
+// borra las imágenes.
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
@@ -91,9 +99,10 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // ── Everything else → stale-while-revalidate ──
+  // ── Everything else (sprites, data) → stale-while-revalidate en la caché
+  //    ESTABLE (persiste entre versiones: actualizar no borra las imágenes) ──
   e.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
+    caches.open(RUNTIME_CACHE).then(async (cache) => {
       const cached = await cache.match(req);
       const networkPromise = fetch(req).then(res => {
         // Only cache successful, basic responses
