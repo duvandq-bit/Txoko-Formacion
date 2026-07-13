@@ -4391,6 +4391,30 @@ test('la app cablea recuperación de PIN sin enviar el PIN en claro', () => {
   assert(/pinStep==='enter'/.test(modal) && /openPinRecovery\(\)/.test(modal),
     'el enlace de recuperación solo debe mostrarse en el paso "enter"');
 });
+test('zona de Ajustes: entrada, perfil, correo, cambio de clave', () => {
+  // botón de entrada en la cabecera
+  assert(/id="ajustesBtn"[^>]*onclick="openAjustes\(\)"/.test(html),
+    'la cabecera debe tener el botón ⚙ que abre openAjustes()');
+  assert(html.includes('function openAjustes('), 'falta la función openAjustes');
+  // helpers de red para estado de correo y cambio de clave
+  assert(html.includes('function supaEmailStatus') && html.includes('function supaChangePin'),
+    'faltan los helpers supaEmailStatus / supaChangePin');
+  const aj = html.slice(html.indexOf('function openAjustes'), html.indexOf('// Sync visible dots from hidden input'));
+  // secciones clave presentes
+  assert(/ajEmail/.test(aj) && /ajPass1/.test(aj) && /ajPass2/.test(aj) && /ajLogout/.test(aj) && /ajAvatar/.test(aj),
+    'Ajustes debe incluir correo, cambio de clave, avatar y cerrar sesión');
+  // el cambio de clave se cifra en el cliente y usa el hash actual como prueba
+  assert(/await hashPin\(a\)/.test(aj) && /supaChangePin\(currentUser,\s*pinHash,\s*h\)/.test(aj),
+    'cambiar clave debe hashear en cliente y probar identidad con el hash actual');
+  // el correo se guarda con prueba de identidad (mismo helper que la recuperación)
+  assert(/supaSetRecoveryEmail\(currentUser,\s*pinHash,\s*email\)/.test(aj),
+    'guardar correo en Ajustes debe llevar el hash del PIN como prueba');
+  // backend cubre las acciones nuevas
+  const fn = read('supabase/functions/reset-pin/index.ts');
+  assert(/'email-status'/.test(fn) && /'change-pin'/.test(fn),
+    'la Edge Function debe manejar email-status y change-pin');
+  assert(/maskEmail/.test(fn), 'el estado del correo debe devolverse enmascarado');
+});
 test('la recuperación está cableada también en el login por contraseña', () => {
   // enlace "¿Olvidaste tu PIN o contraseña?" en el formulario visible
   assert(/id="loginForgotLink"[^>]*onclick="openPinRecovery\(\)"/.test(html) ||

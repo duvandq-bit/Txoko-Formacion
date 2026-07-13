@@ -293,6 +293,7 @@
         <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:32px">ES</button>
         <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:32px">EN</button>
       </div>
+      <button id="ajustesBtn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:.9rem;color:rgba(255,255,255,.9);min-height:32px;min-width:32px;margin-right:.25rem">⚙</button>
       <button class="btn-logout" id="logoutBtn" onclick="logout()" aria-label="Cerrar sesión">Salir</button>
     </div>
   </header>
@@ -1494,7 +1495,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.214';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.215';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7789,6 +7790,10 @@ function supaSetRecoveryEmail(name, pinHash, email){ return _resetFn({ action:'s
 function supaRequestPinReset(email){ return _resetFn({ action:'request', email }); }
 // Confirma el PIN nuevo (ya hasheado) con el token del correo.
 function supaConfirmPinReset(token, newPinHash){ return _resetFn({ action:'confirm', token, newPinHash }); }
+// Ajustes: estado del correo de recuperación (requiere el hash del PIN).
+function supaEmailStatus(name, pinHash){ return _resetFn({ action:'email-status', name, pinHash }); }
+// Ajustes: cambiar PIN/contraseña estando dentro (requiere el hash actual).
+function supaChangePin(name, pinHash, newPinHash){ return _resetFn({ action:'change-pin', name, pinHash, newPinHash }); }
 
 // Overlay "¿Olvidaste tu PIN?": pide el correo y solicita el enlace mágico.
 // Siempre responde con el mismo mensaje (no revela si el correo existe).
@@ -7927,6 +7932,109 @@ function promptRecoveryEmail(name, pinHash){
       msg.textContent = code==='email_taken' ? (_en?'That email is already linked to another account.':'Ese correo ya está en otra cuenta.')
         : (_en?'Could not save. Try again later.':'No se pudo guardar. Prueba más tarde.');
     }
+  };
+  if(typeof setupModalA11y==='function') setupModalA11y(overlay, ()=>overlay.remove());
+}
+
+// ═══════ ZONA DE AJUSTES ═══════
+// Perfil (avatar), correo de recuperación (estado + añadir/cambiar), cambiar
+// PIN/contraseña, idioma y cerrar sesión. Correo y clave pasan por la Edge
+// Function reset-pin usando el hash del PIN local como prueba de identidad
+// (el usuario ya está autenticado dentro de la app).
+function openAjustes(){
+  if(typeof currentUser==='undefined' || !currentUser) return;
+  const _en = LANG==='en';
+  const emp = getEmp(currentUser);
+  const pinHash = (emp && emp.pin) || '';
+  const ex = document.getElementById('ajustesOverlay'); if(ex) ex.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'ajustesOverlay';
+  overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:10010;background:rgba(12,20,14,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem max(1rem,env(safe-area-inset-bottom,0px))';
+  const H = (t)=>`<div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#8a6a2c;margin:1.15rem 0 .5rem">${t}</div>`;
+  const inp = 'width:100%;box-sizing:border-box;padding:.7rem .85rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.4rem';
+  const btn = 'width:100%;background:#8a5a2b;color:#fff;border:none;border-radius:10px;padding:.7rem;font-family:\'Quicksand\',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer';
+  overlay.innerHTML = `
+    <div style="background:#faf6ee;border-radius:20px;width:100%;max-width:400px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1.3rem 1.2rem;box-shadow:0 18px 60px rgba(12,20,14,.5);color:var(--brand-ink)">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700">${_en?'Settings':'Ajustes'}</div>
+        <button id="ajClose" aria-label="${_en?'Close':'Cerrar'}" style="background:none;border:none;font-size:1.5rem;line-height:1;color:#8a6a2c;cursor:pointer">×</button>
+      </div>
+      ${H(_en?'Profile':'Perfil')}
+      <div style="display:flex;align-items:center;gap:.85rem">
+        <div id="ajAvatar" style="cursor:pointer">${renderAvatarDisplay(currentUser,'48px','1.6rem')}</div>
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:1rem;font-weight:700">${escapeHTML(currentUser)}</div>
+          <button id="ajAvatarBtn" style="background:none;border:none;padding:0;font-family:'Quicksand',sans-serif;font-size:.75rem;color:#8a6a2c;text-decoration:underline;cursor:pointer">${_en?'Change avatar':'Cambiar avatar'}</button>
+        </div>
+      </div>
+      ${H(_en?'Recovery email':'Correo de recuperación')}
+      <div id="ajEmailStatus" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:#5a6a5e;margin-bottom:.5rem;line-height:1.4">${_en?'Loading…':'Cargando…'}</div>
+      <input id="ajEmail" type="email" inputmode="email" autocomplete="email" placeholder="${_en?'your@email.com':'tu@correo.com'}" style="${inp}">
+      <div id="ajEmailMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-bottom:.4rem"></div>
+      <button id="ajEmailSave" style="${btn}">${_en?'Save email':'Guardar correo'}</button>
+      ${H(_en?'Change PIN or password':'Cambiar PIN o contraseña')}
+      <input id="ajPass1" type="password" autocomplete="new-password" maxlength="30" placeholder="${_en?'New PIN or password':'Nuevo PIN o contraseña'}" style="${inp}">
+      <input id="ajPass2" type="password" autocomplete="new-password" maxlength="30" placeholder="${_en?'Repeat it':'Repítelo'}" style="${inp}">
+      <div id="ajPassMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-bottom:.4rem"></div>
+      <button id="ajPassSave" style="${btn}">${_en?'Update':'Actualizar'}</button>
+      ${H(_en?'Language':'Idioma')}
+      <div style="display:flex;gap:.5rem">
+        <button id="ajLangEs" style="flex:1;padding:.6rem;border-radius:10px;border:1px solid rgba(196,154,60,.35);background:${LANG==='es'?'#8a5a2b':'#fff'};color:${LANG==='es'?'#fff':'#5a6a5e'};font-family:'Quicksand',sans-serif;font-weight:700;cursor:pointer">Español</button>
+        <button id="ajLangEn" style="flex:1;padding:.6rem;border-radius:10px;border:1px solid rgba(196,154,60,.35);background:${LANG==='en'?'#8a5a2b':'#fff'};color:${LANG==='en'?'#fff':'#5a6a5e'};font-family:'Quicksand',sans-serif;font-weight:700;cursor:pointer">English</button>
+      </div>
+      <button id="ajLogout" style="width:100%;margin-top:1.3rem;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;padding:.7rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer">${_en?'Log out':'Cerrar sesión'}</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+  const $ = id => overlay.querySelector('#'+id);
+  $('ajClose').onclick = ()=> overlay.remove();
+  $('ajAvatar').onclick = ()=> openAvatarPicker();
+  $('ajAvatarBtn').onclick = ()=> openAvatarPicker();
+  $('ajLangEs').onclick = ()=>{ setLangApp('es'); overlay.remove(); openAjustes(); };
+  $('ajLangEn').onclick = ()=>{ setLangApp('en'); overlay.remove(); openAjustes(); };
+  $('ajLogout').onclick = ()=>{ overlay.remove(); logout(); };
+
+  // Estado del correo (requiere el hash del PIN local como prueba)
+  (async ()=>{
+    const el = $('ajEmailStatus'); if(!el) return;
+    if(!pinHash){ el.textContent = _en?'Set a PIN/password first.':'Primero configura un PIN o contraseña.'; return; }
+    const st = await supaEmailStatus(currentUser, pinHash);
+    if(st.ok && st.data && st.data.ok){
+      if(st.data.hasEmail){ el.innerHTML = (_en?'Saved: ':'Guardado: ') + '<b>'+escapeHTML(st.data.masked||'')+'</b>. '+(_en?'You can change it below.':'Puedes cambiarlo abajo.'); }
+      else el.textContent = _en?'No recovery email yet — add one so you can recover your access if you forget it.':'Aún no tienes correo — añade uno para recuperar tu acceso si lo olvidas.';
+    } else el.textContent = _en?'Could not load status.':'No se pudo cargar el estado.';
+  })();
+
+  // Guardar correo
+  $('ajEmailSave').onclick = async ()=>{
+    const email = ($('ajEmail').value||'').trim();
+    const msg = $('ajEmailMsg');
+    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.style.color='#c0392b'; msg.textContent=_en?'Enter a valid email':'Escribe un correo válido'; return; }
+    if(!pinHash){ msg.style.color='#c0392b'; msg.textContent=_en?'Set a PIN/password first.':'Configura primero un PIN.'; return; }
+    const b=$('ajEmailSave'); b.disabled=true; b.textContent=_en?'Saving…':'Guardando…';
+    const r = await supaSetRecoveryEmail(currentUser, pinHash, email);
+    b.disabled=false; b.textContent=_en?'Save email':'Guardar correo';
+    if(r.ok && r.data && r.data.ok){ msg.style.color='#2e7d32'; msg.textContent=_en?'Saved ✓':'Guardado ✓'; $('ajEmailStatus').innerHTML=(_en?'Saved: ':'Guardado: ')+'<b>'+escapeHTML(email)+'</b>'; $('ajEmail').value=''; }
+    else { const c=(r.data&&r.data.error)||''; msg.style.color='#c0392b'; msg.textContent = c==='email_taken'?(_en?'That email is on another account.':'Ese correo ya está en otra cuenta.'):(c==='auth'?(_en?'Session error — sign in again.':'Error de sesión — vuelve a entrar.'):(_en?'Could not save.':'No se pudo guardar.')); }
+  };
+
+  // Cambiar PIN/contraseña
+  $('ajPassSave').onclick = async ()=>{
+    const a=($('ajPass1').value||''), b2=($('ajPass2').value||'');
+    const msg=$('ajPassMsg');
+    if(a.length<4){ msg.style.color='#c0392b'; msg.textContent=_en?'At least 4 characters':'Mínimo 4 caracteres'; return; }
+    if(a!==b2){ msg.style.color='#c0392b'; msg.textContent=_en?"They don't match":'No coinciden'; return; }
+    if(!pinHash){ msg.style.color='#c0392b'; msg.textContent=_en?'Session error — sign in again.':'Error de sesión — vuelve a entrar.'; return; }
+    const b=$('ajPassSave'); b.disabled=true; b.textContent=_en?'Updating…':'Actualizando…';
+    const h=await hashPin(a);
+    const r=await supaChangePin(currentUser, pinHash, h);
+    b.disabled=false; b.textContent=_en?'Update':'Actualizar';
+    if(r.ok && r.data && r.data.ok){
+      emp.pin=h; saveDB();
+      try{ const s=localStorage.getItem('txoko_session'); if(s){ const o=JSON.parse(s); if(o&&o.user===currentUser){ o.hash=h; localStorage.setItem('txoko_session',JSON.stringify(o)); } } }catch(_){}
+      msg.style.color='#2e7d32'; msg.textContent=_en?'Updated ✓':'Actualizado ✓'; $('ajPass1').value=''; $('ajPass2').value='';
+    } else { const c=(r.data&&r.data.error)||''; msg.style.color='#c0392b'; msg.textContent = c==='auth'?(_en?'Session error — sign in again.':'Error de sesión — vuelve a entrar.'):(_en?'Could not update.':'No se pudo actualizar.'); }
   };
   if(typeof setupModalA11y==='function') setupModalA11y(overlay, ()=>overlay.remove());
 }

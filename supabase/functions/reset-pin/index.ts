@@ -50,6 +50,12 @@ function randToken(): string {
 function validEmail(e: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) && e.length <= 120;
 }
+function maskEmail(e: string): string {
+  const [u, d] = e.split('@');
+  if (!d) return '***';
+  const uu = u.length <= 2 ? u[0] + '*' : u[0] + '***' + u[u.length - 1];
+  return uu + '@' + d;
+}
 const rest = (path: string, init: RequestInit = {}) =>
   fetch(`${SUPA_URL}/rest/v1/${path}`, {
     ...init,
@@ -69,11 +75,11 @@ function emailHTML(name: string, link: string): string {
     </div>
     <div style="background:#fff;border-radius:16px;padding:28px 24px;box-shadow:0 2px 10px rgba(0,0,0,.06)">
       <p style="margin:0 0 12px;font-size:17px;font-weight:700">Hola ${name},</p>
-      <p style="margin:0 0 20px;font-size:15px;line-height:1.5">Has pedido recuperar tu PIN. Pulsa el botón para elegir uno nuevo. El enlace caduca en 30 minutos y solo se puede usar una vez.</p>
+      <p style="margin:0 0 20px;font-size:15px;line-height:1.5">Has pedido recuperar tu acceso. Pulsa el botón para elegir un PIN o contraseña nuevos. El enlace caduca en 30 minutos y solo se puede usar una vez.</p>
       <div style="text-align:center;margin:24px 0">
-        <a href="${link}" style="display:inline-block;background:#8a5a2b;color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 28px;border-radius:10px">Elegir PIN nuevo</a>
+        <a href="${link}" style="display:inline-block;background:#8a5a2b;color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 28px;border-radius:10px">Elegir clave nueva</a>
       </div>
-      <p style="margin:16px 0 0;font-size:12px;color:#888;line-height:1.5">Si no has sido tú, ignora este correo: tu PIN no cambia hasta que abras el enlace y crees uno nuevo.</p>
+      <p style="margin:16px 0 0;font-size:12px;color:#888;line-height:1.5">Si no has sido tú, ignora este correo: tu clave no cambia hasta que abras el enlace y crees una nueva.</p>
     </div>
     <p style="text-align:center;margin:20px 0 0;font-size:11px;color:#a8a29a">Meseo · Formación de sala · meseo.es</p>
   </div></body></html>`;
@@ -84,7 +90,7 @@ async function sendEmail(to: string, name: string, link: string): Promise<void> 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: RESEND_FROM, to: [to], subject: 'Recupera tu PIN · Meseo', html: emailHTML(name, link) })
+    body: JSON.stringify({ from: RESEND_FROM, to: [to], subject: 'Recupera tu acceso · Meseo', html: emailHTML(name, link) })
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
 }
@@ -116,6 +122,38 @@ Deno.serve(async (req: Request) => {
         body: JSON.stringify({ employee_name: name, email, updated_at: new Date().toISOString() })
       });
       if (!up.ok) return json({ error: 'save_failed' }, 500);
+      return json({ ok: true });
+    }
+
+    // ── Estado del correo de recuperación (Ajustes; requiere PIN) ──
+    if (action === 'email-status') {
+      const name = String(body.name || '').trim();
+      const pinHash = String(body.pinHash || '');
+      if (!name || !/^[a-f0-9]{64}$/.test(pinHash)) return json({ error: 'bad_request' }, 400);
+      const r = await rest(`employees?select=name,pin&name=eq.${encodeURIComponent(name)}`);
+      const rows = await r.json();
+      const emp = Array.isArray(rows) && rows.length ? rows[0] : null;
+      if (!emp || emp.pin !== pinHash) return json({ error: 'auth' }, 401);
+      const er = await rest(`employee_recovery?select=email&employee_name=eq.${encodeURIComponent(name)}`);
+      const erRows = await er.json();
+      const email = Array.isArray(erRows) && erRows.length ? erRows[0].email : null;
+      return json({ ok: true, hasEmail: !!email, masked: email ? maskEmail(email) : null });
+    }
+
+    // ── Cambiar PIN/contraseña estando dentro (Ajustes; requiere PIN actual) ──
+    if (action === 'change-pin') {
+      const name = String(body.name || '').trim();
+      const pinHash = String(body.pinHash || '');
+      const newPinHash = String(body.newPinHash || '');
+      if (!name || !/^[a-f0-9]{64}$/.test(pinHash) || !/^[a-f0-9]{64}$/.test(newPinHash)) return json({ error: 'bad_request' }, 400);
+      const r = await rest(`employees?select=name,pin&name=eq.${encodeURIComponent(name)}`);
+      const rows = await r.json();
+      const emp = Array.isArray(rows) && rows.length ? rows[0] : null;
+      if (!emp || emp.pin !== pinHash) return json({ error: 'auth' }, 401);
+      const up = await rest(`employees?name=eq.${encodeURIComponent(name)}`, {
+        method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ pin: newPinHash })
+      });
+      if (!up.ok) return json({ error: 'update_failed' }, 500);
       return json({ ok: true });
     }
 
