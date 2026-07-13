@@ -4391,6 +4391,28 @@ test('la app cablea recuperación de PIN sin enviar el PIN en claro', () => {
   assert(/pinStep==='enter'/.test(modal) && /openPinRecovery\(\)/.test(modal),
     'el enlace de recuperación solo debe mostrarse en el paso "enter"');
 });
+test('filtro de turno (DISH_SERVICE) coherente con las cartas reales', () => {
+  const m = html.match(/const DISH_SERVICE = (\{[^}]*\});/);
+  assert(m, 'no se encontró DISH_SERVICE');
+  const SV = eval('(' + m[1] + ')');
+  // valores válidos únicamente
+  for (const [id, v] of Object.entries(SV))
+    assert(v === 'a' || v === 'c' || v === 'ambos', `#${id} tiene servicio inválido: ${v}`);
+  // gemelos por turno (recetas distintas) — cada uno a SU carta
+  assert(SV[69] === 'a' && SV[109] === 'c', 'Fish&chips: 69 almuerzo · 109 cena');
+  assert(SV[78] === 'a' && SV[9] === 'c', 'Tataki: 78 almuerzo · 9 cena');
+  assert(SV[103] === 'a' && SV[119] === 'a', 'Helados B&J son de almuerzo');
+  // lunch-only reales (no deben salir en cena)
+  for (const id of [95, 96, 97, 92, 93, 94, 73, 74, 84, 102, 104, 105, 86, 91])
+    assert(SV[id] === 'a', `#${id} debe ser solo ALMUERZO`);
+  // dinner-only reales (no deben salir en almuerzo)
+  for (const id of [23, 24, 25, 26, 40, 41, 34, 17, 18, 19, 20, 21, 22, 112])
+    assert(SV[id] === 'c', `#${id} debe ser solo CENA`);
+  // reparto razonablemente equilibrado (no todo 'ambos')
+  const cnt = { a: 0, c: 0, ambos: 0 };
+  for (const v of Object.values(SV)) cnt[v]++;
+  assert(cnt.a >= 30 && cnt.c >= 30, `reparto desequilibrado: ${JSON.stringify(cnt)}`);
+});
 test('zona de Ajustes: entrada, perfil, correo, cambio de clave', () => {
   // botón de entrada en la cabecera
   assert(/id="ajustesBtn"[^>]*onclick="openAjustes\(\)"/.test(html),
