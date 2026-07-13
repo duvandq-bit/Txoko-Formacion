@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.224">
+<meta name="app-version" content="7.225">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.224';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.225';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -24640,11 +24640,15 @@ function launchElTurno(){
     for(let i=G.mgrBottles.length-1;i>=0;i--){ const b=G.mgrBottles[i]; b.t+=dt; b.spin+=dt*0.32;
       const k=Math.min(1,b.t/b.dur);
       b.cx=b.ox+(b.tx-b.ox)*k; b.cy=b.oy+(b.ty-b.oy)*k - Math.sin(k*Math.PI)*26;
-      if(k>=1){ const R=96, D=64;
+      if(k>=1){ const R=112, D=64;
         for(const e of G.enemies){ if(!e.inspec && Math.hypot(e.x-b.cx,e.y-b.cy)<R+e.r) hurtEnemy(e,D); }
-        G.explosions.push({x:b.cx,y:b.cy,r:14,max:R,life:1});
-        burst(b.cx,b.cy,'#e8c44c',22); burst(b.cx,b.cy,'rgba(255,255,255,.75)',12);
-        G.shake=Math.max(G.shake,9); sfx('hit'); vibe([18,36]); G.mgrBottles.splice(i,1); }
+        // Explosión BIEN VISIBLE de la botella: doble onda (una grande marcada),
+        // salpicadura de vino y aviso en pantalla para que no pase desapercibida.
+        G.explosions.push({x:b.cx,y:b.cy,r:18,max:R,life:1.5,big:true});
+        G.explosions.push({x:b.cx,y:b.cy,r:10,max:R*0.55,life:1.1});
+        burst(b.cx,b.cy,'#e8c44c',34); burst(b.cx,b.cy,'rgba(255,255,255,.9)',22); burst(b.cx,b.cy,'#cfe0a8',20);
+        flash('¡BOTELLA A LA CASA!','#cfe0a8');
+        G.shake=Math.max(G.shake,13); sfx('hit'); sfx('surge'); vibe([25,50,25]); G.mgrBottles.splice(i,1); }
     }
     // cambio de escenario por nivel (propietario, jul 2026): comedor →
     // cocina (nv 5) → bodega (nv 10), rotando en niveles altos. Fundido ~1s.
@@ -25034,9 +25038,10 @@ function launchElTurno(){
       if(e.hp<e.maxhp&&!e.boss){ ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw,3); ctx.fillStyle=e.elite?'#e0a02c':'#e8735a'; ctx.fillRect(e.x-bw/2,e.y-e.r-9,bw*Math.max(0,e.hp/e.maxhp),3); }
     }
     // explosions (cava)
-    for(const x of G.explosions){ ctx.globalAlpha=Math.max(0,x.life)*0.65; ctx.strokeStyle='#e8c44c'; ctx.lineWidth=5; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.stroke();
-      ctx.globalAlpha=Math.max(0,x.life)*0.35; ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(x.x,x.y,x.r*0.7,0,6.29); ctx.stroke();
-      ctx.globalAlpha=Math.max(0,x.life)*0.2; ctx.fillStyle='#e8a02c'; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
+    for(const x of G.explosions){ const _a=Math.max(0,Math.min(1,x.life)), _lw=x.big?9:5;
+      ctx.globalAlpha=_a*0.7; ctx.strokeStyle='#e8c44c'; ctx.lineWidth=_lw; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.stroke();
+      ctx.globalAlpha=_a*0.42; ctx.strokeStyle='#fff'; ctx.lineWidth=_lw*0.45; ctx.beginPath(); ctx.arc(x.x,x.y,x.r*0.7,0,6.29); ctx.stroke();
+      ctx.globalAlpha=_a*(x.big?0.28:0.2); ctx.fillStyle=x.big?'#cfe0a8':'#e8a02c'; ctx.beginPath(); ctx.arc(x.x,x.y,x.r,0,6.29); ctx.fill(); ctx.globalAlpha=1; }
     // botellas de cava en vuelo (jul 2026: "no hace nada" — sí hacía, pero era
     // invisible: emoji de 20px durante 0,4s. Ahora: diana punteada en el punto
     // de caída, botella grande que VOLTEA en el aire y estela de burbujas).

@@ -2764,7 +2764,7 @@ test('Alérgeno Zero: LA MÁNAGER aliada suelta una botella que explota (jul 202
   // la botella EXPLOTA dañando enemigos (reusa hurtEnemy + explosión) y NO toca al héroe
   assert(/for\(let i=G\.mgrBottles\.length-1[\s\S]{0,400}hurtEnemy\(e,/.test(body),
     'la botella de la mánager no daña a los enemigos al explotar');
-  assert(/mgrBottles[\s\S]{0,400}G\.explosions\.push/.test(body),
+  assert(/G\.mgrBottles\.length-1[\s\S]{0,700}G\.explosions\.push/.test(body),
     'la botella de la mánager no genera la onda de explosión');
   // se reprograma para volver a pasar
   assert(/G\.nextMgr=G\.time\+/.test(body), 'la mánager no se reprograma tras salir');
