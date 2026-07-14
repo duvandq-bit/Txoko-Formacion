@@ -5010,28 +5010,45 @@ body::after{
 
 /* ═══ Técnicas de cocina (Aprender → Técnicas) ═══ */
 .tec-wrap{animation:slideUp .25s ease both}
-.tec-intro{margin:.2rem 0 1rem}
-.tec-intro-t{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment);font-weight:700}
-.tec-intro-s{font-size:.78rem;color:var(--parch3);line-height:1.5;margin-top:.25rem}
-.tec-fam{margin-bottom:1.4rem}
-.tec-fam-h{display:flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;font-size:.62rem;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--tec-col,#a3502a);font-weight:600;margin-bottom:.6rem}
-.tec-fam-dot{width:9px;height:9px;border-radius:50%;background:var(--tec-col,#a3502a);flex-shrink:0;
+.tec-hero{display:flex;gap:.7rem;align-items:flex-start;background:linear-gradient(150deg,#2d6a3e,#22532f);
+  border-radius:var(--r);padding:.95rem 1rem;margin:.1rem 0 1.1rem;box-shadow:0 4px 14px rgba(28,42,34,.18)}
+.tec-hero-ic{font-size:1.9rem;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.tec-hero-t{font-family:'Cinzel',serif;font-size:1.22rem;color:#fbf7ee;font-weight:700;line-height:1.1}
+.tec-hero-s{font-size:.75rem;color:rgba(251,247,238,.82);line-height:1.45;margin-top:.28rem}
+.tec-hero-stat{display:inline-block;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;
+  color:#e4be68;background:rgba(228,190,104,.14);border:1px solid rgba(228,190,104,.3);
+  padding:.14rem .5rem;border-radius:20px;margin-top:.5rem}
+.tec-fam{margin-bottom:1.5rem}
+.tec-fam-h{display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem}
+.tec-fam-dot{width:10px;height:10px;border-radius:50%;background:var(--tec-col,#a3502a);flex-shrink:0;
   box-shadow:0 0 0 3px color-mix(in srgb,var(--tec-col,#a3502a) 18%,transparent)}
-.tec-card{background:linear-gradient(155deg,#faf6ee,#f2ead9);border:1px solid var(--ink3);
+.tec-fam-nm{font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tec-col,#a3502a);font-weight:600}
+.tec-fam-n{font-family:'DM Mono',monospace;font-size:.58rem;color:#fff;background:var(--tec-col,#a3502a);
+  min-width:1.15rem;text-align:center;padding:.05rem .32rem;border-radius:20px;line-height:1.4}
+.tec-fam::after{content:'';display:block;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--tec-col,#a3502a) 30%,transparent),transparent);margin-top:-.35rem}
+.tec-card{position:relative;background:linear-gradient(155deg,#fdfaf3,#f4ecdc);border:1px solid var(--ink3);
   border-left:4px solid var(--tec-col,#a3502a);border-radius:var(--r2);
-  padding:.85rem .95rem;margin-bottom:.6rem;box-shadow:0 2px 0 var(--ink4)}
-.tec-card-h{font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);font-weight:700;margin-bottom:.3rem}
+  padding:.8rem .9rem .85rem;margin-bottom:.6rem;box-shadow:0 2px 0 var(--ink4)}
+.tec-card-top{display:flex;align-items:center;gap:.55rem;margin-bottom:.4rem}
+.tec-ic{flex-shrink:0;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;font-size:1.05rem;
+  border-radius:9px;background:color-mix(in srgb,var(--tec-col,#a3502a) 14%,#fff);
+  border:1px solid color-mix(in srgb,var(--tec-col,#a3502a) 30%,transparent)}
+.tec-card-h{font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment);font-weight:700;line-height:1.15}
 .tec-def{font-size:.82rem;color:var(--parch2);line-height:1.5}
-.tec-txoko{font-size:.76rem;color:var(--parch3);line-height:1.5;margin-top:.45rem}
-.tec-txoko-lbl{display:inline-block;font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--tec-col,#a3502a);background:color-mix(in srgb,var(--tec-col,#a3502a) 12%,transparent);
-  padding:.08rem .4rem;border-radius:6px;margin-right:.35rem;vertical-align:middle}
-.tec-dishes{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem}
-.tec-dish{font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:600;color:var(--parchment);cursor:pointer;
-  background:#fff;border:1px solid var(--ink3);border-radius:20px;padding:.28rem .6rem;transition:all .15s;-webkit-appearance:none}
-.tec-dish:hover,.tec-dish:active{background:color-mix(in srgb,var(--tec-col,#a3502a) 14%,#fff);border-color:var(--tec-col,#a3502a)}
-.tec-more{align-self:center;font-size:.7rem;color:var(--parch3);font-family:'DM Mono',monospace}
+.tec-txoko{font-size:.76rem;color:var(--parch3);line-height:1.5;margin-top:.5rem;
+  background:color-mix(in srgb,var(--tec-col,#a3502a) 6%,transparent);border-radius:8px;padding:.45rem .55rem}
+.tec-txoko-lbl{display:inline-block;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;
+  text-transform:uppercase;color:#fff;background:var(--tec-col,#a3502a);
+  padding:.1rem .42rem;border-radius:6px;margin-right:.4rem;vertical-align:middle}
+.tec-dishes{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;margin-top:.6rem}
+.tec-dishes-lbl{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--parch4);margin-right:.15rem}
+.tec-dish{font-family:'Quicksand',sans-serif;font-size:.71rem;font-weight:600;color:var(--parchment);cursor:pointer;
+  background:#fff;border:1px solid var(--ink3);border-radius:20px;padding:.22rem .55rem;transition:all .15s;-webkit-appearance:none}
+.tec-dish:hover,.tec-dish:active{background:color-mix(in srgb,var(--tec-col,#a3502a) 14%,#fff);
+  border-color:var(--tec-col,#a3502a);transform:translateY(-1px)}
+.tec-more{align-self:center;font-size:.66rem;color:var(--parch4);font-family:'DM Mono',monospace;padding-left:.1rem}
 .xp-burst{
   position:fixed;pointer-events:none;z-index:9999;
   font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;

@@ -9141,107 +9141,112 @@ const TECNICA_FAMS = [
   {k:'cultura',es:'Producto y cultura culinaria',en:'Produce & culinary culture',col:'#8a6d3b'}
 ];
 const TECNICAS = [
-  {fam:'seco', es:'Brasa y parrilla', en:'Grill & barbecue',
+  {fam:'seco', ic:'🔥', es:'Brasa y parrilla', en:'Grill & barbecue',
    def:'Cocción directa sobre las brasas: fuego vivo, costra dorada y aroma ahumado. Sella el exterior y respeta el jugo interior.',
    defEn:'Cooking straight over embers: live fire, a seared crust and smoky aroma; it seals the outside and keeps the juices in.',
    txoko:'Es la firma de la casa: pulpo, lubina, alcachofas, espárragos, mejillones y las grandes carnes pasan por la brasa.',
-   kw:['brasa','parrilla','escalivad']},
-  {fam:'seco', es:'Tostado', en:'Toasting',
+   kw:['brasa','parrilla']},
+  {fam:'seco', ic:'🫑', es:'Escalivada', en:'Escalivada (ember-roasting)',
+   def:'Técnica catalana (escalivar = asar en las ascuas): se asan verduras enteras —pimiento, berenjena, cebolla— sobre las brasas hasta que la piel se quema; luego se pelan y la pulpa queda melosa y ahumada.',
+   defEn:'A Catalan technique (escalivar = to roast in embers): whole vegetables — pepper, aubergine, onion — are roasted on the coals until the skin chars, then peeled for a smoky, silky flesh.',
+   txoko:'Las peras escalivadas toman esta idea: se asan hasta quedar tiernas, melosas y dulces.',
+   kw:['escaliv']},
+  {fam:'seco', ic:'🍞', es:'Tostado', en:'Toasting',
    def:'Dorar pan, cereales o frutos secos en seco para desarrollar aromas y textura crujiente (reacción de Maillard).',
    defEn:'Dry-browning bread, grains or nuts to develop aroma and crunch (the Maillard reaction).',
    txoko:'El gofio tostado, el pan de las tablas y las almendras aportan el punto tostado a varios platos canarios.',
    kw:['tostad']},
-  {fam:'seco', es:'Ahumado', en:'Smoking',
+  {fam:'seco', ic:'💨', es:'Ahumado', en:'Smoking',
    def:'Aromatizar el alimento exponiéndolo al humo, que además ayuda a conservarlo.',
    defEn:'Flavouring food by exposing it to smoke, which also helps preserve it.',
    txoko:'Un toque de humo redondea platos como las alcachofas a la brasa o el brisket del bao.',
    kw:['ahumad']},
-  {fam:'fritura', es:'Tempura', en:'Tempura',
+  {fam:'fritura', ic:'🍤', es:'Tempura', en:'Tempura',
    def:'Rebozado japonés muy ligero y aireado, frito a alta temperatura durante pocos segundos para que quede crujiente y no grasiento.',
    defEn:'A very light, airy Japanese batter flash-fried hot so it stays crisp, never greasy.',
    txoko:'Nuestros calamares a la andaluza se visten con una tempura ligera inspirada en la técnica japonesa.',
    kw:['tempura']},
-  {fam:'fritura', es:'Rebozado y fritura', en:'Breading & frying',
+  {fam:'fritura', ic:'🍟', es:'Rebozado y fritura', en:'Breading & frying',
    def:'Envolver el producto en una capa (harina, huevo, panko) y freírlo en aceite caliente para lograr una costra crujiente.',
    defEn:'Coating food (flour, egg, panko) and frying it in hot oil for a crunchy crust.',
    txoko:'De las croquetas al fish and chips, la coliflor o la milanesa: el rebozado crujiente está por toda la carta.',
    kw:['rebozad','panko','frito','frita','fritas','fritos']},
-  {fam:'lenta', es:'Cocción a baja temperatura', en:'Low-temperature cooking',
+  {fam:'lenta', ic:'🌡️', es:'Cocción a baja temperatura', en:'Low-temperature cooking',
    def:'Cocinar largo rato a una temperatura controlada y baja (sous-vide): la pieza queda jugosa y en su punto de lado a lado.',
    defEn:'Cooking a long time at a low, controlled temperature (sous-vide) for even, juicy results.',
    txoko:'El pollo con huevo a baja temperatura o el entrecot de wagyu buscan esa jugosidad uniforme.',
    kw:['baja temperatura']},
-  {fam:'lenta', es:'Braseado y melosos', en:'Braising',
+  {fam:'lenta', ic:'🍲', es:'Braseado y melosos', en:'Braising',
    def:'Cocción larga y suave en un líquido aromático hasta que la carne se deshace y la salsa se concentra.',
    defEn:'Long, gentle cooking in an aromatic liquid until the meat falls apart and the sauce concentrates.',
    txoko:'La carrillera de wagyu, las costillas melosas de cordero y las alitas glaseadas nacen de una cocción lenta.',
    kw:['meloso','melosa','melosas','carriller','braseado','estofad','guisad']},
-  {fam:'lenta', es:'Confitado', en:'Confit',
+  {fam:'lenta', ic:'🫕', es:'Confitado', en:'Confit',
    def:'Cocinar el alimento sumergido en grasa a baja temperatura: queda tierno, meloso y se conserva mejor.',
    defEn:'Cooking food submerged in fat at low heat: tender, silky and better preserved.',
    txoko:'Confitados a fuego bajo aparecen en croquetas, pámpano y guarniciones de la casa.',
    kw:['confitad']},
-  {fam:'crudo', es:'Tataki', en:'Tataki',
+  {fam:'crudo', ic:'🥢', es:'Tataki', en:'Tataki',
    def:'Técnica japonesa: se sella el exterior a fuego fuerte y el corazón queda crudo. Contraste entre costra caliente y centro fresco.',
    defEn:'A Japanese technique: the outside is seared hard while the core stays raw — hot crust, cool centre.',
    txoko:'Nuestro tataki de atún rojo se sella a la brasa dejando el corazón crudo, tanto en almuerzo como en cena.',
    kw:['tataki']},
-  {fam:'crudo', es:'Tartar', en:'Tartare',
+  {fam:'crudo', ic:'🔪', es:'Tartar', en:'Tartare',
    def:'Carne, pescado o verdura cruda cortada a cuchillo y aliñada, sin pasar por el calor.',
    defEn:'Raw meat, fish or vegetable knife-cut and dressed, never cooked.',
    txoko:'Toda una familia en la carta: tartar de solomillo, de atún, de wagyu dry y el vegetal de remolacha.',
    kw:['tartar']},
-  {fam:'crudo', es:'Carpaccio', en:'Carpaccio',
+  {fam:'crudo', ic:'🥩', es:'Carpaccio', en:'Carpaccio',
    def:'Láminas finísimas de carne o pescado en crudo, extendidas y aliñadas con aceite, cítrico y sal.',
    defEn:'Wafer-thin slices of raw meat or fish, spread out and dressed with oil, citrus and salt.',
    txoko:'El carpaccio con espuma de parmesano lleva esta técnica a la mesa.',
    kw:['carpaccio']},
-  {fam:'crudo', es:'Ceviche y leche de tigre', en:'Ceviche & leche de tigre',
+  {fam:'crudo', ic:'🍋', es:'Ceviche y leche de tigre', en:'Ceviche & leche de tigre',
    def:'El ácido cítrico "cuece" el pescado en frío, cambiando su textura sin fuego. La leche de tigre es su jugo aliñado.',
    defEn:'Citric acid "cooks" the fish cold, changing its texture without heat; leche de tigre is its seasoned juice.',
    txoko:'La lubina crujiente con mayonesa de leche de tigre guiña a esta técnica peruana.',
    kw:['ceviche','leche de tigre']},
-  {fam:'crudo', es:'Marinado', en:'Marinating',
+  {fam:'crudo', ic:'🫙', es:'Marinado', en:'Marinating',
    def:'Reposar el alimento en una mezcla (cítrico, soja, especias, mojo) que lo aromatiza y ablanda antes de servir o cocinar.',
    defEn:'Resting food in a mix (citrus, soy, spices, mojo) that flavours and tenderises it before serving or cooking.',
    txoko:'El pámpano al mojo rojo y el atún en soja y mirin se marinan para ganar sabor y jugosidad.',
    kw:['marinad']},
-  {fam:'conserva', es:'Curado y salazón', en:'Curing & salting',
+  {fam:'conserva', ic:'🧂', es:'Curado y salazón', en:'Curing & salting',
    def:'Deshidratar con sal y tiempo para conservar el producto e intensificar su sabor.',
    defEn:'Drawing out moisture with salt and time to preserve food and deepen its flavour.',
    txoko:'El jamón ibérico, la cecina de wagyu y los embutidos de la tabla son curados de larga tradición.',
    kw:['curad','salazón','cecina','jamón ibérico','embutido','paletilla','salchichón']},
-  {fam:'conserva', es:'Escabeche', en:'Escabeche',
+  {fam:'conserva', ic:'🍶', es:'Escabeche', en:'Escabeche',
    def:'Conservar el alimento, ya cocinado, en una mezcla de vinagre, aceite y especias que lo perfuma y lo mantiene.',
    defEn:'Preserving already-cooked food in a mix of vinegar, oil and spices that perfumes and keeps it.',
    txoko:'La panceta de cochino negro juega con un escabeche que aporta acidez y aroma.',
    kw:['escabech']},
-  {fam:'conserva', es:'Encurtido', en:'Pickling',
+  {fam:'conserva', ic:'🥒', es:'Encurtido', en:'Pickling',
    def:'Conservar vegetales en vinagre para darles acidez y un punto crujiente que refresca el plato.',
    defEn:'Preserving vegetables in vinegar for a fresh, crunchy, acidic bite.',
    txoko:'Cebollas, rabanitos y manzana encurtidos aportan contraste ácido en muchos entrantes.',
    kw:['encurtid']},
-  {fam:'salsa', es:'Emulsión: alioli y mayonesa', en:'Emulsion: aioli & mayo',
+  {fam:'salsa', ic:'🥚', es:'Emulsión: alioli y mayonesa', en:'Emulsion: aioli & mayo',
    def:'Ligar dos ingredientes que no se mezclan (aceite y agua o huevo) en una salsa estable, cremosa y brillante.',
    defEn:'Binding two things that don’t mix (oil and water or egg) into a stable, creamy sauce.',
    txoko:'Alioli cítrico, de tinta de calamar, mayonesa de wasabi o de leche de tigre: emulsiones por toda la carta.',
    kw:['alioli','ali-oli','ali oli','mayonesa','emulsión','emulsion']},
-  {fam:'salsa', es:'Glaseado y demi-glace', en:'Glazing & demi-glace',
+  {fam:'salsa', ic:'🥄', es:'Glaseado y demi-glace', en:'Glazing & demi-glace',
    def:'Reducir un fondo de carne hasta una salsa densa y brillante que napa la pieza y concentra el sabor.',
    defEn:'Reducing a meat stock into a glossy, thick sauce that coats the dish and concentrates flavour.',
    txoko:'La demi-glace y los glaseados dan brillo y profundidad a carnes y rellenos.',
    kw:['glasead','demi-glace','demi glace','demiglace']},
-  {fam:'salsa', es:'Espuma (cocina moderna)', en:'Foam (modern cuisine)',
+  {fam:'salsa', ic:'☁️', es:'Espuma (cocina moderna)', en:'Foam (modern cuisine)',
    def:'Aligerar un sabor concentrado convirtiéndolo en espuma con sifón: intensidad con textura ingrávida.',
    defEn:'Turning a concentrated flavour into a siphon foam: big taste, weightless texture.',
    txoko:'La espuma de parmesano o de queso de cabra son guiños de cocina moderna sobre bases clásicas.',
    kw:['espuma','sifón']},
-  {fam:'cultura', es:'Almadraba (pesca del atún)', en:'Almadraba (tuna fishing)',
+  {fam:'cultura', ic:'🎣', es:'Almadraba (pesca del atún)', en:'Almadraba (tuna fishing)',
    def:'Arte de pesca milenario del Estrecho: un laberinto de redes captura el atún rojo en su migración, con respeto y selección.',
    defEn:'An ancient fishing art of the Strait: a maze of nets catches bluefin tuna on migration, selectively and respectfully.',
    txoko:'El atún rojo de nuestro tataki de almuerzo llega capturado por almadraba.',
    kw:['almadraba']},
-  {fam:'cultura', es:'Ensalada de papaya verde', en:'Green papaya salad',
+  {fam:'cultura', ic:'🥗', es:'Ensalada de papaya verde', en:'Green papaya salad',
    def:'Técnica tailandesa: la papaya aún verde se raya y se aliña en crudo, aportando acidez y un crujiente fresco.',
    defEn:'A Thai technique: unripe papaya is shredded and dressed raw for a fresh, acidic crunch.',
    txoko:'Acompaña a la lubina a la brasa, abriendo la cocina de la casa al sudeste asiático.',
@@ -9263,26 +9268,34 @@ function renderTecnicas(){
   const c=document.getElementById('appContent');
   const _en = LANG==='en';
   const famName=f=>_en?f.en:f.es;
+  const nFam=TECNICA_FAMS.filter(f=>TECNICAS.some(t=>t.fam===f.k)).length;
   let html=`<div class="tec-wrap">
-    <div class="tec-intro">
-      <div class="tec-intro-t">${_en?'Cooking techniques':'Técnicas de cocina'}</div>
-      <div class="tec-intro-s">${_en?'What each technique is, the family it belongs to, and the real Txoko dishes that use it. Tap a dish to open its sheet.':'Qué es cada técnica, a qué familia pertenece y los platos reales del Txoko que la usan. Toca un plato para abrir su ficha.'}</div>
+    <div class="tec-hero">
+      <div class="tec-hero-ic">🍳</div>
+      <div>
+        <div class="tec-hero-t">${_en?'Cooking techniques':'Técnicas de cocina'}</div>
+        <div class="tec-hero-s">${_en?'What each technique is, and the real Txoko dishes that use it. Tap a dish to open its sheet.':'Qué es cada técnica y los platos reales del Txoko que la usan. Toca un plato para abrir su ficha.'}</div>
+        <div class="tec-hero-stat">${TECNICAS.length} ${_en?'techniques':'técnicas'} · ${nFam} ${_en?'families':'familias'}</div>
+      </div>
     </div>`;
   for(const fam of TECNICA_FAMS){
     const techs=TECNICAS.filter(t=>t.fam===fam.k);
     if(!techs.length) continue;
     html+=`<div class="tec-fam" style="--tec-col:${fam.col}">
-      <div class="tec-fam-h"><span class="tec-fam-dot"></span>${famName(fam)}</div>`;
+      <div class="tec-fam-h"><span class="tec-fam-dot"></span><span class="tec-fam-nm">${famName(fam)}</span><span class="tec-fam-n">${techs.length}</span></div>`;
     for(const t of techs){
       const dishes=_tecDishes(t.kw);
-      const chips=dishes.slice(0,7).map(d=>
+      const chips=dishes.slice(0,8).map(d=>
         `<button class="tec-dish" onclick="_aprenderOpenDish(${d.id})">${escapeHTML(d.name)}</button>`).join('');
-      const more=dishes.length>7?`<span class="tec-more">+${dishes.length-7}</span>`:'';
+      const more=dishes.length>8?`<span class="tec-more">+${dishes.length-8}</span>`:'';
       html+=`<div class="tec-card">
-        <div class="tec-card-h">${escapeHTML(_en?t.en:t.es)}</div>
+        <div class="tec-card-top">
+          <span class="tec-ic">${t.ic||'🍳'}</span>
+          <div class="tec-card-h">${escapeHTML(_en?t.en:t.es)}</div>
+        </div>
         <div class="tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
         <div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At Txoko':'En el Txoko'}</span> ${escapeHTML(t.txoko)}</div>
-        ${dishes.length?`<div class="tec-dishes">${chips}${more}</div>`:''}
+        ${dishes.length?`<div class="tec-dishes"><span class="tec-dishes-lbl">${_en?'Dishes':'Platos'}</span>${chips}${more}</div>`:''}
       </div>`;
     }
     html+=`</div>`;
