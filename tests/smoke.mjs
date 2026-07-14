@@ -2460,8 +2460,17 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
   assert(/tecnicas:renderAprender/.test(html), 'tecnicas no está en renderMap');
   assert(/tecnicas:renderTecnicas/.test(html), 'renderAprender no despacha a renderTecnicas');
   // los platos NO se escriben a mano: se buscan por palabra clave en las fichas
-  assert(/function _tecDishes\(kw\)/.test(html) && /kw\.some\(k=>hay\.includes\(k\)\)/.test(html),
+  assert(/function _tecDishes\(kw,kwx\)/.test(html) && /kw\.some\(k=>hay\.includes\(k\)\)/.test(html),
     'los enlaces a platos deben derivarse de DISHES en runtime, no hardcodearse');
+  // kwx: exclusión de falsos positivos (p.ej. "horno de carbón"/josper NO es
+  // "asado al horno"; "grasa infiltrada...a baja temperatura" del entrecot de
+  // wagyu describe la grasa, no una cocción a baja temperatura)
+  assert(/kwx && kwx\.some\(k=>hay\.includes\(k\)\)/.test(html),
+    'falta la exclusión kwx en _tecDishes');
+  assert(/kwx:\['horno de carbón'\]/.test(html), 'Asado al horno debe excluir "horno de carbón" (josper=brasa)');
+  assert(/kwx:\['grasa infiltrada'\]/.test(html), 'Baja temperatura debe excluir "grasa infiltrada" (entrecot wagyu)');
+  assert(/kw:\['brasa','parrilla','horno de carbón'\]/.test(html),
+    'las carnes de horno de carbón (josper) deben enlazarse en Brasa y parrilla');
   // el emparejamiento cubre nombre+ingredientes+historia+NOTAS (p.ej. gratinado
   // del parmentier o filetones al horno solo aparecen en las notas)
   assert(/const hay=\(\(d\.name\|\|''\)\+' '\+\(d\.ingredients\|\|''\)\+' '\+\(d\.history\|\|''\)\+' '\+\(d\.notes\|\|''\)\)/.test(html),

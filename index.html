@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.245">
+<meta name="app-version" content="7.246">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.245';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.246';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9155,8 +9155,8 @@ const TECNICAS = [
   {fam:'seco', ic:'🔥', es:'Brasa y parrilla', en:'Grill & barbecue',
    def:'Cocción directa sobre las brasas: fuego vivo, costra dorada y aroma ahumado. Sella el exterior y respeta el jugo interior.',
    defEn:'Cooking straight over embers: live fire, a seared crust and smoky aroma; it seals the outside and keeps the juices in.',
-   txoko:'Es la firma de la casa: pulpo, lubina, alcachofas, espárragos, mejillones y las grandes carnes pasan por la brasa.',
-   kw:['brasa','parrilla']},
+   txoko:'Es la firma de la casa: pulpo, lubina, alcachofas, espárragos, mejillones y las grandes carnes pasan por el horno de carbón (josper).',
+   kw:['brasa','parrilla','horno de carbón']},
   {fam:'seco', ic:'🫑', es:'Escalivada', en:'Escalivada (ember-roasting)',
    def:'Técnica catalana (escalivar = asar en las ascuas): se asan verduras enteras —pimiento, berenjena, cebolla— sobre las brasas hasta que la piel se quema; luego se pelan y la pulpa queda melosa y ahumada.',
    defEn:'A Catalan technique (escalivar = to roast in embers): whole vegetables — pepper, aubergine, onion — are roasted on the coals until the skin chars, then peeled for a smoky, silky flesh.',
@@ -9220,8 +9220,9 @@ const TECNICAS = [
   {fam:'lenta', ic:'🌡️', es:'Cocción a baja temperatura', en:'Low-temperature cooking',
    def:'Cocinar largo rato a una temperatura controlada y baja (sous-vide): la pieza queda jugosa y en su punto de lado a lado.',
    defEn:'Cooking a long time at a low, controlled temperature (sous-vide) for even, juicy results.',
-   txoko:'El pollo con huevo a baja temperatura o el entrecot de wagyu buscan esa jugosidad uniforme.',
-   kw:['baja temperatura']},
+   txoko:'El pollo con huevo a baja temperatura, la carrillera de wagyu y las costillas de cordero se cocinan así, buscando esa jugosidad uniforme.',
+   kw:['baja temperatura'],
+   kwx:['grasa infiltrada']},
   {fam:'lenta', ic:'🍲', es:'Braseado y melosos', en:'Braising',
    def:'Cocción larga y suave en un líquido aromático hasta que la carne se deshace y la salsa se concentra.',
    defEn:'Long, gentle cooking in an aromatic liquid until the meat falls apart and the sauce concentrates.',
@@ -9359,7 +9360,8 @@ const TECNICAS = [
   {fam:'seco', ic:'♨', es:'Asado al horno', en:'Roasting',
    def:'Cocinar en el horno con calor seco envolvente, dorando el exterior y cociendo el interior de manera uniforme.',
    defEn:'Cooking in the oven with dry, surrounding heat, browning the outside and cooking the inside evenly.',
-   kw:['al horno','asados']},
+   kw:['al horno','asados'],
+   kwx:['horno de carbón']},
   {fam:'seco', ic:'🧀', es:'Gratinar', en:'Gratin',
    def:'Dorar la superficie de un plato con calor fuerte por arriba (salamandra o grill), a menudo con queso, para lograr una costra dorada.',
    defEn:'Browning the top of a dish with strong overhead heat (salamander or grill), often with cheese, for a golden crust.',
@@ -9415,10 +9417,15 @@ const TECNICAS = [
    ]}
 ];
 // Platos reales que usan una técnica: match por palabra clave en la ficha.
-function _tecDishes(kw){
+function _tecDishes(kw,kwx){
   const out=[];
   for(const d of DISHES){
     const hay=((d.name||'')+' '+(d.ingredients||'')+' '+(d.history||'')+' '+(d.notes||'')).toLowerCase();
+    // kwx (exclusión): evita falsos positivos donde la palabra clave aparece
+    // pero describiendo OTRA cosa — p.ej. "horno de carbón" (josper/brasa)
+    // contiene "al horno" pero no es un horno convencional; o "grasa
+    // infiltrada se funde a baja temperatura" describe la grasa, no la cocción.
+    if(kwx && kwx.some(k=>hay.includes(k))) continue;
     if(kw.some(k=>hay.includes(k))) out.push({id:d.id,name:d.name});
   }
   // dedup por nombre (variantes almuerzo/cena comparten técnica) y cap visual
@@ -9446,7 +9453,7 @@ function renderTecnicas(){
     html+=`<div class="tec-fam" style="--tec-col:${fam.col}">
       <div class="tec-fam-h"><span class="tec-fam-dot"></span><span class="tec-fam-nm">${famName(fam)}</span><span class="tec-fam-n">${techs.length}</span></div>`;
     for(const t of techs){
-      const dishes=_tecDishes(t.kw);
+      const dishes=_tecDishes(t.kw,t.kwx);
       const chips=dishes.slice(0,8).map(d=>
         `<button class="tec-dish" onclick="_aprenderOpenDish(${d.id})">${escapeHTML(d.name)}</button>`).join('');
       const more=dishes.length>8?`<span class="tec-more">+${dishes.length-8}</span>`:'';
