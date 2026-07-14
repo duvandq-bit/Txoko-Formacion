@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.244">
+<meta name="app-version" content="7.245">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.244';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.245';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9191,7 +9191,15 @@ const TECNICAS = [
    def:'Envolver el producto en una capa (harina, huevo, panko) y freírlo en aceite caliente para lograr una costra crujiente.',
    defEn:'Coating food (flour, egg, panko) and frying it in hot oil for a crunchy crust.',
    txoko:'De las croquetas al fish and chips, la coliflor o la milanesa: el rebozado crujiente está por toda la carta.',
-   kw:['rebozad','panko','frito','frita','fritas','fritos']},
+   kw:['rebozad','panko','frito','frita','fritas','fritos'],
+   masT:{es:'Tipos de rebozado',en:'Types of coating'},
+   mas:[
+     {t:'A la romana', d:'Pasado por harina y huevo batido: capa fina y dorada.'},
+     {t:'Empanado (milanesa)', d:'Harina, huevo y pan rallado o panko: costra crujiente y más gruesa.'},
+     {t:'Tempura', d:'Rebozado japonés muy ligero y aireado con agua muy fría; fritura breve.'},
+     {t:'Orly', d:'Masa con harina, líquido (cerveza o leche) y clara montada: envoltura esponjosa.'},
+     {t:'Tempura de cerveza', d:'Harina y cerveza fría (a veces trisol) para una fritura crujiente estilo fish and chips.'}
+   ]},
   {fam:'humeda', ic:'♨️', es:'Al vapor', en:'Steaming',
    def:'Cocinar con el vapor del agua sin sumergir el alimento: respeta color, textura y nutrientes.',
    defEn:'Cooking in water steam without submerging the food: it keeps colour, texture and nutrients.',
@@ -9273,7 +9281,13 @@ const TECNICAS = [
    def:'Ligar dos ingredientes que no se mezclan (aceite y agua o huevo) en una salsa estable, cremosa y brillante.',
    defEn:'Binding two things that don’t mix (oil and water or egg) into a stable, creamy sauce.',
    txoko:'Alioli cítrico, de tinta de calamar, mayonesa de wasabi o de leche de tigre: emulsiones por toda la carta.',
-   kw:['alioli','ali-oli','ali oli','mayonesa','emulsión','emulsion']},
+   kw:['alioli','ali-oli','ali oli','mayonesa','emulsión','emulsion'],
+   masT:{es:'Tipos de emulsión',en:'Types of emulsion'},
+   mas:[
+     {t:'Fría y estable', d:'Mayonesa, alioli: la yema (o una proteína) liga el aceite añadido a hilo; aguanta montada.'},
+     {t:'Caliente', d:'Holandesa, bearnesa: yema y mantequilla templadas. Delicada — se corta con exceso de calor.'},
+     {t:'Inestable (vinagreta)', d:'Aceite y vinagre batidos: se separan al reposar, hay que emulsionar al momento.'}
+   ]},
   {fam:'salsa', ic:'🥄', es:'Glaseado y demi-glace', en:'Glazing & demi-glace',
    def:'Reducir un fondo de carne hasta una salsa densa y brillante que napa la pieza y concentra el sabor.',
    defEn:'Reducing a meat stock into a glossy, thick sauce that coats the dish and concentrates flavour.',
@@ -9388,7 +9402,17 @@ const TECNICAS = [
    def:'Extraer el sabor de huesos, espinas o mariscos cociéndolos largo rato con verduras: la base líquida (fumet de pescado, caldo de carne, bisque de marisco) de salsas, arroces y guisos.',
    defEn:'Drawing flavour from bones, fish trimmings or shellfish by simmering them with vegetables: the liquid base (fish fumet, meat stock, shellfish bisque) of sauces, rice and stews.',
    txoko:'El fumet de pescado, la bisque de langostino del arroz negro y los caldos concentrados dan cuerpo a muchos platos.',
-   kw:['fumet','bisque','caldo','veal jus']}
+   kw:['fumet','bisque','caldo','veal jus'],
+   masT:{es:'Tipos de fondo',en:'Types of stock'},
+   mas:[
+     {t:'Fondo blanco', d:'Huesos y carnes (ave, ternera) o verduras cocidos SIN tostar, con hortalizas aromáticas. Queda claro, delicado y perfumado: base de cremas, veloutés, arroces y salsas suaves.'},
+     {t:'Fondo oscuro', d:'Huesos y recortes de vacuno TOSTADOS al horno antes de cocer, con verduras, tomate y vino tinto. Cocción muy larga (hasta 8 h): color, cuerpo y sabor intensos, base de las salsas de carne.'},
+     {t:'Fumet', d:'Fondo de pescado corto (~20 min): espinas, cabezas y recortes de pescado o marisco con verduras y a veces vino blanco. Se cuece poco para que no amargue.'},
+     {t:'Court-bouillon (caldo corto)', d:'Caldo rápido y aromático —agua, vino o vinagre, verduras y especias— para escalfar o cocer pescados, mariscos y verduras. Aporta un punto ácido y fresco.'},
+     {t:'Bisque', d:'Fondo-crema de marisco a partir de cabezas y caparazones de crustáceo (langostino, bogavante) salteados y flambeados. Muy intenso y yodado.'},
+     {t:'Glasa (glace)', d:'Un fondo (blanco u oscuro) reducido al máximo hasta quedar gelatinoso y muy concentrado. Se usa a gotas para reforzar salsas.'},
+     {t:'Consomé', d:'Un caldo clarificado (con claras y carne magra) hasta quedar totalmente transparente y de sabor limpio y elegante.'}
+   ]}
 ];
 // Platos reales que usan una técnica: match por palabra clave en la ficha.
 function _tecDishes(kw){
@@ -9434,6 +9458,7 @@ function renderTecnicas(){
         <div class="tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
         ${t.txoko?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At Txoko':'En el Txoko'}</span> ${escapeHTML(t.txoko)}</div>`:''}
         ${dishes.length?`<div class="tec-dishes"><span class="tec-dishes-lbl">${_en?'Dishes':'Platos'}</span>${chips}${more}</div>`:''}
+        ${t.mas&&t.mas.length?`<details class="tec-mas"><summary>${(t.masT?(_en?(t.masT.en||t.masT.es):t.masT.es):(_en?'Types · learn more':'Tipos · saber más'))} <span class="tec-mas-n">${t.mas.length}</span></summary><div class="tec-mas-body">${t.mas.map(m=>`<div class="tec-mas-row"><b>${escapeHTML(m.t)}</b><span>${escapeHTML(m.d)}</span></div>`).join('')}</div></details>`:''}
       </div>`;
     }
     html+=`</div>`;
