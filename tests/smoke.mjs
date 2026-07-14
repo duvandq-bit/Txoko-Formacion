@@ -1008,7 +1008,7 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     + 'var TX_VOICE_MSGS={}; var TX_VOICE_MSGS_REV={};';
   const M = new Function(stub + dishesSrc + svcSrc + helpers + wmRev + examStop // eslint-disable-line no-new-func
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txDishBanned') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('_txDishBanned') + fn('txBuildQuestion')
     + 'return {DISHES, DISH_SERVICE, txBuildQuestion, txGetAnswer, txTruncate, txNorm, setShift:(s)=>{_studyShift=s;}};')();
   const svc = M.DISH_SERVICE;
   // Mapea una opción a los platos que la producen. Las opciones invertidas son
@@ -1019,16 +1019,34 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     for (const d of M.DISHES) { const raw = M.txGetAnswer(d, 'allergens'); if (raw && M.txNorm(raw) === on && !res.includes(d)) res.push(d); } // alérgenos
     return res;
   };
+  // Gemelo de nombre (fix legibilidad/ambigüedad jul 2026 — tomates con/sin
+  // ventresca): el corto es prefijo POR PALABRAS del largo tras quitar acentos
+  // y «(Cena)/(Almuerzo)». Detector independiente para no auto-validar el del
+  // código con su propio bug.
+  const twinCheck = (a, b) => {
+    const w = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\([^)]*\)/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim().split(/\s+/).filter(Boolean);
+    const wa = w(a), wb = w(b); if (!wa.length || !wb.length) return false;
+    const [s, l] = wa.length <= wb.length ? [wa, wb] : [wb, wa];
+    for (let i = 0; i < s.length; i++) if (s[i] !== l[i]) return false;
+    return true;
+  };
   for (const shift of ['a', 'c']) {
     M.setShift(shift);
-    let n = 0, leak = 0, trunc = 0, tooLong = 0;
+    let n = 0, leak = 0, trunc = 0, tooLong = 0, twinPairs = 0;
     for (let i = 0; i < 1500; i++) {
       const q = M.txBuildQuestion(); if (!q) continue; n++;
+      const rev = (q.topicKey === 'ingredients' || q.topicKey === 'history');
+      if (rev) {
+        const ch = q.choices || [];
+        for (let a = 0; a < ch.length; a++) for (let b = a + 1; b < ch.length; b++)
+          if (twinCheck(ch[a], ch[b])) twinPairs++;
+      }
       for (const o of (q.choices || [])) {
         // Guard de legibilidad (fix jul 2026): ninguna opción puede quedar
         // truncada con «...» ni, en preguntas invertidas, exceder 60 car.
         if (/(\.\.\.|…)\s*$/.test(o)) trunc++;
-        if ((q.topicKey === 'ingredients' || q.topicKey === 'history') && o.length > 60) tooLong++;
+        if (rev && o.length > 60) tooLong++;
         const cand = optDishes(o); if (!cand.length) continue;
         if (cand.every(d => { const s = svc[d.id]; return s !== 'ambos' && s !== shift; })) leak++;
       }
@@ -1037,6 +1055,11 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     assert(leak === 0, `txBuildQuestion leaked ${leak} wrong-shift distractor options in shift ${shift}`);
     assert(trunc === 0, `txBuildQuestion produced ${trunc} truncated «...» options in shift ${shift} — options must stay short & fully legible`);
     assert(tooLong === 0, `txBuildQuestion produced ${tooLong} over-long (>60 char) inverted options in shift ${shift}`);
+    // Ningún par de opciones invertidas puede ser gemelo de nombre (variante
+    // veg / turno / prefijo): «Tomates aliñados» ⟷ «… con granizado de gazpacho»
+    // se leen mal y el pasaje de uno describe al otro. Medido antes: 0.91% de
+    // las invertidas; después: 0.
+    assert(twinPairs === 0, `txBuildQuestion produced ${twinPairs} name-twin inverted option pairs in shift ${shift} — variant/veg twins must never co-occur as options`);
   }
 });
 
@@ -1078,7 +1101,7 @@ test('Mr. Shoesmith habla en 1ª persona y las carnes de autor van por storytell
     + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
     + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txDishBanned') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('_txDishBanned') + fn('txBuildQuestion')
     + 'return {DISHES, SHOESMITH_MSGS, SHOESMITH_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
     + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
   // Todo enunciado del pool de Shoesmith, en ambos idiomas, debe estar en SU voz:
@@ -1189,7 +1212,7 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
     + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
     + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txDishBanned') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('_txDishBanned') + fn('txBuildQuestion')
     + 'return {DISHES, CRITIC_MSGS, CRITIC_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
     + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
   const NOT_HER_VOICE = /\b(mesa|table)\s*\d+|hu[eé]sped|guest|compa[ñn]ero|colleague|cocina|kitchen|mi mujer|my wife|Mr\.?\s*Shoesmith|VIP/i;
@@ -4184,8 +4207,12 @@ test('exam reversed questions: identical passages / duplicate names cannot yield
   // dinner twins share ingredient lists; Ensalada verde exists twice. A
   // distractor with the same answer text or display name as the correct dish
   // made two options right in "which dish is this?" questions.
+  // Ampliado jul 2026 (reporte del propietario, tomates con/sin ventresca): la
+  // guarda de nombre pasó de igualdad exacta (_seenNames) a gemelo de nombre
+  // (_acceptedNames + _txNameTwin) para excluir también variantes veg / turnos /
+  // prefijos indistinguibles como opciones.
   const ex = html.slice(html.indexOf('function startExam'), html.indexOf('function renderExamQuestion'));
-  assert(/_correctAns/.test(ex) && /_seenNames/.test(ex) && /_twNorm\(a\.replace/.test(ex),
+  assert(/_correctAns/.test(ex) && /_acceptedNames/.test(ex) && /_txNameTwin\(/.test(ex) && /_twNorm\(a\.replace/.test(ex),
     'startExam reversed twin/duplicate guard missing');
 });
 

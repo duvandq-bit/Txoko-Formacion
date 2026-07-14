@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.233">
+<meta name="app-version" content="7.234">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.233';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.234';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16674,6 +16674,33 @@ function _examRedact(text, candidates){
   }).join('');
 }
 
+// ── Gemelos de NOMBRE (fix legibilidad/ambigüedad jul 2026) ─────────────────
+// Reporte del propietario: en las preguntas invertidas (pasaje mostrado, las 4
+// opciones son NOMBRES de plato) se cuelan pares de nombres casi idénticos que
+// «no se leen bien» y, peor, delatan/confunden la respuesta — el caso de los
+// tomates con y sin ventresca (versión vegetariana). Dos platos son «gemelos de
+// nombre» si, tras quitar acentos y el paréntesis de turno «(Cena)/(Almuerzo)»,
+// el nombre más corto es prefijo POR PALABRAS del más largo (o son iguales).
+// Captura exactamente los pares problemáticos y solo esos (medido: 6 pares, 0
+// falsos positivos): «Tomates aliñados» ⟷ «Tomates aliñados con granizado de
+// gazpacho», «Ensalada Niçoise» ⟷ «… vegetariana», «Tataki (Almuerzo)» ⟷
+// «(Cena)», «Fish and chips (Almuerzo)» ⟷ «(Cena)», «Tartar de remolacha» ⟷
+// «Tartar de remolacha, aguacate y manzana ácida», «Tartar de tomate y queso» ⟷
+// «… stracciatella». NO marca platos solo TEMÁTICAMENTE parecidos («Tartar de
+// remolacha» ⟷ «Tartar de tomate y queso», «Tabla de embutidos» ⟷ «Tabla de
+// quesos») — esos siguen siendo buenos distractores.
+function _txNameWords(name){
+  return String(name||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\([^)]*\)/g,' ').replace(/[^a-z0-9]+/g,' ').trim().split(/\s+/).filter(Boolean);
+}
+function _txNameTwin(a,b){
+  const wa=_txNameWords(a), wb=_txNameWords(b);
+  if(!wa.length||!wb.length) return false;
+  const s = wa.length<=wb.length?wa:wb, l = wa.length<=wb.length?wb:wa;
+  for(let i=0;i<s.length;i++){ if(s[i]!==l[i]) return false; }
+  return true; // el corto es prefijo por palabras del largo (o iguales)
+}
+
 function startExam(){
   let pool=_shiftDishes(examConfig.cat==='all'?[...DISHES]:DISHES.filter(d=>d.cat===examConfig.cat));
   pool = pool.filter(d => _isQuizableDish(d));
@@ -16717,14 +16744,17 @@ function startExam(){
       // text or the same name as the correct dish makes TWO options right.
       const _twNorm = s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
       const _correctAns = _twNorm(correct);
-      const _seenNames = new Set([_twNorm(getDish(d).name)]);
+      // Gemelos de nombre (fix jul 2026): además del duplicado exacto, rechaza
+      // opciones prefijo/variante del plato correcto o de otra ya aceptada
+      // (tomates con/sin ventresca, Niçoise/Niçoise vegetariana, turnos…).
+      const _acceptedNames=[getDish(d).name];
       const namePool=_lqaShuffle(_pickDistractorPool(d)).filter(o=>{
         const a=(topic.a(o)||'').trim();
         if(!a || a==='—' || a===noHist) return false;
         if(_twNorm(a.replace(/\.+$/,'')) === _correctAns) return false;
-        const nm = _twNorm(getDish(o).name);
-        if(_seenNames.has(nm)) return false;
-        _seenNames.add(nm);
+        const onm = getDish(o).name;
+        if(_acceptedNames.some(n=>_txNameTwin(n,onm))) return false;
+        _acceptedNames.push(onm);
         return true;
       }).slice(0,3);
       if(namePool.length<3) continue;
@@ -23064,8 +23094,11 @@ function txBuildQuestion(voice){
     const dd0 = getDish(chosenDish);
     // Twin guard: rechaza distractores con el MISMO pasaje (embutidos/jamón/
     // cecina comparten historia; gemelos almuerzo/cena comparten ingredientes)
-    // o el MISMO nombre visible → evita doble-correcta.
-    const _seenNames = new Set([_twNorm(dd0.name)]);
+    // o el MISMO nombre visible → evita doble-correcta. Ampliado (jul 2026,
+    // reporte del propietario sobre los tomates con/sin ventresca): también
+    // rechaza GEMELOS de nombre (prefijo/variante veg/turno), opciones que «no
+    // se leen bien» y donde el pasaje de uno describe al otro.
+    const _acceptedNames=[dd0.name];
     // Distractores por turno (a/c) con fallback seguro al pool completo (≥3).
     const _wpBase=DISHES.filter(x=>x.id!==chosenDish.id&&!_txDishBanned(x));
     const _wpShift=_shiftDishes(_wpBase);
@@ -23073,9 +23106,9 @@ function txBuildQuestion(voice){
       const a=txGetAnswer(o, chosenTopicKey);
       if(!a) return false;
       if(_twNorm(a)===_passNorm) return false;
-      const nm=_twNorm(getDish(o).name);
-      if(_seenNames.has(nm)) return false;
-      _seenNames.add(nm);
+      const onm=getDish(o).name;
+      if(_acceptedNames.some(n=>_txNameTwin(n,onm))) return false;
+      _acceptedNames.push(onm);
       return true;
     }).slice(0,3);
     if(namePool.length<3) return null;
