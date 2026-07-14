@@ -4659,6 +4659,11 @@ test('la recuperación está cableada también en el login por contraseña', () 
   // usuario existente → aviso único por dispositivo
   assert(/recEmailAsked:/.test(html) && /promptRecoveryEmail\(userName,\s*hashedPin\)/.test(html),
     'un usuario existente debe recibir el aviso de correo una sola vez por dispositivo');
+  // ...pero NO si la cuenta ya tiene correo en el servidor (evita re-preguntar
+  // al entrar desde otro dispositivo, donde la bandera local no existe)
+  assert(/const st=await supaEmailStatus\(userName, hashedPin\)[\s\S]{0,120}hasEmail=!!st\.data\.hasEmail/.test(html) &&
+         /if\(!hasEmail\)\{ setTimeout\(\(\)=>\{ try\{ promptRecoveryEmail\(userName, hashedPin\)/.test(html),
+    'el aviso de correo debe comprobar el servidor (email-status) antes de pedirlo');
 });
 
 // ─── Endurecimiento de seguridad ────────────────────────────────
