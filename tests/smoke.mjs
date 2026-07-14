@@ -2800,10 +2800,13 @@ test('Camarero Survivors: armas nuevas — tenedor asta + pimentero pesado (jul 
   // estado
   assert(/fork:0, forkT:0/.test(body) && /pepper:0, pepperT:0/.test(body), 'falta el estado de las armas nuevas');
   assert(/pClouds:\[\]/.test(body), 'falta el array de nubes de pimienta');
+  assert(/pepShots:\[\]/.test(body), 'falta el array de molinillos en vuelo');
   // TENEDOR: estocada al más cercano que atraviesa la línea y empuja
   assert(/WEAPON — TENEDOR/.test(body) && /G\.forkFx=1/.test(body), 'falta la lógica del tenedor (estocada)');
-  // PIMENTERO: golpe pesado en área + nube que pica por segundo (DoT)
-  assert(/WEAPON — PIMENTERO/.test(body) && /G\.pClouds\.push/.test(body), 'falta la lógica del pimentero');
+  // PIMENTERO: el molinillo SALE VOLANDO y explota al impactar (área + nube DoT)
+  assert(/WEAPON — PIMENTERO/.test(body) && /G\.pepShots\.push/.test(body), 'el molinillo no sale volando');
+  assert(/G\.pClouds\.push\(\{x:m\.x,y:m\.y/.test(body) && /G\.explosions\.push\(\{x:m\.x,y:m\.y/.test(body),
+    'el molinillo no explota en el punto de impacto');
   assert(/for\(const e of G\.enemies\)\{ if\(Math\.hypot\(e\.x-c\.x,e\.y-c\.y\)<c\.r\) hurtEnemy/.test(body),
     'la nube de pimienta no hace daño por segundo');
   // pimentero MARRÓN (no salero blanco): icono SVG marrón de respaldo, nunca 🧂

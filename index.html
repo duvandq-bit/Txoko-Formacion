@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.231">
+<meta name="app-version" content="7.232">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.231';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.232';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -24269,7 +24269,7 @@ function launchElTurno(){
         evoPierce:0, evoKnives:0, evoCava:0, evoFork:0, evoPepper:0,
         combo:0, comboT:0, bestCombo:0, hitStop:0,
         dashT:0, dashCd:0, dashVX:0, dashVY:0, trail:[], rings:[],
-        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[], eshots:[], zones:[], mgrBottles:[], pClouds:[],
+        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[], eshots:[], zones:[], mgrBottles:[], pClouds:[], pepShots:[],
         spawnT:0, spawnInt:52, roster:_pool.slice(0,5), _pool:_pool,
         nextElite:55, nextSurge:75, bosses:0, chefsKilled:0,
         target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0,
@@ -24733,16 +24733,30 @@ function launchElTurno(){
             if(proj>0 && proj<reach+e.r && perp<halfW+e.r){ hurtEnemy(e,D); e.x+=ca*(9+G.fork*2); e.y+=sa*(9+G.fork*2); } }
           sfx('hit'); } } }
     if(G.forkFx>0){ G.forkFx=Math.max(0,G.forkFx-dt*0.11); }
-    // WEAPON — PIMENTERO (pesado): golpe LENTO en área con empujón fuerte + deja
-    // una nube de pimienta que pica (daño por segundo) a quien la pise.
+    // WEAPON — PIMENTERO (pesado): el molinillo SALE VOLANDO girando hacia el
+    // enemigo más cercano y EXPLOTA al impactar → daño en área con empujón fuerte
+    // + deja una nube de pimienta que pica (daño por segundo) a quien la pise.
     if(G.pepper>0){ G.pepperT-=dt;
       if(G.pepperT<=0){ G.pepperT=Math.max(115,210-G.pepper*14);
+        let best=null,bd=1e9; for(const e of G.enemies){ const d=Math.hypot(e.x-G.px,e.y-G.py); if(d<bd){bd=d;best=e;} }
+        const ang=best?Math.atan2(best.y-G.py,best.x-G.px):(G.face<0?Math.PI:0), sp=5.4;
+        G.pepShots.push({x:G.px,y:G.py-18,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,rot:0,life:70,
+          tx:best?best.x:G.px+Math.cos(ang)*200,ty:best?best.y:G.py+Math.sin(ang)*200});
+        G.pepperFx=1; sfx('hit'); vibe(12); } }
+    if(G.pepperFx>0){ G.pepperFx=Math.max(0,G.pepperFx-dt*0.12); }
+    // molinillos en vuelo: giran y estallan al llegar al objetivo, tocar a un
+    // enemigo, salir de pista o agotar su vuelo → explosión + nube de pimienta.
+    for(let i=G.pepShots.length-1;i>=0;i--){ const m=G.pepShots[i];
+      m.x+=m.vx*dt; m.y+=m.vy*dt; m.rot+=dt*0.42; m.life-=dt;
+      const near=Math.hypot(m.x-m.tx,m.y-m.ty)<24;
+      const touch=G.enemies.some(e=>Math.hypot(e.x-m.x,e.y-m.y)<e.r+10);
+      if(m.life<=0||near||touch||m.x<-20||m.x>W+20||m.y<-20||m.y>H+20){
         const R=(66+G.pepper*12)*(G.evoPepper?1.35:1), D=26+G.pepper*12;
-        for(const e of G.enemies){ const dx=e.x-G.px, dy=e.y-G.py, d=Math.hypot(dx,dy)||1;
+        for(const e of G.enemies){ const dx=e.x-m.x, dy=e.y-m.y, d=Math.hypot(dx,dy)||1;
           if(d<R+e.r){ hurtEnemy(e,D); const k=(1-Math.min(1,d/R))*(20+G.pepper*4); e.x+=dx/d*k; e.y+=dy/d*k; } }
-        G.pClouds.push({x:G.px,y:G.py,r:R,life:1,tk:0});
-        G.explosions.push({x:G.px,y:G.py,r:14,max:R,life:1,big:true}); G.shake=Math.max(G.shake,8); G.pepperFx=1; sfx('hit'); vibe(30); } }
-    if(G.pepperFx>0){ G.pepperFx=Math.max(0,G.pepperFx-dt*0.055); }
+        G.pClouds.push({x:m.x,y:m.y,r:R,life:1,tk:0});
+        G.explosions.push({x:m.x,y:m.y,r:14,max:R,life:1,big:true}); G.shake=Math.max(G.shake,8); sfx('hit'); vibe(30);
+        G.pepShots.splice(i,1); } }
     // nubes de pimienta: pican por segundo mientras duran (~2,5s)
     for(let i=G.pClouds.length-1;i>=0;i--){ const c=G.pClouds[i]; c.life-=dt*0.013; c.tk-=dt;
       if(c.tk<=0){ c.tk=16; const dot=(4+G.pepper*2)*(G.evoPepper?2:1);
@@ -25235,14 +25249,17 @@ function launchElTurno(){
         ctx.lineCap='butt';
       }
       ctx.restore(); ctx.globalAlpha=1; }
-    // MOLINILLO de pimienta: se ve al dar el golpe pesado — cae desde arriba
-    // (pepperFx 1→0) y golpea junto al héroe. Fallback: nada (la nube ya lee).
-    if(G.pepper>0 && G.pepperFx>0 && PEPPER_IMG && PEPPER_IMG._ok){ const f=G.pepperFx;
-      const hh=54+G.pepper*3, ww=hh*(PEPPER_IMG.width/PEPPER_IMG.height);
-      const lift=f*f*46;                       // arriba al empezar, baja al clavar
-      ctx.save(); ctx.globalAlpha=Math.min(1,0.35+f);
-      ctx.drawImage(PEPPER_IMG,G.px-ww/2,G.py-hh-8-lift,ww,hh);
-      ctx.restore(); ctx.globalAlpha=1; }
+    // MOLINILLO de pimienta VOLANDO: sale girando del héroe hacia el enemigo y
+    // estalla al impactar. Respaldo: disco marrón si el sprite no cargó.
+    for(const m of G.pepShots){ const hh=48+G.pepper*3, ww=hh*(PEPPER_IMG&&PEPPER_IMG._ok?PEPPER_IMG.width/PEPPER_IMG.height:0.32);
+      ctx.save(); ctx.translate(m.x,m.y); ctx.rotate(m.rot);
+      if(PEPPER_IMG && PEPPER_IMG._ok){ ctx.drawImage(PEPPER_IMG,-ww/2,-hh/2,ww,hh); }
+      else { ctx.fillStyle='#7a4a1e'; ctx.strokeStyle='#3a2410'; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.roundRect(-ww/2,-hh/2,ww,hh,5); ctx.fill(); ctx.stroke(); }
+      ctx.restore(); }
+    // fogonazo breve sobre el héroe al lanzar (pepperFx 1→0)
+    if(G.pepperFx>0){ ctx.save(); ctx.globalAlpha=G.pepperFx*0.5; ctx.fillStyle='#cdb08a';
+      ctx.beginPath(); ctx.arc(G.px,G.py-16,10+8*(1-G.pepperFx),0,6.29); ctx.fill(); ctx.restore(); ctx.globalAlpha=1; }
     // damage numbers
     ctx.font='bold 13px Georgia'; ctx.textAlign='center'; ctx.lineWidth=3;
     for(const n of G.dmgs){ ctx.globalAlpha=Math.max(0,n.life); ctx.strokeStyle='#241a12'; ctx.strokeText(n.val,n.x,n.y); ctx.fillStyle=n.col||'#fff'; ctx.fillText(n.val,n.x,n.y); }
