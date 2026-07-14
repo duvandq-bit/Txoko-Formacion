@@ -3723,6 +3723,26 @@ test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros 
     'the _etMergeMap helper must do per-key max');
 });
 
+test('supervisor: "Conectados Hoy" usa lastActiveAt (además de lastLoginTs) y el login siempre sincroniza', () => {
+  // Bug real (verificado con datos reales en Supabase): Alexis y Sol tenían
+  // last_active_at DE HOY (el PATCH ligero de supaUpdateLastActive, que
+  // SIEMPRE se manda al entrar, había funcionado) pero last_login de días
+  // atrás (el PATCH pesado de supaUpsertEmployee — topic_scores, known_dishes,
+  // sessions… — puede fallar en silencio con el WiFi de sala). El panel de
+  // supervisor solo miraba last_login → las mostraba como "sin conectarse
+  // hoy" pese a haber usado la app. Faride (0 XP) ni siquiera tenía
+  // last_login: el login lo saltaba del todo para empleados sin XP.
+  assert(/lastActiveAt: r\.last_active_at \|\| null/.test(html),
+    'supaFetchAllEmployees debe mapear last_active_at (antes se descartaba)');
+  const sup = html.slice(html.indexOf('function renderSupervisor('), html.indexOf('function renderSupervisor(') + 30000);
+  assert(/const _supSeen = n => \{ const a=allEmps\[n\]\.lastLoginTs, b=allEmps\[n\]\.lastActiveAt;/.test(sup),
+    'falta el helper _supSeen (la marca más reciente de login/actividad)');
+  assert(/connectedToday = empNames\.filter\(n => \{\s*const lt = _supSeen\(n\);/.test(sup),
+    '"Conectados Hoy" debe filtrar con _supSeen, no solo lastLoginTs');
+  assert(!/if\(emp\.xp && emp\.xp > 0\) supaUpsertEmployee\(currentUser\);/.test(html),
+    'el login ya no debe saltarse la sincronización para empleados con 0 XP');
+});
+
 test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
   // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
   // aparecer como uno de los restaurantes a escoger, pero el nombre de la

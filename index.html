@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.246">
+<meta name="app-version" content="7.247">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.246';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.247';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2146,7 +2146,13 @@ async function supaFetchAllEmployees() {
       sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ dbgw('[fetchAll] bad sessions_data for', r.name, e.message); return Array(r.sessions_count||0).fill({}); } })(),
       txokoRecord: r.txoko_record || 0,
       duelWins: r.duel_wins || 0,
-      lastLoginTs: r.last_login || null
+      lastLoginTs: r.last_login || null,
+      // last_active_at se escribe SIEMPRE al entrar (PATCH ligero, sin el gate
+      // de XP ni el payload pesado de supaUpsertEmployee) → es la señal más
+      // fiable de "hoy ha usado la app". last_login puede quedarse atrás si el
+      // upsert pesado falla con mal WiFi de sala. El panel de "Conectados Hoy"
+      // usa la más reciente de las dos (ver renderSupervisor).
+      lastActiveAt: r.last_active_at || null
     }));
   } catch(e) { return null; }
 }
@@ -8356,8 +8362,13 @@ function closePinAndEnter(){
       showTab('dashboard');
       checkStreak();
     }
-    // Always sync to Supabase so server-side push knows user connected
-    if(emp.xp && emp.xp > 0) supaUpsertEmployee(currentUser);
+    // Always sync to Supabase so server-side push knows user connected.
+    // Antes esto se saltaba para empleados con 0 XP (recién dados de alta) —
+    // su last_login nunca llegaba a la nube y el panel de supervisor los
+    // mostraba como "nunca conectados" pese a usar la app a diario. La propia
+    // supaUpsertEmployee ya protege el caso de riesgo (nube ilegible + local
+    // vacío) con su guarda interna _localEmpty — este gate extra era redundante.
+    supaUpsertEmployee(currentUser);
     requestNotifPermission();
     checkAndShowNotifications(currentUser);
     checkDuelBanner(currentUser);
@@ -9463,7 +9474,7 @@ function renderTecnicas(){
           <div class="tec-card-h">${escapeHTML(_en?t.en:t.es)}</div>
         </div>
         <div class="tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
-        ${t.txoko?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At Txoko':'En el Txoko'}</span> ${escapeHTML(t.txoko)}</div>`:''}
+        ${t.txoko?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At Txoko':'En Txoko'}</span> ${escapeHTML(t.txoko)}</div>`:''}
         ${dishes.length?`<div class="tec-dishes"><span class="tec-dishes-lbl">${_en?'Dishes':'Platos'}</span>${chips}${more}</div>`:''}
         ${t.mas&&t.mas.length?`<details class="tec-mas"><summary>${(t.masT?(_en?(t.masT.en||t.masT.es):t.masT.es):(_en?'Types · learn more':'Tipos · saber más'))} <span class="tec-mas-n">${t.mas.length}</span></summary><div class="tec-mas-body">${t.mas.map(m=>`<div class="tec-mas-row"><b>${escapeHTML(m.t)}</b><span>${escapeHTML(m.d)}</span></div>`).join('')}</div></details>`:''}
       </div>`;
@@ -18490,7 +18501,7 @@ function renderSupDashboard(silent){
     // se actualiza el sello de hora.
     const _hash = JSON.stringify(empNames.map(n => {
       const e = allEmps[n];
-      return [n, e.xp||0, e.streak||0, e.lastStudyDay||'', (e.sessions||[]).length, e.lastLoginTs||'',
+      return [n, e.xp||0, e.streak||0, e.lastStudyDay||'', (e.sessions||[]).length, e.lastLoginTs||'', e.lastActiveAt||'',
         Object.keys(e.knownDishes||{}).length, JSON.stringify(e.topicScores||{})];
     }));
     if(silent && window._supLastHash === _hash){ _supStampLive(); return; }
@@ -18635,14 +18646,23 @@ function renderSupDashboard(silent){
         </div>
         ${(()=>{
           // Connected today section
+          // "Conectados hoy" usaba SOLO lastLoginTs — pero ese campo depende de
+          // supaUpsertEmployee, un PATCH pesado (topic_scores, known_dishes,
+          // sessions…) que puede fallar en silencio con el WiFi de sala, y
+          // además se saltaba del todo para empleados con 0 XP (ver fix en
+          // closePinAndEnter). lastActiveAt es un PATCH ligero que SIEMPRE se
+          // manda al entrar → señal mucho más fiable de "hoy ha usado la app".
+          // _supSeen toma la marca más reciente de las dos.
+          const _supSeen = n => { const a=allEmps[n].lastLoginTs, b=allEmps[n].lastActiveAt;
+            return (a && b) ? (a>b?a:b) : (a||b||''); };
           const todayDate = todayStr();
           const connectedToday = empNames.filter(n => {
-            const lt = allEmps[n].lastLoginTs;
+            const lt = _supSeen(n);
             if(!lt) return false;
             return lt.substring(0,10) === todayDate;
-          }).sort((a,b) => (allEmps[b].lastLoginTs||'').localeCompare(allEmps[a].lastLoginTs||''));
+          }).sort((a,b) => _supSeen(b).localeCompare(_supSeen(a)));
           const notConnected = empNames.filter(n => {
-            const lt = allEmps[n].lastLoginTs;
+            const lt = _supSeen(n);
             return !lt || lt.substring(0,10) !== todayDate;
           });
           return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
@@ -18652,7 +18672,7 @@ function renderSupDashboard(silent){
             </div>
             ${connectedToday.length > 0 ? `<div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.6rem">
               ${connectedToday.map(n => {
-                const lt = allEmps[n].lastLoginTs;
+                const lt = _supSeen(n);
                 const d = new Date(lt);
                 const timeStr = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
                 const avatar = getEmpAvatar(n);
@@ -18674,7 +18694,7 @@ function renderSupDashboard(silent){
               <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem">${LANG==='en'?'Not connected today':'Sin conectarse hoy'}</div>
               <div style="display:flex;flex-wrap:wrap;gap:.3rem">
                 ${notConnected.map(n => {
-                  const lt = allEmps[n].lastLoginTs;
+                  const lt = _supSeen(n);
                   let ago = '';
                   if(lt){
                     const diff = Math.floor((Date.now() - new Date(lt).getTime())/(86400000));
