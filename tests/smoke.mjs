@@ -2806,9 +2806,29 @@ test('Camarero Survivors: armas nuevas — tenedor asta + pimentero pesado (jul 
   assert(/WEAPON — PIMENTERO/.test(body) && /G\.pClouds\.push/.test(body), 'falta la lógica del pimentero');
   assert(/for\(const e of G\.enemies\)\{ if\(Math\.hypot\(e\.x-c\.x,e\.y-c\.y\)<c\.r\) hurtEnemy/.test(body),
     'la nube de pimienta no hace daño por segundo');
-  // pimentero MARRÓN (no salero blanco): icono SVG marrón, nunca el emoji 🧂
+  // pimentero MARRÓN (no salero blanco): icono SVG marrón de respaldo, nunca 🧂
   assert(/const PEPPER_IC='<svg/.test(body) && /fill="#7a4a1e"/.test(body) && !/🧂/.test(body),
     'el pimentero debe ser un SVG marrón, no el salero blanco 🧂');
+  // sprites ilustrados (tenedor plateado + molinillo de madera) con loader _ok y
+  // respaldo vectorial; existen en disco y se cachean en la runtime estable
+  assert(/const ET_FORK_SPRITE='img\/sprites\/fork-weapon\.webp'/.test(html) &&
+         /const ET_PEPPER_SPRITE='img\/sprites\/pepper-mill\.webp'/.test(html),
+    'faltan las constantes de sprite de tenedor/molinillo');
+  assert(existsSync(join(ROOT, 'img/sprites/fork-weapon.webp')), 'img/sprites/fork-weapon.webp missing on disk');
+  assert(existsSync(join(ROOT, 'img/sprites/pepper-mill.webp')), 'img/sprites/pepper-mill.webp missing on disk');
+  assert(/const FORK_IMG=new Image\(\); FORK_IMG\.onload=\(\)=>\{ FORK_IMG\._ok=true; \}/.test(body) &&
+         /const PEPPER_IMG=new Image\(\); PEPPER_IMG\.onload=\(\)=>\{ PEPPER_IMG\._ok=true; \}/.test(body),
+    'faltan los loaders de sprite de las armas nuevas');
+  // el tenedor se dibuja con el sprite rotado (con respaldo vectorial)
+  assert(/if\(FORK_IMG && FORK_IMG\._ok\)\{[\s\S]{0,200}ctx\.rotate\(G\.forkAng\)/.test(body),
+    'el tenedor no dibuja el sprite rotado hacia el enemigo');
+  // el molinillo se muestra al golpear (pepperFx) con su sprite
+  assert(/G\.pepperFx=1;/.test(body) && /PEPPER_IMG && PEPPER_IMG\._ok/.test(body),
+    'el molinillo no se muestra en el golpe pesado');
+  // la carta usa el molinillo ilustrado, con respaldo (onerror) al SVG marrón
+  assert(body.includes('const PEPPER_CARD_IC=\'<img src="') && body.includes("ic:PEPPER_CARD_IC,t:'Pimentero'") &&
+         body.includes('this.outerHTML=this.dataset.fb'),
+    'la carta del pimentero debe usar el sprite del molinillo con respaldo SVG');
 });
 
 test('launchElTurno() is idempotent (guards against a second overlay)', () => {

@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.230">
+<meta name="app-version" content="7.231">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.230';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.231';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1541,6 +1541,13 @@ const ET_CHEF_SPRITES={calm:'img/sprites/chef-calm.webp',attack:'img/sprites/che
 // botella que explota y limpia enemigos. Arte de Grok (mujer volando con
 // botella) se enchufa aquí; sin sprite, se dibuja un respaldo.
 const ET_HELPER_SPRITE='img/sprites/helper-manager.webp';
+
+// ═══ Camarero Survivors — armas ilustradas del héroe (hoja del propietario, Grok jul 2026) ═══
+// Tenedor plateado (horizontal, mango izq. / púas der.: se rota hacia el enemigo
+// en la estocada) y molinillo de pimienta de madera (se muestra al dar el golpe
+// pesado y sirve de icono en la carta de mejora). Ambos con fallback vectorial.
+const ET_FORK_SPRITE='img/sprites/fork-weapon.webp';
+const ET_PEPPER_SPRITE='img/sprites/pepper-mill.webp';
 
 // ═══ Camarero Survivors — JEFES alérgeno (hoja del propietario, estilo jefes de Cuphead, jul 2026) ═══
 // Versión jefe de cada monstruo, misma clave que ALLERGENS/ET_FOE_SPRITES.
@@ -24125,6 +24132,10 @@ function launchElTurno(){
   const CHEF_SPR={};
   for(const k of ['calm','attack']){ const img=new Image(); img.onload=()=>{ img._ok=true; }; img.src=ET_CHEF_SPRITES[k]; CHEF_SPR[k]=img; }
   const MGR_IMG=new Image(); MGR_IMG.onload=()=>{ MGR_IMG._ok=true; }; MGR_IMG.src=ET_HELPER_SPRITE;
+  // Armas ilustradas: tenedor (estocada) y molinillo (golpe pesado). Con _ok
+  // para caer al dibujo vectorial si el webp aún no cargó o falta.
+  const FORK_IMG=new Image(); FORK_IMG.onload=()=>{ FORK_IMG._ok=true; }; FORK_IMG.src=ET_FORK_SPRITE;
+  const PEPPER_IMG=new Image(); PEPPER_IMG.onload=()=>{ PEPPER_IMG._ok=true; }; PEPPER_IMG.src=ET_PEPPER_SPRITE;
   // Bandeja ilustrada (Grok del propietario, jul 2026): si el sprite existe,
   // las bandejas en vuelo lo usan; hasta entonces (o si falla la carga) el
   // dibujo por código con canapés hace de respaldo. Mismo patrón _ok de todos.
@@ -24254,7 +24265,7 @@ function launchElTurno(){
         fireT:0, fireInt:40, proj:1, dmg:15, pspeed:6.4, pickR:70, spread:0,
         magnet:1, aura:0, auraT:0, face:1, moving:0, tilt:0,
         knives:0, knifeAng:0, cava:0, cavaT:150,
-        fork:0, forkT:0, forkFx:0, forkAng:0, pepper:0, pepperT:0,
+        fork:0, forkT:0, forkFx:0, forkAng:0, pepper:0, pepperT:0, pepperFx:0,
         evoPierce:0, evoKnives:0, evoCava:0, evoFork:0, evoPepper:0,
         combo:0, comboT:0, bestCombo:0, hitStop:0,
         dashT:0, dashCd:0, dashVX:0, dashVY:0, trail:[], rings:[],
@@ -24445,8 +24456,12 @@ function launchElTurno(){
   // ── Upgrades ──
   // Each upgrade carries a plain-language explanation of what it does (owner
   // request: "breve explicación de lo que hace cada habilidad al escoger").
-  // Pimentero MARRÓN (no salero blanco): SVG en marrón pimienta para la carta.
+  // Pimentero MARRÓN (no salero blanco). La carta muestra el molinillo de madera
+  // ilustrado (mismo sprite que el golpe pesado); PEPPER_IC es el vector marrón
+  // de respaldo por si el webp no cargara (mantiene el color pimienta).
   const PEPPER_IC='<svg viewBox="0 0 24 24" width="24" height="24" style="vertical-align:middle"><rect x="7" y="9" width="10" height="12.5" rx="4" fill="#7a4a1e" stroke="#3a2410" stroke-width="1.4"/><path d="M7.4 9.5h9.2l-.7-3.3a3.7 3.7 0 0 0-7.8 0z" fill="#5a3414" stroke="#3a2410" stroke-width="1.2"/><circle cx="10" cy="5.6" r="0.9" fill="#241408"/><circle cx="12" cy="5" r="0.9" fill="#241408"/><circle cx="14" cy="5.6" r="0.9" fill="#241408"/><circle cx="10.6" cy="14" r="1" fill="#241408"/><circle cx="13.4" cy="16.4" r="1" fill="#241408"/></svg>';
+  // Icono de carta = molinillo real; si el webp falla, cae al SVG marrón anterior.
+  const PEPPER_CARD_IC='<img src="'+ET_PEPPER_SPRITE+'" width="26" height="34" alt="" style="vertical-align:middle;object-fit:contain" onerror="this.outerHTML=this.dataset.fb" data-fb=\''+PEPPER_IC+'\'>';
   const UPGRADES=[
     {ic:'🍽️',t:'Más bandejas',s:'Lanzas una bandeja más a la vez',fn:g=>{g.proj++;g.spread+=0.12;}},
     {ic:'⚡',t:'Servicio rápido',s:'Disparas más seguido (−16% recarga)',fn:g=>{g.fireInt=Math.max(11,g.fireInt*0.84);}},
@@ -24459,7 +24474,7 @@ function launchElTurno(){
     {ic:'❤️',t:'Aguante',s:'+25 de vida máxima (y te cura +25)',fn:g=>{g.maxhp+=25;g.hp+=25;}},
     {ic:'🎯',t:'Puntería',s:'Las bandejas vuelan +18% más rápido',fn:g=>{g.pspeed*=1.18;}},
     {ic:'🍴',t:'Tenedor gigante',s:g=>g.fork?'La estocada llega más lejos y hace +daño':'Estocada de largo alcance que atraviesa una fila',fn:g=>{g.fork++;}},
-    {ic:PEPPER_IC,t:'Pimentero',s:g=>g.pepper?'El golpe cubre más y la nube pica más':'Golpe pesado en área + nube de pimienta que pica',fn:g=>{g.pepper++;}}
+    {ic:PEPPER_CARD_IC,t:'Pimentero',s:g=>g.pepper?'El golpe cubre más y la nube pica más':'Golpe pesado en área + nube de pimienta que pica',fn:g=>{g.pepper++;}}
   ];
   // Evoluciones: cartas doradas únicas que aparecen al cumplir los requisitos
   const EVOS=[
@@ -24471,7 +24486,7 @@ function launchElTurno(){
       cond:g=>g.cava>=3&&!g.evoCava, fn:g=>{g.evoCava=1;}},
     {ic:'🍴',t:'Trinche real',s:'EVOLUCIÓN · la estocada llega más lejos y clava a todos',evo:1,
       cond:g=>g.fork>=3&&!g.evoFork, fn:g=>{g.evoFork=1;}},
-    {ic:PEPPER_IC,t:'Pimienta negra',s:'EVOLUCIÓN · la nube es mayor y pica el doble',evo:1,
+    {ic:PEPPER_CARD_IC,t:'Pimienta negra',s:'EVOLUCIÓN · la nube es mayor y pica el doble',evo:1,
       cond:g=>g.pepper>=3&&!g.evoPepper, fn:g=>{g.evoPepper=1;}}
   ];
   function showLevelUp(){
@@ -24726,7 +24741,8 @@ function launchElTurno(){
         for(const e of G.enemies){ const dx=e.x-G.px, dy=e.y-G.py, d=Math.hypot(dx,dy)||1;
           if(d<R+e.r){ hurtEnemy(e,D); const k=(1-Math.min(1,d/R))*(20+G.pepper*4); e.x+=dx/d*k; e.y+=dy/d*k; } }
         G.pClouds.push({x:G.px,y:G.py,r:R,life:1,tk:0});
-        G.explosions.push({x:G.px,y:G.py,r:14,max:R,life:1,big:true}); G.shake=Math.max(G.shake,8); sfx('hit'); vibe(30); } }
+        G.explosions.push({x:G.px,y:G.py,r:14,max:R,life:1,big:true}); G.shake=Math.max(G.shake,8); G.pepperFx=1; sfx('hit'); vibe(30); } }
+    if(G.pepperFx>0){ G.pepperFx=Math.max(0,G.pepperFx-dt*0.055); }
     // nubes de pimienta: pican por segundo mientras duran (~2,5s)
     for(let i=G.pClouds.length-1;i>=0;i--){ const c=G.pClouds[i]; c.life-=dt*0.013; c.tk-=dt;
       if(c.tk<=0){ c.tk=16; const dot=(4+G.pepper*2)*(G.evoPepper?2:1);
@@ -25190,25 +25206,43 @@ function launchElTurno(){
       ctx.globalAlpha=a*0.6; ctx.fillStyle='#241408';
       for(let k=0;k<11;k++){ const ang=k*2.3+c.life*4, rr=c.r*(0.25+0.6*((k*7%10)/10)); ctx.beginPath(); ctx.arc(c.x+Math.cos(ang)*rr,c.y+Math.sin(ang)*rr,2.2,0,6.29); ctx.fill(); }
       ctx.globalAlpha=1; }
-    // TENEDOR gigante: estocada TODA PLATEADA y más grande (mango grueso con
-    // contorno + brillo, cabeza mayor de 4 púas). Se dibuja al clavar (forkFx↓).
+    // TENEDOR gigante: estocada de largo alcance. Si el sprite plateado cargó, se
+    // dibuja rotado hacia el enemigo (mango en el héroe, púas en la punta); si no,
+    // cae al dibujo vectorial plateado. Se dibuja al clavar (forkFx↓).
     if(G.fork>0 && G.forkFx>0){ const reach=(74+G.fork*24)*(G.evoFork?1.5:1), ext=reach*(0.5+0.5*G.forkFx);
       const ca=Math.cos(G.forkAng), sa=Math.sin(G.forkAng), tx=G.px+ca*ext, ty=G.py+sa*ext;
-      const hx=tx-ca*24, hy=ty-sa*24;   // donde acaba el mango y empieza la cabeza
-      ctx.save(); ctx.globalAlpha=0.42+0.58*G.forkFx; ctx.lineCap='round';
-      // MANGO plateado grueso: contorno oscuro + plata + brillo
-      ctx.strokeStyle='#33383f'; ctx.lineWidth=14; ctx.beginPath(); ctx.moveTo(G.px,G.py); ctx.lineTo(hx,hy); ctx.stroke();
-      ctx.strokeStyle='#c4cad4'; ctx.lineWidth=10; ctx.beginPath(); ctx.moveTo(G.px,G.py); ctx.lineTo(hx,hy); ctx.stroke();
-      ctx.strokeStyle='#f2f5f9'; ctx.lineWidth=3.5; ctx.beginPath(); ctx.moveTo(G.px,G.py); ctx.lineTo(hx,hy); ctx.stroke();
-      // CABEZA: base que une + 4 púas, plata con contorno
-      ctx.translate(tx,ty); ctx.rotate(G.forkAng);
-      ctx.strokeStyle='#33383f'; ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(-24,-13); ctx.lineTo(-24,13); ctx.stroke();
-      ctx.strokeStyle='#c4cad4'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(-24,-13); ctx.lineTo(-24,13); ctx.stroke();
-      for(let p=0;p<4;p++){ const y=(p-1.5)*8.5;
-        ctx.strokeStyle='#33383f'; ctx.lineWidth=8;   ctx.beginPath(); ctx.moveTo(-24,y); ctx.lineTo(18,y); ctx.stroke();
-        ctx.strokeStyle='#d7dce3'; ctx.lineWidth=4.5; ctx.beginPath(); ctx.moveTo(-24,y); ctx.lineTo(18,y); ctx.stroke();
-        ctx.strokeStyle='#f2f5f9'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(-22,y-1); ctx.lineTo(16,y-1); ctx.stroke(); }
-      ctx.restore(); ctx.globalAlpha=1; ctx.lineCap='butt'; }
+      ctx.save(); ctx.globalAlpha=0.42+0.58*G.forkFx;
+      if(FORK_IMG && FORK_IMG._ok){
+        // sprite horizontal (mango izq. / púas der.) → largo = ext, alto proporcional
+        const len=ext+18, hh=len*(FORK_IMG.height/FORK_IMG.width);
+        ctx.translate(G.px,G.py); ctx.rotate(G.forkAng);
+        ctx.drawImage(FORK_IMG,0,-hh/2,len,hh);
+      } else {
+        ctx.lineCap='round';
+        const hx=tx-ca*24, hy=ty-sa*24;   // donde acaba el mango y empieza la cabeza
+        // MANGO plateado grueso: contorno oscuro + plata + brillo
+        ctx.strokeStyle='#33383f'; ctx.lineWidth=14; ctx.beginPath(); ctx.moveTo(G.px,G.py); ctx.lineTo(hx,hy); ctx.stroke();
+        ctx.strokeStyle='#c4cad4'; ctx.lineWidth=10; ctx.beginPath(); ctx.moveTo(G.px,G.py); ctx.lineTo(hx,hy); ctx.stroke();
+        ctx.strokeStyle='#f2f5f9'; ctx.lineWidth=3.5; ctx.beginPath(); ctx.moveTo(G.px,G.py); ctx.lineTo(hx,hy); ctx.stroke();
+        // CABEZA: base que une + 4 púas, plata con contorno
+        ctx.translate(tx,ty); ctx.rotate(G.forkAng);
+        ctx.strokeStyle='#33383f'; ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(-24,-13); ctx.lineTo(-24,13); ctx.stroke();
+        ctx.strokeStyle='#c4cad4'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(-24,-13); ctx.lineTo(-24,13); ctx.stroke();
+        for(let p=0;p<4;p++){ const y=(p-1.5)*8.5;
+          ctx.strokeStyle='#33383f'; ctx.lineWidth=8;   ctx.beginPath(); ctx.moveTo(-24,y); ctx.lineTo(18,y); ctx.stroke();
+          ctx.strokeStyle='#d7dce3'; ctx.lineWidth=4.5; ctx.beginPath(); ctx.moveTo(-24,y); ctx.lineTo(18,y); ctx.stroke();
+          ctx.strokeStyle='#f2f5f9'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(-22,y-1); ctx.lineTo(16,y-1); ctx.stroke(); }
+        ctx.lineCap='butt';
+      }
+      ctx.restore(); ctx.globalAlpha=1; }
+    // MOLINILLO de pimienta: se ve al dar el golpe pesado — cae desde arriba
+    // (pepperFx 1→0) y golpea junto al héroe. Fallback: nada (la nube ya lee).
+    if(G.pepper>0 && G.pepperFx>0 && PEPPER_IMG && PEPPER_IMG._ok){ const f=G.pepperFx;
+      const hh=54+G.pepper*3, ww=hh*(PEPPER_IMG.width/PEPPER_IMG.height);
+      const lift=f*f*46;                       // arriba al empezar, baja al clavar
+      ctx.save(); ctx.globalAlpha=Math.min(1,0.35+f);
+      ctx.drawImage(PEPPER_IMG,G.px-ww/2,G.py-hh-8-lift,ww,hh);
+      ctx.restore(); ctx.globalAlpha=1; }
     // damage numbers
     ctx.font='bold 13px Georgia'; ctx.textAlign='center'; ctx.lineWidth=3;
     for(const n of G.dmgs){ ctx.globalAlpha=Math.max(0,n.life); ctx.strokeStyle='#241a12'; ctx.strokeText(n.val,n.x,n.y); ctx.fillStyle=n.col||'#fff'; ctx.fillText(n.val,n.x,n.y); }
