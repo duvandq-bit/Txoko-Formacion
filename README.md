@@ -2,7 +2,7 @@
 
 **Meseo** (meseo.es) — formación de equipos de sala, multi-restaurante. Cada restaurante es un *venue* en `data/themes.json` con su propia identidad (nombre, colores, textos); TXOKO es el venue fundador. La marca de la app es Meseo: ningún restaurante presta su nombre al producto.
 
-PWA monolítica (`index.html` + `sw.js`) con sincronización vía Supabase, módulo de vinos con MapLibre, juegos de repaso (Mr. Shoesmith, Alérgeno Zero), Quiz del Día y notificaciones push.
+PWA monolítica (`index.html` + `sw.js`) con sincronización vía Supabase, módulo de vinos con MapLibre, juegos de repaso (Mr. Shoesmith, Camarero Survivors), Quiz del Día y notificaciones push.
 
 ## Versión actual
 

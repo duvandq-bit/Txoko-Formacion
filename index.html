@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.227">
+<meta name="app-version" content="7.228">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.227';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.228';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1531,7 +1531,7 @@ const CRITIC_FACES=['img/sprites/critic-f0.jpg','img/sprites/critic-f1.jpg','img
 const CRITIC_INTRO='img/sprites/critic-intro.jpg';
 const CRITIC_ANIM={talk:'img/sprites/critic-talk.jpg',bored:'img/sprites/critic-bored.jpg',irked:'img/sprites/critic-irked.jpg',growl:'img/sprites/critic-growl.jpg',scream:'img/sprites/critic-scream.jpg'};
 
-// ═══ Alérgeno Zero — EL CHEF, jefe final (foto del propietario → Grok, jul 2026) ═══
+// ═══ Camarero Survivors — EL CHEF, jefe final (foto del propietario → Grok, jul 2026) ═══
 // Dos poses: imponente (patrulla) y furioso con el cucharón (telegrafía/embestida).
 // Recorte por flood-fill desde los bordes: la chaquetilla blanca es casi del
 // color del fondo y el recorte por distancia la dejaba transparente (se veía
@@ -1542,17 +1542,17 @@ const ET_CHEF_SPRITES={calm:'img/sprites/chef-calm.webp',attack:'img/sprites/che
 // botella) se enchufa aquí; sin sprite, se dibuja un respaldo.
 const ET_HELPER_SPRITE='img/sprites/helper-manager.webp';
 
-// ═══ Alérgeno Zero — JEFES alérgeno (hoja del propietario, estilo jefes de Cuphead, jul 2026) ═══
+// ═══ Camarero Survivors — JEFES alérgeno (hoja del propietario, estilo jefes de Cuphead, jul 2026) ═══
 // Versión jefe de cada monstruo, misma clave que ALLERGENS/ET_FOE_SPRITES.
 const ET_BOSS_SPRITES={gluten:'img/sprites/boss-gluten.webp',lacteos:'img/sprites/boss-lacteos.webp',frutos:'img/sprites/boss-frutos.webp',crust:'img/sprites/boss-crust.webp',huevo:'img/sprites/boss-huevo.webp',pescado:'img/sprites/boss-pescado.webp',soja:'img/sprites/boss-soja.webp',sulfitos:'img/sprites/boss-sulfitos.webp',cacahuete:'img/sprites/boss-cacahuete.webp',apio:'img/sprites/boss-apio.webp',mostaza:'img/sprites/boss-mostaza.webp',sesamo:'img/sprites/boss-sesamo.webp',molusco:'img/sprites/boss-molusco.webp',altramuz:'img/sprites/boss-altramuz.webp'};
 
-// ═══ Alérgeno Zero — monstruos-alérgeno ilustrados (hoja del propietario, Grok jul 2026) ═══
+// ═══ Camarero Survivors — monstruos-alérgeno ilustrados (hoja del propietario, Grok jul 2026) ═══
 // 8 sprites recortados de UNA hoja (estilo anclado con el sprite del héroe).
 // Clave = ALLERGENS[].key; el motor los dibuja con la misma sombra, squash por
 // arquetipo, aro de élite y corona de jefe que ya tenía el dibujo por código.
 const ET_FOE_SPRITES={gluten:'img/sprites/foe-gluten.webp',lacteos:'img/sprites/foe-lacteos.webp',frutos:'img/sprites/foe-frutos.webp',crust:'img/sprites/foe-crust.webp',huevo:'img/sprites/foe-huevo.webp',pescado:'img/sprites/foe-pescado.webp',soja:'img/sprites/foe-soja.webp',sulfitos:'img/sprites/foe-sulfitos.webp',cacahuete:'img/sprites/foe-cacahuete.webp',apio:'img/sprites/foe-apio.webp',mostaza:'img/sprites/foe-mostaza.webp',sesamo:'img/sprites/foe-sesamo.webp',molusco:'img/sprites/foe-molusco.webp',altramuz:'img/sprites/foe-altramuz.webp'};
 
-// ═══ Alérgeno Zero — sprite del héroe (referencia del propietario, vídeo Grok jul 2026) ═══
+// ═══ Camarero Survivors — sprite del héroe (referencia del propietario, vídeo Grok jul 2026) ═══
 // Ciclo de carrera de 2 fotogramas (cámara fija → registro perfecto), recortado a
 // PNG con transparencia real (el JPEG dejaba una caja de fondo visible sobre el
 // suelo del comedor). El motor del juego alterna estos dos según la fase del
@@ -1797,7 +1797,7 @@ async function supaFetchTxokoTop10() {
   } catch(e) { return null; }
 }
 
-// ── Récords de Alérgeno Zero (jul 2026): misma tabla genérica 'scores'
+// ── Récords de Camarero Survivors (jul 2026): misma tabla genérica 'scores'
 //    que Mr. Shoesmith, con topic='elturno'. score = segundos sobrevividos
 //    (la métrica de un survivors), total = comandas de esa partida.
 async function supaInsertEtRecord(employee, secs, orders) {
@@ -1864,7 +1864,7 @@ function _txCrownFor(name){
   const c1 = _txChampions.txoko && _txChampions.txoko.name===name;
   const c2 = _txChampions.elturno && _txChampions.elturno.name===name;
   if(!c1 && !c2) return '';
-  const t = [c1?'Mr. Shoesmith':null, c2?'Alérgeno Zero':null].filter(Boolean).join(' · ');
+  const t = [c1?'Mr. Shoesmith':null, c2?'Camarero Survivors':null].filter(Boolean).join(' · ');
   return ` <span class="tx-crown" title="${LANG==='en'?'Reigning #1':'Nº1 vigente'}: ${t}">👑</span>`;
 }
 
@@ -1873,7 +1873,7 @@ function _txCrownFor(name){
 function _txRecordMsg(game, a, b){
   const _en = LANG==='en';
   if(game==='shoesmith') return _en?`${currentUser} beat their record with Mr. Shoesmith: ${a} orders!`:`¡${currentUser} batió su récord con Mr. Shoesmith: ${a} comandas!`;
-  if(game==='survivors'){ const m=Math.floor(a/60), s=a%60; return _en?`${currentUser} survived ${m}:${s<10?'0':''}${s} in Alérgeno Zero (${b} orders)!`:`¡${currentUser} sobrevivió ${m}:${s<10?'0':''}${s} en Alérgeno Zero (${b} comandas)!`; }
+  if(game==='survivors'){ const m=Math.floor(a/60), s=a%60; return _en?`${currentUser} survived ${m}:${s<10?'0':''}${s} in Camarero Survivors (${b} orders)!`:`¡${currentUser} sobrevivió ${m}:${s<10?'0':''}${s} en Camarero Survivors (${b} comandas)!`; }
   if(game==='duelo') return _en?`${currentUser} won a duel vs ${b}: ${a}!`:`¡${currentUser} ganó un duelo vs ${b}: ${a}!`;
   return '';
 }
@@ -1908,7 +1908,7 @@ function _txThroneCheck(game, score){
     if(!seen || !seen.name || seen.name===currentUser) return;
     const beat = game==='txoko' ? score>(seen.record||0) : score>(seen.secs||0);
     if(!beat) return;
-    const lbl = game==='txoko' ? 'Mr. Shoesmith' : 'Alérgeno Zero';
+    const lbl = game==='txoko' ? 'Mr. Shoesmith' : 'Camarero Survivors';
     const val = game==='txoko' ? score+' '+(LANG==='en'?'orders':'comandas')
                                : Math.floor(score/60)+':'+String(score%60).padStart(2,'0');
     _txShareRecord(LANG==='en'
@@ -1927,7 +1927,7 @@ function _hoyCheckOvertaken(){
     if(!ch || !host || !currentUser) return;
     const emp = getEmp(currentUser); if(!emp) return;
     const lost = [];
-    [['txoko','Mr. Shoesmith'],['elturno','Alérgeno Zero']].forEach(([k,lbl])=>{
+    [['txoko','Mr. Shoesmith'],['elturno','Camarero Survivors']].forEach(([k,lbl])=>{
       const now = ch[k] && ch[k].name;
       if(emp._wasChamp && emp._wasChamp[k] && now && now!==currentUser) lost.push({lbl, by:now});
       emp._wasChamp = emp._wasChamp || {};
@@ -8364,7 +8364,7 @@ const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Inspección Fantasma. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Ghost Inspection. You can also browse every service standard by category.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Duelos',title_en:'Games & Duels',text_es:'Modo supervivencia "Mr. Shoesmith" en la mesa 501, esquiva alérgenos-monstruo en Alérgeno Zero, reta a compañeros en Duelos 1v1 remotos y diviértete con la Ruleta Txoko. Compite por el ranking global y desbloquea logros.',text_en:'Survival mode "Mr. Shoesmith" at table 501, dodge allergen-monsters in Alérgeno Zero, challenge colleagues in remote 1v1 Duels, and have fun with the Txoko Roulette. Compete for the global ranking and unlock achievements.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Duelos',title_en:'Games & Duels',text_es:'Modo supervivencia "Mr. Shoesmith" en la mesa 501, esquiva alérgenos-monstruo en Camarero Survivors, reta a compañeros en Duelos 1v1 remotos y diviértete con la Ruleta Txoko. Compite por el ranking global y desbloquea logros.',text_en:'Survival mode "Mr. Shoesmith" at table 501, dodge allergen-monsters in Camarero Survivors, challenge colleagues in remote 1v1 Duels, and have fun with the Txoko Roulette. Compete for the global ranking and unlock achievements.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/><circle cx="12" cy="12" r="2" fill="#fff" opacity=".8"/></svg>`,color:'#5a9ab8',title_es:'Quiz en Vivo y Retos',title_en:'Live Quiz & Challenges',text_es:'El supervisor puede lanzar un Quiz en Vivo para todo el equipo en tiempo real. Cada semana hay un Reto Semanal con un tema diferente. Recibirás notificaciones en tu móvil cuando haya actividad.',text_en:'The supervisor can launch a Live Quiz for the whole team in real time. Each week there\'s a Weekly Challenge with a different topic. You\'ll receive mobile notifications when there\'s activity.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11z" fill="none" stroke="#fff" stroke-width="1.5"/><polygon points="12,7 15,11 12,15 9,11" fill="#fff" opacity=".6"/></svg>`,color:'#c49a3c',title_es:'¡Comienza tu aventura!',title_en:'Start your adventure!',text_es:'Practica todos los días para mantener tu racha, sube de nivel ganando XP y escala en el ranking. ¡Buena suerte!',text_en:'Practice every day to keep your streak, level up by earning XP and climb the ranking. Good luck!'}
 ];
@@ -17645,7 +17645,7 @@ function renderVideoDishInfo(dishName, cat) {
 
 // Récords de juegos dentro de la pestaña Ranking (propietario: «toda la
 // competición en un solo sitio»). Los tablones en contexto (hub de Juegos,
-// pantalla de inicio de Alérgeno Zero) se mantienen; esto los agrega.
+// pantalla de inicio de Camarero Survivors) se mantienen; esto los agrega.
 // Mismo esquema local-primero de esos tablones: pinta con DB.employees al
 // instante y re-pinta al llegar Supabase. Reutiliza el estilo .tx-top10.
 function _renderRankingGames(){
@@ -17669,7 +17669,7 @@ function _renderRankingGames(){
     h.innerHTML =
       '<div class="tunic-divider" style="margin-top:1.1rem"><span>'+(_en?'Game records':'Récords de juegos')+'</span></div>'
       + board('Mr. Shoesmith · '+(_en?'Best Services':'Mejores Servicios'), shoe, e=>e.record+' '+(_en?(e.record===1?'order':'orders'):(e.record===1?'comanda':'cmdas')))
-      + board('Alérgeno Zero · '+(_en?'Best Shifts':'Mejores Turnos'), et, e=>fmtT(e.secs)+' · '+e.orders+' cmd');
+      + board('Camarero Survivors · '+(_en?'Best Shifts':'Mejores Turnos'), et, e=>fmtT(e.secs)+' · '+e.orders+' cmd');
   };
   const shoeLocal=Object.values(DB.employees).filter(e=>e.txokoRecord>0)
     .map(e=>({employee:e.name,record:e.txokoRecord})).sort((a,b)=>b.record-a.record);
@@ -23786,16 +23786,16 @@ function renderTxoko(){
         <div class="game-card-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
       </div>
 
-      <!-- Alérgeno Zero — survivors mini-game (BETA) -->
-      <div role="button" tabindex="0" aria-label="${_en?'Alérgeno Zero, allergen arcade game, beta':'Alérgeno Zero, arcade de alérgenos, beta'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="launchElTurno()" style="--gc-accent:#c4693c;--gc-accent2:#a3502a;--gc-glow:rgba(196,105,60,.2)">
+      <!-- Camarero Survivors — survivors mini-game (BETA) -->
+      <div role="button" tabindex="0" aria-label="${_en?'Camarero Survivors, allergen survivors game, beta':'Camarero Survivors, survivors de alérgenos, beta'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="launchElTurno()" style="--gc-accent:#c4693c;--gc-accent2:#a3502a;--gc-glow:rgba(196,105,60,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,105,60,.08),rgba(196,105,60,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(196,105,60,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(196,105,60,.06)"/><circle cx="20" cy="18" r="7" fill="#c4693c" opacity=".85"/><path d="M14 32c0-4 3-7 6-7s6 3 6 7" fill="none" stroke="#c4693c" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="game-card-body">
-          <div class="game-card-label">ARCADE · BETA</div>
-          <div class="game-card-title">Alérgeno Zero</div>
+          <div class="game-card-label">SURVIVORS · BETA</div>
+          <div class="game-card-title">Camarero Survivors</div>
           <div class="game-card-desc">${_en?'Dodge and clear allergen-monsters all shift long. Auto-fire, level-up cards, boss waves.':'Esquiva y despacha alérgenos-monstruo durante todo el turno. Disparo automático, cartas de mejora, jefes.'}</div>
           <div class="game-card-meta">
-            <span class="game-card-badge">${_en?'Allergen arcade':'Arcade de alérgenos'}</span>
+            <span class="game-card-badge">${_en?'Survivors of allergens':'Survivors de alérgenos'}</span>
             <span class="game-card-badge">BETA</span>
           </div>
         </div>
@@ -23881,7 +23881,7 @@ function launchElTurno(){
   overlay.id = 'etOverlay';
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
-  overlay.setAttribute('aria-label', _en?'Alérgeno Zero, allergen arcade game':'Alérgeno Zero, arcade de alérgenos');
+  overlay.setAttribute('aria-label', _en?'Camarero Survivors, allergen survivors game':'Camarero Survivors, survivors de alérgenos');
   overlay.innerHTML = `
     <div id="etWrap"><div id="etStage">
       <canvas id="etCv"></canvas>
@@ -23924,7 +23924,7 @@ function launchElTurno(){
 
       <div class="et-screen" id="etStart">
         <div class="et-sub">${(typeof ACTIVE_VENUE!=='undefined'&&ACTIVE_VENUE&&ACTIVE_VENUE.eyebrow)?escapeHTML(ACTIVE_VENUE.eyebrow):'Meseo'}</div>
-        <div class="et-card"><div class="et-title">Alérgeno<br>Zero</div></div>
+        <div class="et-card"><div class="et-title">Camarero<br>Survivors</div></div>
         <div class="et-kick"><b>TU MISIÓN:</b> aguanta hasta el <b>cierre (10:00)</b> y despacha a los <b>3 CHEFS</b> especiales (min 3, 6 y 9). Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta. <b>Llegar al cierre es ganar.</b></div>
         <div class="et-chars" id="etChars"></div>
         <div id="etShop"></div>

@@ -2735,16 +2735,16 @@ test('launchElTurno() is defined exactly once', () => {
   assert(defs === 1, `expected exactly 1 launchElTurno definition, found ${defs}`);
 });
 
-test('games hub (renderTxoko) has a card launching Alérgeno Zero', () => {
+test('games hub (renderTxoko) has a card launching Camarero Survivors', () => {
   const hubStart = html.indexOf('function renderTxoko(');
   const hubEnd = html.indexOf('function renderTxTop10(');
   assert(hubStart !== -1 && hubEnd > hubStart, 'could not locate renderTxoko body');
   const hub = html.slice(hubStart, hubEnd);
   assert(hub.includes('launchElTurno()'), 'no game-card in renderTxoko() calls launchElTurno()');
-  assert(hub.includes('Alérgeno Zero'), 'Alérgeno Zero card title missing from games hub');
+  assert(hub.includes('Camarero Survivors'), 'Camarero Survivors card title missing from games hub');
 });
 
-test('Alérgeno Zero: 14 alérgenos de la UE + objetivo visible (jul 2026)', () => {
+test('Camarero Survivors: 14 alérgenos de la UE + objetivo visible (jul 2026)', () => {
   const s = html.indexOf('const ALLERGENS=[');
   assert(s !== -1, 'no se encontró el array ALLERGENS');
   const arr = html.slice(s, html.indexOf('];', s));
@@ -2770,7 +2770,7 @@ test('Alérgeno Zero: 14 alérgenos de la UE + objetivo visible (jul 2026)', () 
   assert(/\.et-obj\{/.test(css) && /\.et-objfill\{/.test(css), 'falta el CSS de la barra de objetivo');
 });
 
-test('Alérgeno Zero: LA MÁNAGER aliada suelta una botella que explota (jul 2026)', () => {
+test('Camarero Survivors: LA MÁNAGER aliada suelta una botella que explota (jul 2026)', () => {
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 130000);
   // estado + temporizador de aparición
@@ -2836,9 +2836,9 @@ test('every game has a uniform, working "back to games" control', () => {
   const qbody = html.slice(q, q + 180);
   assert(/clearInterval\(txokoTimer\)/.test(qbody) && /showTab\('txoko'\)/.test(qbody),
     'txQuit() must stop the patience timer and return to the games hub');
-  // (4) Alérgeno Zero (overlay) keeps its own exit button
+  // (4) Camarero Survivors (overlay) keeps its own exit button
   const e = html.indexOf('function launchElTurno(');
-  assert(/id="etExitBtn"/.test(html.slice(e, e + 60000)), 'Alérgeno Zero must keep its in-game exit button');
+  assert(/id="etExitBtn"/.test(html.slice(e, e + 60000)), 'Camarero Survivors must keep its in-game exit button');
   // (5) El botón Salir debe quedar POR ENCIMA de .et-screen: las pantallas
   // (inicio/pausa/etc.) cubren toda la superficie con fondo translúcido, así
   // que si el botón está por debajo la pantalla se traga el clic y "Salir" no
@@ -4234,7 +4234,7 @@ test('onboarding guide matches the real Juegos hub (no Modo Error promise)', () 
   assert(!/Modo Error/.test(html) && !/Error Mode/.test(html),
     'guide must not promise Modo Error anywhere');
   const games = html.slice(html.indexOf("title_es:'Juegos y Duelos'"), html.indexOf("title_es:'Juegos y Duelos'") + 900);
-  assert(/Alérgeno Zero/.test(games), 'games guide page must mention Alérgeno Zero');
+  assert(/Camarero Survivors/.test(games), 'games guide page must mention Camarero Survivors');
   // Dead leftovers of the removed Modo Error card must stay gone.
   const hub = html.slice(html.indexOf('function renderTxoko()'), html.indexOf('function renderTxTop10()'));
   assert(!/getFailedDishes|failedLabel/.test(hub), 'renderTxoko must not compute unused failed-dish counters');
