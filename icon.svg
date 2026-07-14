@@ -5,16 +5,27 @@
       <stop offset="1" stop-color="#0e1612"/>
     </linearGradient>
     <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#e4be68"/>
-      <stop offset="1" stop-color="#c49a3c"/>
+      <stop offset="0" stop-color="#f0d68a"/>
+      <stop offset="0.5" stop-color="#d9b45c"/>
+      <stop offset="1" stop-color="#b8912f"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="96" fill="url(#bg)"/>
-  <g transform="translate(256 256)" font-family="Cinzel, Georgia, serif" font-weight="600" text-anchor="middle" fill="url(#gold)">
-    <text font-size="220" y="78">M</text>
+  <g fill="url(#gold)">
+    <!-- steam curl -->
+    <path d="M256 150 c 12 -10 -12 -20 0 -32 c 10 -10 -6 -20 2 -30"
+          fill="none" stroke="url(#gold)" stroke-width="7" stroke-linecap="round"/>
+    <!-- knob -->
+    <circle cx="256" cy="176" r="9"/>
+    <!-- cloche dome -->
+    <path d="M150 262 a106 96 0 0 1 212 0 Z"/>
+    <!-- dome highlight sweep -->
+    <path d="M212 196 a92 82 0 0 1 118 20" fill="none" stroke="#fff6df" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+    <!-- tray -->
+    <path d="M132 262 h248 a10 10 0 0 1 10 10 v3 a8 8 0 0 1 -8 8 H130 a8 8 0 0 1 -8 -8 v-3 a10 10 0 0 1 10 -10 Z"/>
+    <!-- serif M -->
+    <text x="256" y="392" font-family="Cinzel, Georgia, 'Times New Roman', serif" font-weight="700"
+          font-size="150" text-anchor="middle">M</text>
   </g>
-  <g transform="translate(256 408)" font-family="DM Mono, monospace" text-anchor="middle" fill="#c49a3c" opacity="0.85">
-    <text font-size="36" letter-spacing="6">MESEO</text>
-  </g>
-  <rect x="56" y="56" width="400" height="400" rx="64" fill="none" stroke="#c49a3c" stroke-opacity="0.35" stroke-width="2"/>
+  <rect x="52" y="52" width="408" height="408" rx="70" fill="none" stroke="#c49a3c" stroke-opacity="0.30" stroke-width="2.5"/>
 </svg>

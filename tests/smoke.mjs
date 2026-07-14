@@ -3765,7 +3765,8 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
   const themes = read('data/themes.json');
   assert(/"title": "Meseo · TXOKO"/.test(themes), 'venue tab titles must compose app brand + venue');
   const icon = read('icon.svg');
-  assert(/MESEO/.test(icon) && !/TXOKO/.test(icon), 'the icon must be Meseo-branded');
+  assert(/>M<\/text>/.test(icon) && !/TXOKO/i.test(icon) && !/MESEO/.test(icon),
+    'the icon must be Meseo-branded (cloche + M monogram), never Txoko');
   assert(/title: 'Meseo'/.test(read('sw.js')), 'the push fallback title must be Meseo');
   assert(/https:\/\/meseo\.es\//.test(html) && !/github\.io\/Txoko-Formacion/.test(html),
     'the share link must point at meseo.es, not the old repo URL');
