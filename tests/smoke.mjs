@@ -2462,6 +2462,12 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
   // los platos NO se escriben a mano: se buscan por palabra clave en las fichas
   assert(/function _tecDishes\(kw\)/.test(html) && /kw\.some\(k=>hay\.includes\(k\)\)/.test(html),
     'los enlaces a platos deben derivarse de DISHES en runtime, no hardcodearse');
+  // el emparejamiento cubre nombre+ingredientes+historia+NOTAS (p.ej. gratinado
+  // del parmentier o filetones al horno solo aparecen en las notas)
+  assert(/const hay=\(\(d\.name\|\|''\)\+' '\+\(d\.ingredients\|\|''\)\+' '\+\(d\.history\|\|''\)\+' '\+\(d\.notes\|\|''\)\)/.test(html),
+    'el emparejamiento de técnicas debe incluir las notas de la ficha');
+  // los fondos (fumet, bisque, caldos) están como técnica
+  assert(/es:'Fondos y caldos'/.test(html), 'falta la técnica de fondos y caldos');
   // toca un plato → abre su ficha en La Carta
   assert(/onclick="_aprenderOpenDish\(\$\{d\.id\}\)"/.test(html), 'los chips de plato deben abrir la ficha');
   // color de texto correcto para tarjetas claras (usar --parchment, no --ink)
