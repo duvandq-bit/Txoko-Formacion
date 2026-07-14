@@ -2468,6 +2468,12 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
     'el emparejamiento de técnicas debe incluir las notas de la ficha');
   // los fondos (fumet, bisque, caldos) están como técnica
   assert(/es:'Fondos y caldos'/.test(html), 'falta la técnica de fondos y caldos');
+  // profundidad "Tipos · saber más": render desplegable + tipos de fondo
+  assert(/<details class="tec-mas"><summary>/.test(html) && /t\.mas\.map\(m=>/.test(html),
+    'falta el desplegable de tipos (tec-mas) en las técnicas');
+  assert(/masT:\{es:'Tipos de fondo'/.test(html) && /t:'Fondo blanco'/.test(html) &&
+         /t:'Fondo oscuro'/.test(html) && /t:'Fumet'/.test(html) && /t:'Court-bouillon/.test(html),
+    'faltan los tipos de fondo (blanco, oscuro, fumet, court-bouillon)');
   // toca un plato → abre su ficha en La Carta
   assert(/onclick="_aprenderOpenDish\(\$\{d\.id\}\)"/.test(html), 'los chips de plato deben abrir la ficha');
   // color de texto correcto para tarjetas claras (usar --parchment, no --ink)

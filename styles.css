@@ -5049,6 +5049,20 @@ body::after{
 .tec-dish:hover,.tec-dish:active{background:color-mix(in srgb,var(--tec-col,#a3502a) 14%,#fff);
   border-color:var(--tec-col,#a3502a);transform:translateY(-1px)}
 .tec-more{align-self:center;font-size:.66rem;color:var(--parch4);font-family:'DM Mono',monospace;padding-left:.1rem}
+/* «Tipos · saber más»: detalle desplegable dentro de la ficha de técnica */
+.tec-mas{margin-top:.6rem;border-top:1px dashed var(--ink3);padding-top:.5rem}
+.tec-mas>summary{cursor:pointer;list-style:none;font-family:'DM Mono',monospace;font-size:.6rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--tec-col,#a3502a);font-weight:600;
+  display:flex;align-items:center;gap:.4rem;-webkit-tap-highlight-color:transparent}
+.tec-mas>summary::-webkit-details-marker{display:none}
+.tec-mas>summary::before{content:'▸';transition:transform .15s;display:inline-block}
+.tec-mas[open]>summary::before{transform:rotate(90deg)}
+.tec-mas-n{font-family:'DM Mono',monospace;font-size:.56rem;color:#fff;background:var(--tec-col,#a3502a);
+  min-width:1.1rem;text-align:center;padding:.03rem .3rem;border-radius:20px;line-height:1.4}
+.tec-mas-body{margin-top:.5rem;display:flex;flex-direction:column;gap:.4rem}
+.tec-mas-row{font-size:.76rem;line-height:1.45;color:var(--parch2)}
+.tec-mas-row b{color:var(--parchment);display:block;font-family:'Quicksand',sans-serif}
+.tec-mas-row span{color:var(--parch3)}
 .xp-burst{
   position:fixed;pointer-events:none;z-index:9999;
   font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;
