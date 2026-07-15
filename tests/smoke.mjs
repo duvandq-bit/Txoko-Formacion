@@ -3743,6 +3743,25 @@ test('supervisor: "Conectados Hoy" usa lastActiveAt (además de lastLoginTs) y e
     'el login ya no debe saltarse la sincronización para empleados con 0 XP');
 });
 
+test('logros: el registro de logros desbloqueados se sincroniza en la nube (no se re-disparan entre dispositivos)', () => {
+  // Bug real (propietario): al entrar en otro dispositivo re-saltaban las
+  // notificaciones de logros ya desbloqueados, porque emp.achievements solo
+  // vivía en local. El dispositivo nuevo restauraba el XP alto pero con el
+  // ledger vacío → checkNewAchievements() los trataba a todos como nuevos.
+  assert(/const _EMP_COLS='[^']*\bachievements\b[^']*'/.test(html),
+    '_EMP_COLS debe incluir achievements para leer el ledger de la nube');
+  assert(/achievements: JSON\.stringify\(ach\)/.test(html),
+    'supaUpsertEmployee debe escribir el ledger de logros en la nube');
+  // La restauración reconstruye el ledger (nube ⊕ local ⊕ logros ya ganados por
+  // stats) antes de entrar, para que un dispositivo nuevo no re-notifique.
+  const restore = html.slice(html.indexOf('async function supaRestoreEmployee('),
+    html.indexOf('async function supaRestoreEmployee(') + 7000);
+  assert(/JSON\.parse\(r\.achievements\|\|'\[\]'\)/.test(restore),
+    'supaRestoreEmployee debe leer r.achievements de la nube');
+  assert(/getUnlockedAchievements\(emp\)\.map\(a=>a\.id\)/.test(restore),
+    'la restauración debe sembrar el ledger con los logros que ya corresponden a las stats (usuarios existentes con ledger vacío en la nube)');
+});
+
 test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
   // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
   // aparecer como uno de los restaurantes a escoger, pero el nombre de la

@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.248">
+<meta name="app-version" content="7.249">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.248';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.249';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1652,7 +1652,7 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 // Wine image helpers
 // Columnas de employees que la anon key SÍ puede leer (todas menos `pin`, que
 // se cierra a la anon key: el PIN se verifica por RPC en el servidor).
-const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login';
+const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements';
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
   return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -1993,6 +1993,10 @@ async function supaUpsertEmployee(name, retries=2) {
   let known=emp.knownDishes||{}, exam=emp.examCorrect||{}, topics=emp.topicScores||{};
   let sess=(emp.sessions||[]).slice(-20), sessCount=(emp.sessions||[]).length;
   let avatar=emp.avatar||null, lastStudy=emp.lastStudyDay||null, lastLogin=emp.lastLoginTs||null;
+  // Logros ya notificados: es un ledger monótono (una vez desbloqueado, no se
+  // pierde). Se fusiona como UNIÓN nube ⊕ local para que ningún dispositivo
+  // "olvide" logros de otro y no se re-disparen las notificaciones al entrar.
+  let ach=Array.isArray(emp.achievements)?emp.achievements.slice():[];
   if(cloud){
     xp=Math.max(xp, cloud.xp||0); streak=Math.max(streak, cloud.streak||0);
     txr=Math.max(txr, cloud.txoko_record||0); dw=Math.max(dw, cloud.duel_wins||0);
@@ -2004,9 +2008,11 @@ async function supaUpsertEmployee(name, retries=2) {
     if(!avatar && cloud.avatar) avatar=cloud.avatar;
     if((cloud.last_study_day||'') > (lastStudy||'')) lastStudy=cloud.last_study_day;
     if(!lastLogin && cloud.last_login) lastLogin=cloud.last_login;
+    try{ const ca=JSON.parse(cloud.achievements||'[]'); if(Array.isArray(ca)) ach=[...new Set([...ach, ...ca])]; }catch(e){}
     // reflejar la fusión en local para que la UI no muestre menos de lo real
     emp.xp=xp; emp.streak=streak; emp.txokoRecord=txr; emp.duelWins=dw;
     emp.knownDishes=known; emp.examCorrect=exam; emp.topicScores=topics;
+    emp.achievements=ach;
     if(avatar) emp.avatar=avatar; if(lastStudy) emp.lastStudyDay=lastStudy;
     try{ saveDB(); }catch(e){}
   }
@@ -2034,6 +2040,7 @@ async function supaUpsertEmployee(name, retries=2) {
         avatar: avatar,
         duel_wins: dw,
         last_login: lastLogin,
+        achievements: JSON.stringify(ach),
         updated_at: new Date().toISOString()
       })
     });
@@ -2118,6 +2125,21 @@ async function supaRestoreEmployee(name) {
     try { const kd = JSON.parse(r.known_dishes||'{}'); if(Object.keys(kd).length) emp.knownDishes = kd; } catch(e){ dbgw('[restore] bad known_dishes JSON for', cloudName, e.message); }
     try { const ec = JSON.parse(r.exam_correct||'{}'); if(Object.keys(ec).length) emp.examCorrect = ec; } catch(e){ dbgw('[restore] bad exam_correct JSON for', cloudName, e.message); }
     try { const sd = JSON.parse(r.sessions_data||'[]'); if(sd.length > (emp.sessions||[]).length) emp.sessions = sd; } catch(e){ dbgw('[restore] bad sessions_data JSON for', cloudName, e.message); }
+    // Registro de logros ya notificados. Sin esto, un dispositivo nuevo restaura
+    // el XP alto pero con el ledger vacío, así que checkNewAchievements() trataría
+    // TODOS los logros como recién desbloqueados y re-dispararía las notificaciones
+    // (y re-otorgaría XP). El ledger se reconstruye como UNIÓN de tres fuentes:
+    //   1) el ledger de la nube,
+    //   2) el ledger local (por si este equipo ya notificó alguno),
+    //   3) los logros que YA corresponden a las stats restauradas.
+    // La (3) cubre a los usuarios existentes cuyo ledger en la nube aún está
+    // vacío: un logro conseguido en otro dispositivo ya se celebró allí, así que
+    // aquí no se vuelve a avisar. A partir de este login solo saltan los logros
+    // nuevos conseguidos en ESTE dispositivo.
+    let _achSet = [...(emp.achievements||[])];
+    try { const ca = JSON.parse(r.achievements||'[]'); if(Array.isArray(ca)) _achSet.push(...ca); } catch(e){ dbgw('[restore] bad achievements JSON for', cloudName, e.message); }
+    try { if(typeof getUnlockedAchievements==='function') _achSet.push(...getUnlockedAchievements(emp).map(a=>a.id)); } catch(e){ dbgw('[restore] achievements seed error for', cloudName, e.message); }
+    emp.achievements = [...new Set(_achSet)];
     saveDB();
     // Do NOT sync back during restore — avoid overwriting cloud with stale local data
     // supaUpsertEmployee will be called after successful login instead
@@ -2146,6 +2168,7 @@ async function supaFetchAllEmployees() {
       sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ dbgw('[fetchAll] bad sessions_data for', r.name, e.message); return Array(r.sessions_count||0).fill({}); } })(),
       txokoRecord: r.txoko_record || 0,
       duelWins: r.duel_wins || 0,
+      achievements: (() => { try { const a=JSON.parse(r.achievements||'[]'); return Array.isArray(a)?a:[]; } catch(e){ return []; } })(),
       lastLoginTs: r.last_login || null,
       // last_active_at se escribe SIEMPRE al entrar (PATCH ligero, sin el gate
       // de XP ni el payload pesado de supaUpsertEmployee) → es la señal más
