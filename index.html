@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.249">
+<meta name="app-version" content="7.250">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.249';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.250';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1652,7 +1652,7 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 // Wine image helpers
 // Columnas de employees que la anon key SÍ puede leer (todas menos `pin`, que
 // se cierra a la anon key: el PIN se verifica por RPC en el servidor).
-const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements';
+const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras';
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
   return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -2009,6 +2009,7 @@ async function supaUpsertEmployee(name, retries=2) {
     if((cloud.last_study_day||'') > (lastStudy||'')) lastStudy=cloud.last_study_day;
     if(!lastLogin && cloud.last_login) lastLogin=cloud.last_login;
     try{ const ca=JSON.parse(cloud.achievements||'[]'); if(Array.isArray(ca)) ach=[...new Set([...ach, ...ca])]; }catch(e){}
+    _extrasMergeInto(emp, cloud.extras); // liga semanal + reto del día
     // reflejar la fusión en local para que la UI no muestre menos de lo real
     emp.xp=xp; emp.streak=streak; emp.txokoRecord=txr; emp.duelWins=dw;
     emp.knownDishes=known; emp.examCorrect=exam; emp.topicScores=topics;
@@ -2041,6 +2042,7 @@ async function supaUpsertEmployee(name, retries=2) {
         duel_wins: dw,
         last_login: lastLogin,
         achievements: JSON.stringify(ach),
+        extras: _extrasCompose(emp),
         updated_at: new Date().toISOString()
       })
     });
@@ -2140,6 +2142,9 @@ async function supaRestoreEmployee(name) {
     try { const ca = JSON.parse(r.achievements||'[]'); if(Array.isArray(ca)) _achSet.push(...ca); } catch(e){ dbgw('[restore] bad achievements JSON for', cloudName, e.message); }
     try { if(typeof getUnlockedAchievements==='function') _achSet.push(...getUnlockedAchievements(emp).map(a=>a.id)); } catch(e){ dbgw('[restore] achievements seed error for', cloudName, e.message); }
     emp.achievements = [...new Set(_achSet)];
+    // Liga semanal + reto del día: heredar el estado de la nube ANTES de entrar
+    // (evita repetir el reto de hoy en otro dispositivo y conserva la racha).
+    _extrasMergeInto(emp, r.extras);
     saveDB();
     // Do NOT sync back during restore — avoid overwriting cloud with stale local data
     // supaUpsertEmployee will be called after successful login instead
@@ -2169,6 +2174,7 @@ async function supaFetchAllEmployees() {
       txokoRecord: r.txoko_record || 0,
       duelWins: r.duel_wins || 0,
       achievements: (() => { try { const a=JSON.parse(r.achievements||'[]'); return Array.isArray(a)?a:[]; } catch(e){ return []; } })(),
+      extras: (() => { try { const x=JSON.parse(r.extras||'{}'); return (x&&typeof x==='object')?x:{}; } catch(e){ return {}; } })(),
       lastLoginTs: r.last_login || null,
       // last_active_at se escribe SIEMPRE al entrar (PATCH ligero, sin el gate
       // de XP ni el payload pesado de supaUpsertEmployee) → es la señal más
@@ -3366,6 +3372,8 @@ function awardXP(amount, reason, mode){
   const oldXP = emp.xp||0;
   const oldLevel = getLevelInfo(oldXP);
   emp.xp = oldXP + granted;
+  // Liga semanal: todo XP ganado puntúa también en la semana en curso
+  _wkEnsure(emp); emp.wkXP=(emp.wkXP||0)+granted;
   // Mark onboarding as seen once user earns XP (won't show again until next login)
   if(!emp.onboardingSeen){ emp.onboardingSeen = true; }
   const newLevel = getLevelInfo(emp.xp);
@@ -7102,6 +7110,219 @@ function renderWeeklyChallenge(){
 function startChallengeExam(topic,cat){
   examConfig={count:15,topic,cat};
   showTab('exam');
+}
+
+
+// ═══ RETO DEL DÍA — la misma pregunta para todo el equipo ═══
+// Una pregunta al día, idéntica para todo el equipo (generador determinista
+// sembrado con la fecha canaria), una sola oportunidad. Es el motivo para
+// abrir la app HOY: 30 segundos, racha propia con bonus de XP, y alimenta
+// la Liga Semanal. No usa red para generarse: mismo día ⇒ misma pregunta
+// en cualquier dispositivo.
+function _mulberry32(a){
+  return function(){
+    a|=0; a=a+0x6D2B79F5|0;
+    let t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296;
+  };
+}
+function _dqSample(arr,n,rng){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a.slice(0,n);
+}
+function _dqQuestion(dayStr){
+  // Determinista: PROHIBIDO Math.random aquí — solo el PRNG sembrado con la
+  // fecha, para que a todo el equipo le salga la misma pregunta.
+  const rng=_mulberry32((parseInt(dayStr.replace(/-/g,''),10)^0x9E3779B9)>>>0);
+  const pick=arr=>arr[Math.floor(rng()*arr.length)];
+  const en=(typeof LANG!=='undefined'&&LANG==='en');
+  const dishes=DISHES.filter(d=>d&&d.name);
+  const types=['allergen','safe','service','ingredient'];
+  let type=types[Math.floor(rng()*types.length)];
+  // Pool de alérgenos con suficientes platos a ambos lados (pregunta y distractores)
+  const alCount={};
+  dishes.forEach(d=>(d.allergens||[]).forEach(a=>alCount[a]=(alCount[a]||0)+1));
+  const alPool=Object.keys(alCount).sort().filter(a=>alCount[a]>=2 && dishes.filter(d=>!(d.allergens||[]).includes(a)).length>=3);
+  if((type==='allergen'||type==='safe') && !alPool.length) type='service';
+
+  if(type==='allergen'){
+    const al=pick(alPool);
+    const withA=dishes.filter(d=>(d.allergens||[]).includes(al));
+    const correct=pick(withA);
+    const opts=_dqSample([correct].concat(_dqSample(dishes.filter(d=>!(d.allergens||[]).includes(al)),3,rng)),4,rng);
+    return { day:dayStr, type,
+      q: en?`Which of these dishes declares ${al}?`:`¿Cuál de estos platos lleva ${al} declarado?`,
+      opts: opts.map(d=>d.name), correctIdx: opts.indexOf(correct),
+      info: en?`“${correct.name}” declares: ${(correct.allergens||[]).join(', ')}.`:`«${correct.name}» declara: ${(correct.allergens||[]).join(', ')}.` };
+  }
+  if(type==='safe'){
+    const al=pick(alPool);
+    const withA=dishes.filter(d=>(d.allergens||[]).includes(al));
+    const without=dishes.filter(d=>!(d.allergens||[]).includes(al));
+    if(withA.length<3) type='service';
+    else {
+      const correct=pick(without);
+      const opts=_dqSample([correct].concat(_dqSample(withA,3,rng)),4,rng);
+      return { day:dayStr, type,
+        q: en?`A guest is allergic to ${al}. Which of these dishes is SAFE?`:`Un cliente es alérgico a ${al}. ¿Cuál de estos platos es SEGURO?`,
+        opts: opts.map(d=>d.name), correctIdx: opts.indexOf(correct),
+        info: en?`The other three declare ${al}.`:`Los otros tres llevan ${al} declarado.` };
+    }
+  }
+  if(type==='ingredient'){
+    // Ingrediente distintivo: aparece en UN solo plato de la carta
+    const cand=[];
+    dishes.forEach(d=>{
+      (d.ingredients||'').split(/[,.]/).map(s=>s.trim()).filter(s=>s.length>=6&&s.length<=40).forEach(tk=>{
+        const lk=tk.toLowerCase();
+        if(!dishes.some(o=>o.id!==d.id && (o.ingredients||'').toLowerCase().includes(lk))) cand.push({d,tk});
+      });
+    });
+    if(!cand.length) type='service';
+    else {
+      const c=pick(cand);
+      const others=_dqSample(dishes.filter(x=>x.id!==c.d.id && !(x.ingredients||'').toLowerCase().includes(c.tk.toLowerCase())),3,rng);
+      const opts=_dqSample([c.d].concat(others),4,rng);
+      return { day:dayStr, type,
+        q: en?`Which dish includes “${c.tk}”?`:`¿Qué plato lleva «${c.tk}»?`,
+        opts: opts.map(d=>d.name), correctIdx: opts.indexOf(c.d),
+        info: en?`“${c.d.name}” (${c.d.cat}).`:`«${c.d.name}» (${c.d.cat}).` };
+    }
+  }
+  // 'service' — también el fallback universal
+  const svcDishes=dishes.filter(d=>DISH_SERVICE[d.id]);
+  const d=pick(svcDishes);
+  const svc=DISH_SERVICE[d.id];
+  const opts=en?['Lunch only','Dinner only','Lunch and dinner']:['Solo almuerzo','Solo cena','Almuerzo y cena'];
+  return { day:dayStr, type:'service',
+    q: en?`In which service is “${d.name}” offered?`:`¿En qué servicio se ofrece «${d.name}»?`,
+    opts, correctIdx: svc==='a'?0:svc==='c'?1:2,
+    info: en?`“${d.name}” — ${d.cat}.`:`«${d.name}» — ${d.cat}.` };
+}
+function _dqIsDone(emp){ return !!emp && (emp.dqLastDay||'')===todayStr(); }
+function _dqXpFor(streak, ok){ return ok ? 40+Math.min((Math.max(streak,1)-1)*5,35) : 10; }
+function openDailyReto(){
+  if(!currentUser) return;
+  window._dqCurrent=_dqQuestion(todayStr());
+  _dqRender();
+}
+function _dqPick(i){
+  const emp=getEmp(currentUser);
+  const day=todayStr();
+  if(!emp || emp.dqLastDay===day) return; // una sola oportunidad al día
+  const q=window._dqCurrent||_dqQuestion(day);
+  const ok=(i===q.correctIdx);
+  // La racha premia JUGAR a diario (el acierto paga más XP): así el hábito
+  // no se rompe por fallar una pregunta difícil.
+  const prev=emp.dqLastDay||'';
+  emp.dqStreak=(prev && _daysBetween(day,prev)===1) ? (emp.dqStreak||0)+1 : 1;
+  emp.dqLastDay=day; emp.dqLastPick=i; emp.dqLastOk=ok;
+  emp.dqTotal=(emp.dqTotal||0)+1; if(ok) emp.dqHits=(emp.dqHits||0)+1;
+  saveDB();
+  awardXP(_dqXpFor(emp.dqStreak,ok), LANG==='en'?'Daily quiz':'Reto del día');
+  if(typeof supaUpsertEmployee==='function') supaUpsertEmployee(currentUser);
+  _dqRender();
+}
+function _dqClose(){
+  const ov=document.getElementById('dqOverlay');
+  if(ov) ov.remove();
+  // Refresca el anillo/pips de «Hoy» si el inicio está visible
+  if(document.querySelector('.hoy-card') && typeof renderDashboard==='function') renderDashboard();
+}
+function _dqRender(){
+  const en=LANG==='en';
+  const emp=getEmp(currentUser);
+  const day=todayStr();
+  const q=window._dqCurrent||_dqQuestion(day);
+  const done=_dqIsDone(emp);
+  const streak=emp.dqStreak||0;
+  let ov=document.getElementById('dqOverlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='dqOverlay';
+    ov.style.cssText='position:fixed;inset:0;background:rgba(14,22,18,.8);backdrop-filter:blur(3px);z-index:6000;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto';
+    ov.addEventListener('click',e=>{ if(e.target===ov) _dqClose(); });
+    document.body.appendChild(ov);
+  }
+  const dateLbl=new Intl.DateTimeFormat(en?'en-GB':'es-ES',{timeZone:'Atlantic/Canary',weekday:'long',day:'numeric',month:'long'}).format(new Date());
+  const optBtns=q.opts.map((o,i)=>{
+    let st='width:100%;text-align:left;padding:.72rem .9rem;border:1.5px solid rgba(196,154,60,.25);border-radius:10px;background:#fff;color:var(--parchment);font-family:Quicksand,sans-serif;font-size:.85rem;font-weight:600;margin-bottom:.5rem;cursor:pointer;display:flex;align-items:center;gap:.55rem';
+    let mark=`<span style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold-deep);opacity:.7">${String.fromCharCode(65+i)}</span>`;
+    let attr=done?'disabled':`onclick="_dqPick(${i})"`;
+    if(done){
+      st+=';cursor:default;opacity:.55';
+      if(i===q.correctIdx){ st=st.replace('border:1.5px solid rgba(196,154,60,.25)','border:1.5px solid var(--green-deep)')+';background:rgba(77,138,94,.12);opacity:1'; mark=`<span style="color:var(--green-deep);font-weight:800">✓</span>`; }
+      else if(i===emp.dqLastPick){ st=st.replace('border:1.5px solid rgba(196,154,60,.25)','border:1.5px solid #a04848')+';background:rgba(160,72,72,.08);opacity:1'; mark=`<span style="color:#a04848;font-weight:800">✗</span>`; }
+    }
+    return `<button type="button" style="${st}" ${attr}>${mark}<span>${escapeHTML(o)}</span></button>`;
+  }).join('');
+  const resultBlock = done ? `
+    <div style="margin:.6rem 0 .2rem;padding:.7rem .9rem;border-radius:10px;background:${emp.dqLastOk?'rgba(77,138,94,.1)':'rgba(160,72,72,.07)'};border:1px solid ${emp.dqLastOk?'rgba(77,138,94,.3)':'rgba(160,72,72,.25)'}">
+      <div style="font-weight:800;font-size:.88rem;color:${emp.dqLastOk?'#3a6a4a':'#a04848'}">${emp.dqLastOk?(en?'Correct! ':'¡Correcto! ')+'+'+_dqXpFor(streak,true)+' XP':(en?'Not this time':'Esta vez no')+' · +'+_dqXpFor(streak,false)+' XP'}</div>
+      <div style="font-size:.78rem;color:var(--parch2);margin-top:.25rem">${escapeHTML(q.info||'')}</div>
+      <div style="font-size:.74rem;color:var(--parch3);margin-top:.4rem">🔥 ${en?'Streak':'Racha'}: <b>${streak}</b> ${en?(streak===1?'day':'days'):(streak===1?'día':'días')} · ${en?'come back tomorrow':'mañana hay otra'}</div>
+    </div>` : `
+    <div style="font-size:.72rem;color:var(--parch3);margin:.2rem 0 .4rem">🔥 ${en?'Streak':'Racha'}: <b>${streak}</b> · ${en?'answering daily raises the bonus':'responder a diario sube el bonus'}</div>`;
+  ov.innerHTML=`
+    <div role="dialog" aria-modal="true" aria-label="${en?'Daily quiz':'Reto del día'}" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.4);border-radius:16px;max-width:460px;width:100%;padding:1.3rem 1.3rem 1rem;box-shadow:0 18px 60px rgba(0,0,0,.45)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.6rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep)">⭐ ${en?'Daily quiz':'Reto del día'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${dateLbl}</div>
+      </div>
+      <div style="font-family:Georgia,serif;font-size:1rem;font-weight:700;color:var(--parchment);margin:.6rem 0 .7rem;line-height:1.35">${escapeHTML(q.q)}</div>
+      ${optBtns}
+      ${resultBlock}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.6rem">
+        <div style="font-size:.66rem;color:var(--parch3)">${en?'Same question for the whole team today':'Hoy todo el equipo responde esta misma pregunta'}</div>
+        <button type="button" onclick="_dqClose()" style="background:none;border:1.5px solid rgba(196,154,60,.35);border-radius:20px;padding:.4rem 1rem;font-family:Quicksand,sans-serif;font-size:.78rem;font-weight:700;color:var(--parchment);cursor:pointer">${done?(en?'Close':'Cerrar'):(en?'Later':'Luego')}</button>
+      </div>
+    </div>`;
+}
+
+// ═══ LIGA SEMANAL — XP de la semana, se reinicia cada lunes ═══
+// El ranking histórico desmotiva a quien va lejos del líder; la liga
+// empieza de cero cada lunes y cualquiera puede ganarla.
+function _wkKey(){
+  const d=new Date(todayStr()+'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));
+  return d.toISOString().slice(0,10);
+}
+function _wkEnsure(emp){
+  const k=_wkKey();
+  if(emp.wkKey!==k){ emp.wkKey=k; emp.wkXP=0; }
+}
+// Estado sincronizable de reto/liga en una sola columna JSON (`extras`).
+function _extrasCompose(emp){
+  _wkEnsure(emp);
+  return JSON.stringify({
+    wk:{ k:emp.wkKey, xp:emp.wkXP||0 },
+    dq:{ d:emp.dqLastDay||'', s:emp.dqStreak||0, ok:emp.dqLastOk?1:0, p:(emp.dqLastPick==null?-1:emp.dqLastPick), t:emp.dqTotal||0, h:emp.dqHits||0 }
+  });
+}
+function _extrasMergeInto(emp, extrasStr){
+  let x=null;
+  try{ x=JSON.parse(extrasStr||'{}'); }catch(e){ return; }
+  if(!x||typeof x!=='object') return;
+  if(x.wk&&x.wk.k){
+    _wkEnsure(emp);
+    if(x.wk.k===emp.wkKey) emp.wkXP=Math.max(emp.wkXP||0, x.wk.xp||0);
+    // una semana más nueva en la nube no puede existir (la clave local ya es la actual)
+  }
+  if(x.dq&&x.dq.d){
+    const local=emp.dqLastDay||'';
+    if(x.dq.d>local){
+      // Otro dispositivo jugó más recientemente: heredar su estado para que
+      // el reto de hoy no se pueda repetir aquí ni se pierda la racha.
+      emp.dqLastDay=x.dq.d; emp.dqStreak=x.dq.s||0; emp.dqLastOk=!!x.dq.ok;
+      if(x.dq.p!=null && x.dq.p>=0) emp.dqLastPick=x.dq.p;
+    } else if(x.dq.d===local){
+      emp.dqStreak=Math.max(emp.dqStreak||0, x.dq.s||0);
+    }
+    emp.dqTotal=Math.max(emp.dqTotal||0, x.dq.t||0);
+    emp.dqHits=Math.max(emp.dqHits||0, x.dq.h||0);
+  }
 }
 
 
@@ -16473,15 +16694,17 @@ function renderDashboard(){
     ${(()=>{ const _m=renderDailyMissions();
       const _ch=getCurrentChallenge(); const _chP=getChallengeProgress(_ch); const _chDone=_chP.completed>=_chP.total;
       const _srsOk=_srsDue===0; const _msDone=_m.done>=_m.total;
-      const _units=[_srsOk,_chDone].concat(_m.list.map(x=>x.done));
+      const _dqD=_dqIsDone(emp); const _dqS=emp.dqStreak||0;
+      const _units=[_dqD,_srsOk,_chDone].concat(_m.list.map(x=>x.done));
       const _dDone=_units.filter(Boolean).length, _dTot=_units.length;
       const _dash=(163.4*(1-(_dTot?_dDone/_dTot:0))).toFixed(1);
       // Regla fija de prioridad para la ÚNICA acción destacada del día:
-      // repaso SRS vencido > práctica débil > reto pendiente > misión más
-      // cercana a completarse. El usuario decide "hacer" o "ver más", no
-      // elige entre 7 filas.
+      // reto del día (30 s, el gancho diario compartido) > repaso SRS vencido >
+      // práctica débil > reto semanal pendiente > misión más cercana a
+      // completarse. El usuario decide "hacer" o "ver más", no elige entre 7 filas.
       let _next=null;
-      if(_srsDue>0) _next={ic:'⚡',t:_en?('Review '+_srsDue+' dishes'):('Repasa '+_srsDue+' platos'),s:_en?'spaced repetition':'repetición espaciada',go:"_subTab.aprender='smart';showTab('aprender')"};
+      if(!_dqD) _next={ic:'⭐',t:_en?'Daily quiz':'Reto del día',s:_en?'same question for the whole team · 30 s':'la misma pregunta para todo el equipo · 30 s',go:'openDailyReto()'};
+      else if(_srsDue>0) _next={ic:'⚡',t:_en?('Review '+_srsDue+' dishes'):('Repasa '+_srsDue+' platos'),s:_en?'spaced repetition':'repetición espaciada',go:"_subTab.aprender='smart';showTab('aprender')"};
       else if(_weakDisplay) _next={ic:'🎯',t:(_en?'Focus practice: ':'Práctica enfocada: ')+_weakDisplay.label,s:_en?'start the simulation':'inicia la simulación',go:'_startSmartSession()'};
       else if(!_chDone) _next={ic:'🏅',t:(_en?'Weekly challenge':'Reto semanal')+': '+(_en?_ch.en:_ch.es),s:_chP.completed+'/'+_chP.total+' '+(_en?'passed':'superado'),go:"startChallengeExam('"+_ch.topic+"','"+_ch.cat+"')"};
       else { const _pm=_m.list.filter(x=>!x.done&&x.go).sort((a,b)=>(b.current/b.target)-(a.current/a.target))[0];
@@ -16507,13 +16730,22 @@ function renderDashboard(){
       </div>
     </div>
     <div class="hoy-pips">
+      ${_pip(_dqD,(_en?'Daily':'Reto')+(_dqS>1?' 🔥'+_dqS:''))}
       ${_pip(_srsOk,(_en?'Review':'Repaso')+(_srsOk?'':' '+_srsDue))}
-      ${_pip(_chDone,_en?'Challenge':'Reto')}
+      ${_pip(_chDone,_en?'Weekly':'Semanal')}
       ${_pip(_msDone,(_en?'Missions':'Misiones')+' '+_m.done+'/'+_m.total)}
       ${_weakDisplay?_pip(false,_en?'Practice':'Práctica'):''}
     </div>
     <div id="hoyOvertaken"></div>
     <div id="hoyDetail" style="display:none;margin-bottom:1rem">
+      <button class="dash-row" onclick="openDailyReto()" aria-label="${_en?'Daily quiz — same question for the whole team':'Reto del día — la misma pregunta para todo el equipo'}">
+        <span class="dash-row-num" style="color:var(--gold-deep)" aria-hidden="true">⭐</span>
+        <span class="dash-row-body">
+          <span class="dash-row-title">${_en?'Daily quiz':'Reto del día'}${_dqS>1?' · 🔥'+_dqS:''}</span>
+          <span class="dash-row-sub" style="display:block">${_dqD?(_en?'done — come back tomorrow':'hecho — mañana hay otra'):(_en?'same question for the whole team':'la misma pregunta para todo el equipo')}</span>
+        </span>
+        <span class="dash-row-go">›</span>
+      </button>
       ${_srsDue>0 ? `
       <button class="dash-row" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
         <span class="dash-row-num" aria-hidden="true">${_srsDue}</span>
@@ -18217,9 +18449,33 @@ function renderRanking(){
     // Drop the "—" placeholder styling (text-align:center + 2rem padding) before
     // injecting rows: leaked in, it centered the row text and squeezed the cards
     // so the rank title wrapped one word per line.
+    // ── LIGA SEMANAL: se reinicia cada lunes — cualquiera puede ganarla ──
+    const _wkNow=_wkKey();
+    const weekMap={};
+    Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && e.wkKey===_wkNow && (e.wkXP||0)>0) weekMap[n]=e.wkXP||0; });
+    (remoteEmps||[]).forEach(e=>{
+      const wk=e.extras && e.extras.wk;
+      if(wk && wk.k===_wkNow && (wk.xp||0)>0) weekMap[e.name]=Math.max(weekMap[e.name]||0, wk.xp||0);
+    });
+    const _wkSorted=Object.keys(weekMap).sort((a,b)=>weekMap[b]-weekMap[a]||a.localeCompare(b));
+    const _wkDaysLeft=7-((new Date(todayStr()+'T12:00:00Z').getUTCDay()+6)%7);
+    const _wkRows=_wkSorted.slice(0,10).map((n,i)=>{
+      const isMe=n===currentUser;
+      return `<div style="display:flex;align-items:center;gap:.8rem;padding:.65rem .9rem;background:${isMe?'linear-gradient(155deg,rgba(196,154,60,.08),rgba(196,154,60,.03))':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1.5px solid ${isMe?'rgba(196,154,60,.3)':'rgba(196,154,60,.12)'};border-radius:10px;margin-bottom:.45rem">
+        <div style="width:24px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'Cinzel',serif;font-size:.8rem;font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
+        <div style="flex:1;min-width:0;font-size:.85rem;font-weight:700;color:${isMe?'var(--gold)':'var(--parchment)'}">${escapeHTML(n)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.95rem;font-weight:800;color:var(--gold-deep);flex-shrink:0">+${weekMap[n].toLocaleString()} <span style="font-size:.55rem;opacity:.6">XP</span></div>
+      </div>`;
+    }).join('');
+    const leagueHTML=`
+      <div class="tunic-divider"><span>${LANG==='en'?'Weekly league':'Liga semanal'}</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3);text-align:center;margin:-.3rem 0 .7rem">${LANG==='en'?'resets every Monday':'se reinicia cada lunes'} · ${_wkDaysLeft===1?(LANG==='en'?'last day!':'¡último día!'):(_wkDaysLeft+(LANG==='en'?' days left':' días restantes'))}</div>
+      ${_wkRows || `<div style="text-align:center;font-size:.78rem;color:var(--parch3);padding:.8rem 0 1rem">${LANG==='en'?'Nobody has scored this week yet — first to study takes the lead':'Nadie puntúa todavía esta semana — el primero en estudiar se pone líder'}</div>`}`;
+
     const _rc = document.getElementById('rankingContent');
     _rc.removeAttribute('style');
     _rc.innerHTML = `
+      ${leagueHTML}
       <div class="tunic-divider"><span>${LANG==='en'?'By total XP':'Por XP total'}</span></div>
       ${rows}`;
   });

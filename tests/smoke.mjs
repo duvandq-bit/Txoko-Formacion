@@ -3762,6 +3762,32 @@ test('logros: el registro de logros desbloqueados se sincroniza en la nube (no s
     'la restauración debe sembrar el ledger con los logros que ya corresponden a las stats (usuarios existentes con ledger vacío en la nube)');
 });
 
+test('reto del día + liga semanal: pregunta compartida determinista y XP semanal sincronizado (jul 2026)', () => {
+  // Enganche diario pedido por el propietario: «no logramos que los usuarios
+  // se enganchen y la usen a diario». Reto del día = la MISMA pregunta para
+  // todo el equipo (generador sembrado con la fecha — sin Math.random, o cada
+  // móvil vería una pregunta distinta) + Liga semanal que se reinicia cada
+  // lunes (el ranking histórico solo motivaba a los 2 primeros).
+  const dq = html.slice(html.indexOf('function _dqQuestion('), html.indexOf('function _dqIsDone('));
+  assert(dq.length > 100 && !/Math\.random\(/.test(dq),
+    '_dqQuestion debe ser determinista: PROHIBIDA la llamada Math.random() (rompería la pregunta compartida)');
+  assert(/function _mulberry32\(/.test(html), 'falta el PRNG sembrado _mulberry32');
+  assert(/_wkEnsure\(emp\); emp\.wkXP=\(emp\.wkXP\|\|0\)\+granted/.test(html),
+    'awardXP debe acumular el XP ganado en la liga semanal (wkXP)');
+  assert(/const _EMP_COLS='[^']*\bextras\b[^']*'/.test(html),
+    '_EMP_COLS debe incluir extras (estado de liga y reto en la nube)');
+  assert(/extras: _extrasCompose\(emp\)/.test(html),
+    'supaUpsertEmployee debe escribir extras (liga + reto) en la nube');
+  const restore = html.slice(html.indexOf('async function supaRestoreEmployee('),
+    html.indexOf('async function supaRestoreEmployee(') + 8000);
+  assert(/_extrasMergeInto\(emp, r\.extras\)/.test(restore),
+    'la restauración debe heredar liga/reto de la nube (evita repetir el reto de hoy en otro dispositivo)');
+  assert(/Liga semanal/.test(html) && /weekMap/.test(html) && /se reinicia cada lunes/.test(html),
+    'el ranking debe mostrar la Liga semanal con reinicio los lunes');
+  assert(/openDailyReto\(\)/.test(html) && /Reto del día/.test(html),
+    'el inicio debe ofrecer el Reto del día');
+});
+
 test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
   // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
   // aparecer como uno de los restaurantes a escoger, pero el nombre de la
