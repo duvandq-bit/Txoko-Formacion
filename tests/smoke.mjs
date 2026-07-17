@@ -3808,6 +3808,13 @@ test('El Código del Camarero: manual de oficio consultable (jul 2026)', () => {
     'la app debe cargar el Código (lazy) con startCodigo()');
   assert(/El Código del Camarero/.test(html) && /startCodigo\(\)/.test(html),
     'el hub de Protocolo debe tener la entrada al Código del Camarero');
+  // Regla del propietario: «que ningún código actúe en contra del estándar de
+  // Forbes». La vista lo declara y los códigos sensibles lo respetan (p. ej.
+  // la cuenta se OFRECE con prisa, nunca se planta sin pedirla).
+  assert(/ante la duda, manda el estándar/.test(html),
+    'la vista del Código debe declarar que ante la duda manda el estándar Forbes/LQA');
+  assert(/la cuenta está lista/.test(raw) && !/Lleva la cuenta preparada con el último pase, sin que la pidan/.test(raw),
+    'con prisa la cuenta se OFRECE (estándar: se presenta al pedirla) — no se lleva sin pedirla');
 });
 
 test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
