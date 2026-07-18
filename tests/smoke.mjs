@@ -3845,6 +3845,13 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/extractOgImage/.test(sc) && /og:image/.test(sc) && /garturlres/.test(sc),
     'el robot debe extraer og:image y resolver el enlace real del artículo');
   assert(/AbortController/.test(sc), 'toda descarga del robot lleva tope de tiempo');
+  // Regla del propietario: solo la foto PROPIA de la noticia — nunca logos,
+  // placeholders ni la cabecera genérica que el medio repite en todo.
+  assert(/IMG_GENERIC/.test(sc) && /og:image:width/.test(sc) && /byImg/.test(sc),
+    'el robot debe vetar imágenes genéricas: por nombre, por tamaño de icono y por foto repetida entre noticias');
+  const imgUrls = noticias.items.filter(i => i.img).map(i => i.img);
+  assert(new Set(imgUrls).size === imgUrls.length,
+    'ninguna foto puede repetirse entre noticias (repetida = genérica del medio)');
   const actSlice = html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderActualidad'));
   assert(/act-thumb/.test(actSlice) && /loading="lazy"/.test(actSlice)
     && /referrerpolicy="no-referrer"/.test(actSlice) && /onerror=/.test(actSlice),

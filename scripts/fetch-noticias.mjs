@@ -137,18 +137,30 @@ export async function resolveArticle(link){
 
 // ── Imagen principal del artículo (la misma que usan WhatsApp/Twitter
 //    para las previsualizaciones). https obligatorio, nada de svg. ──
+// REGLA DEL PROPIETARIO: si la foto no es la propia de la noticia, mejor
+// sin foto. De ahí los tres cedazos: nombres que delatan logo/placeholder,
+// dimensiones declaradas de icono, y (en enrich) la misma foto repetida en
+// dos noticias distintas = cabecera genérica del medio, fuera de todas.
+// Ojo: nada de vetar «default» a secas — los CDN de Prensa Ibérica llevan
+// «aspect-ratio_default_0» en fotos reales de artículo.
+const IMG_GENERIC = /(logo|logotipo|favicon|placeholder|sprite|avatar|fallback|og[-_.]?default|default[-_.]?(og|share|social)|share[-_.]?image|imagen[-_.]?generica)/i;
+
 export function extractOgImage(html){
-  let og = null, tw = null;
+  let og = null, tw = null, w = null, h = null;
   for(const tag of (html.match(/<meta\s[^>]*>/gi) || [])){
     const prop = ((tag.match(/(?:property|name)\s*=\s*["']([^"']+)["']/i)||[])[1]||'').toLowerCase();
     const content = (tag.match(/content\s*=\s*["']([^"']*)["']/i)||[])[1];
     if(!prop || !content) continue;
     if(!og && (prop === 'og:image' || prop === 'og:image:secure_url')) og = content;
     if(!tw && (prop === 'twitter:image' || prop === 'twitter:image:src')) tw = content;
+    if(!w && prop === 'og:image:width') w = parseInt(content, 10) || null;
+    if(!h && prop === 'og:image:height') h = parseInt(content, 10) || null;
   }
   const u = (og || tw || '').replace(/&amp;/g,'&').trim();
   if(!/^https:\/\//.test(u)) return null;
   if(/\.svg(\?|#|$)/i.test(u)) return null;
+  if(IMG_GENERIC.test(u)) return null;
+  if((w && w < 300) || (h && h < 200)) return null;   // tamaño de logo/icono, no de foto
   return u.length <= 500 ? u : null;
 }
 
@@ -168,6 +180,11 @@ async function enrich(items){
     }
   });
   await Promise.all(workers);
+  // La misma foto en dos noticias distintas no es la foto de ninguna: es la
+  // imagen de cabecera genérica del medio → se quita de todas.
+  const byImg = {};
+  items.forEach(i => { if(i.img) byImg[i.img] = (byImg[i.img]||0) + 1; });
+  items.forEach(i => { if(i.img && byImg[i.img] > 1) delete i.img; });
   const withImg = items.filter(i => i.img).length;
   const direct = items.filter(i => !/news\.google\./.test(i.u)).length;
   console.log(`Enriquecido: ${direct}/${items.length} enlaces directos, ${withImg}/${items.length} con imagen`);
