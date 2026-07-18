@@ -1661,6 +1661,12 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 // escribir la nube — el ranking enseña la caché local a 0 y parece que «se
 // perdió el progreso de todos» (no se pierde: la nube queda congelada y lo
 // local se sube al restaurar los permisos, pero el susto es máximo).
+// ⚠ Y SEGUNDA TRAMPA (mismo incidente): el upsert de PostgREST
+// (Prefer: resolution=merge-duplicates) incluye la columna de conflicto
+// `name` en el DO UPDATE SET ⇒ hace falta también UPDATE(name), aunque la
+// app jamás renombre. Sin él, los GET van bien y SOLO fallan los POST (401
+// en bucle de reintentos). Diagnóstico rápido: logs api = POST 401 + logs
+// postgres = «permission denied for table employees».
 const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras';
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
