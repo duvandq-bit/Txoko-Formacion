@@ -9869,3 +9869,33 @@ body.chat-open .sound-toggle{ display:none !important; }
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lu-meta{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--gold-deep);flex-shrink:0}
 .lu-row.done .lu-meta{color:var(--parch4)}
+
+/* ═══ LOGIN refinado (jul 2026) — emblema cloche, botón premium plano,
+   pestañas finas, un solo camino por acción y pie compacto ═══ */
+.login-emblem{display:flex;justify-content:center;margin-bottom:.5rem;
+  filter:drop-shadow(0 4px 16px rgba(196,154,60,.3));animation:fadeIn .8s ease}
+.login-emblem svg{width:74px;height:auto}
+.login-eyebrow{margin-bottom:.35rem}
+/* El enlace «¿Primera vez aquí? Crear cuenta nueva» duplicaba la pestaña
+   CREAR CUENTA de arriba: un solo camino por acción. El de recuperación
+   (#loginForgotRow) se queda — ese no tiene duplicado. */
+#loginNewUserHint{display:none!important}
+.login-mode-tab{min-height:32px;padding:.45rem .5rem;font-size:.6rem;letter-spacing:.12em}
+.login-mode-tab svg{width:12px;height:12px;flex-shrink:0}
+.login-card{border-radius:18px;border-color:rgba(196,154,60,.22);padding:1.35rem 1.4rem 1.15rem}
+.btn-primary.login-submit-btn{
+  background:linear-gradient(150deg,#eecb79,var(--gold) 55%,#a8813a);
+  box-shadow:0 6px 20px rgba(196,154,60,.3), inset 0 1px 0 rgba(255,246,223,.5);
+  color:var(--parchment);text-shadow:none;
+  font-family:'Cinzel',serif;font-weight:700;letter-spacing:.24em;
+  font-size:.88rem;border-radius:12px;padding:.85rem;margin-top:.7rem;
+}
+.btn-primary.login-submit-btn:active{transform:translateY(1px);box-shadow:0 3px 10px rgba(196,154,60,.25)}
+.login-remember{font-size:.68rem}
+.login-remember input{accent-color:var(--gold);width:15px;height:15px}
+.login-venue-label{margin-bottom:.35rem;opacity:.85}
+.login-venue-trigger{min-height:46px;border-radius:12px;font-size:.88rem}
+#loginForgotRow{margin-top:.55rem!important}
+#disclaimerText{font-size:.52rem!important;opacity:.85}
+.login-tools button{padding:.4rem .9rem!important;font-size:.6rem!important;min-height:34px}
+.login-footer{margin-top:.4rem}

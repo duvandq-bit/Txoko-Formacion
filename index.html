@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.257">
+<meta name="app-version" content="7.258">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -138,6 +138,23 @@
        venue elegido en data/themes.json — la app ya no se presenta como
        ningún restaurante. Si themes.json no carga (primera visita offline),
        lo que se ve es Meseo, no una marca ajena. -->
+  <!-- Emblema: la cloche del icono de la app, coronando la marca -->
+  <div class="login-emblem" aria-hidden="true">
+    <svg viewBox="118 84 276 202" width="74">
+      <defs>
+        <linearGradient id="lemG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f0d68a"/><stop offset=".55" stop-color="#d9b45c"/><stop offset="1" stop-color="#b8912f"/>
+        </linearGradient>
+      </defs>
+      <g fill="url(#lemG)">
+        <path d="M256 150 c 12 -10 -12 -20 0 -32 c 10 -10 -6 -20 2 -30" fill="none" stroke="url(#lemG)" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="256" cy="176" r="9"/>
+        <path d="M150 262 a106 96 0 0 1 212 0 Z"/>
+        <path d="M212 196 a92 82 0 0 1 118 20" fill="none" stroke="#fff6df" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+        <path d="M132 262 h248 a10 10 0 0 1 10 10 v3 a8 8 0 0 1 -8 8 H130 a8 8 0 0 1 -8 -8 v-3 a10 10 0 0 1 10 -10 Z"/>
+      </g>
+    </svg>
+  </div>
   <div class="login-eyebrow"><span id="loginEyebrow">Formación de sala</span></div>
   <div class="login-logo">
     <h1 id="loginLogoName">Meseo</h1>
@@ -259,7 +276,7 @@
       <button class="legal-modal-close" onclick="document.getElementById('legalModal').style.display='none'">Cerrar</button>
     </div>
   </div>
-  <div style="display:flex;gap:.6rem;margin-top:.6rem;justify-content:center;flex-wrap:wrap">
+  <div class="login-tools" style="display:flex;gap:.6rem;margin-top:.6rem;justify-content:center;flex-wrap:wrap">
     <button onclick="shareApp()" style="display:flex;align-items:center;gap:.5rem;padding:.5rem 1.1rem;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.55);border-radius:2rem;cursor:pointer;transition:all .2s;font-family:'DM Mono',monospace;font-size:.66rem;color:rgba(212,170,76,.95);letter-spacing:.08em">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(196,154,60,.75)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       Compartir
@@ -1511,7 +1528,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.257';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.258';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
