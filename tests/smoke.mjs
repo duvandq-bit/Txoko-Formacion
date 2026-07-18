@@ -4496,43 +4496,53 @@ test('the simulation carries ONE name everywhere: Simulación', () => {
     'XP toasts must not use the old name');
 });
 
-test('dashboard «Hoy»: ring + single next action + pips, detail on demand', () => {
-  // Retention audit (jul 2026): 7 equal-weight ledger rows forced reading
-  // everything. Now: aggregate day-ring, ONE prioritized CTA, status pips;
-  // the full rows live in a collapsed #hoyDetail accordion.
-  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('function checkActiveLiveSession'));
+test('dashboard «Hoy»: héroe pergamino de dos estados + stats + filas numeradas (rediseño jul 2026)', () => {
+  // Exploración de diseño aprobada por el propietario: UNA tarjeta pergamino
+  // dominante con dos estados (Reto del día pendiente ⇄ Plato del día al
+  // terminarlo), tira de stats (racha · precisión · liga) y filas numeradas
+  // compactas; el detalle sigue en el acordeón #hoyDetail (fila 03).
+  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
   assert(/\$\{_en\?'Today':'Hoy'\}/.test(dash), 'the Hoy divider must exist');
-  assert(/class="hoy-card"/.test(dash) && /class="hoy-ring"/.test(dash) && /hoy-ring-fill/.test(dash),
-    'the day-progress ring must exist');
-  assert(/class="hoy-next"/.test(dash) && /SIGUIENTE/.test(dash),
-    'the single prioritized next-action button must exist');
-  // Priority rule: SRS > weak practice > weekly challenge > closest mission.
-  assert(dash.indexOf('_srsDue>0) _next=') < dash.indexOf('else if(_weakDisplay) _next=')
-      && dash.indexOf('else if(_weakDisplay) _next=') < dash.indexOf('else if(!_chDone) _next='),
-    'next-action priority order broken');
-  assert(/class="hoy-pips"/.test(dash) && /_hoyToggle\(\)/.test(dash),
-    'status pips must toggle the detail accordion');
+  assert(/_pddHeroHTML\(emp,_en\)/.test(dash), 'el héroe de dos estados debe renderizarse en Hoy');
+  // El héroe: estado A = reto pendiente (CTA Empezar), estado B = plato del día.
+  const hero = html.slice(html.indexOf('function _pddHeroHTML('), html.indexOf('function _pddAsyncFill('));
+  assert(/_dqIsDone\(emp\)/.test(hero) && /openDailyReto\(\)/.test(hero),
+    'estado A del héroe: reto pendiente con CTA Empezar');
+  assert(/_pddDishOfDay\(todayStr\(\)\)/.test(hero) && /_emplOpen\(\$\{d\.id\}\)/.test(hero),
+    'estado B del héroe: plato del día con Ver ficha');
+  assert(/RETO HECHO ✓/.test(hero), 'el estado B debe mostrar el sello RETO HECHO');
+  // Plato del día determinista: mismo día ⇒ mismo plato para todo el equipo.
+  const pdd = html.slice(html.indexOf('function _pddDishOfDay('), html.indexOf('function _pddTecFor('));
+  assert(/_mulberry32\(/.test(pdd) && !/Math\.random\(/.test(pdd),
+    '_pddDishOfDay debe ser determinista (semilla por fecha, sin Math.random)');
+  // Chips honestos: SIN GLUTEN ✓ solo si el plato NO declara gluten.
+  assert(/!al\.includes\('Gluten'\)/.test(hero), 'el chip SIN GLUTEN solo sale si no hay gluten declarado');
+  // Tira de stats + filas numeradas + acordeón.
+  assert(/class="hoy-stats"/.test(dash) && /id="hoyLigaPos"/.test(dash),
+    'la tira de stats (racha · precisión · liga) debe existir');
+  assert(/class="hoy-numrow"/.test(dash) && /_hoyToggle\(\)/.test(dash),
+    'las filas numeradas deben existir y la 03 abre el acordeón');
   assert(/id="hoyDetail" style="display:none/.test(dash), 'detail must start collapsed');
-  // The old rows survive inside the accordion (SRS, weak, challenge, missions).
   assert(/\$\{renderWeeklyChallenge\(\)\}\s*\$\{_m\.rows\}/.test(dash),
     'challenge and mission rows must live inside #hoyDetail');
   assert(!/'Needs practice':'Necesita práctica'/.test(dash),
     'the redundant weak-topic alert row must stay removed');
   // «Próximo rango» is passive context — it moved to «Tu progreso».
-  const hoyEnd = dash.indexOf('id="hoyDetail"');
   const progIdx = dash.indexOf("'Your progress':'Tu progreso'");
   const rankIdx = dash.indexOf('_rankProg ? `');
   assert(progIdx !== -1 && rankIdx > progIdx, 'next-rank row must live under Tu progreso, not in Hoy');
-  // El IIFE de «Hoy» no puede cerrar con "`;": el guard del dashboard corta
-  // la plantilla en la primera aparición de esa secuencia.
-  assert(!/<\/div>`; \}\)\(\)\}/.test(dash), 'Hoy IIFE must not emit a backtick-semicolon inside the template');
-  // renderDailyMissions exposes per-mission state for the ring/pips/next.
+  // renderDailyMissions exposes per-mission state for the rows/detail.
   assert(/return \{ rows, done: doneCount, total: missions\.length, list \};/.test(html),
     'renderDailyMissions must return the per-mission list');
   assert(/function _hoyToggle\(\)/.test(html), '_hoyToggle accordion missing');
+  // Rellenos asíncronos: foto (dish-photos), maridaje (wines) y liga (nube).
+  assert(/_pddAsyncFill\(\);/.test(dash), 'renderDashboard debe disparar _pddAsyncFill tras pintar');
+  const fill = html.slice(html.indexOf('function _pddAsyncFill('), html.indexOf('// ═══ LIGA SEMANAL'));
+  assert(/loadDishPhotos/.test(fill) && /_pddWineFor/.test(fill) && /_ligaPosCache/.test(fill),
+    '_pddAsyncFill debe rellenar foto, maridaje y posición de liga (con caché)');
   const css = read('styles.css');
-  assert(/\.hoy-card\{/.test(css) && /\.hoy-pip\.done\{/.test(css) && /\.hoy-next\{/.test(css),
-    'hoy component styles missing');
+  assert(/\.pdd-hero\{/.test(css) && /\.hoy-stats\{/.test(css) && /\.hoy-numrow\{/.test(css),
+    'estilos del héroe/stats/filas numeradas ausentes');
 });
 
 test('vinos: Sensorial+Mapa merged under Estudio — the bar holds 5 chips', () => {
