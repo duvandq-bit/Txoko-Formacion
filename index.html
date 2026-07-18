@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.254">
+<meta name="app-version" content="7.255">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.254';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.255';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8809,7 +8809,6 @@ function logout(){
   clearTimeout(_sessionTimer); _sessionTimer = null;
   clearInterval(timerInterval); timerInterval = null;
   clearInterval(_duelTimerInterval); _duelTimerInterval = null;
-  clearInterval(_qdTimer); _qdTimer = null; _qdState = null;
   clearInterval(txokoTimer); txokoTimer = null;
   // ── Clear supervisor-scope leaks so next user can't read team data from window ──
   supAuthenticated = false; _supPin = null;
@@ -16907,21 +16906,9 @@ function renderDashboard(){
       <span class="dash-row-go">›</span>
     </button>` })()}
 
-    <!-- Quiz del día: SIEMPRE visible — abierto 24/7, sin supervisor ni código
-         (jul 2026; el tile del quiz en vivo de abajo solo aparece si un
-         supervisor monta el modo evento) -->
-    <div onclick="renderQuizDia()" id="qdTile" role="button" tabindex="0" aria-label="${LANG==='en'?'Daily Quiz, open now':'Quiz del día, abierto ahora'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--gold-b);border:2px solid var(--gold-a);border-radius:var(--r2);margin-bottom:.5rem;cursor:pointer">
-      <span style="font-size:1.1rem" aria-hidden="true">🎯</span>
-      <div style="flex:1">
-        <div style="font-size:.85rem;font-weight:500;color:var(--gold)">${LANG==='en'?'Daily Quiz':'Quiz del día'}</div>
-        <div id="qdTileSub" style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${LANG==='en'?'5 questions · 20s · same for everyone':'5 preguntas · 20s · las mismas para todos'}</div>
-      </div>
-      <span class="dash-row-go">›</span>
-    </div>
 
   `;
   animateCounters();
-  _qdTileSync();
   checkMissionCompletion();
   checkNewAchievements();
   _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
@@ -16929,10 +16916,6 @@ function renderDashboard(){
 }
 
 
-
-// (checkActiveLiveSession + el polling de 15s del quiz en vivo se retiraron
-// con el quiz de supervisor: el Quiz del Día no necesita vigilar nada — su
-// tile es permanente y _qdTileSync solo pinta la participación del día)
 
 // ═══════ FLASHCARDS ═══════
 function initFlashcards(topic,cat){
@@ -19807,204 +19790,12 @@ async function sendNotification(){
 // diaria compartida, avance automático — lo sustituye. Los helpers de la
 // tabla live_sessions se fueron con él; la tabla queda sin lectores. ═══
 
-// ═══ EL QUIZ DEL DÍA (jul 2026, propietario: «debería ser abierto y que todo
-// el mundo pueda entrar cuando quiera, sin esperar por el supervisor») ═══
-// El quiz en vivo exigía DOS esperas humanas: que el supervisor crease la
-// sesión (sin sesión, ni siquiera había puerta en el dashboard) y que pulsara
-// ▶ en cada pregunta. El Quiz del Día está abierto 24/7 y corre solo:
-//   · MISMAS 5 preguntas para todo el equipo — semilla por fecha (mulberry32)
-//     → generación determinista en cada dispositivo, sin servidor. A
-//     propósito NO filtra por turno de estudio: una competición compartida
-//     exige un pool idéntico para todos.
-//   · 20s por pregunta con avance AUTOMÁTICO (respondes o expira → siguiente).
-//   · Un intento CLASIFICADO al día por empleado (guard local); el ranking
-//     diario vive en la tabla genérica 'scores' (topic='quizdia',
-//     cat=YYYY-MM-DD — cero migraciones).
-//   · El primero del día en terminar deja aviso al equipo (notificación
-//     in-app ya existente): el quiz se convierte en cita, no en sorpresa.
-// El modo con anfitrión (código + ▶) sobrevive como «modo evento» para
-// reuniones de equipo; solo deja de ser la única puerta.
-let _qdTimer=null, _qdState=null;
-function _qdDayKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function _qdRng(){ // mulberry32 sembrado con la fecha de hoy
-  let a=(+_qdDayKey().replace(/-/g,''))^0x9e3779b9;
-  return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; };
-}
-function _qdShuffle(arr,rng){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-function _qdQuestions(){
-  const rng=_qdRng();
-  const pool=_qdShuffle(DISHES,rng).slice(0,5);
-  return pool.map(d=>{
-    const topic=TOPICS[Math.floor(rng()*TOPICS.length)];
-    const correct=(topic.a(d)||'').trim();
-    // distractores: misma categoría preferida (la regla pedagógica de
-    // _pickDistractorPool, que aquí no se puede reutilizar tal cual porque
-    // su filtro de turno rompería el determinismo compartido); con menos de
-    // 6 en la categoría se abre al resto de la carta, como allí
-    const sameCat=DISHES.filter(x=>x.id!==d.id&&x.cat===d.cat);
-    const dpool=sameCat.length>=6?sameCat:DISHES.filter(x => x.id !== d.id);
-    const wrongs=_qdShuffle(dpool,rng).map(x=>(topic.a(x)||'').trim()).filter(w=>w&&w!==correct);
-    const uniq=[...new Set(wrongs)].slice(0,3);
-    const choices=_qdShuffle([correct,...uniq],rng);
-    return { dish:d.name, topic:topic.label, q:topic.q(d), correct, choices };
-  });
-}
-function _qdRecKey(){ return 'qd:'+currentUser+':'+_qdDayKey(); }
-function _qdPlayed(){ try{ return JSON.parse(localStorage.getItem(_qdRecKey())||'null'); }catch(_){ return null; } }
-async function supaInsertQdScore(correct,total){
-  try {
-    await fetch(`${SUPA_URL}/rest/v1/scores`, {
-      method: 'POST',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ employee: currentUser, score: correct, total, topic: 'quizdia', cat: _qdDayKey(), time_sec: 0 })
-    });
-  } catch(e) {}
-}
-async function supaFetchQdToday(){
-  try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score,total&topic=eq.quizdia&cat=eq.${_qdDayKey()}&order=score.desc&limit=100`,
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
-    if(!res.ok) return null;
-    const rows = await res.json();
-    if(!Array.isArray(rows)) return null;
-    const best = {};
-    rows.forEach(r => { if(!best[r.employee] || r.score > best[r.employee].score) best[r.employee] = r; });
-    return Object.values(best).sort((a,b)=>b.score-a.score);
-  } catch(e) { return null; }
-}
-// tile del dashboard: siempre visible; el subtítulo cuenta la participación
-async function _qdTileSync(){
-  const el=document.getElementById('qdTileSub'); if(!el) return;
-  const played=_qdPlayed();
-  if(played){ el.textContent=(LANG==='en'?'Done today: ':'Hecho hoy: ')+played.correct+'/'+played.total+(LANG==='en'?' · tap for ranking':' · toca para ver el ranking'); return; }
-  const rows=await supaFetchQdToday();
-  const el2=document.getElementById('qdTileSub'); if(!el2) return;
-  if(rows&&rows.length) el2.textContent=rows.length+(LANG==='en'?(rows.length===1?' teammate already played':' teammates already played'):(rows.length===1?' compañero ya jugó hoy':' compañeros ya jugaron hoy'));
-}
-function _qdStopTimer(){ if(_qdTimer){ clearInterval(_qdTimer); _qdTimer=null; } }
-function renderQuizDia(){
-  _qdStopTimer();
-  const played=_qdPlayed();
-  if(played){ _qdEnd(played.correct, played.total, true); return; }
-  const _en=LANG==='en';
-  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">🎯 ${_en?'Daily Quiz':'Quiz del día'}</div>
-    </div>
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;text-align:center">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem">${_qdDayKey()}</div>
-      <div style="font-size:.85rem;color:var(--parchment);line-height:1.6">${_en
-        ? '<b>5 questions</b> on today\'s menu · <b>20s</b> each, auto-advance.<br>Same questions for the whole team — one ranked attempt per day.'
-        : '<b>5 preguntas</b> de la carta · <b>20s</b> cada una, avance automático.<br>Las mismas para todo el equipo — un intento clasificado al día.'}</div>
-    </div>
-    <button onclick="_qdStart()" class="btn-primary" style="width:100%;padding:.85rem">▶ ${_en?'Start now':'Empezar ahora'}</button>
-    <div style="text-align:center;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);margin-top:.6rem">${_en?'No code. No host. No waiting.':'Sin código. Sin supervisor. Sin esperas.'}</div>
-  </div>`;
-}
-function _qdStart(){
-  _qdState={ qs:_qdQuestions(), i:0, correct:0, detail:[] };
-  _qdQuestion();
-}
-function _qdQuestion(){
-  _qdStopTimer();
-  const st=_qdState; if(!st) return;
-  const q=st.qs[st.i], _en=LANG==='en';
-  const deadline=Date.now()+20000;
-  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;text-align:left">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4)">${_en?'Question':'Pregunta'} ${st.i+1} ${_en?'of':'de'} ${st.qs.length} · ${escapeHTML(q.topic||'')}</div>
-        <div id="qdTimer" role="timer" style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--gold);min-width:32px;text-align:right">20</div>
-      </div>
-      <div style="width:100%;height:3px;background:var(--ink3);border-radius:2px;margin-bottom:.85rem;overflow:hidden">
-        <div id="qdTimerFill" style="height:100%;background:var(--sage);width:100%;border-radius:2px;transition:width 1s linear"></div>
-      </div>
-      <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);margin-bottom:1rem">${escapeHTML(q.q||q.dish||'')}</div>
-      <div id="qdChoices">
-      ${q.choices.map((ch,i)=>`
-        <button onclick="_qdAnswer(${i})" style="width:100%;text-align:left;padding:.75rem 1rem;margin-bottom:.4rem;border:2px solid var(--line);border-radius:var(--r2);background:#fff;font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);cursor:pointer;transition:all .2s">
-          ${String.fromCharCode(65+i)}. ${escapeHTML(ch||'')}
-        </button>`).join('')}
-      </div>
-    </div>
-  </div>`;
-  _qdTimer=setInterval(()=>{
-    const remaining=Math.max(0,deadline-Date.now()), secs=Math.ceil(remaining/1000);
-    const tEl=document.getElementById('qdTimer'), fEl=document.getElementById('qdTimerFill');
-    if(!tEl){ _qdStopTimer(); return; }   // navegó fuera: el timer muere solo
-    tEl.textContent=secs; tEl.style.color=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--parch2)';
-    if(fEl){ fEl.style.width=(remaining/20000*100)+'%'; fEl.style.background=secs<=5?'var(--rose)':secs<=10?'var(--gold)':'var(--sage)'; }
-    if(remaining<=0) _qdAnswer(-1);       // tiempo agotado: cuenta como fallo y AVANZA SOLO
-  },1000);
-}
-function _qdAnswer(choiceIdx){
-  _qdStopTimer();
-  const st=_qdState; if(!st) return;
-  const q=st.qs[st.i];
-  const answer=choiceIdx>=0?q.choices[choiceIdx]:null;
-  const ok=answer===q.correct;
-  if(ok) st.correct++;
-  st.detail.push({ dish:q.dish, mine:answer, correct:q.correct, ok });
-  // feedback inmediato: verde la correcta, rojo la elegida si falló
-  document.querySelectorAll('#qdChoices button').forEach((b,i)=>{
-    b.disabled=true;
-    const isC=q.choices[i]===q.correct;
-    if(isC){ b.style.borderColor='var(--sage)'; b.style.background='rgba(77,138,94,.1)'; }
-    else if(i===choiceIdx){ b.style.borderColor='var(--rose)'; b.style.background='rgba(196,112,104,.08)'; }
-    else b.style.opacity='.55';
-  });
-  const tEl=document.getElementById('qdTimer'); if(tEl&&choiceIdx<0){ tEl.textContent='⏰'; tEl.style.color='var(--rose)'; }
-  setTimeout(()=>{ st.i++; if(st.i<st.qs.length) _qdQuestion(); else _qdFinish(); }, 1200);
-}
-async function _qdFinish(){
-  const st=_qdState; if(!st) return;
-  const correct=st.correct, total=st.qs.length;
-  try{ localStorage.setItem(_qdRecKey(), JSON.stringify({ correct, total, detail: st.detail })); }catch(_){}
-  awardXP(correct*5, LANG==='en'?'Daily Quiz':'Quiz del día', 'live');
-  supaInsertQdScore(correct, total);
-  _qdEnd(correct, total, false);
-}
-async function _qdEnd(correct, total, revisit){
-  _qdStopTimer(); _qdState=null;
-  const _en=LANG==='en';
-  const pct=Math.round(correct/total*100);
-  const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-  const played=_qdPlayed();
-  const detail=(played&&played.detail)||[];
-  document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem;text-align:center">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;text-align:left">
-      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">🎯 ${_en?'Daily Quiz':'Quiz del día'}</div>
-    </div>
-    <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment)">${revisit?(_en?'Your result today':'Tu resultado de hoy'):(_en?'Done!':'¡Hecho!')}</div>
-    <div style="font-size:2.5rem;font-family:'Cinzel',serif;color:${col};margin:.4rem 0">${correct}/${total}</div>
-    ${revisit?'':`<div style="font-size:.8rem;color:var(--parch3);margin-bottom:.5rem">+${correct*5} XP</div>`}
-    ${detail.length?`<div style="margin:1rem 0;text-align:left">${detail.map(d=>`
-      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid ${d.ok?'rgba(77,138,94,.3)':'rgba(196,112,104,.2)'};border-radius:var(--r2);padding:.6rem .9rem;margin-bottom:.35rem">
-        <div style="font-size:.78rem;color:var(--parchment)">${d.ok?'✓':'✗'} ${escapeHTML(d.dish||'')}</div>
-        ${!d.ok?`<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.15rem">${escapeHTML(d.mine||(_en?'No answer':'Sin respuesta'))} → ${escapeHTML(d.correct||'')}</div>`:''}
-      </div>`).join('')}</div>`:''}
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin:1rem 0 .5rem">${_en?'Today\'s ranking':'Ranking de hoy'}</div>
-    <div id="qdBoard" role="status" aria-live="polite" style="font-size:.8rem;color:var(--parch3);font-style:italic">${_en?'Loading…':'Cargando…'}</div>
-    <button onclick="showTab('dashboard')" class="btn-primary" style="width:100%;margin-top:1.25rem">${_en?'Back to start':'Volver al inicio'}</button>
-  </div>`;
-  const rows=await supaFetchQdToday();
-  const bEl=document.getElementById('qdBoard'); if(!bEl) return;
-  if(!rows){ bEl.textContent=_en?'Offline — your score will count when you reconnect.':'Sin conexión — tu resultado contará al reconectar.'; return; }
-  if(!rows.length){ bEl.textContent=_en?'You are the first today!':'¡Eres el primero de hoy!'; }
-  else bEl.innerHTML=rows.slice(0,10).map((r,i)=>{
-    const me=r.employee===currentUser;
-    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem .7rem;margin-bottom:.25rem;background:${me?'var(--gold-b)':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1px solid ${me?'var(--gold-a)':'var(--line)'};border-radius:var(--r2);text-align:left">
-      <span style="font-family:'Cinzel',serif;font-weight:700;font-size:.85rem;color:${i===0?'var(--gold)':'var(--parch3)'};min-width:22px">${i===0?'👑':(i+1)+'.'}</span>
-      <span style="flex:1;font-size:.8rem;color:var(--parchment);font-weight:${me?'700':'400'}">${escapeHTML(r.employee)}${me?(_en?' (you)':' (tú)'):''}</span>
-      <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--parch3)">${r.score}/${r.total||total}</span>
-    </div>`;}).join('');
-  // el primero del día que termina avisa al equipo: cita, no sorpresa
-  if(!revisit && rows.length===1 && rows[0].employee===currentUser){
-    supaCreateNotification('all', (_en?'🎯 Daily Quiz is served — ':'🎯 El quiz del día está servido — ')+currentUser+(_en?' opened the board with ':' ha abierto el marcador con ')+correct+'/'+total, 'info');
-  }
-}
+// ═══ (RETIRADO jul 2026) EL QUIZ DEL DÍA de 5 preguntas ═══
+// El propietario decidió retirarlo: convivía con el nuevo «Reto del día»
+// (1 pregunta compartida, racha y liga) y el nombre casi idéntico confundía.
+// Las puntuaciones históricas (scores topic='quizdia') quedan en la nube sin
+// que nadie las lea. Si algún día vuelve, que vuelva con otro nombre.
+
 function renderCartaEditor(){
   const cats = [...new Set(DISHES.map(d=>d.cat))];
   const c = document.getElementById('appContent');

@@ -3653,38 +3653,19 @@ test('Camarero Survivors: música v2 — swing, batería sintetizada, lead que r
     'the sequencer lifecycle (start with run, die in teardown) must stay intact');
 });
 
-test('Quiz del día: abierto 24/7 sin supervisor — semilla diaria, avance automático y ranking compartido (jul 2026)', () => {
-  // Propietario: «debería ser abierto y que todo el mundo pueda entrar
-  // cuando quiera, sin esperar por el supervisor para entrar o que inicie
-  // las preguntas». El quiz en vivo exigía sesión del supervisor (sin ella
-  // no había ni puerta en el dashboard) y un ▶ manual por pregunta. El Quiz
-  // del Día corre solo; el modo con anfitrión sobrevive como modo evento.
-  // — tile SIEMPRE visible; el quiz en vivo de supervisor se RETIRÓ entero
-  //   (segunda petición: «ya no hace falta») —
-  assert(/id="qdTile"[^>]*style="display:flex/.test(html), 'the daily-quiz tile must be always visible on the dashboard');
-  assert(!/renderLiveQuizHost|renderJoinLiveQuiz|supaCreateLiveSession|_supTool\('quiz'\)|id="liveQuizTile"/.test(html),
-    'the supervisor-hosted live quiz (host view, join view, session helpers, panel button, hidden tile) must be gone');
-  assert(!/rest\/v1\/live_sessions/.test(html), 'no code may still read or write the live_sessions table');
-  // — mismas 5 preguntas para todos: fecha → mulberry32 → generación local —
-  assert(/function _qdRng\(\)/.test(html) && /0x6D2B79F5/.test(html) && /_qdDayKey\(\)\.replace/.test(html),
-    'questions must derive from a date-seeded RNG (same questions for everyone, no server)');
-  assert(/function _qdQuestions\(\)/.test(html) && /_qdShuffle\(DISHES,rng\)/.test(html),
-    'the generator must be a deterministic seeded shuffle over the full shared menu');
-  // — avance automático: deadline de 20s, el timeout cuenta como fallo —
-  assert(/Date\.now\(\)\+20000/.test(html) && /if\(remaining<=0\) _qdAnswer\(-1\)/.test(html),
-    'each question must auto-advance after 20s (no host pressing ▶)');
-  // — un intento clasificado al día + ranking en la tabla genérica scores —
-  assert(/'qd:'\+currentUser\+':'\+_qdDayKey\(\)/.test(html), 'the one-ranked-attempt guard must key on employee+date');
-  assert(/topic: 'quizdia', cat: _qdDayKey\(\)/.test(html) && /topic=eq\.quizdia&cat=eq\./.test(html),
-    'daily scores must reuse the generic scores table (topic=quizdia, cat=day) — zero migrations');
-  // — XP, aviso del primero del día, y limpieza de timers —
-  assert(/awardXP\(correct\*5/.test(html), 'finishing must pay XP like the live quiz did');
-  assert(/rows\.length===1 && rows\[0\]\.employee===currentUser/.test(html) && /quiz del día está servido/.test(html),
-    'the first finisher of the day must ping the team (turns the quiz into a daily rendezvous)');
-  assert(/clearInterval\(_qdTimer\); _qdTimer = null; _qdState = null;/.test(html),
-    'logout must clear the quiz timer/state like every other interval');
-  assert(/if\(!tEl\)\{ _qdStopTimer\(\); return; \}/.test(html),
-    'the question timer must self-kill when the user navigates away mid-question');
+test('Quiz del día antiguo (5 preguntas): RETIRADO — solo existe el Reto del día (jul 2026)', () => {
+  // Decisión del propietario: el quiz de 5 preguntas convivía con el nuevo
+  // «Reto del día» (1 pregunta compartida, racha y liga) y el nombre casi
+  // idéntico confundía. Se retiró entero: tile, vistas, temporizador, RNG
+  // propio y escritura de scores (topic=quizdia). Este guard evita que
+  // vuelva por una caché vieja o un copy-paste.
+  assert(!/renderQuizDia|id="qdTile"|_qdTileSync|_qdDayKey|_qdState|_qdTimer/.test(html),
+    'el quiz del día antiguo debe seguir retirado (tile, vistas y estado)');
+  assert(!/topic: 'quizdia'|topic=eq\.quizdia/.test(html),
+    'nada puede volver a escribir o leer scores con topic=quizdia');
+  // El sustituto sigue vivo: el Reto del día con su generador determinista.
+  assert(/function _dqQuestion\(/.test(html) && /openDailyReto/.test(html),
+    'el Reto del día (1 pregunta compartida) debe seguir siendo la mecánica diaria');
 });
 
 test('SW: la recarga por versión nueva no interrumpe una sesión en curso (jul 2026, doble pantalla de carga)', () => {
