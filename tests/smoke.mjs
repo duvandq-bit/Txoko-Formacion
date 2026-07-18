@@ -680,20 +680,19 @@ test('DISH_COMPONENTS: dish allergens derive exactly from components, zero drift
   assert(/'From':'Por'/.test(detail), 'allergen provenance line missing from dish detail');
 });
 
-test('smart review console: simulation briefing with terminal typing', () => {
-  // El propietario pidió una introducción que haga sentir que se entra en
-  // una simulación. El briefing vive en el terminal Pip-Boy, se teclea la
-  // primera vez por sesión y respeta prefers-reduced-motion (aparece
-  // completo, sin animación).
-  const sr = html.slice(html.indexOf("c.innerHTML = `\n    <div class=\"ri-console\">"), html.indexOf('function _riSetDifficulty'));
-  assert(/ri-brief/.test(sr) && /riBriefText/.test(sr), 'simulation briefing block missing from the console');
-  assert(/BRIEFING DE SIMULACIÓN/.test(sr) && /SIMULATION BRIEFING/.test(sr), 'briefing header must exist in both languages');
-  assert(/turno virtual de Txoko/.test(sr) && /virtual Txoko shift/.test(sr), 'briefing copy missing');
-  assert(/prefers-reduced-motion/.test(sr), 'typing effect must respect reduced motion');
-  assert(/_srBriefTyped/.test(sr), 'typing must run once per session (sessionStorage gate)');
+test('repaso inteligente: nota de la casa en vez de briefing de terminal', () => {
+  // Rediseño jul 2026 (propietario + su novia: «rompe la estética»): fuera
+  // el briefing tecleado de terminal; dentro una nota elegante en serif que
+  // explica qué es la sesión, presente en ambos idiomas.
+  const sr = html.slice(html.indexOf("c.innerHTML = `\n    <div class=\"ri-console\">"), html.indexOf('function _startSmartSession'));
+  assert(/class="ri-brief"/.test(sr), 'la nota de la casa falta en la consola');
+  assert(/estás a punto de olvidar/.test(sr) && /about to forget/.test(sr),
+    'la nota debe explicar la repetición espaciada en ambos idiomas');
+  assert(!/riBriefText/.test(sr) && !/_srBriefTyped/.test(html),
+    'el efecto de tecleo de terminal debe quedar retirado');
   const css = read('styles.css');
-  assert(/\.ri-brief-text\.typing::after/.test(css), 'typing cursor style missing');
-  assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
+  assert(/\.ri-brief\{/.test(css) && /Georgia,serif/.test((css.match(/\.ri-brief\{[^}]*\}/)||[''])[0]),
+    'la nota va en serif de la casa, no en monoespaciada de terminal');
 });
 
 test('supervisor panel: realtime employees channel + silent refresh + live pill', () => {
@@ -1864,39 +1863,43 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
-test('Smart Review console wears the Pip-Boy phosphor skin', () => {
+test('la consola del Repaso Inteligente viste pergamino, no terminal', () => {
+  // Rediseño jul 2026: la consola era un terminal Pip-Boy (fósforo verde
+  // sobre negro) que rompía la estética Michelin de la app. Ahora es una
+  // tarjeta de pergamino como el resto — y que no vuelva el fósforo.
   const css = read('styles.css');
-  const con = (css.match(/\.ri-console\s*\{([^}]*)\}/) || [])[1] || '';
-  assert(/#03160c/.test(con) || /#02110a/.test(con),
-    '.ri-console must use the dark Pip-Boy background');
-  assert(/\.ri-console \.ri-stat-v\{color:#9fffc8/.test(css),
-    'the stat numbers must be phosphor green in the reskinned console');
-  assert(/\.ri-console::after\{[^}]*repeating-linear-gradient/.test(css),
-    'the CRT scanline overlay on the console is missing');
+  const con = (css.match(/\.ri-console\{([^}]*)\}/) || [])[1] || '';
+  assert(/#faf6ee/.test(con) && /#f0e8d8/.test(con),
+    '.ri-console debe ser tarjeta de pergamino (como .card)');
+  assert(!/3dffa0|22ff88|9fffc8|7fffb8|03160c|02110a/.test(css),
+    'paleta de fósforo Pip-Boy detectada en styles.css — el terminal no debe volver');
+  assert(!/smart-terminal\s*\{/.test(css),
+    'el bloque .smart-terminal (CRT de la sesión) debe quedar retirado');
+  assert(!/TXOKO·OS/.test(html) && !/ri-cta-bracket/.test(html),
+    'restos del terminal (topbar TXOKO·OS / brackets NieR) en el markup');
+  const cta = (css.match(/\.ri-cta\{([^}]*)\}/) || [])[1] || '';
+  assert(/var\(--gold\)/.test(cta),
+    'el CTA «Empezar sesión» debe ser el oro de la casa');
 });
 
 test('smart review screen is stripped to the simulation lead', () => {
-  // Owner removed the focus-areas, difficulty-picker and allergen blocks
-  // from the smart-review screen; difficulty is auto. Guard they stay out.
+  // Owner removed the focus-areas, difficulty-picker and allergen blocks;
+  // the jul 2026 redesign deleted even their dead builders. Guard they stay out.
   const start = html.indexOf('function renderSmartReview()');
   const fn = html.slice(start, start + 12000);
-  assert(!/\$\{focusHTML\}/.test(fn) && !/\$\{diffHTML\}/.test(fn) && !/\$\{allergenHTML\}/.test(fn),
+  assert(!/focusHTML/.test(fn) && !/diffHTML/.test(fn) && !/allergenHTML/.test(fn),
     'a removed block (focus/difficulty/allergens) is back in the smart-review render');
   assert(/const pickedDiff = autoDiff;/.test(html),
     'difficulty must be auto (pickedDiff = autoDiff) now the picker is gone');
 });
 
-test('simulation terminal uses the Pip-Boy phosphor-green palette', () => {
-  // The contextual-simulation screen (.smart-terminal) was reskinned to a
-  // Fallout Pip-Boy: phosphor green on near-black with a CRT bloom.
-  const css = read('styles.css');
-  const rule = (css.match(/\.smart-terminal\s*\{([^}]*)\}/) || [])[1] || '';
-  assert(/--trm-ink:\s*#3dffa0/.test(rule),
-    '.smart-terminal --trm-ink must be phosphor green #3dffa0 (Pip-Boy look)');
-  assert(/--trm-accent:\s*#22ff88/.test(rule),
-    '.smart-terminal --trm-accent must be phosphor green #22ff88');
-  assert(/\.smart-terminal \.dj-phase-title\{text-shadow:0 0 9px rgba\(34,255,136/.test(css),
-    'the phosphor glow on the title is missing — core of the CRT look');
+test('la sesión de repaso usa el acabado cálido estándar, sin piel CRT', () => {
+  // Rediseño jul 2026: la sesión ya no se abre con la clase .smart-terminal
+  // (piel CRT verde); hereda el dj-overlay cálido que comparte con Dish Journey.
+  assert(!/smart-terminal/.test(html),
+    'la clase smart-terminal no debe aplicarse en ninguna pantalla');
+  assert(/overlay\.className = 'dj-overlay';/.test(html),
+    'el overlay de la sesión debe ser dj-overlay a secas');
 });
 
 test('main nav is a dropdown, not a horizontal scroller', () => {
@@ -1916,9 +1919,20 @@ test('main nav is a dropdown, not a horizontal scroller', () => {
     'active nav item must show the gold accent bar');
 });
 
-test('Simulación uses a green dot, not a red one', () => {
-  assert(/'Simulación',_srsCount>0\?'🟢'/.test(html),
-    'the SRS-due indicator on the Simulación chip must be a green dot, not red');
+test('el Repaso Inteligente vive dentro de La Carta, sin chip propio', () => {
+  // Fusión jul 2026: fuera el chip «Simulación» de la barra de Aprender
+  // (novia del propietario: «no aporta»; propietario: rompe la estética).
+  // La sesión entra por una tarjeta al frente de La Carta y sigue enlazada
+  // desde la fila «Repaso» del inicio.
+  assert(!/\['smart',_en\?'Simulation':'Simulación'/.test(html),
+    'el chip Simulación ha vuelto a la barra de Aprender');
+  assert(/smart:renderSmartReview/.test(html),
+    'la ruta smart debe seguir existiendo (el plan del día del inicio la usa)');
+  const rc = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function renderRepasoTopic()'));
+  assert(/Repaso inteligente/.test(rc) && /_subTab\.aprender='smart'/.test(rc),
+    'falta la tarjeta de entrada a la sesión al frente de La Carta');
+  assert(/REPASO INTELIGENTE/.test(html) && !/'SIMULACIÓN'/.test(html),
+    'la pantalla debe presentarse como Repaso Inteligente, no Simulación');
 });
 
 test('nav opens as a thumb-zone bottom sheet with a dim scrim', () => {
@@ -2263,26 +2277,18 @@ test('smart review v2: unified frames, no set-fingerprint, smarter scenarios', (
     'dedupe must receive the correct option FIRST (shuffle after), or correctIdx can be -1');
 });
 
-test('Repaso Inteligente landing is a real Pip-Boy tube (monochrome CRT)', () => {
-  // Owner: "haz que parezca mucho más a un pip-boy". The device illusion dies
-  // with any non-green accent inside the screen, serif type, or missing CRT
-  // furniture — lock the invariants.
+test('el aterrizaje del Repaso Inteligente es pergamino puro (sin tubo CRT)', () => {
+  // Rediseño jul 2026: el «tubo Pip-Boy» completo (topbar, scanlines, cursor,
+  // barrido CRT) se retiró. Guardia inversa de la que había antes.
+  const smart = html.slice(html.indexOf('function renderSmartReview'), html.indexOf('function _startSmartSession'));
+  assert(!/ri-topbar|ri-grid-bg|ri-particles/.test(smart),
+    'mobiliario del terminal (topbar/grid/partículas) de vuelta en la pantalla');
   const css = read('styles.css');
-  const smart = html.slice(html.indexOf('function renderSmartReview'), html.indexOf('function _riSetDifficulty'));
-  assert(!/#dc5a32|#c49a3c/.test(smart), 'orange/gold accents are back inside the Pip-Boy stats');
-  assert(smart.includes('ri-topbar'), 'device boot strip (TXOKO·OS) missing');
-  const cssPip = css.slice(css.indexOf('Pip-Boy / Fallout reskin'), css.indexOf('Hero greeting with radial progress'));
-  assert(/ri-crt-sweep/.test(cssPip), 'CRT sweep beam missing');
-  assert(/repeating-linear-gradient\(0deg,rgba\(0,0,0,\.14\)/.test(cssPip), 'scanlines missing or weakened');
-  assert(/\.ri-console \.ri-greet-name\{[^}]*DM Mono/.test(cssPip), 'greeting must be terminal mono, not serif');
-  assert(/ri-cursor/.test(cssPip), 'blinking terminal cursor missing');
-  // Motion must be gated for staff with vestibular sensitivity — the Pip-Boy
-  // ambient animations live in the GLOBAL atmospheric freeze list.
-  const rmIdx = css.indexOf('ATMOSPHERIC LAYER — prefers-reduced-motion guard');
-  const rmBlock = css.slice(rmIdx, rmIdx + 3000);
-  for (const sel of ['.ri-console::before', '.ri-topbar .ri-sys::before', '.ri-console .ri-greet-name::after']) {
-    assert(rmBlock.includes(sel), `${sel} missing from the reduced-motion freeze list`);
-  }
+  assert(!/ri-crt-sweep|ri-cursor|ri-scanlines/.test(css),
+    'restos de CSS del tubo CRT (sweep/cursor/scanlines) en styles.css');
+  // Los acentos de color de la casa vuelven a las stats (ya no monocromo)
+  assert(/#b0563c/.test(smart) && /#4a8f6f/.test(smart),
+    'las stats deben usar los acentos cálidos de la casa');
 });
 
 test('smart review owner-reported fixes: header leak, agua), Txipiron≠ron', () => {
@@ -2429,10 +2435,10 @@ test('sub-tab navigation is VISIBLE chips (owner: the dropdown hid the subsectio
   const css = read('styles.css');
   assert(/\.subtab-chips\{[^}]*overflow-x:auto/.test(css), 'chips row must scroll horizontally');
   assert(/\.subtab-chip\.on\{[^}]*var\(--gold\)/.test(css), 'active chip must be gold-filled');
-  assert(/\.subtab-chip\.on\.subtab-chip--green\{[^}]*#0c3a22/.test(css),
-    'Repaso Inteligente active chip keeps its Pip-Boy green');
-  assert(/parentTab==='aprender' && activeTab==='smart' \? 'smart' : null/.test(html),
-    'green variant must be scoped to Repaso Inteligente only');
+  // (la variante verde del chip era exclusiva de la antigua «Simulación»;
+  // desde el rediseño jul 2026 ningún chip la usa)
+  assert(!/\? 'smart' : null/.test(html),
+    'la barra no debe cablear el chip verde de la antigua Simulación');
 });
 
 test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivado de la carta', () => {
@@ -2497,9 +2503,10 @@ test('Aprender lands on Emplatado and lists it first (owner request, jul 2026)',
   const bar = html.match(/_subTabBar\(\[\s*([\s\S]*?)\]\s*,\s*_subTab\.aprender \|\| 'emplatado'\s*,\s*'aprender'\)/);
   assert(bar, 'aprender _subTabBar call not found');
   const empIdx = bar[1].indexOf("'emplatado'");
-  const smartIdx = bar[1].indexOf("'smart'");
-  assert(empIdx !== -1 && smartIdx !== -1, 'emplatado/smart tabs missing');
-  assert(empIdx < smartIdx, 'Emplatado must be the FIRST Aprender sub-tab');
+  assert(empIdx !== -1, 'emplatado tab missing');
+  assert(bar[1].indexOf("'smart'") === -1,
+    'el chip Simulación/smart no debe volver a la barra (vive en La Carta)');
+  assert(bar[1].trim().startsWith("['emplatado'"), 'Emplatado must be the FIRST Aprender sub-tab');
   assert(/_subTab\.aprender\s*\|\|\s*'emplatado'/.test(html),
     "Aprender default sub-tab must be 'emplatado'");
   // el inicializador manda: '|| emplatado' nunca dispara porque _subTab.aprender
@@ -2689,7 +2696,7 @@ test('.btn-secondary has a real style rule (not a bare grey button)', () => {
 test('Explorar is a TUNIC manual page (statline + ledger categories)', () => {
   // Same de-boxing as dashboard/LQA: the boxed stats banner and the seven
   // ~200px category tiles became a mono stat line and hairline ledger rows.
-  const rep = html.slice(html.indexOf('const cards=activeCats.map'), html.indexOf('function searchRepaso'));
+  const rep = html.slice(html.indexOf('const cards=smartCard+activeCats.map'), html.indexOf('function searchRepaso'));
   assert(/dash-row" aria-label[^>]*onclick="openRepasoCat/.test(rep),
     'categories must render as ledger rows');
   assert(/repaso-statline/.test(rep), 'overview must be the mono stat line');
@@ -4486,9 +4493,9 @@ test('allergen drill moved from Examen to Aprender → Repaso Inteligente', () =
   assert(!/renderExam\(\)/.test(res), 'drill results must not route back to Examen');
   const css = read('styles.css');
   assert(/\.ri-drill\{/.test(css) && /\.ri-drill-title\{/.test(css),
-    'ri-drill terminal styles missing');
-  assert(/@media \(prefers-reduced-motion:reduce\)\{\.ri-drill-icon\{animation:none\}\}/.test(css),
-    'drill blink must freeze under reduced motion');
+    'ri-drill styles missing');
+  assert(!/ri-drill-blink/.test(css),
+    'el parpadeo de terminal del drill no debe volver (rediseño pergamino jul 2026)');
 });
 
 test('ranking hub aggregates game records (local-first + Supabase merge)', () => {
@@ -4522,20 +4529,17 @@ test('onboarding guide matches the real Juegos hub (no Modo Error promise)', () 
   assert(/onclick="startPersonalErrorMode\(\)"/.test(html), 'dashboard Débiles shortcut must survive');
 });
 
-test('the simulation carries ONE name everywhere: Simulación', () => {
-  // IA audit (A1): the same activity was "Simulación Contextual" in the
-  // guide, "Repaso Inteligente" on the chip and "ENTRAR EN SIMULACIÓN" on
-  // the CTA — three names, zero findability.
-  assert(/\['smart',_en\?'Simulation':'Simulación',_srsCount>0\?'🟢'/.test(html),
-    'Aprender chip must say Simulación/Simulation');
-  assert(/title_es:'Simulación',title_en:'Simulation'/.test(html),
-    'onboarding page must use the same name');
-  assert(/Aprender → Simulación/.test(html) && /Learn → Simulation/.test(html),
-    'onboarding must say WHERE the simulation lives');
-  assert(/\$\{_en\?'SIMULATION':'SIMULACIÓN'\}/.test(html),
-    'the Pip-Boy screen header must match the chip name');
-  assert(!/'Smart Review' : 'Repaso Inteligente'/.test(html),
-    'XP toasts must not use the old name');
+test('la actividad lleva UN solo nombre en todas partes: Repaso Inteligente', () => {
+  // Auditoría A1 + rediseño jul 2026: mismo criterio de siempre (un nombre
+  // único), nombre nuevo — «Simulación» murió con el disfraz de terminal.
+  assert(/title_es:'Repaso inteligente',title_en:'Smart review'/.test(html),
+    'la guía de onboarding debe usar el nombre nuevo');
+  assert(/Aprender → La Carta/.test(html) && /Learn → The Menu/.test(html),
+    'la guía debe decir DÓNDE vive ahora la sesión');
+  assert(/\$\{_en\?'SMART REVIEW':'REPASO INTELIGENTE'\}/.test(html),
+    'la cabecera de la pantalla debe decir Repaso Inteligente');
+  assert(/'Smart review' : 'Repaso inteligente'/.test(html),
+    'el historial de XP debe usar el nombre nuevo');
 });
 
 test('dashboard «Hoy»: héroe pergamino de dos estados + stats + filas numeradas (rediseño jul 2026)', () => {
