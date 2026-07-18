@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.261">
+<meta name="app-version" content="7.262">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1528,7 +1528,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.261';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.262';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -5716,130 +5716,38 @@ function renderSmartReview(){
   const masteryPct = DISHES.length > 0 ? Math.round((mastered / DISHES.length) * 100) : 0;
   const ringTarget = 201 - (201 * masteryPct / 100); // circle circumference ~ 201 for r=32
 
-  // ── Pick a realistic scenario ──
-  const samples = [];
-  const tried = new Set();
-  for(let i=0;i<12 && samples.length<1;i++){
-    const _srPool = _shiftDishes(DISHES); const d = (_srPool.length?_srPool:DISHES)[Math.floor(Math.random()*(_srPool.length||DISHES.length))];
-    if(tried.has(d.id)) continue;
-    tried.add(d.id);
-    const qs = _srGenerateQuiz(d, pickedDiff);
-    if(qs && qs[0]) samples.push({dish:d, q:qs[0]});
-  }
-  const stripQuote = (text) => text
-    .replace(/^(Huésped|Guest|Pareja|Couple|Un huésped|A guest|Huésped con[^:]*|Pregnant guest|Vegetarian guest|Huésped embarazada|Huésped vegetariano|Huésped celíaco severo|Severely celiac guest|Guest allergic[^:]*|Huésped con alergia[^:]*)[^:]*:\s*/i,'')
-    .replace(/^"|"$/g,'')
-    .trim();
-
-  // ── Stats trio (streak, best combo, precision) ──
+  // ── Stats trio (racha, mejor combo, precisión) ──
   const bestStreak = ad.streakBest || 0;
   const currStreak = ad.streakCurrent || 0;
   const streakVal = currStreak > 0 ? currStreak : bestStreak;
-  // Line-art SVG icons (not colour emojis) to keep the Pip-Boy terminal monochrome
   const _icoFlame = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-5-4-7-4-11 0 0-3 2-3 6-1 0-2-1-2-3-2 1.5-3 4-3 8a7 7 0 0 0 8 7z"/></svg>';
   const _icoBolt = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>';
   const _icoTarget = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6"/></svg>';
-  // Strict phosphor monochrome — the old orange/gold accents broke the
-  // Pip-Boy tube (inline --stat-c wins over the scoped CSS override).
   const statsHTML = [
-    { icon:_icoFlame, v: streakVal, l: _en?'streak':'racha', c:'#3dffa0', cls: currStreak > 0 ? 'flame' : '' },
-    { icon:_icoBolt, v: bestStreak, l: _en?'best combo':'mejor combo', c:'#3dffa0', cls:'' },
-    { icon:_icoTarget, v: ad.totalQuizzes>0 ? accuracy+'%' : '—', l: _en?'precision':'precisión', c:'#3dffa0', cls:'' }
+    { icon:_icoFlame, v: streakVal, l: _en?'streak':'racha', c:'#b0563c', cls: currStreak > 0 ? 'flame' : '' },
+    { icon:_icoBolt, v: bestStreak, l: _en?'best combo':'mejor combo', c:'#b8892e', cls:'' },
+    { icon:_icoTarget, v: ad.totalQuizzes>0 ? accuracy+'%' : '—', l: _en?'precision':'precisión', c:'#4a8f6f', cls:'' }
   ].map(s=>`
     <div class="ri-stat ${s.cls}" style="--stat-c:${s.c}">
-      <div class="ri-stat-icon">${s.icon}</div>
+      <div class="ri-stat-icon" style="color:${s.c}">${s.icon}</div>
       <div class="ri-stat-v">${s.v}</div>
       <div class="ri-stat-l">${s.l}</div>
     </div>
   `).join('');
 
-  // "EN VIVO · MESA AHORA" single-case block removed per owner request —
-  // redundant with the full simulation, which is now the lead action.
-
-  // ── Focus areas (weaknesses) ──
-  const weaknesses = _adaptiveWeaknesses(emp).slice(0, 5);
-  const focusHTML = weaknesses.length > 0 ? `
-    <div class="ri-section-head">
-      <span class="ri-section-title">${_en?'YOUR FOCUS AREAS':'ZONAS A REFORZAR'}</span>
-      <span class="ri-section-count">${weaknesses.length}</span>
-    </div>
-    <div class="ri-focus">
-      ${weaknesses.map(w => {
-        let label = '';
-        if(w.type === 'allergen') label = w.key;
-        else if(w.type === 'category') label = (typeof catLocal === 'function') ? catLocal(w.key) : w.key;
-        else if(w.type === 'ingredient'){
-          const d = DISHES.find(dd => dd.id === parseInt(w.key));
-          label = d ? getDish(d).name : w.key;
-        }
-        return `<span class="ri-focus-chip">${label}<span class="ri-focus-count">×${w.count}</span></span>`;
-      }).join('')}
-    </div>
-  ` : '';
-
-  // ── Difficulty picker ──
-  const diffs = [
-    { k:'beginner',     ic:'🌱', l_es:'Aprendiz',     l_en:'Beginner',     t:20 },
-    { k:'intermediate', ic:'🌿', l_es:'Intermedio',   l_en:'Intermediate', t:15 },
-    { k:'advanced',     ic:'🔥', l_es:'Avanzado',     l_en:'Advanced',     t:12 },
-    { k:'expert',       ic:'💎', l_es:'Experto',      l_en:'Expert',       t: 8 }
-  ];
-  // F-P2-6: surface whether the active difficulty is auto-detected or a manual pick,
-  // and how to reset the manual override (tap the active tile again).
-  const _isAutoActive = !emp.pickedDifficulty;
-  const _modeLabel = _isAutoActive
-    ? (_en?'AUTO':'AUTO')+' · '+autoDiff.slice(0,3).toUpperCase()
-    : (_en?'MANUAL · tap again to reset':'MANUAL · toca de nuevo para auto');
-  const diffHTML = `
-    <div class="ri-section-head">
-      <span class="ri-section-title">${_en?'CHOOSE YOUR CHALLENGE':'ELIGE TU DESAFÍO'}</span>
-      <span class="ri-section-count">${_modeLabel}</span>
-    </div>
-    <div class="ri-diff-row">
-      ${diffs.map(d=>`
-        <div class="ri-diff ${pickedDiff===d.k?'active':''}" onclick="_riSetDifficulty('${d.k}')" title="${pickedDiff===d.k && !_isAutoActive ? (_en?'Tap again to use AUTO':'Toca de nuevo para AUTO') : (_en?d.l_en:d.l_es)}">
-          <span class="ri-diff-icon">${d.ic}</span>
-          <div class="ri-diff-lbl">${_en?d.l_en:d.l_es}</div>
-          <div class="ri-diff-sub">${d.t}s/${_en?'q':'p'}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-
-  // ── Allergen chips ──
-  const allergenList = _en
-    ? ['Gluten','Dairy','Egg','Fish','Shellfish','Mollusks','Nuts','Peanut','Soy','Sulfites','Sesame','Celery','Mustard']
-    : ['Gluten','Lácteos','Huevo','Pescado','Marisco','Moluscos','Frutos secos','Cacahuete','Soja','Sulfitos','Sésamo','Apio','Mostaza'];
-  const allergenHTML = `
-    <div class="ri-section-head">
-      <span class="ri-section-title">${_en?'ALLERGENS IN MENU':'ALÉRGENOS EN CARTA'}</span>
-      <span class="ri-section-count">${allergenList.length}</span>
-    </div>
-    <div class="ri-allergen-grid">
-      ${allergenList.map(a=>`<span class="ri-allergen-chip">⚠ ${a}</span>`).join('')}
-    </div>
-  `;
+  // (Los bloques de dificultad manual, zonas a reforzar y rejilla de
+  // alérgenos se retiraron hace tiempo de esta pantalla; sus builders
+  // muertos se fueron con el rediseño a pergamino de jul 2026.)
 
   c.innerHTML = `
     <div class="ri-console">
-      <div class="ri-grid-bg"></div>
-      <div class="ri-particles" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-      <div class="ri-topbar" aria-hidden="true">
-        <span><b>TXOKO·OS</b> // ${_en?'FLOOR TERMINAL':'TERMINAL DE SALA'}</span>
-        <span class="ri-sys">SYS·OK</span>
-      </div>
-
       <div class="ri-hero">
         <div class="ri-ring" style="--ring-target:${ringTarget}">
           <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
             <defs>
               <linearGradient id="riRingGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#3dffa0"/>
-                <stop offset="100%" stop-color="#7fffb8"/>
+                <stop offset="0%" stop-color="#c49a3c"/>
+                <stop offset="100%" stop-color="#4a8f6f"/>
               </linearGradient>
             </defs>
             <circle class="ri-ring-track" cx="36" cy="36" r="32"/>
@@ -5851,7 +5759,7 @@ function renderSmartReview(){
           </div>
         </div>
         <div class="ri-greet">
-          <div class="ri-greet-hi">${_en?'SIMULATION':'SIMULACIÓN'}</div>
+          <div class="ri-greet-hi">${_en?'SMART REVIEW':'REPASO INTELIGENTE'}</div>
           <div class="ri-greet-name">${greeting}${empName?', '+empName:''}</div>
           <span class="ri-greet-rank">
             <span class="ri-greet-rank-icon">${rank.icon}</span>
@@ -5864,31 +5772,23 @@ function renderSmartReview(){
         </div>
       </div>
 
-      <!-- Briefing de simulación: sitúa al camarero antes de entrar. El texto
-           se teclea (efecto terminal) la primera vez por sesión; con
-           prefers-reduced-motion o en visitas siguientes aparece completo. -->
-      <div class="ri-brief" style="margin:.1rem 1rem .8rem;padding:.6rem .8rem;position:relative;z-index:2;border:1px solid rgba(61,255,160,.16);border-left:2px solid rgba(61,255,160,.5);background:rgba(61,255,160,.045);border-radius:6px">
-        <div class="ri-brief-head" aria-hidden="true" style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:#7fffb8;opacity:.85;margin-bottom:.32rem;text-shadow:0 0 5px rgba(34,255,136,.3)">// ${_en?'SIMULATION BRIEFING':'BRIEFING DE SIMULACIÓN'}</div>
-        <p class="ri-brief-text" id="riBriefText" style="font-family:'DM Mono',monospace;font-size:.66rem;line-height:1.65;color:#c8ffe0;text-shadow:0 0 6px rgba(34,255,136,.35);letter-spacing:.02em;margin:0;min-height:7em"></p>
-      </div>
-
       <div class="ri-pad">
+        <!-- Qué es esto, en dos frases (antes era un «briefing de terminal»
+             con efecto de tecleo; ahora es una nota elegante de la casa) -->
+        <p class="ri-brief">${_en
+          ? 'Guest cases built from our menu, chosen for you: this session reviews exactly the dishes you are about to forget. Here you may get it wrong — in front of the guest, you cannot.'
+          : 'Casos de huésped creados desde nuestra carta, elegidos para ti: esta sesión repasa justo los platos que estás a punto de olvidar. Aquí puedes equivocarte — delante del huésped, no.'}</p>
         <div class="ri-cta-wrap">
-          <button onclick="_startSmartSession()" class="ri-cta" aria-label="${_en?'Enter simulation':'Entrar en simulación'}">
-            <span class="ri-cta-bracket tl" aria-hidden="true"></span>
-            <span class="ri-cta-bracket tr" aria-hidden="true"></span>
-            <span class="ri-cta-bracket bl" aria-hidden="true"></span>
-            <span class="ri-cta-bracket br" aria-hidden="true"></span>
+          <button onclick="_startSmartSession()" class="ri-cta" aria-label="${_en?'Start review session':'Empezar sesión de repaso'}">
             <span class="ri-cta-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" style="position:relative;z-index:2">
+              <svg viewBox="0 0 24 24" width="18" height="18">
                 <path d="M5 4 L19 12 L5 20 Z" fill="currentColor"/>
               </svg>
             </span>
             <span class="ri-cta-text">
-              <span class="ri-cta-top">${_en?'ENTER SIMULATION':'ENTRAR EN SIMULACIÓN'}</span>
+              <span class="ri-cta-top">${_en?'Start session':'Empezar sesión'}</span>
               <span class="ri-cta-sub">${sessionSize} ${_en?'cases':'casos'} · ${_srDiffLabel(pickedDiff,_en)} · ≈ ${Math.round(sessionSize * _srTimerSeconds(pickedDiff) / 60)} ${_en?'min':'min'}</span>
             </span>
-            <span class="ri-cta-status">${_en?'READY':'READY'}</span>
           </button>
           <button onclick="renderAprender()" class="ri-secondary">↻ ${_en?'Reshuffle selection':'Regenerar selección'}</button>
         </div>
@@ -5908,43 +5808,6 @@ function renderSmartReview(){
       </div>
     </div>
   `;
-
-  // ── Briefing con efecto de terminal ──
-  const briefTxt = _en
-    ? 'You are entering a virtual Txoko shift. Guests with real allergies, questions and requests from our menu — every case is generated from the dish cards and decided exactly as on the floor. Here you can get it wrong; in front of the guest, you cannot.'
-    : 'Vas a entrar en un turno virtual de Txoko. Huéspedes con alergias, dudas y peticiones reales de nuestra carta — cada caso se genera desde las fichas y se decide igual que en sala. Aquí puedes equivocarte; delante del huésped, no.';
-  const briefEl = document.getElementById('riBriefText');
-  if(briefEl){
-    const _reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(_reduce || sessionStorage.getItem('_srBriefTyped')){
-      briefEl.textContent = briefTxt;
-    } else {
-      sessionStorage.setItem('_srBriefTyped','1');
-      briefEl.classList.add('typing');
-      let _i = 0;
-      const _t = setInterval(()=>{
-        _i += 3;
-        briefEl.textContent = briefTxt.slice(0, _i);
-        if(_i >= briefTxt.length){ clearInterval(_t); briefEl.classList.remove('typing'); briefEl.textContent = briefTxt; }
-      }, 26);
-    }
-  }
-}
-
-// ── Manual difficulty selection ──
-function _riSetDifficulty(k){
-  const emp = getEmp(currentUser);
-  // F-P2-6: clicking the currently-active tile clears the override and returns
-  // to auto-detection (_srGetDifficulty). Previously emp.pickedDifficulty stuck
-  // forever once set, so a user who manually picked 'beginner' early would never
-  // get auto-promoted to 'intermediate'/'advanced' as their accuracy improved.
-  if (emp.pickedDifficulty === k) {
-    delete emp.pickedDifficulty;
-  } else {
-    emp.pickedDifficulty = k;
-  }
-  if(typeof saveDB === 'function') saveDB();
-  renderAprender();   // vía host: conserva la barra de subcategorías
 }
 
 // ── Session Start ──
@@ -6074,7 +5937,7 @@ function _renderSmartCard(){
         <div style="width:52px;height:52px"></div>
       </div>
       <div class="dj-body">
-        <div class="dj-phase-label">🎭 ${_en?'CONTEXTUAL SIMULATION':'SIMULACIÓN CONTEXTUAL'}</div>
+        <div class="dj-phase-label">🎭 ${_en?'CONTEXTUAL REVIEW':'REPASO EN CONTEXTO'}</div>
         <div class="dj-phase-title">${dd.name}</div>
         <div class="dj-dish-name">${dd.cat} · ${dish.allergens?dish.allergens.length:0} ${_en?'allergens':'alérgenos'} · ${_en?'guest interaction':'interacción con huésped'}</div>
         <div id="smartQuizArea"></div>
@@ -6091,16 +5954,13 @@ function _renderSmartCard(){
   } else {
     const overlay = document.createElement('div');
     overlay.id = 'smartOverlay';
-    overlay.className = 'dj-overlay smart-terminal';
+    overlay.className = 'dj-overlay';
     overlay.setAttribute('role','dialog');
     overlay.setAttribute('aria-modal','true');
     overlay.setAttribute('aria-label', (typeof LANG!=='undefined' && LANG==='en')?'Smart quiz':'Quiz inteligente');
     overlay.innerHTML = newContent;
     document.body.appendChild(overlay);
   }
-  // Ensure terminal skin even on re-renders that hit the "existing" branch
-  const _ov = document.getElementById('smartOverlay');
-  if(_ov) _ov.classList.add('smart-terminal');
 
   _smartQuizState = { qs:qs, answered:0, correct:0, dishId:dishId, qTimes:[], timerMax:0, timerLeft:0, currentIdx:0 };
   _renderSmartQuiz();
@@ -6324,7 +6184,7 @@ function _renderSmartSummary(){
   const totalXP = Math.round(rawXP * _practiceMult);
   const _isReviewHeavy = _queueMastered > 0 && (_queueMastered / _queueLen) >= 0.5;
 
-  if(totalXP > 0) awardXP(totalXP, _en ? 'Simulation' : 'Simulación', 'smart');
+  if(totalXP > 0) awardXP(totalXP, _en ? 'Smart review' : 'Repaso inteligente', 'smart');
   // F-P1-5: SRS-related missions/achievements never unlocked because these checks were missing.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
   if(typeof checkMissionCompletion==='function') checkMissionCompletion();
@@ -6394,11 +6254,10 @@ function _renderSmartSummary(){
   const existing = document.getElementById('smartOverlay');
   if(existing){
     existing.innerHTML = summaryContent;
-    existing.classList.add('smart-terminal');
   } else {
     const overlay = document.createElement('div');
     overlay.id = 'smartOverlay';
-    overlay.className = 'dj-overlay smart-terminal';
+    overlay.className = 'dj-overlay';
     overlay.setAttribute('role','dialog');
     overlay.setAttribute('aria-modal','true');
     overlay.setAttribute('aria-label', (typeof LANG!=='undefined' && LANG==='en')?'Quiz summary':'Resumen del quiz');
@@ -8929,7 +8788,7 @@ function closePinAndEnter(){
 const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Simulación',title_en:'Simulation',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. Practica exactamente lo que ocurre en sala con respuestas adaptadas a cada escenario. La encontrarás en Aprender → Simulación.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Practice exactly what happens on the floor with answers adapted to each situation. You\'ll find it under Learn → Simulation.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → La Carta.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → The Menu.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Inspección Fantasma. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Ghost Inspection. You can also browse every service standard by category.'},
@@ -9175,7 +9034,7 @@ function showTab(tab, instant){
 // Núcleo COMPARTIDO de sub-navegación: chips visibles con scroll horizontal.
 // Es el único lenguaje de subsecciones de la app (Aprender, Ranking, Vinos…) —
 // el propietario exige diseño uniforme y detectó que el desplegable cerrado
-// escondía las opciones. greenWhen: id cuyo chip activo va en verde Pip-Boy.
+// escondía las opciones.
 function _chipsBar(tabs, activeId, onclickFor, greenWhen){
   return `<div class="subtab-chips" role="tablist">`+tabs.map(([id,label,icon])=>{
     const on = id===activeId;
@@ -9184,8 +9043,7 @@ function _chipsBar(tabs, activeId, onclickFor, greenWhen){
   }).join('')+`</div>`;
 }
 function _subTabBar(tabs, activeTab, parentTab){
-  return _chipsBar(tabs, activeTab, id=>`_subTab.${parentTab}='${id}';showTab('${id}')`,
-    parentTab==='aprender' && activeTab==='smart' ? 'smart' : null);
+  return _chipsBar(tabs, activeTab, id=>`_subTab.${parentTab}='${id}';showTab('${id}')`, null);
 }
 // Close an open dropdown (sub-tab, main nav or login venue) when tapping outside it
 document.addEventListener('click', function(e){
@@ -9637,10 +9495,8 @@ async function _supPhotoModerate(id,status){
 // idempotente; renderRepaso la llama tras cada re-render interno.
 function _aprChipsBar(){
   const _en = LANG==='en';
-  const _srsCount = _srsDueCount(getEmp(currentUser));
   return _subTabBar([
     ['emplatado',_en?'Plating':'Emplatado','📷'],
-    ['smart',_en?'Simulation':'Simulación',_srsCount>0?'🟢':'🧠'],
     ['repaso',_en?'The Menu':'La Carta',''],
     ['tecnicas',_en?'Techniques':'Técnicas','🍳'],
     ['actualidad',_en?'News':'Actualidad','📰'],
@@ -17954,7 +17810,19 @@ function renderRepasoCats(){
   const known=emp.knownDishes||{};
   const _en=LANG==='en';
   const activeCats=CATS_ES.filter(c=>DISHES.some(d=>d.cat===c));
-  const cards=activeCats.map(c=>{
+  // Sesión de repaso inteligente al frente: antes vivía como subpestaña
+  // «Simulación» con estética de terminal; ahora es la primera acción de
+  // La Carta (rediseño jul 2026 a petición del propietario).
+  const _srsDue=_srsDueCount(emp);
+  const smartCard=`<button class="dash-row" style="border-color:rgba(196,154,60,.55)" aria-label="${_en?'Smart review session':'Sesión de repaso inteligente'}" onclick="_subTab.aprender='smart';showTab('aprender')">
+      <span class="dash-row-num" aria-hidden="true">🧠</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title">${_en?'Smart review':'Repaso inteligente'}</span>
+        <span class="dash-row-sub" style="display:block">${_srsDue>0?(_en?`${_srsDue} cards due today`:`${_srsDue} fichas pendientes hoy`):(_en?'5 guest cases, chosen for you':'5 casos de huésped, elegidos para ti')}</span>
+      </span>
+      <span class="dash-row-go">›</span>
+    </button>`;
+  const cards=smartCard+activeCats.map(c=>{
     const dishes=DISHES.filter(d=>d.cat===c);
     const kn=dishes.filter(d=>known[d.id]).length;
     const full=kn===dishes.length&&dishes.length>0;
