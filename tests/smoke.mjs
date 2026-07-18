@@ -3832,6 +3832,13 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/target="_blank" rel="noopener noreferrer"/.test(html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderActualidad'))),
     'las noticias abren fuera con rel=noopener');
   assert(/\.act-card\{/.test(read('styles.css')), 'estilos del feed ausentes');
+  // Teaser en el inicio: 2 titulares + «Ver más» (petición del propietario).
+  const dash2 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
+  assert(/id="dashNews" style="display:none"/.test(dash2),
+    'el inicio debe llevar el hueco del teaser de Actualidad, oculto por defecto');
+  assert(/\.slice\(0,3\)/.test(html.slice(html.indexOf('const dn=document.getElementById'), html.indexOf('// Posición en la liga semanal')))
+    && /_subTab\.aprender='actualidad'/.test(html),
+    'el teaser muestra 3 titulares y el Ver más lleva a Actualidad');
 });
 
 test('auditoría de botones: nada de tinta oscura sobre el fondo oscuro de la página (jul 2026)', () => {

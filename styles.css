@@ -9918,3 +9918,10 @@ body.chat-open .sound-toggle{ display:none !important; }
   background:var(--gold-deep);border-radius:10px;padding:.2rem .5rem;font-weight:700}
 .act-empty{text-align:center;padding:1.2rem .8rem;font-size:.78rem;color:var(--parch3)}
 .act-foot{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:var(--parch4);text-align:center;margin:.9rem 0 .4rem}
+
+/* Teaser de Actualidad en el inicio (2 titulares + Ver más) */
+.act-mini{padding:.6rem .8rem;margin-bottom:.45rem}
+.act-more{display:block;width:100%;min-height:40px;margin-bottom:1rem;border-radius:12px;cursor:pointer;
+  background:transparent;border:1.5px solid rgba(196,154,60,.5);color:var(--gold-deep);
+  font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700}
+.act-more:active{background:rgba(196,154,60,.08)}
