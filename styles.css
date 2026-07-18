@@ -9810,3 +9810,44 @@ body.chat-open .sound-toggle{ display:none !important; }
   background:transparent;border:1.5px solid rgba(196,154,60,.55);color:var(--gold-deep);
   font-family:'Quicksand',sans-serif;font-weight:700;font-size:.78rem}
 .empl-ov-journey:hover,.empl-ov-journey:active{background:rgba(196,154,60,.1)}
+
+/* ═══ HOY rediseñado (exploración de diseño jul 2026): héroe pergamino con
+   dos estados (Reto del día ⇄ Plato del día), tira de stats y filas
+   numeradas. Regla del sistema: máx. 1 tarjeta pergamino por pantalla y un
+   solo botón primario. ═══ */
+.pdd-hero{background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.25);
+  border-radius:16px;padding:1.1rem 1.15rem;margin-bottom:.9rem;overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.pdd-photo{display:none;height:150px;margin:-1.1rem -1.15rem .9rem;background-size:cover;background-position:center}
+.pdd-photo.has-photo{display:block}
+.pdd-eyebrow{display:flex;justify-content:space-between;gap:.6rem;font-family:'DM Mono',monospace;
+  font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.45rem}
+.pdd-done{opacity:.85;white-space:nowrap}
+.pdd-title{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;color:var(--parchment);line-height:1.3;margin-bottom:.3rem}
+.pdd-sub{font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:600;color:var(--parch2);margin-bottom:.6rem}
+.pdd-chips{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.8rem}
+.pdd-chip{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;padding:.3rem .55rem;
+  border-radius:14px;border:1px solid rgba(28,42,34,.3);color:var(--parch2)}
+.pdd-chip.free{background:var(--gold-deep);border-color:var(--gold-deep);color:#faf6ee;font-weight:700}
+/* Primario sobre pergamino: se invierte a verde (regla del design system) */
+.pdd-cta{display:block;width:100%;min-height:46px;border-radius:12px;cursor:pointer;
+  font-family:'Quicksand',sans-serif;font-size:.92rem;font-weight:700;
+  background:var(--parchment);color:#f0d68a;border:none}
+.pdd-cta:active{transform:scale(.985)}
+.pdd-cta.ghost{background:transparent;color:var(--parchment);border:1.5px solid rgba(28,42,34,.35)}
+.hoy-stats{display:flex;align-items:stretch;margin:0 0 .5rem}
+.hoy-stat{flex:1;text-align:center;padding:.4rem 0}
+.hoy-stat+.hoy-stat{border-left:1px solid rgba(196,154,60,.18)}
+.hoy-stat b{display:block;font-family:'Cinzel',serif;font-size:1.35rem;line-height:1.15;color:var(--gold2);font-weight:700}
+.hoy-stat b i{font-style:normal;font-size:.7rem}
+.hoy-stat span{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(228,190,104,.55)}
+.hoy-rows{margin-bottom:1rem}
+.hoy-numrow{display:flex;align-items:center;gap:.7rem;width:100%;min-height:52px;padding:.55rem .35rem;
+  background:transparent;border:none;border-bottom:1px solid rgba(196,154,60,.14);cursor:pointer;text-align:left}
+.hoy-numrow:first-child{border-top:1px solid rgba(196,154,60,.14)}
+.hoy-numrow:active{background:rgba(196,154,60,.06)}
+.hoy-num{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold);opacity:.75;flex-shrink:0}
+.hoy-numrow-t{flex:1;min-width:0;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:600;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hoy-numrow-meta{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(228,190,104,.85);flex-shrink:0}
+.hoy-numrow-meta.ok{color:rgba(228,190,104,.45)}

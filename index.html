@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.253">
+<meta name="app-version" content="7.254">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.253';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.254';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7228,8 +7228,8 @@ function _dqPick(i){
 function _dqClose(){
   const ov=document.getElementById('dqOverlay');
   if(ov) ov.remove();
-  // Refresca el anillo/pips de «Hoy» si el inicio está visible
-  if(document.querySelector('.hoy-card') && typeof renderDashboard==='function') renderDashboard();
+  // Refresca «Hoy» si el inicio está visible (el héroe pasa a Plato del día)
+  if(document.querySelector('.pdd-hero') && typeof renderDashboard==='function') renderDashboard();
 }
 function _dqRender(){
   const en=LANG==='en';
@@ -7279,6 +7279,99 @@ function _dqRender(){
         <button type="button" onclick="_dqClose()" style="background:none;border:1.5px solid rgba(196,154,60,.35);border-radius:20px;padding:.4rem 1rem;font-family:Quicksand,sans-serif;font-size:.78rem;font-weight:700;color:var(--parchment);cursor:pointer">${done?(en?'Close':'Cerrar'):(en?'Later':'Luego')}</button>
       </div>
     </div>`;
+}
+
+// ═══ PLATO DEL DÍA — la portada editorial del héroe de «Hoy» ═══
+// Cuando el reto del día ya está hecho, la tarjeta pergamino del inicio pasa
+// a ser el plato del día: mismo plato para todo el equipo (determinista por
+// fecha, como el reto), con foto real, alérgenos, maridaje y técnica de la
+// carta. Un plato al día = la carta entera repasada en unos meses.
+function _pddDishOfDay(dayStr){
+  // Semilla propia (≠ reto) para que plato y pregunta no vayan en paralelo.
+  const dishes=DISHES.filter(d=>d&&d.name&&d.cat!=='Guarniciones y Salsas');
+  const rng=_mulberry32((parseInt(dayStr.replace(/-/g,''),10)^0x5EED50FA)>>>0);
+  return dishes[Math.floor(rng()*dishes.length)];
+}
+function _pddTecFor(dish){
+  if(typeof TECNICAS==='undefined' || !Array.isArray(TECNICAS)) return null;
+  const hay=((dish.name||'')+' '+(dish.ingredients||'')+' '+(dish.history||'')+' '+(dish.notes||'')).toLowerCase();
+  for(const t of TECNICAS){
+    if(!t.kw || !t.kw.length) continue;
+    if(t.kwx && t.kwx.some(k=>hay.includes(k))) continue;
+    if(t.kw.some(k=>hay.includes(k))) return t;
+  }
+  return null;
+}
+function _pddWineFor(dish){
+  if(typeof WINES==='undefined' || !Array.isArray(WINES)) return null;
+  const n=(dish.name||'').toLowerCase().trim();
+  return WINES.find(w=>(w.pairings||[]).some(p=>{
+    const pl=(p||'').toLowerCase().trim();
+    return pl===n || pl.includes(n) || n.includes(pl);
+  }))||null;
+}
+function _pddHeroHTML(emp,en){
+  if(!_dqIsDone(emp)){
+    const s=emp.dqStreak||0;
+    return `<div class="pdd-hero">
+      <div class="pdd-eyebrow"><span>⭐ ${en?'Daily quiz':'Reto del día'}</span><span>≈ 30 s</span></div>
+      <div class="pdd-title">${en?'Today’s question':'La pregunta de hoy'}</div>
+      <div class="pdd-sub">${en?'Same question for the whole team':'La misma pregunta para todo el equipo'}${s>0?` · 🔥 ${s}`:''}</div>
+      <button type="button" class="pdd-cta" onclick="openDailyReto()">${en?'Start':'Empezar'}</button>
+    </div>`;
+  }
+  const d=_pddDishOfDay(todayStr());
+  const tec=_pddTecFor(d);
+  const al=d.allergens||[];
+  const chips = al.slice(0,3).map(a=>`<span class="pdd-chip">${escapeHTML(a.toUpperCase())}</span>`).join('')
+    + (al.length>3?`<span class="pdd-chip">+${al.length-3}</span>`:'')
+    + (!al.includes('Gluten')?`<span class="pdd-chip free">${en?'GLUTEN-FREE ✓':'SIN GLUTEN ✓'}</span>`:'');
+  return `<div class="pdd-hero">
+    <div id="pddPhoto" class="pdd-photo" role="img" aria-label="${en?'Photo of the dish of the day':'Foto del plato del día'}"></div>
+    <div class="pdd-eyebrow"><span>${en?'Dish of the day':'Plato del día'} · Nº ${d.id}</span><span class="pdd-done">${en?'QUIZ DONE ✓':'RETO HECHO ✓'}</span></div>
+    <div class="pdd-title">${escapeHTML(d.name)}</div>
+    <div class="pdd-sub"><span id="pddPair">${escapeHTML(d.cat)}</span>${tec?` · ${en?'Technique':'Técnica'}: ${escapeHTML(en?(tec.en||tec.es):tec.es)}`:''}</div>
+    <div class="pdd-chips">${chips}</div>
+    <button type="button" class="pdd-cta ghost" onclick="_emplOpen(${d.id})">${en?'View card':'Ver ficha'}</button>
+  </div>`;
+}
+// Rellenos asíncronos del héroe (foto y maridaje viven en JSON perezosos) y
+// posición en la liga (nube, con caché de 5 min para no machacar Supabase).
+function _pddAsyncFill(){
+  const emp=getEmp(currentUser);
+  if(emp && _dqIsDone(emp)){
+    const d=_pddDishOfDay(todayStr());
+    if(typeof loadDishPhotos==='function') loadDishPhotos().then(m=>{
+      const el=document.getElementById('pddPhoto');
+      const src=m && m[d.id];
+      if(el && src && typeof src==='string'){ el.style.backgroundImage=`url('${src}')`; el.classList.add('has-photo'); }
+    }).catch(()=>{});
+    const _wines = (typeof WINES!=='undefined' && Array.isArray(WINES))
+      ? Promise.resolve(WINES)
+      : loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos', {silent:true}).then(w=>{ if(typeof WINES!=='undefined' && !WINES) WINES=w; return w; });
+    _wines.then(()=>{
+      const w=_pddWineFor(d);
+      const el=document.getElementById('pddPair');
+      if(el && w) el.textContent=(LANG==='en'?'Pairing: ':'Maridaje: ')+w.name;
+    }).catch(()=>{});
+  }
+  // Posición en la liga semanal
+  const el=document.getElementById('hoyLigaPos');
+  if(el){
+    const c=window._ligaPosCache;
+    if(c && (Date.now()-c.ts)<300000){ el.textContent=c.v; }
+    else if(typeof supaFetchAllEmployees==='function') supaFetchAllEmployees().then(rows=>{
+      const wkNow=_wkKey(); const map={};
+      Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && e.wkKey===wkNow && (e.wkXP||0)>0) map[n]=e.wkXP||0; });
+      (rows||[]).forEach(e=>{ const wk=e.extras&&e.extras.wk; if(wk && wk.k===wkNow && (wk.xp||0)>0) map[e.name]=Math.max(map[e.name]||0, wk.xp||0); });
+      const sorted=Object.keys(map).sort((a,b)=>map[b]-map[a]||a.localeCompare(b));
+      const pos=sorted.indexOf(currentUser);
+      const v=pos>=0?('Nº'+(pos+1)):'—';
+      window._ligaPosCache={ts:Date.now(), v};
+      const el2=document.getElementById('hoyLigaPos');
+      if(el2) el2.textContent=v;
+    }).catch(()=>{});
+  }
 }
 
 // ═══ LIGA SEMANAL — XP de la semana, se reinicia cada lunes ═══
@@ -16687,65 +16780,43 @@ function renderDashboard(){
       <span class="dash-plating-shine" aria-hidden="true"></span>
     </div>
 
-    <!-- ── HOY: plan (SRS · rango · debilidad) + reto semanal + misiones en
-         UN solo ledger. Antes eran 4 bloques consecutivos de "qué hacer hoy"
-         con marcos visuales distintos; la alerta de tema débil (→ Examen) se
-         retiró por duplicar la práctica enfocada (→ Simulación). ── -->
+    <!-- ── HOY: rediseño «una acción dominante» (exploración de diseño jul
+         2026). UNA tarjeta pergamino (héroe) con dos estados — Reto del día
+         pendiente ⇄ Plato del día al terminarlo —, tira de stats (racha ·
+         precisión · liga) y filas numeradas compactas. El detalle completo
+         sigue viviendo en el acordeón #hoyDetail (fila 03). ── -->
     ${(()=>{ const _m=renderDailyMissions();
       const _ch=getCurrentChallenge(); const _chP=getChallengeProgress(_ch); const _chDone=_chP.completed>=_chP.total;
-      const _srsOk=_srsDue===0; const _msDone=_m.done>=_m.total;
       const _dqD=_dqIsDone(emp); const _dqS=emp.dqStreak||0;
-      const _units=[_dqD,_srsOk,_chDone].concat(_m.list.map(x=>x.done));
-      const _dDone=_units.filter(Boolean).length, _dTot=_units.length;
-      const _dash=(163.4*(1-(_dTot?_dDone/_dTot:0))).toFixed(1);
-      // Regla fija de prioridad para la ÚNICA acción destacada del día:
-      // reto del día (30 s, el gancho diario compartido) > repaso SRS vencido >
-      // práctica débil > reto semanal pendiente > misión más cercana a
-      // completarse. El usuario decide "hacer" o "ver más", no elige entre 7 filas.
-      let _next=null;
-      if(!_dqD) _next={ic:'⭐',t:_en?'Daily quiz':'Reto del día',s:_en?'same question for the whole team · 30 s':'la misma pregunta para todo el equipo · 30 s',go:'openDailyReto()'};
-      else if(_srsDue>0) _next={ic:'⚡',t:_en?('Review '+_srsDue+' dishes'):('Repasa '+_srsDue+' platos'),s:_en?'spaced repetition':'repetición espaciada',go:"_subTab.aprender='smart';showTab('aprender')"};
-      else if(_weakDisplay) _next={ic:'🎯',t:(_en?'Focus practice: ':'Práctica enfocada: ')+_weakDisplay.label,s:_en?'start the simulation':'inicia la simulación',go:'_startSmartSession()'};
-      else if(!_chDone) _next={ic:'🏅',t:(_en?'Weekly challenge':'Reto semanal')+': '+(_en?_ch.en:_ch.es),s:_chP.completed+'/'+_chP.total+' '+(_en?'passed':'superado'),go:"startChallengeExam('"+_ch.topic+"','"+_ch.cat+"')"};
-      else { const _pm=_m.list.filter(x=>!x.done&&x.go).sort((a,b)=>(b.current/b.target)-(a.current/a.target))[0];
-        if(_pm) _next={ic:'◆',t:_pm.title,s:'+'+_pm.xp+' XP',go:_pm.go}; }
-      if(!_next) _next={ic:'★',t:_en?'All done for today!':'¡Día completado!',s:_en?'come back tomorrow':'vuelve mañana',go:''};
-      const _pip=(done,lbl)=>'<button type="button" class="hoy-pip'+(done?' done':'')+'" aria-expanded="false" onclick="_hoyToggle()">'+(done?'✓':'◇')+' '+lbl+'</button>';
+      const _msDone=_m.done>=_m.total;
       return `
     <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
-    <div class="hoy-card">
-      <div class="hoy-ring" role="img" aria-label="${_dDone}/${_dTot} ${_en?'tasks done today':'tareas de hoy hechas'}">
-        <svg viewBox="0 0 60 60" aria-hidden="true">
-          <circle class="hoy-ring-track" cx="30" cy="30" r="26"/>
-          <circle class="hoy-ring-fill" cx="30" cy="30" r="26" style="stroke-dashoffset:${_dash}"/>
-        </svg>
-        <div class="hoy-ring-txt"><b>${_dDone}/${_dTot}</b><span>${_en?'today':'hoy'}</span></div>
-      </div>
-      <div class="hoy-main">
-        <div class="hoy-next-lbl">${_en?'NEXT':'SIGUIENTE'} ▸</div>
-        <button type="button" class="hoy-next" ${_next.go?`onclick="${_next.go}"`:'disabled'}>
-          <span class="hoy-next-ic" aria-hidden="true">${_next.ic}</span>
-          <span class="hoy-next-tx"><b>${escapeHTML(_next.t)}</b><span>${_next.s}</span></span>
-        </button>
-      </div>
+    ${_pddHeroHTML(emp,_en)}
+    <div class="hoy-stats" role="group" aria-label="${_en?'Your numbers: quiz streak, exam accuracy, league position':'Tus números: racha del reto, precisión de exámenes, posición en la liga'}">
+      <div class="hoy-stat"><b>${_dqS}</b><span>${_en?'streak':'racha'}</span></div>
+      <div class="hoy-stat"><b>${sessions.length?avg+'<i>%</i>':'—'}</b><span>${_en?'accuracy':'precisión'}</span></div>
+      <div class="hoy-stat"><b id="hoyLigaPos">—</b><span>${_en?'league':'liga'}</span></div>
     </div>
-    <div class="hoy-pips">
-      ${_pip(_dqD,(_en?'Daily':'Reto')+(_dqS>1?' 🔥'+_dqS:''))}
-      ${_pip(_srsOk,(_en?'Review':'Repaso')+(_srsOk?'':' '+_srsDue))}
-      ${_pip(_chDone,_en?'Weekly':'Semanal')}
-      ${_pip(_msDone,(_en?'Missions':'Misiones')+' '+_m.done+'/'+_m.total)}
-      ${_weakDisplay?_pip(false,_en?'Practice':'Práctica'):''}
+    <div class="hoy-rows">
+      <button type="button" class="hoy-numrow" onclick="_subTab.aprender='smart';showTab('aprender')" aria-label="${_en?`Review — ${_srsDue} cards pending`:`Repaso — ${_srsDue} fichas pendientes`}">
+        <span class="hoy-num" aria-hidden="true">01</span><span class="hoy-numrow-t">${_en?'Review':'Repaso'}</span>
+        <span class="hoy-numrow-meta${_srsDue===0?' ok':''}">${_srsDue>0?(_srsDue+' '+(_en?'CARDS':'FICHAS')):(_en?'DONE ✓':'HECHO ✓')}</span>
+      </button>
+      <button type="button" class="hoy-numrow" onclick="startChallengeExam('${_ch.topic}','${_ch.cat}')" aria-label="${_en?'Weekly challenge':'Reto semanal'}: ${_en?_ch.en:_ch.es}">
+        <span class="hoy-num" aria-hidden="true">02</span><span class="hoy-numrow-t">${_en?'Weekly challenge':'Reto semanal'}</span>
+        <span class="hoy-numrow-meta${_chDone?' ok':''}">${_chP.completed}/${_chP.total}</span>
+      </button>
+      <button type="button" class="hoy-numrow" onclick="_hoyToggle()" aria-expanded="false" aria-label="${_en?`Missions ${_m.done} of ${_m.total} — expand detail`:`Misiones ${_m.done} de ${_m.total} — desplegar detalle`}">
+        <span class="hoy-num" aria-hidden="true">03</span><span class="hoy-numrow-t">${_en?'Missions':'Misiones'}</span>
+        <span class="hoy-numrow-meta${_msDone?' ok':''}">${_m.done}/${_m.total} ▾</span>
+      </button>
+      ${_weakDisplay?`<button type="button" class="hoy-numrow" onclick="_startSmartSession()" aria-label="${_en?`Focus practice: ${_weakDisplay.label}`:`Práctica enfocada: ${_weakDisplay.label}`}">
+        <span class="hoy-num" aria-hidden="true">04</span><span class="hoy-numrow-t">${_en?'Practice':'Práctica'}: ${escapeHTML(_weakDisplay.label)}</span>
+        <span class="hoy-numrow-meta">${_weakDisplay.count} ${_en?(_weakDisplay.count===1?'MISS':'MISSES'):(_weakDisplay.count===1?'FALLO':'FALLOS')}</span>
+      </button>`:''}
     </div>
     <div id="hoyOvertaken"></div>
     <div id="hoyDetail" style="display:none;margin-bottom:1rem">
-      <button class="dash-row" onclick="openDailyReto()" aria-label="${_en?'Daily quiz — same question for the whole team':'Reto del día — la misma pregunta para todo el equipo'}">
-        <span class="dash-row-num" style="color:var(--gold-deep)" aria-hidden="true">⭐</span>
-        <span class="dash-row-body">
-          <span class="dash-row-title">${_en?'Daily quiz':'Reto del día'}${_dqS>1?' · 🔥'+_dqS:''}</span>
-          <span class="dash-row-sub" style="display:block">${_dqD?(_en?'done — come back tomorrow':'hecho — mañana hay otra'):(_en?'same question for the whole team':'la misma pregunta para todo el equipo')}</span>
-        </span>
-        <span class="dash-row-go">›</span>
-      </button>
       ${_srsDue>0 ? `
       <button class="dash-row" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
         <span class="dash-row-num" aria-hidden="true">${_srsDue}</span>
@@ -16854,6 +16925,7 @@ function renderDashboard(){
   checkMissionCompletion();
   checkNewAchievements();
   _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
+  _pddAsyncFill();        // foto/maridaje del plato del día + posición en la liga
 }
 
 
