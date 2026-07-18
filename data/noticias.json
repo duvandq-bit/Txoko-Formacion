@@ -1,5 +1,5 @@
 {
- "updated": "2026-07-18T15:55:16.595Z",
+ "updated": "2026-07-18T18:10:09.489Z",
  "items": [
   {
    "t": "La pizza en honor a la Virgen de Candelaria que se ha hecho viral en Tenerife: tiene forma de templo y solo se podrá...",
@@ -82,6 +82,15 @@
    "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/07/14/6a56351590477.r_d.467-386-13058.jpeg"
   },
   {
+   "t": "Andalucía triunfa en la Gala de la Guía Michelin con cinco restaurantes que logran su primera Estrella",
+   "u": "https://www.101tv.es/andalucia/andalucia-triunfa-en-la-gala-de-la-guia-michelin-con-cinco-restaurantes-que-logran-su-primera-estrella/",
+   "s": "101TV",
+   "d": "2026-07-18T03:25:05.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
    "t": "Tres vinos volcánicos de Tenerife, el paraíso de las uvas que fascina al mundo",
    "u": "https://elpais.com/gastronomia/beber/2026-07-18/tres-vinos-volcanicos-de-tenerife-el-paraiso-de-las-uvas-que-fascina-al-mundo.html?outputType",
    "s": "EL PAÍS",
@@ -152,16 +161,6 @@
    "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-164432.jpg"
   },
   {
-   "t": "Prime Video y Disney+ tienen la película perfecta para el fin de semana con Anya Taylor-Joy y Ralph Fiennes",
-   "u": "https://www.larazon.es/tecnologia-consumo/series/prime-video-disney-tienen-pelicula-perfecta-fin-semana-anya-taylor-joy-ralph-fiennes_202607176a561484c0b5fb431c555114.html",
-   "s": "La Razón",
-   "d": "2026-07-17T16:01:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://fotografias-2.larazon.es/assets/2026/07/tiene-dos-autenticos-actorazos-a-la-cabeza-de-la-cinta.jpg?width=1280"
-  },
-  {
    "t": "Cuatro estrellas Michelin aterrizan en Maspalomas para protagonizar las noches gastronómicas del verano",
    "u": "https://www.canarias7.es/gastronomia-c7/bp-cuatro-estrellas-michelin-aterrizan-maspalomas-protagonizar-noches-20260717152239-nt.html",
    "s": "Canarias7",
@@ -203,7 +202,7 @@
   {
    "t": "Las primeras notas de bodegas de la guía Michelin generan rechazo",
    "u": "https://es.euronews.com/cultura/2026/07/17/michelin-estrena-clasificacion-de-bodegas-y-recibe-criticas-inmediatas",
-   "s": "Euronews",
+   "s": "Euronews.com",
    "d": "2026-07-17T11:46:28.000Z",
    "tags": [
     "MICHELIN",
@@ -299,8 +298,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
+   ]
   }
  ]
 }
