@@ -3817,6 +3817,19 @@ test('El Código del Camarero: manual de oficio consultable (jul 2026)', () => {
     'con prisa la cuenta se OFRECE (estándar: se presenta al pedirla) — no se lleva sin pedirla');
 });
 
+test('auditoría de botones: nada de tinta oscura sobre el fondo oscuro de la página (jul 2026)', () => {
+  // Bug real (propietario): «en auditoría los botones para volver atrás no se
+  // ven bien». El fondo de la página es oscuro (#1c2a22); un botón transparente
+  // con color var(--parch*) (tinta oscura, pensada para tarjetas claras) es
+  // invisible. 28 botones (← volver de LQA/supervisor/editor/Código, «Volver
+  // al menú», pestañas de turno apagadas) pasaron a dorado tenue. Este guard
+  // bloquea el patrón entero: transparente + borde tenue + tinta = prohibido.
+  assert(!/color:var\(--parch\d?\);cursor:pointer[^>]*>\s*←\s*</.test(html),
+    'ningún botón ← de volver puede usar tinta oscura (var(--parch*)) sobre fondo transparente');
+  assert(!/background:transparent;border:1px solid var\(--line\);border-radius:var\(--r2?\);padding:\.4rem \.8rem;font-size:\.75rem;color:var\(--parch/.test(html),
+    'patrón de botón de volver con tinta oscura detectado — usa dorado tenue rgba(228,190,104,.85)');
+});
+
 test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
   // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
   // aparecer como uno de los restaurantes a escoger, pero el nombre de la

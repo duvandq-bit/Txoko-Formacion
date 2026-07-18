@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.252">
+<meta name="app-version" content="7.253">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.252';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.253';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2365,7 +2365,7 @@ function _renderShiftBar(){
       'style="flex:1;min-height:36px;padding:.4rem .3rem;border:none;border-radius:9px;cursor:pointer;'+
       'font-family:\'DM Mono\',monospace;font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;'+
       (on ? 'background:linear-gradient(155deg,#faf6ee,#f0e8d8);color:var(--gold-deep);font-weight:700;border:1px solid rgba(196,154,60,.35);box-shadow:0 1px 4px rgba(28,42,34,.08)'
-          : 'background:transparent;color:var(--parch3)')+'">'+lbl+'</button>';
+          : 'background:transparent;color:rgba(228,190,104,.7)')+'">'+lbl+'</button>';
   }).join('');
 }
 
@@ -16221,7 +16221,7 @@ function _mqRender(){
   c.innerHTML = `
     <div class="sup-wrap">
       <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-        <button onclick="_mqExit()" aria-label="${_en?'Exit pairing quiz':'Salir del quiz'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+        <button onclick="_mqExit()" aria-label="${_en?'Exit pairing quiz':'Salir del quiz'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
         <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${_en?'Pairing Quiz':'Quiz de Maridaje'}</div>
       </div>
       <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
@@ -19395,7 +19395,7 @@ function renderAllergenResults() {
       <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--parch3);margin-bottom:.5rem">${score}/${questions.length} · ${Math.floor(time/60)}m ${time%60}s</div>
       ${pct < 80 ? `<div style="background:rgba(196,112,104,.08);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.75rem;margin-bottom:1rem;font-size:.78rem;color:var(--rose)">⚠ ${LANG==='en'?'Review the allergens section before service':'Repasa la sección de alérgenos antes del servicio'}</div>` : ''}
       <button class="btn-primary" onclick="startAllergenTest('${cat||''}')" style="width:100%;margin-bottom:.5rem">${LANG==='en'?'New test':'Nuevo test'}</button>
-      <button onclick="_subTab.aprender='smart';showTab('aprender')" style="width:100%;padding:.65rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);cursor:pointer">← ${LANG==='en'?'Back to Learn':'Volver a Aprender'}</button>
+      <button onclick="_subTab.aprender='smart';showTab('aprender')" style="width:100%;padding:.65rem;background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.8rem;color:rgba(228,190,104,.85);cursor:pointer">← ${LANG==='en'?'Back to Learn':'Volver a Aprender'}</button>
     </div>
   </div>`;
   checkMissionCompletion();
@@ -19483,7 +19483,7 @@ function renderSupAnalytics(allEmps, empNames){
 
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
-      <button onclick="renderSupDashboard()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderSupDashboard()" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)"> Analytics del equipo</div>
     </div>
 
@@ -19558,7 +19558,7 @@ function renderSupLqaStats(allEmps, empNames){
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderSupDashboard()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderSupDashboard()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?'LQA Team Readiness':'Preparación LQA del Equipo'}</div>
     </div>
 
@@ -19626,7 +19626,7 @@ function renderSupNotifSender(empNames){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="renderSupDashboard()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderSupDashboard()" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">! Enviar aviso al equipo</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
@@ -19817,7 +19817,7 @@ function renderQuizDia(){
   const _en=LANG==='en';
   document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">🎯 ${_en?'Daily Quiz':'Quiz del día'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;text-align:center">
@@ -19902,7 +19902,7 @@ async function _qdEnd(correct, total, revisit){
   const detail=(played&&played.detail)||[];
   document.getElementById('appContent').innerHTML = `<div style="max-width:420px;margin:0 auto;padding:1.5rem 1rem;text-align:center">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;text-align:left">
-      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">🎯 ${_en?'Daily Quiz':'Quiz del día'}</div>
     </div>
     <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment)">${revisit?(_en?'Your result today':'Tu resultado de hoy'):(_en?'Done!':'¡Hecho!')}</div>
@@ -19978,7 +19978,7 @@ function renderCartaDishEdit(id){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="renderCartaEditor()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderCartaEditor()" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${d.name}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
@@ -20030,7 +20030,7 @@ function renderCartaNewDish(){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="renderCartaEditor()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderCartaEditor()" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${LANG==='en'?'New dish':'Nuevo plato'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
@@ -22502,7 +22502,7 @@ function renderCodigo(){
   const c=document.getElementById('appContent');
   const chips=[{id:'all',t:en?'All':'Todos',icon:'◆'}].concat(CODIGO_CAMARERO.cats.map(x=>({id:x.id,t:en?x.t_en:x.t,icon:x.icon})));
   c.innerHTML=`<div class="sup-wrap">
-    <button onclick="renderLqa()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer;margin-bottom:.6rem">←</button>
+    <button onclick="renderLqa()" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer;margin-bottom:.6rem">←</button>
     <div class="sup-hero">
       <div class="sup-hero-icon" style="font-size:1.6rem">🧭</div>
       <div class="sup-hero-title">${en?'The Waiter’s Code':'El Código del Camarero'}</div>
@@ -22621,7 +22621,7 @@ function renderLqaCategory(catId){
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderLqa()" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-size:1.2rem">${cat.icon}</div>
       <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?cat.title_en:cat.title}</div>
     </div>
@@ -22674,7 +22674,7 @@ function renderLqaInfo(){
 
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderLqa()" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?'LQA Information':'Información LQA'}</div>
     </div>
 
@@ -22748,7 +22748,7 @@ function renderLqaExamQuestion(){
   if (!c) return;
   c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'LQA Exam question':'Pregunta examen LQA'}">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'}</div>
     </div>
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
@@ -22782,7 +22782,7 @@ function lqaExamAnswer(optIdx){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'} · ${s.index+1}/${s.questions.length}</div>
     </div>
     <div style="text-align:center;margin:.5rem 0 1rem">
@@ -22850,7 +22850,7 @@ function renderLqaExamResults(){
       <button onclick="renderLqaExamReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
       <button onclick="startLqaExam()" style="padding:.75rem;background:var(--gold);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
     </div>
-    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r);color:rgba(228,190,104,.85);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
   </div>`;
   setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
 }
@@ -22869,7 +22869,7 @@ function renderLqaExamReview(){
   }).join('');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqaExamResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderLqaExamResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
     </div>
     ${items}
@@ -22940,7 +22940,7 @@ function renderLqaSituationQuestion(){
   if (!c) return;
   c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'LQA situation':'Situación LQA'}">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'}</div>
     </div>
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
@@ -22981,7 +22981,7 @@ function lqaSituationAnswer(idx){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'} · ${s.index+1}/${s.questions.length}</div>
     </div>
     <div style="text-align:center;margin:.5rem 0 1rem">
@@ -23138,7 +23138,7 @@ function renderLqaSituationResults(){
       <button onclick="renderLqaSituationReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
       <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'De nuevo'}</button>
     </div>
-    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r);color:rgba(228,190,104,.85);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
   </div>`;
   setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
 }
@@ -23158,7 +23158,7 @@ function renderLqaSituationReview(){
   }).join('');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqaSituationResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderLqaSituationResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
     </div>
     ${items}
@@ -23182,7 +23182,7 @@ function renderLqaAuditorScenario(){
   if (!c) return;
   c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'Auditor scenario':'Escenario auditor'}">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'}</div>
     </div>
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
@@ -23232,7 +23232,7 @@ function lqaAuditorAnswer(verdict){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'} · ${s.index+1}/${s.questions.length}</div>
     </div>
     <div style="text-align:center;margin:.5rem 0 1rem">
@@ -23306,7 +23306,7 @@ function renderLqaAuditorResults(){
       <button onclick="renderLqaAuditorReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
       <button onclick="startLqaAuditor()" style="padding:.75rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
     </div>
-    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r);color:rgba(228,190,104,.85);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
   </div>`;
   setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
 }
@@ -23328,7 +23328,7 @@ function renderLqaAuditorReview(){
   }).join('');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqaAuditorResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="renderLqaAuditorResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
     </div>
     ${items}
@@ -23366,7 +23366,7 @@ function renderGhostIntro(){
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">\u2190</button>
+      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">\u2190</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Ghost Inspection':'Inspecci\u00f3n Fantasma'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(140,200,150,.2);border-radius:var(--r);padding:1.5rem;margin-bottom:1.1rem;position:relative;overflow:hidden">
@@ -23394,7 +23394,7 @@ function renderGhostScene(){
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="if(confirm('${LANG==='en'?'Exit? Progress will be lost.':'\u00bfSalir? Se perder\u00e1 el progreso.'}'))renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">\u2190</button>
+      <button onclick="if(confirm('${LANG==='en'?'Exit? Progress will be lost.':'\u00bfSalir? Se perder\u00e1 el progreso.'}'))renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">\u2190</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Ghost Inspection':'Inspecci\u00f3n Fantasma'} \u00b7 ${ghostSceneIdx+1}/${ghostScenario.scenes.length}</div>
     </div>
     <div style="margin-bottom:1rem">
@@ -23433,7 +23433,7 @@ function ghostChoose(idx){
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="if(confirm('${LANG==='en'?'Exit?':'\u00bfSalir?'}'))renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">\u2190</button>
+      <button onclick="if(confirm('${LANG==='en'?'Exit?':'\u00bfSalir?'}'))renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">\u2190</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Inspector\u2019s Note':'Nota del Inspector'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-left:4px solid ${col};border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
@@ -23523,7 +23523,7 @@ function renderGhostReport(){
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">\u2190</button>
+      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer">\u2190</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Inspector\u2019s Report':'Informe del Inspector'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(140,200,150,.25);border-radius:var(--r);padding:1.5rem;margin-bottom:1.1rem;text-align:center">
@@ -26679,7 +26679,7 @@ function txGameOver(){
         </div>
         ${isRecord?`<button type="button" class="tx-share-btn" onclick="_txShareRecord(_txRecordMsg('shoesmith',${txokoState.score}),this)">🏆 ${LANG==='en'?'Boast on the Terrace':'Presumir en la Terraza'}</button>`:''}
         <button class="btn-primary" onclick="txStart(true,'${txokoState.persona||'shoesmith'}')" style="width:100%;margin-bottom:.75rem">${LANG==='en'?'Try again →':'Volver a intentarlo →'}</button>
-        <button onclick="renderTxoko()" style="width:100%;padding:.85rem;background:transparent;border:1px solid var(--line);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:500;color:var(--parch2);cursor:pointer;letter-spacing:.04em">${LANG==='en'?'← Main menu':'← Menú principal'}</button>
+        <button onclick="renderTxoko()" style="width:100%;padding:.85rem;background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:500;color:rgba(228,190,104,.85);cursor:pointer;letter-spacing:.04em">${LANG==='en'?'← Main menu':'← Menú principal'}</button>
       </div>
       </div>
     </div>`;
