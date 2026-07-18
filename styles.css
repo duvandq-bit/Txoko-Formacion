@@ -9838,19 +9838,19 @@ body.chat-open .sound-toggle{ display:none !important; }
 .hoy-stats{display:flex;align-items:stretch;margin:0 0 .5rem}
 .hoy-stat{flex:1;text-align:center;padding:.4rem 0}
 .hoy-stat+.hoy-stat{border-left:1px solid rgba(196,154,60,.18)}
-.hoy-stat b{display:block;font-family:'Cinzel',serif;font-size:1.35rem;line-height:1.15;color:var(--gold2);font-weight:700}
+.hoy-stat b{display:block;font-family:'Cinzel',serif;font-size:1.35rem;line-height:1.15;color:var(--gold-deep);font-weight:700}
 .hoy-stat b i{font-style:normal;font-size:.7rem}
-.hoy-stat span{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(228,190,104,.55)}
+.hoy-stat span{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--parch3)}
 .hoy-rows{margin-bottom:1rem}
 .hoy-numrow{display:flex;align-items:center;gap:.7rem;width:100%;min-height:52px;padding:.55rem .35rem;
   background:transparent;border:none;border-bottom:1px solid rgba(196,154,60,.14);cursor:pointer;text-align:left}
 .hoy-numrow:first-child{border-top:1px solid rgba(196,154,60,.14)}
 .hoy-numrow:active{background:rgba(196,154,60,.06)}
 .hoy-num{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold);opacity:.75;flex-shrink:0}
-.hoy-numrow-t{flex:1;min-width:0;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:600;color:var(--ink);
+.hoy-numrow-t{flex:1;min-width:0;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;color:var(--parchment);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hoy-numrow-meta{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(228,190,104,.85);flex-shrink:0}
-.hoy-numrow-meta.ok{color:rgba(228,190,104,.45)}
+.hoy-numrow-meta{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--gold-deep);flex-shrink:0}
+.hoy-numrow-meta.ok{color:var(--parch4)}
 
 /* ═══ LINE UP — ritual de antes del servicio (fase 2, jul 2026) ═══ */
 .lu-list{border-top:1px solid rgba(196,154,60,.14)}
@@ -9862,10 +9862,10 @@ body.chat-open .sound-toggle{ display:none !important; }
   display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#14201a;font-weight:800}
 .lu-row.done .lu-check{background:var(--gold);border-color:var(--gold)}
 .lu-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem}
-.lu-t{font-family:'Quicksand',sans-serif;font-size:.9rem;font-weight:700;color:var(--ink);
+.lu-t{font-family:'Quicksand',sans-serif;font-size:.9rem;font-weight:700;color:var(--parchment);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lu-row.done .lu-t{color:rgba(244,237,226,.45);text-decoration:line-through}
-.lu-s{font-family:'Quicksand',sans-serif;font-size:.68rem;color:rgba(228,190,104,.6);
+.lu-row.done .lu-t{color:rgba(28,42,34,.4);text-decoration:line-through}
+.lu-s{font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--parch3);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lu-meta{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:rgba(228,190,104,.8);flex-shrink:0}
-.lu-row.done .lu-meta{color:rgba(228,190,104,.4)}
+.lu-meta{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:var(--gold-deep);flex-shrink:0}
+.lu-row.done .lu-meta{color:var(--parch4)}
