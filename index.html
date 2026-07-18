@@ -1652,6 +1652,15 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 // Wine image helpers
 // Columnas de employees que la anon key SÍ puede leer (todas menos `pin`, que
 // se cierra a la anon key: el PIN se verifica por RPC en el servidor).
+// ⚠ LECCIÓN (jul 2026, caída de sincronización de 3 días): public.employees
+// usa GRANTs POR COLUMNA (para excluir `pin` de la anon key). Una columna
+// nueva NO hereda esos permisos: si se añade aquí sin ejecutar antes
+//   GRANT SELECT (col), INSERT (col), UPDATE (col) ON public.employees
+//   TO anon, authenticated;
+// TODA petición que la nombre falla (42501) y la app entera deja de leer y
+// escribir la nube — el ranking enseña la caché local a 0 y parece que «se
+// perdió el progreso de todos» (no se pierde: la nube queda congelada y lo
+// local se sube al restaurar los permisos, pero el susto es máximo).
 const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras';
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
