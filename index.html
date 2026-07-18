@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.255">
+<meta name="app-version" content="7.256">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.255';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.256';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7228,8 +7228,10 @@ function _dqPick(i){
 function _dqClose(){
   const ov=document.getElementById('dqOverlay');
   if(ov) ov.remove();
-  // Refresca «Hoy» si el inicio está visible (el héroe pasa a Plato del día)
-  if(document.querySelector('.pdd-hero') && typeof renderDashboard==='function') renderDashboard();
+  // Refresca la vista de fondo: el Line Up si está abierto, o «Hoy» en el
+  // inicio (el héroe pasa a Plato del día al completar el reto).
+  if(document.getElementById('lineupWrap')) renderLineUp();
+  else if(document.querySelector('.pdd-hero') && typeof renderDashboard==='function') renderDashboard();
 }
 function _dqRender(){
   const en=LANG==='en';
@@ -7372,6 +7374,164 @@ function _pddAsyncFill(){
       if(el2) el2.textContent=v;
     }).catch(()=>{});
   }
+}
+
+// ═══ LINE UP — el ritual de antes del servicio (fase 2 del rediseño) ═══
+// 5 pasos de ~30-60 s con contenido REAL que rota a diario de forma
+// determinista (mismo día ⇒ mismos contenidos para todo el equipo, como el
+// reto): Reto del día · Plato del día · Vino de la semana · Protocolo
+// Forbes del día · Código del día. Pensado para hacerse en el Line Up de
+// antes del servicio — en el trabajo, no en el sofá.
+function _luWineOfWeek(){
+  if(typeof WINES==='undefined' || !Array.isArray(WINES) || !WINES.length) return null;
+  const rng=_mulberry32((parseInt(_wkKey().replace(/-/g,''),10)^0x77EEC0DE)>>>0);
+  return WINES[Math.floor(rng()*WINES.length)];
+}
+function _luStdOfDay(){
+  const rng=_mulberry32((parseInt(todayStr().replace(/-/g,''),10)^0x10A57D)>>>0);
+  return LQA_STANDARDS[Math.floor(rng()*LQA_STANDARDS.length)];
+}
+function _luCodeOfDay(){
+  if(!CODIGO_CAMARERO || !Array.isArray(CODIGO_CAMARERO.cards) || !CODIGO_CAMARERO.cards.length) return null;
+  const rng=_mulberry32((parseInt(todayStr().replace(/-/g,''),10)^0xC0D160)>>>0);
+  return CODIGO_CAMARERO.cards[Math.floor(rng()*CODIGO_CAMARERO.cards.length)];
+}
+function _luItems(emp){
+  const day=todayStr(), wk=_wkKey();
+  return [
+    { key:'reto',  secs:30, done:_dqIsDone(emp) },
+    { key:'plato', secs:60, done:(emp.luPddDay||'')===day },
+    { key:'vino',  secs:60, done:(emp.luWineWk||'')===wk },
+    { key:'std',   secs:60, done:(emp.luStdDay||'')===day },
+    { key:'codigo',secs:30, done:(emp.luCdgDay||'')===day }
+  ];
+}
+function _luTitle(key, en){
+  const emp=getEmp(currentUser);
+  if(key==='reto')  return { t:en?'Daily quiz':'Reto del día', s:en?'same question for everyone':'la misma pregunta para todos' };
+  if(key==='plato'){ const d=_pddDishOfDay(todayStr()); return { t:en?'Dish of the day':'Plato del día', s:d?d.name:'' }; }
+  if(key==='vino'){ const w=_luWineOfWeek(); return { t:en?'Wine of the week':'Vino de la semana', s:w?w.name:(en?'from the wine list':'de la carta de vinos') }; }
+  if(key==='std'){ const st=_luStdOfDay(); return { t:(en?'Forbes standard #':'Protocolo Forbes nº ')+st.id, s:en?'today, watch for it in service':'hoy, fíjate en cumplirlo en sala' }; }
+  const c=_luCodeOfDay(); return { t:en?'Code of the day':'Código del día', s:c?(en?c.t_en:c.t):(en?'the waiter’s craft':'el oficio del camarero') };
+}
+function _luGo(key){
+  const emp=getEmp(currentUser);
+  const day=todayStr();
+  if(key==='reto'){ openDailyReto(); return; }
+  if(key==='plato'){ emp.luPddDay=day; saveDB(); const d=_pddDishOfDay(day); if(d) _emplOpen(d.id); setTimeout(()=>{ if(document.getElementById('lineupWrap')) renderLineUp(); }, 300); return; }
+  if(key==='vino'){ _luWineOpen(); return; }
+  if(key==='std'){ _luStdOpen(); return; }
+  if(key==='codigo'){ _luCodeOpen(); return; }
+}
+function _luOverlay(inner, label){
+  let ov=document.getElementById('luOverlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='luOverlay';
+    ov.style.cssText='position:fixed;inset:0;background:rgba(14,22,18,.8);backdrop-filter:blur(3px);z-index:6000;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto';
+    ov.addEventListener('click',e=>{ if(e.target===ov) _luClose(); });
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML=`<div role="dialog" aria-modal="true" aria-label="${label}" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.4);border-radius:16px;max-width:480px;width:100%;max-height:86vh;overflow-y:auto;padding:1.25rem;box-shadow:0 18px 60px rgba(0,0,0,.45)">
+    ${inner}
+    <button type="button" onclick="_luClose()" style="display:block;width:100%;margin-top:.9rem;min-height:44px;border-radius:12px;cursor:pointer;background:var(--parchment);color:#f0d68a;border:none;font-family:Quicksand,sans-serif;font-size:.88rem;font-weight:700">${LANG==='en'?'Done':'Listo'}</button>
+  </div>`;
+}
+function _luClose(){
+  const ov=document.getElementById('luOverlay');
+  if(ov) ov.remove();
+  if(document.getElementById('lineupWrap')) renderLineUp();
+}
+async function _luWineOpen(){
+  const en=LANG==='en';
+  if(typeof WINES==='undefined' || !Array.isArray(WINES)){
+    try{ const w=await loadLazyData('data/wines.json', en?'wine list':'lista de vinos'); if(!WINES) WINES=w; }catch(e){ return; }
+  }
+  const w=_luWineOfWeek();
+  if(!w) return;
+  const emp=getEmp(currentUser); emp.luWineWk=_wkKey(); saveDB();
+  _luOverlay(`
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.4rem">🍷 ${en?'Wine of the week':'Vino de la semana'}</div>
+    <div style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--parchment);margin-bottom:.25rem">${escapeHTML(w.name)}</div>
+    <div style="font-size:.76rem;font-weight:600;color:var(--parch2);margin-bottom:.6rem">${escapeHTML(w.grapes||'')} · ${escapeHTML(w.region||'')} · ${w.price?w.price+'€':''}</div>
+    <div style="font-size:.8rem;color:var(--parch2);line-height:1.55;margin-bottom:.6rem">${escapeHTML((w.story||'').slice(0,380))}${(w.story||'').length>380?'…':''}</div>
+    ${(w.pairings&&w.pairings.length)?`<div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.3rem">${en?'Pairs with':'Marida con'}</div>
+    <div style="font-size:.76rem;color:var(--parch2)">${w.pairings.slice(0,4).map(escapeHTML).join(' · ')}</div>`:''}
+  `, en?'Wine of the week':'Vino de la semana');
+}
+function _luStdOpen(){
+  const en=LANG==='en';
+  const st=_luStdOfDay();
+  const emp=getEmp(currentUser); emp.luStdDay=todayStr(); saveDB();
+  const cat=(typeof LQA_CATEGORIES!=='undefined' && LQA_CATEGORIES.find(c=>c.id===st.cat))||null;
+  _luOverlay(`
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.4rem">✓ ${en?'Forbes/LQA standard of the day':'Protocolo Forbes del día'} · Nº ${st.id}</div>
+    ${cat?`<div style="font-size:.68rem;font-weight:700;color:var(--parch3);margin-bottom:.4rem">${en?cat.title_en:cat.title} · ${escapeHTML(st.cls||'')}</div>`:''}
+    <div style="font-family:Georgia,serif;font-size:.95rem;font-weight:600;color:var(--parchment);line-height:1.5;margin-bottom:.6rem">${escapeHTML(en?(st.std_en||st.std):st.std)}</div>
+    <div style="font-size:.76rem;font-style:italic;color:var(--parch3)">${en?'The auditor checks exactly this. Today in service: make it happen at your tables.':'El auditor comprueba exactamente esto. Hoy en el servicio: que se cumpla en tus mesas.'}</div>
+  `, en?'Standard of the day':'Protocolo del día');
+}
+async function _luCodeOpen(){
+  const en=LANG==='en';
+  if(!CODIGO_CAMARERO){
+    try{ CODIGO_CAMARERO=await loadLazyData('data/codigo-camarero.json', en?'the Waiter’s Code':'el Código del Camarero'); }catch(e){ return; }
+  }
+  const c=_luCodeOfDay();
+  if(!c) return;
+  const emp=getEmp(currentUser); emp.luCdgDay=todayStr(); saveDB();
+  const card=_cdgCardHTML(c).replace('<details class="cdg-card"','<details class="cdg-card" open');
+  _luOverlay(`
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.5rem">🧭 ${en?'Code of the day':'Código del día'}</div>
+    ${card}
+  `, en?'Code of the day':'Código del día');
+}
+function renderLineUp(){
+  const en=LANG==='en';
+  const emp=getEmp(currentUser);
+  const items=_luItems(emp);
+  const done=items.filter(x=>x.done).length, tot=items.length;
+  const dash=(163.4*(1-(tot?done/tot:0))).toFixed(1);
+  const next=items.find(x=>!x.done)||null;
+  const dateLbl=new Intl.DateTimeFormat(en?'en-GB':'es-ES',{timeZone:'Atlantic/Canary',weekday:'short',day:'numeric',month:'short'}).format(new Date()).toUpperCase().replace(/\./g,'');
+  const rows=items.map(it=>{
+    const m=_luTitle(it.key,en);
+    return `<button type="button" class="lu-row${it.done?' done':''}${(next&&next.key===it.key)?' next':''}" onclick="_luGo('${it.key}')" aria-label="${escapeHTML(m.t)}${it.done?(en?' — done':' — hecho'):''}">
+      <span class="lu-check" aria-hidden="true">${it.done?'✓':''}</span>
+      <span class="lu-body"><span class="lu-t">${escapeHTML(m.t)}</span>${m.s?`<span class="lu-s">${escapeHTML(m.s)}</span>`:''}</span>
+      <span class="lu-meta">${it.done?(en?'DONE':'HECHO'):(it.secs>=60?Math.round(it.secs/60)+' MIN':it.secs+' S')}</span>
+    </button>`;
+  }).join('');
+  const nextT=next?_luTitle(next.key,en):null;
+  const c=document.getElementById('appContent');
+  c.innerHTML=`<div class="sup-wrap" id="lineupWrap">
+    <button onclick="showTab('dashboard')" style="background:transparent;border:1px solid rgba(196,154,60,.4);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:rgba(228,190,104,.85);cursor:pointer;margin-bottom:.8rem">←</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.1rem">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;color:rgba(228,190,104,.6);margin-bottom:.3rem">MESEO · ${dateLbl}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.7rem;font-weight:700;color:var(--ink);line-height:1.15">Line Up</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.74rem;color:rgba(228,190,104,.6)">${en?'before service · ~3 min':'antes del servicio · ~3 min'}</div>
+      </div>
+      <div style="position:relative;width:64px;height:64px;flex-shrink:0" role="img" aria-label="${done}/${tot}">
+        <svg viewBox="0 0 60 60" width="64" height="64" aria-hidden="true">
+          <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(196,154,60,.18)" stroke-width="3"/>
+          <circle cx="30" cy="30" r="26" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="${dash}" transform="rotate(-90 30 30)"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;color:var(--gold2)">${done}/${tot}</div>
+      </div>
+    </div>
+    <div class="lu-list">${rows}</div>
+    ${next?`
+    <div class="pdd-hero" style="margin-top:1rem;padding:.9rem 1rem;display:flex;align-items:center;gap:.8rem">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.25rem">${en?'NEXT':'SIGUIENTE'} · ${next.secs>=60?Math.round(next.secs/60)+' MIN':next.secs+' S'}</div>
+        <div style="font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(nextT.t.toUpperCase())}</div>
+      </div>
+      <button type="button" onclick="_luGo('${next.key}')" style="flex-shrink:0;min-height:44px;padding:.5rem 1.1rem;border-radius:22px;cursor:pointer;background:var(--parchment);color:#f0d68a;border:none;font-family:Quicksand,sans-serif;font-size:.85rem;font-weight:700">${en?'Go':'Ir'} →</button>
+    </div>`:`
+    <div class="pdd-hero" style="margin-top:1rem;padding:.9rem 1rem;text-align:center">
+      <div style="font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--parchment)">${en?'Line Up complete — have a great service! ★':'Line Up completo — ¡buen servicio! ★'}</div>
+    </div>`}
+  </div>`;
 }
 
 // ═══ LIGA SEMANAL — XP de la semana, se reinicia cada lunes ═══
@@ -16797,6 +16957,11 @@ function renderDashboard(){
       <div class="hoy-stat"><b id="hoyLigaPos">—</b><span>${_en?'league':'liga'}</span></div>
     </div>
     <div class="hoy-rows">
+      ${(()=>{ const _lu=_luItems(emp); const _luD=_lu.filter(x=>x.done).length;
+        return `<button type="button" class="hoy-numrow" onclick="renderLineUp()" aria-label="${_en?`Line Up — pre-service ritual, ${_luD} of ${_lu.length} done`:`Line Up — ritual de antes del servicio, ${_luD} de ${_lu.length} hechos`}">
+        <span class="hoy-num" aria-hidden="true">▶</span><span class="hoy-numrow-t">Line Up</span>
+        <span class="hoy-numrow-meta${_luD===_lu.length?' ok':''}">${_luD}/${_lu.length}</span>
+      </button>` })()}
       <button type="button" class="hoy-numrow" onclick="_subTab.aprender='smart';showTab('aprender')" aria-label="${_en?`Review — ${_srsDue} cards pending`:`Repaso — ${_srsDue} fichas pendientes`}">
         <span class="hoy-num" aria-hidden="true">01</span><span class="hoy-numrow-t">${_en?'Review':'Repaso'}</span>
         <span class="hoy-numrow-meta${_srsDue===0?' ok':''}">${_srsDue>0?(_srsDue+' '+(_en?'CARDS':'FICHAS')):(_en?'DONE ✓':'HECHO ✓')}</span>

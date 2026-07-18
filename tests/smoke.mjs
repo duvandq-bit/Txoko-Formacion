@@ -4526,6 +4526,34 @@ test('dashboard «Hoy»: héroe pergamino de dos estados + stats + filas numerad
     'estilos del héroe/stats/filas numeradas ausentes');
 });
 
+test('Line Up: ritual de antes del servicio — 5 pasos reales, rotación determinista (fase 2, jul 2026)', () => {
+  // Fase 2 del rediseño aprobado. El propietario llama «Line Up» a la reunión
+  // de antes del servicio (no «briefing»). 5 pasos con contenido REAL que rota
+  // determinista (mismo día ⇒ mismo contenido para todo el equipo): Reto ·
+  // Plato del día · Vino de la semana · Protocolo Forbes · Código del día.
+  assert(/function renderLineUp\(/.test(html) && /id="lineupWrap"/.test(html),
+    'la pantalla Line Up debe existir');
+  const lu = html.slice(html.indexOf('// ═══ LINE UP'), html.indexOf('// ═══ LIGA SEMANAL'));
+  assert(lu.length>500 && !/Math\.random\(/.test(lu),
+    'los contenidos del Line Up deben rotar con semilla determinista, sin Math.random()');
+  assert(/_luWineOfWeek/.test(lu) && /_luStdOfDay/.test(lu) && /_luCodeOfDay/.test(lu),
+    'vino de la semana, protocolo del día y código del día deben existir');
+  assert(/_wkKey\(\)\.replace/.test(lu), 'el vino rota por SEMANA (clave del lunes), no por día');
+  assert(/LQA_STANDARDS\[/.test(lu) && /CODIGO_CAMARERO\.cards\[/.test(lu),
+    'protocolo y código del día deben salir del contenido real (LQA_STANDARDS / codigo-camarero.json)');
+  assert(/emp\.luPddDay/.test(lu) && /emp\.luWineWk/.test(lu) && /emp\.luStdDay/.test(lu) && /emp\.luCdgDay/.test(lu),
+    'cada paso debe marcar su estado hecho');
+  assert(/SIGUIENTE/.test(lu) || /'NEXT'/.test(lu), 'la tarjeta SIGUIENTE del mockup debe existir');
+  assert(/renderLineUp\(\)/.test(html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'))),
+    'el inicio debe tener la entrada al Line Up');
+  // El término de la casa es «Line Up», no «briefing», en el texto de la app.
+  assert(!/briefing/i.test(html.slice(html.indexOf('// ═══ LINE UP'), html.indexOf('// ═══ LIGA SEMANAL'))),
+    'en la pantalla se dice Line Up, no briefing');
+  const css = read('styles.css');
+  assert(/\.lu-row\{/.test(css) && /\.lu-row\.done .lu-t\{/.test(css),
+    'estilos de las filas del Line Up ausentes (incluido el tachado de hechas)');
+});
+
 test('vinos: Sensorial+Mapa merged under Estudio — the bar holds 5 chips', () => {
   // IA audit (C2+A2): 7 chips overflowed on a phone and "Aprende" clashed
   // with the main "Aprender" tab. Estudio = Conceptos · Sensorial · Mapa.
