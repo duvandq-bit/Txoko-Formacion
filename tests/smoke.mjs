@@ -2046,12 +2046,14 @@ test('vinos carta premium port: fonts, search, pills, card, light sub-trigger', 
     assert(css.includes(`.${cls}`) && html.includes(`class="${cls}`),
       `card class .${cls} missing from CSS or markup`);
   }
-  // Chips claros sobre nav oscuro (jerarquía); el activo de Repaso Inteligente
-  // conserva su verde Pip-Boy oscuro.
-  assert(/\.subtab-chip\{[^}]*background:#faf6ee/.test(css),
-    'sub-tab chips must be the light variant');
-  assert(/\.subtab-chip\.on\.subtab-chip--green\{[^}]*#0c3a22/.test(css),
-    'green active chip must keep its dark Pip-Boy look');
+  // Índice editorial (rediseño jul 2026): pestañas transparentes en serif
+  // sobre línea de libro mayor — nada de píldoras rellenas ni emojis.
+  assert(/\.subtab-chip\{[^}]*background:transparent/.test(css) && /\.subtab-chip\{[^}]*Cinzel/.test(css),
+    'sub-tab chips must be the editorial serif tabs');
+  assert(!/subtab-chip-ico/.test(html),
+    'los emojis no deben volver a la barra de subsecciones');
+  assert(!/subtab-chip--green/.test(css),
+    'la variante verde Pip-Boy del chip murió con el rediseño — no debe volver');
 });
 
 test('wine detail speaks the premium carta language', () => {
@@ -2089,8 +2091,8 @@ test('editorial TUNIC DNA: left headers, pull-quotes, crisp radii, slim bars', (
     'sommelier hub title must be editorial');
   assert(/\.wine-hex-medallion\{display:none;/.test(css) && !/\.wine-hex-medallion\{display:none;[^}]*display:flex/.test(css),
     'hub medallion must be retired without a later display override');
-  assert(/\.nav-dd-trigger\{[^}]*min-height:44px/.test(css) && /\.subtab-chip\{[^}]*min-height:40px/.test(css),
-    'nav stays slim 44px and sub-nav chips stay tappable (40px)');
+  assert(/\.nav-dd-trigger\{[^}]*min-height:44px/.test(css) && /\.subtab-chip\{[^}]*min-height:44px/.test(css),
+    'nav stays slim 44px and sub-nav chips stay tappable (44px)');
 });
 
 test('vinos sweep 3: sommelier index, maridaje rows, frases rows', () => {

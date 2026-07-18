@@ -9236,18 +9236,23 @@ body.chat-open .sound-toggle{ display:none !important; }
   background:rgba(196,112,104,.14);border:1px solid rgba(196,112,104,.4);color:#a35048}
 .empl-ov-ing{font-size:.8rem;line-height:1.5;color:var(--parch2)}
 
-/* ── Subsecciones como CHIPS visibles (descubribilidad; antes desplegable) ── */
-.subtab-chips{display:flex;gap:.45rem;overflow-x:auto;-webkit-overflow-scrolling:touch;
-  padding:.15rem .1rem .55rem;margin-bottom:.55rem;scrollbar-width:none}
+/* ── Subsecciones como ÍNDICE editorial (rediseño jul 2026) ──
+   Las píldoras con emojis desentonaban con la casa («encuentro el diseño
+   muy pobre», propietario). Ahora: pestañas serif en versalitas sobre una
+   línea de libro mayor; la activa va en tinta dorada con subrayado de oro.
+   Sigue siendo scroll horizontal y sigue siendo visible (nada de desplegables). */
+.subtab-chips{display:flex;gap:.15rem;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  padding:0 .1rem;margin-bottom:.85rem;scrollbar-width:none;
+  border-bottom:1px solid rgba(28,42,34,.14)}
 .subtab-chips::-webkit-scrollbar{display:none}
-.subtab-chip{flex-shrink:0;display:inline-flex;align-items:center;gap:.35rem;min-height:40px;
-  padding:.45rem .9rem;border-radius:100px;cursor:pointer;white-space:nowrap;
-  background:#faf6ee;border:1.5px solid var(--ink3);box-shadow:0 2px 0 var(--ink4);
-  font-family:'Quicksand',sans-serif;font-weight:600;font-size:.78rem;color:var(--parch2);
-  transition:all .15s;-webkit-tap-highlight-color:transparent}
-.subtab-chip .subtab-chip-ico{font-size:.9rem;line-height:1}
-.subtab-chip.on{background:var(--gold);border-color:var(--gold);color:#1c1508;font-weight:700}
-.subtab-chip.on.subtab-chip--green{background:#0c3a22;border-color:#0c3a22;color:#7de8a0}
+.subtab-chip{flex-shrink:0;display:inline-flex;align-items:center;min-height:44px;
+  padding:.5rem .7rem;cursor:pointer;white-space:nowrap;
+  background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;
+  font-family:'Cinzel',serif;font-weight:600;font-size:.66rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--parch3);
+  transition:color .15s,border-color .15s;-webkit-tap-highlight-color:transparent}
+.subtab-chip:active{color:var(--gold-deep)}
+.subtab-chip.on{color:var(--gold-deep);border-bottom-color:var(--gold);font-weight:700}
 
 /* ── Tarjeta "Guía de Emplatado" del dashboard: abanico de fotos reales ── */
 .dash-plating{position:relative;display:flex;align-items:center;gap:.95rem;margin-bottom:1.6rem;padding:.95rem 1rem;
