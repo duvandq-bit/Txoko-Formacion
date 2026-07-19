@@ -3914,8 +3914,10 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
     'la regla del doble turno (9 h o más → ambos rangos) debe estar en _horRango');
   assert(/Math\.max\(t\.s,540\)/.test(html) && /Math\.max\(t\.s,960\)/.test(html),
     'las ventanas de rango deben ser 09:00–15:00 y 16:00–00:00');
-  assert(/_horRangosMsg/.test(html) && /Copiar rangos/.test(html),
+  assert(/_horRangosMsg/.test(html) && /Compartir rangos/.test(html),
     'el mensaje de rangos del día debe poder copiarse/enviarse por WhatsApp');
+  assert(/Solo almuerzo/.test(html) && /Solo cena/.test(html) && /_horShareRangos/.test(html),
+    'debe poder compartirse el día completo, solo almuerzo o solo cena');
   assert(/_horSetDay/.test(html),
     'la vista Hoy debe permitir elegir cualquier día de la semana (rangos diarios)');
   // Blindaje multi-semana (propietario: «que no haya errores cuando se suba
