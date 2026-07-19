@@ -3902,6 +3902,14 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
     'el lector de capturas debe pasar por la Edge Function con el PIN');
   assert(/toDataURL\('image\/jpeg'/.test(html) && /2400\/Math\.max/.test(html),
     'la captura se comprime en el dispositivo antes de enviarse');
+  // Subir la foto tiene que ser FÁCIL (propietario): botón grande arriba del
+  // editor, dudas visibles en pantalla y salto directo al botón de guardar.
+  assert(/Subir foto del horario/.test(html) && /id="horSupOcrBtn" class="ri-cta"/.test(html),
+    'la acción principal del editor debe ser el botón grande de subir foto');
+  assert(/id="horSupDudas"/.test(html) && /Celdas dudosas/.test(html),
+    'las dudas de la lectura se enseñan en pantalla, no en consola');
+  assert(/horSupSaveBtn/.test(html) && /scrollIntoView/.test(html),
+    'tras la lectura se desplaza al botón de guardar');
   const ocrFn = html.slice(html.indexOf('async function _horSupOCR'), html.indexOf('async function _horSupSave'));
   assert(!/_horSupSave\(/.test(ocrFn),
     'la lectura IA nunca guarda sola: rellena el editor y el supervisor revisa');
