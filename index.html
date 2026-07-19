@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.267">
+<meta name="app-version" content="7.268">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1529,7 +1529,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.267';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.268';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7251,6 +7251,21 @@ function _pddAsyncFill(){
   }
   // Teaser de Actualidad en el inicio: 3 titulares + Ver más (petición del
   // propietario). Solo se pinta si hay noticias (offline con caché incluida).
+  // Tu turno de hoy y de mañana en la fila Horarios del inicio (petición
+  // del propietario). Si tu nombre aún no casa con el cuadrante o no hay
+  // semana cargada, la fila conserva su texto genérico.
+  const hm=document.getElementById('hoyHorMeta');
+  if(hm){
+    _horLoad().then(()=>{
+      const t=todayStr(), tmw=_horDayISO(t,1);
+      const a=_horMyDayLbl(t), b=_horMyDayLbl(tmw);
+      const hm2=document.getElementById('hoyHorMeta');
+      if(hm2 && (a||b)){
+        const en2=LANG==='en';
+        hm2.textContent=`${en2?'Today':'Hoy'}: ${a||'—'} · ${en2?'Tomorrow':'Mañana'}: ${b||'—'}`;
+      }
+    }).catch(()=>{});
+  }
   const dn=document.getElementById('dashNews');
   if(dn){
     _actLoad().then(()=>{
@@ -9865,7 +9880,7 @@ function _tecDishes(kw,kwx){
 //   BOLSA = Vacaciones (bolsa) · FD = Fijo discontinuo
 let HORARIOS=null;
 let _horView='hoy';
-let _horWeekIdx=0;
+let _horWeekIdx=null;   // null = aún sin elegir: se abre en la semana actual
 let _horSwapSel=null;    // {w,svc,di} turno propio elegido en el asistente
 const _HOR_CODES={
   'L':      {es:'Libre',                en:'Day off',            k:'libre'},
@@ -9897,7 +9912,11 @@ async function _horLoad(force){
     HORARIOS=cached.weeks; return HORARIOS;
   }
   try{
-    const r=await fetch(`${SUPA_URL}/rest/v1/horarios?select=week_start,data&order=week_start.asc&limit=12`,
+    // Solo semanas vigentes: desde la semana pasada en adelante. Sin este
+    // filtro, al acumularse historial el límite devolvería las semanas MÁS
+    // VIEJAS y la actual quedaría fuera (fallo de multi-semana).
+    const since=_horDayISO(todayStr(),-7);
+    const r=await fetch(`${SUPA_URL}/rest/v1/horarios?select=week_start,data&order=week_start.asc&week_start=gte.${since}&limit=12`,
       {headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`}});
     if(!r.ok) throw new Error('http '+r.status);
     const rows=await r.json();
@@ -9947,8 +9966,9 @@ function _horPickName(n){
 // Resumen persona×día dentro de una semana: turnos (únicos) + código si no trabaja
 function _horPersonDay(week,name,di){
   const shifts=[]; let code='';
+  const nn=_horNorm(name);
   (week.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
-    if(r.n!==name) return;
+    if(_horNorm(r.n)!==nn) return;
     const cell=(r.c||[])[di]||'';
     const k=_horCellKind(cell);
     if(k==='shift'){ const p=_horShiftParts(cell); if(!shifts.some(x=>x.hrs===p.hrs)) shifts.push({...p,svc:sv.label}); }
@@ -9965,12 +9985,14 @@ function _horPersonDay(week,name,di){
 //   turno en la semana, no por nombre — sobrevive a cambios de plantilla).
 const _HOR_MANAGERS=['Faride Navarro'];
 function _horTier(week,name){
+  const nn=_horNorm(name);
   let g=null;
-  (week.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{ if(r.n===name && g===null) g=(r.g||''); }));
+  (week.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{ if(_horNorm(r.n)===nn && g===null) g=(r.g||''); }));
   return g==='' ? 'jefatura' : 'sala';
 }
 function _horIsHostess(week,name){
-  return (week.data.services||[]).some(sv=>(sv.rows||[]).some(r=> r.n===name && (r.c||[]).some(cell=>/HOSTESS/i.test(cell||'')) ));
+  const nn=_horNorm(name);
+  return (week.data.services||[]).some(sv=>(sv.rows||[]).some(r=> _horNorm(r.n)===nn && (r.c||[]).some(cell=>/HOSTESS/i.test(cell||'')) ));
 }
 function _horSwapAllowed(week,me,other){
   if(_HOR_MANAGERS.includes(other) || _HOR_MANAGERS.includes(me)) return false;
@@ -9985,7 +10007,7 @@ function _horSwapAllowed(week,me,other){
 // cada día — el botón genera el mensaje listo para WhatsApp.
 let _horDaySel=null;   // ISO del día elegido en la vista Hoy (null = hoy)
 function _horShiftMins(hrs){
-  const m=String(hrs).match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+  const m=String(hrs).match(/(\d{1,2})[:.](\d{2})\s*-\s*(\d{1,2})[:.](\d{2})/);
   if(!m) return null;
   const a=(+m[1])*60+(+m[2]);
   let b=(+m[3])*60+(+m[4]);
@@ -10029,6 +10051,18 @@ function _horRangosMsg(w,di,iso){
     +`${en?'Lunch':'Almuerzo'} (09:00-15:00)${cub('almuerzo')}:\n`+(alm.length?alm.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'))
     +`\n\n${en?'Dinner':'Cena'} (16:00-00:00)${cub('cena')}:\n`+(cen.length?cen.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
 }
+// Tu turno de un día en una línea (para la fila Horarios del inicio):
+// horas del turno, o el código traducido (Libre, Vacaciones…), o null.
+function _horMyDayLbl(iso){
+  const mine=_horMyName(); if(!mine) return null;
+  const wi=_horWeekOf(iso); if(wi===-1) return null;
+  const w=HORARIOS[wi];
+  const di=Math.round((new Date(iso+'T12:00:00Z')-new Date(w.start+'T12:00:00Z'))/86400000);
+  const pd=_horPersonDay(w,mine,di);
+  if(pd.shifts.length) return pd.shifts.map(p=>p.hrs).join(' y ');
+  if(pd.code) return _horCodeLbl(pd.code);
+  return null;
+}
 function _horSetDay(iso){ _horDaySel=iso; renderHorarios(); }
 function _horSetView(v){ _horView=v; _horSwapSel=null; renderHorarios(); }
 function _horSetWeek(i){ _horWeekIdx=i; renderHorarios(); }
@@ -10071,10 +10105,13 @@ function _horHoyHTML(){
   const hues=(w.data.huespedes||[])[di];
   const today=todayStr();
   // selector de día de la semana cargada (los supervisores miran los rangos a diario)
-  const dayChips=`<div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:.7rem;-webkit-overflow-scrolling:touch">${[0,1,2,3,4,5,6].map(k=>{
+  const wi=_horWeekOf(iso);
+  const prevW=wi>0?HORARIOS[wi-1]:null, nextW=wi<HORARIOS.length-1?HORARIOS[wi+1]:null;
+  const wkArrow=(wk,lbl)=>wk?`<button type="button" class="hor-pick" style="margin:0;flex-shrink:0;padding:.4rem .55rem;min-height:36px;font-size:.66rem;font-weight:900" onclick="_horSetDay('${wk.start}')" aria-label="${en?'Other week':'Otra semana'}">${lbl}</button>`:'';
+  const dayChips=`<div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:.7rem;-webkit-overflow-scrolling:touch">${wkArrow(prevW,'‹')}${[0,1,2,3,4,5,6].map(k=>{
     const dIso=_horDayISO(w.start,k);
     return `<button type="button" class="hor-pick${dIso===iso?' on':''}" style="margin:0;flex-shrink:0;padding:.4rem .6rem;min-height:36px;font-size:.66rem" onclick="_horSetDay('${dIso}')">${_horDayLbl(dIso)}${dIso===today?' ·':''}</button>`;
-  }).join('')}</div>`;
+  }).join('')}${wkArrow(nextW,'›')}</div>`;
   const {alm,cen}=_horDayRangos(w,di);
   const cubFor=k=>{ const sv=(w.data.services||[]).find(x=>x.k===k); const v=sv&&(sv.cubiertos||[])[di]; return v!=null?` · ${v} ${en?'covers':'cubiertos'}`:''; };
   const rows=list=>list.length?list.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span>${x.doble?`<span class="hor-code hor-code-dphrs">${en?'double':'doble'}</span>`:''}<span class="hor-row-h">${escapeHTML(x.hrs)}</span>${x.zona?`<span class="hor-row-z">${escapeHTML(x.zona)}</span>`:''}</div>`).join('')
@@ -10135,7 +10172,12 @@ function _horMioHTML(){
 }
 function _horCuadranteHTML(){
   const en=LANG==='en';
-  if(_horWeekIdx>=HORARIOS.length) _horWeekIdx=HORARIOS.length-1;
+  if(_horWeekIdx==null || _horWeekIdx>=HORARIOS.length){
+    const t=todayStr();
+    let ix=_horWeekOf(t);
+    if(ix===-1) ix=HORARIOS.findIndex(x=>x.start>t);
+    _horWeekIdx = ix===-1 ? HORARIOS.length-1 : ix;
+  }
   const wsel=HORARIOS.length>1?`<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem">${HORARIOS.map((w,i)=>`<button type="button" class="hor-pick${i===_horWeekIdx?' on':''}" style="margin:0" onclick="_horSetWeek(${i})">${_horDayLbl(w.start)} – ${_horDayLbl(_horDayISO(w.start,6))}</button>`).join('')}</div>`:'';
   const w=HORARIOS[_horWeekIdx];
   const today=todayStr();
@@ -10255,6 +10297,8 @@ function _horSupParse(text){
     if(parts[0].toUpperCase()==='CUBIERTOS'){ if(sv) sv.cubiertos=parts.slice(1,8).map(Number); continue; }
     if(!sv) throw new Error('Fila antes de la primera sección == CENA ==: '+parts[0]);
     if(parts.length<3) throw new Error('Fila incompleta: '+parts[0]);
+    if(parts.length>9) throw new Error('Fila con demasiados campos (¿un «|» dentro de una celda?): '+parts[0]);
+    if(!parts[0]) throw new Error('Fila sin nombre');
     sv.rows.push({n:parts[0], pct:parseInt(parts[1],10)||100, g:g, c:parts.slice(2,9).concat(['','','','','','','']).slice(0,7)});
   }
   if(!out.start) throw new Error('Falta la línea SEMANA AAAA-MM-DD');
@@ -10344,6 +10388,14 @@ async function _horSupSave(){
   let w;
   try{ w=_horSupParse(ta.value); }
   catch(e){ showToast(e.message,'warning',6000); return; }
+  // La fecha de SEMANA debe ser lunes: si no, dos semanas se solaparían y
+  // la app enseñaría datos cruzados. Mejor pararlo aquí con aviso claro.
+  if(new Date(w.start+'T12:00:00Z').getUTCDay()!==1){
+    showToast((LANG==='en'?'The SEMANA date must be a MONDAY — ':'La fecha de SEMANA debe ser un LUNES — ')+w.start,'warning',7000); return;
+  }
+  if(!w.services.some(sv=>(sv.rows||[]).length)){
+    showToast(LANG==='en'?'The week has no rows':'La semana no tiene ninguna fila','warning',5000); return;
+  }
   try{
     const r=await fetch(`${SUPA_URL}/rest/v1/horarios`,{
       method:'POST',
@@ -17513,7 +17565,7 @@ function renderDashboard(){
     <span class="hoy-num" aria-hidden="true">📅</span>
     <span style="flex:1;min-width:0">
       <span class="hoy-numrow-t">${_en?'Rota':'Horarios'}</span>
-      <span class="hoy-numrow-meta">${_en?'who works today · your week · swap shifts':'quién trabaja hoy · tu semana · cambios de turno'}</span>
+      <span class="hoy-numrow-meta" id="hoyHorMeta">${_en?'who works today · your week · swap shifts':'quién trabaja hoy · tu semana · cambios de turno'}</span>
     </span>
     <span style="color:var(--gold-deep)">›</span>
   </button>

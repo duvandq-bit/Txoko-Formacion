@@ -3918,6 +3918,21 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
     'el mensaje de rangos del día debe poder copiarse/enviarse por WhatsApp');
   assert(/_horSetDay/.test(html),
     'la vista Hoy debe permitir elegir cualquier día de la semana (rangos diarios)');
+  // Blindaje multi-semana (propietario: «que no haya errores cuando se suba
+  // la semana siguiente o dos») — 4 fallos reales cazados y sus guardas:
+  assert(/week_start=gte\./.test(html),
+    'la carga debe filtrar semanas vigentes — sin esto, con historial largo la app enseñaría semanas viejas');
+  assert(/getUTCDay\(\)!==1/.test(html) && /LUNES/.test(html),
+    'guardar exige que la semana empiece en lunes (evita solapes silenciosos)');
+  assert(/demasiados campos/.test(html),
+    'el parser avisa si una celda lleva «|» (descuadre silencioso de columnas)');
+  assert(/let _horWeekIdx=null/.test(html),
+    'el cuadrante abre en la semana actual, no en la más vieja cargada');
+  assert(/\[:.\]\(\\d\{2\}\)/.test(html.slice(html.indexOf('function _horShiftMins'), html.indexOf('function _horRango'))),
+    'las horas con punto (12:30-16.30, como el Excel real) deben parsearse');
+  // Tu turno de hoy y mañana en el inicio (fila Horarios, relleno diferido)
+  assert(/_horMyDayLbl/.test(html) && /id="hoyHorMeta"/.test(html),
+    'el inicio debe mostrar tu turno de hoy y el de mañana en la fila Horarios');
   // Acceso desde el inicio.
   const dash3 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
   assert(/showTab\('horarios'\)/.test(dash3), 'el inicio debe llevar la fila de acceso a Horarios');
