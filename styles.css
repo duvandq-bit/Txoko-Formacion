@@ -9495,3 +9495,12 @@ body.chat-open .sound-toggle{ display:none !important; }
 .hor-pick.on{background:rgba(196,154,60,.15);border-color:var(--gold-deep)}
 .hor-mini{min-width:40px;min-height:32px;border-radius:9px;cursor:pointer;background:transparent;
   border:1.5px solid rgba(196,154,60,.5);color:var(--gold-deep);font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700}
+
+/* ── Línea de Horarios dentro de la tarjeta verde del Dashboard ──
+   (petición del propietario: el turno de hoy y mañana, arriba del todo) */
+.dash-hero-hor{position:relative;z-index:2;display:flex;align-items:center;gap:.5rem;width:100%;min-height:40px;
+  margin-top:.7rem;padding:.5rem .65rem;cursor:pointer;
+  background:rgba(228,190,104,.08);border:1px solid rgba(228,190,104,.28);border-radius:10px;
+  font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.04em;font-weight:600;color:#e8c275;
+  -webkit-tap-highlight-color:transparent}
+.dash-hero-hor:active{background:rgba(228,190,104,.16)}
