@@ -3895,6 +3895,18 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
     'el editor de horarios debe colgar del panel de supervisor');
   assert(/_horSupSave/.test(html) && /'Prefer':'resolution=merge-duplicates'/.test(html),
     'guardar semana debe hacer upsert (merge-duplicates) en horarios');
+  // Lector de capturas con IA: la imagen se comprime en el móvil, viaja a la
+  // Edge Function leer-horario con el PIN de supervisor, y el resultado SOLO
+  // rellena el editor (revisar antes de guardar — nunca se autopublica).
+  assert(/functions\/v1\/leer-horario/.test(html) && /supPin:_supPin/.test(html),
+    'el lector de capturas debe pasar por la Edge Function con el PIN');
+  assert(/toDataURL\('image\/jpeg'/.test(html) && /2400\/Math\.max/.test(html),
+    'la captura se comprime en el dispositivo antes de enviarse');
+  const ocrFn = html.slice(html.indexOf('async function _horSupOCR'), html.indexOf('async function _horSupSave'));
+  assert(!/_horSupSave\(/.test(ocrFn),
+    'la lectura IA nunca guarda sola: rellena el editor y el supervisor revisa');
+  assert(!/sk-ant/.test(html),
+    'ninguna clave de API de Anthropic puede vivir en la app (va en secretos de Supabase)');
   // Acceso desde el inicio.
   const dash3 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
   assert(/showTab\('horarios'\)/.test(dash3), 'el inicio debe llevar la fila de acceso a Horarios');
