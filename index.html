@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.271">
+<meta name="app-version" content="7.272">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1529,7 +1529,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.271';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.272';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10005,6 +10005,8 @@ function _horSwapAllowed(week,me,other){
 // ambos rangos marcado como doble. Para el resto, el turno se asigna al
 // servicio con el que más se solapa. Los supervisores envían estos rangos
 // cada día — el botón genera el mensaje listo para WhatsApp.
+const _WA_ICO='<svg viewBox="0 0 24 24" width="15" height="15" fill="#1faa53" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+const _COPY_ICO='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
 let _horDaySel=null;   // ISO del día elegido en la vista Hoy (null = hoy)
 function _horShiftMins(hrs){
   const m=String(hrs).match(/(\d{1,2})[:.](\d{2})\s*-\s*(\d{1,2})[:.](\d{2})/);
@@ -10126,17 +10128,26 @@ function _horHoyHTML(){
   }).join('')}${wkArrow(nextW,'›')}</div>`;
   const {alm,cen}=_horDayRangos(w,di);
   const cubFor=k=>{ const sv=(w.data.services||[]).find(x=>x.k===k); const v=sv&&(sv.cubiertos||[])[di]; return v!=null?` · ${v} ${en?'covers':'cubiertos'}`:''; };
+  // Compartir a la vista: junto al título del día (completo) y en el
+  // encabezado de cada servicio (solo ese servicio). Icono real de WhatsApp.
+  const shareBtns=(only,lbl)=>`<span style="display:inline-flex;gap:.35rem;flex-shrink:0">
+    <button type="button" class="hor-mini" aria-label="${en?'Copy':'Copiar'} ${lbl}" onclick="_horShareRangos(${_horWeekOf(iso)},${di},'${iso}',${only?`'${only}'`:'null'},false)">${_COPY_ICO}</button>
+    <button type="button" class="hor-mini hor-mini-wa" aria-label="WhatsApp ${lbl}" onclick="_horShareRangos(${_horWeekOf(iso)},${di},'${iso}',${only?`'${only}'`:'null'},true)">${_WA_ICO}</button>
+  </span>`;
   const rows=list=>list.length?list.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span>${x.doble?`<span class="hor-code hor-code-dphrs">${en?'double':'doble'}</span>`:''}<span class="hor-row-h">${escapeHTML(x.hrs)}</span>${x.zona?`<span class="hor-row-z">${escapeHTML(x.zona)}</span>`:''}</div>`).join('')
     :`<div class="act-empty" style="padding:.6rem">${en?'Nobody scheduled':'Nadie programado'}</div>`;
   let html=`${note?`<div class="act-nota" style="margin-bottom:.6rem">${escapeHTML(note)}</div>`:''}
     ${dayChips}
-    <div class="hor-day-head">
-      <div class="hor-day-title">${_horDayLbl(iso,true)}</div>
-      <div class="hor-day-meta">${hues!=null?`${en?'guests in house':'huéspedes en casa'}: <b>${hues}</b>`:''}${nota?` · <span style="color:var(--gold-deep);font-weight:700">${escapeHTML(nota)}</span>`:''}</div>
+    <div class="hor-day-head" style="display:flex;align-items:flex-start;gap:.6rem">
+      <div style="flex:1;min-width:0">
+        <div class="hor-day-title">${_horDayLbl(iso,true)}</div>
+        <div class="hor-day-meta">${hues!=null?`${en?'guests in house':'huéspedes en casa'}: <b>${hues}</b>`:''}${nota?` · <span style="color:var(--gold-deep);font-weight:700">${escapeHTML(nota)}</span>`:''}</div>
+      </div>
+      ${shareBtns(null, en?'full day':'día completo')}
     </div>
-    <div class="tunic-divider"><span>${en?'LUNCH':'ALMUERZO'} · 09:00–15:00${cubFor('almuerzo')}</span></div>
+    <div class="hor-svc-head"><span class="hor-svc-t">${en?'LUNCH':'ALMUERZO'} · 09:00–15:00${cubFor('almuerzo')}</span>${shareBtns('almuerzo', en?'lunch only':'solo almuerzo')}</div>
     ${rows(alm)}
-    <div class="tunic-divider"><span>${en?'DINNER':'CENA'} · 16:00–00:00${cubFor('cena')}</span></div>
+    <div class="hor-svc-head"><span class="hor-svc-t">${en?'DINNER':'CENA'} · 16:00–00:00${cubFor('cena')}</span>${shareBtns('cena', en?'dinner only':'solo cena')}</div>
     ${rows(cen)}`;
   // libres / ausencias del día (personas, sin la fila-puesto)
   const off=[], seenOff=new Set();
@@ -10146,17 +10157,6 @@ function _horHoyHTML(){
     if(!pd.shifts.length && pd.code){ seenOff.add(r.n); off.push(`${escapeHTML(r.n)} <span class="hor-code hor-code-${_horCellKind(pd.code)}">${escapeHTML(_horCodeLbl(pd.code))}</span>`); }
   }));
   if(off.length) html+=`<div class="tunic-divider"><span>${en?'Off that day':'Libran ese día'}</span></div><div class="hor-off">${off.join(' · ')}</div>`;
-  // mensaje de rangos listo para enviar (trabajo diario del supervisor):
-  // día completo, solo almuerzo o solo cena — copiar o WhatsApp
-  const shareRow=(lbl,only)=>`<div class="hor-row"><span class="hor-row-n">${lbl}</span>
-    <span style="display:inline-flex;gap:.35rem;margin-left:auto">
-      <button type="button" class="hor-mini" aria-label="${en?'Copy':'Copiar'} ${lbl}" onclick="_horShareRangos(${_horWeekOf(iso)},${di},'${iso}',${only?`'${only}'`:'null'},false)">⧉</button>
-      <button type="button" class="hor-mini" aria-label="WhatsApp ${lbl}" onclick="_horShareRangos(${_horWeekOf(iso)},${di},'${iso}',${only?`'${only}'`:'null'},true)">WA</button>
-    </span></div>`;
-  html+=`<div class="tunic-divider" style="margin-top:1rem"><span>${en?'Share ranges':'Compartir rangos'}</span></div>
-    ${shareRow(en?'Full day':'Día completo',null)}
-    ${shareRow(en?'Lunch only':'Solo almuerzo','almuerzo')}
-    ${shareRow(en?'Dinner only':'Solo cena','cena')}`;
   return html;
 }
 function _horMioHTML(){
@@ -10267,8 +10267,8 @@ function _horCambioHTML(){
   const btn=(name,motivo)=>{
     const msg=msgFor(name,motivo).replace(/'/g,"\\'").replace(/"/g,'&quot;');
     return `<span style="display:inline-flex;gap:.35rem;margin-left:auto">
-      <button type="button" class="hor-mini" onclick="navigator.clipboard&&navigator.clipboard.writeText('${msg}');showToast('${en?'Message copied':'Mensaje copiado'}','success',1800)">⧉</button>
-      <button type="button" class="hor-mini" onclick="window.open('https://wa.me/?text='+encodeURIComponent('${msg}'),'_blank','noopener')">WA</button></span>`;
+      <button type="button" class="hor-mini" aria-label="${en?'Copy message':'Copiar mensaje'}" onclick="navigator.clipboard&&navigator.clipboard.writeText('${msg}');showToast('${en?'Message copied':'Mensaje copiado'}','success',1800)">${_COPY_ICO}</button>
+      <button type="button" class="hor-mini hor-mini-wa" aria-label="WhatsApp" onclick="window.open('https://wa.me/?text='+encodeURIComponent('${msg}'),'_blank','noopener')">${_WA_ICO}</button></span>`;
   };
   html+=`<div class="tunic-divider"><span>${en?'Free that day — can cover you':'Libres ese día — pueden cubrirte'}</span></div>`;
   html+=libres.length?libres.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span><span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>${btn(x.n, en?'is off that day':'libra ese día')}</div>`).join('')

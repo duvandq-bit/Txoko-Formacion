@@ -9504,3 +9504,12 @@ body.chat-open .sound-toggle{ display:none !important; }
   font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.04em;font-weight:600;color:#e8c275;
   -webkit-tap-highlight-color:transparent}
 .dash-hero-hor:active{background:rgba(228,190,104,.16)}
+
+/* ── Encabezado de servicio con compartir integrado (rangos a la vista) ── */
+.hor-svc-head{display:flex;align-items:center;gap:.5rem;margin:1.05rem 0 .3rem;
+  padding-bottom:.4rem;border-bottom:1px solid rgba(196,154,60,.3)}
+.hor-svc-t{flex:1;min-width:0;font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;
+  letter-spacing:.1em;color:var(--gold-deep)}
+.hor-mini{display:inline-flex;align-items:center;justify-content:center}
+.hor-mini-wa{border-color:rgba(31,170,83,.45)}
+.hor-mini-wa:active{background:rgba(31,170,83,.1)}
