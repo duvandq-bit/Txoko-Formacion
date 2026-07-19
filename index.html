@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.272">
+<meta name="app-version" content="7.273">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1529,7 +1529,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.272';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.273';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10329,16 +10329,25 @@ function renderSupHorarios(){
     const weeks=HORARIOS||[];
     c.innerHTML=`<div class="sup-wrap">
       <button type="button" class="act-more" style="margin-bottom:.8rem" onclick="renderSupervisor()">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
-      <div class="hor-day-head"><div class="hor-day-title">${LANG==='en'?'Team rota':'Horarios del equipo'}</div>
-      <div class="hor-day-meta">${LANG==='en'?'One line per row: Name | % | 7 cells (shift or code). Sections with == CENA ==, groups with -- Name.':'Una línea por fila: Nombre | % | 7 celdas (turno o código). Secciones con == CENA ==, grupos con -- Nombre.'}</div></div>
+      <div class="hor-day-head"><div class="hor-day-title">${LANG==='en'?'Team rota':'Horarios del equipo'}</div></div>
+      <!-- La acción principal, grande y arriba: subir la foto del cuadrante
+           (petición del propietario: «asegura que sea fácil subir la foto»). -->
+      <button type="button" id="horSupOcrBtn" class="ri-cta" style="margin:.2rem 0 .35rem;padding:1rem 1.1rem" onclick="document.getElementById('horSupFile').click()">
+        <span class="ri-cta-icon" aria-hidden="true" style="width:40px;height:40px;font-size:1.15rem">📷</span>
+        <span class="ri-cta-text">
+          <span class="ri-cta-top" style="font-size:.92rem">${LANG==='en'?'Upload rota photo':'Subir foto del horario'}</span>
+          <span class="ri-cta-sub">${LANG==='en'?'AI reads it in ~1 min · you review before saving':'la IA la lee en ~1 min · tú revisas antes de guardar'}</span>
+        </span>
+      </button>
+      <input type="file" id="horSupFile" accept="image/*" style="display:none" onchange="_horSupOCR(this)">
+      <div class="hor-day-meta" style="margin-bottom:.8rem">${LANG==='en'?'Manual editing below: one line per row — Name | % | 7 cells (shift or code). Sections with == CENA ==, groups with -- Name.':'Edición manual abajo: una línea por fila — Nombre | % | 7 celdas (turno o código). Secciones con == CENA ==, grupos con -- Nombre.'}</div>
       <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem">
         ${weeks.map((w,i)=>`<button type="button" class="hor-pick" style="margin:0" onclick="document.getElementById('horSupTxt').value=_horSupSerialize(HORARIOS[${i}].data)">${_horDayLbl(w.start)}</button>`).join('')}
         <button type="button" class="hor-pick" style="margin:0" onclick="_horSupNextWeek()">＋ ${LANG==='en'?'Duplicate to next week':'Duplicar a semana siguiente'}</button>
-        <button type="button" id="horSupOcrBtn" class="hor-pick" style="margin:0" onclick="document.getElementById('horSupFile').click()">📷 ${LANG==='en'?'Read screenshot (AI)':'Leer captura (IA)'}</button>
-        <input type="file" id="horSupFile" accept="image/*" style="display:none" onchange="_horSupOCR(this)">
       </div>
       <textarea id="horSupTxt" spellcheck="false" style="width:100%;box-sizing:border-box;min-height:300px;border:1.5px solid rgba(196,154,60,.4);border-radius:12px;background:#fdf9f0;padding:.7rem;font-family:'DM Mono',monospace;font-size:.62rem;line-height:1.6;color:var(--parchment)">${weeks.length?escapeHTML(_horSupSerialize(weeks[weeks.length-1].data)):''}</textarea>
-      <button type="button" class="ri-cta" style="margin-top:.7rem;padding:.9rem 1.1rem" onclick="_horSupSave()"><span class="ri-cta-text"><span class="ri-cta-top" style="font-size:.85rem">${LANG==='en'?'Save week':'Guardar semana'}</span></span></button>
+      <div id="horSupDudas"></div>
+      <button type="button" id="horSupSaveBtn" class="ri-cta" style="margin-top:.7rem;padding:.9rem 1.1rem" onclick="_horSupSave()"><span class="ri-cta-text"><span class="ri-cta-top" style="font-size:.85rem">${LANG==='en'?'Save week':'Guardar semana'}</span></span></button>
     </div>`;
   };
   if(!HORARIOS){ c.innerHTML=`<div class="sup-wrap"><div class="act-empty">…</div></div>`; _horLoad().then(draw); } else draw();
@@ -10364,7 +10373,7 @@ async function _horSupOCR(input){
   const btn=document.getElementById('horSupOcrBtn');
   const en=LANG==='en';
   try{
-    if(btn){ btn.disabled=true; btn.textContent='⏳ '+(en?'Reading… (up to 1 min)':'Leyendo… (hasta 1 min)'); }
+    if(btn){ btn.disabled=true; btn.style.opacity='.65'; const t=btn.querySelector('.ri-cta-top'); if(t) t.textContent='⏳ '+(en?'Reading… (up to 1 min)':'Leyendo… (hasta 1 min)'); }
     showToast(en?'Reading the screenshot with AI…':'Leyendo la captura con IA…','info',6000);
     // Comprimir en el dispositivo: máx 2400 px de lado largo, JPEG.
     const img=await new Promise((ok,ko)=>{ const i=new Image(); i.onload=()=>ok(i); i.onerror=ko; i.src=URL.createObjectURL(file); });
@@ -10390,15 +10399,23 @@ async function _horSupOCR(input){
     }
     const ta=document.getElementById('horSupTxt');
     if(ta) ta.value=_horSupSerialize(out.week);
-    const nd=(out.dudas||[]).length;
-    showToast((en?`Week ${out.week.start} read. `:`Semana ${out.week.start} leída. `)
-      +(nd?(en?`${nd} doubtful cells (see — in the text). `:`${nd} celdas dudosas (busca los huecos). `):'')
-      +(en?'REVIEW and then press Save.':'REVISA el texto y luego pulsa Guardar.'),'success',9000);
-    if(nd && (out.dudas||[]).length) console.log('Dudas de la lectura:', out.dudas);
+    // Dudas de la lectura VISIBLES en pantalla (no en consola): el
+    // supervisor las repasa antes de guardar.
+    const dudas=(out.dudas||[]).slice(0,20);
+    const dd=document.getElementById('horSupDudas');
+    if(dd) dd.innerHTML = dudas.length
+      ? `<div style="margin-top:.6rem;padding:.7rem .85rem;border:1.5px solid rgba(224,123,90,.4);border-left:4px solid #c9822e;border-radius:10px;background:rgba(224,123,90,.06)">
+          <div style="font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;color:#8a5a1c;margin-bottom:.3rem">⚠ ${en?'Doubtful cells — check them in the text above':'Celdas dudosas — repásalas en el texto de arriba'}</div>
+          ${dudas.map(d=>`<div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch2);line-height:1.5">· ${escapeHTML(d)}</div>`).join('')}
+        </div>`
+      : `<div style="margin-top:.6rem;font-family:'Quicksand',sans-serif;font-size:.7rem;color:#3d7a4e;font-weight:600">✓ ${en?'Read without doubtful cells':'Lectura sin celdas dudosas'}</div>`;
+    showToast((en?`Week ${out.week.start} read — review and press Save.`:`Semana ${out.week.start} leída — revisa y pulsa Guardar.`),'success',6000);
+    const sb=document.getElementById('horSupSaveBtn');
+    if(sb) sb.scrollIntoView({behavior:'smooth',block:'center'});
   }catch(e){
     showToast((en?'Read failed: ':'Fallo al leer: ')+e.message,'warning',6000);
   }finally{
-    if(btn){ btn.disabled=false; btn.textContent='📷 '+(en?'Read screenshot (AI)':'Leer captura (IA)'); }
+    if(btn){ btn.disabled=false; btn.style.opacity=''; const t=btn.querySelector('.ri-cta-top'); if(t) t.textContent=en?'Upload rota photo':'Subir foto del horario'; }
   }
 }
 async function _horSupSave(){
