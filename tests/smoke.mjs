@@ -3902,6 +3902,19 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
   const css = read('styles.css');
   assert(/\.hor-tblwrap\{[^}]*overflow-x:auto/.test(css) && /\.hor-table \.hor-name\{[^}]*position:sticky/.test(css),
     'la tabla del cuadrante debe hacer scroll con la columna de nombres fija');
+  // Reglas de cambio confirmadas por el propietario: la manager (Faride) es
+  // intocable; supervisores solo entre supervisores (bloque sin grupo) y la
+  // sala con la sala; el puesto de HOSTESS no entra (detectado por zona).
+  assert(/_HOR_MANAGERS=\['Faride Navarro'\]/.test(html),
+    'Faride debe estar fijada como manager intocable');
+  assert(/_horSwapAllowed/.test(html) && /_horTier\(week,me\)===_horTier\(week,other\)/.test(html),
+    'los cambios deben respetar el nivel: jefatura con jefatura, sala con sala');
+  assert(/_horIsHostess/.test(html) && /HOSTESS/.test(html),
+    'el puesto de Hostess debe quedar fuera de los cambios');
+  assert(/los cambios los apruebas tú/.test(html),
+    'la manager no debe poder pedir cambios desde el asistente');
+  assert(/Reglas de la casa: los supervisores solo cambian entre supervisores/.test(html),
+    'las reglas deben mostrarse al equipo en el propio asistente');
 });
 
 test('auditoría de botones: nada de tinta oscura sobre el fondo oscuro de la página (jul 2026)', () => {

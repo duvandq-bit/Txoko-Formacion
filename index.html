@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.264">
+<meta name="app-version" content="7.265">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1529,7 +1529,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.264';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.265';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9956,6 +9956,27 @@ function _horPersonDay(week,name,di){
   }));
   return {shifts,code};
 }
+// Reglas de cambio confirmadas por el propietario (jul 2026):
+// - Faride es la manager: intocable — no pide cambios ni se le proponen
+//   (ella los aprueba).
+// - La jefatura (el bloque sin grupo del cuadrante: supervisores) solo
+//   cambia entre sí; el equipo de sala solo con el equipo de sala.
+// - El puesto de HOSTESS no entra en cambios (se detecta por la zona del
+//   turno en la semana, no por nombre — sobrevive a cambios de plantilla).
+const _HOR_MANAGERS=['Faride Navarro'];
+function _horTier(week,name){
+  let g=null;
+  (week.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{ if(r.n===name && g===null) g=(r.g||''); }));
+  return g==='' ? 'jefatura' : 'sala';
+}
+function _horIsHostess(week,name){
+  return (week.data.services||[]).some(sv=>(sv.rows||[]).some(r=> r.n===name && (r.c||[]).some(cell=>/HOSTESS/i.test(cell||'')) ));
+}
+function _horSwapAllowed(week,me,other){
+  if(_HOR_MANAGERS.includes(other) || _HOR_MANAGERS.includes(me)) return false;
+  if(_horIsHostess(week,other) || _horIsHostess(week,me)) return false;
+  return _horTier(week,me)===_horTier(week,other);
+}
 function _horSetView(v){ _horView=v; _horSwapSel=null; renderHorarios(); }
 function _horSetWeek(i){ _horWeekIdx=i; renderHorarios(); }
 
@@ -10084,6 +10105,10 @@ function _horCambioHTML(){
   const en=LANG==='en';
   const mine=_horMyName();
   if(!mine) return `<div class="act-empty">${en?'First pick who you are in “My week”.':'Primero dime quién eres en «Mi semana».'}</div>`;
+  if(_HOR_MANAGERS.includes(mine))
+    return `<div class="act-empty">${en?'You are the manager — swaps are yours to approve, not to request.':'Eres la manager — los cambios los apruebas tú, no los pides.'}</div>`;
+  if(HORARIOS.some(w=>_horIsHostess(w,mine)))
+    return `<div class="act-empty">${en?'The Hostess position is not part of shift swaps (house rule).':'El puesto de Hostess no entra en los cambios de turno (norma de la casa).'}</div>`;
   const today=todayStr();
   // mis turnos de hoy en adelante
   const opts=[];
@@ -10103,6 +10128,7 @@ function _horCambioHTML(){
   (w.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
     if(_HOR_POSROWS.includes(r.n) || seen.has(r.n)) return;
     seen.add(r.n);
+    if(!_horSwapAllowed(w,mine,r.n)) return;   // reglas de la casa (ver arriba)
     const pd=_horPersonDay(w,r.n,sel.di);
     if(pd.shifts.length){
       if(!pd.shifts.some(p=>p.hrs===sel.p.hrs)) permutas.push({n:r.n,p:pd.shifts[0]});
@@ -10131,6 +10157,9 @@ function _horCambioHTML(){
   html+=permutas.length?permutas.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span><span class="hor-row-h">${escapeHTML(x.p.hrs)}</span>${btn(x.n,(en?'works ':'tiene el turno de ')+x.p.hrs)}</div>`).join('')
     :`<div class="act-empty" style="padding:.5rem">${en?'Nobody on a different shift.':'Nadie con turno distinto.'}</div>`;
   if(noDisp.length) html+=`<div class="tunic-divider"><span>${en?'Not available':'No disponibles'}</span></div><div class="hor-off">${noDisp.map(x=>`${escapeHTML(x.n)} <span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>`).join(' · ')}</div>`;
+  html+=`<div class="act-nota" style="margin-top:.8rem">${en
+    ?'House rules: supervisors only swap with supervisors, the floor team with the floor team; the manager and the Hostess position are not part of swaps.'
+    :'Reglas de la casa: los supervisores solo cambian entre supervisores y la sala con la sala; la manager y el puesto de Hostess no entran en los cambios.'}</div>`;
   return html;
 }
 
