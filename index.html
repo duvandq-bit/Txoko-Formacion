@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.274">
+<meta name="app-version" content="7.275">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -316,11 +316,18 @@
   </header>
 
   <div class="nav-dd" id="mainNavDD">
-  <button class="nav-dd-trigger" aria-haspopup="true" aria-label="Menú de navegación" onclick="this.closest('.nav-dd').classList.toggle('open')">
+  <!-- El lado derecho es una píldora «☰ MENÚ ▾» explícita: con solo el
+       chevron nadie sabía que la barra era desplegable (reporte del
+       propietario, jul 2026). -->
+  <button class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menú de navegación" onclick="const o=this.closest('.nav-dd').classList.toggle('open');this.setAttribute('aria-expanded',o)">
     <span class="nav-dd-cur" id="navDDCur"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</span>
-    <span class="nav-dd-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6"/></svg></span>
+    <span class="nav-dd-chev" aria-hidden="true">
+      <svg class="nav-dd-burger" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <span class="nav-dd-menu-lbl" id="navDDMenuLbl">Menú</span>
+      <svg class="nav-dd-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6"/></svg>
+    </span>
   </button>
-  <div class="nav-scrim" aria-hidden="true" onclick="document.getElementById('mainNavDD').classList.remove('open')"></div>
+  <div class="nav-scrim" aria-hidden="true" onclick="_navDDClose()"></div>
   <nav class="app-nav nav-dd-list" id="appNav" role="navigation" aria-label="Navegación principal">
     <button type="button" class="nav-search-entry" id="navSearchEntry" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -1187,6 +1194,8 @@ function applyLangToApp() {
   if(_gsLbl) _gsLbl.textContent = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
   const _gsPill = document.getElementById('globalSearchPillLbl');
   if(_gsPill) _gsPill.textContent = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
+  const _ddMenu = document.getElementById('navDDMenuLbl');
+  if(_ddMenu) _ddMenu.textContent = LANG==='en' ? 'Menu' : 'Menú';
   if(typeof _renderShiftBar === 'function') _renderShiftBar();
   const _gsInp = document.getElementById('gsInput');
   if(_gsInp) _gsInp.placeholder = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
@@ -1532,7 +1541,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.274';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.275';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8979,6 +8988,15 @@ document.addEventListener('keydown', function(e){
   }
 });
 
+// Cierre único de la hoja de navegación: quita .open y sincroniza el
+// aria-expanded del disparador (píldora «Menú»).
+function _navDDClose(){
+  const n = document.getElementById('mainNavDD');
+  if(!n) return;
+  n.classList.remove('open');
+  const t = n.querySelector('.nav-dd-trigger');
+  if(t) t.setAttribute('aria-expanded','false');
+}
 function showTab(tab, instant){
   // Tear down the chat realtime channel + presence when navigating away, so we
   // don't leak the socket or leave a stale "online" marker for this user.
@@ -9017,8 +9035,7 @@ function showTab(tab, instant){
   const _activeNav = document.querySelector('.nav-btn.active');
   const _navCur = document.getElementById('navDDCur');
   if(_activeNav && _navCur) _navCur.innerHTML = _activeNav.innerHTML;
-  const _navDD = document.getElementById('mainNavDD');
-  if(_navDD) _navDD.classList.remove('open');
+  _navDDClose();
   const c=document.getElementById('appContent');
   const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
@@ -9075,7 +9092,11 @@ function _subTabBar(tabs, activeTab, parentTab){
 // Close an open dropdown (sub-tab, main nav or login venue) when tapping outside it
 document.addEventListener('click', function(e){
   document.querySelectorAll('.nav-dd.open, .login-venue-dd.open').forEach(dd=>{
-    if(!dd.contains(e.target)) dd.classList.remove('open');
+    if(!dd.contains(e.target)){
+      dd.classList.remove('open');
+      const t = dd.querySelector('.nav-dd-trigger');
+      if(t) t.setAttribute('aria-expanded','false');
+    }
   });
 });
 
@@ -9193,8 +9214,7 @@ function _gsRender(raw){
   box.innerHTML = html;
 }
 async function openGlobalSearch(){
-  const nav = document.getElementById('mainNavDD');
-  if(nav) nav.classList.remove('open');
+  _navDDClose();
   const ov = document.getElementById('gsOverlay');
   if(!ov) return;
   ov.style.display='flex';        // inline — wins over any stale/fresh CSS

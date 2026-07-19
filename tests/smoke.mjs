@@ -1920,7 +1920,7 @@ test('main nav is a dropdown, not a horizontal scroller', () => {
   // showTab must reflect the active section into the trigger + close it
   assert(/_navCur\.innerHTML = _activeNav\.innerHTML/.test(html),
     'showTab must update the nav trigger to the active section');
-  assert(/_navDD\.classList\.remove\('open'\)/.test(html),
+  assert(/function showTab\(tab, instant\)\{[^]{0,4000}_navDDClose\(\)/.test(html),
     'showTab must close the nav dropdown after navigating');
   const css = read('styles.css');
   assert(/\.nav-dd-list \.nav-btn\.active\{[^}]*border-left-color:var\(--gold\)/.test(css),
@@ -1954,7 +1954,7 @@ test('nav opens as a thumb-zone bottom sheet with a dim scrim', () => {
   assert(/\.nav-dd\.open \.nav-dd-list\{transform:translateY\(0\)/.test(css),
     'opening the nav must slide the sheet into view');
   // markup: scrim element that closes the sheet on tap
-  assert(/class="nav-scrim"[^>]*onclick="[^"]*mainNavDD'\)\.classList\.remove\('open'\)/.test(html),
+  assert(/class="nav-scrim"[^>]*onclick="_navDDClose\(\)"/.test(html) && /function _navDDClose\(\)/.test(html),
     'a tappable scrim element that closes the nav must exist');
 });
 
@@ -1977,8 +1977,17 @@ test('dropdown triggers use a clear chevron-chip (not a subtle glyph)', () => {
   const css = read('styles.css');
   assert(/\.nav-dd-chev\{[^}]*border:1px solid[^}]*\}/.test(css) && /\.nav-dd-chev svg\{/.test(css),
     'nav chevron must be a bordered chip containing an SVG');
-  assert(/class="nav-dd-chev"[^>]*><svg/.test(html),
-    'main nav trigger chevron must be an SVG, not a ▾ glyph');
+  // Regresión (jul 2026): con solo el chevron nadie sabía que la barra era un
+  // menú desplegable. La píldora debe llevar la PALABRA «Menú» + hamburguesa
+  // + caret, y el disparador debe anunciar su estado (aria-expanded).
+  assert(/id="navDDMenuLbl"/.test(html) && /class="nav-dd-burger"/.test(html) && /class="nav-dd-caret"/.test(html),
+    'nav trigger pill must say «Menú» with burger + caret icons');
+  assert(/class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false"/.test(html),
+    'nav trigger must expose aria-expanded');
+  assert(/_ddMenu\.textContent = LANG==='en' \? 'Menu' : 'Menú'/.test(html),
+    'menu pill label must be bilingual');
+  assert(/\.nav-dd-menu-lbl\{[^}]*text-transform:uppercase/.test(css),
+    'menu pill label style missing');
   // (la sub-navegación pasó a chips visibles — solo el nav principal es desplegable)
 });
 
