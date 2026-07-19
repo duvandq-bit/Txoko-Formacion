@@ -3935,6 +3935,11 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
   // Tu turno de hoy y mañana en el inicio (fila Horarios, relleno diferido)
   assert(/_horMyDayLbl/.test(html) && /id="hoyHorMeta"/.test(html),
     'el inicio debe mostrar tu turno de hoy y el de mañana en la fila Horarios');
+  // La fila va EN CABEZA del bloque Hoy (el propietario no la encontraba al
+  // final): entre el héroe y la tira de stats.
+  const dash4 = html.slice(html.indexOf('${_pddHeroHTML(emp,_en)}'), html.indexOf('class="hoy-stats"'));
+  assert(/id="hoyHorMeta"/.test(dash4),
+    'la fila Horarios debe estar justo bajo el héroe, antes de las stats');
   // Acceso desde el inicio.
   const dash3 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
   assert(/showTab\('horarios'\)/.test(dash3), 'el inicio debe llevar la fila de acceso a Horarios');
