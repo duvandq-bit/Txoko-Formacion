@@ -1772,12 +1772,19 @@ body::after{
 .nav-dd-trigger:active{transform:translateY(1px)}
 .nav-dd-cur{display:flex;align-items:center;gap:.6rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nav-dd-cur svg{width:18px;height:18px;flex-shrink:0}
-.nav-dd-chev{display:inline-flex;align-items:center;justify-content:center;
-  width:28px;height:28px;flex-shrink:0;border-radius:8px;color:var(--gold);
+/* Píldora «☰ MENÚ ▾»: la palabra escrita es la señal — el chevron solo no
+   se leía como desplegable (reporte del propietario, jul 2026). */
+.nav-dd-chev{display:inline-flex;align-items:center;justify-content:center;gap:.32rem;
+  height:30px;padding:0 .55rem;flex-shrink:0;border-radius:8px;color:var(--gold);
   background:rgba(196,154,60,.15);border:1px solid rgba(196,154,60,.32);
-  transition:transform .24s ease,background .2s ease}
-.nav-dd-chev svg{width:15px;height:15px;stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.nav-dd.open .nav-dd-chev{transform:rotate(180deg);background:rgba(196,154,60,.28)}
+  transition:background .2s ease}
+.nav-dd-chev svg{stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.nav-dd-burger{width:14px;height:14px}
+.nav-dd-caret{width:13px;height:13px;transition:transform .24s ease}
+.nav-dd-menu-lbl{font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;line-height:1}
+.nav-dd.open .nav-dd-chev{background:rgba(196,154,60,.28)}
+.nav-dd.open .nav-dd-caret{transform:rotate(180deg)}
 /* ── Bottom-sheet navigation ──────────────────────────────────────────
    The option list rises from the bottom into the thumb zone (fastest reach
    for a waiter holding the phone one-handed) instead of dropping from the
