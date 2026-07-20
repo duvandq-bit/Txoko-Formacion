@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.276">
+<meta name="app-version" content="7.277">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1541,7 +1541,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.276';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.277';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7442,7 +7442,7 @@ function renderLineUp(){
   const nextT=next?_luTitle(next.key,en):null;
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap" id="lineupWrap">
-    <button onclick="showTab('dashboard')" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer;margin-bottom:.8rem">←</button>
+    <button onclick="showTab('dashboard')" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer;margin-bottom:.8rem">←</button>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.1rem">
       <div>
         <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;color:var(--parch3);margin-bottom:.3rem">MESEO · ${dateLbl}</div>
@@ -20186,7 +20186,19 @@ function startAllergenTest(cat) {
   renderAllergenQuestion();
 }
 
+// Salida del simulacro (auditoría de botones jul 2026: misma queja que el
+// examen — no había forma de volver atrás).
+function abortAllergenTest(){
+  if(!confirm(LANG==='en'?'Exit the drill? Progress in this session will be lost.':'¿Salir del simulacro? Se perderá el progreso de esta sesión.')) return;
+  allergenTestState=null;
+  renderExam();
+}
+
 function renderAllergenQuestion() {
+  // Guarda anti-repintado: el setTimeout de 1,8 s tras responder no debe
+  // volver a pintar el simulacro si el usuario lo abandonó o navegó a otra
+  // pestaña mientras se mostraba el feedback.
+  if(!allergenTestState || currentTab!=='exam') return;
   const { questions, index } = allergenTestState;
   if (index >= questions.length) { renderAllergenResults(); return; }
   const q = questions[index];
@@ -20195,6 +20207,7 @@ function renderAllergenQuestion() {
   document.getElementById('appContent').innerHTML = `
     <div class="sup-wrap">
       <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
+        <button type="button" class="exam-exit" onclick="abortAllergenTest()" aria-label="${LANG==='en'?'Exit drill':'Salir del simulacro'}">←</button>
         <div style="flex:1"><div class="fc-ribbon"><div class="fc-ribbon-fill" style="width:${pct}%"></div></div></div>
         <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch3)">${index+1}/${questions.length}</div>
       </div>
@@ -20363,7 +20376,7 @@ function renderSupAnalytics(allEmps, empNames){
 
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
-      <button onclick="renderSupDashboard()" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <button onclick="renderSupDashboard()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)"> Analytics del equipo</div>
     </div>
 
@@ -20506,7 +20519,7 @@ function renderSupNotifSender(empNames){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="renderSupDashboard()" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <button onclick="renderSupDashboard()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">! Enviar aviso al equipo</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
@@ -20666,7 +20679,7 @@ function renderCartaDishEdit(id){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="renderCartaEditor()" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <button onclick="renderCartaEditor()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${d.name}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
@@ -20718,7 +20731,7 @@ function renderCartaNewDish(){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
-      <button onclick="renderCartaEditor()" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <button onclick="renderCartaEditor()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${LANG==='en'?'New dish':'Nuevo plato'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;margin-bottom:.75rem">
@@ -21448,13 +21461,31 @@ async function startChallenge(rivalName) {
   renderRemoteDuelQuestion();
 }
 
+// Abandono de un duelo remoto (auditoría de botones jul 2026). Seguro en
+// ambos sentidos: el reto solo se envía al terminar las 5 preguntas, así que
+// abandonar no deja nada a medias — y una defensa abandonada queda pendiente.
+function abortRemoteDuel(){
+  const defending = remoteDuelState && remoteDuelState.phase==='defending';
+  const msg = defending
+    ? (LANG==='en'?'Abandon the defense? The challenge will stay pending.':'¿Abandonar la defensa? El reto quedará pendiente.')
+    : (LANG==='en'?'Abandon the challenge? Nothing will be sent.':'¿Abandonar el reto? No se enviará nada.');
+  if(!confirm(msg)) return;
+  duelClearTimer();
+  remoteDuelState=null;
+  renderDuel();
+}
+
 function renderRemoteDuelQuestion() {
+  // Guarda anti-repintado: si el jugador abandonó o navegó a otra pestaña,
+  // el temporizador de 10 s no debe recuperar la pantalla del duelo.
+  if(!remoteDuelState || currentTab!=='txoko'){ duelClearTimer(); return; }
   const { questions, answers, rivalName, qIdx } = remoteDuelState;
   if (qIdx >= questions.length) { submitChallenge(); return; }
   const q = questions[qIdx];
   const letters = ['A','B','C','D'];
   document.getElementById('appContent').innerHTML = `
     <div class="sup-wrap">
+      <button type="button" class="exam-exit" onclick="abortRemoteDuel()" aria-label="${LANG==='en'?'Abandon challenge':'Abandonar reto'}">←</button>
       <div class="sup-hero" style="padding-bottom:.75rem">
         <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         <div class="sup-hero-title">${LANG==='en'?`Challenge ${escapeHTML(rivalName)}`:`Retando a ${escapeHTML(rivalName)}`}</div>
@@ -21557,12 +21588,15 @@ async function startDefense(duel) {
 }
 
 function renderRemoteDefenseQuestion() {
+  // Misma guarda anti-repintado que el reto (ver renderRemoteDuelQuestion).
+  if(!remoteDuelState || currentTab!=='txoko'){ duelClearTimer(); return; }
   const { questions, answers, rivalName, qIdx } = remoteDuelState;
   if (qIdx >= questions.length) { submitDefense(); return; }
   const q = questions[qIdx];
   const letters = ['A','B','C','D'];
   document.getElementById('appContent').innerHTML = `
     <div class="sup-wrap">
+      <button type="button" class="exam-exit" onclick="abortRemoteDuel()" aria-label="${LANG==='en'?'Abandon defense':'Abandonar defensa'}">←</button>
       <div class="sup-hero" style="padding-bottom:.75rem">
         <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="sup-hero-title">${LANG==='en'?`Defending vs ${escapeHTML(rivalName)}`:`Defendiendo vs ${escapeHTML(rivalName)}`}</div>
@@ -21748,10 +21782,19 @@ function duelShowRoundResult(){
   // Insert result temporarily
   const fb=document.getElementById('duelFeedback');
   if(fb){ fb.innerHTML=resultHtml; fb.style.display='block'; }
-  setTimeout(()=>{ if(duelState.round<=duelState.totalRounds) duelRender(); else duelGameOver(); },1800);
+  setTimeout(()=>{ if(!duelState) return; if(duelState.round<=duelState.totalRounds) duelRender(); else duelGameOver(); },1800);
+}
+
+// Fin anticipado del duelo local (auditoría de botones jul 2026): sin esto,
+// la única salida era terminar todas las rondas o navegar por el menú.
+function abortLocalDuel(){
+  if(!confirm(LANG==='en'?'End the duel? The result will not be saved.':'¿Terminar el duelo? No se guardará el resultado.')) return;
+  duelState=null;
+  renderTxoko();
 }
 
 function duelRender(){
+  if(!duelState) return;
   const {p1,p2,scores,round,totalRounds,current,question}=duelState;
   // Use current player's language preference
   const _savedLang = LANG;
@@ -21760,6 +21803,7 @@ function duelRender(){
   const letters=['A','B','C','D'];
   document.getElementById('appContent').innerHTML=`
     <div class="duel-wrap">
+      <button type="button" class="exam-exit" onclick="abortLocalDuel()" aria-label="${LANG==='en'?'End duel':'Terminar duelo'}" style="margin-bottom:.5rem">←</button>
       <div class="duel-vs">
         <div class="duel-player${current===p1?' active':''}">
           <div class="duel-player-name">${escapeHTML(p1)}</div>
@@ -23190,7 +23234,7 @@ function renderCodigo(){
   const c=document.getElementById('appContent');
   const chips=[{id:'all',t:en?'All':'Todos',icon:'◆'}].concat(CODIGO_CAMARERO.cats.map(x=>({id:x.id,t:en?x.t_en:x.t,icon:x.icon})));
   c.innerHTML=`<div class="sup-wrap">
-    <button onclick="renderLqa()" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer;margin-bottom:.6rem">←</button>
+    <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer;margin-bottom:.6rem">←</button>
     <div class="sup-hero">
       <div class="sup-hero-icon" style="font-size:1.6rem">🧭</div>
       <div class="sup-hero-title">${en?'The Waiter’s Code':'El Código del Camarero'}</div>
@@ -23309,7 +23353,7 @@ function renderLqaCategory(catId){
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
       <div style="font-size:1.2rem">${cat.icon}</div>
       <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?cat.title_en:cat.title}</div>
     </div>
@@ -23362,7 +23406,7 @@ function renderLqaInfo(){
 
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${LANG==='en'?'LQA Information':'Información LQA'}</div>
     </div>
 

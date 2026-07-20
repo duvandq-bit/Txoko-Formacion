@@ -2234,6 +2234,32 @@ test('exam setup: one-tap start, folded customize, drill role, dark mastery pane
   assert(/\.exam-exit\{[^}]*min-height:34px/.test(css), 'exam exit button style missing');
 });
 
+test('auditoría de botones: toda sesión interactiva tiene salida y no repinta tras abandonar', () => {
+  // Auditoría jul 2026 tras el «←» del examen: el Simulacro de Alérgenos,
+  // los duelos remotos (reto y defensa) y el duelo local eran callejones sin
+  // salida — y sus setTimeout/temporizadores recuperaban la pantalla aunque
+  // el usuario hubiera navegado a otra pestaña.
+  assert(/function abortAllergenTest\(\)/.test(html) && /onclick="abortAllergenTest\(\)"/.test(html),
+    'el simulacro de alérgenos debe tener botón de salida');
+  const raq = html.slice(html.indexOf('function renderAllergenQuestion()'), html.indexOf('function renderAllergenQuestion()') + 700);
+  assert(/if\(!allergenTestState \|\| currentTab!=='exam'\) return;/.test(raq),
+    'renderAllergenQuestion debe cortar el repintado tras abandono o navegación');
+  assert(/function abortRemoteDuel\(\)/.test(html) && /onclick="abortRemoteDuel\(\)"/.test(html),
+    'los duelos remotos deben tener botón de abandono');
+  for(const fn of ['renderRemoteDuelQuestion', 'renderRemoteDefenseQuestion']){
+    const body = html.slice(html.indexOf(`function ${fn}()`), html.indexOf(`function ${fn}()`) + 700);
+    assert(/if\(!remoteDuelState \|\| currentTab!=='txoko'\)\{ duelClearTimer\(\); return; \}/.test(body),
+      `${fn} debe parar el temporizador y no repintar fuera de Juegos`);
+  }
+  const ard = html.slice(html.indexOf('function abortRemoteDuel()'), html.indexOf('function abortRemoteDuel()') + 700);
+  assert(/confirm\(/.test(ard) && /duelClearTimer\(\)/.test(ard) && /renderDuel\(\)/.test(ard),
+    'abortRemoteDuel debe confirmar, parar el temporizador y volver al lobby');
+  assert(/function abortLocalDuel\(\)/.test(html) && /onclick="abortLocalDuel\(\)"/.test(html),
+    'el duelo local debe tener botón de fin anticipado');
+  assert(/setTimeout\(\(\)=>\{ if\(!duelState\) return; if\(duelState\.round<=duelState\.totalRounds\)/.test(html),
+    'el paso de ronda del duelo local debe tolerar el abandono');
+});
+
 test('allergen drill: three action-frames per question, no fixed traps', () => {
   // The old drill used three FIXED trap texts and a correct answer whose
   // yes/no polarity was unique — solvable by option style after one round.
