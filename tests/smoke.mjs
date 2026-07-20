@@ -2224,6 +2224,14 @@ test('exam setup: one-tap start, folded customize, drill role, dark mastery pane
     'dom-panel stats must use light ink on the dark card');
   assert(/\.exam-orient\{/.test(css) && /class="exam-orient"/.test(html),
     'the review-vs-exam orientation line must exist');
+  // Regresión (jul 2026): en mitad de un examen no había botón para volver
+  // atrás. La pregunta debe llevar un «←» que confirma antes de abandonar.
+  assert(/class="exam-exit" onclick="abortExam\(\)"/.test(html),
+    'exam question topbar must carry the exit button');
+  const ab = html.slice(html.indexOf('function abortExam()'), html.indexOf('function abortExam()') + 500);
+  assert(/confirm\(/.test(ab) && /examActive=false/.test(ab) && /renderExam\(\)/.test(ab),
+    'abortExam must confirm, deactivate the exam and return to setup');
+  assert(/\.exam-exit\{[^}]*min-height:34px/.test(css), 'exam exit button style missing');
 });
 
 test('allergen drill: three action-frames per question, no fixed traps', () => {

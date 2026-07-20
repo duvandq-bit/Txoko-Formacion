@@ -3638,6 +3638,11 @@ body::after{
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:.9rem;
 }
+/* Botón de salida a mitad de examen — mismo lenguaje que el «←» del LQA */
+.exam-exit{flex-shrink:0;min-width:38px;min-height:34px;padding:.3rem .6rem;cursor:pointer;
+  background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:10px;
+  font-size:.85rem;font-weight:700;color:var(--gold-deep);line-height:1}
+.exam-exit:active{background:rgba(196,154,60,.12)}
 .exam-meta{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--parch3);letter-spacing:.1em}
 .exam-timer{
   font-family:'DM Mono',monospace;font-size:.75rem;color:var(--gold);
