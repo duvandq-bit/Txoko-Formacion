@@ -4253,6 +4253,13 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
   assert(/<meta name="apple-mobile-web-app-title" content="Meseo">/.test(html) &&
     !/apple-mobile-web-app-title" content="TXOKO"/.test(html),
     'the iOS web-app title must be Meseo, never TXOKO');
+  // Los placeholders del HTML crudo (los ve un crawler sin ejecutar JS, y la
+  // 1ª visita offline) no deben traer la marca del restaurante: el JS los
+  // reescribe con el venue activo, pero por defecto la app es Meseo.
+  const trigStatic = html.slice(html.indexOf('id="loginVenueTriggerName">') + 27, html.indexOf('</span>', html.indexOf('id="loginVenueTriggerName">')));
+  assert(trigStatic === 'Meseo', 'the static venue-trigger placeholder must default to Meseo, not a restaurant');
+  const hdrStatic = html.slice(html.indexOf('id="headerLogo"'), html.indexOf('</div>', html.indexOf('id="headerLogo"')));
+  assert(!/txoko/i.test(hdrStatic), 'the static header-logo placeholder must not hardcode TXOKO (JS themes it per venue)');
 });
 
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
