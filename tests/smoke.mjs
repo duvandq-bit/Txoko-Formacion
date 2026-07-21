@@ -5257,16 +5257,32 @@ test('quiz del Viaje del plato: ingrediente falso limpio y de la misma categorí
   // la pregunta se respondía por absurdo. Ahora comparte tokenizador con los
   // escenarios y el falso solo sale de platos hermanos de categoría.
   const djGen = html.slice(html.indexOf('function _djGenerateQuiz(dish){'), html.indexOf('var allergenData_en'));
-  assert(/const ingredients = _simExtractIngredients\(dish\);/.test(djGen),
+  assert(/const ingredients = _simExtractIngredients\(dd\);/.test(djGen),
     'los ingredientes reales del quiz deben pasar por _simExtractIngredients (limpia paréntesis)');
   assert(!/dish\.ingredients\.split\(','\)/.test(djGen),
     'el split(",") crudo no debe volver — producía opciones rotas tipo "brócoli)"');
   assert(/d\.cat===dish\.cat\)/.test(djGen),
     'el ingrediente falso debe salir SOLO de platos de la misma categoría');
-  assert(/_simIngredientOverlapsDish\(i, dish\)/.test(djGen),
+  assert(/_simIngredientOverlapsDish\(i, dd\)/.test(djGen),
     'el falso debe pasar el filtro de sinónimos (papa/patata) para no mentir al huésped');
   assert(!/Aceite de trufa/.test(djGen),
     'sin relleno inventado: si no hay falso válido, la pregunta cae al fallback de historia/recuento');
+  // Idioma: los ingredientes salen del plato LOCALIZADO (dd), no del base ES
+  // — en inglés se mostraban ingredientes en español.
+  assert(/const ingredients = _simExtractIngredients\(dd\);/.test(djGen),
+    'los ingredientes del quiz deben salir del plato localizado (dd), no del base ES');
+  assert(/otherDishes\.map\(d=>getDish\(d\)\)\.flatMap\(d=>_simExtractIngredients\(d\)\)/.test(djGen),
+    'los ingredientes falsos deben localizarse también (getDish) para no mezclar idiomas');
+  assert(/if\(il === _dishNameLow\) return false;/.test(djGen),
+    'el nombre del propio plato no puede salir como ingrediente (Tarta de queso)');
+  // Alérgenos: comparación por sinónimos para no ofrecer como ausente un
+  // alérgeno que el plato sí tiene con otro nombre (Sésamo/Granos de sésamo).
+  assert(/const _allNorm = a =>/.test(djGen) && /dishAllNorm\.has\(_allNorm\(a\)\)/.test(djGen),
+    'el distractor de alérgeno debe compararse por sinónimos (Granos de sésamo ≡ Sésamo)');
+  assert(/dishAllNorm\.has\('crustaceo'\) \|\| dishAllNorm\.has\('molusco'\)\) dishAllNorm\.add\('marisco'\)/.test(djGen),
+    'Mariscos debe contar como presente si el plato lleva Crustáceos o Moluscos');
+  assert(/'Granos de sésamo':'Sesame'/.test(html) && /'Cacahuete':'Peanut'/.test(html),
+    'allergenData_en debe traducir Granos de sésamo y Cacahuete (los usa la carta)');
 });
 
 test('ficha técnica del plato: muestra el maridaje priorizando la copa', () => {
