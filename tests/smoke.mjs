@@ -111,6 +111,12 @@ test('vinos EN: enciclopedia bilingüe, copa recomendada resucitada, origen trad
   assert((html.match(/_wineOrigin\(w\.origin\)/g) || []).length >= 5,
     'las tarjetas deben pintar el origen con _wineOrigin');
   assert(/'Crianza en barrica':'Barrel-aged'/.test(html), '_wineStoryTags debe traducir las etiquetas');
+  // El radar del perfil de cata pintaba Cuerpo/Acidez/Especias también en
+  // inglés («el tasting profile no está en inglés», propietario jul 2026).
+  assert(/const DIM_EN = \{'Cuerpo':'Body','Acidez':'Acidity'/.test(html),
+    'el radar debe traducir las dimensiones');
+  assert((html.match(/dimLbl\(scores\[i\]\.name\)|dimLbl\(s\.name\)/g) || []).length >= 2,
+    'ejes y leyenda del radar deben pasar por dimLbl');
 });
 
 test('data/vinos-content.json keys match what loadVinosContent() assigns', () => {
