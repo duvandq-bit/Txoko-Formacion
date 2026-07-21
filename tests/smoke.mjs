@@ -4211,7 +4211,12 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
   assert(/no está afiliada, patrocinada ni respaldada/.test(html) && /sus respectivos titulares/.test(html),
     'the legal modal must keep the trademark disclaimer, generalized to all venues');
   const themes = read('data/themes.json');
-  assert(/"title": "Meseo · TXOKO"/.test(themes), 'venue tab titles must compose app brand + venue');
+  // El document.title es lo que Google indexa (renderiza el JS). Ningún venue
+  // debe filtrar la marca del restaurante al título de la pestaña → salía
+  // "Meseo · TXOKO" en el buscador. El título público es siempre neutro.
+  const themeTitles = (JSON.parse(themes).venues || []).map(v => v.title || '');
+  assert(themeTitles.every(t => /^Meseo/.test(t) && !/txoko|berasategui|ritz/i.test(t)),
+    'venue tab titles must stay neutral Meseo — no restaurant brand leaks into document.title (SEO)');
   const icon = read('icon.svg');
   assert(/>M<\/text>/.test(icon) && !/TXOKO/i.test(icon) && !/MESEO/.test(icon),
     'the icon must be Meseo-branded (cloche + M monogram), never Txoko');
@@ -4238,6 +4243,16 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
     'the language re-render must keep the single-venue picker visible too');
   assert(/is not affiliated with, sponsored by or officially endorsed/.test(html) && /their respective owners/.test(html),
     'the EN legal modal must carry the generalized multi-venue disclaimer like the ES one');
+  // Señales explícitas de nombre de sitio para Google (para que no deduzca
+  // "TXOKO" del contenido visible). Y el nombre de app para móvil ya no es
+  // TXOKO. Son las fuentes que Google prioriza para el site name.
+  assert(/<meta property="og:site_name" content="Meseo">/.test(html),
+    'head must declare og:site_name=Meseo so Google shows the right site name');
+  assert(/"@type":"WebSite","name":"Meseo"/.test(html),
+    'head must ship WebSite structured data naming the site Meseo');
+  assert(/<meta name="apple-mobile-web-app-title" content="Meseo">/.test(html) &&
+    !/apple-mobile-web-app-title" content="TXOKO"/.test(html),
+    'the iOS web-app title must be Meseo, never TXOKO');
 });
 
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
