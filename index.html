@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.278">
+<meta name="app-version" content="7.279">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1541,7 +1541,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.278';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.279';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -12012,7 +12012,7 @@ function _buildNoteDetail(key, _en){
       <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
       <div class="sensory-card-info">
         <div class="sensory-card-name">${escapeHTML(w.name)}</div>
-        <div class="sensory-card-meta">${escapeHTML(w.grapes)} · ${escapeHTML(w.origin)}</div>
+        <div class="sensory-card-meta">${escapeHTML(w.grapes)} · ${escapeHTML(_wineOrigin(w.origin))}</div>
       </div>
       <div class="sensory-intensity">${'<span class="sensory-dot on"></span>'.repeat(int)}${'<span class="sensory-dot"></span>'.repeat(3-int)}</div>
     </div>`).join('');
@@ -12171,7 +12171,7 @@ function _renderSensoryDetail(c, bar){
           <div class="sensory-fp-badge" style="background:${typeColors[w.type]||'#888'}">${escapeHTML(w.type).toUpperCase()}</div>
           <div class="sensory-fp-name">${escapeHTML(w.name)}</div>
         </div>
-        <div style="font-size:.65rem;color:rgba(28,42,34,.5);margin-bottom:.5rem">${escapeHTML(w.grapes)} · ${escapeHTML(w.origin)} · ${w.price}€</div>
+        <div style="font-size:.65rem;color:rgba(28,42,34,.5);margin-bottom:.5rem">${escapeHTML(w.grapes)} · ${escapeHTML(_wineOrigin(w.origin))} · ${w.price}€</div>
         <div class="sensory-radar-wrap">${radar}</div>
         <div style="text-align:center;font-size:.6rem;color:rgba(28,42,34,.4);margin-bottom:.5rem">${_en?'Sensory Fingerprint':'Huella Sensorial'}</div>
         <div class="sensory-fp-notes">${tags}</div>
@@ -12628,7 +12628,7 @@ function _renderWineCard(w, idx, filteredList){
       <div style="flex:1;min-width:0">
         <div class="wc-name">${escapeHTML(w.name)}</div>
         ${isWine?`<div class="wc-grape">${escapeHTML(w.grapes||'')}</div>
-        <div class="wc-region">${escapeHTML((w.origin?w.origin+' · ':'')+w.region)}</div>`:''}
+        <div class="wc-region">${escapeHTML((w.origin?_wineOrigin(w.origin)+' · ':'')+w.region)}</div>`:''}
       </div>
       <div style="text-align:right;flex-shrink:0;position:relative">
         <div class="wc-price">${w.price} €</div>
@@ -14461,6 +14461,8 @@ function _wineStoryTags(w) {
   const story = (w.story||'').toLowerCase();
   const notes = (w.notes||'').toLowerCase();
   const grapes = (w.grapes||'').toLowerCase();
+  // Detecta SIEMPRE sobre el texto español (la ficha base); la etiqueta
+  // visible se traduce al final (auditoría EN jul 2026).
   if(story.includes('barrica') || story.includes('roble') || story.includes('barrel')) tags.push('Crianza en barrica');
   else if(story.includes('acero') || story.includes('inox')) tags.push('Acero inoxidable');
   if(story.includes('ecológic') || story.includes('orgánic') || story.includes('biodinám')) tags.push('Ecológico');
@@ -14473,8 +14475,21 @@ function _wineStoryTags(w) {
   if(story.includes('vendimia manual') || story.includes('manual')) tags.push('Vendimia manual');
   if(story.includes('coupage') || story.includes('blend') || grapes.includes('/')) tags.push('Blend');
   if(story.includes('monovariet') || (!grapes.includes('/') && !grapes.includes(',') && grapes.length > 0)) tags.push('Monovarietal');
-  return tags.slice(0, 4);
+  const out = tags.slice(0, 4);
+  if(LANG!=='en') return out;
+  const EN = {'Crianza en barrica':'Barrel-aged','Acero inoxidable':'Stainless steel','Ecológico':'Organic',
+    'Levaduras nativas':'Native yeasts','Maceración':'Maceration','Suelo volcánico':'Volcanic soil',
+    'Suelo calizo':'Limestone soil','Suelo mineral':'Mineral soil','Viñedo viejo':'Old vines',
+    'Vendimia manual':'Hand-harvested','Blend':'Blend','Monovarietal':'Single varietal'};
+  return out.map(t=>EN[t]||t);
 }
+
+// País/región de origen legible en inglés (las tarjetas mostraban «Hungría»,
+// «Sudáfrica»… también con la app en English — auditoría EN jul 2026).
+const _ORIGIN_EN = {'Francia':'France','Hungría':'Hungary','Alemania':'Germany','Sudáfrica':'South Africa',
+  'Italia':'Italy','Cataluña':'Catalonia','Andalucía':'Andalusia','Islas Baleares':'Balearic Islands',
+  'Canarias':'Canary Islands','Internacional':'International'};
+function _wineOrigin(o){ return (LANG==='en' && o && _ORIGIN_EN[o]) || o || ''; }
 
 function _wineServingTemp(w) {
   const type = w.type;
@@ -14493,24 +14508,11 @@ function _wineServingTemp(w) {
   return '10–14°C';
 }
 
-function _wineGlassType(w) {
-  const type = w.type;
-  const notes = (w.notes||'').toLowerCase();
-  const grapes = (w.grapes||'').toLowerCase();
-  if(type === 'espumoso') return 'Flauta / Tulipa';
-  if(type === 'blanco') {
-    if(grapes.includes('chardonnay') || notes.includes('complej') || notes.includes('barrica')) return 'Borgoña blanca';
-    return 'Copa blanco estándar';
-  }
-  if(type === 'rosado') return 'Copa tulipa';
-  if(type === 'dulce') return 'Copa pequeña / Catavinos';
-  if(type === 'tinto') {
-    if(grapes.includes('pinot') || notes.includes('elegante') || notes.includes('delicad')) return 'Borgoña';
-    if(notes.includes('potente') || notes.includes('complej') || notes.includes('estructura')) return 'Burdeos gran reserva';
-    return 'Burdeos estándar';
-  }
-  return 'Copa universal';
-}
+// (auditoría jul 2026: aquí vivía una SEGUNDA _wineGlassType que devolvía
+// nombres en español y machacaba a la original de arriba, que devuelve las
+// claves de GLASS_TYPES — el panel «Copa recomendada» nunca encontraba la
+// copa y no se mostraba. La única definición válida es la de la sección de
+// datos de educación de vino.)
 
 function _wineDecantAdvice(w) {
   const type = w.type;
@@ -14694,7 +14696,7 @@ function _wineNotesExpanded(w) {
       const glassName = _en ? glass.name_en : glass.name_es;
       html += '<div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(126,200,227,.3)">';
       html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:#7ec8e3;letter-spacing:.08em;margin-bottom:.25rem">◇ ' + (_en?'RECOMMENDED GLASS':'COPA RECOMENDADA') + '</div>';
-      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4"><strong>' + escapeHTML(glassName) + '</strong> — ' + escapeHTML(glass.use) + ' (' + glass.size + ')</div>';
+      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.4"><strong>' + escapeHTML(glassName) + '</strong> — ' + escapeHTML(_en?(glass.use_en||glass.use):glass.use) + ' (' + glass.size + ')</div>';
       html += '</div>';
     }
   }
@@ -16102,7 +16104,7 @@ function _showWineDetail(id, list, direction){
       <div class="wine-info-box" style="flex:1;min-width:140px">
         <div class="wine-info-label">◇ ${_en?'Region':'Región'}</div>
         <div class="wine-info-value">${escapeHTML(w.region||'-')}</div>
-        ${w.origin?`<div style="font-size:.68rem;color:var(--parch3);margin-top:.15rem;position:relative">${escapeHTML(w.origin)}</div>`:''}
+        ${w.origin?`<div style="font-size:.68rem;color:var(--parch3);margin-top:.15rem;position:relative">${escapeHTML(_wineOrigin(w.origin))}</div>`:''}
       </div>
     </div>`:''}
 
@@ -16360,11 +16362,11 @@ function _renderWineLearn(c, bar){
                         <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.7;margin-bottom:.7rem">${body}</div>
                         ${e.examples?`<div style="padding:.4rem .6rem;border-radius:8px;background:rgba(196,154,60,.04);border:1px solid rgba(196,154,60,.08);margin-bottom:.6rem">
                           <div style="font-family:'DM Mono',monospace;font-size:.45rem;color:var(--gold-b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem">🍷 ${_en?'FROM OUR LIST':'EN NUESTRA CARTA'}</div>
-                          <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch2)">${e.examples}</div>
+                          <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch2)">${_en?(e.examples_en||e.examples):e.examples}</div>
                         </div>`:''}
                         ${e.guest?`<div class="wine-script-box">
                           <div class="wine-info-label" style="margin-left:.5rem">💬 ${_en?'How to explain to the guest':'Cómo explicarlo al huésped'}</div>
-                          <div style="font-family:'Quicksand',sans-serif;font-size:.74rem;color:var(--parchment);font-style:italic;line-height:1.45;margin-left:.5rem">${e.guest}</div>
+                          <div style="font-family:'Quicksand',sans-serif;font-size:.74rem;color:var(--parchment);font-style:italic;line-height:1.45;margin-left:.5rem">${_en?(e.guest_en||e.guest):e.guest}</div>
                         </div>`:''}
                       </div>
                     </div>
@@ -27612,7 +27614,7 @@ function _svcUpdateResults(){
         return `<div class="svc-result" id="svcWine_${w.id}">
           <button class="svc-similar-btn" onclick="event.stopPropagation();_svcToggleSimilar(${w.id})" title="${_en?'Show similar wines':'Ver vinos similares'}">⚯ ${_en?'Similar':'Similar'}</button>
           <div class="svc-result-name">${escapeHTML(w.name)}</div>
-          <div class="svc-result-cat"><span style="color:${typeColor}">${typeLabel}</span> · ${escapeHTML(w.region||'')} ${w.origin && w.origin!==w.region?'· '+escapeHTML(w.origin):''}</div>
+          <div class="svc-result-cat"><span style="color:${typeColor}">${typeLabel}</span> · ${escapeHTML(w.region||'')} ${w.origin && w.origin!==w.region?'· '+escapeHTML(_wineOrigin(w.origin)):''}</div>
           <div style="font-size:.65rem;color:rgba(244,237,226,.55);margin-top:.25rem">${w.grapes?'G '+escapeHTML(w.grapes):''} ${wTemp?'· T° '+wTemp:''} ${w.price?'· €'+w.price:''}</div>
           <div class="svc-similar-slot" id="svcSimilarSlot_${w.id}"></div>
         </div>`;

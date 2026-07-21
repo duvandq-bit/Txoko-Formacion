@@ -68,6 +68,51 @@ test('data/wines.json is a non-empty array with id/name/type', () => {
   assert(new Set(ids).size === ids.length, 'duplicate wine ids');
 });
 
+test('carta de vinos 19.07.26: vinos nuevos, bilingües y con la copa oficial', () => {
+  const wines = JSON.parse(read('data/wines.json'));
+  assert(wines.length >= 134, 'faltan vinos de la carta 19.07.26');
+  const names = wines.map(w => w.name);
+  for (const n of ['Dom Pérignon 2015', 'Roda Reserva 2021', 'Miraval', 'El Grifo Seco', 'Hey Malbec',
+    'Col d’Orcia 2020', 'Clós Pepín', 'Almirez', 'Paco García «Seis»', 'Petra Hebo 2023',
+    'Alion 2019 3L Doble Magnum', 'Valtravieso', 'El Grifo «Ariana»', 'Fenomenal'])
+    assert(names.includes(n), 'falta el vino ' + n);
+  for (const w of wines)
+    for (const f of ['story_en', 'notes_en', 'grapeSelection_en', 'winemaking_en'])
+      assert(w[f] && String(w[f]).trim(), `vino ${w.id} sin ${f}`);
+  // Por copa: exactamente los diez de la página «vinos por copa» de la carta
+  const glassIds = wines.filter(w => w.glass).map(w => w.id).sort((a, b) => a - b);
+  assert(JSON.stringify(glassIds) === JSON.stringify([8, 32, 35, 62, 96, 106, 107, 109, 112, 121]),
+    'los vinos por copa no coinciden con la carta: ' + glassIds.join(','));
+  // El juego sensorial cubre también los nuevos
+  const vc = JSON.parse(read('data/vinos-content.json'));
+  for (const w of wines) if (w.id >= 121) assert(vc.WINE_SNS[String(w.id)], 'WINE_SNS sin vino ' + w.id);
+});
+
+test('vinos EN: enciclopedia bilingüe, copa recomendada resucitada, origen traducido', () => {
+  // Auditoría EN jul 2026 («no está todo traducido»): examples/guest de la
+  // enciclopedia se pintaban siempre en español; una _wineGlassType duplicada
+  // (nombres en español) machacaba a la de claves y el panel «Copa
+  // recomendada» nunca aparecía; el origen salía como «Hungría» en inglés.
+  const vc = JSON.parse(read('data/vinos-content.json'));
+  for (const e of vc.WINE_ENCYCLOPEDIA) {
+    if (e.examples) assert(e.examples_en, 'ficha ' + e.id + ' sin examples_en');
+    if (e.guest) assert(e.guest_en, 'ficha ' + e.id + ' sin guest_en');
+  }
+  assert(/e\.examples_en\|\|e\.examples/.test(html) && /e\.guest_en\|\|e\.guest/.test(html),
+    'el render de la enciclopedia debe usar los campos _en');
+  assert((html.match(/function _wineGlassType\(/g) || []).length === 1,
+    'sigue habiendo una _wineGlassType duplicada');
+  const g = html.slice(html.indexOf('function _wineGlassType('), html.indexOf('function _wineGlassType(') + 1200);
+  assert(/'flute'/.test(g) && /'borgona'/.test(g), '_wineGlassType debe devolver claves de GLASS_TYPES');
+  for (const gt of Object.values(vc.GLASS_TYPES)) assert(gt.use_en, 'GLASS_TYPES sin use_en');
+  assert(/glass\.use_en\|\|glass\.use/.test(html), 'el panel de copa debe usar use_en');
+  assert(/const _ORIGIN_EN = \{'Francia':'France'/.test(html) && /function _wineOrigin\(/.test(html),
+    'falta el traductor de origen _wineOrigin');
+  assert((html.match(/_wineOrigin\(w\.origin\)/g) || []).length >= 5,
+    'las tarjetas deben pintar el origen con _wineOrigin');
+  assert(/'Crianza en barrica':'Barrel-aged'/.test(html), '_wineStoryTags debe traducir las etiquetas');
+});
+
 test('data/vinos-content.json keys match what loadVinosContent() assigns', () => {
   const content = JSON.parse(read('data/vinos-content.json'));
   const jsonKeys = Object.keys(content).sort();
