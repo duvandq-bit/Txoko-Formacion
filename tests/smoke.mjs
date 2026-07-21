@@ -1728,7 +1728,7 @@ test('"Which ingredient is NOT in this dish?" rejects substring-ambiguous fakes'
   // The fix added a bidirectional substring filter so we never produce
   // questions like "Which is NOT in this dish? Egg / Egg yolk / Squid / Onion"
   // where the fake ("Egg") is a substring of a real ingredient ("Egg yolk").
-  const m = /const fakeIng = _djShuffle\(otherIngs\.filter\(i => \{([\s\S]*?)\}\)\)/.exec(html);
+  const m = /fakeIng = _djShuffle\(otherIngs\.filter\(i => \{([\s\S]*?)\}\)\)/.exec(html);
   assert(m, 'fake-ingredient filter signature changed — bug-2 guard may be gone');
   const body = m[1];
   // Both directions of substring overlap must be filtered out.
@@ -2355,7 +2355,9 @@ test('auditoría de botones: toda sesión interactiva tiene salida y no repinta 
   assert(/function abortAllergenTest\(\)/.test(html) && /onclick="abortAllergenTest\(\)"/.test(html),
     'el simulacro de alérgenos debe tener botón de salida');
   const raq = html.slice(html.indexOf('function renderAllergenQuestion()'), html.indexOf('function renderAllergenQuestion()') + 700);
-  assert(/if\(!allergenTestState \|\| currentTab!=='exam'\) return;/.test(raq),
+  // Tab-aware desde jul 2026: el drill vive en Aprender, así que la guarda
+  // compara contra la pestaña de lanzamiento registrada (no 'exam' fijo).
+  assert(/if\(!allergenTestState \|\| currentTab!==\(allergenTestState\.tab\|\|'exam'\)\) return;/.test(raq),
     'renderAllergenQuestion debe cortar el repintado tras abandono o navegación');
   assert(/function abortRemoteDuel\(\)/.test(html) && /onclick="abortRemoteDuel\(\)"/.test(html),
     'los duelos remotos deben tener botón de abandono');
@@ -5226,6 +5228,45 @@ test('custom_dishes: escrituras por Edge Function gateada, no anon directo', () 
   // el PIN de supervisor se guarda en memoria al autenticar y se borra al salir
   assert(/let _supPin\s*=\s*null/.test(html) && /_supPin\s*=\s*entered/.test(html) && /_supPin\s*=\s*null;/.test(html),
     '_supPin debe fijarse al autenticar y limpiarse al salir');
+});
+
+test('simulacro de alérgenos: abre desde Aprender y sale hacia donde se lanzó', () => {
+  // Reporte del propietario (jul 2026): «el simulacro de alérgenos no
+  // funciona». El drill se movió de Examen a Aprender → Repaso, pero la
+  // guarda anti-repintado seguía comparando currentTab con 'exam' fijo, así
+  // que renderAllergenQuestion salía sin pintar y el toque no hacía nada.
+  assert(/startTime: Date\.now\(\), cat, tab: currentTab/.test(html),
+    'startAllergenTest debe registrar la pestaña de lanzamiento en el estado');
+  assert(/if\(!allergenTestState \|\| currentTab!==\(allergenTestState\.tab\|\|'exam'\)\) return;/.test(html),
+    'la guarda anti-repintado debe comparar contra la pestaña registrada, no contra exam fijo');
+  assert(!/if\(!allergenTestState \|\| currentTab!=='exam'\) return;/.test(html),
+    'la guarda antigua (exam fijo) no debe volver — mataba el drill desde Aprender');
+  // La salida ← vuelve a Aprender si se lanzó desde ahí (antes saltaba a Examen)
+  const abortFn = html.slice(html.indexOf('function abortAllergenTest'), html.indexOf('function renderAllergenQuestion'));
+  assert(/_subTab\.aprender='smart';\s*showTab\('aprender'\)/.test(abortFn) && /else renderExam\(\)/.test(abortFn),
+    'abortAllergenTest debe volver a Aprender cuando el drill se lanzó desde ahí');
+  // Y el punto de entrada sigue existiendo en el terminal de Repaso
+  assert(/onclick="startAllergenTest\(null\)" class="ri-drill"/.test(html),
+    'la tarjeta del simulacro debe seguir en el terminal de Repaso Inteligente');
+});
+
+test('quiz del Viaje del plato: ingrediente falso limpio y de la misma categoría', () => {
+  // Reporte del propietario (jul 2026): pregunta del Flan marmolado con
+  // respuesta «brócoli» — el split(',') crudo dejaba tokens rotos
+  // ("brócoli)", "Flan: Leche") y el falso salía de CUALQUIER plato, así que
+  // la pregunta se respondía por absurdo. Ahora comparte tokenizador con los
+  // escenarios y el falso solo sale de platos hermanos de categoría.
+  const djGen = html.slice(html.indexOf('function _djGenerateQuiz(dish){'), html.indexOf('var allergenData_en'));
+  assert(/const ingredients = _simExtractIngredients\(dish\);/.test(djGen),
+    'los ingredientes reales del quiz deben pasar por _simExtractIngredients (limpia paréntesis)');
+  assert(!/dish\.ingredients\.split\(','\)/.test(djGen),
+    'el split(",") crudo no debe volver — producía opciones rotas tipo "brócoli)"');
+  assert(/d\.cat===dish\.cat\)/.test(djGen),
+    'el ingrediente falso debe salir SOLO de platos de la misma categoría');
+  assert(/_simIngredientOverlapsDish\(i, dish\)/.test(djGen),
+    'el falso debe pasar el filtro de sinónimos (papa/patata) para no mentir al huésped');
+  assert(!/Aceite de trufa/.test(djGen),
+    'sin relleno inventado: si no hay falso válido, la pregunta cae al fallback de historia/recuento');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

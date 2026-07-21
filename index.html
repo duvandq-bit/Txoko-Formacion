@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.290">
+<meta name="app-version" content="7.291">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1549,7 +1549,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.290';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.291';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3851,27 +3851,36 @@ function _djGenerateQuiz(dish){
   });
 
   // Q3: Ingredient or storytelling question
-  const ingredients = dish.ingredients ? dish.ingredients.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  // Tokenización compartida con los escenarios (_simExtractIngredients): parte
+  // por comas/puntos/dos puntos Y limpia paréntesis. El split(',') crudo de
+  // antes producía opciones rotas tipo "brócoli)" o "Flan: Leche" (reporte del
+  // propietario: pregunta del Flan marmolado con respuesta «brócoli»).
+  const ingredients = _simExtractIngredients(dish);
   // Ingredientes reales ÚNICOS (case-insensitive) que caben como opción. El
   // dedupe evita opciones repetidas (p. ej. "Azúcar, Azúcar" en Goxua); exigir
   // 3 evita preguntas de 3 opciones (Chateaubriand: su nombre largo no cabe).
   const _seenIng = new Set();
   const realIngPool = ingredients.filter(i=>{
-    if(i.length<=2 || i.length>=30) return false;
     const il=i.toLowerCase(); if(_seenIng.has(il)) return false; _seenIng.add(il); return true;
   });
+  // "Which ingredient is NOT in this dish?" — el falso sale SOLO de platos de
+  // la MISMA categoría (misma regla que los escenarios: un brócoli en una
+  // pregunta de postre se responde por absurdo y no entrena nada).
+  let fakeIng = null;
   if(realIngPool.length >= 3){
-    // "Which ingredient is NOT in this dish?"
-    let otherDishes = _shiftDishes(allDishes.filter(d=>d.id!==dish.id && d.ingredients));
-    if(otherDishes.length < 3) otherDishes = allDishes.filter(d=>d.id!==dish.id && d.ingredients);
-    const otherIngs = otherDishes.flatMap(d=>d.ingredients.split(',').map(s=>s.trim()).filter(Boolean));
+    const sameCat = allDishes.filter(d=>d.id!==dish.id && d.id!==103 && d.ingredients && d.cat===dish.cat);
+    let otherDishes = _shiftDishes(sameCat);
+    if(otherDishes.length === 0) otherDishes = sameCat;
+    const otherIngs = otherDishes.flatMap(d=>_simExtractIngredients(d));
     const dishIngsLow = ingredients.map(i=>i.toLowerCase());
-    const fakeIng = _djShuffle(otherIngs.filter(i => {
-      if(i.length <= 2 || i.length >= 30) return false;
+    fakeIng = _djShuffle(otherIngs.filter(i => {
       const il = i.toLowerCase();
       if(dishIngsLow.includes(il)) return false;
-      return !dishIngsLow.some(real => real.includes(il) || il.includes(real));
-    }))[0] || (_en?'Truffle oil':'Aceite de trufa');
+      if(dishIngsLow.some(real => real.includes(il) || il.includes(real))) return false;
+      return !_simIngredientOverlapsDish(i, dish);
+    }))[0] || null;
+  }
+  if(fakeIng){
     const realIngs = _djShuffle(realIngPool).slice(0,3);
     const allOpts = _djShuffle([fakeIng, ...realIngs]);
     questions.push({
@@ -20206,7 +20215,10 @@ function buildAllergenQuestions(cat) {
 function startAllergenTest(cat) {
   const questions = buildAllergenQuestions(cat);
   if (!questions.length) { alert(LANG==='en'?'Not enough data':'Sin datos suficientes'); return; }
-  allergenTestState = { questions, index: 0, score: 0, answered: false, startTime: Date.now(), cat };
+  // La pestaña de lanzamiento manda: el simulacro vive hoy en Aprender →
+  // Repaso, pero la guarda anti-repintado comparaba contra 'exam' fijo y el
+  // drill no llegaba a pintarse (toque sin efecto, reporte del propietario).
+  allergenTestState = { questions, index: 0, score: 0, answered: false, startTime: Date.now(), cat, tab: currentTab };
   renderAllergenQuestion();
 }
 
@@ -20214,15 +20226,17 @@ function startAllergenTest(cat) {
 // examen — no había forma de volver atrás).
 function abortAllergenTest(){
   if(!confirm(LANG==='en'?'Exit the drill? Progress in this session will be lost.':'¿Salir del simulacro? Se perderá el progreso de esta sesión.')) return;
+  const _tab = allergenTestState && allergenTestState.tab;
   allergenTestState=null;
-  renderExam();
+  if(_tab === 'aprender'){ _subTab.aprender='smart'; showTab('aprender'); }
+  else renderExam();
 }
 
 function renderAllergenQuestion() {
   // Guarda anti-repintado: el setTimeout de 1,8 s tras responder no debe
   // volver a pintar el simulacro si el usuario lo abandonó o navegó a otra
   // pestaña mientras se mostraba el feedback.
-  if(!allergenTestState || currentTab!=='exam') return;
+  if(!allergenTestState || currentTab!==(allergenTestState.tab||'exam')) return;
   const { questions, index } = allergenTestState;
   if (index >= questions.length) { renderAllergenResults(); return; }
   const q = questions[index];
