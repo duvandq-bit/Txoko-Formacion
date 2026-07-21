@@ -5269,6 +5269,29 @@ test('quiz del Viaje del plato: ingrediente falso limpio y de la misma categorí
     'sin relleno inventado: si no hay falso válido, la pregunta cae al fallback de historia/recuento');
 });
 
+test('ficha técnica del plato: muestra el maridaje priorizando la copa', () => {
+  // Reporte del propietario (jul 2026): «en la ficha técnica de los platos no
+  // aparece el maridaje». renderRepasoDishDetail no tenía tarjeta de vinos.
+  assert(/function _dishPairWines\(dish, limit\)\{/.test(html),
+    'debe existir el helper _dishPairWines que cruza plato ↔ vinos');
+  const helper = html.slice(html.indexOf('function _dishPairWines(dish, limit){'), html.indexOf('function renderRepasoDishDetail'));
+  // Prioridad de sala: primero los servidos POR COPA, luego los recomendados
+  assert(/w\.glass!=null\?0:1\)\*10 \+ \(w\.recommended\?0:1\)/.test(helper),
+    'el maridaje debe priorizar copa (glass) y luego recomendados');
+  assert(/return null;/.test(helper),
+    'debe devolver null si la lista de vinos aún no ha cargado (carga diferida)');
+  // La ficha inserta la tarjeta y sabe recargar cuando llegan los vinos
+  const ficha = html.slice(html.indexOf('function renderRepasoDishDetail(dishId){'), html.indexOf('function changeRepasoTopic'));
+  assert(/const _pairWines = _dishPairWines\(dish, 3\);/.test(ficha),
+    'la ficha debe calcular el maridaje (máx 3)');
+  assert(/🍷 \$\{LANG==='en'\?'Wine pairing':'Maridaje'\}/.test(ficha),
+    'la ficha debe pintar una tarjeta de Maridaje');
+  assert(/\$\{maridajeHtml\}/.test(ficha),
+    'la tarjeta de maridaje debe insertarse en el cuerpo de la ficha');
+  assert(/if\(_pairWines === null && typeof loadLazyData/.test(ficha) && /repasoView==='dish' && repasoDishId===dishId\) renderRepasoDishDetail\(dishId\)/.test(ficha),
+    'si los vinos no habían cargado, la ficha debe recargarse al recibirlos (solo si sigue abierta)');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
