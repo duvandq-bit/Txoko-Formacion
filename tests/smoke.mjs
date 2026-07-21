@@ -2524,6 +2524,15 @@ test('ghost inspection shuffles scene options per session', () => {
   assert(/_gBase\.scenes\.map/.test(start), 'ghost session copy must be built at inspection start');
   const render = html.slice(html.indexOf('function renderGhostScene'), html.indexOf('function ghostChoose'));
   assert(!/GHOST_SCENARIOS/.test(render), 'renderGhostScene must read the shuffled session copy, never the authored array');
+  // Anti-repetición (jul 2026: "se repiten mucho las mismas situaciones"): la
+  // elección recuerda los últimos vistos y evita repetir; hay botón "Otra".
+  assert(/function _ghostPick\(exclude\)/.test(html) && /txk_ghost_recent/.test(html),
+    'debe existir _ghostPick con memoria de escenarios recientes');
+  assert(/const _gBase = _ghostPick\(/.test(start),
+    'startGhostInspection debe elegir vía _ghostPick (sin repetición)');
+  const intro = html.slice(html.indexOf('function renderGhostIntro'), html.indexOf('function renderGhostScene'));
+  assert(/startGhostInspection\(true\)/.test(intro) && /(Otra situación|Another situation)/.test(intro),
+    'el intro debe ofrecer «Otra situación» (reroll)');
   // Shuffle-safety shape guard: options must be self-contained (label+effects+
   // feedback travel together, both languages) so reordering needs no index remap.
   const ghost = JSON.parse(read('data/ghost-scenarios.json'));

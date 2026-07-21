@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.287">
+<meta name="app-version" content="7.288">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1541,7 +1541,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.287';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.288';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -24354,13 +24354,34 @@ let GHOST_SCENARIOS = null;
 
 let ghostScenario=null, ghostSceneIdx=0, ghostEffects=[], ghostChoices=[];
 
-async function startGhostInspection(){
+// Selección sin repetición (reporte del propietario: "se repiten mucho las
+// mismas situaciones"). Antes elegía con Math.random() puro sin memoria, así
+// que en pocas partidas salía el mismo escenario. Recordamos los últimos ~2/3
+// vistos en localStorage y elegimos entre el resto; cuando el pozo se agota,
+// se reinicia. Se mantiene la sorpresa de auditoría (no eliges el estándar).
+function _ghostPick(exclude){
+  const all = GHOST_SCENARIOS;
+  const CAP = Math.min(all.length - 1, Math.max(6, Math.round(all.length * 2 / 3)));
+  let recent = [];
+  try { recent = JSON.parse(localStorage.getItem('txk_ghost_recent') || '[]'); } catch(_){}
+  let pool = all.filter(s => !recent.includes(s.id) && s.id !== exclude);
+  if(!pool.length){ recent = []; pool = all.filter(s => s.id !== exclude); }
+  if(!pool.length) pool = all.slice();
+  const chosen = pool[Math.floor(Math.random() * pool.length)];
+  recent.push(chosen.id);
+  while(recent.length > CAP) recent.shift();
+  try { localStorage.setItem('txk_ghost_recent', JSON.stringify(recent)); } catch(_){}
+  return chosen;
+}
+
+async function startGhostInspection(reroll){
   try { if(!GHOST_SCENARIOS) GHOST_SCENARIOS = await loadLazyData('data/ghost-scenarios.json', LANG==='en'?'Ghost Service scenarios':'escenarios de Servicio Fantasma'); } catch(_){ return; }
   // Session copy with each scene's options shuffled: measured on the authored
   // data, the all-standards-met option sat on position B in 95/96 scenes —
   // fixed render order let position do the answering. Options are self-contained
   // (label+effects+feedback travel together), so no index remap is needed.
-  const _gBase = GHOST_SCENARIOS[Math.floor(Math.random()*GHOST_SCENARIOS.length)];
+  // reroll=true (botón "Otra situación") excluye la actual para garantizar cambio.
+  const _gBase = _ghostPick(reroll && ghostScenario ? ghostScenario.id : null);
   ghostScenario = Object.assign({}, _gBase, {scenes: _gBase.scenes.map(sc => Object.assign({}, sc, {options: _lqaShuffle(sc.options)}))});
   ghostSceneIdx=0;
   ghostEffects=[];
@@ -24393,6 +24414,7 @@ function renderGhostIntro(){
       <div style="font-size:.78rem;color:var(--parch3);line-height:1.6">${LANG==='en'?'At the end, the inspector will file a report on YOUR service \u2014 with the exact standards you met or failed.':'Al final, el inspector presentar\u00e1 un informe sobre TU servicio \u2014 con los est\u00e1ndares exactos que cumpliste o fallaste.'}</div>
     </div>
     <button onclick="renderGhostScene()" style="width:100%;padding:1rem;background:linear-gradient(135deg,var(--sage),var(--green-deep));border:none;border-radius:var(--r);color:#fff;font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 4px 16px rgba(77,138,94,.25)">${LANG==='en'?'Start Service':'Comenzar el Servicio'} \u2192</button>
+    <button onclick="startGhostInspection(true)" style="width:100%;margin-top:.5rem;padding:.7rem;background:transparent;border:1.5px solid rgba(196,154,60,.45);border-radius:var(--r2);color:var(--gold-deep);font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer">\u21bb ${LANG==='en'?'Another situation':'Otra situaci\u00f3n'}</button>
   </div>`;
 }
 
