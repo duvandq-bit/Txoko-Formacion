@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.285">
+<meta name="app-version" content="7.286">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1541,7 +1541,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.285';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.286';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -20440,6 +20440,67 @@ function renderSupAnalytics(allEmps, empNames){
     </div>`;
   }).join('');
 
+  // ── ALÉRGENOS — seguridad del equipo (crítico: quién es un riesgo) ──
+  // Combina la precisión de alérgenos en examen (topicScores.allergens) con el
+  // mejor resultado del Simulacro (allergenBest). Peor primero, ⚠ por debajo
+  // de 80%. Los que aún no lo han entrenado se listan aparte.
+  const allergenRows = empNames.map(n => {
+    const e = allEmps[n];
+    const ts = (e.topicScores||{}).allergens;
+    const examPct = ts && ts.total>0 ? Math.round(ts.correct/ts.total*100) : null;
+    const drill = (e.allergenBest!=null && e.allergenBest>0) ? e.allergenBest : null;
+    const val = examPct!=null ? examPct : drill;
+    return {name:n, examPct, drill, wrong: ts?ts.total-ts.correct:0, total: ts?ts.total:0, val};
+  });
+  const allergenTrained = allergenRows.filter(r => r.val!=null).sort((a,b)=>a.val-b.val);
+  const allergenUntrained = allergenRows.filter(r => r.val==null);
+  const allergenHTML = allergenTrained.map(r => {
+    const risk = r.val < 80;
+    const col = r.val>=90?'var(--sage)':r.val>=80?'var(--gold)':'var(--rose)';
+    const detail = [];
+    if(r.examPct!=null) detail.push(`${LANG==='en'?'exam':'examen'} ${r.examPct}%${r.total?` · ${r.wrong} ${LANG==='en'?'wrong':'fallos'}`:''}`);
+    if(r.drill!=null) detail.push(`${LANG==='en'?'drill':'simulacro'} ${r.drill}%`);
+    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid ${risk?'rgba(196,112,104,.18)':'var(--line)'}">
+      <div style="width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(r.name,26)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.8rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${risk?'⚠ ':''}${r.name}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">${detail.join(' · ')}</div>
+      </div>
+      <span style="font-family:'DM Mono',monospace;font-size:.78rem;font-weight:700;color:${col};width:36px;text-align:right">${r.val}%</span>
+    </div>`;
+  }).join('');
+
+  // ── EXÁMENES — resumen y precisión por categoría de carta ──
+  let exN=0, exC=0, exT=0, exTime=0, exTimeN=0;
+  const examCatAgg={};
+  empNames.forEach(n => (allEmps[n].sessions||[]).forEach(s => {
+    exN++; exC += s.score||0; exT += s.total||0;
+    if(s.time){ exTime += s.time; exTimeN++; }
+    const cat = s.cat && s.cat!=='all' ? s.cat : null;
+    if(cat){ if(!examCatAgg[cat]) examCatAgg[cat]={correct:0,total:0}; examCatAgg[cat].correct += s.score||0; examCatAgg[cat].total += s.total||0; }
+  }));
+  const exAcc = exT?Math.round(exC/exT*100):0;
+  const exAvgTime = exTimeN?Math.round(exTime/exTimeN):0;
+  const examCatRows = Object.entries(examCatAgg).filter(([,v])=>v.total>0)
+    .map(([k,v])=>({label:k, pct:Math.round(v.correct/v.total*100), wrong:v.total-v.correct, total:v.total}))
+    .sort((a,b)=>a.pct-b.pct);
+  const examCatHTML = examCatRows.map(r => {
+    const col = r.pct>=80?'var(--sage)':r.pct>=50?'var(--gold)':'var(--rose)';
+    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem 0;border-bottom:1px solid var(--line)">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.8rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.label}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--rose)">${r.wrong} ${LANG==='en'?'wrong':'fallos'} / ${r.total}</div>
+      </div>
+      <div style="width:70px;background:var(--ink3);border-radius:4px;height:6px"><div style="width:${r.pct}%;background:${col};border-radius:4px;height:6px"></div></div>
+      <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${col};width:30px;text-align:right">${r.pct}%</span>
+    </div>`;
+  }).join('');
+
+  // ── PLATOS — punto ciego: platos sin ningún acierto del equipo ──
+  const dishTeamCorrect={};
+  empNames.forEach(n => Object.entries(allEmps[n].examCorrect||{}).forEach(([id,cnt])=>{ dishTeamCorrect[id]=(dishTeamCorrect[id]||0)+(cnt||0); }));
+  const neverRight = DISHES.filter(d => !(dishTeamCorrect[d.id]>0));
+
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
       <button onclick="renderSupDashboard()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
@@ -20451,6 +20512,13 @@ function renderSupAnalytics(allEmps, empNames){
       <div class="stat-tile"><div class="stat-num">${totalExams}</div><div class="stat-lbl">Exámenes totales</div></div>
       <div class="stat-tile"><div class="stat-num">${Math.round(empNames.reduce((a,n)=>(a+(allEmps[n].xp||0)),0)/Math.max(1,empNames.length)).toLocaleString()}</div><div class="stat-lbl">XP medio</div></div>
     </div>
+
+    ${(allergenTrained.length || allergenUntrained.length) ? `
+    <div style="background:rgba(196,112,104,.05);border:1px solid rgba(196,112,104,.2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">⚠ ${LANG==='en'?'Allergens — team safety':'Alérgenos — seguridad del equipo'}</div>
+      ${allergenHTML}
+      ${allergenUntrained.length ? `<div style="margin-top:.6rem;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);line-height:1.5">${LANG==='en'?'Not trained on allergens yet':'Aún sin entrenar alérgenos'}: ${allergenUntrained.map(r=>escapeHTML(r.name)).join(', ')}</div>` : ''}
+    </div>` : ''}
 
     ${weeks.length ? `
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
@@ -20464,6 +20532,17 @@ function renderSupAnalytics(allEmps, empNames){
       ${topicHTML}
     </div>` : ''}
 
+    ${exN ? `
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">${LANG==='en'?'Exams — team overview':'Exámenes — resumen del equipo'}</div>
+      <div class="stats-row" style="margin-bottom:${examCatRows.length?'.75rem':'0'}">
+        <div class="stat-tile"><div class="stat-num">${exN}</div><div class="stat-lbl">${LANG==='en'?'Exams taken':'Exámenes'}</div></div>
+        <div class="stat-tile"><div class="stat-num" style="color:${exAcc>=80?'var(--sage)':exAcc>=50?'var(--gold)':'var(--rose)'}">${exAcc}%</div><div class="stat-lbl">${LANG==='en'?'Avg accuracy':'Precisión media'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${exAvgTime?Math.floor(exAvgTime/60)+'m '+(exAvgTime%60)+'s':'—'}</div><div class="stat-lbl">${LANG==='en'?'Avg time':'Tiempo medio'}</div></div>
+      </div>
+      ${examCatRows.length ? `<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin:.2rem 0 .4rem">${LANG==='en'?'Accuracy by menu category':'Precisión por categoría de carta'}</div>${examCatHTML}` : ''}
+    </div>` : ''}
+
     ${perEmp.length ? `
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">${LANG==='en'?'Performance by employee — who needs help':'Rendimiento por empleado — quién necesita apoyo'}</div>
@@ -20473,6 +20552,7 @@ function renderSupAnalytics(allEmps, empNames){
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Platos menos dominados</div>
       ${hardestRows}
+      ${neverRight.length ? `<div style="margin-top:.7rem;padding-top:.6rem;border-top:1px dashed var(--line);font-family:'DM Mono',monospace;font-size:.58rem;color:var(--rose);line-height:1.5">⚠ ${neverRight.length} ${LANG==='en'?'dishes with no correct answer from anyone yet':'platos sin ningún acierto del equipo todavía'}${neverRight.length<=6?': '+neverRight.map(d=>escapeHTML(d.name)).join(', '):''}</div>` : ''}
     </div>
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">

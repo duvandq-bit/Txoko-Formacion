@@ -834,6 +834,13 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   const lqaFn = html.slice(html.indexOf('function renderSupLqaStats'), html.indexOf('function renderSupNotifSender'));
   assert(/const empWeakCat=\(e\)=>/.test(lqaFn) && /empWeakCat\(r\.e\)/.test(lqaFn),
     'la vista LQA debe mostrar la categoría más floja de cada empleado');
+  // Analítica profunda de exámenes, platos y alérgenos (jul 2026).
+  assert(/const allergenRows = empNames\.map/.test(ana) && /Alérgenos — seguridad del equipo/.test(ana) && /allergenBest/.test(ana),
+    'debe existir la seguridad de alérgenos por empleado');
+  assert(/const examCatAgg=\{\}/.test(ana) && /Exámenes — resumen del equipo/.test(ana) && /Precisión por categoría de carta/.test(ana),
+    'debe existir el resumen de exámenes y la precisión por categoría de carta');
+  assert(/const dishTeamCorrect=\{\}/.test(ana) && /const neverRight = DISHES\.filter/.test(ana) && /sin ningún acierto del equipo/.test(ana),
+    'debe existir el punto ciego de platos sin aciertos');
 });
 
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
