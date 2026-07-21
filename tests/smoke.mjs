@@ -144,6 +144,27 @@ test('data/lqa-situations.json is valid JSON (non-empty array)', () => {
   assert(Array.isArray(lqa) && lqa.length > 0, 'not a non-empty array');
 });
 
+test('LQA situations coherence: own venue only, 24h Spanish clock, bilingual', () => {
+  // Revisión de coherencia (jul 2026): las situaciones se ambientan en el
+  // restaurante de formación; no deben nombrar otros outlets del hotel
+  // (Akira Back, etc.), la hora en español va en formato 24h (no AM/PM), y
+  // cada escena debe estar completa en ES + EN.
+  const lqa = JSON.parse(read('data/lqa-situations.json'));
+  for (const s of lqa) {
+    assert(!/Akira/i.test(s.scn) && !/Akira/i.test(s.scn_en || ''),
+      `situación ${s.id} nombra un outlet ajeno (Akira)`);
+    assert(!/\b(?:AM|PM)\b/.test(s.scn),
+      `situación ${s.id} usa AM/PM en español — el reloj va en 24h`);
+    for (const k of ['scn', 'scn_en', 'q', 'q_en', 'expl', 'expl_en']) {
+      assert(typeof s[k] === 'string' && s[k].trim(), `situación ${s.id} sin ${k}`);
+    }
+    assert(Array.isArray(s.opts) && Array.isArray(s.opts_en) && s.opts.length === s.opts_en.length,
+      `situación ${s.id}: opts ES/EN descuadradas`);
+    assert(Number.isInteger(s.corr) && s.corr >= 0 && s.corr < s.opts.length,
+      `situación ${s.id}: índice correcto fuera de rango`);
+  }
+});
+
 test('data/themes.json venue registry is well-formed', () => {
   // Multi-restaurant registry: every venue needs a name and the 8 brand hexes
   // that applyTheme() injects; at least one venue must be enabled or the app
