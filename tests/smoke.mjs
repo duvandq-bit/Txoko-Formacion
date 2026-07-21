@@ -2458,6 +2458,32 @@ test('exam surfaces shuffle options: LQA exam/situations + wine quiz shape guard
   assert(/_inWindow/.test(wq) && /strictLen/.test(wq), 'wine quiz length-window two-pass pick missing');
 });
 
+test('ghost inspection shuffles scene options per session', () => {
+  // Measured on data/ghost-scenarios.json: the all-standards-met option sat on
+  // position B in 95/96 scenes, and the renderer painted the AUTHORED order —
+  // always pressing B scored a near-perfect inspection. startGhostInspection
+  // must build a session copy with each scene's options shuffled at runtime
+  // (never by reordering the JSON: the bias would return with the next authored
+  // scenario), and the scene renderer must read only that copy.
+  const start = html.slice(html.indexOf('async function startGhostInspection'), html.indexOf('function renderGhostIntro'));
+  assert(/options: _lqaShuffle\(sc\.options\)/.test(start),
+    'startGhostInspection must shuffle each scene\'s options via _lqaShuffle');
+  assert(/_gBase\.scenes\.map/.test(start), 'ghost session copy must be built at inspection start');
+  const render = html.slice(html.indexOf('function renderGhostScene'), html.indexOf('function ghostChoose'));
+  assert(!/GHOST_SCENARIOS/.test(render), 'renderGhostScene must read the shuffled session copy, never the authored array');
+  // Shuffle-safety shape guard: options must be self-contained (label+effects+
+  // feedback travel together, both languages) so reordering needs no index remap.
+  const ghost = JSON.parse(read('data/ghost-scenarios.json'));
+  for (const g of ghost) for (const sc of g.scenes) {
+    assert(Array.isArray(sc.options) && sc.options.length >= 3, `ghost ${g.id}/${sc.title}: expected >=3 options`);
+    for (const o of sc.options) {
+      assert(o.label && o.label_en && o.feedback && o.feedback_en, `ghost ${g.id}/${sc.title}: option missing bilingual label/feedback`);
+      assert(Array.isArray(o.effects) && o.effects.length && o.effects.every(e => typeof e.std === 'number' && typeof e.met === 'boolean'),
+        `ghost ${g.id}/${sc.title}: option missing well-formed effects`);
+    }
+  }
+});
+
 test('exam anti-echo: ingredients/history questions are reversed and redacted', () => {
   // Measured on the real menu: the correct option leaked dish-name words in
   // 74% (ingredients) / 83% (history) of questions. Those topics now ask in
