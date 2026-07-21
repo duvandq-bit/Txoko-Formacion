@@ -841,6 +841,25 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
     'debe existir el resumen de exámenes y la precisión por categoría de carta');
   assert(/const dishTeamCorrect=\{\}/.test(ana) && /const neverRight = DISHES\.filter/.test(ana) && /sin ningún acierto del equipo/.test(ana),
     'debe existir el punto ciego de platos sin aciertos');
+  // «Platos con más fallo»: ordenar por tasa de fallo REAL (intentos por
+  // plato), no por dominado auto-marcado (petición del propietario jul 2026).
+  assert(/const dishSeen = \{\}, dishCorr = \{\};/.test(ana) && /allEmps\[n\]\.examSeen\|\|\{\}/.test(ana),
+    'la analítica debe sumar intentos por plato (examSeen) para la tasa de fallo');
+  assert(/const corr = Math\.min\(dishCorr\[d\.id\]\|\|0, seen\)/.test(ana),
+    'los aciertos deben caparse a los intentos (examCorrect no puede exceder intentos)');
+  assert(/fail: seen \? Math\.round\(\(seen-corr\)\/seen\*100\) : null/.test(ana),
+    'la tasa de fallo = (intentos-aciertos)/intentos');
+  assert(/const byFail = failData\.length > 0;/.test(ana) && /failData\.sort\(\(a,b\) => \(b\.fail-a\.fail\)/.test(ana),
+    'debe ordenar por fallo desc cuando hay datos, con respaldo a menos-dominado');
+  assert(/Platos con más fallo \(examen\)/.test(ana) && /Dishes with the highest fail rate/.test(ana),
+    'el título debe reflejar el modo tasa de fallo (ES+EN)');
+  // Los intentos se registran en el examen y se sincronizan por extras.es
+  assert(/emp\.examSeen\[q\.dish\.id\]=\(emp\.examSeen\[q\.dish\.id\]\|\|0\)\+1;/.test(html),
+    'el examen debe contar intentos por plato (aciertos y fallos)');
+  assert(/es: emp\.examSeen\|\|\{\}/.test(html) && /emp\.examSeen\[id\]=Math\.max\(emp\.examSeen\[id\]\|\|0, x\.es\[id\]\|\|0\)/.test(html),
+    'examSeen debe sincronizarse por extras (compose + merge por máximo)');
+  assert(/examSeen: \(\(\) => \{ try \{ const x=JSON\.parse\(r\.extras\|\|'\{\}'\);/.test(html),
+    'el fetch del supervisor debe exponer examSeen desde extras.es');
   // Ficha individual del empleado (jul 2026): tocar un nombre abre su perfil.
   assert(/function renderSupEmployee\(name\)/.test(html), 'debe existir renderSupEmployee');
   const emp = html.slice(html.indexOf('function renderSupEmployee(name)'), html.indexOf('function renderSupNotifSender'));
