@@ -29,7 +29,9 @@ jobs:
       SUPA_URL: https://advkoujfgbrrjvqexrcu.supabase.co
       # Clave ANÓNIMA (pública, ya va en la app) — solo lectura.
       SUPA_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdmtvdWpmZ2Jycmp2cWV4cmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODAxODgsImV4cCI6MjA4ODc1NjE4OH0.4MTKzEy_c5x3eWjWJPfS216TTVAVNNlP1Wo_-h1Nt4c
-      TABLES: employees scores horarios custom_dishes
+      # employees: el rol anónimo tiene permiso por COLUMNA (no select=*), así
+      # que se listan las columnas explícitas (las mismas que usa la app).
+      EMP_COLS: name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras
     steps:
       - name: Preparar la rama backups (aislada de main)
         run: |
@@ -55,17 +57,29 @@ jobs:
           DATE=$(date -u +%F)
           DIR="backups/$DATE"
           mkdir -p "$DIR"
-          fail=0
-          for t in $TABLES; do
+          # tabla → columnas (select). employees necesita columnas explícitas
+          # (permiso por columna del rol anónimo); el resto admite select=*.
+          dump() {  # $1 = tabla, $2 = select
+            local t="$1" sel="$2" code
             code=$(curl -sS -o "$DIR/$t.json" -w '%{http_code}' \
               -H "apikey: $SUPA_KEY" -H "Authorization: Bearer $SUPA_KEY" \
-              "$SUPA_URL/rest/v1/$t?select=*") || code=000
+              "$SUPA_URL/rest/v1/$t?select=$sel") || code=000
             if [ "$code" != "200" ]; then
-              echo "⚠ $t → HTTP $code (guardo lista vacía como marcador)"
-              echo '[]' > "$DIR/$t.json"; fail=1
+              echo "⚠ $t → HTTP $code"; echo '[]' > "$DIR/$t.json"
             fi
-            echo "$t: $(wc -c < "$DIR/$t.json") bytes"
-          done
+            echo "$t: $(wc -c < "$DIR/$t.json") bytes (HTTP $code)"
+          }
+          dump employees "$EMP_COLS"
+          dump scores "*"
+          dump horarios "*"
+          dump custom_dishes "*"
+          # SALVAGUARDA: employees es la tabla crítica. Si vuelve vacía cuando
+          # debería tener datos, algo va mal (permiso/URL) → fallar en alto en
+          # vez de guardar una copia inútil en silencio.
+          if [ "$(tr -d ' \n' < "$DIR/employees.json")" = "[]" ]; then
+            echo "::error::La copia de employees salió VACÍA — se aborta para no guardar una copia inútil."
+            exit 1
+          fi
           git add backups/
           if git diff --cached --quiet; then
             echo "Sin cambios respecto a la última copia — no se confirma nada."
@@ -74,6 +88,3 @@ jobs:
             git push origin HEAD:backups
             echo "✓ Copia $DATE confirmada en la rama backups."
           fi
-          # No rompemos el job si alguna tabla no fue legible: la copia parcial
-          # (las tablas críticas SÍ se leen con la anónima) igualmente se guarda.
-          exit 0
