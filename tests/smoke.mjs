@@ -954,6 +954,25 @@ test('panel supervisor Fase 2b: cabecera de KPIs con impacto', () => {
     'la sección Hoy debe pintar la cabecera de KPIs en lugar de las stat-tiles pequeñas');
 });
 
+test('panel supervisor Fase 2c: analytics KPI, tarjeta con dominio, heatmap visual', () => {
+  const css = read('styles.css');
+  // ── Analytics: cabecera de KPIs (no las 3 stat-tiles planas) ──
+  const ana = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function renderSupLqaStats'));
+  assert(/class="sup-kpis"/.test(ana) && /Riesgo alérgenos/.test(ana) && /Allergen risk/.test(ana),
+    'la analítica debe abrir con una cabecera de KPIs (equipo/exámenes/precisión/riesgo)');
+  assert(!/<div class="stat-tile"><div class="stat-num">\$\{empNames\.length\}<\/div><div class="stat-lbl">Empleados/.test(ana),
+    'las 3 stat-tiles planas de la analítica deben haberse sustituido');
+  // ── Tarjeta de empleado: barra de dominio ──
+  assert(/\.sup-emp-dominio\{/.test(css) && /\.sup-emp-dominio-fill\{/.test(css), 'debe existir el CSS de la barra de dominio');
+  assert(/class="sup-emp-dominio"/.test(html) && /sup-emp-dominio-fill/.test(html),
+    'cada tarjeta de empleado debe mostrar la barra de dominio (platos dominados)');
+  // ── Heatmap: día pico destacado + total de 14 días ──
+  const heat = html.slice(html.indexOf('function renderSupActivityHeatmap'), html.indexOf('function renderSupScoreTrend'));
+  assert(/const total14=/.test(heat) && /const peak=/.test(heat), 'el heatmap debe calcular total y día pico');
+  assert(/const isPeak=d\.count>0 && d\.count===maxCount;/.test(heat) && /linear-gradient\(180deg,var\(--gold\),var\(--gold-deep\)\)/.test(heat),
+    'el heatmap debe destacar el día más activo en dorado sólido');
+});
+
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
   // Reporte del propietario (iOS/Android): la ✕ vivía DENTRO del área con
   // scroll (desaparecía al desplazarse), sin área táctil ni safe-area, y no

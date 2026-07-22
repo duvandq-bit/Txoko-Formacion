@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.297">
+<meta name="app-version" content="7.298">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1549,7 +1549,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.297';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.298';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -19581,17 +19581,23 @@ function renderSupActivityHeatmap(allEmps){
     data.push({date:dateStr, label:dayLabel, count, day:dt.getDate()});
   }
   const maxCount=Math.max(...data.map(d=>d.count),1);
+  const total14=data.reduce((a,d)=>a+d.count,0);
+  const peak=data.reduce((a,d)=>d.count>a.count?d:a,data[0]);
 
   return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
-    <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">${LANG==='en'?'Team Activity — Last 14 Days':'Actividad del Equipo — Últimos 14 Días'}</div>
-    <div style="display:flex;gap:4px;align-items:end;height:60px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.7rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase">${LANG==='en'?'Team Activity — 14 Days':'Actividad — 14 Días'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3)">${total14} ${LANG==='en'?'exams':'exámenes'}${total14>0?` · ${LANG==='en'?'peak':'pico'} ${peak.count}`:''}</div>
+    </div>
+    <div style="display:flex;gap:4px;align-items:end;height:84px">
       ${data.map(d=>{
-        const h=Math.max(8,Math.round(d.count/maxCount*52));
-        const opacity=d.count?Math.max(.25,d.count/maxCount):.06;
-        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-          <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch3)">${d.count||''}</div>
-          <div style="width:100%;height:${h}px;background:rgba(200,169,110,${opacity});border-radius:3px;transition:height .3s"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:.42rem;color:var(--parch4)">${d.label}</div>
+        const h=Math.max(6,Math.round(d.count/maxCount*70));
+        const isPeak=d.count>0 && d.count===maxCount;
+        const bg=d.count?(isPeak?'linear-gradient(180deg,var(--gold),var(--gold-deep))':`rgba(196,154,60,${Math.max(.28,d.count/maxCount*.9)})`):'rgba(28,42,34,.05)';
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0">
+          <div style="font-family:'DM Mono',monospace;font-size:.44rem;color:${isPeak?'var(--gold-deep)':'var(--parch3)'};font-weight:${isPeak?'700':'400'};height:.55rem">${d.count||''}</div>
+          <div style="width:100%;height:${h}px;background:${bg};border-radius:3px 3px 1px 1px;transition:height .3s"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.44rem;color:var(--parch4)">${d.label}</div>
         </div>`;
       }).join('')}
     </div>
@@ -19887,10 +19893,16 @@ function renderSupDashboard(silent){
       return `<details class="sup-emp-card"${(window._supOpenEmps&&window._supOpenEmps.has(name))?' open':''} data-emp="${escapeHTML(name)}" ontoggle="_supEmpToggle(this)">
         <summary class="sup-emp-header">
           <div class="sup-emp-avatar">${renderSmallAvatar(name, 36)}</div>
-          <div style="flex:1">
+          <div style="flex:1;min-width:0">
             <div class="sup-emp-name">${escapeHTML(name)}${isCloud?` <span style="font-size:.55rem;color:var(--gold);font-family:'DM Mono',monospace;opacity:.7">○</span>`:''}</div>
             <div style="font-size:.65rem;color:var(--parch3);display:flex;align-items:center;gap:.2rem">${tunicLevelIcon(lvl.level,lvl.color,13)} ${lvl.title} · Nv.${lvl.level}</div>
             ${getCertifications(emp).map(c=>`<span title="${catLocal(c)}" style="font-size:.65rem">${CAT_ICONS[c]||''}</span>`).join('')}
+            ${(()=>{ const dom=Math.round(known/Math.max(1,(typeof DISHES!=='undefined'?DISHES.length:1))*100);
+              const dc=dom>=80?'var(--sage)':dom>=40?'var(--gold)':'var(--rose)';
+              return `<div class="sup-emp-dominio" title="${LANG==='en'?'Dishes mastered':'Platos dominados'}">
+                <div class="sup-emp-dominio-track"><div class="sup-emp-dominio-fill" style="width:${dom}%;background:${dc}"></div></div>
+                <span style="font-family:'DM Mono',monospace;font-size:.5rem;color:${dc};font-weight:700">${dom}%</span>
+              </div>`; })()}
           </div>
           <span class="sup-emp-level">${activityLabel}</span>
           <span class="sup-emp-chev" aria-hidden="true">▾</span>
@@ -20714,11 +20726,24 @@ function renderSupAnalytics(allEmps, empNames){
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)"> Analytics del equipo</div>
     </div>
 
-    <div class="stats-row" style="margin-bottom:1rem">
-      <div class="stat-tile"><div class="stat-num">${empNames.length}</div><div class="stat-lbl">Empleados</div></div>
-      <div class="stat-tile"><div class="stat-num">${totalExams}</div><div class="stat-lbl">Exámenes totales</div></div>
-      <div class="stat-tile"><div class="stat-num">${Math.round(empNames.reduce((a,n)=>(a+(allEmps[n].xp||0)),0)/Math.max(1,empNames.length)).toLocaleString()}</div><div class="stat-lbl">XP medio</div></div>
-    </div>
+    ${(()=>{
+      // Cabecera de KPIs de la analítica (mismo lenguaje que el dashboard).
+      const risk = allergenRows.filter(r => r.val==null || r.val<80).length;
+      const accCls = !exN?'info':exAcc>=80?'good':exAcc>=50?'warn':'bad';
+      const IC = {
+        team:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+        exam:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+        acc:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>',
+        shield:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+      };
+      const card = (cls, icon, num, lbl, sub) => `<div class="sup-kpi ${cls}"><div class="sup-kpi-top"><span class="sup-kpi-icon">${icon}</span><span class="sup-kpi-lbl">${lbl}</span></div><div class="sup-kpi-num">${num}</div><div class="sup-kpi-sub">${sub}</div></div>`;
+      return `<div class="sup-kpis">
+        ${card('info', IC.team, empNames.length, LANG==='en'?'Team':'Equipo', LANG==='en'?'total staff':'personas')}
+        ${card('info', IC.exam, totalExams, LANG==='en'?'Exams':'Exámenes', LANG==='en'?'taken in total':'realizados')}
+        ${card(accCls, IC.acc, exN?`${exAcc}<small>%</small>`:'—', LANG==='en'?'Avg accuracy':'Precisión media', exN?(LANG==='en'?'in exams':'en exámenes'):(LANG==='en'?'no exams yet':'sin exámenes'))}
+        ${card(risk?'bad':'good', IC.shield, risk, LANG==='en'?'Allergen risk':'Riesgo alérgenos', risk?(LANG==='en'?'below 80%':'por debajo de 80%'):(LANG==='en'?'all safe':'todos seguros'))}
+      </div>`;
+    })()}
 
     ${(allergenTrained.length || allergenUntrained.length) ? `
     <div style="background:rgba(196,112,104,.05);border:1px solid rgba(196,112,104,.2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
