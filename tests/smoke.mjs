@@ -873,6 +873,50 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
     'los nombres deben ser tocables (analítica + alérgenos + ranking LQA)');
 });
 
+test('auditoría panel supervisor (jul 2026): datos reales, push, LQA, a11y, marca', () => {
+  // ── Push: auth + marca Meseo (antes sin apikey → 401 silencioso; título TXOKO) ──
+  assert(!/TXOKO Formación/.test(html), 'los títulos de push no deben usar la marca vieja «TXOKO Formación»');
+  const pushIdx = [...html.matchAll(/functions\/v1\/send-push/g)].map(m => m.index);
+  assert(pushIdx.length >= 2 && pushIdx.every(i => {
+    const seg = html.slice(i, i + 180);
+    return /'apikey':\s*SUPA_KEY/.test(seg) && /Authorization/.test(seg);
+  }), 'las llamadas a send-push deben mandar apikey + Authorization como el resto');
+  assert(/title:'📲 Meseo · v'/.test(html) && /title: `\$\{typeIcons\[type\]\|\|'◆'\} Meseo`/.test(html),
+    'los push deben titularse Meseo');
+  // ── Sincronización de datos que el supervisor necesita ──
+  assert(/ab: emp\.allergenBest\|\|0/.test(html) && /emp\.allergenBest=Math\.max\(emp\.allergenBest\|\|0, x\.ab\|\|0\)/.test(html),
+    'allergenBest debe sincronizarse por extras (compose + merge por máximo)');
+  assert(/allergenBest: \(\(\) => \{ try \{ const x=JSON\.parse\(r\.extras/.test(html),
+    'el fetch del supervisor debe exponer allergenBest');
+  assert(/avatar: r\.avatar \|\| null,/.test(html), 'el fetch del supervisor debe mapear el avatar (antes se descartaba)');
+  assert(/const emp = \(window\._supAllEmps && window\._supAllEmps\[name\]\) \|\| getEmp\(name\);/.test(html),
+    'renderSmallAvatar debe priorizar _supAllEmps para el equipo remoto');
+  // ── Analytics: semana cronológica real + contador de exámenes sin rellenos ──
+  const ana = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function renderSupLqaStats'));
+  assert(/const _weekKey = ts =>/.test(ana) && /d\.setDate\(d\.getDate\(\)-day\)/.test(ana),
+    'la gráfica semanal debe agrupar por el lunes de la semana (no por semana del mes)');
+  assert(/const _realSess = s => s && \(s\.ts \|\| s\.total\)/.test(ana) && /\.filter\(_realSess\)\.length/.test(ana),
+    'el total de exámenes debe excluir las sesiones de relleno vacías');
+  // ── Heatmap: solo datos sincronizados (sin fcHistory local) ──
+  const heat = html.slice(html.indexOf('function renderSupActivityHeatmap'), html.indexOf('function renderSupActivityHeatmap')+900);
+  assert(!/\.fcHistory/.test(heat), 'el heatmap no debe contar fcHistory (local, no sincronizado)');
+  // ── LQA: un solo umbral (hero+ranking) y estado sin datos ──
+  const lqa = html.slice(html.indexOf('function renderSupLqaStats'), html.indexOf('function renderSupEmployee'));
+  assert(/const _lqaCut = s => s>=75\?'ok':s>=55\?'mid':'low';/.test(lqa),
+    'los umbrales LQA deben venir de una única fuente (75/55)');
+  assert(!/r\.score>=80\?'#4d8a5e':r\.score>=60/.test(lqa), 'el ranking LQA no debe usar los umbrales viejos 80/60');
+  assert(/_hasReady\?teamReadyAvg\+'%':'—'/.test(lqa), 'el hero LQA debe mostrar «—» cuando no hay datos, no 0% rojo');
+  // ── Borrado: nube primero, ilike, comprueba respuesta ──
+  const del = html.slice(html.indexOf('function supDeleteExecute'), html.indexOf('function supDeleteExecute')+900);
+  assert(/name=ilike\./.test(del) && /cloudOk = res\.ok/.test(del) && /if \(cloudOk\)/.test(del),
+    'el borrado debe ir a la nube primero con ilike y comprobar la respuesta');
+  // ── El widget de reto ya no vive en el panel de supervisor ──
+  const dash = html.slice(html.indexOf('function renderSupDashboard'), html.indexOf('function renderSupDeleteEmployee'));
+  assert(!/renderWeeklyChallenge\(\)/.test(dash), 'el widget de reto semanal (de empleado) no debe estar en el panel de supervisor');
+  // ── i18n: sin literales fijos ──
+  assert(/history:LANG==='en'\?'Story':'Historia'/.test(html), 'la etiqueta de tema Historia debe estar traducida');
+});
+
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
   // Reporte del propietario (iOS/Android): la ✕ vivía DENTRO del área con
   // scroll (desaparecía al desplazarse), sin área táctil ni safe-area, y no
@@ -3944,7 +3988,7 @@ test('supervisor: "Conectados Hoy" usa lastActiveAt (además de lastLoginTs) y e
   // last_login: el login lo saltaba del todo para empleados sin XP.
   assert(/lastActiveAt: r\.last_active_at \|\| null/.test(html),
     'supaFetchAllEmployees debe mapear last_active_at (antes se descartaba)');
-  const sup = html.slice(html.indexOf('function renderSupervisor('), html.indexOf('function renderSupervisor(') + 30000);
+  const sup = html.slice(html.indexOf('function renderSupervisor('), html.indexOf('function renderSupDeleteEmployee'));
   assert(/const _supSeen = n => \{ const a=allEmps\[n\]\.lastLoginTs, b=allEmps\[n\]\.lastActiveAt;/.test(sup),
     'falta el helper _supSeen (la marca más reciente de login/actividad)');
   assert(/connectedToday = empNames\.filter\(n => \{\s*const lt = _supSeen\(n\);/.test(sup),

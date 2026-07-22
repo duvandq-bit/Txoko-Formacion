@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.294">
+<meta name="app-version" content="7.295">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1549,7 +1549,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.294';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.295';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2227,6 +2227,9 @@ async function supaFetchAllEmployees() {
       // fallo real del panel. Se extrae aquí para que el supervisor lo tenga
       // como campo de primer nivel, igual que examCorrect.
       examSeen: (() => { try { const x=JSON.parse(r.extras||'{}'); return (x&&x.es&&typeof x.es==='object')?x.es:{}; } catch(e){ return {}; } })(),
+      // Seguridad de alérgenos (mejor % del Simulacro), guardado en extras.ab.
+      allergenBest: (() => { try { const x=JSON.parse(r.extras||'{}'); return (x&&typeof x.ab==='number')?x.ab:0; } catch(e){ return 0; } })(),
+      avatar: r.avatar || null,   // el avatar se descargaba pero no se mapeaba → equipo remoto sin foto
       sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ dbgw('[fetchAll] bad sessions_data for', r.name, e.message); return Array(r.sessions_count||0).fill({}); } })(),
       txokoRecord: r.txoko_record || 0,
       duelWins: r.duel_wins || 0,
@@ -2518,7 +2521,7 @@ async function subscribeToPush(employeeName) {
       try {
         await fetch(`${SUPA_URL}/functions/v1/send-push`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             target: employeeName,
             title: '◆ Notificaciones activadas',
@@ -7530,7 +7533,8 @@ function _extrasCompose(emp){
   return JSON.stringify({
     wk:{ k:emp.wkKey, xp:emp.wkXP||0 },
     dq:{ d:emp.dqLastDay||'', s:emp.dqStreak||0, ok:emp.dqLastOk?1:0, p:(emp.dqLastPick==null?-1:emp.dqLastPick), t:emp.dqTotal||0, h:emp.dqHits||0 },
-    es: emp.examSeen||{}  // intentos por plato → tasa de fallo real del supervisor
+    es: emp.examSeen||{},   // intentos por plato → tasa de fallo real del supervisor
+    ab: emp.allergenBest||0 // mejor % del Simulacro de alérgenos → seguridad del equipo
   });
 }
 function _extrasMergeInto(emp, extrasStr){
@@ -7560,6 +7564,8 @@ function _extrasMergeInto(emp, extrasStr){
     emp.examSeen=emp.examSeen||{};
     for(const id in x.es){ emp.examSeen[id]=Math.max(emp.examSeen[id]||0, x.es[id]||0); }
   }
+  // Mejor % del Simulacro de alérgenos: el máximo entre local y nube.
+  if(typeof x.ab==='number') emp.allergenBest=Math.max(emp.allergenBest||0, x.ab||0);
 }
 
 
@@ -19563,12 +19569,14 @@ function renderSupActivityHeatmap(allEmps){
   for(let d=days-1;d>=0;d--){
     const dt=new Date(today);dt.setDate(dt.getDate()-d);
     const dateStr=dt.toISOString().split('T')[0];
-    const dayNames=['D','L','M','X','J','V','S'];
+    const dayNames=LANG==='en'?['S','M','T','W','T','F','S']:['D','L','M','X','J','V','S'];
     const dayLabel=dayNames[dt.getDay()];
+    // Solo actividad SINCRONIZADA (exámenes). fcHistory (flashcards) es local
+    // de cada dispositivo y no llega al supervisor, así que sumarlo hacía que
+    // el propio móvil del supervisor contara de más frente al resto del equipo.
     let count=0;
     allEmps.forEach(emp=>{
       (emp.sessions||[]).forEach(s=>{if(s.date===dateStr)count++;});
-      (emp.fcHistory||[]).forEach(f=>{if(f.date===dateStr)count++;});
     });
     data.push({date:dateStr, label:dayLabel, count, day:dt.getDate()});
   }
@@ -19798,7 +19806,7 @@ function renderSupDashboard(silent){
       document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
       return;
     }
-    const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:'Story'};
+    const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:LANG==='en'?'Story':'Historia'};
     const cards=empNames.sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0)).map(name=>{
       const emp=allEmps[name];
       const sessions=(emp.sessions||[]);
@@ -19884,7 +19892,7 @@ function renderSupDashboard(silent){
                 const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
                 const d=s.ts?new Date(s.ts):null;
                 const dt=d?`${d.getDate()}/${d.getMonth()+1}`:'—';
-                const topic=s.topic==='mixed'?'Mixto':(TOPICS.find(tp=>tp.key===s.topic)?.label||s.topic||'—');
+                const topic=s.topic==='mixed'?(LANG==='en'?'Mixed':'Mixto'):(TOPICS.find(tp=>tp.key===s.topic)?.label||s.topic||'—');
                 return `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">
                   <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch4);width:32px">${dt}</span>
                   <span style="font-size:.72rem;color:var(--parch2);flex:1">${topic}</span>
@@ -19963,7 +19971,6 @@ function renderSupDashboard(silent){
                 const lt = _supSeen(n);
                 const d = new Date(lt);
                 const timeStr = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
-                const avatar = getEmpAvatar(n);
                 const lvl = getLevelInfo(allEmps[n].xp||0);
                 return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:rgba(136,176,131,.08);border:1px solid rgba(136,176,131,.15);border-radius:var(--r2)">
                   <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden">${renderSmallAvatar(n, 28)}</div>
@@ -19994,7 +20001,6 @@ function renderSupDashboard(silent){
             </div>` : ''}
           </div>`;
         })()}
-        ${renderWeeklyChallenge()}
         </div>
         <div class="sup-sec" data-sec="analisis">
         ${renderSupActivityHeatmap(Object.values(allEmps))}
@@ -20118,15 +20124,27 @@ function supDeleteConfirm(name) {
 }
 
 async function supDeleteExecute(name, overlay) {
-  // Delete from local DB
-  if (DB.employees[name]) { delete DB.employees[name]; saveDB(); }
-  // Delete from Supabase
+  // La NUBE primero, comprobando la respuesta. Antes se borraba local a ciegas
+  // y, si la nube fallaba (o el nombre difería en mayúsculas con name=eq.), el
+  // empleado reaparecía en la siguiente sincronización. Se usa ilike como en
+  // restore/upsert (insensible a mayúsculas) y solo se borra local si la nube
+  // confirmó.
+  let cloudOk = false;
   try {
-    await fetch(`${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}`, {
+    const res = await fetch(`${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}`, {
       method: 'DELETE',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Prefer':'return=minimal' }
     });
-  } catch(e) {}
+    cloudOk = res.ok;
+  } catch(e) { cloudOk = false; }
+  if (cloudOk) {
+    if (DB.employees[name]) { delete DB.employees[name]; saveDB(); }
+  } else if (typeof showToast==='function') {
+    showToast(LANG==='en'
+      ? 'Could not delete from the cloud — the employee may reappear. Check the connection and retry.'
+      : 'No se pudo borrar de la nube — el empleado podría reaparecer. Revisa la conexión y reinténtalo.',
+      'warning', 6000);
+  }
   if (overlay) overlay.remove();
   renderSupDashboard();
 }
@@ -20439,15 +20457,24 @@ function renderAllergenResults() {
 function renderSupAnalytics(allEmps, empNames){
   const c = document.getElementById('appContent');
 
-  // Compute team-wide stats
-  const totalExams = empNames.reduce((a,n)=>(a+(allEmps[n].sessions||[]).length),0);
-  const avgAccByWeek = {}; // week → {correct,total}
+  // Compute team-wide stats. Las sesiones sin datos reales (rellenos {} cuando
+  // sessions_data no viaja) inflaban el total → se cuentan solo las reales.
+  const _realSess = s => s && (s.ts || s.total);
+  const totalExams = empNames.reduce((a,n)=>(a+(allEmps[n].sessions||[]).filter(_realSess).length),0);
+  const avgAccByWeek = {}; // clave = lunes de la semana (YYYY-MM-DD) → {correct,total}
 
+  // Clave de semana por el LUNES de esa semana: cronológica y sin colapsar
+  // meses (el cálculo anterior agrupaba por «semana del mes» y mezclaba
+  // enero/febrero/… en la misma barra).
+  const _weekKey = ts => {
+    const d = new Date(ts); const day = (d.getDay()+6)%7;   // 0 = lunes
+    d.setHours(0,0,0,0); d.setDate(d.getDate()-day);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  };
   empNames.forEach(n => {
     (allEmps[n].sessions||[]).forEach(s => {
       if(!s.ts) return;
-      const d = new Date(s.ts);
-      const week = `${d.getFullYear()}-W${String(Math.ceil((d.getDate()+new Date(d.getFullYear(),d.getMonth(),1).getDay())/7)).padStart(2,'0')}`;
+      const week = _weekKey(s.ts);
       if(!avgAccByWeek[week]) avgAccByWeek[week] = {correct:0,total:0};
       avgAccByWeek[week].correct += s.score||0;
       avgAccByWeek[week].total += s.total||0;
@@ -20460,7 +20487,7 @@ function renderSupAnalytics(allEmps, empNames){
     const {correct,total} = avgAccByWeek[w];
     const pct = total ? Math.round(correct/total*100) : 0;
     const col = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
-    const label = w.split('-W')[1] ? `S${w.split('-W')[1]}` : w;
+    const _wp = w.split('-'); const label = _wp.length===3 ? `${+_wp[2]}/${+_wp[1]}` : w;
     return `<div style="display:flex;flex-direction:column;align-items:center;gap:.2rem;flex:1">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3)">${pct}%</div>
       <div style="width:100%;background:var(--ink3);border-radius:4px 4px 0 0;height:${maxBar}px;display:flex;align-items:flex-end">
@@ -20518,7 +20545,7 @@ function renderSupAnalytics(allEmps, empNames){
     </div>`;
   }).join('');
 
-  // Top improver — most XP gained this week (approximate from streak)
+  // Ranking XP: por XP total acumulado (de mayor a menor).
   const sorted = empNames.slice().sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0));
   const leaderRows = sorted.slice(0,5).map((n,i)=>{
     const emp = allEmps[n];
@@ -20575,7 +20602,7 @@ function renderSupAnalytics(allEmps, empNames){
   const perEmpHTML = perEmp.map(e => {
     const col = e.pct>=80?'var(--sage)':e.pct>=50?'var(--gold)':'var(--rose)';
     const worstTxt = e.worst ? ` · <span style="color:var(--rose)">${LANG==='en'?'weakest':'más flojo'}: ${e.worst.label} ${Math.round(e.worst.p*100)}%</span>` : '';
-    return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(e.name)}" role="button" tabindex="0" style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line);cursor:pointer">
+    return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(e.name)}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line);cursor:pointer">
       <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(e.name,28)}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:.82rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.name} <span style="color:var(--gold);font-size:.7rem">›</span></div>
@@ -20605,7 +20632,7 @@ function renderSupAnalytics(allEmps, empNames){
     const detail = [];
     if(r.examPct!=null) detail.push(`${LANG==='en'?'exam':'examen'} ${r.examPct}%${r.total?` · ${r.wrong} ${LANG==='en'?'wrong':'fallos'}`:''}`);
     if(r.drill!=null) detail.push(`${LANG==='en'?'drill':'simulacro'} ${r.drill}%`);
-    return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(r.name)}" role="button" tabindex="0" style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid ${risk?'rgba(196,112,104,.18)':'var(--line)'};cursor:pointer">
+    return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(r.name)}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid ${risk?'rgba(196,112,104,.18)':'var(--line)'};cursor:pointer">
       <div style="width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(r.name,26)}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:.8rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${risk?'⚠ ':''}${r.name} <span style="color:var(--gold);font-size:.7rem">›</span></div>
@@ -20761,6 +20788,14 @@ function renderSupLqaStats(allEmps, empNames){
   const teamRuns=emps.reduce((a,e)=>a+(e.lqaExamsCompleted||0)+(e.lqaSituationsCompleted||0)+(e.lqaAuditsCompleted||0)+(e.ghostRuns||0),0);
   const teamReadyAvg=readiness.length?Math.round(readiness.reduce((a,r)=>a+r.score,0)/readiness.length):0;
 
+  // ÚNICA fuente de verdad para los umbrales de preparación (antes el hero
+  // usaba 75/55 y el ranking 80/60 → un 78% salía verde arriba y ámbar abajo).
+  // ≥75 listo, ≥55 refuerzo, si no crítico. Coincide con la leyenda de abajo.
+  const _lqaCut = s => s>=75?'ok':s>=55?'mid':'low';
+  const _lqaHero = {ok:'#8fc499', mid:'#e4c07c', low:'#e4a090'};   // sobre fondo oscuro
+  const _lqaRank = {ok:'var(--sage)', mid:'var(--gold)', low:'var(--rose)'}; // sobre pergamino
+  const _hasReady = readiness.length > 0;
+
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
@@ -20770,8 +20805,8 @@ function renderSupLqaStats(allEmps, empNames){
 
     <div style="background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(140,200,150,.25);border-radius:var(--r);padding:1.3rem;margin-bottom:1rem;text-align:center">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:#8fc499;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.7rem">${LANG==='en'?'Team LQA Readiness Index':'Índice de Preparación LQA del Equipo'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:3.5rem;font-weight:700;color:${teamReadyAvg>=75?'#8fc499':teamReadyAvg>=55?'#e4c07c':'#e4a090'};line-height:1;margin-bottom:.3rem">${teamReadyAvg}%</div>
-      <div style="font-size:.78rem;color:#a8c4b0">${readiness.length} ${LANG==='en'?'employees evaluated':'empleados evaluados'} · ${teamRuns} ${LANG==='en'?'total runs':'intentos totales'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:3.5rem;font-weight:700;color:${_hasReady?_lqaHero[_lqaCut(teamReadyAvg)]:'#a8c4b0'};line-height:1;margin-bottom:.3rem">${_hasReady?teamReadyAvg+'%':'—'}</div>
+      <div style="font-size:.78rem;color:#a8c4b0">${_hasReady?`${readiness.length} ${LANG==='en'?'employees evaluated':'empleados evaluados'} · ${teamRuns} ${LANG==='en'?'total runs':'intentos totales'}`:(LANG==='en'?'No LQA training yet':'Nadie ha entrenado LQA todavía')}</div>
     </div>
 
     <div class="stats-row" style="margin-bottom:1rem">
@@ -20791,13 +20826,14 @@ function renderSupLqaStats(allEmps, empNames){
     </div>` : ''}
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.7rem">🏆 ${LANG==='en'?'Readiness Ranking':'Ranking de Preparación'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">🏆 ${LANG==='en'?'Readiness Ranking':'Ranking de Preparación'}</div>
+      ${_hasReady?`<div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);margin-bottom:.6rem">${LANG==='en'?'E=Exam · S=Situations · P=Would pass? · F=Ghost':'E=Examen · S=Situaciones · P=¿Pasaría? · F=Fantasma'}</div>`:''}
       ${readiness.length===0
         ? `<div style="font-size:.8rem;color:var(--parch4);font-style:italic;text-align:center;padding:1rem 0">${LANG==='en'?'No LQA activity yet.':'Sin actividad LQA aún.'}</div>`
         : readiness.map((r,i)=>{
-            const col=r.score>=80?'#4d8a5e':r.score>=60?'#c49a3c':'#c47068';
+            const col=_lqaRank[_lqaCut(r.score)];
             const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
-            return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(r.name)}" role="button" tabindex="0" style="display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid rgba(196,154,60,.08);cursor:pointer">
+            return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(r.name)}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid rgba(196,154,60,.08);cursor:pointer">
               <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch4);width:20px">${medal||(i+1)}</span>
               <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(r.name, 28)}</div>
               <div style="flex:1;min-width:0">
@@ -20993,10 +21029,10 @@ async function sendAppUpdatePush(){
   if(!ok) return;
   try{
     await fetch(`${SUPA_URL}/functions/v1/send-push`, {
-      method:'POST', headers:{ 'Content-Type':'application/json' },
+      method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
       body: JSON.stringify({
         target:'all',
-        title:'📲 TXOKO Formación · v'+APP_VERSION,
+        title:'📲 Meseo · v'+APP_VERSION,
         body: LANG==='en'
           ? 'New version ready — tap to open with the update installed.'
           : 'Nueva versión lista — toca para abrir con la actualización ya instalada.',
@@ -21022,15 +21058,15 @@ async function sendNotification(){
   try {
     await fetch(`${SUPA_URL}/functions/v1/send-push`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         target,
-        title: `${typeIcons[type]||'◆'} TXOKO Formación`,
+        title: `${typeIcons[type]||'◆'} Meseo`,
         body: msg,
         tag: type
       })
     });
-  } catch(e) { dbgw('[Txoko] Push send error:', e); }
+  } catch(e) { dbgw('[Meseo] Push send error:', e); }
   const el = document.getElementById('notifSendMsg');
   if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
   document.getElementById('notifMsg').value = '';
@@ -22375,7 +22411,9 @@ function _getPixelArtData(name){
 
 function renderSmallAvatar(name, sizePx){
   const sz = sizePx || 28;
-  const emp = getEmp(name);
+  // En el panel de supervisor los empleados remotos no están en el DB local;
+  // su avatar (sincronizado) vive en _supAllEmps. Se prioriza esa fuente.
+  const emp = (window._supAllEmps && window._supAllEmps[name]) || getEmp(name);
   const rawAv = emp.avatar;
   if(rawAv && _isAvatarJson(rawAv)){
     // Canvas-based pixel art avatar
@@ -28626,7 +28664,7 @@ async function _chatSend(){
     mentions.forEach(n=>{
       supaCreateNotification(n, `💬 ${currentUser} te ha mencionado en el Chat: "${snippet}"`, 'info');
       fetch(`${SUPA_URL}/functions/v1/send-push`, {
-        method:'POST', headers:{ 'Content-Type':'application/json' },
+        method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
         // renotify: a mention must ring even if a coalesced 'chat' notification
         // is already on screen. data.tab deep-links the tap into the Chat tab.
         body: JSON.stringify({ target:n, title:`💬 ${currentUser} · Chat`, body:snippet, tag:'chat', renotify:true, data:{tab:'chat'} })
@@ -28684,7 +28722,7 @@ function _chatBroadcastPush(body){
     if(body.image_url) extra.image = body.image_url;
     recipients.forEach(n=>{
       fetch(`${SUPA_URL}/functions/v1/send-push`, {
-        method:'POST', headers:{ 'Content-Type':'application/json' },
+        method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
         body: JSON.stringify(Object.assign({ target:n, title:`💬 ${currentUser} · Chat`, body:snippet }, extra))
       }).catch(()=>{});
     });
@@ -28898,7 +28936,12 @@ document.addEventListener('visibilitychange', ()=>{
   if(document.visibilityState==='hidden' && currentTab==='chat') _chatDisconnect();
   else if(document.visibilityState==='visible' && currentTab==='chat' && !_chatChannel) _chatConnect();
   if(document.visibilityState==='hidden' && currentTab==='supervisor' && typeof _supDisconnect==='function') _supDisconnect();
-  else if(document.visibilityState==='visible' && currentTab==='supervisor' && supAuthenticated && !_supChannel) _supConnectLive();
+  else if(document.visibilityState==='visible' && currentTab==='supervisor' && supAuthenticated){
+    if(!_supChannel) _supConnectLive();
+    // Al volver de segundo plano las cifras estaban congeladas hasta el
+    // siguiente push o el sondeo de 60s → refresco inmediato.
+    if(typeof _supQueueRefresh==='function') _supQueueRefresh();
+  }
 });
 
 // Init — check for remembered session
