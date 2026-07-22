@@ -1805,6 +1805,15 @@ test('ES and EN dish twins declare identical allergens', () => {
   }
 });
 
+test('búsqueda: alias de plato (aka) indexado — "Lomo de atún" encuentra la Txuleta', () => {
+  // El mismo plato se oye llamar de dos formas (Txuleta / Lomo de atún). El
+  // campo `aka` lo hace encontrable por ambos nombres sin duplicar la ficha.
+  assert(/\{id:21,cat:'Platos Principales',name:'Txuleta de atún con tomate en texturas',aka:'Lomo de atún',/.test(html),
+    'id21 debe llevar aka:"Lomo de atún"');
+  const idx = html.slice(html.indexOf('function _gsDishIndex'), html.indexOf('function _gsWineIndex'));
+  assert(/d\.aka\|\|''/.test(idx), '_gsDishIndex debe incluir d.aka en el texto buscable');
+});
+
 test('no dish in the Vegetariano category self-declares as not vegetarian', () => {
   // Owner call (Jul 2026): the potato purée sat in Vegetariano while its own
   // card warned "NO es vegetariano (caldo de pollo)" — moved to Guarniciones.
