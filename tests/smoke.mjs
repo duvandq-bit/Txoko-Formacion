@@ -841,6 +841,11 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
     'debe existir el resumen de exámenes y la precisión por categoría de carta');
   assert(/const dishTeamCorrect=\{\}/.test(ana) && /const neverRight = DISHES\.filter/.test(ana) && /sin ningún acierto del equipo/.test(ana),
     'debe existir el punto ciego de platos sin aciertos');
+  // La agregación por tema solo debe contar temas VIGENTES (allergens/
+  // ingredients/history). Temas retirados que quedan en datos viejos (p. ej.
+  // "cutlery") no deben aparecer en «Dónde falla el equipo» ni en «más flojo».
+  assert((ana.match(/if\(!_TL\[k\]\) return;/g)||[]).length >= 2,
+    'topicAgg y perEmp deben ignorar los temas fuera de _TL (excluye "cutlery")');
   // «Platos con más fallo»: ordenar por tasa de fallo REAL (intentos por
   // plato), no por dominado auto-marcado (petición del propietario jul 2026).
   assert(/const dishSeen = \{\}, dishCorr = \{\};/.test(ana) && /allEmps\[n\]\.examSeen\|\|\{\}/.test(ana),
