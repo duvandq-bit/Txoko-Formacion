@@ -917,6 +917,25 @@ test('auditoría panel supervisor (jul 2026): datos reales, push, LQA, a11y, mar
   assert(/history:LANG==='en'\?'Story':'Historia'/.test(html), 'la etiqueta de tema Historia debe estar traducida');
 });
 
+test('panel supervisor Fase 2: objetivos táctiles ≥44px y roles de pestaña', () => {
+  const css = read('styles.css');
+  // Las pestañas de sección deben respetar el objetivo táctil de 44px.
+  assert(/\.sup-seg button\{[^}]*min-height:44px/.test(css), 'las pestañas de sección deben ser ≥44px');
+  // El botón «Resetear PIN» ya no depende de hover (invisible en móvil) y es ≥44px.
+  assert(/\.sup-pin-reset\{[^}]*min-height:44px/.test(css) && /\.sup-pin-reset\{[^}]*border:1px solid var\(--gold-a\)/.test(css),
+    'el botón Resetear PIN debe tener afordancia visible y objetivo táctil ≥44px');
+  const resetBtn = html.slice(html.indexOf('class="sup-pin-reset"')-10, html.indexOf('RESETEAR PIN'));
+  assert(/class="sup-pin-reset"/.test(resetBtn) && !/onmouseover/.test(resetBtn),
+    'el botón Resetear PIN debe usar la clase, sin onmouseover inline');
+  // Semántica de pestañas: role=tab + aria-selected + tabpanel.
+  assert(/<button role="tab" aria-selected="false" data-sec="hoy"/.test(html),
+    'las pestañas de sección deben declarar role=tab y aria-selected');
+  assert(/b\.setAttribute\('aria-selected', on \? 'true' : 'false'\)/.test(html),
+    'aria-selected debe sincronizarse con la pestaña activa');
+  assert((html.match(/class="sup-sec" role="tabpanel"/g)||[]).length >= 3,
+    'los paneles de sección deben ser role=tabpanel');
+});
+
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
   // Reporte del propietario (iOS/Android): la ✕ vivía DENTRO del área con
   // scroll (desaparecía al desplazarse), sin área táctil ni safe-area, y no

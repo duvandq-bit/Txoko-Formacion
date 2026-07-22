@@ -6150,7 +6150,14 @@ body::after{
   background:rgba(28,42,34,.05);border:1px solid rgba(196,154,60,.14);border-radius:14px}
 .sup-seg button{flex:1;padding:.5rem .3rem;background:transparent;border:none;border-radius:10px;
   font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--parch3);cursor:pointer;transition:all .2s;min-height:38px}
+  color:var(--parch3);cursor:pointer;transition:all .2s;min-height:44px}
+/* Botón «Resetear PIN»: afordancia visible SIEMPRE (no solo en hover, que en
+   el móvil no existe) y objetivo táctil ≥44px. */
+.sup-pin-reset{background:transparent;border:1px solid var(--gold-a);border-radius:var(--r3);
+  padding:.5rem .8rem;min-height:44px;font-size:.62rem;color:var(--gold-deep);
+  font-family:'DM Mono',monospace;letter-spacing:.06em;font-weight:700;cursor:pointer;transition:all .2s}
+.sup-pin-reset:active{background:var(--gold-a)}
+@media (hover:hover){.sup-pin-reset:hover{border-color:var(--gold);background:rgba(196,154,60,.08)}}
 .sup-seg button.active{background:linear-gradient(155deg,#faf6ee,#f0e8d8);
   color:var(--gold-deep);font-weight:700;border:1px solid rgba(196,154,60,.3);
   box-shadow:0 1px 4px rgba(28,42,34,.08)}

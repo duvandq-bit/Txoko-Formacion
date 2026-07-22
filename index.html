@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.295">
+<meta name="app-version" content="7.296">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1549,7 +1549,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.295';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.296';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -19740,7 +19740,11 @@ function _supSetSection(s){
 function _supApplySection(){
   const cur = window._supSection || 'hoy';
   document.querySelectorAll('.sup-sec').forEach(d=>d.classList.toggle('active', d.dataset.sec===cur));
-  document.querySelectorAll('.sup-seg button').forEach(b=>b.classList.toggle('active', b.dataset.sec===cur));
+  document.querySelectorAll('.sup-seg button').forEach(b=>{
+    const on = b.dataset.sec===cur;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
 }
 function _supEmpToggle(el){
   if(!window._supOpenEmps) window._supOpenEmps = new Set();
@@ -19902,7 +19906,7 @@ function renderSupDashboard(silent){
           }
         </div>
         <div style="border-top:1px solid var(--line);margin-top:.65rem;padding-top:.55rem;text-align:right">
-          <button onclick="_supResetEmployeePin(${escapeHTML(JSON.stringify(name))})" title="${LANG==='en'?'Reset employee PIN — they create a new one on next login':'Resetear PIN del empleado — creará uno nuevo al entrar'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r3);padding:.3rem .6rem;font-size:.6rem;color:var(--parch3);font-family:'DM Mono',monospace;letter-spacing:.06em;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--line)';this.style.color='var(--parch3)'">↻ ${LANG==='en'?'RESET PIN':'RESETEAR PIN'}</button>
+          <button class="sup-pin-reset" onclick="_supResetEmployeePin(${escapeHTML(JSON.stringify(name))})" title="${LANG==='en'?'Reset employee PIN — they create a new one on next login':'Resetear PIN del empleado — creará uno nuevo al entrar'}">↻ ${LANG==='en'?'RESET PIN':'RESETEAR PIN'}</button>
         </div>
       </details>`;
     }).join('');
@@ -19922,13 +19926,13 @@ function renderSupDashboard(silent){
         <!-- Reorganización (petición del propietario): el panel era un scroll
              kilométrico. Cuatro secciones — el estado se conserva entre
              refrescos EN VIVO (window._supSection / _supOpenEmps). -->
-        <div class="sup-seg" role="tablist">
-          <button data-sec="hoy" onclick="_supSetSection('hoy')">${LANG==='en'?'Today':'Hoy'}</button>
-          <button data-sec="equipo" onclick="_supSetSection('equipo')">${LANG==='en'?'Team':'Equipo'}</button>
-          <button data-sec="analisis" onclick="_supSetSection('analisis')">${LANG==='en'?'Analysis':'Análisis'}</button>
-          <button data-sec="acciones" onclick="_supSetSection('acciones')">${LANG==='en'?'Actions':'Acciones'}</button>
+        <div class="sup-seg" role="tablist" aria-label="${LANG==='en'?'Supervisor sections':'Secciones del panel'}">
+          <button role="tab" aria-selected="false" data-sec="hoy" onclick="_supSetSection('hoy')">${LANG==='en'?'Today':'Hoy'}</button>
+          <button role="tab" aria-selected="false" data-sec="equipo" onclick="_supSetSection('equipo')">${LANG==='en'?'Team':'Equipo'}</button>
+          <button role="tab" aria-selected="false" data-sec="analisis" onclick="_supSetSection('analisis')">${LANG==='en'?'Analysis':'Análisis'}</button>
+          <button role="tab" aria-selected="false" data-sec="acciones" onclick="_supSetSection('acciones')">${LANG==='en'?'Actions':'Acciones'}</button>
         </div>
-        <div class="sup-sec" data-sec="hoy">
+        <div class="sup-sec" role="tabpanel" data-sec="hoy">
         <div class="stats-row" style="margin-bottom:.75rem">
           <div class="stat-tile"><div class="stat-num">${totalEmp}</div><div class="stat-lbl">${LANG==='en'?'Staff':'Equipo'}</div></div>
           <div class="stat-tile"><div class="stat-num">${studiedToday}</div><div class="stat-lbl">${LANG==='en'?'Active today':'Hoy activos'}</div></div>
@@ -20002,7 +20006,7 @@ function renderSupDashboard(silent){
           </div>`;
         })()}
         </div>
-        <div class="sup-sec" data-sec="analisis">
+        <div class="sup-sec" role="tabpanel" data-sec="analisis">
         ${renderSupActivityHeatmap(Object.values(allEmps))}
         ${renderSupScoreTrend(Object.values(allEmps))}
         ${(()=>{
@@ -20029,11 +20033,11 @@ function renderSupDashboard(silent){
           </div>`;
         })()}
         </div>
-        <div class="sup-sec" data-sec="equipo">
+        <div class="sup-sec" role="tabpanel" data-sec="equipo">
         <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
         ${cards}
         </div>
-        <div class="sup-sec" data-sec="acciones">
+        <div class="sup-sec" role="tabpanel" data-sec="acciones">
         <div style="border-top:none;margin-top:.25rem;padding-top:.25rem">
           <div class="tunic-divider"><span>${LANG==='en'?'Supervisor Tools':'Herramientas'}</span></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.75rem">
