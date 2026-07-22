@@ -6,7 +6,9 @@ name: CI
 
 on:
   push:
-    branches: ['**']
+    # La rama 'backups' es un archivo de datos aislado (sin código ni tests):
+    # se excluye para que no dispare la suite (que fallaría sin package.json).
+    branches: ['**', '!backups']
   pull_request:
     branches: ['**']
 

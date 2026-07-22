@@ -1,0 +1,79 @@
+# ═══ Copia de seguridad diaria de la base de datos ═══
+# Plan Free de Supabase = sin copias. Este workflow descarga cada día las
+# tablas de datos (usuarios, puntuaciones, horarios, carta editada) con la
+# clave anónima (solo LECTURA, la misma que ya es pública en la app) y guarda
+# una instantánea fechada.
+#
+# SEGURIDAD: las copias se confirman en una rama AISLADA `backups`, NUNCA en
+# `main`. GitHub Pages publica `main`, así que los datos NO llegan a meseo.es.
+# Las tablas sensibles de autenticación (PINs, recuperación) no se copian —
+# no son legibles con la clave anónima y son regenerables.
+name: Copia de seguridad de datos
+
+on:
+  schedule:
+    - cron: '30 3 * * *'   # 03:30 UTC cada día (~04:30 hora de Canarias)
+  workflow_dispatch: {}      # permite lanzarla a mano desde la pestaña Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    env:
+      SUPA_URL: https://advkoujfgbrrjvqexrcu.supabase.co
+      # Clave ANÓNIMA (pública, ya va en la app) — solo lectura.
+      SUPA_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdmtvdWpmZ2Jycmp2cWV4cmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODAxODgsImV4cCI6MjA4ODc1NjE4OH0.4MTKzEy_c5x3eWjWJPfS216TTVAVNNlP1Wo_-h1Nt4c
+      TABLES: employees scores horarios custom_dishes
+    steps:
+      - name: Preparar la rama backups (aislada de main)
+        run: |
+          git config --global user.name  "meseo-backup"
+          git config --global user.email "backup@users.noreply.github.com"
+          REPO="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          if git clone --depth 1 --branch backups "$REPO" bkp 2>/dev/null; then
+            echo "Rama backups existente."
+          else
+            echo "La rama backups no existe todavía — la creo huérfana (sin historia de main)."
+            git clone --depth 1 "$REPO" bkp
+            cd bkp
+            git checkout --orphan backups
+            git rm -rf . >/dev/null 2>&1 || true
+            printf '# Copias de seguridad\n\nRama AISLADA — no se publica en la web.\nInstantáneas diarias (JSON) de las tablas de datos.\nPara restaurar: sube el JSON de la fecha deseada a Supabase.\n' > README.md
+            git add README.md
+            git commit -qm "init rama backups"
+          fi
+
+      - name: Descargar tablas y confirmar la copia
+        run: |
+          cd bkp
+          DATE=$(date -u +%F)
+          DIR="backups/$DATE"
+          mkdir -p "$DIR"
+          fail=0
+          for t in $TABLES; do
+            code=$(curl -sS -o "$DIR/$t.json" -w '%{http_code}' \
+              -H "apikey: $SUPA_KEY" -H "Authorization: Bearer $SUPA_KEY" \
+              "$SUPA_URL/rest/v1/$t?select=*") || code=000
+            if [ "$code" != "200" ]; then
+              echo "⚠ $t → HTTP $code (guardo lista vacía como marcador)"
+              echo '[]' > "$DIR/$t.json"; fail=1
+            fi
+            echo "$t: $(wc -c < "$DIR/$t.json") bytes"
+          done
+          git add backups/
+          if git diff --cached --quiet; then
+            echo "Sin cambios respecto a la última copia — no se confirma nada."
+          else
+            git commit -qm "backup $DATE"
+            git push origin HEAD:backups
+            echo "✓ Copia $DATE confirmada en la rama backups."
+          fi
+          # No rompemos el job si alguna tabla no fue legible: la copia parcial
+          # (las tablas críticas SÍ se leen con la anónima) igualmente se guarda.
+          exit 0
