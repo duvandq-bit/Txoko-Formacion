@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.299">
+<meta name="app-version" content="7.300">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1549,7 +1549,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.299';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.300';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2019,10 +2019,13 @@ function _etMergeMap(a, b){
   }
   return out;
 }
+// Devuelve true si la nube confirmó la escritura (o no había nada valioso que
+// guardar), false si quedó pendiente (offline/error) → lo usa el outbox para
+// reintentar hasta que confirme, sin perder datos.
 async function supaUpsertEmployee(name, retries=2) {
-  if(!name) return;
+  if(!name) return true;
   const emp = DB.employees[name];
-  if(!emp) return;
+  if(!emp) return true;
   // ¿La ficha local está "vacía" (sin progreso que merezca guardarse)?
   const _localEmpty = !(emp.xp>0)
     && !(emp.knownDishes && Object.keys(emp.knownDishes).length)
@@ -2040,7 +2043,7 @@ async function supaUpsertEmployee(name, retries=2) {
   } catch(e){ dbgw('[Txoko] upsert cloud-read error for', name, e.message); }
   // Si NO pudimos leer la nube y la ficha local está vacía, ABORTAR: escribir
   // ahora arriesgaría pisar datos buenos con ceros. Nada valioso que perder.
-  if(!cloudReadOk && _localEmpty) { dbgw('[Txoko] upsert abortado: nube ilegible + local vacío para', name); return; }
+  if(!cloudReadOk && _localEmpty) { dbgw('[Txoko] upsert abortado: nube ilegible + local vacío para', name); return true; }
   // 2) Fusionar monótonamente local ⊕ nube.
   let xp=emp.xp||0, streak=emp.streak||0, txr=emp.txokoRecord||0, dw=emp.duelWins||0;
   let known=emp.knownDishes||{}, exam=emp.examCorrect||{}, topics=emp.topicScores||{};
@@ -2103,11 +2106,81 @@ async function supaUpsertEmployee(name, retries=2) {
       const errText = await res.text().catch(()=>'');
       dbgw(`[Txoko] Supabase upsert failed (${res.status}) for ${name}:`, errText);
       if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
+      return false;
     }
+    return true;
   } catch(e) {
     dbgw(`[Txoko] Supabase upsert error for ${name}:`, e.message);
     if(retries > 0) setTimeout(() => supaUpsertEmployee(name, retries - 1), 3000);
+    return false;
   }
+}
+
+// ═══ OUTBOX DE SINCRONIZACIÓN ═══════════════════════════════════════════
+// Cola PERSISTENTE de empleados con cambios locales sin confirmar en la nube.
+// Sobrevive a cerrar la app. Se reintenta al volver la conexión, al reabrir,
+// al volver de segundo plano y cada 2 min, hasta que la nube confirme. Es la
+// red de seguridad contra "se perdieron los datos" con el WiFi de sala.
+const _OUTBOX_KEY = 'txk_sync_outbox';
+function _outboxLoad(){ try{ const a=JSON.parse(localStorage.getItem(_OUTBOX_KEY)||'[]'); return new Set(Array.isArray(a)?a:[]); }catch(_){ return new Set(); } }
+function _outboxSave(set){ try{ localStorage.setItem(_OUTBOX_KEY, JSON.stringify([...set])); }catch(_){} }
+function _outboxAdd(name){ if(!name) return; const s=_outboxLoad(); if(!s.has(name)){ s.add(name); _outboxSave(s); } _outboxReflect(); }
+function _outboxRemove(name){ const s=_outboxLoad(); if(s.delete(name)){ _outboxSave(s); } _outboxReflect(); }
+function _outboxReflect(){
+  // Refleja el estado en el chip de sincronización sin pisar el 'offline'.
+  if(navigator.onLine === false) return;
+  const n = _outboxLoad().size;
+  if(typeof _setSyncPill==='function') _setSyncPill(n>0 ? 'pending' : 'synced');
+}
+let _outboxFlushing = false;
+async function _outboxFlush(){
+  if(_outboxFlushing || navigator.onLine === false) return;
+  const s = _outboxLoad();
+  if(!s.size) return;
+  _outboxFlushing = true;
+  try{
+    for(const name of [...s]){
+      // Reintenta cada ficha pendiente. supaUpsertEmployee fusiona de forma
+      // monótona (nunca reduce), así que reintentar es siempre seguro.
+      let ok = false;
+      try{ ok = await supaUpsertEmployee(name); }catch(_){ ok = false; }
+      if(ok) _outboxRemove(name);
+    }
+  } finally { _outboxFlushing = false; _outboxReflect(); }
+}
+// Disparadores del flush: al volver la conexión, al reabrir/enfocar y cada 2 min.
+window.addEventListener('online', () => setTimeout(_outboxFlush, 800));
+document.addEventListener('visibilitychange', () => { if(document.visibilityState==='visible') _outboxFlush(); });
+setInterval(_outboxFlush, 120000);
+setTimeout(_outboxFlush, 4000);   // un intento al arrancar por si quedó algo de la sesión anterior
+
+// ═══ GUARDIA ANTI-DUPLICADOS ════════════════════════════════════════════
+// Evita partir los datos de una persona en varios perfiles por un nombre
+// escrito distinto (Ana / Ana Kurzweil, Anna / Ana, Germán / German).
+function _normName(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim(); }
+function _levDist(a,b){
+  const m=a.length, n=b.length; if(!m) return n; if(!n) return m;
+  let prev=Array.from({length:n+1},(_,i)=>i), cur=new Array(n+1);
+  for(let i=1;i<=m;i++){ cur[0]=i; for(let j=1;j<=n;j++){ cur[j]=Math.min(prev[j]+1, cur[j-1]+1, prev[j-1]+(a[i-1]===b[j-1]?0:1)); } [prev,cur]=[cur,prev]; }
+  return prev[n];
+}
+function _nameSimilar(a,b){
+  const na=_normName(a), nb=_normName(b);
+  if(!na||!nb) return false;
+  if(na===nb) return true;                                   // igual salvo acentos/mayúsculas (Germán/German)
+  const ta=na.split(' '), tb=nb.split(' ');
+  if(ta[0]===tb[0] && (ta.length===1 || tb.length===1)) return true;  // "ana" ⊂ "ana kurzweil"
+  if(Math.abs(na.length-nb.length)<=1 && _levDist(na,nb)<=1) return true;  // Anna/Ana
+  return false;
+}
+let _nameListCache=null, _nameListTs=0;
+async function _fetchEmployeeNames(){
+  if(_nameListCache && (Date.now()-_nameListTs)<60000) return _nameListCache;
+  try{
+    const r=await fetchT(`${SUPA_URL}/rest/v1/employees?select=name`, { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 6000);
+    if(r.ok){ const rows=await r.json(); _nameListCache=(rows||[]).map(x=>x&&x.name).filter(Boolean); _nameListTs=Date.now(); return _nameListCache; }
+  }catch(_){}
+  return _nameListCache || Object.keys(DB.employees);
 }
 
 // Short-lived cache for restore lookups — dedupes rapid-fire logins (typing/retries)
@@ -3095,6 +3168,10 @@ function _setSyncPill(state){
   } else if(state==='syncing'){
     txt.textContent = (typeof LANG!=='undefined' && LANG==='en') ? 'Syncing…' : 'Sincronizando…';
     pill.classList.add('syncing','visible');
+  } else if(state==='pending'){
+    // Hay cambios locales sin confirmar en la nube (el outbox los reintenta).
+    txt.textContent = (typeof LANG!=='undefined' && LANG==='en') ? 'Saving…' : 'Guardando…';
+    pill.classList.add('syncing','visible');
   } else if(state==='synced'){
     txt.textContent = (typeof LANG!=='undefined' && LANG==='en') ? 'Synced' : 'Sincronizado';
     pill.classList.add('synced','visible');
@@ -3103,6 +3180,7 @@ function _setSyncPill(state){
 }
 function _updateOnlineStatus(){
   if(navigator.onLine === false) _setSyncPill('offline');
+  else if(typeof _outboxReflect==='function') _outboxReflect();  // 'pending' si queda algo por subir, si no 'synced'
   else _setSyncPill('synced');
 }
 window.addEventListener('online',  _updateOnlineStatus);
@@ -3183,7 +3261,14 @@ function _saveDBNow(){
     }
     dbgw('[saveDB] localStorage failed:', e);
   }
-  if(currentUser) supaUpsertEmployee(currentUser);
+  if(currentUser){
+    // Encola SIEMPRE antes de intentar: si el guardado en la nube falla (o
+    // estamos offline), queda pendiente y el outbox lo reintentará hasta
+    // confirmarlo. Al confirmar, se desencola.
+    _outboxAdd(currentUser);
+    const _u = currentUser;
+    supaUpsertEmployee(_u).then(ok => { if(ok) _outboxRemove(_u); }).catch(()=>{});
+  }
   return localOk;
 }
 function _flushSaveDB(){
@@ -7811,6 +7896,30 @@ async function loginWithPassword(){
     if(!localExists) {
       errEl.textContent = (LANG==='en' ? 'Cloud error: ' : 'Error nube: ') + e.message;
     }
+  }
+
+  // Anti-duplicados: al CREAR una cuenta nueva, si ya existe un perfil muy
+  // parecido (mismo nombre con acentos/mayúsculas distintas, un nombre que es
+  // subconjunto del otro, o a un carácter de distancia), ofrecer entrar en ese
+  // en vez de partir los datos en dos. Solo en alta y si no existe ya local.
+  if(isSignup && !localExists){
+    try{
+      const _names = await _fetchEmployeeNames();
+      const _sim = _names.find(nm => _normName(nm)!==_normName(name) && _nameSimilar(nm, name));
+      if(_sim){
+        const _useIt = confirm(LANG==='en'
+          ? `A very similar profile already exists: "${_sim}".\n\nOK = it's me → sign in as "${_sim}".\nCancel = create a new, different profile.`
+          : `Ya existe un perfil muy parecido: «${_sim}».\n\nAceptar = soy yo → entrar como «${_sim}».\nCancelar = crear un perfil nuevo distinto.`);
+        if(_useIt){
+          nameInput.value = _sim;
+          if(_loginMode==='signup' && typeof setLoginMode==='function') setLoginMode('signin');
+          submitBtn.disabled=false; submitBtn.textContent = LANG==='en'?'Sign in':'Entrar';
+          errEl.style.color=''; errEl.textContent = LANG==='en'?`Now sign in as "${_sim}"`:`Ahora entra como «${_sim}»`;
+          return;
+        }
+        // Si cancela, se crea el perfil nuevo (dos personas con nombres parecidos).
+      }
+    }catch(_){}
   }
 
   // Get the employee (may have been restored from cloud)

@@ -4024,7 +4024,7 @@ test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros 
   assert(/employees\?name=ilike\.\$\{encodeURIComponent\(name\)\}&select=\$\{_EMP_COLS\}/.test(fn),
     'the upsert must read the current cloud row before writing');
   // (2) aborta si no puede leer la nube y la ficha local está vacía
-  assert(/const _localEmpty =/.test(fn) && /if\(!cloudReadOk && _localEmpty\) \{[^}]*return;/.test(fn),
+  assert(/const _localEmpty =/.test(fn) && /if\(!cloudReadOk && _localEmpty\) \{[^}]*return true;/.test(fn),
     'the upsert must abort when the cloud is unreadable AND local is empty (never clobber with zeros)');
   // (3) fusión monótona: max en números, unión en mapas
   assert(/xp=Math\.max\(xp, cloud\.xp\|\|0\)/.test(fn) && /_etMergeMap\(JSON\.parse\(cloud\.known_dishes/.test(fn),
@@ -4036,6 +4036,41 @@ test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros 
   // (5) el helper de fusión de mapas existe y hace max por clave
   assert(/function _etMergeMap\(a, b\)\{/.test(html) && /Math\.max\(av, bv\)/.test(html),
     'the _etMergeMap helper must do per-key max');
+  // (6) el upsert señala éxito (para el outbox): true al confirmar, false si falla
+  assert(/return true;\s*\} catch\(e\) \{/.test(fn) && /return false;\s*\}\s*\}/.test(fn),
+    'supaUpsertEmployee debe devolver true al confirmar y false si queda pendiente');
+});
+
+test('resiliencia: outbox de sincronización (no se pierden datos con mal WiFi)', () => {
+  // Cola persistente de fichas con cambios locales sin confirmar en la nube.
+  // Se reintenta hasta que la nube confirme; sobrevive a cerrar la app.
+  assert(/const _OUTBOX_KEY = 'txk_sync_outbox';/.test(html), 'debe existir la clave persistente del outbox');
+  assert(/function _outboxFlush\(\)\{[\s\S]*?const ok = await supaUpsertEmployee\(name\);|let ok = false;[\s\S]*?ok = await supaUpsertEmployee\(name\)/.test(html) || /ok = await supaUpsertEmployee\(name\)/.test(html),
+    'el flush debe reintentar cada ficha vía supaUpsertEmployee');
+  assert(/if\(ok\) _outboxRemove\(name\);/.test(html), 'solo se desencola cuando la nube confirma');
+  // _saveDBNow encola SIEMPRE y desencola al confirmar
+  const saveNow = html.slice(html.indexOf('function _saveDBNow'), html.indexOf('function _flushSaveDB'));
+  assert(/_outboxAdd\(currentUser\);/.test(saveNow) && /supaUpsertEmployee\(_u\)\.then\(ok => \{ if\(ok\) _outboxRemove\(_u\); \}\)/.test(saveNow),
+    '_saveDBNow debe encolar antes de subir y desencolar al confirmar');
+  // Disparadores del flush: online, volver a primer plano y temporizador
+  assert(/window\.addEventListener\('online', \(\) => setTimeout\(_outboxFlush/.test(html), 'el outbox debe reintentar al volver la conexión');
+  assert(/setInterval\(_outboxFlush, 120000\)/.test(html), 'el outbox debe reintentar periódicamente');
+  // El chip refleja "pendiente" sin pisar el estado offline
+  assert(/state==='pending'/.test(html), 'el indicador debe tener estado «pendiente»');
+});
+
+test('resiliencia: guardia anti-duplicados en el alta', () => {
+  assert(/function _nameSimilar\(a,b\)\{/.test(html) && /function _levDist\(a,b\)\{/.test(html),
+    'deben existir los helpers de similitud de nombres');
+  // Reglas: igual salvo acentos, subconjunto, y distancia ≤1
+  const sim = html.slice(html.indexOf('function _nameSimilar'), html.indexOf('let _nameListCache'));
+  assert(/if\(na===nb\) return true;/.test(sim) && /ta\[0\]===tb\[0\] && \(ta\.length===1 \|\| tb\.length===1\)/.test(sim) && /_levDist\(na,nb\)<=1/.test(sim),
+    '_nameSimilar debe cubrir acentos/mayúsculas, subconjunto y distancia 1');
+  assert(/async function _fetchEmployeeNames\(\)/.test(html), 'debe listar nombres de la nube para comparar');
+  // La guardia solo actúa al CREAR cuenta y ofrece entrar en el existente
+  const login = html.slice(html.indexOf('if(isSignup && !localExists){'), html.indexOf('// Get the employee (may have been restored'));
+  assert(/_names\.find\(nm => _normName\(nm\)!==_normName\(name\) && _nameSimilar\(nm, name\)\)/.test(login) && /setLoginMode\('signin'\)/.test(login),
+    'al crear cuenta, un nombre muy parecido debe ofrecer entrar en el perfil existente');
 });
 
 test('supervisor: "Conectados Hoy" usa lastActiveAt (además de lastLoginTs) y el login siempre sincroniza', () => {
