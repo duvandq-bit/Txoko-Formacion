@@ -1169,9 +1169,10 @@
    "nombre": "Salsa tonnata",
    "alergenos": [
     "Pescado",
-    "Huevos"
+    "Huevos",
+    "Soja"
    ],
-   "fuente": "certeza culinaria"
+   "fuente": "confirmado por propietario"
   },
   "ventresca de lata": {
    "nombre": "Ventresca de lata",
@@ -2794,6 +2795,20 @@
    "nombre": "Mayonesa de cítricos",
    "alergenos": [
     "Huevos",
+    "Sulfitos"
+   ],
+   "fuente": "confirmado por propietario"
+  },
+  "sesamo": {
+   "nombre": "Sésamo",
+   "alergenos": [
+    "Granos de sésamo"
+   ],
+   "fuente": "confirmado por propietario"
+  },
+  "reduccion de vino tinto": {
+   "nombre": "Reducción de vino tinto",
+   "alergenos": [
     "Sulfitos"
    ],
    "fuente": "confirmado por propietario"
