@@ -936,6 +936,24 @@ test('panel supervisor Fase 2: objetivos táctiles ≥44px y roles de pestaña',
     'los paneles de sección deben ser role=tabpanel');
 });
 
+test('panel supervisor Fase 2b: cabecera de KPIs con impacto', () => {
+  const css = read('styles.css');
+  assert(/\.sup-kpis\{[^}]*grid-template-columns:1fr 1fr/.test(css), 'debe existir la rejilla .sup-kpis (2 columnas)');
+  assert(/\.sup-kpi\.good\{--kpi-accent:var\(--sage\)\}/.test(css) && /\.sup-kpi\.bad\{--kpi-accent:var\(--rose\)\}/.test(css),
+    'las KPIs deben tener color semántico (good/warn/bad/info) por variable');
+  const band = html.slice(html.indexOf('function _supKpiBand'), html.indexOf('function renderSupDashboard'));
+  assert(/const acc = tot \? Math\.round\(corr\/tot\*100\) : null;/.test(band),
+    'la KPI de precisión media debe calcularse de topicScores (aciertos/total)');
+  assert(/const risk = empNames\.filter\(n => \(allEmps\[n\]\.allergenBest\|\|0\) < 80\)\.length;/.test(band),
+    'la KPI de alertas de seguridad debe contar allergenBest < 80');
+  assert(/Alertas seguridad/.test(band) && /Safety alerts/.test(band) && /Precisión media/.test(band),
+    'las etiquetas de KPI deben ser bilingües');
+  // La sección Hoy debe usar el band, no las stat-tiles viejas.
+  const dash = html.slice(html.indexOf('data-sec="hoy">'), html.indexOf('data-sec="analisis">'));
+  assert(/\$\{_supKpiBand\(allEmps, empNames\)\}/.test(dash) && !/class="stats-row"/.test(dash),
+    'la sección Hoy debe pintar la cabecera de KPIs en lugar de las stat-tiles pequeñas');
+});
+
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
   // Reporte del propietario (iOS/Android): la ✕ vivía DENTRO del área con
   // scroll (desaparecía al desplazarse), sin área táctil ni safe-area, y no

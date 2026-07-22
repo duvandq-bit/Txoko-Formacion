@@ -6163,6 +6163,28 @@ body::after{
   box-shadow:0 1px 4px rgba(28,42,34,.08)}
 .sup-sec{display:none}
 .sup-sec.active{display:block;animation:loginFadeIn .25s ease}
+
+/* ═══ Cabecera de KPIs del panel (rediseño jul 2026) ═══
+   Cuatro métricas grandes de un vistazo: equipo, conectados, precisión media
+   y alertas de seguridad. Color semántico por estado (verde/ámbar/rojo). */
+.sup-kpis{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.85rem}
+.sup-kpi{position:relative;background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1px solid var(--line2);border-radius:16px;padding:.8rem .85rem;overflow:hidden;
+  box-shadow:0 1px 5px rgba(28,42,34,.05)}
+.sup-kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--kpi-accent,var(--gold))}
+.sup-kpi-top{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem}
+.sup-kpi-icon{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;background:var(--kpi-accent,var(--gold));color:#fff;flex-shrink:0}
+.sup-kpi-lbl{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--parch3);line-height:1.2}
+.sup-kpi-num{font-family:'Cinzel',serif;font-size:2rem;font-weight:700;line-height:1;
+  color:var(--kpi-accent,var(--parchment))}
+.sup-kpi-num small{font-size:.9rem;font-weight:600;color:var(--parch3)}
+.sup-kpi-sub{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4);margin-top:.25rem;letter-spacing:.04em}
+.sup-kpi.good{--kpi-accent:var(--sage)}
+.sup-kpi.warn{--kpi-accent:var(--gold-deep)}
+.sup-kpi.bad{--kpi-accent:var(--rose)}
+.sup-kpi.info{--kpi-accent:#4888a0}
 /* fichas plegables: el summary es la fila, el chevron gira al abrir */
 .sup-emp-card summary{list-style:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .sup-emp-card summary::-webkit-details-marker{display:none}
