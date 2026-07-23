@@ -4687,7 +4687,7 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   const ids = new Set([...html.matchAll(/\{id:(\d+),cat:'/g)].map(m => m[1]));
   for (const id of keys) assert(ids.has(id), `dish-photos.json maps unknown dish id ${id}`);
   // sección cableada como subtab de Aprender + overlay + búsqueda
-  assert(/\['emplatado',_en\?'Plating':'Emplatado'/.test(html), 'Emplatado subtab missing from Aprender hub');
+  assert(/\['emplatado','Plating guide'/.test(html), 'Plating guide subtab missing from Aprender hub');
   assert(/emplatado:renderEmplatado/.test(html), 'renderEmplatado not wired into the Aprender dispatch');
   // CADA subtab de Aprender debe existir en el enrutador global: _subTabBar
   // conmuta con showTab('<subkey>'), así que renderMap y parentMap deben
@@ -4884,7 +4884,8 @@ test('Dashboard: tarjeta de acceso directo a la Guía de Emplatado (1 toque desd
   for (const sel of ['.dash-plating{', '.dash-plating-strip img{', '.dash-plating-shine{']) {
     assert(css.includes(sel), `styles.css must style ${sel}`);
   }
-  assert(/"Guía de emplatado"/.test(read('manifest.json')), 'the icon shortcut must be renamed to match its landing');
+  assert(/"Plating guide"/.test(read('manifest.json')), 'the icon shortcut must be renamed to match its landing');
+  assert(/dash-plating-title">Plating guide</.test(html), 'the dashboard card must use the official name (Plating guide)');
 });
 
 test('Acceso en 1 toque: sesión deslizante 90d, banner de instalación, hoja iOS, atajos del manifest', () => {
@@ -5197,8 +5198,8 @@ test('la actividad lleva UN solo nombre en todas partes: Repaso Inteligente', ()
   // único), nombre nuevo — «Simulación» murió con el disfraz de terminal.
   assert(/title_es:'Repaso inteligente',title_en:'Smart review'/.test(html),
     'la guía de onboarding debe usar el nombre nuevo');
-  assert(/Aprender → La Carta/.test(html) && /Learn → The Menu/.test(html),
-    'la guía debe decir DÓNDE vive ahora la sesión');
+  assert(/Aprender → Repaso/.test(html) && /Learn → Review/.test(html),
+    'la guía debe decir DÓNDE vive ahora la sesión (renombrada a Repaso, jul 2026)');
   assert(/\$\{_en\?'SMART REVIEW':'REPASO INTELIGENTE'\}/.test(html),
     'la cabecera de la pantalla debe decir Repaso Inteligente');
   assert(/'Smart review' : 'Repaso inteligente'/.test(html),
@@ -5339,13 +5340,15 @@ test('nav sheet: grouped into Consulta/Formación/Equipo (labels only)', () => {
   assert(/\.nav-group-lbl\{/.test(css), 'nav group label style missing');
 });
 
-test('renames: Terraza / La Carta / Repasar fallos (labels only)', () => {
+test('renames: Terraza / Repaso / Repasar fallos (labels only)', () => {
   // One place, one name: the tab matches the screen (La Terraza); the dish
-  // browser mirrors Vinos ("Carta"); the error-mode shortcut says what it does.
+  // browser is "Repaso" («La Carta es muy confuso», propietario jul 2026);
+  // the error-mode shortcut says what it does.
   assert(/<\/svg> Terraza<\/button>/.test(html) && !/<\/svg> Chat<\/button>/.test(html),
     'nav tab must say Terraza');
   assert(/navChat: LANG==='en'\?'Terrace':'Terraza'/.test(html), 'applyLangToApp must localize Terraza');
-  assert(/\['repaso',_en\?'The Menu':'La Carta',''\]/.test(html), 'Aprender chip must say La Carta');
+  assert(/\['repaso',_en\?'Review':'Repaso',''\]/.test(html), 'Aprender chip must say Repaso');
+  assert(!/'The Menu':'La Carta'/.test(html), 'no visible label may still say La Carta/The Menu');
   assert(/'Review misses':'Repasar fallos'/.test(html),
     'dashboard error-mode shortcut must say Repasar fallos');
   assert(/'Abrir Terraza'/.test(read('sw.js')), 'push action must match the tab name');
@@ -5707,6 +5710,29 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   const sup = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('Ranking XP'));
   assert(/La Mesa Infinita/.test(sup) && /_miPel/.test(sup) && /seguras en alérgenos/.test(sup),
     'el panel de análisis debe mostrar la sección de La Mesa Infinita con la seguridad por delante');
+});
+
+test('La Mesa Infinita destacada: tarjeta en el inicio + primera en Repaso + estilo propio', () => {
+  // «Es una gran adición, debería destacar» (propietario, jul 2026): entrada
+  // a 1 toque desde el inicio y primera tarjeta del hub de Repaso, con una
+  // variante visual propia (verde profundo + oro) que no se confunde con los
+  // CTA dorados de sesión.
+  assert(/function _miGo\(\)\{ _subTab\.aprender='repaso'; showTab\('aprender', true\); renderMesaLobby\(\); \}/.test(html),
+    '_miGo debe navegar con showTab INSTANTÁNEO — el render diferido (120 ms) pisaría la antesala');
+  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('function checkActiveLiveSession'));
+  assert(/ri-cta ri-cta-mesa/.test(dash) && /onclick="_miGo\(\)"/.test(dash),
+    'el inicio debe mostrar la tarjeta destacada de La Mesa Infinita');
+  const cats = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function searchRepaso'));
+  // Orden de PINTADO: la tarjeta de la Mesa va antes del hueco ${smartCard}
+  // (la definición de smartCard vive arriba y no cuenta como orden visual).
+  const iMesa = cats.indexOf('ri-cta-mesa'), iSmart = cats.indexOf('${smartCard}');
+  assert(iMesa > -1 && iSmart > -1 && iMesa < iSmart,
+    'en Repaso la Mesa Infinita debe ir ANTES de la sesión inteligente');
+  const css = read('styles.css');
+  assert(/\.ri-cta-mesa\{/.test(css) && /@keyframes miShine/.test(css),
+    'styles.css debe definir la variante destacada .ri-cta-mesa');
+  assert(/prefers-reduced-motion:reduce\)\{ \.ri-cta-mesa::after\{ animation:none \} \}/.test(css),
+    'el brillo animado debe respetar prefers-reduced-motion');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

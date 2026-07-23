@@ -1719,6 +1719,28 @@ body::after{
 .ri-cta-top{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.15)}
 .ri-cta-sub{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.85)}
 
+/* ── La Mesa Infinita — variante destacada del CTA («es una gran adición,
+   debería destacar», propietario jul 2026). Verde comedor profundo con borde
+   y brillo de oro: se distingue a primera vista de los CTA dorados de sesión
+   sin salirse del lenguaje pergamino de la casa. ── */
+.ri-cta-mesa{
+  background:linear-gradient(150deg,#22302a 0%,#2e3d33 55%,#22302a 100%);
+  border:1.5px solid rgba(228,190,104,.55);
+  box-shadow:0 4px 16px rgba(0,0,0,.28), inset 0 1px 0 rgba(228,190,104,.18);
+  overflow:hidden;
+}
+.ri-cta-mesa::after{
+  content:'';position:absolute;top:0;left:-75%;width:50%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(228,190,104,.16),transparent);
+  animation:miShine 3.8s ease-in-out infinite;pointer-events:none;
+}
+@keyframes miShine{ 0%,55%{left:-75%} 85%,100%{left:125%} }
+@media (prefers-reduced-motion:reduce){ .ri-cta-mesa::after{ animation:none } }
+.ri-cta-mesa .ri-cta-icon{ background:rgba(228,190,104,.14);border-color:rgba(228,190,104,.5) }
+.ri-cta-mesa .ri-cta-top{ color:#f2e6c8 }
+.ri-cta-mesa .ri-cta-sub{ color:rgba(242,230,200,.82) }
+@media (hover:hover){ .ri-cta-mesa:hover{ box-shadow:0 8px 26px rgba(0,0,0,.35), 0 0 0 1px rgba(228,190,104,.35), inset 0 1px 0 rgba(228,190,104,.22) } }
+
 /* Secundario — fantasma dorado como el resto de la app */
 .ri-secondary{
   background:transparent;border:1.5px solid rgba(196,154,60,.5);

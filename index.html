@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.314">
+<meta name="app-version" content="7.315">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -558,7 +558,7 @@ const T = {
     navDashboard: LANG==='en'?'Home':'Inicio',
     navFlashcards: 'Flashcards',
     navExam: 'Examen',
-    navRepaso: 'La Carta',
+    navRepaso: 'Repaso',
     navStats: 'Estadísticas',
     sessions: 'sesiones',
     sessionsMedia: 'media',
@@ -654,7 +654,7 @@ const T = {
     navDashboard: 'Home',
     navFlashcards: 'Flashcards',
     navExam: 'Exam',
-    navRepaso: 'The Menu',
+    navRepaso: 'Review',
     navStats: 'Statistics',
     sessions: 'sessions',
     sessionsMedia: 'avg',
@@ -1553,7 +1553,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.314';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.315';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9189,7 +9189,7 @@ function closePinAndEnter(){
 const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → La Carta.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → The Menu.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → Repaso.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → Review.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Inspección Fantasma. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Ghost Inspection. You can also browse every service standard by category.'},
@@ -9918,8 +9918,8 @@ async function _supPhotoModerate(id,status){
 function _aprChipsBar(){
   const _en = LANG==='en';
   return _subTabBar([
-    ['emplatado',_en?'Plating':'Emplatado','📷'],
-    ['repaso',_en?'The Menu':'La Carta',''],
+    ['emplatado','Plating guide','📷'],
+    ['repaso',_en?'Review':'Repaso',''],
     ['tecnicas',_en?'Techniques':'Técnicas','🍳'],
     ['actualidad',_en?'News':'Actualidad','📰'],
     ['flashcards','Flashcards',''],
@@ -17905,6 +17905,19 @@ function renderDashboard(){
 
   const _runeSvg = `<svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(228,190,104,.55)" stroke-width=".7"/><polygon points="8,3 13,8 8,13 3,8" fill="none" stroke="rgba(228,190,104,.35)" stroke-width=".45"/><circle cx="8" cy="8" r="1" fill="rgba(228,190,104,.6)"/></svg>`;
 
+  // La Mesa Infinita destacada en el inicio («es una gran adición, debería
+  // destacar», propietario jul 2026). Verde profundo + oro para que no se
+  // confunda con los CTA dorados de sesión. Se calcula FUERA de la plantilla:
+  // un template anidado dentro rompería el recorte de las guardas de CI.
+  const _miDashCard = (typeof _miLeft==='function') ? (()=>{ const _miL=_miLeft(emp);
+    return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'The Infinite Table':'La Mesa Infinita'}" onclick="_miGo()">
+      <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'The Infinite Table':'La Mesa Infinita'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-sub">${_en?`Serve an AI guest · a 5★ auditor scores you · ${_miL}/${_MI_DAILY} today`:`Atiende a un huésped IA · te puntúa un auditor 5★ · ${_miL}/${_MI_DAILY} hoy`}</span>
+      </span>
+    </button>`; })() : '';
+
   document.getElementById('appContent').innerHTML=`
 
     <!-- ── HERO ── -->
@@ -17952,12 +17965,15 @@ function renderDashboard(){
       </div>
       <div class="dash-plating-tx">
         <div class="dash-plating-eyebrow">◈ ${_en?'Quick reference':'Consulta rápida'}</div>
-        <div class="dash-plating-title">${_en?'Plating Guide':'Guía de Emplatado'}</div>
+        <div class="dash-plating-title">Plating guide</div>
         <div class="dash-plating-sub">${_en?'The menu in photos · always current':'La carta en fotos · siempre al día'}</div>
       </div>
       <div class="dash-plating-arrow" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="var(--gold)" opacity=".85"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><polyline points="9 12 14 12 11 8 14 12 11 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <span class="dash-plating-shine" aria-hidden="true"></span>
     </div>
+
+    <!-- ── LA MESA INFINITA: destacada en el inicio (tarjeta calculada arriba) ── -->
+    ${_miDashCard}
 
     <!-- ── HOY: rediseño «una acción dominante» (exploración de diseño jul
          2026). UNA tarjeta pergamino (héroe) con dos estados — Reto del día
@@ -18041,7 +18057,7 @@ function renderDashboard(){
       </button>
       <button class="dash-index-entry" onclick="showTab('repaso')">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/></svg>
-        <span><span class="dash-index-lbl">${LANG==='en'?'The Menu':'La Carta'}</span><span class="dash-index-meta">${LANG==='en'?'browse the dishes':'explora los platos'}</span></span>
+        <span><span class="dash-index-lbl">${LANG==='en'?'Review':'Repaso'}</span><span class="dash-index-meta">${LANG==='en'?'browse the dishes':'explora los platos'}</span></span>
       </button>
       <button class="dash-index-entry" onclick="startPersonalErrorMode()">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/></svg>
@@ -18966,6 +18982,10 @@ function _miLqa(lang, role){
     .map(s=>'#'+s.id+' '+(en?(s.std_en||s.std):s.std)).join('\n');
 }
 
+// Entrada desde fuera de Aprender (tarjeta del inicio): fija la subpestaña y
+// el resaltado del nav ANTES de pintar la antesala — el render instantáneo de
+// showTab evita que el _doRender diferido (120 ms) pise la antesala.
+function _miGo(){ _subTab.aprender='repaso'; showTab('aprender', true); renderMesaLobby(); }
 // Antesala: explica el modo, muestra las mesas restantes y deja elegir idioma.
 function renderMesaLobby(){
   const emp=getEmp(currentUser); const _en=LANG==='en'; const left=_miLeft(emp);
@@ -19222,17 +19242,18 @@ function renderRepasoCats(){
     </div>
     <!-- Search results -->
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
-    <!-- Sesión inteligente destacada, fuera de la lista de secciones -->
-    ${smartCard}
+    <!-- La Mesa Infinita PRIMERO («debería destacar», propietario jul 2026),
+         después la sesión inteligente, fuera de la lista de secciones -->
     ${(function(){
       const left=_miLeft(emp);
-      return `<button type="button" class="ri-cta" style="margin:0 0 1rem" aria-label="${_en?'The Infinite Table':'La Mesa Infinita'}" onclick="renderMesaLobby()">
+      return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'The Infinite Table':'La Mesa Infinita'}" onclick="renderMesaLobby()">
       <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
       <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'The Infinite Table':'La Mesa Infinita'} <span style="font-size:.6rem;background:rgba(196,154,60,.2);border:1px solid rgba(196,154,60,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-top">${_en?'The Infinite Table':'La Mesa Infinita'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
         <span class="ri-cta-sub">${_en?`Serve an AI guest by chat · a 5★ auditor scores you · ${left}/${_MI_DAILY} today`:`Atiende a un huésped IA por chat · te puntúa un auditor 5★ · ${left}/${_MI_DAILY} hoy`}</span>
       </span>
     </button>`;})()}
+    ${smartCard}
     <!-- Category grid -->
     <div id="repasoCatGrid">
       <div class="tunic-divider"><span>${t('selectSection')}</span></div>
