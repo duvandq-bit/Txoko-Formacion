@@ -1745,6 +1745,50 @@ test('smart review provenance: DISH_COMPONENTS-driven, executed, anti-obvious', 
   assert(/q\.explain/.test(aq), 'drill feedback must show the provenance explanation');
 });
 
+test('Reto del Día: ingredient subjects are clean tokens, no section labels', () => {
+  // El tipo 'ingredient' preguntaba «¿qué plato lleva X?» donde X salía de un
+  // split(/[,.]/) crudo — dejaba el prefijo de sección pegado y producía
+  // sujetos absurdos: «Topping: loncha de jamón», «Masa: Leche», «Aderezo
+  // césar: Huevo» (agravado por la división de las croquetas). El generador
+  // debe tokenizar con _simExtractIngredients (parte por ':' y limpia
+  // paréntesis) y descartar etiquetas de sección. Candado: ejecuta el
+  // generador determinista sobre 1000 días × 2 idiomas y verifica que ningún
+  // sujeto de ingrediente contiene ':' '/' paréntesis ni una etiqueta de
+  // sección. Corre los MISMOS builders reales, no una regex sobre el fuente.
+  const cut = (a, b) => { const i = html.indexOf(a); assert(i !== -1, 'missing ' + a); return html.slice(i, html.indexOf(b, i)); };
+  const fnBody = (name) => { const s = html.indexOf('function ' + name + '('); let d = 0, k = html.indexOf('{', s); for (;;) { const c = html[k]; if (c === '{') d++; else if (c === '}') { d--; if (d === 0) return html.slice(s, k + 1); } k++; } };
+  const dishesSrc = cut('const DISHES = [', '\n];') + '\n];';
+  const svcSrc = cut('const DISH_SERVICE = {', '};') + '};';
+  const block = html.slice(html.indexOf('const _SIM_PROFILES = {'), html.indexOf('function _srGenerateQuiz('));
+  const stub = 'let LANG="es";const DISHES_EN=[];function getDish(d){return d;}function _djShuffle(a){return a;}'
+    + 'function escapeHTML(s){return s;}function _srCap(s){return s;}function _shiftDishes(a){return a;}function catLocal(c){return c;}';
+  const M = new Function(stub + '\n' + dishesSrc + '\n' + svcSrc + '\n' + block + '\n' // eslint-disable-line no-new-func
+    + fnBody('_mulberry32') + '\n' + fnBody('_dqSample') + '\n' + fnBody('_dqQuestion')
+    + '\nreturn {_dqQuestion, setLang:(l)=>{LANG=l;}};')();
+  const dayStr = (n) => { const d = new Date(2026, 0, 1); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+  const STRUCT = /^(masa|topping|base|relleno|guarnici|sabores|caldo|bisque|fondo)\b/i;
+  let ing = 0;
+  for (const lang of ['es', 'en']) {
+    M.setLang(lang);
+    for (let n = 0; n < 1000; n++) {
+      const q = M._dqQuestion(dayStr(n));
+      const nOpt = q.type === 'service' ? 3 : 4;
+      assert(q.opts && q.opts.length === nOpt && q.correctIdx >= 0 && q.correctIdx < nOpt,
+        `Reto del Día malformed (${lang}): ${JSON.stringify(q)}`);
+      assert(new Set(q.opts.map((o) => String(o).toLowerCase())).size === q.opts.length,
+        `Reto del Día duplicate options (${lang}): ${q.q}`);
+      const m = q.q.match(/«([^»]+)»|[“]([^”]+)[”]/);
+      if (m && /lleva |includes /.test(q.q)) {
+        ing++;
+        const tk = m[1] || m[2];
+        assert(!/[:\/()]/.test(tk), `Reto del Día: ingredient subject has an artifact token (${lang}): «${tk}»`);
+        assert(!STRUCT.test(tk), `Reto del Día: ingredient subject is a section label (${lang}): «${tk}»`);
+      }
+    }
+  }
+  assert(ing >= 100, `Reto del Día ingredient questions collapsed (${ing})`);
+});
+
 test('pairingExplanations: every entry matches a dish still on the menu', () => {
   // Los mapas indexados por nombre de plato quedan huérfanos en silencio
   // cuando un plato sale de la carta (pasó con el Rejo de pulpo): la entrada
