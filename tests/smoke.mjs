@@ -2685,9 +2685,47 @@ test('exam surfaces shuffle options: LQA exam/situations + wine quiz shape guard
   // Wine quiz shape guard: a sentence correct among bare-term wrongs (36% of
   // EN questions) revealed the answer by shape; and the correct was the
   // longest option ~50% of the time.
-  const wq = html.slice(html.indexOf('function _generateWineChoices'), html.indexOf('function _generateWineChoices') + 9000);
+  const wq = html.slice(html.indexOf('function _generateWineChoices'), html.indexOf('function _generateWineChoices') + 10000);
   assert(/isSentence/.test(wq) && /mergedPool/.test(wq), 'wine quiz shape guard missing');
   assert(/_inWindow/.test(wq) && /strictLen/.test(wq), 'wine quiz length-window two-pass pick missing');
+  // El generador debe CONSUMIR los distractores autorados por flashcard.
+  assert(/q\.distractors_en \|\| q\.distractors/.test(wq) && /\.\.\.authored/.test(wq),
+    'wine quiz must seed authored distractors (q.distractors/_en) at top priority');
+});
+
+test('wine quiz length tell: correct is never reliably the longest option', () => {
+  // Medido sobre los generadores REALES (auditoría jul 2026): en 6 flashcards
+  // ES + 7 EN la respuesta correcta era la opción más larga >60% de las veces
+  // (3 tarjetas lo daban al 100 %), así que "elegir la más larga" acertaba sin
+  // saber de vino. Las flashcards infractoras traen ahora distractores
+  // autorados —erróneos pero plausibles y de longitud ≥ la correcta— que el
+  // generador prioriza. Candado: ejecuta el generador real sobre cada flashcard
+  // en los dos idiomas y verifica que ninguna deja la correcta como opción
+  // estrictamente más larga en >75 % de las tiradas.
+  const fnBody = (name) => { const s = html.indexOf('function ' + name + '('); let d = 0, k = html.indexOf('{', s); for (;;) { const c = html[k]; if (c === '{') d++; else if (c === '}') { d--; if (d === 0) return html.slice(s, k + 1); } k++; } };
+  const wines = JSON.parse(read('data/wines.json'));
+  const FC = JSON.parse(read('data/vinos-content.json')).WINE_FLASHCARDS;
+  const M = new Function('let LANG="es";const WINES=arguments[0];const WINE_FLASHCARDS=arguments[1];' // eslint-disable-line no-new-func
+    + '\n' + fnBody('_generateWineChoices') + '\nreturn {gen:_generateWineChoices, setLang:(l)=>{LANG=l;}};')(wines, FC);
+  const N = 400, offenders = [];
+  let malformed = 0;
+  for (const lang of ['es', 'en']) {
+    M.setLang(lang);
+    FC.forEach((q, idx) => {
+      let longest = 0;
+      for (let r = 0; r < N; r++) {
+        const ch = M.gen(q);
+        const ci = ch.findIndex((c) => c.correct);
+        if (ch.length !== 4 || ci < 0 || new Set(ch.map((c) => c.text.toLowerCase())).size !== 4) { malformed++; continue; }
+        const cl = ch[ci].text.length;
+        const mo = Math.max(...ch.filter((_, i) => i !== ci).map((c) => c.text.length));
+        if (cl > mo) longest++;
+      }
+      if (longest / N > 0.75) offenders.push(`${lang} idx${idx} [${q.cat}] rate=${(longest / N).toFixed(2)}`);
+    });
+  }
+  assert(malformed === 0, `wine quiz produced ${malformed} malformed question(s)`);
+  assert(offenders.length === 0, `wine quiz length tell (correct = longest >75%): ${offenders.join(' · ')}`);
 });
 
 test('ghost inspection shuffles scene options per session', () => {

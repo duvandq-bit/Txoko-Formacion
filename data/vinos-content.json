@@ -3277,7 +3277,15 @@
    "a": "Un vino sin dulzor. La mayoría de tintos y blancos de nuestra carta son secos. Lo contrario es un vino dulce como el Tokaji Aszú.",
    "a_en": "A wine with no sweetness. Most reds and whites on our list are dry. The opposite is a sweet wine like Tokaji Aszú.",
    "hint": "No tiene que ver con la textura",
-   "hint_en": "It has nothing to do with texture"
+   "hint_en": "It has nothing to do with texture",
+   "distractors": [
+    "Un vino elaborado con uvas pasificadas al sol antes de prensarlas, lo que concentra sus azúcares y da como resultado un vino denso y muy aromático.",
+    "Un vino que ha perdido gas y frescura por llevar la botella demasiado tiempo abierta, y que por eso resulta más áspero y plano en boca al servirlo."
+   ],
+   "distractors_en": [
+    "A wine made from grapes dried in the sun before pressing, which concentrates their sugars and gives a dense, intensely aromatic result.",
+    "A wine that has lost its gas and freshness because the bottle was left open far too long, and therefore tastes harsher and flatter in the mouth."
+   ]
   },
   {
    "cat": "Principiante",
@@ -3286,7 +3294,15 @@
    "a": "Le ofreces alternativas: espumosos o vinos dulces, mocktails sin alcohol (12€), o incluso un espumoso suave como Colet A Priori que puede sorprenderle.",
    "a_en": "Offer alternatives: sparkling or sweet wines, non-alcoholic mocktails (12€), or even a gentle sparkling like Colet A Priori that might surprise them.",
    "hint": "Siempre hay alternativas",
-   "hint_en": "There are always alternatives"
+   "hint_en": "There are always alternatives",
+   "distractors": [
+    "Le insistes en que es una de las joyas de nuestra bodega y le animas a acostumbrarse poco a poco a su sabor, describiéndole con detalle sus notas y aromas antes de plantear siquiera un cambio de botella.",
+    "Retiras la copa en silencio y le sirves agua, dando por hecho que ya no querrá probar nada más de nuestra carta de vinos durante el resto de la velada."
+   ],
+   "distractors_en": [
+    "You insist that it is one of the true jewels of our cellar and encourage the guest to get used to its flavour little by little, describing its aromas in detail before you even consider changing the bottle.",
+    "You quietly take the glass away and pour water instead, simply assuming the guest will no longer want to try anything else from our wine list for the rest of the evening."
+   ]
   },
   {
    "cat": "Principiante",
@@ -3295,7 +3311,15 @@
    "a": "Que puedes pedir solo una copa en lugar de la botella entera. Ideal para probar o si cada comensal quiere algo diferente.",
    "a_en": "You can order just one glass instead of the whole bottle. Ideal for tasting or if each guest wants something different.",
    "hint": "No hace falta comprar toda la botella",
-   "hint_en": "No need to buy the whole bottle"
+   "hint_en": "No need to buy the whole bottle",
+   "distractors": [
+    "Significa que la botella se abrió antes para otra mesa y ahora se ofrece más barata antes de que se estropee del todo, así que conviene beberla cuanto antes.",
+    "Significa que el sumiller sirve una medida de cata idéntica para toda la mesa, de modo que todos los comensales comparten exactamente el mismo vino a la vez."
+   ],
+   "distractors_en": [
+    "It means the bottle was opened earlier for another table and is now offered at a lower price before it spoils completely, so it should really be drunk quickly.",
+    "It means the sommelier pours one identical tasting measure for the whole table, so that every guest shares exactly the same wine at the very same time."
+   ]
   },
   {
    "cat": "Principiante",
@@ -3304,7 +3328,15 @@
    "a": "El Tempranillo. Es la estrella de Rioja y Ribera del Duero. Da vinos elegantes con notas de fruta roja, vainilla y cuero.",
    "a_en": "Tempranillo. It's the star of Rioja and Ribera del Duero. It produces elegant wines with notes of red fruit, vanilla and leather.",
    "hint": "Piensa en La Rioja",
-   "hint_en": "Think of La Rioja"
+   "hint_en": "Think of La Rioja",
+   "distractors": [
+    "Garnacha. Muy cultivada en Aragón y el Priorat, da tintos cálidos y de alta graduación, con fruta roja madura y un cuerpo más redondo, suave y generoso en boca.",
+    "Monastrell. Variedad sureña de piel gruesa de Jumilla y Yecla, que da vinos oscuros y potentes, de taninos firmes, notas cálidas y un final especiado y largo."
+   ],
+   "distractors_en": [
+    "Garnacha. Widely grown across Aragón and Priorat, it produces warm, high-alcohol reds with ripe red-fruit character and a rounder, softer, more generous body on the palate.",
+    "Monastrell. A thick-skinned southern grape from Jumilla and Yecla, yielding dark, powerful wines with firm tannin, warm notes and a long, spiced finish."
+   ]
   },
   {
    "cat": "Conceptos",
@@ -3340,7 +3372,15 @@
    "a": "Nunca fueron afectados por la filoxera — conservan cepas centenarias sobre pie franco (raíz original)",
    "a_en": "They were never affected by phylloxera — they preserve century-old vines on original rootstock",
    "hint": "Una plaga del siglo XIX",
-   "hint_en": "A 19th century plague"
+   "hint_en": "A 19th century plague",
+   "distractors": [
+    "Que se cultivan a mayor altitud que cualquier otro viñedo europeo, lo que obliga a vendimiar siempre de noche para preservar el frescor de la uva.",
+    "Que emplean solo variedades francesas replantadas tras la filoxera y luego adaptadas poco a poco al clima atlántico de las islas durante el último siglo."
+   ],
+   "distractors_en": [
+    "That they grow at a higher altitude than any other European vineyard, which forces every single harvest to be carried out at night to keep the fruit fresh.",
+    "That they use only French varieties replanted after phylloxera and then slowly adapted to the islands' Atlantic climate over the course of the last century."
+   ]
   },
   {
    "cat": "Conceptos",
@@ -3367,7 +3407,15 @@
    "a": "Compuestos de la piel, semillas y barrica que dan estructura y sensación de sequedad en boca",
    "a_en": "Compounds from the skin, seeds and barrel that give structure and a drying sensation in the mouth",
    "hint": "Esa sensación áspera en la lengua",
-   "hint_en": "That rough feeling on your tongue"
+   "hint_en": "That rough feeling on your tongue",
+   "distractors": [
+    "Los azúcares naturales que quedan en el vino cuando se detiene la fermentación, que aportan dulzor y una sensación más redonda y envolvente en el paladar.",
+    "Las burbujas de dióxido de carbono que libera una segunda fermentación en botella, que aportan frescura y una chispa viva al vino cuando se sirve en la copa."
+   ],
+   "distractors_en": [
+    "The natural sugars left in the wine when fermentation stops, which bring sweetness and a rounder, fuller and more enveloping sensation on the palate.",
+    "The tiny bubbles of carbon dioxide released by a second fermentation in the bottle, which bring freshness and a lively prickle to the wine when it is served."
+   ]
   },
   {
    "cat": "Conceptos",
@@ -3430,7 +3478,15 @@
    "a": "Valtravieso Nogara, Fenomenal SB, El Grifo Lías, Muga Rosado, Arienzo, Cair Cuvèe, Artifice tinto, Marqués de Murrieta Reserva, Colet A Priori, Andre Clouet",
    "a_en": "Valtravieso Nogara, Fenomenal SB, El Grifo Lías, Muga Rosado, Arienzo, Cair Cuvèe, Artifice tinto, Marqués de Murrieta Reserva, Colet A Priori, Andre Clouet",
    "hint": "Tenemos blancos, rosado, tintos y espumosos por copa",
-   "hint_en": "We have whites, rosé, reds and sparkling by the glass"
+   "hint_en": "We have whites, rosé, reds and sparkling by the glass",
+   "distractors": [
+    "Tempranillo, Garnacha, Albariño, Godello, Verdejo, Mencía, Monastrell, Bobal, Cariñena, Listán Blanco, Malvasía Volcánica, Syrah, Cabernet Sauvignon, Merlot y Chardonnay.",
+    "DO Ca Rioja, Ribera del Duero, Rías Baixas, Rueda, Bierzo, Toro, Jumilla, Priorat, Penedès, Ycoden-Daute-Isora, Tacoronte-Acentejo, Valdeorras, La Orotava y Abona."
+   ],
+   "distractors_en": [
+    "Tempranillo, Garnacha, Albariño, Godello, Verdejo, Mencía, Monastrell, Bobal, Cariñena, Listán Blanco, Malvasía Volcánica, Syrah, Cabernet Sauvignon, Merlot and Chardonnay.",
+    "DO Ca Rioja, Ribera del Duero, Rías Baixas, Rueda, Bierzo, Toro, Jumilla, Priorat, Penedès, Ycoden-Daute-Isora, Tacoronte-Acentejo, Valdeorras, La Orotava and Abona."
+   ]
   },
   {
    "cat": "Nuestra Carta",
@@ -3457,7 +3513,15 @@
    "a": "Blancos frescos y minerales: Cepado (Godello), Viñatigo Blanco, Fenomenal SB (Sauvignon Blanc) o un espumoso como Colet A Priori",
    "a_en": "Fresh mineral whites: Cepado (Godello), Viñatigo Blanco, Fenomenal SB (Sauvignon Blanc) or a sparkling like Colet A Priori",
    "hint": "Acidez y frescura para el pescado",
-   "hint_en": "Acidity and freshness for fish"
+   "hint_en": "Acidity and freshness for fish",
+   "distractors": [
+    "Tintos potentes y con crianza como Marqués de Murrieta Reserva, Contino Reserva o Alion, cuyo cuerpo tánico apaga el atún y el sésamo en lugar de realzarlos.",
+    "Un vino dulce de postre como Oremus Late Harvest o un Pedro Ximénez, para contrastar el sésamo tostado con notas intensas de miel, pasas y fruta confitada."
+   ],
+   "distractors_en": [
+    "Powerful aged reds such as Marqués de Murrieta Reserva, Contino Reserva or Alion, whose tannic body overpowers the tuna and the sesame instead of lifting them.",
+    "A sweet dessert wine such as Oremus Late Harvest or a Pedro Ximénez, to contrast the toasted sesame with intense notes of honey, raisins and candied fruit."
+   ]
   },
   {
    "cat": "Maridaje",
@@ -3502,7 +3566,15 @@
    "a": "Nuestros vinos canarios nacen de viñedos volcánicos centenarios que nunca fueron afectados por la filoxera. Son cepas con raíces originales, únicas en Europa. El suelo de lava y el viento del Atlántico les dan un carácter mineral y salino inigualable.",
    "a_en": "Our Canary wines come from century-old volcanic vineyards never affected by phylloxera. They are vines with original roots, unique in Europe. The lava soil and Atlantic wind give them an unmatched mineral, saline character.",
    "hint": "Volcán + filoxera + Atlántico",
-   "hint_en": "Volcano + phylloxera + Atlantic"
+   "hint_en": "Volcano + phylloxera + Atlantic",
+   "distractors": [
+    "Que son vinos jóvenes y económicos, pensados sobre todo para el turismo de playa, que se elaboran en grandes bodegas industriales modernas repartidas por todas las islas. Se hacen con variedades francesas e italianas traídas hace pocas décadas. Su estilo busca imitar a los grandes vinos europeos de siempre.",
+    "Que destacan por servirse siempre muy fríos y con mucho gas, porque el calor de las islas obliga a añadirles burbujas y azúcar para que resulten más refrescantes. Se elaboran en cooperativas jóvenes sin apenas historia. Por eso son vinos sencillos, pensados para beber deprisa junto al mar."
+   ],
+   "distractors_en": [
+    "That they are young, inexpensive wines made mostly for beach tourism, produced in large modern industrial wineries spread across every one of the islands. They are made from French and Italian varieties brought over just a few decades ago. Their style simply tries to imitate the great classic European wines.",
+    "That they stand out for always being served very cold and fizzy, because the islands' heat forces producers to add bubbles and sugar to make them more refreshing. They come from young cooperatives with almost no history. They are simple wines, meant to be drunk quickly by the sea."
+   ]
   },
   {
    "cat": "Servicio",
