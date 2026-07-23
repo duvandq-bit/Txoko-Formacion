@@ -1010,10 +1010,8 @@
   },
   "loncha de jamon": {
    "nombre": "loncha de jamón",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "deducido de la carta"
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "txipiron": {
    "nombre": "Txipiron",
