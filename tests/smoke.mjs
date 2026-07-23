@@ -5659,8 +5659,23 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   // Entrada visible: tarjeta en el hub de Repaso
   assert(/renderMesaLobby\(\)/.test(html) && /La Mesa Infinita/.test(html), 'tarjeta de entrada en Repaso');
   // La evaluación premia XP y telemetría sin subir la conversación a la nube
-  const endFn = html.slice(html.indexOf('async function _miEnd'), html.indexOf('async function _miEnd') + 4200);
+  const endFn = html.slice(html.indexOf('async function _miEnd'), html.indexOf('async function _miEnd') + 5200);
   assert(/awardXP\(xp/.test(endFn) && /track\('mesa\.finish'/.test(endFn), 'cierre: XP + telemetría agregada');
+  // REGRESIÓN (bug real): "Cerrar mesa" durante la respuesta del huésped se
+  // ignoraba en silencio (guard de busy) y la mesa parecía colgada. Ahora se
+  // ENCOLA y se ejecuta al terminar el turno; y todo fetch lleva tiempo máximo.
+  assert(/closeQueued=true/.test(endFn), 'cerrar mesa con el huésped hablando debe ENCOLARSE, no ignorarse');
+  const turnFn = html.slice(html.indexOf('async function _miCallTurn'), html.indexOf('function _miSend'));
+  assert(/closeQueued && !_miS\.over/.test(turnFn) && /_miEnd\(\)/.test(turnFn), 'el cierre encolado debe ejecutarse al resolver el turno');
+  assert(/AbortController/.test(turnFn) && /45000/.test(turnFn), 'el turno debe tener tiempo máximo (45 s)');
+  assert(/90000/.test(endFn), 'la evaluación debe tener tiempo máximo (90 s)');
+  assert(/evaluating/.test(endFn), 'la evaluación debe mostrar su propio estado (no "el huésped piensa")');
+  // LQA: el auditor recibe los estándares REALES observables por chat
+  assert(/const _MI_LQA_IDS = \[13,15,16,19,20,21,22,23,25,34,36,42,71,73,76,78\];/.test(html),
+    'subconjunto de estándares LQA observables en conversación');
+  const lqaFn = html.slice(html.indexOf('function _miLqa'), html.indexOf('function renderMesaLobby'));
+  assert(/LQA_STANDARDS\.filter/.test(lqaFn), '_miLqa debe derivar de LQA_STANDARDS (fuente única)');
+  assert(/lqa:_miLqa\(_miS\.lang\)/.test(endFn), 'la evaluación debe enviar los estándares LQA');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

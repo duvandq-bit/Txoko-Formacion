@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.310">
+<meta name="app-version" content="7.311">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1553,7 +1553,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.310';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.311';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -18897,9 +18897,25 @@ function _miScenario(lang){
          :'Eres estrictamente vegetariano/a (ni carne ni pescado). Quieres un par de entrantes y un principal, y te gusta preguntar antes de decidir.')
     : (en?'You have a serious '+algN+' allergy. You want to share two starters and order a main, but you accept nothing until you are sure it is safe for you.'
          :'Tienes una alergia seria a '+algN+'. Quieres compartir dos entrantes y pedir un principal, pero no aceptas nada sin estar seguro de que es seguro para ti.');
+  // Aperturas LQA: el huésped deja hueco para agua, vino, postre y café —
+  // así el auditor puede observar los estándares de venta sugerente.
+  const lqaHook = en
+    ? ' During the evening, react naturally if offered water, wine, dessert or coffee — and wait to be offered dessert before asking for the bill.'
+    : ' Durante la velada, reacciona con naturalidad si te ofrecen agua, vino, postre o café — y espera a que te ofrezcan el postre antes de pedir la cuenta.';
   return { persona:P[Math.floor(Math.random()*P.length)],
-           situacion,
+           situacion: situacion + lqaHook,
            label: veg?(en?'Vegetarian guest':'Huésped vegetariano'):(en?algN+' allergy':'Alergia: '+algN) };
+}
+
+// Estándares LQA observables en una conversación de mesa (subconjunto de
+// LQA_STANDARDS por id): los de tiempos físicos (bandeja, minutos, montaje)
+// no se pueden auditar por chat y se excluyen. El auditor cita el nº real.
+const _MI_LQA_IDS = [13,15,16,19,20,21,22,23,25,34,36,42,71,73,76,78];
+function _miLqa(lang){
+  if(typeof LQA_STANDARDS==='undefined') return '';
+  const en = lang==='en';
+  return LQA_STANDARDS.filter(s=>_MI_LQA_IDS.includes(s.id))
+    .map(s=>'#'+s.id+' '+(en?(s.std_en||s.std):s.std)).join('\n');
 }
 
 // Antesala: explica el modo, muestra las mesas restantes y deja elegir idioma.
@@ -18959,7 +18975,7 @@ function _miRenderMsgs(){
     ? `<div style="align-self:flex-start;max-width:85%;background:rgba(255,255,255,.08);border:1px solid var(--ink3);border-radius:14px 14px 14px 4px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(m.text)}</div>`
     : `<div style="align-self:flex-end;max-width:85%;background:rgba(196,154,60,.16);border:1px solid rgba(196,154,60,.4);border-radius:14px 14px 4px 14px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(m.text)}</div>`
   ).join('')
-  + (_miS.busy?`<div style="align-self:flex-start;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3);padding:.2rem .4rem">${_en?'the guest is thinking…':'el huésped piensa…'}</div>`:'')
+  + (_miS.busy?`<div style="align-self:flex-start;font-family:'DM Mono',monospace;font-size:.7rem;color:${_miS.evaluating?'var(--gold-deep)':'var(--parch3)'};padding:.2rem .4rem">${_miS.evaluating?(_en?'🧾 the auditor is reviewing your service… (~20 s)':'🧾 el auditor está revisando tu servicio… (~20 s)'):(_en?'the guest is thinking…':'el huésped piensa…')}</div>`:'')
   + (waiterN>=_MI_MAX_WAITER&&!_miS.over?`<div style="align-self:center;font-size:.72rem;color:var(--gold-deep);padding:.3rem">${_en?'The evening winds down — close the table.':'La velada se acaba — cierra la mesa.'}</div>`:'');
   const inp=document.getElementById('miInput'), btn=document.getElementById('miSendBtn');
   const lock=_miS.busy||_miS.over||waiterN>=_MI_MAX_WAITER;
@@ -18978,8 +18994,11 @@ function _miFriendly(code){
 async function _miCallTurn(start){
   if(!_miS||_miS.busy) return;
   _miS.busy=true; _miRenderMsgs();
+  // Tiempo máximo: un turno nunca deja la mesa colgada (45 s y se avisa).
+  const _ac = (typeof AbortController!=='undefined') ? new AbortController() : null;
+  const _tm = _ac ? setTimeout(()=>{ try{_ac.abort();}catch(_){} }, 45000) : null;
   try{
-    const res=await fetch(_MI_FN_URL,{ method:'POST',
+    const res=await fetch(_MI_FN_URL,{ method:'POST', signal:_ac?_ac.signal:undefined,
       headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
       body:JSON.stringify({ mode:'turn', startSession:!!start, user:currentUser, lang:_miS.lang,
         scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion}, menu:_miMenu(_miS.lang), messages:_miS.msgs }) });
@@ -18993,7 +19012,15 @@ async function _miCallTurn(start){
       emp.miCount=(emp.miCount||0)+1; saveDB();
     }
   }catch(_){ showToast(_miFriendly('red'),'warning',6000); if(_miS&&!_miS.started){ renderMesaLobby(); _miS=null; return; } }
-  finally{ if(_miS){ _miS.busy=false; _miRenderMsgs(); } }
+  finally{
+    if(_tm) clearTimeout(_tm);
+    if(_miS){
+      _miS.busy=false; _miRenderMsgs();
+      // Si el camarero pidió cerrar la mesa mientras el huésped respondía,
+      // se cierra ahora — el toque nunca se pierde en silencio.
+      if(_miS.closeQueued && !_miS.over){ _miS.closeQueued=false; _miEnd(); }
+    }
+  }
 }
 
 function _miSend(){
@@ -19013,18 +19040,26 @@ function _miExit(){
 }
 
 async function _miEnd(){
-  if(!_miS||_miS.busy||_miS.over) return;
+  if(!_miS||_miS.over) return;
   const _en=LANG==='en';
+  if(_miS.busy){
+    // El huésped aún responde: se ENCOLA el cierre en vez de ignorar el toque.
+    if(!_miS.closeQueued){ _miS.closeQueued=true; showToast(_en?'Closing the table as soon as the guest finishes…':'Cerrando la mesa en cuanto termine el huésped…','info',3500); }
+    return;
+  }
   if(_miS.msgs.filter(m=>m.role==='waiter').length<2){ _miExit(); return; }
-  _miS.busy=true; _miRenderMsgs();
+  _miS.busy=true; _miS.evaluating=true; _miRenderMsgs();
+  const _ac=(typeof AbortController!=='undefined')?new AbortController():null;
+  const _tm=_ac?setTimeout(()=>{ try{_ac.abort();}catch(_){} },90000):null;
   try{
-    const res=await fetch(_MI_FN_URL,{ method:'POST',
+    const res=await fetch(_MI_FN_URL,{ method:'POST', signal:_ac?_ac.signal:undefined,
       headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
       body:JSON.stringify({ mode:'eval', user:currentUser, lang:_miS.lang,
-        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion}, menu:_miMenu(_miS.lang), messages:_miS.msgs }) });
+        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion}, menu:_miMenu(_miS.lang), lqa:_miLqa(_miS.lang), messages:_miS.msgs }) });
     const j=await res.json().catch(()=>({}));
-    if(!res.ok||!j.eval){ _miS.busy=false; _miRenderMsgs(); showToast(_miFriendly(j.error),'warning',6000); return; }
-    _miS.over=true; _miS.busy=false;
+    if(!res.ok||!j.eval){ _miS.busy=false; _miS.evaluating=false; _miRenderMsgs(); showToast(_miFriendly(j.error),'warning',7000); return; }
+    _miS.over=true; _miS.busy=false; _miS.evaluating=false;
+    if(_tm) clearTimeout(_tm);
     const ev=j.eval;
     const xp= ev.score>=85?50: ev.score>=70?35: ev.score>=50?20: 10;
     awardXP(xp,(_en?'The Infinite Table':'La Mesa Infinita')+' ('+ev.score+'%)');
@@ -19042,7 +19077,8 @@ async function _miEnd(){
       ${(ev.mejoras||[]).length?`<div style="text-align:left;background:rgba(196,112,104,.07);border:1px solid rgba(196,112,104,.22);border-radius:var(--r2);padding:.7rem .9rem;margin-bottom:1rem">${ev.mejoras.map(a=>`<div style="font-size:.78rem;color:var(--parchment);margin:.2rem 0">→ ${escapeHTML(a)}</div>`).join('')}</div>`:''}
       <button class="btn-primary" style="width:100%;margin-bottom:.5rem" onclick="renderMesaLobby()">${_en?'Back to the lobby':'Volver a la antesala'}</button>
     </div>`;
-  }catch(_){ if(_miS){ _miS.busy=false; _miRenderMsgs(); } showToast(_miFriendly('red'),'warning',6000); }
+  }catch(_){ if(_miS){ _miS.busy=false; _miS.evaluating=false; _miRenderMsgs(); } showToast(_miFriendly('red'),'warning',7000); }
+  finally{ if(_tm) clearTimeout(_tm); }
 }
 
 
