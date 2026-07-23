@@ -4933,11 +4933,8 @@ test('bug 2: vegetarian variant claim requires REAL variant data', () => {
   assert(/^No — lleva productos animales/.test(qv.options[qv.correctIdx]),
     `Ravioli de pularda must be a plain NO, got: "${qv.options[qv.correctIdx]}"`);
   assert(!/Boletus/i.test(qv.explain), 'explain must not invent a Boletus ravioli');
-  const croq = SIM.DISHES.find(d => d.id === 1);
-  const qc = SIM._scenarioVegetarian(croq, croq, false);
-  assert(qc && /variantes|sabores/.test(qc.options[qc.correctIdx]),
-    'Croquetas Premium must keep the variant verdict (it HAS a Boletus variant)');
-  assert(/Boletus/.test(qc.explain), 'Croquetas explain must name Boletus from the variant DATA');
+  // (Las croquetas se separaron en fichas individuales sin variantes; el caso
+  // positivo de "variante vegetariana real" ya no aplica a ellas.)
 });
 
 test('bug 3: no oil may ever be an ingredient question subject', () => {
