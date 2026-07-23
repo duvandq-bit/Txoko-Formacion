@@ -1,14 +1,65 @@
 {
- "updated": "2026-07-23T00:14:46.713Z",
+ "updated": "2026-07-23T07:44:58.147Z",
  "items": [
   {
-   "t": "La popular chef Samantha Vallejo desvela la graciosa anécdota que vivió Canarias: \"Prometí no volver y",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/samantha-vallejo-nagera-anecdota-canarias/",
-   "s": "Diario de Avisos",
-   "d": "2026-07-22T23:01:55.000Z",
+   "t": "Así es el nuevo centro comercial de Tenerife: más de 30 tiendas, cine, restaurantes y 1.000 plazas de aparcamiento",
+   "u": "https://www.20minutos.es/canarias/tenerife/centro-comercial-tenerife-tiendas-cine-restaurantes-plazas-aparcamiento_7017878_0.html",
+   "s": "20Minutos",
+   "d": "2026-07-23T07:13:57.000Z",
    "tags": [
     "CANARIAS"
+   ],
+   "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/07/22/6a60e8015d75f1-82576110.jpeg"
+  },
+  {
+   "t": "El evento gastronómico de Tenerife que reunirá a dos chefs internacionales en una \"batalla\" frente al mar",
+   "u": "https://www.atlanticohoy.com/tenerife/evento-gastronomico-tenerife-chefs-internacionales-batalla-frente-mar_1564597_102.html",
+   "s": "Atlántico Hoy",
+   "d": "2026-07-23T04:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.atlanticohoy.com/uploads/s1/37/50/32/3/disen-o-sin-ti-tulo.webp"
+  },
+  {
+   "t": "La alta cocina se sube al Gran Premio de Fórmula 1 de Madrid",
+   "u": "https://sivarious.com/proveedores/la-alta-cocina-se-sube-al-gran-premio-de-formula-1-de-madrid-20260723-0522/",
+   "s": "Sivarious",
+   "d": "2026-07-23T03:23:15.000Z",
+   "tags": [
+    "ALTA COCINA"
    ]
+  },
+  {
+   "t": "Olas de calor redefinen las preferencias turísticas hacia España",
+   "u": "http://www.pulsoturistico.com.ar/mas_informacion.asp?id",
+   "s": "Pulso Turístico",
+   "d": "2026-07-23T03:02:28.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "El restaurante de la Costa Blanca que inicia una nueva etapa de la mano del único chef español con Estrellas Michelin en España y Francia",
+   "u": "https://www.vozpopuli.com/amp/gastropoli/el-restaurante-de-la-costa-blanca-que-inicia-una-nueva-etapa-de-la-mano-del-unico-chef-espanol-con-estrellas-michelin-en-espana-y-francia.html",
+   "s": "Vozpopuli",
+   "d": "2026-07-23T02:45:00.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://cdn.vozpopuli.com/cdn/posts/4231574/restaurante-beat-the-cookbook-hotel-2883480-1200-700.jpg"
+  },
+  {
+   "t": "Fat Dog, Getdown Services, Ibibio Sound Machine y Bodega: llega el Phe Festival más internacional",
+   "u": "https://diariodeavisos.elespanol.com/2026/07/fat-dog-getdown-services-ibibio-sound-machine-y-bodega-llega-el-phe-festival-mas-internacional/",
+   "s": "Diario de Avisos",
+   "d": "2026-07-22T23:00:51.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Pagina-43-La-undecima-edicion-del-festival-se-presento-este-miercoles.jpg"
   },
   {
    "t": "Santy (23/07/26)",
@@ -31,7 +82,7 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
   },
   {
-   "t": "La Fórmula 1 en Madrid 2026 se llena de estrellas Michelin",
+   "t": "La Fórmula 1 en Madrid 2026 se llena de estrellas Michelin | Precio",
    "u": "https://gastroactivity.com/gastronomia-de-lujo-formula-1-2026-madrid/",
    "s": "Gastroactivity",
    "d": "2026-07-22T20:27:58.000Z",
@@ -42,13 +93,14 @@
    "img": "https://gastroactivity.com/wp-content/uploads/2026/07/La-Azotea-Formula-1-Madrid.jpg"
   },
   {
-   "t": "Jamón ibérico gratis en pleno centro de La Laguna este viernes: fecha, hora y lugar",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/degustacion-gratis-jamon-iberico-la-laguna/amp/",
+   "t": "La popular chef Samantha Vallejo desvela la graciosa anécdota que vivió Canarias: \"Prometí no volver y",
+   "u": "https://diariodeavisos.elespanol.com/2026/07/samantha-vallejo-nagera-anecdota-canarias/",
    "s": "Diario de Avisos",
-   "d": "2026-07-22T20:27:07.000Z",
+   "d": "2026-07-22T19:16:08.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/RS733502_P7130353-scr.jpg"
   },
   {
    "t": "Los Realejos celebra la gran fiesta de la papa bonita, joya agrícola llegada desde Perú",
@@ -81,16 +133,6 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/22/Yuzu%20Mochi%20-%20Chef%20Julio-U201366525911ltB-U3095998565191D-1200x840@Canarias7.jpg"
   },
   {
-   "t": "Iván Cerdeño, el cocinero de lo salvaje: “Nos gusta la carne de caza porque la mano del hombre no interviene, cada vez te enfrentas a un animal diferente”",
-   "u": "https://www.directoalpaladar.com/viajes/ivan-cerdeno-cocinero-salvaje-nos-gusta-carne-caza-porque-mano-hombre-no-interviene-cada-vez-te-enfrentas-a-animal-diferente/amp",
-   "s": "Directo al Paladar",
-   "d": "2026-07-22T17:07:05.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://i.blogs.es/4f498d/cerdeno_portada/840_560.jpeg"
-  },
-  {
    "t": "Roberto Ruiz, el chef que cambió la historia de la cocina mexicana en Madrid: «Hemos creado nuevos sabores»",
    "u": "https://okdiario.com/cool/lifestyle/mexicano-restaurantes-madrid-entrevista-roberto-ruiz-chef-19040196/amp",
    "s": "OkDiario",
@@ -119,16 +161,6 @@
     "VINO",
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Así es el centro comercial de Tenerife que se inaugura este jueves: más de 30 tiendas, cine, restaurantes y 1.000 plazas de aparcamiento",
-   "u": "https://www.20minutos.es/canarias/tenerife/centro-comercial-tenerife-inaugura-jueves-tiendas-cine-restaurantes-plazas-aparcamiento_7017878_0.html",
-   "s": "20Minutos",
-   "d": "2026-07-22T16:44:31.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/07/22/6a60e8015d75f1-82576110.jpeg"
   },
   {
    "t": "Mónica García responde a los hosteleros que critican la ley antitabaco: \"Los bares funcionan perfectamente sin humo\"",
@@ -163,7 +195,7 @@
   },
   {
    "t": "El bar italiano de Tenerife que conquista con sus desayunos: sirve uno de los mejores cappuccinos de la isla",
-   "u": "https://www.eldia.es/tenerife/2026/07/22/bar-italiano-tenerife-conquista-desayunos-dv-132695521.html",
+   "u": "https://www.eldia.es/tenerife/2026/07/22/bar-italiano-tenerife-conquista-desayunos-dv-132695521.amp.html",
    "s": "Eldía",
    "d": "2026-07-22T12:31:00.000Z",
    "tags": [
@@ -188,7 +220,8 @@
    "d": "2026-07-22T12:14:38.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/CC-La-Gran-Manzana-1200x619-1.jpg"
   },
   {
    "t": "Donaire: el rigor de la precisión técnica como motor de la alta cocina canaria",
@@ -217,7 +250,8 @@
    "d": "2026-07-22T11:39:23.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/EuropaPress_6949150_persona_fuma_terraza_12_septiembre_2025_madrid_espana_anteproyecto_ley.jpg"
   },
   {
    "t": "Tenerife más allá de los imprescindibles: una forma diferente de descubrir la isla",
@@ -268,35 +302,6 @@
     "CANARIAS"
    ],
    "img": "https://www.atlanticohoy.com/uploads/s1/37/49/97/6/imagen-del-centro-comercial-la-gran-manzana-de-tenerife-que-se-inaugura-este-jueves-montaje-ah.webp"
-  },
-  {
-   "t": "99 Sushi Bar recibe el reconocimiento internacional Dos Toques Gault&Millau en su restaurante de Rabat",
-   "u": "https://www.bolsamania.com/nota-de-prensa_amp/empresas/99-sushi-bar-recibe-el-reconocimiento-internacional-dos-toques-gaultampmillau-en-su-restaurante-de-rabat--23097972.html",
-   "s": "Bolsamania",
-   "d": "2026-07-22T09:13:06.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Barceló reabre en Santa Cruz un hotel renovado para reforzar su apuesta urbana en Tenerife",
-   "u": "https://www.vinetur.com/amp/20260722104606/barcelo-reabre-en-santa-cruz-un-hotel-renovado-para-reforzar-su-apuesta-urbana-en-tenerife.html",
-   "s": "Vinetur",
-   "d": "2026-07-22T08:23:15.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/2026/july/22/20260722-122315-1004.jpg"
-  },
-  {
-   "t": "El polvo de higo tinto ecológico de TUNOCANARIAS, ganador de los VII Premios BBVA a los Mejores Productores Sostenibles",
-   "u": "https://www.eldia.es/canarias/2026/07/22/polvo-higo-tinto-ecologico-tunocanarias-132687361.amp.html",
-   "s": "Eldía",
-   "d": "2026-07-22T08:06:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/6f7fa9f4-14fe-450b-8564-d444b1aa0b26_16-9-discover-aspect-ratio_default_0_x768y522.jpg"
   }
  ]
 }
