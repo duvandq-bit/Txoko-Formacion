@@ -5641,7 +5641,12 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   // errores del servidor con mensaje amable, y sin clave de API en la app.
   assert(/const _MI_FN_URL = SUPA_URL \+ '\/functions\/v1\/mesa-infinita';/.test(html),
     'la app debe llamar a la Edge Function mesa-infinita (nunca a la API de IA directa)');
-  assert(/const _MI_DAILY = 2;/.test(html), 'límite de 2 mesas/día por camarero');
+  assert(/const _MI_DAILY = 3;/.test(html), 'límite de 3 mesas/día por camarero');
+  // VARIEDAD (bug real: dos mesas seguidas con alergia a soja): la restricción
+  // anterior queda vetada — ni alérgeno repetido ni dos vegetarianos seguidos.
+  const scVar = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
+  assert(/miLastScn/.test(scVar) && /present\.filter\(a=>a!==_last\)/.test(scVar) && /_last==='veg'/.test(scVar),
+    'el escenario debe vetar la restricción de la sesión anterior');
   // La carta que viaja a la IA se construye desde DISHES + DISH_ACTIONS + DISH_SERVICE
   const menuFn = html.slice(html.indexOf('function _miMenu'), html.indexOf('function _miScenario'));
   assert(/DISH_SERVICE\[d\.id\]/.test(menuFn) && /DISH_ACTIONS\[d\.id\]/.test(menuFn) && /d\.allergens/.test(menuFn),
