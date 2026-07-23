@@ -1631,6 +1631,10 @@ test('force-update escape hatch + APP_VERSION synced to the SW', () => {
   const swv = read('sw.js').match(/const VERSION = 'v([\d.]+)';/)[1];
   const appv = html.match(/const APP_VERSION='([\d.]+)'/)[1];
   assert(swv === appv, `APP_VERSION (${appv}) must match sw.js VERSION (${swv}) — bump both together`);
+  // La META app-version también debe ir a la par: quedó atrás en main (7.307
+  // vs 7.309) sin que este guard lo viera. Tres sitios, una sola versión.
+  const metav = html.match(/<meta name="app-version" content="([\d.]+)">/)[1];
+  assert(metav === appv, `meta app-version (${metav}) must match APP_VERSION (${appv}) — bump all three`);
 
   // El botón también avisa si el servidor tiene versión más nueva que la
   // cacheada (fetch de sw.js con no-store y comparación).
@@ -5629,6 +5633,34 @@ test('ficha técnica del plato: muestra el maridaje priorizando la copa', () => 
     'la tarjeta de maridaje debe insertarse en el cuerpo de la ficha');
   assert(/if\(_pairWines === null && typeof loadLazyData/.test(ficha) && /repasoView==='dish' && repasoDishId===dishId\) renderRepasoDishDetail\(dishId\)/.test(ficha),
     'si los vinos no habían cargado, la ficha debe recargarse al recibirlos (solo si sigue abierta)');
+});
+
+test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados de coste', () => {
+  // El simulador de huésped por chat. Candados que no pueden regresar:
+  // carta SIEMPRE derivada de la fuente única, límite diario en cliente,
+  // errores del servidor con mensaje amable, y sin clave de API en la app.
+  assert(/const _MI_FN_URL = SUPA_URL \+ '\/functions\/v1\/mesa-infinita';/.test(html),
+    'la app debe llamar a la Edge Function mesa-infinita (nunca a la API de IA directa)');
+  assert(/const _MI_DAILY = 2;/.test(html), 'límite de 2 mesas/día por camarero');
+  // La carta que viaja a la IA se construye desde DISHES + DISH_ACTIONS + DISH_SERVICE
+  const menuFn = html.slice(html.indexOf('function _miMenu'), html.indexOf('function _miScenario'));
+  assert(/DISH_SERVICE\[d\.id\]/.test(menuFn) && /DISH_ACTIONS\[d\.id\]/.test(menuFn) && /d\.allergens/.test(menuFn),
+    '_miMenu debe derivar la carta de la fuente única (platos, alérgenos y comandas reales)');
+  assert(/ALLERGEN_ES_TO_EN\[a\]/.test(menuFn), 'la carta EN debe usar el vocabulario canónico de alérgenos');
+  // El escenario usa restricciones REALES (alérgenos presentes en la carta)
+  const scFn = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
+  assert(/DISHES\.flatMap\(d=>d\.allergens/.test(scFn), 'la restricción del huésped debe existir en la carta real');
+  // Cupo diario: se consume al CONFIRMAR el primer turno, y bloquea al agotarse
+  assert(/_miLeft\(emp\)<=0/.test(html) && /emp\.miCount=\(emp\.miCount\|\|0\)\+1; saveDB\(\);/.test(html),
+    'el límite diario debe comprobarse y consumirse de verdad');
+  // Errores del servidor → mensajes amables (nunca un fallo mudo)
+  for (const code of ['falta_api_key', 'limite_usuario', 'limite_diario'])
+    assert(html.includes(`'${code}'`), `_miFriendly debe cubrir el error ${code}`);
+  // Entrada visible: tarjeta en el hub de Repaso
+  assert(/renderMesaLobby\(\)/.test(html) && /La Mesa Infinita/.test(html), 'tarjeta de entrada en Repaso');
+  // La evaluación premia XP y telemetría sin subir la conversación a la nube
+  const endFn = html.slice(html.indexOf('async function _miEnd'), html.indexOf('async function _miEnd') + 4200);
+  assert(/awardXP\(xp/.test(endFn) && /track\('mesa\.finish'/.test(endFn), 'cierre: XP + telemetría agregada');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
