@@ -5676,11 +5676,23 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   assert(/90000/.test(endFn), 'la evaluación debe tener tiempo máximo (90 s)');
   assert(/evaluating/.test(endFn), 'la evaluación debe mostrar su propio estado (no "el huésped piensa")');
   // LQA: el auditor recibe los estándares REALES observables por chat
-  assert(/const _MI_LQA_IDS = \[13,15,16,19,20,21,22,23,25,34,36,42,71,73,76,78\];/.test(html),
+  assert(/const _MI_LQA_IDS = \[13,15,16,19,20,21,22,23,25,34,36,40,42,71,73,76,78\];/.test(html),
     'subconjunto de estándares LQA observables en conversación');
+  assert(/const _MI_LQA_IDS_HOSTESS = \[1,2,3,4,5,6,7,8,9,10,70,71,76,78\];/.test(html),
+    'la hostess se audita con los estándares de reserva/llegada');
   const lqaFn = html.slice(html.indexOf('function _miLqa'), html.indexOf('function renderMesaLobby'));
   assert(/LQA_STANDARDS\.filter/.test(lqaFn), '_miLqa debe derivar de LQA_STANDARDS (fuente única)');
-  assert(/lqa:_miLqa\(_miS\.lang\)/.test(endFn), 'la evaluación debe enviar los estándares LQA');
+  assert(/lqa:_miLqa\(_miS\.lang,_miS\.role\)/.test(endFn), 'la evaluación debe enviar los estándares LQA de su rol');
+  // FICHA DE LA HOSTESS (feedback real del propietario): el camarero conoce
+  // el apellido/pax/ocasión ANTES de acercarse — así el Estándar #71 (nombre)
+  // es exigible con justicia. La ficha se fija arriba del chat y viaja al
+  // auditor. El modo Hostess entrena reservas/llegadas (#1-#10).
+  const scFn2 = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
+  assert(/_MI_SURNAMES/.test(scFn2) && /briefing/.test(scFn2), 'el escenario de mesa debe generar la ficha de la hostess');
+  assert(/Ficha de la hostess/.test(html), 'la ficha debe pintarse fija en el chat');
+  assert(/briefing:_miS\.sc\.briefing\|\|''/.test(html), 'la ficha debe viajar al servidor');
+  assert(/startMesaInfinita\(false,'hostess'\)/.test(html), 'la antesala debe ofrecer el modo Hostess');
+  assert(/role:_miS\.role/.test(html), 'las llamadas deben llevar el rol');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
