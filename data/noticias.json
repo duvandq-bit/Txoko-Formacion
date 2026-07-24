@@ -1,6 +1,25 @@
 {
- "updated": "2026-07-23T18:39:23.703Z",
+ "updated": "2026-07-24T00:13:10.042Z",
  "items": [
+  {
+   "t": "Padylla (24/07/26)",
+   "u": "https://www.eldia.es/humor/2026/07/24/padylla-24-07-26-132753551.html",
+   "s": "Eldía",
+   "d": "2026-07-23T22:59:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/07/23/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-07-23T19:11:26.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
+  },
   {
    "t": "Lava Live afronta su segundo gran fin de semana con música internacional, gastronomía local y una experiencia para todos los públicos",
    "u": "https://www.diariodelanzarote.com/noticia/lava-live-afronta-su-segundo-gran-fin-de-semana-con-m%C3%BAsica-internacional-gastronom%C3%ADa-local-y",
@@ -113,16 +132,6 @@
    "img": "https://static.eldiario.es/clip/5ccb8190-ade3-49cf-be60-e43ca305c02d_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "Parece las Maldivas pero está en Canarias: la playa paradisíaca y de agua cristalina que te hará viajar sin salir de las islas",
-   "u": "https://www.elperiodico.com/es/shopping/20260723/playa-canarias-mundo-compara-maldivas-dv-132736408",
-   "s": "El Periódico",
-   "d": "2026-07-23T12:43:12.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/5f0bbbba-4fbe-4604-98e3-cf33f71adbde_16-9-discover-aspect-ratio_default_0.jpg"
-  },
-  {
    "t": "Más de Uno Canarias 23/07/2026",
    "u": "https://www.ondacero.es/podcast/emisoras/las-palmas/mas-de-uno-canarias/mas-uno-canarias-23072026_202607236a61f254b6c6930007be5990.html",
    "s": "Onda Cero",
@@ -148,8 +157,7 @@
    "d": "2026-07-23T12:01:40.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://pictures.lanocion.es/2026/julio/23/1_1200wt/260723-feria-gastrocultural-peruana.jpeg"
+   ]
   },
   {
    "t": "Santa Cruz celebra la III Feria Gastrocultural Peruana en el parque Las Indias",
@@ -261,24 +269,13 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Pagina-43-La-undecima-edicion-del-festival-se-presento-este-miercoles.jpg"
   },
   {
-   "t": "Santy (23/07/26)",
-   "u": "https://www.eldia.es/humor/2026/07/23/santy-23-07-26-132713577.html",
-   "s": "Eldía",
-   "d": "2026-07-22T22:59:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
    "t": "Padylla (23/07/26)",
    "u": "https://www.eldia.es/humor/2026/07/23/padylla-23-07-26-132715581.html",
    "s": "Eldía",
    "d": "2026-07-22T22:59:52.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+   ]
   },
   {
    "t": "La Fórmula 1 en Madrid 2026 se llena de estrellas Michelin | Precio",
@@ -288,8 +285,7 @@
    "tags": [
     "ALTA COCINA",
     "MICHELIN"
-   ],
-   "img": "https://gastroactivity.com/wp-content/uploads/2026/07/La-Azotea-Formula-1-Madrid.jpg"
+   ]
   },
   {
    "t": "La popular chef Samantha Vallejo desvela la graciosa anécdota que vivió Canarias: \"Prometí no volver y",
