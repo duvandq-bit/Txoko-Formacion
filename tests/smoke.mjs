@@ -5758,9 +5758,14 @@ test('Cliente IA F2: modo voz en el dispositivo (Web Speech API)', () => {
   // El botón de voz solo aparece si el navegador lo soporta (nada de botones muertos)
   assert(/\$\{_miVoiceSupported\(\)\?`<button type="button" id="miVoiceBtn"/.test(html),
     'el toggle de voz debe ocultarse en navegadores sin soporte');
-  // Manos libres: al callar, la transcripción se envía sola
+  // La transcripción NUNCA se envía sola: el dictado falla con nombres de
+  // carta («niçoise») y el camarero debe poder corregir antes de enviar
+  // (feedback real del propietario, jul 2026).
   const mic = html.slice(html.indexOf('function _miMicTap'), html.indexOf('function _miRender'));
-  assert(/r\.onend=/.test(mic) && /_miSend\(\)/.test(mic), 'al terminar de hablar debe enviarse solo');
+  assert(/r\.onend=/.test(mic) && !/_miSend\(\)/.test(mic), 'la transcripción debe quedarse en el cajón para editarla — nada de auto-envío');
+  assert(/inp\.focus\(\)/.test(mic), 'al terminar el dictado, el foco va al cajón para corregir');
+  // El TTS no lee markdown: «asterisco» en voz alta rompía la ilusión
+  assert(/replace\(\/\[\*_#`~\]\+\/g,' '\)/.test(html), 'el TTS debe limpiar los asteriscos/markdown antes de hablar');
   assert(/_miSpeakStop\(\);\s*\/\/ que el micro no se escuche a sí mismo/.test(mic),
     'antes de escuchar hay que callar al TTS (eco del propio huésped)');
   // El huésped habla su respuesta SOLO en modo voz
