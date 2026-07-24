@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.317">
+<meta name="app-version" content="7.318">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1555,7 +1555,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.317';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.318';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -18901,7 +18901,7 @@ function _miMenu(lang){
 // o vegetariano). Nada inventado: la restricción siempre existe en los datos.
 // En modo mesa, la HOSTESS entrega una ficha (apellido, pax, ocasión): así el
 // camarero puede usar el nombre del huésped (Estándar #71) con justicia.
-const _MI_SURNAMES=['García','Marrero','Hernández','Weiss','Dupont','Rossi','Smith','Müller','Ivanova','Tanaka'];
+const _MI_SURNAMES=['García','Marrero','Hernández','Weiss','Dupont','Rossi','Smith','Müller','Laurent','Tanaka'];
 function _miScenario(lang, role){
   const en=lang==='en';
   const surname=_MI_SURNAMES[Math.floor(Math.random()*_MI_SURNAMES.length)];
@@ -18930,14 +18930,21 @@ function _miScenario(lang, role){
     'A couple celebrating their anniversary; you speak for both and want a perfect evening.',
     'A business guest, polite but time-conscious: a great dinner without a long evening.',
     'A curious first-time visitor to the Canary Islands who loves local produce.',
-    'A parent dining with their teenage daughter; wants safe choices and something special for dessert.'
+    'A parent dining with their teenage daughter; it is her birthday and he wants safe choices and something special for dessert.'
   ] : [
     'Señora mayor elegante, clienta habitual del hotel, cercana pero exigente; cena sola y le gusta conversar.',
     'Pareja celebrando su aniversario; llevas tú la voz y quieres una noche perfecta.',
     'Huésped de negocios, educado pero con el tiempo justo: cenar muy bien sin sobremesa larga.',
     'Turista curioso, primera vez en Canarias, le encanta el producto local.',
-    'Padre con su hija adolescente; quiere opciones seguras y algo especial de postre.'
+    'Padre con su hija adolescente; es el cumpleaños de ella y quiere opciones seguras y algo especial de postre.'
   ];
+  // COHERENCIA ficha ↔ personaje (bug real jul 2026: la ficha decía «sin
+  // ocasión especial» y el huésped hablaba de su aniversario): la ocasión,
+  // los comensales y el trato se DERIVAN del personaje elegido, no al azar.
+  const pIdx=Math.floor(Math.random()*P.length);
+  const occM=[en?'no special occasion':'sin ocasión especial', en?'anniversary':'aniversario', en?'business dinner':'cena de negocios', en?'no special occasion':'sin ocasión especial', en?'birthday':'cumpleaños'][pIdx];
+  const paxM=[1,2,2+Math.floor(Math.random()*3),2,2][pIdx];
+  const tratoM= pIdx===0 ? (en?'Mrs.':'Sra.') : pIdx===4 ? (en?'Mr.':'Sr.') : trato;
   const present=[...new Set(DISHES.flatMap(d=>d.allergens||[]))];
   // VARIEDAD (bug real: dos mesas seguidas con la misma alergia): la
   // restricción de la sesión anterior queda vetada en esta — ni el mismo
@@ -18953,8 +18960,8 @@ function _miScenario(lang, role){
   const situacion= veg
     ? (en?'You are strictly vegetarian (no meat, no fish). You want a couple of starters and a main, and you like to ask before deciding.'
          :'Eres estrictamente vegetariano/a (ni carne ni pescado). Quieres un par de entrantes y un principal, y te gusta preguntar antes de decidir.')
-    : (en?'You have a serious '+algN+' allergy. You want to share two starters and order a main, but you accept nothing until you are sure it is safe for you.'
-         :'Tienes una alergia seria a '+algN+'. Quieres compartir dos entrantes y pedir un principal, pero no aceptas nada sin estar seguro de que es seguro para ti.');
+    : (en?'You have a serious '+algN+' allergy. You want '+(paxM===1?'a couple of starters and a main':'to share two starters and order a main')+', but you accept nothing until you are sure it is safe for you.'
+         :'Tienes una alergia seria a '+algN+'. Quieres '+(paxM===1?'un par de entrantes y un principal':'compartir dos entrantes y pedir un principal')+', pero no aceptas nada sin estar seguro de que es seguro para ti.');
   // Aperturas LQA: el huésped deja hueco para agua, vino, postre y café —
   // así el auditor puede observar los estándares de venta sugerente.
   const lqaHook = en
@@ -18972,15 +18979,15 @@ function _miScenario(lang, role){
     ? (en?' Also, your table does not eat pork — politely decline any dish or garnish with pork (ham, chistorra, bacon…).'
          :' Además, en tu mesa no se come cerdo — rechaza con amabilidad cualquier plato o guarnición con cerdo (jamón, chistorra, tocineta…).')
     : pref==='alcohol'
-    ? (en?' Also, you do not drink alcohol — if offered wine, decline politely and ask for an alcohol-free alternative.'
-         :' Además, no bebéis alcohol — si te ofrecen vino, recházalo con amabilidad y pide una alternativa sin alcohol.')
+    ? (en?' Also, no one at your table drinks alcohol — if offered wine, decline politely and ask for an alcohol-free alternative.'
+         :' Además, en tu mesa no se bebe alcohol — si te ofrecen vino, recházalo con amabilidad y pide una alternativa sin alcohol.')
     : '';
   const restr= veg ? (en?'Vegetarian':'Vegetariano') : (en?algN+' allergy':'Alergia: '+algN);
   const prefTxt= pref==='cerdo' ? (en?' · no pork':' · no comen cerdo') : pref==='alcohol' ? (en?' · no alcohol':' · no beben alcohol') : '';
   const briefing= en
-    ? `Table ${mesa} · ${trato} ${surname} · ${pax} guests · ${occ} · ${restr}${prefTxt}`
-    : `Mesa ${mesa} · ${trato} ${surname} · ${pax} pax · ${occ} · ${restr}${prefTxt}`;
-  return { persona:P[Math.floor(Math.random()*P.length)]+(en?` Your surname is ${surname}.`:` Te apellidas ${surname}.`),
+    ? `Table ${mesa} · ${tratoM} ${surname} · ${paxM} ${paxM===1?'guest':'guests'} · ${occM} · ${restr}${prefTxt}`
+    : `Mesa ${mesa} · ${tratoM} ${surname} · ${paxM} pax · ${occM} · ${restr}${prefTxt}`;
+  return { persona:P[pIdx]+(en?` Your surname is ${surname}.`:` Te apellidas ${surname}.`),
            situacion: situacion + lqaHook + prefHook,
            briefing,
            label: veg?(en?'Vegetarian guest':'Huésped vegetariano'):(en?algN+' allergy':'Alergia: '+algN), role:'mesa' };

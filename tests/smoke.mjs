@@ -5700,6 +5700,12 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   assert(/\$\{restr\}\$\{prefTxt\}/.test(html), 'la ficha debe incluir siempre la restricción del huésped');
   assert(/no comen cerdo/.test(html) && /no beben alcohol/.test(html), 'la ficha debe poder llevar preferencias (sin cerdo / sin alcohol)');
   assert(/situacion \+ lqaHook \+ prefHook/.test(html), 'el huésped debe respetar en conversación la preferencia de su ficha');
+  // COHERENCIA ficha ↔ personaje (bug real: ficha «sin ocasión especial» y el
+  // huésped hablaba de su aniversario): ocasión, pax y trato derivan del
+  // personaje elegido (índice pIdx), nunca de una tirada independiente.
+  assert(/const pIdx=Math\.floor\(Math\.random\(\)\*P\.length\);/.test(html) && /\[pIdx\];/.test(html)
+    && /persona:P\[pIdx\]/.test(html) && /\$\{occM\}/.test(html),
+    'la ocasión de la ficha debe derivar del personaje (coherencia ficha ↔ conversación)');
   assert(/startMesaInfinita\(false,'hostess'\)/.test(html), 'la antesala debe ofrecer el modo Hostess');
   assert(/role:_miS\.role/.test(html), 'las llamadas deben llevar el rol');
   // RESULTADOS → SUPERVISOR (petición del propietario): la nota de cada mesa
