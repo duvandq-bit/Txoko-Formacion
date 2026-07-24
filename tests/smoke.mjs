@@ -5749,6 +5749,39 @@ test('Cliente IA (Mesa Infinita) destacado: tarjeta en el inicio + primera en Re
     'el brillo animado debe respetar prefers-reduced-motion');
 });
 
+test('Cliente IA F2: modo voz en el dispositivo (Web Speech API)', () => {
+  // Fase 2 (propietario): hablar y escuchar al cliente IA. Todo local — STT
+  // con SpeechRecognition (webkit en Safari/iOS) y TTS con speechSynthesis —
+  // cero coste de API extra y audio por el enrutado del sistema (bluetooth).
+  assert(/window\.SpeechRecognition\|\|window\.webkitSpeechRecognition/.test(html) && /'speechSynthesis' in window/.test(html),
+    'la detección debe cubrir Chrome/Android Y Safari/iOS (prefijo webkit)');
+  // El botón de voz solo aparece si el navegador lo soporta (nada de botones muertos)
+  assert(/\$\{_miVoiceSupported\(\)\?`<button type="button" id="miVoiceBtn"/.test(html),
+    'el toggle de voz debe ocultarse en navegadores sin soporte');
+  // Manos libres: al callar, la transcripción se envía sola
+  const mic = html.slice(html.indexOf('function _miMicTap'), html.indexOf('function _miRender'));
+  assert(/r\.onend=/.test(mic) && /_miSend\(\)/.test(mic), 'al terminar de hablar debe enviarse solo');
+  assert(/_miSpeakStop\(\);\s*\/\/ que el micro no se escuche a sí mismo/.test(mic),
+    'antes de escuchar hay que callar al TTS (eco del propio huésped)');
+  // El huésped habla su respuesta SOLO en modo voz
+  assert(/if\(_miV\.on\) _miSpeak\(j\.text\);/.test(html), 'la respuesta del huésped debe leerse en voz alta en modo voz');
+  // Idioma de voz = idioma de la mesa (huésped inglés → voz inglesa)
+  assert(/\(_miS\.lang==='en'\)\?'en-GB':'es-ES'/.test(mic), 'el micro debe transcribir en el idioma de la mesa');
+  assert(/u\.lang=\(_miS&&_miS\.lang==='en'\)\?'en-GB':'es-ES'/.test(html), 'el TTS debe hablar en el idioma de la mesa');
+  // Silencio garantizado al salir o cerrar la mesa (nada sigue sonando)
+  const exitFn = html.slice(html.indexOf('function _miExit'), html.indexOf('async function _miEnd'));
+  assert(/_miSpeakStop\(\); _miRecStop\(\)/.test(exitFn), 'salir de la mesa debe parar voz y micro');
+  const endFn2 = html.slice(html.indexOf('async function _miEnd'), html.indexOf('async function _miEnd') + 1200);
+  assert(/_miSpeakStop\(\); _miRecStop\(\)/.test(endFn2), 'cerrar la mesa debe parar voz y micro');
+  // Cada mesa arranca en modo texto (el modo voz no se hereda por sorpresa)
+  assert(/_miV=\{ on:false, rec:null, listening:false \};/.test(html), 'cada mesa debe arrancar en modo texto');
+  // El micro en escucha se ve (pulso) y respeta reduced-motion
+  const css = read('styles.css');
+  assert(/\.mi-mic-live\{/.test(css) && /@keyframes miMicPulse/.test(css), 'styles.css debe marcar el micro en escucha');
+  assert(/prefers-reduced-motion:reduce\)\{ \.mi-mic-live\{ animation:none \} \}/.test(css),
+    'el pulso del micro debe respetar prefers-reduced-motion');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
