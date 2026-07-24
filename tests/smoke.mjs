@@ -5654,6 +5654,10 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   const menuFn = html.slice(html.indexOf('function _miMenu'), html.indexOf('function _miScenario'));
   assert(/DISH_SERVICE\[d\.id\]/.test(menuFn) && /DISH_ACTIONS\[d\.id\]/.test(menuFn) && /d\.allergens/.test(menuFn),
     '_miMenu debe derivar la carta de la fuente única (platos, alérgenos y comandas reales)');
+  // La carta del huésped es SIEMPRE la de cena: filtrar por reloj hacía que
+  // entrenar de día negara platos reales («raviolis de espinaca no existe»).
+  assert(!/new Date\(\)\.getHours\(\)/.test(menuFn) && /const shift = 'c';/.test(menuFn),
+    'la mesa simula el servicio de cena — la carta no puede depender de la hora del reloj');
   assert(/ALLERGEN_ES_TO_EN\[a\]/.test(menuFn), 'la carta EN debe usar el vocabulario canónico de alérgenos');
   // El escenario usa restricciones REALES (alérgenos presentes en la carta)
   const scFn = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
