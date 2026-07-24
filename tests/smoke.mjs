@@ -5665,7 +5665,7 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   for (const code of ['falta_api_key', 'limite_usuario', 'limite_diario'])
     assert(html.includes(`'${code}'`), `_miFriendly debe cubrir el error ${code}`);
   // Entrada visible: tarjeta en el hub de Repaso
-  assert(/renderMesaLobby\(\)/.test(html) && /La Mesa Infinita/.test(html), 'tarjeta de entrada en Repaso');
+  assert(/renderMesaLobby\(\)/.test(html) && /Cliente IA/.test(html), 'tarjeta de entrada en Repaso');
   // La evaluación premia XP y telemetría sin subir la conversación a la nube
   const endFn = html.slice(html.indexOf('async function _miEnd'), html.indexOf('async function _miEnd') + 5200);
   assert(/awardXP\(xp/.test(endFn) && /track\('mesa\.finish'/.test(endFn), 'cierre: XP + telemetría agregada');
@@ -5720,11 +5720,11 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   assert(/miStats: \(\(\) => \{ try \{ const x=JSON\.parse\(r\.extras/.test(html),
     'el fetch de empleados debe extraer miStats de extras');
   const sup = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('Ranking XP'));
-  assert(/La Mesa Infinita/.test(sup) && /_miPel/.test(sup) && /seguras en alérgenos/.test(sup),
-    'el panel de análisis debe mostrar la sección de La Mesa Infinita con la seguridad por delante');
+  assert(/Cliente IA/.test(sup) && /_miPel/.test(sup) && /seguras en alérgenos/.test(sup),
+    'el panel de análisis debe mostrar la sección de Cliente IA con la seguridad por delante');
 });
 
-test('La Mesa Infinita destacada: tarjeta en el inicio + primera en Repaso + estilo propio', () => {
+test('Cliente IA (Mesa Infinita) destacado: tarjeta en el inicio + primera en Repaso + estilo propio', () => {
   // «Es una gran adición, debería destacar» (propietario, jul 2026): entrada
   // a 1 toque desde el inicio y primera tarjeta del hub de Repaso, con una
   // variante visual propia (verde profundo + oro) que no se confunde con los
@@ -5740,6 +5740,8 @@ test('La Mesa Infinita destacada: tarjeta en el inicio + primera en Repaso + est
   const iMesa = cats.indexOf('ri-cta-mesa'), iSmart = cats.indexOf('${smartCard}');
   assert(iMesa > -1 && iSmart > -1 && iMesa < iSmart,
     'en Repaso la Mesa Infinita debe ir ANTES de la sesión inteligente');
+  assert(!/'La Mesa Infinita'/.test(html) && !/'The Infinite Table'/.test(html),
+    'el nombre visible es Cliente IA — «La Mesa Infinita» prometía conversación sin límite (propietario jul 2026)');
   const css = read('styles.css');
   assert(/\.ri-cta-mesa\{/.test(css) && /@keyframes miShine/.test(css),
     'styles.css debe definir la variante destacada .ri-cta-mesa');

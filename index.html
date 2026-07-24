@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.318">
+<meta name="app-version" content="7.319">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1555,7 +1555,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.318';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.319';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7806,7 +7806,7 @@ function _extrasCompose(emp){
     dq:{ d:emp.dqLastDay||'', s:emp.dqStreak||0, ok:emp.dqLastOk?1:0, p:(emp.dqLastPick==null?-1:emp.dqLastPick), t:emp.dqTotal||0, h:emp.dqHits||0 },
     es: emp.examSeen||{},   // intentos por plato → tasa de fallo real del supervisor
     ab: emp.allergenBest||0, // mejor % del Simulacro de alérgenos → seguridad del equipo
-    mi: emp.miStats||0      // La Mesa Infinita → notas y seguridad para el supervisor
+    mi: emp.miStats||0      // Cliente IA (Mesa Infinita) → notas y seguridad para el supervisor
   });
 }
 function _extrasMergeInto(emp, extrasStr){
@@ -7838,7 +7838,7 @@ function _extrasMergeInto(emp, extrasStr){
   }
   // Mejor % del Simulacro de alérgenos: el máximo entre local y nube.
   if(typeof x.ab==='number') emp.allergenBest=Math.max(emp.allergenBest||0, x.ab||0);
-  // La Mesa Infinita: contadores al máximo (monótonos) y "última mesa" por fecha.
+  // Cliente IA (Mesa Infinita): contadores al máximo (monótonos) y "última mesa" por fecha.
   if(x.mi && typeof x.mi==='object'){
     const m=emp.miStats=emp.miStats||{n:0,sum:0,best:0,pel:0,rsk:0,hn:0};
     for(const k of ['n','sum','best','pel','rsk','hn']) m[k]=Math.max(m[k]||0, x.mi[k]||0);
@@ -17907,16 +17907,16 @@ function renderDashboard(){
 
   const _runeSvg = `<svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(228,190,104,.55)" stroke-width=".7"/><polygon points="8,3 13,8 8,13 3,8" fill="none" stroke="rgba(228,190,104,.35)" stroke-width=".45"/><circle cx="8" cy="8" r="1" fill="rgba(228,190,104,.6)"/></svg>`;
 
-  // La Mesa Infinita destacada en el inicio («es una gran adición, debería
+  // Cliente IA (Mesa Infinita) destacado en el inicio («es una gran adición, debería
   // destacar», propietario jul 2026). Verde profundo + oro para que no se
   // confunda con los CTA dorados de sesión. Se calcula FUERA de la plantilla:
   // un template anidado dentro rompería el recorte de las guardas de CI.
   const _miDashCard = (typeof _miLeft==='function') ? (()=>{ const _miL=_miLeft(emp);
-    return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'The Infinite Table':'La Mesa Infinita'}" onclick="_miGo()">
+    return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="_miGo()">
       <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
       <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'The Infinite Table':'La Mesa Infinita'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
-        <span class="ri-cta-sub">${_en?`Serve an AI guest · a 5★ auditor scores you · ${_miL}/${_MI_DAILY} today`:`Atiende a un huésped IA · te puntúa un auditor 5★ · ${_miL}/${_MI_DAILY} hoy`}</span>
+        <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${_miL}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${_miL}/${_MI_DAILY} hoy`}</span>
       </span>
     </button>`; })() : '';
 
@@ -19018,7 +19018,7 @@ function renderMesaLobby(){
     <button type="button" class="exam-exit" onclick="_subTab.aprender='repaso';showTab('aprender')" aria-label="${_en?'Back':'Volver'}">←</button>
     <div style="text-align:center;padding:1.2rem .5rem .4rem">
       <div style="font-size:2.4rem">🍽️</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.35rem;color:var(--parchment);margin:.3rem 0">${_en?'The Infinite Table':'La Mesa Infinita'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.35rem;color:var(--parchment);margin:.3rem 0">${_en?'AI Guest':'Cliente IA'}</div>
       <p style="font-size:.85rem;color:var(--parch3);line-height:1.5;max-width:42ch;margin:0 auto .9rem">${_en
         ?'A guest sits at your table. Serve them by chat: listen, recommend from the real menu and keep their allergies safe. When you close the order, a 5-star auditor scores your service.'
         :'Un huésped se sienta en tu mesa. Atiéndelo por chat: escucha, recomienda desde la carta real y cuida sus alergias. Al cerrar la comanda, un auditor 5★ puntúa tu servicio.'}</p>
@@ -19048,7 +19048,7 @@ function _miRender(){
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem">
       <button type="button" class="exam-exit" onclick="_miExit()" aria-label="${_en?'Leave table':'Abandonar mesa'}">←</button>
       <div style="flex:1">
-        <div style="font-family:'Cinzel',serif;font-size:1.02rem;color:var(--parchment)">${_miS.role==='hostess'?'🛎️':'🍽️'} ${_miS.role==='hostess'?(_en?'The Reception':'La Recepción'):(_en?'The Infinite Table':'La Mesa Infinita')}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.02rem;color:var(--parchment)">${_miS.role==='hostess'?'🛎️':'🍽️'} ${_miS.role==='hostess'?(_en?'The Reception':'La Recepción'):(_en?'AI Guest':'Cliente IA')}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-deep)">${escapeHTML(_miS.sc.label)}</div>
       </div>
       <button type="button" onclick="_miEnd()" style="padding:.5rem .8rem;background:rgba(196,154,60,.14);border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.74rem;font-weight:700;color:var(--gold-deep);cursor:pointer">🧾 ${_en?'Close table':'Cerrar mesa'}</button>
@@ -19160,7 +19160,7 @@ async function _miEnd(){
     if(_tm) clearTimeout(_tm);
     const ev=j.eval;
     const xp= ev.score>=85?50: ev.score>=70?35: ev.score>=50?20: 10;
-    awardXP(xp,(_en?'The Infinite Table':'La Mesa Infinita')+' ('+ev.score+'%)');
+    awardXP(xp,(_en?'AI Guest':'Cliente IA')+' ('+ev.score+'%)');
     if(typeof track==='function') track('mesa.finish',{score:ev.score,safety:ev.safety,turns:_miS.msgs.length,role:_miS.role});
     // Resultado → panel del supervisor: agregado compacto en emp.miStats,
     // sincronizado por extras.mi (merge monótono, misma fuente única).
@@ -19267,15 +19267,15 @@ function renderRepasoCats(){
     </div>
     <!-- Search results -->
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
-    <!-- La Mesa Infinita PRIMERO («debería destacar», propietario jul 2026),
+    <!-- Cliente IA (Mesa Infinita) PRIMERO («debería destacar», propietario jul 2026),
          después la sesión inteligente, fuera de la lista de secciones -->
     ${(function(){
       const left=_miLeft(emp);
-      return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'The Infinite Table':'La Mesa Infinita'}" onclick="renderMesaLobby()">
+      return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="renderMesaLobby()">
       <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
       <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'The Infinite Table':'La Mesa Infinita'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
-        <span class="ri-cta-sub">${_en?`Serve an AI guest by chat · a 5★ auditor scores you · ${left}/${_MI_DAILY} today`:`Atiende a un huésped IA por chat · te puntúa un auditor 5★ · ${left}/${_MI_DAILY} hoy`}</span>
+        <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${left}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${left}/${_MI_DAILY} hoy`}</span>
       </span>
     </button>`;})()}
     ${smartCard}
@@ -21288,7 +21288,7 @@ function renderSupAnalytics(allEmps, empNames){
     </div>`;
   }).join('');
 
-  // La Mesa Infinita: notas del simulador de huésped/hostess por empleado.
+  // Cliente IA (Mesa Infinita): notas del simulador de huésped/hostess por empleado.
   // La seguridad manda: cualquier 'peligro' en simulación es aviso de coaching.
   const _miEmp = empNames.filter(n => allEmps[n].miStats && (allEmps[n].miStats.n||0) > 0);
   const _miTot = _miEmp.reduce((a,n)=>a+(allEmps[n].miStats.n||0),0);
@@ -21314,7 +21314,7 @@ function renderSupAnalytics(allEmps, empNames){
     }).join('');
   const mesaSection = `
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">🍽️ La Mesa Infinita — ${LANG==='en'?'AI service simulator':'simulador de servicio con IA'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">🍽️ Cliente IA — ${LANG==='en'?'real-time service simulator':'simulador de servicio en tiempo real'}</div>
       ${_miTot ? `
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;font-family:'DM Mono',monospace;font-size:.62rem">
         <span style="background:rgba(140,110,60,.1);border-radius:8px;padding:.3rem .55rem;color:var(--brand-ink)"><b>${_miTot}</b> ${LANG==='en'?'tables served':'mesas atendidas'}</span>
