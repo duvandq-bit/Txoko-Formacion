@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.322">
+<meta name="app-version" content="7.323">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1555,7 +1555,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.322';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.323';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -18876,14 +18876,13 @@ function _miLeft(emp){ return (emp && emp.miDay===_miToday()) ? Math.max(0, _MI_
 
 // Carta compacta para la IA — SIEMPRE derivada de la fuente única y del turno
 // actual (mismo criterio horario que el resto de la app: cena desde las 17h).
-function _miMenu(lang){
+function _miMenu(lang, shift){
   const en = lang==='en';
-  // La mesa simulada es SIEMPRE el servicio de CENA (la carta principal y el
-  // arco narrativo de «la velada»). Antes se filtraba por la hora del reloj y
-  // entrenar de día enviaba la carta de almuerzo: el huésped negaba platos
-  // reales de cena («raviolis de espinaca no existe», propietario jul 2026).
-  // Los platos solo-almuerzo (terraza) quedan para un futuro modo Terraza.
-  const shift = 'c';
+  // El turno lo ELIGE el camarero en la antesala (petición del propietario):
+  // 🌙 cena (carta principal, por defecto) o ☀️ almuerzo (terraza). Nunca el
+  // reloj: filtrar por hora enviaba la carta equivocada y el huésped negaba
+  // platos reales de cena («raviolis de espinaca no existe», jul 2026).
+  shift = shift==='a' ? 'a' : 'c';
   const lines=[];
   for(const d of DISHES){
     const sv=(typeof DISH_SERVICE!=='undefined'&&DISH_SERVICE[d.id])||'ambos';
@@ -19015,9 +19014,13 @@ function _miLqa(lang, role){
 // el resaltado del nav ANTES de pintar la antesala — el render instantáneo de
 // showTab evita que el _doRender diferido (120 ms) pise la antesala.
 function _miGo(){ _subTab.aprender='repaso'; showTab('aprender', true); renderMesaLobby(); }
+// Turno elegido en la antesala: 🌙 cena (carta principal, por defecto) o
+// ☀️ almuerzo (terraza). Decide qué carta viaja al huésped y al auditor.
+let _miShift='c';
 // Antesala: explica el modo, muestra las mesas restantes y deja elegir idioma.
 function renderMesaLobby(){
   const emp=getEmp(currentUser); const _en=LANG==='en'; const left=_miLeft(emp);
+  const _shBtn=(k,txt)=>`<button type="button" onclick="_miShift='${k}';renderMesaLobby()" aria-pressed="${_miShift===k?'true':'false'}" style="flex:1;padding:.55rem .6rem;min-height:44px;background:${_miShift===k?'rgba(196,154,60,.22)':'transparent'};border:1.5px solid rgba(196,154,60,${_miShift===k?'.8':'.35'});border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700;color:${_miShift===k?'var(--gold-deep)':'var(--parch3)'};cursor:pointer">${txt}</button>`;
   document.getElementById('appContent').innerHTML=`<div class="sup-wrap" style="max-width:560px;margin:0 auto">
     <button type="button" class="exam-exit" onclick="_subTab.aprender='repaso';showTab('aprender')" aria-label="${_en?'Back':'Volver'}">←</button>
     <div style="text-align:center;padding:1.2rem .5rem .4rem">
@@ -19027,7 +19030,12 @@ function renderMesaLobby(){
         ?'A guest sits at your table. Serve them by chat: listen, recommend from the real menu and keep their allergies safe. When you close the order, a 5-star auditor scores your service.'
         :'Un huésped se sienta en tu mesa. Atiéndelo por chat: escucha, recomienda desde la carta real y cuida sus alergias. Al cerrar la comanda, un auditor 5★ puntúa tu servicio.'}</p>
       ${(typeof _miVoiceSupported==='function'&&_miVoiceSupported())?`<div style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold-deep);margin-bottom:.5rem">🎙️ ${_en?'NEW: turn on voice mode at the table — speak and listen to your guest.':'NUEVO: activa el modo voz en la mesa — habla y escucha a tu cliente.'}</div>`:''}
-      <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:${left>0?'var(--gold-deep)':'#a04848'};margin-bottom:1rem">${_en?'Tables left today':'Mesas disponibles hoy'}: ${left}/${_MI_DAILY}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:${left>0?'var(--gold-deep)':'#a04848'};margin-bottom:.8rem">${_en?'Tables left today':'Mesas disponibles hoy'}: ${left}/${_MI_DAILY}</div>
+      <!-- Turno del servicio: decide la carta que conoce el huésped -->
+      <div style="display:flex;gap:.5rem;margin-bottom:.9rem" role="group" aria-label="${_en?'Service shift':'Turno del servicio'}">
+        ${_shBtn('c','🌙 '+(_en?'Dinner':'Cena'))}
+        ${_shBtn('a','☀️ '+(_en?'Lunch (terrace)':'Almuerzo (terraza)'))}
+      </div>
       <button class="btn-primary" style="width:100%;margin-bottom:.5rem" ${left<=0?'disabled':''} onclick="startMesaInfinita(false,'mesa')">🍽️ ${_en?'Serve a table (waiter)':'Atender una mesa (camarero)'}</button>
       <button class="btn-primary" style="width:100%;margin-bottom:.5rem;background:linear-gradient(135deg,#7a5a8a,#5a4a7a)" ${left<=0?'disabled':''} onclick="startMesaInfinita(false,'hostess')">🛎️ ${_en?'Reception (hostess)':'La Recepción (hostess)'} <span style="font-size:.6rem;background:rgba(255,255,255,.2);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></button>
       <button style="width:100%;padding:.65rem;background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--gold-deep);cursor:pointer" ${left<=0?'disabled':''} onclick="startMesaInfinita(true,'mesa')">🇬🇧 ${_en?'English-speaking guest':'Huésped en inglés'}</button>
@@ -19041,7 +19049,7 @@ function startMesaInfinita(guestEn, role){
   if(navigator.onLine===false){ showToast(_en?'You need a connection to serve the table.':'Necesitas conexión para atender la mesa.','warning'); return; }
   if(_miLeft(emp)<=0){ showToast(_en?'You have served your tables for today — come back tomorrow.':'Ya has atendido tus mesas de hoy — vuelve mañana.','warning'); return; }
   const lang = guestEn ? 'en' : (LANG==='en'?'en':'es');
-  _miS={ sc:_miScenario(lang, role), msgs:[], lang, role, started:false, busy:false, over:false };
+  _miS={ sc:_miScenario(lang, role), msgs:[], lang, role, shift:(_miShift==='a'?'a':'c'), started:false, busy:false, over:false };
   _miV={ on:false, rec:null, listening:false };   // cada mesa arranca en modo texto
   if(typeof track==='function') track('mesa.start',{lang, role});
   _miRender();
@@ -19132,7 +19140,7 @@ function _miRender(){
       <button type="button" class="exam-exit" onclick="_miExit()" aria-label="${_en?'Leave table':'Abandonar mesa'}">←</button>
       <div style="flex:1">
         <div style="font-family:'Cinzel',serif;font-size:1.02rem;color:var(--parchment)">${_miS.role==='hostess'?'🛎️':'🍽️'} ${_miS.role==='hostess'?(_en?'The Reception':'La Recepción'):(_en?'AI Guest':'Cliente IA')}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-deep)">${escapeHTML(_miS.sc.label)}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-deep)">${escapeHTML(_miS.sc.label)} · ${_miS.shift==='a'?'☀️':'🌙'}</div>
       </div>
       ${_miVoiceSupported()?`<button type="button" id="miVoiceBtn" onclick="_miVoiceToggle()" aria-pressed="${_miV.on?'true':'false'}" aria-label="${_en?'Voice mode':'Modo voz'}" title="${_en?'Voice mode':'Modo voz'}" style="padding:.5rem .65rem;min-height:44px;background:${_miV.on?'rgba(196,154,60,.25)':'transparent'};border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-size:.95rem;cursor:pointer">🎙️</button>`:''}
       <button type="button" onclick="_miEnd()" style="padding:.5rem .8rem;background:rgba(196,154,60,.14);border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.74rem;font-weight:700;color:var(--gold-deep);cursor:pointer">🧾 ${_en?'Close table':'Cerrar mesa'}</button>
@@ -19184,7 +19192,7 @@ async function _miCallTurn(start){
     const res=await fetch(_MI_FN_URL,{ method:'POST', signal:_ac?_ac.signal:undefined,
       headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
       body:JSON.stringify({ mode:'turn', startSession:!!start, user:currentUser, lang:_miS.lang, role:_miS.role,
-        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion,briefing:_miS.sc.briefing||''}, menu:_miS.role==='hostess'?'':_miMenu(_miS.lang), messages:_miS.msgs }) });
+        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion,briefing:_miS.sc.briefing||''}, menu:_miS.role==='hostess'?'':_miMenu(_miS.lang,_miS.shift), messages:_miS.msgs }) });
     const j=await res.json().catch(()=>({}));
     if(!res.ok){ showToast(_miFriendly(j.error),'warning',6000); if(!_miS.started){ renderMesaLobby(); _miS=null; } return; }
     _miS.msgs.push({role:'guest',text:String(j.text||'')});
@@ -19241,7 +19249,7 @@ async function _miEnd(){
     const res=await fetch(_MI_FN_URL,{ method:'POST', signal:_ac?_ac.signal:undefined,
       headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
       body:JSON.stringify({ mode:'eval', user:currentUser, lang:_miS.lang, role:_miS.role,
-        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion,briefing:_miS.sc.briefing||''}, menu:_miS.role==='hostess'?'':_miMenu(_miS.lang), lqa:_miLqa(_miS.lang,_miS.role), messages:_miS.msgs }) });
+        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion,briefing:_miS.sc.briefing||''}, menu:_miS.role==='hostess'?'':_miMenu(_miS.lang,_miS.shift), lqa:_miLqa(_miS.lang,_miS.role), messages:_miS.msgs }) });
     const j=await res.json().catch(()=>({}));
     if(!res.ok||!j.eval){ _miS.busy=false; _miS.evaluating=false; _miRenderMsgs(); showToast(_miFriendly(j.error),'warning',7000); return; }
     _miS.over=true; _miS.busy=false; _miS.evaluating=false;

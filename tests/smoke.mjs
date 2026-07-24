@@ -5654,10 +5654,20 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   const menuFn = html.slice(html.indexOf('function _miMenu'), html.indexOf('function _miScenario'));
   assert(/DISH_SERVICE\[d\.id\]/.test(menuFn) && /DISH_ACTIONS\[d\.id\]/.test(menuFn) && /d\.allergens/.test(menuFn),
     '_miMenu debe derivar la carta de la fuente única (platos, alérgenos y comandas reales)');
-  // La carta del huésped es SIEMPRE la de cena: filtrar por reloj hacía que
-  // entrenar de día negara platos reales («raviolis de espinaca no existe»).
-  assert(!/new Date\(\)\.getHours\(\)/.test(menuFn) && /const shift = 'c';/.test(menuFn),
-    'la mesa simula el servicio de cena — la carta no puede depender de la hora del reloj');
+  // El turno lo ELIGE el camarero en la antesala (🌙 cena por defecto /
+  // ☀️ almuerzo): filtrar por reloj hacía que entrenar de día negara platos
+  // reales de cena («raviolis de espinaca no existe»). Nunca por hora.
+  assert(!/new Date\(\)\.getHours\(\)/.test(menuFn),
+    'la carta del huésped no puede depender de la hora del reloj');
+  assert(/function _miMenu\(lang, shift\)/.test(html) && /shift = shift==='a' \? 'a' : 'c';/.test(menuFn),
+    '_miMenu recibe el turno elegido, con la cena como valor por defecto');
+  assert(/let _miShift='c';/.test(html) && /_miShift='\$\{k\}';renderMesaLobby\(\)/.test(html)
+    && /_shBtn\('a','☀️ '/.test(html) && /Almuerzo \(terraza\)/.test(html),
+    'la antesala debe ofrecer el selector Cena/Almuerzo (cena por defecto)');
+  assert(/shift:\(_miShift==='a'\?'a':'c'\)/.test(html),
+    'el turno elegido debe viajar con la sesión (no leerse en caliente)');
+  assert((html.match(/_miMenu\(_miS\.lang,_miS\.shift\)/g)||[]).length===2,
+    'huésped Y auditor deben recibir la carta del turno elegido');
   assert(/ALLERGEN_ES_TO_EN\[a\]/.test(menuFn), 'la carta EN debe usar el vocabulario canónico de alérgenos');
   // El escenario usa restricciones REALES (alérgenos presentes en la carta)
   const scFn = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
